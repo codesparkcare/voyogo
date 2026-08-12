@@ -37,7 +37,7 @@
             </div>
 
             <!-- Search Inputs Form -->
-            <form action="<?php echo function_exists('site_url') ? site_url('welcome/search_flights') : '#'; ?>" method="POST">
+            <form action="<?php echo function_exists('site_url') ? site_url('flight/search') : '#'; ?>" method="POST">
                 <div class="search-grid">
                     
                     <!-- From & To Group with Centered Swap Button -->

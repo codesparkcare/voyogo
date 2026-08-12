@@ -101,7 +101,7 @@
                         <tbody>
                             <?php if (!empty($recent_flights)): foreach ($recent_flights as $fb): ?>
                             <tr>
-                                <td><a href="<?php echo site_url('welcome/flight_confirmation/' . $fb['booking_ref']); ?>" target="_blank" class="fw-bold text-primary text-decoration-none"><?php echo htmlspecialchars($fb['booking_ref']); ?></a></td>
+                                <td><a href="<?php echo site_url('flight/confirmation/' . $fb['booking_ref']); ?>" target="_blank" class="fw-bold text-primary text-decoration-none"><?php echo htmlspecialchars($fb['booking_ref']); ?></a></td>
                                 <td><?php echo htmlspecialchars($fb['contact_name']); ?></td>
                                 <td><span class="badge bg-secondary"><?php echo htmlspecialchars($fb['origin']); ?> &rarr; <?php echo htmlspecialchars($fb['destination']); ?></span></td>
                                 <td class="fw-bold">₹ <?php echo number_format($fb['total_amount']); ?></td>
@@ -139,7 +139,7 @@
                         <tbody>
                             <?php if (!empty($recent_hotels)): foreach ($recent_hotels as $hb): ?>
                             <tr>
-                                <td><a href="<?php echo site_url('welcome/hotel_confirmation/' . $hb['booking_ref']); ?>" target="_blank" class="fw-bold text-danger text-decoration-none"><?php echo htmlspecialchars($hb['booking_ref']); ?></a></td>
+                                <td><a href="<?php echo site_url('hotels/confirmation/' . $hb['booking_ref']); ?>" target="_blank" class="fw-bold text-danger text-decoration-none"><?php echo htmlspecialchars($hb['booking_ref']); ?></a></td>
                                 <td><?php echo htmlspecialchars($hb['primary_guest_name']); ?></td>
                                 <td><span class="fw-medium text-dark"><?php echo htmlspecialchars($hb['hotel_name']); ?></span></td>
                                 <td class="fw-bold">₹ <?php echo number_format($hb['total_amount']); ?></td>

@@ -33,7 +33,7 @@
             </div>
 
             <!-- Hotel Search Form -->
-            <form action="<?php echo function_exists('site_url') ? site_url('welcome/search_hotels') : '#'; ?>" method="POST">
+            <form action="<?php echo function_exists('site_url') ? site_url('hotels/search') : '#'; ?>" method="POST">
                 <div class="search-grid hotel-grid">
                     
                     <!-- Destination / City -->

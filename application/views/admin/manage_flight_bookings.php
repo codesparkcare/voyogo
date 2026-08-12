@@ -59,7 +59,7 @@
                             </td>
                             <td class="text-end">
                                 <div class="btn-group">
-                                    <a href="<?php echo site_url('welcome/flight_confirmation/' . $b['booking_ref']); ?>" target="_blank" class="btn btn-sm btn-outline-primary" title="Print E-Ticket">
+                                    <a href="<?php echo site_url('flight/confirmation/' . $b['booking_ref']); ?>" target="_blank" class="btn btn-sm btn-outline-primary" title="Print E-Ticket">
                                         <i class="fa-solid fa-print"></i> Ticket
                                     </a>
                                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $b['id']; ?>" title="Edit Status">

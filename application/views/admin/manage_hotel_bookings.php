@@ -62,7 +62,7 @@
                             </td>
                             <td class="text-end">
                                 <div class="btn-group">
-                                    <a href="<?php echo site_url('welcome/hotel_confirmation/' . $b['booking_ref']); ?>" target="_blank" class="btn btn-sm btn-outline-danger" title="Print Voucher">
+                                    <a href="<?php echo site_url('hotels/confirmation/' . $b['booking_ref']); ?>" target="_blank" class="btn btn-sm btn-outline-danger" title="Print Voucher">
                                         <i class="fa-solid fa-print"></i> Voucher
                                     </a>
                                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editHotelModal<?php echo $b['id']; ?>" title="Edit Status">

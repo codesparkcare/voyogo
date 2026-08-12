@@ -166,7 +166,7 @@ class Welcome extends CI_Controller {
         $this->load->library('Mailer');
         @$this->mailer->send_flight_ticket($booking_data);
 
-        redirect('welcome/flight_confirmation/' . $booking_ref);
+        redirect('flight/confirmation/' . $booking_ref);
     }
 
     /**
@@ -336,7 +336,7 @@ class Welcome extends CI_Controller {
         $this->load->library('Mailer');
         @$this->mailer->send_hotel_voucher($booking_data);
 
-        redirect('welcome/hotel_confirmation/' . $booking_ref);
+        redirect('hotels/confirmation/' . $booking_ref);
     }
 
     /**
