@@ -1,0 +1,85 @@
+-- Voyogo Database Schema
+
+CREATE TABLE IF NOT EXISTS `admin_users` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `username` VARCHAR(50) NOT NULL UNIQUE,
+  `password` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `flight_bookings` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `booking_ref` VARCHAR(50) NOT NULL UNIQUE,
+  `pnr` VARCHAR(20) DEFAULT NULL,
+  `airline_name` VARCHAR(100) DEFAULT NULL,
+  `airline_code` VARCHAR(10) DEFAULT NULL,
+  `flight_number` VARCHAR(20) DEFAULT NULL,
+  `origin` VARCHAR(100) DEFAULT NULL,
+  `destination` VARCHAR(100) DEFAULT NULL,
+  `departure_datetime` DATETIME DEFAULT NULL,
+  `arrival_datetime` DATETIME DEFAULT NULL,
+  `cabin_class` VARCHAR(50) DEFAULT 'Economy',
+  `passenger_details` TEXT DEFAULT NULL,
+  `contact_name` VARCHAR(100) DEFAULT NULL,
+  `contact_email` VARCHAR(100) DEFAULT NULL,
+  `contact_phone` VARCHAR(20) DEFAULT NULL,
+  `total_amount` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+  `payment_id` VARCHAR(100) DEFAULT NULL,
+  `payment_status` VARCHAR(20) DEFAULT 'Pending',
+  `booking_status` VARCHAR(20) DEFAULT 'Confirmed',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `hotel_bookings` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `booking_ref` VARCHAR(50) NOT NULL UNIQUE,
+  `hotel_id` VARCHAR(50) DEFAULT NULL,
+  `hotel_name` VARCHAR(255) DEFAULT NULL,
+  `hotel_address` TEXT DEFAULT NULL,
+  `hotel_image` TEXT DEFAULT NULL,
+  `room_type` VARCHAR(100) DEFAULT NULL,
+  `checkin_date` DATE DEFAULT NULL,
+  `checkout_date` DATE DEFAULT NULL,
+  `guests_count` INT DEFAULT 1,
+  `rooms_count` INT DEFAULT 1,
+  `primary_guest_name` VARCHAR(100) DEFAULT NULL,
+  `guest_email` VARCHAR(100) DEFAULT NULL,
+  `guest_phone` VARCHAR(20) DEFAULT NULL,
+  `total_amount` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+  `payment_id` VARCHAR(100) DEFAULT NULL,
+  `payment_status` VARCHAR(20) DEFAULT 'Pending',
+  `booking_status` VARCHAR(20) DEFAULT 'Confirmed',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `enquiries` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(100) DEFAULT NULL,
+  `email` VARCHAR(100) DEFAULT NULL,
+  `phone` VARCHAR(20) DEFAULT NULL,
+  `message` TEXT DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `email_settings` (
+  `id` INT PRIMARY KEY DEFAULT 1,
+  `smtp_host` VARCHAR(100) DEFAULT 'smtp.gmail.com',
+  `smtp_port` INT DEFAULT 587,
+  `smtp_user` VARCHAR(100) DEFAULT '',
+  `smtp_pass` VARCHAR(255) DEFAULT '',
+  `smtp_crypto` VARCHAR(10) DEFAULT 'tls',
+  `from_email` VARCHAR(100) DEFAULT 'noreply@voyogo.com',
+  `from_name` VARCHAR(100) DEFAULT 'Voyogo Travels',
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Default Admin User (Password: admin123)
+INSERT INTO `admin_users` (`username`, `password`, `email`)
+SELECT 'admin', '$2y$10$wN9a8iG0rVzTz7P0bQx0e.6r6K4.nZ0K3N5m3w6q8J7y6z5w4u3v2', 'admin@voyogo.com'
+FROM DUAL WHERE NOT EXISTS (SELECT * FROM `admin_users` WHERE `username` = 'admin');
+
+-- Default Email Settings row
+INSERT INTO `email_settings` (`id`, `smtp_host`, `smtp_port`, `smtp_user`, `smtp_pass`, `smtp_crypto`, `from_email`, `from_name`)
+SELECT 1, 'smtp.gmail.com', 587, '', '', 'tls', 'noreply@voyogo.com', 'Voyogo Travels'
+FROM DUAL WHERE NOT EXISTS (SELECT * FROM `email_settings` WHERE `id` = 1);
