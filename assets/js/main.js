@@ -5,7 +5,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   
   // =========================================================================
-  // 1. AIRPORT DATABASE & INTERACTIVE AUTOCOMPLETE MODAL
+  // 1. AIRPORT DATABASE & INTERACTIVE INLINE AUTOCOMPLETE DROPDOWNS
   // =========================================================================
   const airportsData = [
     { city: "Delhi", code: "DEL", airport: "Indira Gandhi Intl Airport", country: "India", popular: true },
@@ -32,84 +32,114 @@ document.addEventListener('DOMContentLoaded', function() {
     { city: "Kathmandu", code: "KTM", airport: "Tribhuvan International Airport", country: "Nepal", popular: false }
   ];
 
-  let currentTargetSector = 'from'; // 'from' or 'to'
-
   const fromCityBox = document.getElementById('fromCityBox');
   const toCityBox = document.getElementById('toCityBox');
-  const airportModalOverlay = document.getElementById('airportModalOverlay');
-  const closeAirportModal = document.getElementById('closeAirportModal');
-  const airportModalTitle = document.getElementById('airportModalTitle');
-  const airportSearchInput = document.getElementById('airportSearchInput');
-  const popularAirportsPills = document.getElementById('popularAirportsPills');
-  const airportsListContainer = document.getElementById('airportsListContainer');
+  const fromCityDropdown = document.getElementById('fromCityDropdown');
+  const toCityDropdown = document.getElementById('toCityDropdown');
+  const passengerDropdown = document.getElementById('passengerDropdown');
 
-  if (airportModalOverlay) {
-    // Open FROM Modal
-    if (fromCityBox) {
-      fromCityBox.addEventListener('click', function() {
-        currentTargetSector = 'from';
-        if (airportModalTitle) airportModalTitle.textContent = 'Select Departure Airport (FROM)';
-        openAirportModal();
-      });
-    }
+  const fromSearchInput = document.getElementById('fromSearchInput');
+  const toSearchInput = document.getElementById('toSearchInput');
 
-    // Open TO Modal
-    if (toCityBox) {
-      toCityBox.addEventListener('click', function() {
-        currentTargetSector = 'to';
-        if (airportModalTitle) airportModalTitle.textContent = 'Select Destination Airport (TO)';
-        openAirportModal();
-      });
-    }
+  const fromPopularPills = document.getElementById('fromPopularPills');
+  const toPopularPills = document.getElementById('toPopularPills');
 
-    // Close Modal
-    if (closeAirportModal) {
-      closeAirportModal.addEventListener('click', closeAirportModalFn);
-    }
-    airportModalOverlay.addEventListener('click', function(e) {
-      if (e.target === airportModalOverlay) closeAirportModalFn();
+  const fromCityList = document.getElementById('fromCityList');
+  const toCityList = document.getElementById('toCityList');
+
+  // Helper to close all dropdowns
+  function closeAllDropdowns() {
+    if (fromCityDropdown) fromCityDropdown.classList.remove('open');
+    if (toCityDropdown) toCityDropdown.classList.remove('open');
+    if (passengerDropdown) passengerDropdown.classList.remove('open');
+  }
+
+  // Global document click listener to dismiss dropdowns
+  document.addEventListener('click', function(e) {
+    if (fromCityBox && fromCityBox.contains(e.target)) return;
+    if (toCityBox && toCityBox.contains(e.target)) return;
+    const passengerBox = document.getElementById('passengerSelectBox');
+    if (passengerBox && passengerBox.contains(e.target)) return;
+    closeAllDropdowns();
+  });
+
+  // Init FROM Dropdown
+  if (fromCityBox && fromCityDropdown) {
+    fromCityBox.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = fromCityDropdown.classList.contains('open');
+      closeAllDropdowns();
+      if (!isOpen) {
+        fromCityDropdown.classList.add('open');
+        renderPills('from');
+        renderList('from', '');
+        if (fromSearchInput) {
+          fromSearchInput.value = '';
+          setTimeout(() => fromSearchInput.focus(), 100);
+        }
+      }
     });
 
-    // Real-Time Search Filter
-    if (airportSearchInput) {
-      airportSearchInput.addEventListener('input', function() {
-        renderAirportsList(this.value.trim().toLowerCase());
+    if (fromSearchInput) {
+      fromSearchInput.addEventListener('click', e => e.stopPropagation());
+      fromSearchInput.addEventListener('input', function(e) {
+        e.stopPropagation();
+        renderList('from', this.value.trim().toLowerCase());
       });
     }
   }
 
-  function openAirportModal() {
-    airportModalOverlay.classList.add('open');
-    if (airportSearchInput) {
-      airportSearchInput.value = '';
-      setTimeout(() => airportSearchInput.focus(), 100);
+  // Init TO Dropdown
+  if (toCityBox && toCityDropdown) {
+    toCityBox.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = toCityDropdown.classList.contains('open');
+      closeAllDropdowns();
+      if (!isOpen) {
+        toCityDropdown.classList.add('open');
+        renderPills('to');
+        renderList('to', '');
+        if (toSearchInput) {
+          toSearchInput.value = '';
+          setTimeout(() => toSearchInput.focus(), 100);
+        }
+      }
+    });
+
+    if (toSearchInput) {
+      toSearchInput.addEventListener('click', e => e.stopPropagation());
+      toSearchInput.addEventListener('input', function(e) {
+        e.stopPropagation();
+        renderList('to', this.value.trim().toLowerCase());
+      });
     }
-    renderPopularPills();
-    renderAirportsList('');
   }
 
-  function closeAirportModalFn() {
-    airportModalOverlay.classList.remove('open');
-  }
-
-  function renderPopularPills() {
-    if (!popularAirportsPills) return;
-    popularAirportsPills.innerHTML = '';
+  // Render Popular Pills
+  function renderPills(target) {
+    const container = (target === 'from') ? fromPopularPills : toPopularPills;
+    if (!container) return;
+    container.innerHTML = '';
     const populars = airportsData.filter(a => a.popular);
+
     populars.forEach(item => {
-      const pill = document.createElement('button');
-      pill.type = 'button';
-      pill.className = 'popular-pill-btn';
-      pill.style.cssText = 'background: #f1f5f9; border: 1px solid #cbd5e1; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #0d3470;';
-      pill.innerHTML = `<i class="fa-solid fa-plane-up" style="color:#ef4444; margin-right:4px;"></i> ${item.city} <strong>(${item.code})</strong>`;
-      pill.addEventListener('click', () => selectAirport(item));
-      popularAirportsPills.appendChild(pill);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.style.cssText = 'background: #f1f5f9; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; cursor: pointer; color: #0d3470;';
+      btn.innerHTML = `${item.city} <strong>(${item.code})</strong>`;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectCityItem(target, item);
+      });
+      container.appendChild(btn);
     });
   }
 
-  function renderAirportsList(query) {
-    if (!airportsListContainer) return;
-    airportsListContainer.innerHTML = '';
+  // Render City List Items
+  function renderList(target, query) {
+    const container = (target === 'from') ? fromCityList : toCityList;
+    if (!container) return;
+    container.innerHTML = '';
 
     const filtered = airportsData.filter(item => {
       if (!query) return true;
@@ -122,47 +152,41 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     if (filtered.length === 0) {
-      airportsListContainer.innerHTML = `
-        <div style="padding: 24px; text-align: center; color: #64748b;">
-          <i class="fa-solid fa-plane-slash" style="font-size: 24px; color: #ef4444; margin-bottom: 8px;"></i>
-          <p style="margin: 0; font-size: 13px;">No airports found matching "<strong>${query}</strong>"</p>
-        </div>`;
+      container.innerHTML = `<div style="padding: 12px; font-size: 12px; color: #64748b; text-align: center;">No cities found for "${query}"</div>`;
       return;
     }
 
     filtered.forEach(item => {
       const div = document.createElement('div');
-      div.className = 'airport-item-row';
-      div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: background 0.15s;';
+      div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid #f1f5f9; cursor: pointer; font-size: 12px;';
       
       div.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <div style="width: 36px; height: 36px; background: #eff6ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #2563eb;">
-            <i class="fa-solid fa-plane"></i>
-          </div>
-          <div>
-            <div style="font-weight: 700; font-size: 15px; color: #09204b;">${item.city}, <span style="font-weight: 400; color: #64748b; font-size: 13px;">${item.country}</span></div>
-            <div style="font-size: 12px; color: #64748b;">${item.airport}</div>
-          </div>
+        <div>
+          <div style="font-weight: 700; color: #09204b;">${item.city}, <span style="font-weight: 400; color: #64748b;">${item.country}</span></div>
+          <div style="font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">${item.airport}</div>
         </div>
         <div>
-          <span style="background: #fef2f2; color: #ef4444; font-weight: 900; font-size: 14px; padding: 4px 10px; border-radius: 6px; border: 1px solid #fca5a5; font-family: monospace;">${item.code}</span>
+          <span style="background: #fef2f2; color: #ef4444; font-weight: 800; font-size: 11px; padding: 2px 6px; border-radius: 4px; font-family: monospace;">${item.code}</span>
         </div>
       `;
 
       div.addEventListener('mouseover', () => div.style.background = '#f8fafc');
       div.addEventListener('mouseout', () => div.style.background = '#ffffff');
-      div.addEventListener('click', () => selectAirport(item));
+      div.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectCityItem(target, item);
+      });
 
-      airportsListContainer.appendChild(div);
+      container.appendChild(div);
     });
   }
 
-  function selectAirport(item) {
+  // Select City Handler
+  function selectCityItem(target, item) {
     const formattedVal = `${item.city} (${item.code})`;
     const subtext = item.airport;
 
-    if (currentTargetSector === 'from') {
+    if (target === 'from') {
       const fromInput = document.getElementById('fromCity');
       const fromText = document.getElementById('fromCityText');
       const fromSub = document.getElementById('fromCitySub');
@@ -170,6 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (fromInput) fromInput.value = formattedVal;
       if (fromText) fromText.textContent = formattedVal;
       if (fromSub) fromSub.textContent = subtext;
+      if (fromCityDropdown) fromCityDropdown.classList.remove('open');
     } else {
       const toInput = document.getElementById('toCity');
       const toText = document.getElementById('toCityText');
@@ -178,9 +203,8 @@ document.addEventListener('DOMContentLoaded', function() {
       if (toInput) toInput.value = formattedVal;
       if (toText) toText.textContent = formattedVal;
       if (toSub) toSub.textContent = subtext;
+      if (toCityDropdown) toCityDropdown.classList.remove('open');
     }
-
-    closeAirportModalFn();
   }
 
   // =========================================================================
@@ -242,17 +266,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // 4. PASSENGER COUNTER DROPDOWN LOGIC
   // =========================================================================
   const passengerBox = document.getElementById('passengerSelectBox');
-  const passengerDropdown = document.getElementById('passengerDropdown');
   if (passengerBox && passengerDropdown) {
     passengerBox.addEventListener('click', function(e) {
       e.stopPropagation();
-      passengerDropdown.classList.toggle('open');
-    });
-
-    document.addEventListener('click', function(e) {
-      if (!passengerDropdown.contains(e.target) && !passengerBox.contains(e.target)) {
-        passengerDropdown.classList.remove('open');
-      }
+      const isOpen = passengerDropdown.classList.contains('open');
+      closeAllDropdowns();
+      if (!isOpen) passengerDropdown.classList.add('open');
     });
   }
 
