@@ -36,29 +36,45 @@ class Welcome extends CI_Controller {
      */
     public function search_flights()
     {
-        $from_raw = $this->input->post('from_city') ?: $this->input->get('from') ?: 'Delhi (DEL)';
-        $to_raw = $this->input->post('to_city') ?: $this->input->get('to') ?: 'Mumbai (BOM)';
-        $date = $this->input->post('departure_date') ?: $this->input->get('date') ?: date('Y-m-d', strtotime('+3 days'));
+        $multi_from = $this->input->post('multi_from');
+        $multi_to   = $this->input->post('multi_to');
+        $multi_date = $this->input->post('multi_date');
+
+        if (!empty($multi_from) && is_array($multi_from)) {
+            $from_raw = $multi_from[0];
+            $to_raw   = end($multi_to);
+            $date     = isset($multi_date[0]) ? $multi_date[0] : date('Y-m-d', strtotime('+3 days'));
+            $is_multicity = true;
+        } else {
+            $from_raw = $this->input->post('from_city') ?: $this->input->get('from') ?: 'Delhi (DEL)';
+            $to_raw   = $this->input->post('to_city') ?: $this->input->get('to') ?: 'Mumbai (BOM)';
+            $date     = $this->input->post('departure_date') ?: $this->input->get('date') ?: date('Y-m-d', strtotime('+3 days'));
+            $is_multicity = false;
+        }
 
         preg_match('/\(([A-Z]{3})\)/', $from_raw, $from_match);
         preg_match('/\(([A-Z]{3})\)/', $to_raw, $to_match);
         
         $from = isset($from_match[1]) ? $from_match[1] : (strlen($from_raw) == 3 ? strtoupper($from_raw) : 'DEL');
-        $to = isset($to_match[1]) ? $to_match[1] : (strlen($to_raw) == 3 ? strtoupper($to_raw) : 'BOM');
+        $to   = isset($to_match[1]) ? $to_match[1] : (strlen($to_raw) == 3 ? strtoupper($to_raw) : 'BOM');
 
         $this->load->library('BenzyFlightApi');
         
         $tui = $this->benzyflightapi->expressSearch($from, $to, $date);
         $flightResults = $this->benzyflightapi->getExpSearch($tui, $from, $to, $date);
 
-        $data['page_title'] = "Flight Search: $from to $to - Voyogo";
+        $data['page_title'] = $is_multicity ? "Multi-City Flight Itinerary: $from to $to - Voyogo" : "Flight Search: $from to $to - Voyogo";
         $data['active_page'] = 'flight';
         $data['search_query'] = array(
             'from' => $from_raw,
             'to'   => $to_raw,
             'from_code' => $from,
             'to_code' => $to,
-            'date' => $date
+            'date' => $date,
+            'is_multicity' => $is_multicity,
+            'multi_from' => $multi_from,
+            'multi_to' => $multi_to,
+            'multi_date' => $multi_date
         );
         $data['flightResults'] = $flightResults;
 

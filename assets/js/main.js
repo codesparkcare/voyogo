@@ -250,23 +250,112 @@ document.addEventListener('DOMContentLoaded', function() {
   // =========================================================================
   const tripTypeRadios = document.querySelectorAll('input[name="tripType"]');
   const returnDateBox = document.getElementById('returnDateBox');
-  if (tripTypeRadios.length > 0 && returnDateBox) {
+  const standardSearchGrid = document.getElementById('standardSearchGrid');
+  const multiCitySearchContainer = document.getElementById('multiCitySearchContainer');
+
+  if (tripTypeRadios.length > 0) {
     tripTypeRadios.forEach(radio => {
       radio.addEventListener('change', function() {
         if (this.value === 'oneway') {
-          returnDateBox.style.opacity = '0.5';
-          returnDateBox.style.pointerEvents = 'none';
-          const returnInput = returnDateBox.querySelector('input');
-          if (returnInput) returnInput.disabled = true;
-        } else {
-          returnDateBox.style.opacity = '1';
-          returnDateBox.style.pointerEvents = 'auto';
-          const returnInput = returnDateBox.querySelector('input');
-          if (returnInput) returnInput.disabled = false;
+          if (standardSearchGrid) standardSearchGrid.style.display = 'grid';
+          if (multiCitySearchContainer) multiCitySearchContainer.style.display = 'none';
+          if (returnDateBox) {
+            returnDateBox.style.opacity = '0.5';
+            returnDateBox.style.pointerEvents = 'none';
+            const returnInput = returnDateBox.querySelector('input');
+            if (returnInput) returnInput.disabled = true;
+          }
+        } else if (this.value === 'roundtrip') {
+          if (standardSearchGrid) standardSearchGrid.style.display = 'grid';
+          if (multiCitySearchContainer) multiCitySearchContainer.style.display = 'none';
+          if (returnDateBox) {
+            returnDateBox.style.opacity = '1';
+            returnDateBox.style.pointerEvents = 'auto';
+            const returnInput = returnDateBox.querySelector('input');
+            if (returnInput) returnInput.disabled = false;
+          }
+        } else if (this.value === 'multicity') {
+          if (standardSearchGrid) standardSearchGrid.style.display = 'none';
+          if (multiCitySearchContainer) multiCitySearchContainer.style.display = 'block';
         }
       });
     });
   }
+
+  // Multi-City Dynamic Leg Builder
+  const addMultiLegBtn = document.getElementById('addMultiLegBtn');
+  const multiCityLegsList = document.getElementById('multiCityLegsList');
+
+  if (addMultiLegBtn && multiCityLegsList) {
+    addMultiLegBtn.addEventListener('click', function() {
+      const legRows = multiCityLegsList.querySelectorAll('.multi-leg-row');
+      const count = legRows.length;
+      if (count >= 5) {
+        alert('Maximum 5 flight legs allowed per Multi-City search.');
+        return;
+      }
+      const newLegIndex = count + 1;
+      
+      // Default From to previous leg's To
+      let defaultFrom = 'Bengaluru (BLR)';
+      const lastToInput = legRows[count - 1].querySelector('.multi-to-input');
+      if (lastToInput && lastToInput.value) {
+        defaultFrom = lastToInput.value;
+      }
+
+      const row = document.createElement('div');
+      row.className = 'multi-leg-row';
+      row.setAttribute('data-leg', newLegIndex);
+      row.style.cssText = 'display: grid; grid-template-columns: 2fr 2fr 1.5fr 40px; gap: 12px; align-items: center; background: #f8fafc; padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1;';
+      
+      const futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + 3 + (newLegIndex * 3));
+      const dateStr = futureDate.toISOString().split('T')[0];
+
+      row.innerHTML = `
+        <div>
+            <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Flight ${newLegIndex} - From</label>
+            <input type="text" class="field-input multi-from-input" name="multi_from[]" value="${defaultFrom}" placeholder="City / Code" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+        </div>
+        <div>
+            <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">To</label>
+            <input type="text" class="field-input multi-to-input" name="multi_to[]" value="Dubai (DXB)" placeholder="City / Code" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+        </div>
+        <div>
+            <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Departure Date</label>
+            <input type="date" class="field-input" name="multi_date[]" value="${dateStr}" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 600; background: #ffffff;">
+        </div>
+        <div style="text-align: center; padding-top: 14px;">
+            <button type="button" class="btn-remove-leg" onclick="removeMultiLeg(this)" style="background: none; border: none; color: #ef4444; font-size: 16px; cursor: pointer;" title="Remove Leg"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+      `;
+
+      multiCityLegsList.appendChild(row);
+    });
+  }
+
+  window.removeMultiLeg = function(btn) {
+    const row = btn.closest('.multi-leg-row');
+    const multiCityLegsList = document.getElementById('multiCityLegsList');
+    if (!row || !multiCityLegsList) return;
+
+    const legRows = multiCityLegsList.querySelectorAll('.multi-leg-row');
+    if (legRows.length <= 2) {
+      alert('Multi-City search requires at least 2 flight legs.');
+      return;
+    }
+
+    row.remove();
+    const remaining = multiCityLegsList.querySelectorAll('.multi-leg-row');
+    remaining.forEach((r, idx) => {
+      const legNum = idx + 1;
+      r.setAttribute('data-leg', legNum);
+      const labels = r.querySelectorAll('label');
+      if (labels.length > 0) {
+        labels[0].textContent = `Flight ${legNum} - From`;
+      }
+    });
+  };
 
   // =========================================================================
   // 4. PASSENGER COUNTER DROPDOWN LOGIC

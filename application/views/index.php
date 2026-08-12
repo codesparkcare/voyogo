@@ -38,7 +38,7 @@
 
             <!-- Search Inputs Form -->
             <form action="<?php echo function_exists('site_url') ? site_url('flight/search') : '#'; ?>" method="POST">
-                <div class="search-grid">
+                <div class="search-grid" id="standardSearchGrid">
                     
                     <!-- From & To Group with Centered Swap Button -->
                     <div class="from-to-group">
@@ -162,6 +162,67 @@
                         </div>
                     </div>
 
+                </div>
+
+                <!-- Multi City Container (hidden by default) -->
+                <div id="multiCitySearchContainer" style="display: none; background: #ffffff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 10px;">
+                    <div style="font-family: var(--font-heading); font-weight: 800; font-size: 16px; color: #0d3470; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;">
+                        <span><i class="fa-solid fa-route" style="color: #ef4444; margin-right: 6px;"></i> Build Your Multi-City Itinerary</span>
+                        <span style="font-size: 12px; font-weight: 500; color: #64748b;">Add up to 5 flight legs</span>
+                    </div>
+
+                    <!-- Dynamic Flight Legs Container -->
+                    <div id="multiCityLegsList" style="display: flex; flex-direction: column; gap: 12px;">
+                        
+                        <!-- Leg 1 -->
+                        <div class="multi-leg-row" data-leg="1" style="display: grid; grid-template-columns: 2fr 2fr 1.5fr 40px; gap: 12px; align-items: center; background: #f8fafc; padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1;">
+                            <div>
+                                <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Flight 1 - From</label>
+                                <input type="text" class="field-input multi-from-input" name="multi_from[]" value="Delhi (DEL)" placeholder="City / Code" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+                            </div>
+                            <div>
+                                <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">To</label>
+                                <input type="text" class="field-input multi-to-input" name="multi_to[]" value="Mumbai (BOM)" placeholder="City / Code" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+                            </div>
+                            <div>
+                                <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Departure Date</label>
+                                <input type="date" class="field-input" name="multi_date[]" value="<?php echo date('Y-m-d', strtotime('+3 days')); ?>" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 600; background: #ffffff;">
+                            </div>
+                            <div style="text-align: center; padding-top: 14px;">
+                                <span style="font-size: 11px; font-weight: 800; color: #94a3b8;">LEG 1</span>
+                            </div>
+                        </div>
+
+                        <!-- Leg 2 -->
+                        <div class="multi-leg-row" data-leg="2" style="display: grid; grid-template-columns: 2fr 2fr 1.5fr 40px; gap: 12px; align-items: center; background: #f8fafc; padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1;">
+                            <div>
+                                <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Flight 2 - From</label>
+                                <input type="text" class="field-input multi-from-input" name="multi_from[]" value="Mumbai (BOM)" placeholder="City / Code" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+                            </div>
+                            <div>
+                                <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">To</label>
+                                <input type="text" class="field-input multi-to-input" name="multi_to[]" value="Bengaluru (BLR)" placeholder="City / Code" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+                            </div>
+                            <div>
+                                <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Departure Date</label>
+                                <input type="date" class="field-input" name="multi_date[]" value="<?php echo date('Y-m-d', strtotime('+6 days')); ?>" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 600; background: #ffffff;">
+                            </div>
+                            <div style="text-align: center; padding-top: 14px;">
+                                <button type="button" class="btn-remove-leg" onclick="removeMultiLeg(this)" style="background: none; border: none; color: #ef4444; font-size: 16px; cursor: pointer;" title="Remove Leg"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Controls Bar -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;">
+                        <button type="button" id="addMultiLegBtn" style="background: #eff6ff; color: #2563eb; border: 1.5px dashed #3b82f6; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
+                            <i class="fa-solid fa-circle-plus"></i> + ADD ANOTHER CITY
+                        </button>
+                        <div style="font-size: 12px; font-weight: 600; color: #475569;">
+                            <i class="fa-solid fa-circle-info" style="color: #2563eb;"></i> Single ticket checkout for all flight legs
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Submit Button -->
