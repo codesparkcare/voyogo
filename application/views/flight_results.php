@@ -134,9 +134,9 @@
                         'IX' => array('name' => 'Air India Express', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/IX.png')
                     );
                     foreach ($flightResults['Trips'][0]['Journey'] as $j) {
-                        $provider = isset($j['Provider']) ? strtoupper($j['Provider']) : 'SG';
-                        $aName = isset($airlineMap[$provider]) ? $airlineMap[$provider]['name'] : 'Airline (' . $provider . ')';
-                        $aLogo = isset($airlineMap[$provider]) ? $airlineMap[$provider]['logo'] : 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/' . $provider . '.png';
+                        $provider = isset($j['Provider']) && !empty($j['Provider']) ? strtoupper($j['Provider']) : '6E';
+                        $aName = isset($airlineMap[$provider]) ? $airlineMap[$provider]['name'] : 'IndiGo (' . $provider . ')';
+                        $aLogo = isset($airlineMap[$provider]) ? $airlineMap[$provider]['logo'] : 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png';
 
                         $flights[] = array(
                             'ResultID' => 'FL_' . rand(100, 999),

@@ -93,7 +93,7 @@ class BenzyFlightApi {
                 )
             ),
             "Parameters" => array(
-                "Airlines" => "",
+                "Airlines" => "6E",
                 "GroupType" => "",
                 "Refundable" => "",
                 "IsDirect" => false,
