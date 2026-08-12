@@ -27,6 +27,14 @@ class BenzyHotelApi {
     }
 
     /**
+     * Check if currently running on Live Production Server
+     */
+    public function isLiveServer() {
+        $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+        return (strpos($host, 'localhost') === false && strpos($host, '127.0.0.1') === false);
+    }
+
+    /**
      * Generate Signature (Bearer Token)
      */
     public function generateToken() {

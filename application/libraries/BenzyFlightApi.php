@@ -128,6 +128,14 @@ class BenzyFlightApi {
     }
 
     /**
+     * Check if currently running on Live Production Server
+     */
+    public function isLiveServer() {
+        $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+        return (strpos($host, 'localhost') === false && strpos($host, '127.0.0.1') === false);
+    }
+
+    /**
      * Helper to resolve Airline Name and Logo from Airline IATA Code
      */
     public function getAirlineDetails($code) {
