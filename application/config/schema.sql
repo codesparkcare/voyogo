@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `email_settings` (
 
 -- Default Admin User (Password: admin123)
 INSERT INTO `admin_users` (`username`, `password`, `email`)
-SELECT 'admin', '$2y$10$wN9a8iG0rVzTz7P0bQx0e.6r6K4.nZ0K3N5m3w6q8J7y6z5w4u3v2', 'admin@voyogo.com'
+SELECT 'admin', '$2y$10$cyNdwHuPyQQEtWob3FftDuNfhwqmMkmh5Li4i.bn2CfkgU0nLHEuO', 'admin@voyogo.com'
 FROM DUAL WHERE NOT EXISTS (SELECT * FROM `admin_users` WHERE `username` = 'admin');
 
 -- Default Email Settings row
