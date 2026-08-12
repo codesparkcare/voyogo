@@ -4,10 +4,192 @@
 
 document.addEventListener('DOMContentLoaded', function() {
   
-  // 1. Swap From and To sectors in Flight Search
+  // =========================================================================
+  // 1. AIRPORT DATABASE & INTERACTIVE AUTOCOMPLETE MODAL
+  // =========================================================================
+  const airportsData = [
+    { city: "Delhi", code: "DEL", airport: "Indira Gandhi Intl Airport", country: "India", popular: true },
+    { city: "Mumbai", code: "BOM", airport: "Chhatrapati Shivaji Maharaj Intl", country: "India", popular: true },
+    { city: "Bengaluru", code: "BLR", airport: "Kempegowda Intl Airport", country: "India", popular: true },
+    { city: "Goa (Dabolim)", code: "GOI", airport: "Dabolim Airport", country: "India", popular: true },
+    { city: "Goa (Mopa)", code: "GOX", airport: "Manohar International Airport", country: "India", popular: true },
+    { city: "Dubai", code: "DXB", airport: "Dubai International Airport", country: "UAE", popular: true },
+    { city: "London", code: "LHR", airport: "Heathrow Airport", country: "UK", popular: true },
+    { city: "Singapore", code: "SIN", airport: "Changi Airport", country: "Singapore", popular: true },
+    { city: "Hyderabad", code: "HYD", airport: "Rajiv Gandhi Intl Airport", country: "India", popular: true },
+    { city: "Chennai", code: "MAA", airport: "Chennai International Airport", country: "India", popular: true },
+    { city: "Kolkata", code: "CCU", airport: "Netaji Subhash Chandra Bose Intl", country: "India", popular: false },
+    { city: "Ahmedabad", code: "AMD", airport: "Sardar Vallabhbhai Patel Intl", country: "India", popular: false },
+    { city: "Kochi", code: "COK", airport: "Cochin International Airport", country: "India", popular: false },
+    { city: "Pune", code: "PNQ", airport: "Pune Airport", country: "India", popular: false },
+    { city: "Jaipur", code: "JAI", airport: "Jaipur International Airport", country: "India", popular: false },
+    { city: "Lucknow", code: "LKO", airport: "Chaudhary Charan Singh Intl", country: "India", popular: false },
+    { city: "Chandigarh", code: "IXC", airport: "Shaheed Bhagat Singh Intl", country: "India", popular: false },
+    { city: "Srinagar", code: "SXR", airport: "Sheikh ul-Alam Intl Airport", country: "India", popular: false },
+    { city: "Bangkok", code: "BKK", airport: "Suvarnabhumi Airport", country: "Thailand", popular: false },
+    { city: "New York", code: "JFK", airport: "John F. Kennedy Intl Airport", country: "USA", popular: false },
+    { city: "Kuala Lumpur", code: "KUL", airport: "Kuala Lumpur Intl Airport", country: "Malaysia", popular: false },
+    { city: "Kathmandu", code: "KTM", airport: "Tribhuvan International Airport", country: "Nepal", popular: false }
+  ];
+
+  let currentTargetSector = 'from'; // 'from' or 'to'
+
+  const fromCityBox = document.getElementById('fromCityBox');
+  const toCityBox = document.getElementById('toCityBox');
+  const airportModalOverlay = document.getElementById('airportModalOverlay');
+  const closeAirportModal = document.getElementById('closeAirportModal');
+  const airportModalTitle = document.getElementById('airportModalTitle');
+  const airportSearchInput = document.getElementById('airportSearchInput');
+  const popularAirportsPills = document.getElementById('popularAirportsPills');
+  const airportsListContainer = document.getElementById('airportsListContainer');
+
+  if (airportModalOverlay) {
+    // Open FROM Modal
+    if (fromCityBox) {
+      fromCityBox.addEventListener('click', function() {
+        currentTargetSector = 'from';
+        if (airportModalTitle) airportModalTitle.textContent = 'Select Departure Airport (FROM)';
+        openAirportModal();
+      });
+    }
+
+    // Open TO Modal
+    if (toCityBox) {
+      toCityBox.addEventListener('click', function() {
+        currentTargetSector = 'to';
+        if (airportModalTitle) airportModalTitle.textContent = 'Select Destination Airport (TO)';
+        openAirportModal();
+      });
+    }
+
+    // Close Modal
+    if (closeAirportModal) {
+      closeAirportModal.addEventListener('click', closeAirportModalFn);
+    }
+    airportModalOverlay.addEventListener('click', function(e) {
+      if (e.target === airportModalOverlay) closeAirportModalFn();
+    });
+
+    // Real-Time Search Filter
+    if (airportSearchInput) {
+      airportSearchInput.addEventListener('input', function() {
+        renderAirportsList(this.value.trim().toLowerCase());
+      });
+    }
+  }
+
+  function openAirportModal() {
+    airportModalOverlay.classList.add('open');
+    if (airportSearchInput) {
+      airportSearchInput.value = '';
+      setTimeout(() => airportSearchInput.focus(), 100);
+    }
+    renderPopularPills();
+    renderAirportsList('');
+  }
+
+  function closeAirportModalFn() {
+    airportModalOverlay.classList.remove('open');
+  }
+
+  function renderPopularPills() {
+    if (!popularAirportsPills) return;
+    popularAirportsPills.innerHTML = '';
+    const populars = airportsData.filter(a => a.popular);
+    populars.forEach(item => {
+      const pill = document.createElement('button');
+      pill.type = 'button';
+      pill.className = 'popular-pill-btn';
+      pill.style.cssText = 'background: #f1f5f9; border: 1px solid #cbd5e1; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #0d3470;';
+      pill.innerHTML = `<i class="fa-solid fa-plane-up" style="color:#ef4444; margin-right:4px;"></i> ${item.city} <strong>(${item.code})</strong>`;
+      pill.addEventListener('click', () => selectAirport(item));
+      popularAirportsPills.appendChild(pill);
+    });
+  }
+
+  function renderAirportsList(query) {
+    if (!airportsListContainer) return;
+    airportsListContainer.innerHTML = '';
+
+    const filtered = airportsData.filter(item => {
+      if (!query) return true;
+      return (
+        item.city.toLowerCase().includes(query) ||
+        item.code.toLowerCase().includes(query) ||
+        item.airport.toLowerCase().includes(query) ||
+        item.country.toLowerCase().includes(query)
+      );
+    });
+
+    if (filtered.length === 0) {
+      airportsListContainer.innerHTML = `
+        <div style="padding: 24px; text-align: center; color: #64748b;">
+          <i class="fa-solid fa-plane-slash" style="font-size: 24px; color: #ef4444; margin-bottom: 8px;"></i>
+          <p style="margin: 0; font-size: 13px;">No airports found matching "<strong>${query}</strong>"</p>
+        </div>`;
+      return;
+    }
+
+    filtered.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'airport-item-row';
+      div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: background 0.15s;';
+      
+      div.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div style="width: 36px; height: 36px; background: #eff6ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #2563eb;">
+            <i class="fa-solid fa-plane"></i>
+          </div>
+          <div>
+            <div style="font-weight: 700; font-size: 15px; color: #09204b;">${item.city}, <span style="font-weight: 400; color: #64748b; font-size: 13px;">${item.country}</span></div>
+            <div style="font-size: 12px; color: #64748b;">${item.airport}</div>
+          </div>
+        </div>
+        <div>
+          <span style="background: #fef2f2; color: #ef4444; font-weight: 900; font-size: 14px; padding: 4px 10px; border-radius: 6px; border: 1px solid #fca5a5; font-family: monospace;">${item.code}</span>
+        </div>
+      `;
+
+      div.addEventListener('mouseover', () => div.style.background = '#f8fafc');
+      div.addEventListener('mouseout', () => div.style.background = '#ffffff');
+      div.addEventListener('click', () => selectAirport(item));
+
+      airportsListContainer.appendChild(div);
+    });
+  }
+
+  function selectAirport(item) {
+    const formattedVal = `${item.city} (${item.code})`;
+    const subtext = item.airport;
+
+    if (currentTargetSector === 'from') {
+      const fromInput = document.getElementById('fromCity');
+      const fromText = document.getElementById('fromCityText');
+      const fromSub = document.getElementById('fromCitySub');
+
+      if (fromInput) fromInput.value = formattedVal;
+      if (fromText) fromText.textContent = formattedVal;
+      if (fromSub) fromSub.textContent = subtext;
+    } else {
+      const toInput = document.getElementById('toCity');
+      const toText = document.getElementById('toCityText');
+      const toSub = document.getElementById('toCitySub');
+
+      if (toInput) toInput.value = formattedVal;
+      if (toText) toText.textContent = formattedVal;
+      if (toSub) toSub.textContent = subtext;
+    }
+
+    closeAirportModalFn();
+  }
+
+  // =========================================================================
+  // 2. SWAP FROM AND TO SECTORS
+  // =========================================================================
   const swapBtn = document.getElementById('swapCitiesBtn');
   if (swapBtn) {
-    swapBtn.addEventListener('click', function() {
+    swapBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
       const fromInput = document.getElementById('fromCity');
       const toInput = document.getElementById('toCity');
       const fromText = document.getElementById('fromCityText');
@@ -33,7 +215,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 2. Toggle Trip Type (One Way / Round Trip / Multi City)
+  // =========================================================================
+  // 3. TRIP TYPE TOGGLE (One Way / Round Trip / Multi City)
+  // =========================================================================
   const tripTypeRadios = document.querySelectorAll('input[name="tripType"]');
   const returnDateBox = document.getElementById('returnDateBox');
   if (tripTypeRadios.length > 0 && returnDateBox) {
@@ -54,7 +238,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 3. Passenger Counter Popup Toggle
+  // =========================================================================
+  // 4. PASSENGER COUNTER DROPDOWN LOGIC
+  // =========================================================================
   const passengerBox = document.getElementById('passengerSelectBox');
   const passengerDropdown = document.getElementById('passengerDropdown');
   if (passengerBox && passengerDropdown) {
@@ -70,7 +256,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 4. Passenger Counter Logic (+ / - buttons)
   let adults = 1;
   let children = 0;
   let infants = 0;
@@ -110,7 +295,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // 5. FAQ Accordion Toggle
+  // =========================================================================
+  // 5. FAQ ACCORDION
+  // =========================================================================
   const faqQuestions = document.querySelectorAll('.faq-question');
   faqQuestions.forEach(question => {
     question.addEventListener('click', function() {
@@ -119,7 +306,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 6. Login / Register Modal Dialog
+  // =========================================================================
+  // 6. LOGIN / REGISTER MODAL DIALOG
+  // =========================================================================
   const loginModalBtn = document.getElementById('loginModalBtn');
   const loginModal = document.getElementById('loginModal');
   const closeLoginModal = document.getElementById('closeLoginModal');
@@ -142,37 +331,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 7. Hotel Filtering Logic (Hotel Page)
-  const starFilterInputs = document.querySelectorAll('.star-filter-checkbox');
-  const hotelCards = document.querySelectorAll('.hotel-card');
-
-  if (starFilterInputs.length > 0 && hotelCards.length > 0) {
-    starFilterInputs.forEach(input => {
-      input.addEventListener('change', filterHotels);
-    });
-  }
-
-  function filterHotels() {
-    const checkedStars = Array.from(starFilterInputs)
-      .filter(i => i.checked)
-      .map(i => parseInt(i.value));
-
-    hotelCards.forEach(card => {
-      const cardStar = parseInt(card.getAttribute('data-star') || 0);
-      if (checkedStars.length === 0 || checkedStars.includes(cardStar)) {
-        card.style.display = 'grid';
-      } else {
-        card.style.display = 'none';
-      }
-    });
-  }
-
-  // Reset Filters Button
-  const resetFiltersBtn = document.getElementById('resetFiltersBtn');
-  if (resetFiltersBtn) {
-    resetFiltersBtn.addEventListener('click', function() {
-      starFilterInputs.forEach(i => i.checked = false);
-      filterHotels();
-    });
-  }
 });

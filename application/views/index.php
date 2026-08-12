@@ -43,7 +43,7 @@
                     <!-- From & To Group with Centered Swap Button -->
                     <div class="from-to-group">
                         <!-- From City -->
-                        <div class="input-box">
+                        <div class="input-box" id="fromCityBox" style="cursor: pointer;">
                             <div class="input-label"><i class="fa-solid fa-plane-departure"></i> From</div>
                             <div class="input-val" id="fromCityText">Delhi (DEL)</div>
                             <input type="hidden" name="from_city" id="fromCity" value="Delhi (DEL)">
@@ -56,7 +56,7 @@
                         </button>
 
                         <!-- To City -->
-                        <div class="input-box">
+                        <div class="input-box" id="toCityBox" style="cursor: pointer;">
                             <div class="input-label"><i class="fa-solid fa-plane-arrival"></i> To</div>
                             <div class="input-val" id="toCityText">Mumbai (BOM)</div>
                             <input type="hidden" name="to_city" id="toCity" value="Mumbai (BOM)">
@@ -334,3 +334,36 @@
         </div>
     </div>
 </section>
+
+<!-- Airport Selector Modal -->
+<div class="modal-backdrop" id="airportModalOverlay" style="z-index: 9999;">
+    <div class="modal-box" style="max-width: 600px; padding: 24px; border-radius: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div>
+                <h3 style="font-family: var(--font-heading); font-size: 20px; color: var(--primary-dark); margin: 0;" id="airportModalTitle">Select Departure Airport</h3>
+                <span style="font-size: 12px; color: #64748b;" id="airportModalSub">Search by City Name, Airport Name, or 3-letter IATA Code</span>
+            </div>
+            <button type="button" class="modal-close" id="closeAirportModal" style="background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Search Input -->
+        <div style="position: relative; margin-bottom: 16px;">
+            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 16px; top: 15px; color: #0d3470;"></i>
+            <input type="text" id="airportSearchInput" placeholder="Type city or airport (e.g. Delhi, BOM, Goa, Dubai, London)..." style="width: 100%; padding: 12px 16px 12px 46px; border: 2px solid #0d3470; border-radius: 10px; font-size: 15px; font-weight: 600; outline: none; box-shadow: 0 4px 12px rgba(13, 52, 112, 0.1);">
+        </div>
+
+        <!-- Popular Cities Quick Select Pills -->
+        <div style="margin-bottom: 16px;">
+            <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">POPULAR DESTINATIONS</span>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="popularAirportsPills">
+                <!-- Javascript will inject popular pills -->
+            </div>
+        </div>
+
+        <!-- Results List -->
+        <div style="max-height: 280px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 10px; background: #ffffff;" id="airportsListContainer">
+            <!-- Dynamic airport items -->
+        </div>
+    </div>
+</div>
+
