@@ -23,7 +23,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/voyogo/';
+// Dynamic Auto-Detect Base URL for Localhost & Live Server
+$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ? 'https://' : 'http://';
+$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
+if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+    $config['base_url'] = $protocol . $host . '/voyogo/';
+} else {
+    $config['base_url'] = $protocol . $host . '/';
+}
+
 
 /*
 |--------------------------------------------------------------------------
