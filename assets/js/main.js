@@ -138,6 +138,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // Render City List Items
   function renderList(target, query) {
     const container = (target === 'from') ? fromCityList : toCityList;
+    const popularSection = (target === 'from') ? document.getElementById('fromPopularSection') : document.getElementById('toPopularSection');
+
+    if (popularSection) {
+      popularSection.style.display = query ? 'none' : 'block';
+    }
+
     if (!container) return;
     container.innerHTML = '';
 
@@ -152,21 +158,21 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     if (filtered.length === 0) {
-      container.innerHTML = `<div style="padding: 12px; font-size: 12px; color: #64748b; text-align: center;">No cities found for "${query}"</div>`;
+      container.innerHTML = `<div style="padding: 14px; font-size: 12px; color: #64748b; text-align: center;"><i class="fa-solid fa-magnifying-glass" style="margin-right:4px;"></i> No airports found for "${query}"</div>`;
       return;
     }
 
     filtered.forEach(item => {
       const div = document.createElement('div');
-      div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid #f1f5f9; cursor: pointer; font-size: 12px;';
+      div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid #f1f5f9; cursor: pointer; font-size: 12px;';
       
       div.innerHTML = `
         <div>
-          <div style="font-weight: 700; color: #09204b;">${item.city}, <span style="font-weight: 400; color: #64748b;">${item.country}</span></div>
-          <div style="font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">${item.airport}</div>
+          <div style="font-weight: 700; color: #09204b; font-size: 13px;">${item.city}, <span style="font-weight: 400; color: #64748b;">${item.country}</span></div>
+          <div style="font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 210px;">${item.airport}</div>
         </div>
         <div>
-          <span style="background: #fef2f2; color: #ef4444; font-weight: 800; font-size: 11px; padding: 2px 6px; border-radius: 4px; font-family: monospace;">${item.code}</span>
+          <span style="background: #fef2f2; color: #ef4444; font-weight: 900; font-size: 12px; padding: 3px 8px; border-radius: 4px; font-family: monospace; border: 1px solid #fca5a5;">${item.code}</span>
         </div>
       `;
 

@@ -279,7 +279,7 @@ ul {
   position: relative;
   background: linear-gradient(180deg, var(--primary-navy) 0%, #0e2d5c 40%, var(--bg-light) 100%);
   padding: 40px 0 60px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .hero-bg-overlay {

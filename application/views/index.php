@@ -50,14 +50,16 @@
                             <div class="input-subtext" id="fromCitySub">Indira Gandhi Intl Airport</div>
 
                             <!-- Inline Autocomplete Dropdown Popup -->
-                            <div class="dropdown-popup city-autocomplete-popup" id="fromCityDropdown" style="width: 320px; padding: 14px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); background: #ffffff; text-align: left; z-index: 2000;">
+                            <div class="dropdown-popup city-autocomplete-popup" id="fromCityDropdown" style="width: 340px; padding: 14px; border-radius: 12px; box-shadow: 0 12px 35px rgba(0,0,0,0.3); background: #ffffff; text-align: left; z-index: 99999;">
                                 <div style="position: relative; margin-bottom: 10px;" onclick="event.stopPropagation();">
                                     <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 10px; color: #0d3470; font-size: 13px;"></i>
-                                    <input type="text" class="city-search-input" id="fromSearchInput" placeholder="Type city or airport (e.g. Delhi, BOM)..." style="width: 100%; padding: 7px 12px 7px 32px; border: 1.5px solid #0d3470; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none;">
+                                    <input type="text" class="city-search-input" id="fromSearchInput" placeholder="Type city or airport (e.g. GOX, Delhi, BOM)..." style="width: 100%; padding: 7px 12px 7px 32px; border: 1.5px solid #0d3470; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none;">
                                 </div>
-                                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Popular Destinations</div>
-                                <div class="popular-pills-wrap" id="fromPopularPills" style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px;"></div>
-                                <div class="city-list-wrap" id="fromCityList" style="max-height: 200px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;"></div>
+                                <div id="fromPopularSection">
+                                    <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Popular Destinations</div>
+                                    <div class="popular-pills-wrap" id="fromPopularPills" style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px;"></div>
+                                </div>
+                                <div class="city-list-wrap" id="fromCityList" style="max-height: 220px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;"></div>
                             </div>
                         </div>
 
@@ -74,14 +76,16 @@
                             <div class="input-subtext" id="toCitySub">Chhatrapati Shivaji Maharaj Intl</div>
 
                             <!-- Inline Autocomplete Dropdown Popup -->
-                            <div class="dropdown-popup city-autocomplete-popup" id="toCityDropdown" style="width: 320px; padding: 14px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); background: #ffffff; text-align: left; z-index: 2000;">
+                            <div class="dropdown-popup city-autocomplete-popup" id="toCityDropdown" style="width: 340px; padding: 14px; border-radius: 12px; box-shadow: 0 12px 35px rgba(0,0,0,0.3); background: #ffffff; text-align: left; z-index: 99999;">
                                 <div style="position: relative; margin-bottom: 10px;" onclick="event.stopPropagation();">
                                     <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 10px; color: #0d3470; font-size: 13px;"></i>
-                                    <input type="text" class="city-search-input" id="toSearchInput" placeholder="Type city or airport (e.g. Mumbai, GOI)..." style="width: 100%; padding: 7px 12px 7px 32px; border: 1.5px solid #0d3470; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none;">
+                                    <input type="text" class="city-search-input" id="toSearchInput" placeholder="Type city or airport (e.g. GOX, Mumbai, GOI)..." style="width: 100%; padding: 7px 12px 7px 32px; border: 1.5px solid #0d3470; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none;">
                                 </div>
-                                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Popular Destinations</div>
-                                <div class="popular-pills-wrap" id="toPopularPills" style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px;"></div>
-                                <div class="city-list-wrap" id="toCityList" style="max-height: 200px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;"></div>
+                                <div id="toPopularSection">
+                                    <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Popular Destinations</div>
+                                    <div class="popular-pills-wrap" id="toPopularPills" style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px;"></div>
+                                </div>
+                                <div class="city-list-wrap" id="toCityList" style="max-height: 220px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;"></div>
                             </div>
                         </div>
                     </div>
