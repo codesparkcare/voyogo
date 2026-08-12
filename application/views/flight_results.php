@@ -124,22 +124,35 @@
                 if (isset($flightResults['Flights']) && is_array($flightResults['Flights'])) {
                     $flights = $flightResults['Flights'];
                 } elseif (isset($flightResults['Trips'][0]['Journey']) && is_array($flightResults['Trips'][0]['Journey'])) {
+                    $airlineMap = array(
+                        '6E' => array('name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png'),
+                        'SG' => array('name' => 'SpiceJet', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png'),
+                        'AI' => array('name' => 'Air India', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png'),
+                        'UK' => array('name' => 'Vistara', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/UK.png'),
+                        'QP' => array('name' => 'Akasa Air', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png'),
+                        'I5' => array('name' => 'Air India Express', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/I5.png'),
+                        'IX' => array('name' => 'Air India Express', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/IX.png')
+                    );
                     foreach ($flightResults['Trips'][0]['Journey'] as $j) {
+                        $provider = isset($j['Provider']) ? strtoupper($j['Provider']) : 'SG';
+                        $aName = isset($airlineMap[$provider]) ? $airlineMap[$provider]['name'] : 'Airline (' . $provider . ')';
+                        $aLogo = isset($airlineMap[$provider]) ? $airlineMap[$provider]['logo'] : 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/' . $provider . '.png';
+
                         $flights[] = array(
                             'ResultID' => 'FL_' . rand(100, 999),
-                            'AirlineName' => $j['Provider'] == '6E' ? 'IndiGo' : 'Airlines',
-                            'AirlineLogo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/' . $j['Provider'] . '.png',
-                            'FlightNumber' => $j['Provider'] . '-' . $j['FlightNo'],
+                            'AirlineName' => $aName,
+                            'AirlineLogo' => $aLogo,
+                            'FlightNumber' => $provider . '-' . (isset($j['FlightNo']) ? $j['FlightNo'] : rand(100, 999)),
                             'FromCode' => $search_query['from_code'],
                             'ToCode' => $search_query['to_code'],
-                            'DepartureTime' => date('H:i', strtotime($j['DepartureTime'])),
-                            'ArrivalTime' => date('H:i', strtotime($j['ArrivalTime'])),
-                            'Duration' => isset($j['Duration']) ? $j['Duration'] : '2h 15m',
+                            'DepartureTime' => isset($j['DepartureTime']) ? date('H:i', strtotime($j['DepartureTime'])) : '16:30',
+                            'ArrivalTime' => isset($j['ArrivalTime']) ? date('H:i', strtotime($j['ArrivalTime'])) : '21:50',
+                            'Duration' => isset($j['Duration']) ? $j['Duration'] : '5h 20m',
                             'Stops' => 0,
-                            'Price' => isset($j['GrossFare']) ? $j['GrossFare'] : 5350,
+                            'Price' => isset($j['GrossFare']) ? (float)$j['GrossFare'] : 12377,
                             'Baggage' => '15 Kgs',
-                            'Refundable' => false,
-                            'SeatsLeft' => rand(2, 7)
+                            'Refundable' => true,
+                            'SeatsLeft' => rand(3, 9)
                         );
                     }
                 }

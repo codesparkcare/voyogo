@@ -128,11 +128,35 @@ class BenzyFlightApi {
     }
 
     /**
-     * Check if currently running on Live Production Server
+     * Helper to resolve Airline Name and Logo from Airline IATA Code
      */
-    public function isLiveServer() {
-        $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
-        return (strpos($host, 'localhost') === false && strpos($host, '127.0.0.1') === false);
+    public function getAirlineDetails($code) {
+        $code = strtoupper(trim($code));
+        $map = array(
+            '6E' => array('name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png'),
+            'SG' => array('name' => 'SpiceJet', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png'),
+            'AI' => array('name' => 'Air India', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png'),
+            'UK' => array('name' => 'Vistara', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/UK.png'),
+            'QP' => array('name' => 'Akasa Air', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png'),
+            'I5' => array('name' => 'AirAsia / AIX', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/I5.png'),
+            'IX' => array('name' => 'Air India Express', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/IX.png'),
+            'G8' => array('name' => 'Go First', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/G8.png'),
+            'S5' => array('name' => 'Star Air', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/S5.png'),
+            'EK' => array('name' => 'Emirates', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/EK.png'),
+            'EY' => array('name' => 'Etihad Airways', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/EY.png'),
+            'QR' => array('name' => 'Qatar Airways', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QR.png'),
+            'FZ' => array('name' => 'flydubai', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/FZ.png'),
+            'SQ' => array('name' => 'Singapore Airlines', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SQ.png')
+        );
+
+        if (isset($map[$code])) {
+            return $map[$code];
+        }
+
+        return array(
+            'name' => 'Airline (' . $code . ')',
+            'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/' . $code . '.png'
+        );
     }
 
     /**
@@ -167,15 +191,24 @@ class BenzyFlightApi {
                     $liveFlights = array();
 
                     if (!empty($resData['Flights']) && is_array($resData['Flights'])) {
-                        $liveFlights = $resData['Flights'];
+                        foreach ($resData['Flights'] as $f) {
+                            $code = isset($f['AirlineCode']) ? $f['AirlineCode'] : '6E';
+                            $details = $this->getAirlineDetails($code);
+                            $f['AirlineName'] = $details['name'];
+                            $f['AirlineLogo'] = $details['logo'];
+                            $liveFlights[] = $f;
+                        }
                     } elseif (!empty($resData['Journeys']) && is_array($resData['Journeys'])) {
                         foreach ($resData['Journeys'] as $idx => $j) {
+                            $code = isset($j['AirlineCode']) ? $j['AirlineCode'] : (isset($j['Provider']) ? $j['Provider'] : '6E');
+                            $details = $this->getAirlineDetails($code);
+
                             $liveFlights[] = array(
                                 'ResultID' => isset($j['ResultID']) ? $j['ResultID'] : ('BENZY_' . ($idx + 101)),
-                                'AirlineCode' => isset($j['AirlineCode']) ? $j['AirlineCode'] : (isset($j['Provider']) ? $j['Provider'] : '6E'),
-                                'AirlineName' => isset($j['AirlineName']) ? $j['AirlineName'] : (isset($j['Provider']) && $j['Provider'] == '6E' ? 'IndiGo' : 'IndiGo Airlines'),
-                                'AirlineLogo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/' . (isset($j['AirlineCode']) ? $j['AirlineCode'] : '6E') . '.png',
-                                'FlightNumber' => isset($j['FlightNumber']) ? $j['FlightNumber'] : (isset($j['FlightNo']) ? '6E-' . $j['FlightNo'] : '6E-' . rand(100, 999)),
+                                'AirlineCode' => $code,
+                                'AirlineName' => $details['name'],
+                                'AirlineLogo' => $details['logo'],
+                                'FlightNumber' => isset($j['FlightNumber']) ? $j['FlightNumber'] : (isset($j['FlightNo']) ? $code . '-' . $j['FlightNo'] : $code . '-' . rand(100, 999)),
                                 'FromCode' => $from,
                                 'ToCode' => $to,
                                 'DepartureTime' => isset($j['DepartureTime']) ? date('H:i', strtotime($j['DepartureTime'])) : '08:00',
@@ -193,12 +226,14 @@ class BenzyFlightApi {
                         }
                     } elseif (!empty($resData['Trips'][0]['Journey']) && is_array($resData['Trips'][0]['Journey'])) {
                         foreach ($resData['Trips'][0]['Journey'] as $idx => $j) {
-                            $provider = isset($j['Provider']) ? $j['Provider'] : '6E';
+                            $provider = isset($j['Provider']) ? $j['Provider'] : (isset($j['AirlineCode']) ? $j['AirlineCode'] : '6E');
+                            $details = $this->getAirlineDetails($provider);
+
                             $liveFlights[] = array(
                                 'ResultID' => 'BENZY_TRIP_' . ($idx + 101),
                                 'AirlineCode' => $provider,
-                                'AirlineName' => ($provider == '6E') ? 'IndiGo' : 'Airlines (' . $provider . ')',
-                                'AirlineLogo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/' . $provider . '.png',
+                                'AirlineName' => $details['name'],
+                                'AirlineLogo' => $details['logo'],
                                 'FlightNumber' => isset($j['FlightNo']) ? $provider . '-' . $j['FlightNo'] : $provider . '-101',
                                 'FromCode' => $from,
                                 'ToCode' => $to,
