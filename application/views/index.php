@@ -105,22 +105,27 @@
                     </div>
 
                     <!-- Passengers & Cabin Class Select -->
-                    <div class="input-box" id="passengerSelectBox">
+                    <div class="input-box" id="passengerSelectBox" style="cursor: pointer; position: relative;">
                         <div class="input-label"><i class="fa-solid fa-users"></i> Travelers & Class</div>
                         <div class="input-val" id="passengerSummary">1 Traveler, Economy</div>
                         <div class="input-subtext">Click to change</div>
 
+                        <input type="hidden" name="adults" id="hiddenAdults" value="1">
+                        <input type="hidden" name="children" id="hiddenChildren" value="0">
+                        <input type="hidden" name="infants" id="hiddenInfants" value="0">
+                        <input type="hidden" name="cabin_class" id="hiddenCabinClass" value="Economy">
+
                         <!-- Dropdown Popup -->
-                        <div class="dropdown-popup" id="passengerDropdown">
+                        <div class="dropdown-popup" id="passengerDropdown" style="z-index: 99999; text-align: left;" onclick="event.stopPropagation();">
                             <div class="counter-row">
                                 <div class="counter-info">
                                     <h4>Adults</h4>
                                     <p>12+ years</p>
                                 </div>
                                 <div class="counter-controls">
-                                    <button type="button" class="counter-btn" onclick="updatePassengers('adult', -1)">-</button>
+                                    <button type="button" class="counter-btn" onclick="event.stopPropagation(); updatePassengers('adult', -1);">-</button>
                                     <span class="counter-val" id="adultCount">1</span>
-                                    <button type="button" class="counter-btn" onclick="updatePassengers('adult', 1)">+</button>
+                                    <button type="button" class="counter-btn" onclick="event.stopPropagation(); updatePassengers('adult', 1);">+</button>
                                 </div>
                             </div>
                             <div class="counter-row">
@@ -129,9 +134,9 @@
                                     <p>2-12 years</p>
                                 </div>
                                 <div class="counter-controls">
-                                    <button type="button" class="counter-btn" onclick="updatePassengers('child', -1)">-</button>
+                                    <button type="button" class="counter-btn" onclick="event.stopPropagation(); updatePassengers('child', -1);">-</button>
                                     <span class="counter-val" id="childCount">0</span>
-                                    <button type="button" class="counter-btn" onclick="updatePassengers('child', 1)">+</button>
+                                    <button type="button" class="counter-btn" onclick="event.stopPropagation(); updatePassengers('child', 1);">+</button>
                                 </div>
                             </div>
                             <div class="counter-row">
@@ -140,14 +145,14 @@
                                     <p>Below 2 years</p>
                                 </div>
                                 <div class="counter-controls">
-                                    <button type="button" class="counter-btn" onclick="updatePassengers('infant', -1)">-</button>
+                                    <button type="button" class="counter-btn" onclick="event.stopPropagation(); updatePassengers('infant', -1);">-</button>
                                     <span class="counter-val" id="infantCount">0</span>
-                                    <button type="button" class="counter-btn" onclick="updatePassengers('infant', 1)">+</button>
+                                    <button type="button" class="counter-btn" onclick="event.stopPropagation(); updatePassengers('infant', 1);">+</button>
                                 </div>
                             </div>
-                            <div style="margin-top: 14px;">
-                                <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px;">Cabin Class</label>
-                                <select class="field-input" id="cabinClassSelect" style="padding: 6px; border: 1px solid var(--border-color); border-radius: 6px;">
+                            <div style="margin-top: 14px;" onclick="event.stopPropagation();">
+                                <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px; color: #0d3470;">Cabin Class</label>
+                                <select class="field-input" id="cabinClassSelect" style="width: 100%; padding: 8px 12px; border: 1.5px solid #0d3470; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;" onclick="event.stopPropagation();">
                                     <option value="Economy">Economy</option>
                                     <option value="Premium Economy">Premium Economy</option>
                                     <option value="Business">Business</option>

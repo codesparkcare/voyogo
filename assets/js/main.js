@@ -279,6 +279,10 @@ document.addEventListener('DOMContentLoaded', function() {
       closeAllDropdowns();
       if (!isOpen) passengerDropdown.classList.add('open');
     });
+
+    passengerDropdown.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
   }
 
   let adults = 1;
@@ -291,24 +295,37 @@ document.addEventListener('DOMContentLoaded', function() {
   const infantValEl = document.getElementById('infantCount');
   const passengerSummaryEl = document.getElementById('passengerSummary');
 
+  const hiddenAdults = document.getElementById('hiddenAdults');
+  const hiddenChildren = document.getElementById('hiddenChildren');
+  const hiddenInfants = document.getElementById('hiddenInfants');
+  const hiddenCabinClass = document.getElementById('hiddenCabinClass');
+
   window.updatePassengers = function(type, change) {
     if (type === 'adult') {
       adults = Math.max(1, adults + change);
       if (adultValEl) adultValEl.textContent = adults;
+      if (hiddenAdults) hiddenAdults.value = adults;
     } else if (type === 'child') {
       children = Math.max(0, children + change);
       if (childValEl) childValEl.textContent = children;
+      if (hiddenChildren) hiddenChildren.value = children;
     } else if (type === 'infant') {
       infants = Math.max(0, Math.min(adults, infants + change));
       if (infantValEl) infantValEl.textContent = infants;
+      if (hiddenInfants) hiddenInfants.value = infants;
     }
     updateSummaryText();
   };
 
   const classSelect = document.getElementById('cabinClassSelect');
   if (classSelect) {
-    classSelect.addEventListener('change', function() {
+    classSelect.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+    classSelect.addEventListener('change', function(e) {
+      e.stopPropagation();
       travelClass = this.value;
+      if (hiddenCabinClass) hiddenCabinClass.value = travelClass;
       updateSummaryText();
     });
   }
