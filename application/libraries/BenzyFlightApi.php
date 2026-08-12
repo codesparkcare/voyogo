@@ -128,10 +128,20 @@ class BenzyFlightApi {
     }
 
     /**
+     * Check if currently running on Live Production Server
+     */
+    public function isLiveServer() {
+        $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+        return (strpos($host, 'localhost') === false && strpos($host, '127.0.0.1') === false);
+    }
+
+    /**
      * Fetch flight search results using TUI
      */
     public function getExpSearch($tui, $from = 'DEL', $to = 'BOM', $date = '') {
         if (empty($date)) $date = date('Y-m-d', strtotime('+3 days'));
+
+        $isLive = $this->isLiveServer();
 
         if (strpos($tui, 'MOCK_TUI_') === false) {
             $token = $this->generateToken();
@@ -162,10 +172,10 @@ class BenzyFlightApi {
                         foreach ($resData['Journeys'] as $idx => $j) {
                             $liveFlights[] = array(
                                 'ResultID' => isset($j['ResultID']) ? $j['ResultID'] : ('BENZY_' . ($idx + 101)),
-                                'AirlineCode' => isset($j['AirlineCode']) ? $j['AirlineCode'] : '6E',
-                                'AirlineName' => isset($j['AirlineName']) ? $j['AirlineName'] : 'IndiGo',
+                                'AirlineCode' => isset($j['AirlineCode']) ? $j['AirlineCode'] : (isset($j['Provider']) ? $j['Provider'] : '6E'),
+                                'AirlineName' => isset($j['AirlineName']) ? $j['AirlineName'] : (isset($j['Provider']) && $j['Provider'] == '6E' ? 'IndiGo' : 'IndiGo Airlines'),
                                 'AirlineLogo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/' . (isset($j['AirlineCode']) ? $j['AirlineCode'] : '6E') . '.png',
-                                'FlightNumber' => isset($j['FlightNumber']) ? $j['FlightNumber'] : '6E-' . rand(100, 999),
+                                'FlightNumber' => isset($j['FlightNumber']) ? $j['FlightNumber'] : (isset($j['FlightNo']) ? '6E-' . $j['FlightNo'] : '6E-' . rand(100, 999)),
                                 'FromCode' => $from,
                                 'ToCode' => $to,
                                 'DepartureTime' => isset($j['DepartureTime']) ? date('H:i', strtotime($j['DepartureTime'])) : '08:00',
@@ -181,11 +191,36 @@ class BenzyFlightApi {
                                 'SeatsLeft' => isset($j['SeatsLeft']) ? (int)$j['SeatsLeft'] : rand(3, 9)
                             );
                         }
+                    } elseif (!empty($resData['Trips'][0]['Journey']) && is_array($resData['Trips'][0]['Journey'])) {
+                        foreach ($resData['Trips'][0]['Journey'] as $idx => $j) {
+                            $provider = isset($j['Provider']) ? $j['Provider'] : '6E';
+                            $liveFlights[] = array(
+                                'ResultID' => 'BENZY_TRIP_' . ($idx + 101),
+                                'AirlineCode' => $provider,
+                                'AirlineName' => ($provider == '6E') ? 'IndiGo' : 'Airlines (' . $provider . ')',
+                                'AirlineLogo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/' . $provider . '.png',
+                                'FlightNumber' => isset($j['FlightNo']) ? $provider . '-' . $j['FlightNo'] : $provider . '-101',
+                                'FromCode' => $from,
+                                'ToCode' => $to,
+                                'DepartureTime' => isset($j['DepartureTime']) ? date('H:i', strtotime($j['DepartureTime'])) : '08:00',
+                                'ArrivalTime' => isset($j['ArrivalTime']) ? date('H:i', strtotime($j['ArrivalTime'])) : '10:15',
+                                'Duration' => isset($j['Duration']) ? $j['Duration'] : '2h 15m',
+                                'Stops' => 0,
+                                'Price' => isset($j['GrossFare']) ? (float)$j['GrossFare'] : (isset($j['Price']) ? (float)$j['Price'] : 5350),
+                                'BaseFare' => isset($j['NetFare']) ? (float)$j['NetFare'] : 4500,
+                                'Taxes' => 850,
+                                'Baggage' => '15 Kgs',
+                                'CabinBaggage' => '7 Kgs',
+                                'Refundable' => isset($j['Refundable']) ? (bool)$j['Refundable'] : false,
+                                'SeatsLeft' => rand(3, 9)
+                            );
+                        }
                     }
 
-                    if (!empty($liveFlights)) {
+                    if (!empty($liveFlights) || $isLive) {
                         return array(
-                            'Status' => 'Success',
+                            'Status' => !empty($liveFlights) ? 'Success' : 'NoResults',
+                            'Message' => !empty($liveFlights) ? 'Live Benzy API results retrieved successfully' : 'No flights returned from Benzy API for this sector.',
                             'From' => $from,
                             'To' => $to,
                             'Date' => $date,
@@ -197,8 +232,19 @@ class BenzyFlightApi {
             }
         }
 
-        // Fallback realistic flight search results for local server testing
-        return $this->getMockFlightResults($from, $to, $date);
+        // Only fallback to mock on local development server
+        if (!$isLive) {
+            return $this->getMockFlightResults($from, $to, $date);
+        }
+
+        return array(
+            'Status' => 'Error',
+            'Message' => 'Unable to connect to Benzy API. Please check server IP whitelisting or credentials.',
+            'From' => $from,
+            'To' => $to,
+            'Date' => $date,
+            'Flights' => array()
+        );
     }
 
     /**
