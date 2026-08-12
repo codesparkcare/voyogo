@@ -102,6 +102,6 @@
     </footer>
 
     <!-- Main Client JavaScript -->
-    <script src="<?php echo function_exists('base_url') ? base_url('assets/js/main.js') : '/assets/js/main.js'; ?>"></script>
+    <script src="<?php echo function_exists('base_url') ? base_url('assets/js/main.js?v=' . time()) : '/assets/js/main.js?v=' . time(); ?>"></script>
 </body>
 </html>
