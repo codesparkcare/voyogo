@@ -37,10 +37,24 @@
                 <div class="search-grid hotel-grid">
                     
                     <!-- Destination / City -->
-                    <div class="input-box">
+                    <div class="input-box" id="hotelCityBox" style="cursor: pointer; position: relative;">
                         <div class="input-label"><i class="fa-solid fa-location-dot"></i> Destination / City / Hotel Name</div>
-                        <input type="text" class="field-input" name="city" value="Goa, India" placeholder="Where are you going?">
-                        <div class="input-subtext">Popular: Baga Beach, Calangute, Panjim</div>
+                        <div class="input-val" id="hotelCityText" style="font-weight: 700; color: var(--primary-blue); font-size: 16px;">Goa, India</div>
+                        <input type="hidden" name="city" id="hotelCityInput" value="Goa, India">
+                        <div class="input-subtext" id="hotelCitySub">Popular: Baga Beach, Calangute, Panjim</div>
+
+                        <!-- Inline Autocomplete Dropdown Popup -->
+                        <div class="dropdown-popup city-autocomplete-popup" id="hotelCityDropdown" style="width: 340px; padding: 14px; border-radius: 12px; box-shadow: 0 12px 35px rgba(0,0,0,0.3); background: #ffffff; text-align: left; z-index: 99999;" onclick="event.stopPropagation();">
+                            <div style="position: relative; margin-bottom: 10px;">
+                                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 10px; color: #0d3470; font-size: 13px;"></i>
+                                <input type="text" class="city-search-input" id="hotelSearchInput" placeholder="Search city or hotel area (e.g. Goa, Mumbai, Dubai)..." style="width: 100%; padding: 7px 12px 7px 32px; border: 1.5px solid #0d3470; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none;">
+                            </div>
+                            <div id="hotelPopularSection">
+                                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Popular Hotel Destinations</div>
+                                <div class="popular-pills-wrap" id="hotelPopularPills" style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px;"></div>
+                            </div>
+                            <div class="city-list-wrap" id="hotelCityList" style="max-height: 220px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;"></div>
+                        </div>
                     </div>
 
                     <!-- Check-in Date -->
@@ -58,10 +72,54 @@
                     </div>
 
                     <!-- Rooms & Guests Select -->
-                    <div class="input-box">
+                    <div class="input-box" id="hotelGuestSelectBox" style="cursor: pointer; position: relative;">
                         <div class="input-label"><i class="fa-solid fa-bed"></i> Rooms & Guests</div>
-                        <div class="input-val">1 Room, 2 Guests</div>
-                        <div class="input-subtext">2 Adults, 0 Children</div>
+                        <div class="input-val" id="hotelGuestSummary" style="font-weight: 700; color: var(--primary-blue); font-size: 16px;">1 Room, 2 Guests</div>
+                        <div class="input-subtext" id="hotelGuestSub">2 Adults, 0 Children</div>
+
+                        <input type="hidden" name="rooms" id="hiddenHotelRooms" value="1">
+                        <input type="hidden" name="adults" id="hiddenHotelAdults" value="2">
+                        <input type="hidden" name="children" id="hiddenHotelChildren" value="0">
+
+                        <!-- Dropdown Popup -->
+                        <div class="dropdown-popup" id="hotelGuestDropdown" style="z-index: 99999; text-align: left; width: 300px; padding: 16px;" onclick="event.stopPropagation();">
+                            <div class="counter-row">
+                                <div class="counter-info">
+                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #09204b;">Rooms</h4>
+                                    <p style="margin: 2px 0 0 0; font-size: 11px; color: #64748b;">Max 10 rooms</p>
+                                </div>
+                                <div class="counter-controls" style="display: flex; align-items: center; gap: 8px;">
+                                    <button type="button" class="counter-btn" onclick="event.stopPropagation(); updateHotelGuests('rooms', -1);">-</button>
+                                    <span class="counter-val" id="hotelRoomsCount" style="font-weight: 700; min-width: 18px; text-align: center;">1</span>
+                                    <button type="button" class="counter-btn" onclick="event.stopPropagation(); updateHotelGuests('rooms', 1);">+</button>
+                                </div>
+                            </div>
+                            <div class="counter-row">
+                                <div class="counter-info">
+                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #09204b;">Adults</h4>
+                                    <p style="margin: 2px 0 0 0; font-size: 11px; color: #64748b;">12+ years</p>
+                                </div>
+                                <div class="counter-controls" style="display: flex; align-items: center; gap: 8px;">
+                                    <button type="button" class="counter-btn" onclick="event.stopPropagation(); updateHotelGuests('adults', -1);">-</button>
+                                    <span class="counter-val" id="hotelAdultsCount" style="font-weight: 700; min-width: 18px; text-align: center;">2</span>
+                                    <button type="button" class="counter-btn" onclick="event.stopPropagation(); updateHotelGuests('adults', 1);">+</button>
+                                </div>
+                            </div>
+                            <div class="counter-row">
+                                <div class="counter-info">
+                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #09204b;">Children</h4>
+                                    <p style="margin: 2px 0 0 0; font-size: 11px; color: #64748b;">0-11 years</p>
+                                </div>
+                                <div class="counter-controls" style="display: flex; align-items: center; gap: 8px;">
+                                    <button type="button" class="counter-btn" onclick="event.stopPropagation(); updateHotelGuests('children', -1);">-</button>
+                                    <span class="counter-val" id="hotelChildrenCount" style="font-weight: 700; min-width: 18px; text-align: center;">0</span>
+                                    <button type="button" class="counter-btn" onclick="event.stopPropagation(); updateHotelGuests('children', 1);">+</button>
+                                </div>
+                            </div>
+                            <div style="margin-top: 14px; text-align: right;">
+                                <button type="button" class="btn-done" style="background: #0d3470; color: #ffffff; border: none; padding: 6px 16px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;" onclick="document.getElementById('hotelGuestDropdown').classList.remove('open');">Done</button>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

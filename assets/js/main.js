@@ -52,6 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (fromCityDropdown) fromCityDropdown.classList.remove('open');
     if (toCityDropdown) toCityDropdown.classList.remove('open');
     if (passengerDropdown) passengerDropdown.classList.remove('open');
+    const hotelCityDropdown = document.getElementById('hotelCityDropdown');
+    const hotelGuestDropdown = document.getElementById('hotelGuestDropdown');
+    if (hotelCityDropdown) hotelCityDropdown.classList.remove('open');
+    if (hotelGuestDropdown) hotelGuestDropdown.classList.remove('open');
   }
 
   // Global document click listener to dismiss dropdowns
@@ -60,6 +64,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (toCityBox && toCityBox.contains(e.target)) return;
     const passengerBox = document.getElementById('passengerSelectBox');
     if (passengerBox && passengerBox.contains(e.target)) return;
+    const hotelCityBox = document.getElementById('hotelCityBox');
+    if (hotelCityBox && hotelCityBox.contains(e.target)) return;
+    const hotelGuestBox = document.getElementById('hotelGuestSelectBox');
+    if (hotelGuestBox && hotelGuestBox.contains(e.target)) return;
     closeAllDropdowns();
   });
 
@@ -460,6 +468,203 @@ document.addEventListener('DOMContentLoaded', function() {
         loginModal.classList.remove('open');
       }
     });
+  }
+
+  // =========================================================================
+  // 7. HOTEL SEARCH PAGE DROPDOWNS (DESTINATION & ROOMS/GUESTS)
+  // =========================================================================
+  const hotelDestinationsData = [
+    { city: "Goa", state: "Goa", country: "India", subtext: "Popular: Baga Beach, Calangute, Panjim", popular: true },
+    { city: "Mumbai", state: "Maharashtra", country: "India", subtext: "Popular: Marine Drive, Juhu, Bandra", popular: true },
+    { city: "Delhi NCR", state: "Delhi", country: "India", subtext: "Popular: Connaught Place, South Delhi, Aerocity", popular: true },
+    { city: "Jaipur", state: "Rajasthan", country: "India", subtext: "Popular: Pink City, Amer, Malviya Nagar", popular: true },
+    { city: "Dubai", state: "Dubai", country: "UAE", subtext: "Popular: Downtown, Marina, Palm Jumeirah", popular: true },
+    { city: "Maldives", state: "Male", country: "Maldives", subtext: "Popular: North Male Atoll, South Male Atoll", popular: true },
+    { city: "Udaipur", state: "Rajasthan", country: "India", subtext: "Popular: Lake Pichola, Fatehsagar, Old City", popular: true },
+    { city: "Bengaluru", state: "Karnataka", country: "India", subtext: "Popular: Indiranagar, MG Road, Koramangala", popular: true },
+    { city: "Shimla", state: "Himachal Pradesh", country: "India", subtext: "Popular: Mall Road, Kufri, Chotta Shimla", popular: false },
+    { city: "Manali", state: "Himachal Pradesh", country: "India", subtext: "Popular: Mall Road, Solang Valley, Old Manali", popular: false },
+    { city: "Agra", state: "Uttar Pradesh", country: "India", subtext: "Popular: Taj Ganj, Fatehabad Road", popular: false },
+    { city: "Varanasi", state: "Uttar Pradesh", country: "India", subtext: "Popular: Ghats, Cantt, Assi Ghat", popular: false },
+    { city: "Singapore", state: "Singapore", country: "Singapore", subtext: "Popular: Marina Bay, Orchard Road, Sentosa", popular: false },
+    { city: "Bangkok", state: "Bangkok", country: "Thailand", subtext: "Popular: Sukhumvit, Siam, Silom", popular: false }
+  ];
+
+  const hotelCityBox = document.getElementById('hotelCityBox');
+  const hotelCityDropdown = document.getElementById('hotelCityDropdown');
+  const hotelSearchInput = document.getElementById('hotelSearchInput');
+  const hotelPopularPills = document.getElementById('hotelPopularPills');
+  const hotelCityList = document.getElementById('hotelCityList');
+
+  if (hotelCityBox && hotelCityDropdown) {
+    hotelCityBox.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = hotelCityDropdown.classList.contains('open');
+      closeAllDropdowns();
+      if (!isOpen) {
+        hotelCityDropdown.classList.add('open');
+        renderHotelPills();
+        renderHotelList('');
+        if (hotelSearchInput) {
+          hotelSearchInput.value = '';
+          setTimeout(() => hotelSearchInput.focus(), 100);
+        }
+      }
+    });
+
+    if (hotelSearchInput) {
+      hotelSearchInput.addEventListener('click', e => e.stopPropagation());
+      hotelSearchInput.addEventListener('input', function(e) {
+        e.stopPropagation();
+        renderHotelList(this.value.trim().toLowerCase());
+      });
+    }
+  }
+
+  function renderHotelPills() {
+    if (!hotelPopularPills) return;
+    hotelPopularPills.innerHTML = '';
+    const populars = hotelDestinationsData.filter(item => item.popular);
+    populars.forEach(item => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.style.cssText = 'background: #f1f5f9; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; cursor: pointer; color: #0d3470;';
+      btn.innerHTML = `${item.city}`;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectHotelDestination(item);
+      });
+      hotelPopularPills.appendChild(btn);
+    });
+  }
+
+  function renderHotelList(query) {
+    const popularSection = document.getElementById('hotelPopularSection');
+    if (popularSection) popularSection.style.display = query ? 'none' : 'block';
+    if (!hotelCityList) return;
+    hotelCityList.innerHTML = '';
+
+    const filtered = hotelDestinationsData.filter(item => {
+      if (!query) return true;
+      return (
+        item.city.toLowerCase().includes(query) ||
+        item.state.toLowerCase().includes(query) ||
+        item.country.toLowerCase().includes(query) ||
+        item.subtext.toLowerCase().includes(query)
+      );
+    });
+
+    if (filtered.length === 0) {
+      const customDiv = document.createElement('div');
+      customDiv.style.cssText = 'padding: 10px 12px; cursor: pointer; font-size: 12px; background: #f0fdf4; color: #166534; font-weight: 700; border-radius: 4px; margin: 4px;';
+      customDiv.innerHTML = `<i class="fa-solid fa-location-dot" style="margin-right: 6px;"></i> Use "${query}"`;
+      customDiv.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectHotelDestination({
+          city: query.charAt(0).toUpperCase() + query.slice(1),
+          country: '',
+          subtext: `Hotels in ${query}`
+        });
+      });
+      hotelCityList.appendChild(customDiv);
+      return;
+    }
+
+    filtered.forEach(item => {
+      const div = document.createElement('div');
+      div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid #f1f5f9; cursor: pointer; font-size: 12px;';
+      const locStr = item.country ? `${item.city}, ${item.country}` : item.city;
+      div.innerHTML = `
+        <div>
+          <div style="font-weight: 700; color: #09204b; font-size: 13px;"><i class="fa-solid fa-location-dot" style="color: #fa3a3a; margin-right: 4px;"></i> ${locStr}</div>
+          <div style="font-size: 11px; color: #64748b;">${item.subtext}</div>
+        </div>
+      `;
+
+      div.addEventListener('mouseover', () => div.style.background = '#f8fafc');
+      div.addEventListener('mouseout', () => div.style.background = '#ffffff');
+      div.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectHotelDestination(item);
+      });
+      hotelCityList.appendChild(div);
+    });
+  }
+
+  function selectHotelDestination(item) {
+    const formattedVal = item.country ? `${item.city}, ${item.country}` : item.city;
+    const hotelCityInput = document.getElementById('hotelCityInput');
+    const hotelCityText = document.getElementById('hotelCityText');
+    const hotelCitySub = document.getElementById('hotelCitySub');
+
+    if (hotelCityInput) hotelCityInput.value = formattedVal;
+    if (hotelCityText) hotelCityText.textContent = formattedVal;
+    if (hotelCitySub) hotelCitySub.textContent = item.subtext;
+    if (hotelCityDropdown) hotelCityDropdown.classList.remove('open');
+  }
+
+  // Hotel Guest & Room Counter Logic
+  const hotelGuestSelectBox = document.getElementById('hotelGuestSelectBox');
+  const hotelGuestDropdown = document.getElementById('hotelGuestDropdown');
+
+  if (hotelGuestSelectBox && hotelGuestDropdown) {
+    hotelGuestSelectBox.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = hotelGuestDropdown.classList.contains('open');
+      closeAllDropdowns();
+      if (!isOpen) hotelGuestDropdown.classList.add('open');
+    });
+
+    hotelGuestDropdown.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  }
+
+  let hotelRooms = 1;
+  let hotelAdults = 2;
+  let hotelChildren = 0;
+
+  const hotelRoomsCountEl = document.getElementById('hotelRoomsCount');
+  const hotelAdultsCountEl = document.getElementById('hotelAdultsCount');
+  const hotelChildrenCountEl = document.getElementById('hotelChildrenCount');
+  const hotelGuestSummaryEl = document.getElementById('hotelGuestSummary');
+  const hotelGuestSubEl = document.getElementById('hotelGuestSub');
+
+  const hiddenHotelRooms = document.getElementById('hiddenHotelRooms');
+  const hiddenHotelAdults = document.getElementById('hiddenHotelAdults');
+  const hiddenHotelChildren = document.getElementById('hiddenHotelChildren');
+
+  window.updateHotelGuests = function(type, change) {
+    if (type === 'rooms') {
+      hotelRooms = Math.max(1, Math.min(10, hotelRooms + change));
+      if (hotelRoomsCountEl) hotelRoomsCountEl.textContent = hotelRooms;
+      if (hiddenHotelRooms) hiddenHotelRooms.value = hotelRooms;
+    } else if (type === 'adults') {
+      hotelAdults = Math.max(1, Math.min(30, hotelAdults + change));
+      if (hotelAdultsCountEl) hotelAdultsCountEl.textContent = hotelAdults;
+      if (hiddenHotelAdults) hiddenHotelAdults.value = hotelAdults;
+    } else if (type === 'children') {
+      hotelChildren = Math.max(0, Math.min(10, hotelChildren + change));
+      if (hotelChildrenCountEl) hotelChildrenCountEl.textContent = hotelChildren;
+      if (hiddenHotelChildren) hiddenHotelChildren.value = hotelChildren;
+    }
+    updateHotelGuestSummary();
+  };
+
+  function updateHotelGuestSummary() {
+    const totalGuests = hotelAdults + hotelChildren;
+    const roomStr = `${hotelRooms} Room${hotelRooms > 1 ? 's' : ''}`;
+    const guestStr = `${totalGuests} Guest${totalGuests > 1 ? 's' : ''}`;
+    
+    if (hotelGuestSummaryEl) {
+      hotelGuestSummaryEl.textContent = `${roomStr}, ${guestStr}`;
+    }
+    
+    if (hotelGuestSubEl) {
+      const adultText = `${hotelAdults} Adult${hotelAdults > 1 ? 's' : ''}`;
+      const childText = `${hotelChildren} Child${hotelChildren !== 1 ? 'ren' : ''}`;
+      hotelGuestSubEl.textContent = `${adultText}, ${childText}`;
+    }
   }
 
 });
