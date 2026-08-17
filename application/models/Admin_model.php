@@ -42,12 +42,12 @@ class Admin_model extends CI_Model {
         $row = $this->db->get_where('email_settings', array('id' => 1))->row_array();
         if (!$row) {
             return array(
-                'smtp_host'   => 'smtp.gmail.com',
-                'smtp_port'   => 587,
-                'smtp_user'   => '',
-                'smtp_pass'   => '',
-                'smtp_crypto' => 'tls',
-                'from_email'  => 'noreply@voyogo.com',
+                'smtp_host'   => 'smtpout.secureserver.net',
+                'smtp_port'   => 465,
+                'smtp_user'   => 'support@voyogos.com',
+                'smtp_pass'   => 'Voyosup@130826',
+                'smtp_crypto' => 'ssl',
+                'from_email'  => 'support@voyogos.com',
                 'from_name'   => 'Voyogo Travels'
             );
         }

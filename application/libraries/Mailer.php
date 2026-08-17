@@ -17,17 +17,23 @@ class Mailer {
     private function initialize_config() {
         $settings = $this->CI->Admin_model->get_email_settings();
 
+        $smtp_host = $settings['smtp_host'];
+        if (!empty($settings['smtp_crypto']) && strtolower($settings['smtp_crypto']) === 'ssl' && strpos($smtp_host, 'ssl://') === false) {
+            $smtp_host = 'ssl://' . $smtp_host;
+        }
+
         $config = array(
-            'protocol'  => !empty($settings['smtp_host']) ? 'smtp' : 'mail',
-            'smtp_host' => $settings['smtp_host'],
-            'smtp_port' => (int)$settings['smtp_port'],
-            'smtp_user' => $settings['smtp_user'],
-            'smtp_pass' => $settings['smtp_pass'],
+            'protocol'    => !empty($settings['smtp_host']) ? 'smtp' : 'mail',
+            'smtp_host'   => $smtp_host,
+            'smtp_port'   => (int)$settings['smtp_port'],
+            'smtp_user'   => $settings['smtp_user'],
+            'smtp_pass'   => $settings['smtp_pass'],
             'smtp_crypto' => $settings['smtp_crypto'],
-            'mailtype'  => 'html',
-            'charset'   => 'utf-8',
-            'wordwrap'  => TRUE,
-            'newline'   => "\r\n"
+            'mailtype'    => 'html',
+            'charset'     => 'utf-8',
+            'wordwrap'    => TRUE,
+            'newline'     => "\r\n",
+            'crlf'        => "\r\n"
         );
 
         $this->CI->email->initialize($config);

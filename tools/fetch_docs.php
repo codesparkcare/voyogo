@@ -10,12 +10,12 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
     'redirect_to' => 'https://wrc.benzyinfotech.com/home/b2b-revamp-flight/flight/',
     'testcookie' => '1'
 ]));
-curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookies.txt');
-curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookies.txt');
+curl_setopt($ch, CURLOPT_COOKIEJAR, __DIR__ . '/cookies.txt');
+curl_setopt($ch, CURLOPT_COOKIEFILE, __DIR__ . '/cookies.txt');
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
 $response = curl_exec($ch);
 curl_close($ch);
 
-file_put_contents('flight_docs.html', $response);
+file_put_contents(__DIR__ . '/../docs/flight_docs.html', $response);
 echo "Fetched successfully.";

@@ -25,8 +25,11 @@
                 <div class="sh-divider"></div>
                 <div class="sh-block">
                     <span class="sh-label">Travellers & Class</span>
-                    <strong class="sh-title">01 Traveller</strong>
-                    <span class="sh-sub">Economy</span>
+                    <?php 
+                        $total_travelers = ($search_query['adults'] ?? 1) + ($search_query['children'] ?? 0) + ($search_query['infants'] ?? 0);
+                    ?>
+                    <strong class="sh-title"><?php echo sprintf('%02d', $total_travelers); ?> Traveller<?php echo $total_travelers > 1 ? 's' : ''; ?></strong>
+                    <span class="sh-sub"><?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?></span>
                 </div>
                 <div class="sh-action">
                     <a href="<?php echo site_url('flight'); ?>" class="btn-modify">MODIFY SEARCH <i class="fa-solid fa-magnifying-glass"></i></a>
@@ -212,6 +215,10 @@
                                 <input type="hidden" name="arrival_time" value="<?php echo htmlspecialchars($f['ArrivalTime']); ?>">
                                 <input type="hidden" name="departure_date" value="<?php echo htmlspecialchars($search_query['date']); ?>">
                                 <input type="hidden" name="price" value="<?php echo htmlspecialchars($f['Price']); ?>">
+                                <input type="hidden" name="adults" value="<?php echo htmlspecialchars($search_query['adults'] ?? 1); ?>">
+                                <input type="hidden" name="children" value="<?php echo htmlspecialchars($search_query['children'] ?? 0); ?>">
+                                <input type="hidden" name="infants" value="<?php echo htmlspecialchars($search_query['infants'] ?? 0); ?>">
+                                <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
                                 <button type="submit" class="f-book-btn">BOOK NOW</button>
                             </form>
                         </div>

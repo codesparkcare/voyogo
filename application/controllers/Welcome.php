@@ -52,6 +52,11 @@ class Welcome extends CI_Controller {
             $is_multicity = false;
         }
 
+        $adults      = max(1, (int)($this->input->post('adults') ?: $this->input->get('adults') ?: 1));
+        $children    = max(0, (int)($this->input->post('children') ?: $this->input->get('children') ?: 0));
+        $infants     = max(0, (int)($this->input->post('infants') ?: $this->input->get('infants') ?: 0));
+        $cabin_class = $this->input->post('cabin_class') ?: $this->input->get('cabin_class') ?: 'Economy';
+
         preg_match('/\(([A-Z]{3})\)/', $from_raw, $from_match);
         preg_match('/\(([A-Z]{3})\)/', $to_raw, $to_match);
         
@@ -60,7 +65,7 @@ class Welcome extends CI_Controller {
 
         $this->load->library('BenzyFlightApi');
         
-        $tui = $this->benzyflightapi->expressSearch($from, $to, $date);
+        $tui = $this->benzyflightapi->expressSearch($from, $to, $date, $adults, $children, $infants, substr($cabin_class, 0, 1));
         $flightResults = $this->benzyflightapi->getExpSearch($tui, $from, $to, $date);
 
         $data['page_title'] = $is_multicity ? "Multi-City Flight Itinerary: $from to $to - Voyogo" : "Flight Search: $from to $to - Voyogo";
@@ -74,7 +79,11 @@ class Welcome extends CI_Controller {
             'is_multicity' => $is_multicity,
             'multi_from' => $multi_from,
             'multi_to' => $multi_to,
-            'multi_date' => $multi_date
+            'multi_date' => $multi_date,
+            'adults' => $adults,
+            'children' => $children,
+            'infants' => $infants,
+            'cabin_class' => $cabin_class
         );
         $data['flightResults'] = $flightResults;
 
@@ -85,35 +94,124 @@ class Welcome extends CI_Controller {
 
     /**
      * Flight Review & Passenger Details Form
+     * Supports Akbar Travels URL Format: /flight/review/{Type}/{FareType}/{Cabin}/{TUI}/{Price}
      */
-    public function flight_review()
+    public function flight_review($p1 = null, $p2 = null, $p3 = null, $p4 = null, $p5 = null)
     {
-        $flight_id = $this->input->post('flight_id') ?: $this->input->get('flight_id') ?: 'FL_101';
-        $airline_name = $this->input->post('airline_name') ?: 'IndiGo';
-        $airline_logo = $this->input->post('airline_logo') ?: 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png';
-        $flight_number = $this->input->post('flight_number') ?: '6E-2134';
-        $from_code = $this->input->post('from_code') ?: 'DEL';
-        $to_code = $this->input->post('to_code') ?: 'BOM';
-        $departure_time = $this->input->post('departure_time') ?: '06:00';
-        $arrival_time = $this->input->post('arrival_time') ?: '08:15';
-        $departure_date = $this->input->post('departure_date') ?: date('Y-m-d', strtotime('+3 days'));
-        $price = (float)($this->input->post('price') ?: 5350);
+        $this->load->library('BenzyFlightApi');
 
-        $data['flight'] = array(
-            'id' => $flight_id,
-            'airline_name' => $airline_name,
-            'airline_logo' => $airline_logo,
-            'flight_number' => $flight_number,
-            'from_code' => $from_code,
-            'to_code' => $to_code,
-            'departure_time' => $departure_time,
-            'arrival_time' => $arrival_time,
-            'departure_date' => $departure_date,
-            'price' => $price,
-            'base_fare' => round($price * 0.82),
-            'taxes' => round($price * 0.18)
+        $tui = '';
+        $price = 0;
+        $type = 'D';
+        $fare_type = 'ON';
+        $cabin = 'E';
+
+        // Check if params are passed via URI segments (Akbar Travels format: flight/review/D/ON/E/{TUI}/{Price})
+        $segments = array_values($this->uri->segment_array());
+        if (count($segments) >= 6 && strtolower($segments[0]) === 'flight' && strtolower($segments[1]) === 'review') {
+            $type = strtoupper($segments[2]);
+            $fare_type = strtoupper($segments[3]);
+            $cabin = strtoupper($segments[4]);
+            $tui = urldecode($segments[5]);
+            if (isset($segments[6]) && is_numeric($segments[6])) {
+                $price = (float)$segments[6];
+            }
+        } elseif (count($segments) >= 3 && strtolower($segments[0]) === 'flight' && strtolower($segments[1]) === 'review') {
+            $tui = urldecode($segments[2]);
+            if (isset($segments[3]) && is_numeric($segments[3])) {
+                $price = (float)$segments[3];
+            }
+        } elseif ($p1 !== null) {
+            if ($p4 !== null) {
+                $type = strtoupper($p1);
+                $fare_type = strtoupper($p2);
+                $cabin = strtoupper($p3);
+                $tui = urldecode($p4);
+                $price = (float)($p5 ?: 5350);
+            } else {
+                $tui = urldecode($p1);
+                $price = (float)($p2 ?: 5350);
+            }
+        }
+
+        // Fallback to GET or POST if URL params not present
+        if (empty($tui)) {
+            $tui = $this->input->post('tui') ?: $this->input->get('tui') ?: $this->input->post('flight_id') ?: $this->input->get('flight_id') ?: '';
+        }
+        if ($price <= 0) {
+            $price = (float)($this->input->post('price') ?: $this->input->get('price') ?: 5350);
+        }
+
+        $adults      = max(1, (int)($this->input->post('adults') ?: $this->input->get('adults') ?: 1));
+        $children    = max(0, (int)($this->input->post('children') ?: $this->input->get('children') ?: 0));
+        $infants     = max(0, (int)($this->input->post('infants') ?: $this->input->get('infants') ?: 0));
+        $cabin_class = $this->input->post('cabin_class') ?: $this->input->get('cabin_class') ?: 'Economy';
+
+        // Fetch revalidated flight data using Benzy API (SmartPricer / GetSPricer)
+        $flightDetails = $this->benzyflightapi->smartPricer($tui, $price);
+        
+        // Adjust fares for total passenger count
+        $pax_multiplier = $adults + $children + (0.5 * $infants);
+        if ($pax_multiplier < 1) $pax_multiplier = 1;
+
+        $flightDetails['unit_price'] = isset($flightDetails['price']) ? (float)$flightDetails['price'] : $price;
+        $unit_base = isset($flightDetails['base_fare']) ? (float)$flightDetails['base_fare'] : round($flightDetails['unit_price'] * 0.82);
+        $unit_taxes = isset($flightDetails['taxes']) ? (float)$flightDetails['taxes'] : round($flightDetails['unit_price'] * 0.18);
+
+        $flightDetails['base_fare'] = round($unit_base * $pax_multiplier);
+        $flightDetails['taxes'] = round($unit_taxes * $pax_multiplier);
+        $flightDetails['price'] = $flightDetails['base_fare'] + $flightDetails['taxes'];
+
+        // Fetch Fare Rules (Cancellation & Date change policy)
+        $fareRules = $this->benzyflightapi->getFareRule($tui);
+
+        // Fetch SSR options (Baggage, Meals, Seats)
+        $ssrOptions = $this->benzyflightapi->getSSR($tui);
+
+        // Merge POST inputs if coming from search results selection
+        if ($this->input->post('airline_name')) {
+            $flightDetails['airline_name'] = $this->input->post('airline_name');
+        }
+        if ($this->input->post('airline_logo')) {
+            $flightDetails['airline_logo'] = $this->input->post('airline_logo');
+        }
+        if ($this->input->post('flight_number')) {
+            $flightDetails['flight_number'] = $this->input->post('flight_number');
+        }
+        if ($this->input->post('from_code')) {
+            $flightDetails['from_code'] = $this->input->post('from_code');
+        }
+        if ($this->input->post('to_code')) {
+            $flightDetails['to_code'] = $this->input->post('to_code');
+        }
+        if ($this->input->post('departure_time')) {
+            $flightDetails['departure_time'] = $this->input->post('departure_time');
+        }
+        if ($this->input->post('arrival_time')) {
+            $flightDetails['arrival_time'] = $this->input->post('arrival_time');
+        }
+        if ($this->input->post('departure_date')) {
+            $flightDetails['departure_date'] = $this->input->post('departure_date');
+        }
+
+        $data['flight'] = $flightDetails;
+        $data['fare_rules'] = $fareRules;
+        $data['ssr'] = $ssrOptions;
+        $data['search_query'] = array(
+            'adults'      => $adults,
+            'children'    => $children,
+            'infants'     => $infants,
+            'cabin_class' => $cabin_class
+        );
+        $data['url_meta'] = array(
+            'type' => $type,
+            'fare_type' => $fare_type,
+            'cabin' => $cabin,
+            'tui' => $tui
         );
 
+        $from_code = $flightDetails['from_code'];
+        $to_code = $flightDetails['to_code'];
         $data['page_title'] = "Review Booking: $from_code to $to_code - Voyogo";
         $data['active_page'] = 'flight';
 
@@ -131,14 +229,35 @@ class Welcome extends CI_Controller {
         $contact_email = $this->input->post('contact_email') ?: 'customer@example.com';
         $contact_phone = $this->input->post('contact_phone') ?: '9876543210';
         
-        $passengers = array(
-            array(
-                'title' => $this->input->post('passenger_title') ?: 'Mr',
-                'name'  => $this->input->post('passenger_name') ?: $contact_name,
-                'age'   => $this->input->post('passenger_age') ?: '30',
-                'gender'=> $this->input->post('passenger_gender') ?: 'Male'
-            )
-        );
+        $titles  = $this->input->post('passenger_title');
+        $names   = $this->input->post('passenger_name');
+        $ages    = $this->input->post('passenger_age');
+        $types   = $this->input->post('passenger_type');
+
+        $passengers = array();
+        if (is_array($names) && count($names) > 0) {
+            for ($i = 0; $i < count($names); $i++) {
+                $p_idx = $i + 1;
+                $gender = $this->input->post('passenger_gender_' . $p_idx) ?: 'Male';
+                $passengers[] = array(
+                    'title'  => isset($titles[$i]) ? $titles[$i] : 'Mr',
+                    'name'   => !empty($names[$i]) ? $names[$i] : 'Passenger ' . $p_idx,
+                    'age'    => isset($ages[$i]) ? $ages[$i] : '25',
+                    'gender' => $gender,
+                    'type'   => isset($types[$i]) ? $types[$i] : 'Adult'
+                );
+            }
+        } else {
+            $passengers = array(
+                array(
+                    'title'  => $this->input->post('passenger_title') ?: 'Mr',
+                    'name'   => $this->input->post('passenger_name') ?: $contact_name,
+                    'age'    => $this->input->post('passenger_age') ?: '30',
+                    'gender' => $this->input->post('passenger_gender') ?: 'Male',
+                    'type'   => 'Adult'
+                )
+            );
+        }
 
         $booking_ref = 'VYG-FL-' . strtoupper(substr(md5(uniqid()), 0, 8));
         $pnr = 'PNR' . rand(100000, 999999);
