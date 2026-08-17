@@ -54,7 +54,8 @@ class Migrate extends CI_Controller {
         } else {
             // Get current version
             $version = $this->migration->find_migrations();
-            $latest_key = end(array_keys($version));
+            $keys = array_keys($version);
+            $latest_key = end($keys);
 
             if ($is_cli) {
                 echo "Migrations completed successfully!\n";
