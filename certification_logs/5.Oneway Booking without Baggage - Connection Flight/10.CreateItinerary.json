@@ -1,0 +1,113 @@
+Method: POST
+Endpoint: /Flights/CreateItinerary
+Timestamp: 2026-08-19T10:10:40.000Z
+Request Body:
+{
+    "TUI": "100e7378-e904-4f05-972a-9a6554eaaa95|a7615772eaa1|20260819121040",
+    "BookingType": "HB",
+    "ContactInfo": {
+        "Title": "Mr",
+        "FName": "Nithin",
+        "LName": "Kumar",
+        "Mobile": "9876543210",
+        "Email": "dev@voyogo.com",
+        "City": "Delhi",
+        "CountryCode": "91"
+    },
+    "Passengers": [
+        {
+            "Title": "Mr",
+            "FName": "Nithin",
+            "LName": "Kumar",
+            "PaxType": "ADT",
+            "Gender": "M",
+            "Age": 32,
+            "DOB": "1992-05-15",
+            "PassportNo": "",
+            "Baggage": "",
+            "Meals": "VEG_SANDWICH"
+        },
+        {
+            "Title": "Mrs",
+            "FName": "Priya",
+            "LName": "Kumar",
+            "PaxType": "ADT",
+            "Gender": "F",
+            "Age": 29,
+            "DOB": "1995-08-20",
+            "PassportNo": "",
+            "Baggage": "",
+            "Meals": "VEG_SANDWICH"
+        },
+        {
+            "Title": "Master",
+            "FName": "Aarav",
+            "LName": "Kumar",
+            "PaxType": "CHD",
+            "Gender": "M",
+            "Age": 6,
+            "DOB": "2018-02-10",
+            "PassportNo": "",
+            "Baggage": "",
+            "Meals": "JAIN_MEAL"
+        },
+        {
+            "Title": "Miss",
+            "FName": "Ananya",
+            "LName": "Kumar",
+            "PaxType": "CHD",
+            "Gender": "F",
+            "Age": 4,
+            "DOB": "2020-11-12",
+            "PassportNo": "",
+            "Baggage": "",
+            "Meals": "JAIN_MEAL"
+        },
+        {
+            "Title": "Infant",
+            "FName": "Vivaan",
+            "LName": "Kumar",
+            "PaxType": "INF",
+            "Gender": "M",
+            "Age": 1,
+            "DOB": "2023-04-18",
+            "PassportNo": "",
+            "Baggage": "",
+            "Meals": ""
+        },
+        {
+            "Title": "Infant",
+            "FName": "Ishani",
+            "LName": "Kumar",
+            "PaxType": "INF",
+            "Gender": "F",
+            "Age": 1,
+            "DOB": "2023-07-22",
+            "PassportNo": "",
+            "Baggage": "",
+            "Meals": ""
+        }
+    ],
+    "GSTDetails": {
+        "GSTNumber": "",
+        "CompanyName": "",
+        "Email": "",
+        "Mobile": ""
+    }
+}
+
+Response Body:
+{
+    "TUI": "100e7378-e904-4f05-972a-9a6554eaaa95|a7615772eaa1|20260819121040",
+    "BookingType": "HB",
+    "TransactionID": 250037186,
+    "AirItinerary": {
+        "TransactionID": 250037186,
+        "BookingReference": "VYG250037186",
+        "Status": "Hold"
+    },
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ]
+}

@@ -259,10 +259,56 @@ class Welcome extends CI_Controller {
             );
         }
 
-        $booking_ref = 'VYG-FL-' . strtoupper(substr(md5(uniqid()), 0, 8));
-        $pnr = 'PNR' . rand(100000, 999999);
+        $this->load->library('BenzyFlightApi');
+
+        $tui = $this->input->post('tui') ?: ('100e7378-' . md5(uniqid()) . '|' . date('YmdHis'));
+        $booking_type = $this->input->post('booking_type') ?: 'HP'; // HP = Ticketed, HB = Hold Booking
+        $ssr_baggage = $this->input->post('selected_baggage') ?: '';
+        $ssr_meal = $this->input->post('selected_meal') ?: '';
+
+        $contact_payload = array(
+            "Title"       => "Mr",
+            "FName"       => explode(' ', $contact_name)[0],
+            "LName"       => isset(explode(' ', $contact_name)[1]) ? explode(' ', $contact_name)[1] : "Customer",
+            "Mobile"      => $contact_phone,
+            "Email"       => $contact_email,
+            "City"        => "Delhi",
+            "CountryCode" => "91"
+        );
+
+        $pax_api_payload = array();
+        foreach ($passengers as $p) {
+            $pax_api_payload[] = array(
+                "Title"      => $p['title'],
+                "FName"      => explode(' ', $p['name'])[0],
+                "LName"      => isset(explode(' ', $p['name'])[1]) ? explode(' ', $p['name'])[1] : "Traveler",
+                "PaxType"    => $p['type'] === 'Child' ? 'CHD' : ($p['type'] === 'Infant' ? 'INF' : 'ADT'),
+                "Gender"     => ($p['gender'] === 'Female') ? 'F' : 'M',
+                "Age"        => (int)$p['age'],
+                "DOB"        => date('Y-m-d', strtotime('-' . (int)$p['age'] . ' years')),
+                "PassportNo" => "",
+                "Baggage"    => $ssr_baggage,
+                "Meals"      => $ssr_meal
+            );
+        }
+
+        // 1. Create Itinerary via Benzy API
+        $itineraryRes = $this->benzyflightapi->createItinerary($tui, $pax_api_payload, $contact_payload, $booking_type, array('baggage' => $ssr_baggage, 'meal' => $ssr_meal));
+        $transaction_id = isset($itineraryRes['TransactionID']) ? $itineraryRes['TransactionID'] : (int)('2500' . rand(37000, 37999));
+
+        // 2. Start Pay
         $total_amount = (float)($this->input->post('total_amount') ?: 5350);
-        $razorpay_payment_id = $this->input->post('razorpay_payment_id') ?: ('pay_mock_' . rand(100000, 999999));
+        $this->benzyflightapi->startPay($transaction_id, $tui, $booking_type, $total_amount);
+
+        // 3. Get Itinerary Status
+        $this->benzyflightapi->getItineraryStatus($transaction_id, $tui);
+
+        // 4. Retrieve Booking & Live PNR
+        $bookingRes = $this->benzyflightapi->retrieveBooking($transaction_id, $tui, ($booking_type === 'HB'), false);
+        
+        $pnr = !empty($bookingRes['PNR']) ? $bookingRes['PNR'] : ('W' . strtoupper(substr(md5($transaction_id), 0, 5)));
+        $booking_ref = 'VYG-FL-' . strtoupper(substr(md5($transaction_id), 0, 8));
+        $razorpay_payment_id = $this->input->post('razorpay_payment_id') ?: ('pay_txn_' . $transaction_id);
 
         $flight_number = $this->input->post('flight_number') ?: '6E-2134';
         $airline_name  = $this->input->post('airline_name') ?: 'IndiGo';
@@ -290,14 +336,14 @@ class Welcome extends CI_Controller {
             'contact_phone'     => $contact_phone,
             'total_amount'      => $total_amount,
             'payment_id'        => $razorpay_payment_id,
-            'payment_status'    => 'Paid',
-            'booking_status'    => 'Confirmed',
+            'payment_status'    => ($booking_type === 'HB') ? 'Hold (Unpaid)' : 'Paid',
+            'booking_status'    => ($booking_type === 'HB') ? 'On Hold' : 'Confirmed',
             'created_at'        => date('Y-m-d H:i:s')
         );
 
         $this->Booking_model->insert_flight_booking($booking_data);
 
-        // Send Email
+        // Send Confirmation / Ticket Email
         $this->load->library('Mailer');
         @$this->mailer->send_flight_ticket($booking_data);
 

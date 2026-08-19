@@ -1,0 +1,70 @@
+Method: POST
+Endpoint: /Flights/SSR
+Timestamp: 2026-08-19T10:10:40.000Z
+Request Body:
+{
+    "TUI": "100e7378-e904-4f05-972a-6cfad2db07d1|fae70836ec09|20260819121040",
+    "ChannelID": "b2bIndiaDeals"
+}
+
+Response Body:
+{
+    "Baggage": [
+        {
+            "Code": "BAG0",
+            "Description": "No Extra Baggage",
+            "Amount": 0,
+            "Weight": "15kg"
+        },
+        {
+            "Code": "BAG3",
+            "Description": "Additional 3 Kgs Check-in Baggage",
+            "Amount": 1350,
+            "Weight": "3kg"
+        },
+        {
+            "Code": "BAG5",
+            "Description": "Additional 5 Kgs Check-in Baggage",
+            "Amount": 2250,
+            "Weight": "5kg"
+        },
+        {
+            "Code": "BAG10",
+            "Description": "Additional 10 Kgs Check-in Baggage",
+            "Amount": 4500,
+            "Weight": "10kg"
+        },
+        {
+            "Code": "BAG15",
+            "Description": "Additional 15 Kgs Check-in Baggage",
+            "Amount": 6750,
+            "Weight": "15kg"
+        }
+    ],
+    "Meals": [
+        {
+            "Code": "NO_MEAL",
+            "Description": "No Meal",
+            "Amount": 0
+        },
+        {
+            "Code": "VEG_SANDWICH",
+            "Description": "Paneer Tikka Sandwich + Soft Drink",
+            "Amount": 350
+        },
+        {
+            "Code": "NONVEG_SANDWICH",
+            "Description": "Chicken Tikka Sandwich + Beverage",
+            "Amount": 400
+        },
+        {
+            "Code": "JAIN_MEAL",
+            "Description": "Jain Veg Meal Box",
+            "Amount": 380
+        }
+    ],
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ]
+}

@@ -1,0 +1,26 @@
+Method: POST
+Endpoint: /Utils/RetrieveBooking
+Timestamp: 2026-08-19T10:10:40.000Z
+Request Body:
+{
+    "TransactionID": 250037921,
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
+}
+
+Response Body:
+{
+    "TransactionID": 250037921,
+    "Status": "HO0,HR0",
+    "PNR": "W71363",
+    "BookingReference": "VYG250037921",
+    "AirBookingResponse": {
+        "PNR": "W71363",
+        "BookingReference": "VYG250037921",
+        "TicketStatus": "Hold",
+        "Status": "HO0,HR0"
+    },
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ]
+}

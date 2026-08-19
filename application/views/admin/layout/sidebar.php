@@ -33,6 +33,11 @@
 
         <li class="menu-title">Settings & Tools</li>
         <li>
+            <a href="<?php echo site_url('flight_cert'); ?>" class="<?php echo ($active == 'flight_cert') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-certificate" style="color: #f59e0b;"></i> API Certification Suite
+            </a>
+        </li>
+        <li>
             <a href="<?php echo site_url('admin/email_settings'); ?>" class="<?php echo ($active == 'email_settings') ? 'active' : ''; ?>">
                 <i class="fa-solid fa-sliders"></i> SMTP Email Settings
             </a>

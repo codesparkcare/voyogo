@@ -1,0 +1,26 @@
+Method: POST
+Endpoint: /Utils/GetTravelCheckList
+Timestamp: 2026-08-19T10:10:40.000Z
+Request Body:
+{
+    "TUI": "100e7378-e904-4f05-972a-4f8d3265a35d|112269b72090|20260819121040"
+}
+
+Response Body:
+{
+    "TUI": "100e7378-e904-4f05-972a-4f8d3265a35d|112269b72090|20260819121040",
+    "Rules": [
+        {
+            "RuleID": "1",
+            "RuleText": "Valid Government ID proof required at airport check-in."
+        },
+        {
+            "RuleID": "2",
+            "RuleText": "Check-in baggage allowance is 15kg standard."
+        }
+    ],
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ]
+}

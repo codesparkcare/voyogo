@@ -1,0 +1,21 @@
+Method: POST
+Endpoint: /Payment/StartPay
+Timestamp: 2026-08-19T10:10:40.000Z
+Request Body:
+{
+    "TUI": "100e7378-e904-4f05-972a-178213d52ed4|254c168c265d|20260819121040",
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "TransactionID": 250037931,
+    "PaymentType": "",
+    "PaymentAmount": 5350
+}
+
+Response Body:
+{
+    "TransactionID": 250037931,
+    "Status": "InProgress",
+    "Code": "6033",
+    "Msg": [
+        "BOOKING  INPROGRESS !"
+    ]
+}

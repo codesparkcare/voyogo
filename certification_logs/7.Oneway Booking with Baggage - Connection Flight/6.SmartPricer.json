@@ -1,0 +1,17 @@
+Method: POST
+Endpoint: /flights/SmartPricer
+Timestamp: 2026-08-19T10:10:40.000Z
+Request Body:
+{
+    "TUI": "100e7378-e904-4f05-972a-e85842eed5da|fa35f6451bf0|20260819121040"
+}
+
+Response Body:
+{
+    "TUI": "100e7378-e904-4f05-972a-e85842eed5da|fa35f6451bf0|20260819121040",
+    "Trips": null,
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ]
+}

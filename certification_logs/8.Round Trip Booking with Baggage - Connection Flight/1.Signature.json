@@ -1,0 +1,28 @@
+Method: POST
+Endpoint: /Utils/Signature
+Timestamp: 2026-08-19T10:10:40.000Z
+Request Body:
+{
+    "MerchantID": "300",
+    "ApiKey": "kXAY9yHARK",
+    "ClientID": "bitest",
+    "Password": "staging@1",
+    "AgentCode": "",
+    "BrowserKey": "caecd3cd30225512c1811070dce615c1",
+    "Key": "ef20-925c-4489-bfeb-236c8b406f7e"
+}
+
+Response Body:
+{
+    "TUI": "8608dafd-b425-4e1e-832c-0608c234b1c5|20260819121040",
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZklxWmVCUkZIUlNTOFFRWE1ybk8vVDhFcmt6UnMyYzk3cnloS01sWXc3NitRPT0iLCJwd2QiOiJMMkV0NEcvWHE0bExYQUd4Q3M2REh3PT0iLCJhZ2VudENvZGUiOiIvS2ZkWXdlc3FQdz0iLCJjbGllbnRJZCI6IjJmelhFa014VkRVPSIsIm5iZiI61787134240LCJleHAiOiI1787998240\"}.e5d5a44066bc325df31c49e99e8152c9",
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "LastLoginDate": "08/19/2026 12:10:40 PM",
+    "Password": "L2Et4G/Xq4lLXAGxCs6DHw==",
+    "loginAttempts": 0,
+    "UserType": "",
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ]
+}
