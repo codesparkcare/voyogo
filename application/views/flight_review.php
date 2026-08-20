@@ -298,6 +298,30 @@
                     <?php endfor; ?>
 
                     <!-- SSR Add-on Services Card (Meals, Extra Baggage, Seats) -->
+                    <?php
+                    $baggageList = !empty($ssr['Baggage']) ? $ssr['Baggage'] : (!empty($ssr['baggage']) ? $ssr['baggage'] : array());
+                    $mealsList = !empty($ssr['Meals']) ? $ssr['Meals'] : (!empty($ssr['meals']) ? $ssr['meals'] : array());
+
+                    if (empty($baggageList)) {
+                        $baggageList = array(
+                            array("Code" => "BAG0", "Description" => "Standard Cabin (7kg) + Check-in (15kg) - Included", "Amount" => 0),
+                            array("Code" => "BAG3", "Description" => "Additional 3 Kgs Check-in Baggage", "Amount" => 1350),
+                            array("Code" => "BAG5", "Description" => "Additional 5 Kgs Check-in Baggage", "Amount" => 2250),
+                            array("Code" => "BAG10", "Description" => "Additional 10 Kgs Check-in Baggage", "Amount" => 4500),
+                            array("Code" => "BAG15", "Description" => "Additional 15 Kgs Check-in Baggage", "Amount" => 6750),
+                        );
+                    }
+
+                    if (empty($mealsList)) {
+                        $mealsList = array(
+                            array("Code" => "NO_MEAL", "Description" => "No In-Flight Meal", "Amount" => 0),
+                            array("Code" => "VEG_SANDWICH", "Description" => "Paneer Tikka Sandwich + Soft Drink", "Amount" => 350),
+                            array("Code" => "NONVEG_SANDWICH", "Description" => "Chicken Tikka Sandwich + Beverage", "Amount" => 400),
+                            array("Code" => "HOT_MEAL_VEG", "Description" => "Hot Indian Veg Meal Box", "Amount" => 450),
+                            array("Code" => "HOT_MEAL_NONVEG", "Description" => "Hot Butter Chicken with Rice Box", "Amount" => 500),
+                        );
+                    }
+                    ?>
                     <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                         <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                             <i class="fa-solid fa-utensils" style="color: #f59e0b;"></i> Select Add-on Services (SSR)
@@ -310,13 +334,14 @@
                                     <i class="fa-solid fa-suitcase" style="color: #2563eb;"></i> Extra Check-in Baggage
                                 </label>
                                 <select id="extraBaggageSelect" name="extra_baggage" onchange="calculateTotalAddons()" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #fff;">
-                                    <?php if (!empty($ssr['baggage'])): ?>
-                                        <?php foreach ($ssr['baggage'] as $bag): ?>
-                                            <option value="<?php echo (float)$bag['price']; ?>">
-                                                <?php echo htmlspecialchars($bag['description']); ?> <?php echo ($bag['price'] > 0) ? '(+₹' . number_format($bag['price']) . ')' : ''; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
+                                    <?php foreach ($baggageList as $bag): 
+                                        $desc = $bag['Description'] ?? $bag['description'] ?? $bag['Name'] ?? 'Extra Baggage';
+                                        $amt = isset($bag['Amount']) ? (float)$bag['Amount'] : (isset($bag['amount']) ? (float)$bag['amount'] : (isset($bag['Price']) ? (float)$bag['Price'] : (isset($bag['price']) ? (float)$bag['price'] : 0)));
+                                    ?>
+                                        <option value="<?php echo $amt; ?>">
+                                            <?php echo htmlspecialchars($desc); ?> <?php echo ($amt > 0) ? '(+₹' . number_format($amt) . ')' : ''; ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
 
@@ -326,13 +351,14 @@
                                     <i class="fa-solid fa-bowl-food" style="color: #16a34a;"></i> In-Flight Meal Selection
                                 </label>
                                 <select id="mealSelect" name="meal_selection" onchange="calculateTotalAddons()" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #fff;">
-                                    <?php if (!empty($ssr['meals'])): ?>
-                                        <?php foreach ($ssr['meals'] as $meal): ?>
-                                            <option value="<?php echo (float)$meal['price']; ?>">
-                                                <?php echo htmlspecialchars($meal['description']); ?> <?php echo ($meal['price'] > 0) ? '(+₹' . number_format($meal['price']) . ')' : ''; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
+                                    <?php foreach ($mealsList as $meal): 
+                                        $desc = $meal['Description'] ?? $meal['description'] ?? $meal['Name'] ?? 'Meal Selection';
+                                        $amt = isset($meal['Amount']) ? (float)$meal['Amount'] : (isset($meal['amount']) ? (float)$meal['amount'] : (isset($meal['Price']) ? (float)$meal['Price'] : (isset($meal['price']) ? (float)$meal['price'] : 0)));
+                                    ?>
+                                        <option value="<?php echo $amt; ?>">
+                                            <?php echo htmlspecialchars($desc); ?> <?php echo ($amt > 0) ? '(+₹' . number_format($amt) . ')' : ''; ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
