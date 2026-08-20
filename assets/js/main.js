@@ -264,9 +264,11 @@ document.addEventListener('DOMContentLoaded', function() {
   if (tripTypeRadios.length > 0) {
     tripTypeRadios.forEach(radio => {
       radio.addEventListener('change', function() {
+        const multiInputs = multiCitySearchContainer ? multiCitySearchContainer.querySelectorAll('input') : [];
         if (this.value === 'oneway') {
           if (standardSearchGrid) standardSearchGrid.style.display = 'grid';
           if (multiCitySearchContainer) multiCitySearchContainer.style.display = 'none';
+          multiInputs.forEach(inp => inp.disabled = true);
           if (returnDateBox) {
             returnDateBox.style.opacity = '0.5';
             returnDateBox.style.pointerEvents = 'none';
@@ -276,6 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (this.value === 'roundtrip') {
           if (standardSearchGrid) standardSearchGrid.style.display = 'grid';
           if (multiCitySearchContainer) multiCitySearchContainer.style.display = 'none';
+          multiInputs.forEach(inp => inp.disabled = true);
           if (returnDateBox) {
             returnDateBox.style.opacity = '1';
             returnDateBox.style.pointerEvents = 'auto';
@@ -285,6 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (this.value === 'multicity') {
           if (standardSearchGrid) standardSearchGrid.style.display = 'none';
           if (multiCitySearchContainer) multiCitySearchContainer.style.display = 'block';
+          multiInputs.forEach(inp => inp.disabled = false);
         }
       });
     });

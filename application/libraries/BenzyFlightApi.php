@@ -633,7 +633,7 @@ class BenzyFlightApi {
         }
 
         $connectTimeout = 2;
-        $execTimeout = 6;
+        $execTimeout = 4;
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -651,7 +651,7 @@ class BenzyFlightApi {
         $curlErr = curl_error($ch);
         curl_close($ch);
 
-        if ($httpCode === 0 || !empty($curlErr)) {
+        if ($httpCode !== 200 || !empty($curlErr)) {
             self::$gatewayOffline = true;
         }
 

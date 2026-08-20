@@ -36,11 +36,12 @@ class Welcome extends CI_Controller {
      */
     public function search_flights()
     {
+        $trip_type  = strtolower($this->input->post('tripType') ?: $this->input->get('tripType') ?: 'oneway');
         $multi_from = $this->input->post('multi_from');
         $multi_to   = $this->input->post('multi_to');
         $multi_date = $this->input->post('multi_date');
 
-        if (!empty($multi_from) && is_array($multi_from)) {
+        if ($trip_type === 'multicity' && !empty($multi_from) && is_array($multi_from)) {
             $from_raw = $multi_from[0];
             $to_raw   = end($multi_to);
             $date     = isset($multi_date[0]) ? $multi_date[0] : date('Y-m-d', strtotime('+3 days'));

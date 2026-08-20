@@ -178,15 +178,15 @@
                         <div class="multi-leg-row" data-leg="1" style="display: grid; grid-template-columns: 2fr 2fr 1.5fr 40px; gap: 12px; align-items: center; background: #f8fafc; padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1;">
                             <div>
                                 <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Flight 1 - From</label>
-                                <input type="text" class="field-input multi-from-input" name="multi_from[]" value="Delhi (DEL)" placeholder="City / Code" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+                                <input type="text" class="field-input multi-from-input" name="multi_from[]" value="Delhi (DEL)" placeholder="City / Code" required disabled style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
                             </div>
                             <div>
                                 <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">To</label>
-                                <input type="text" class="field-input multi-to-input" name="multi_to[]" value="Mumbai (BOM)" placeholder="City / Code" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+                                <input type="text" class="field-input multi-to-input" name="multi_to[]" value="Mumbai (BOM)" placeholder="City / Code" required disabled style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
                             </div>
                             <div>
                                 <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Departure Date</label>
-                                <input type="date" class="field-input" name="multi_date[]" value="<?php echo date('Y-m-d', strtotime('+3 days')); ?>" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 600; background: #ffffff;">
+                                <input type="date" class="field-input" name="multi_date[]" value="<?php echo date('Y-m-d', strtotime('+3 days')); ?>" required disabled style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 600; background: #ffffff;">
                             </div>
                             <div style="text-align: center; padding-top: 14px;">
                                 <span style="font-size: 11px; font-weight: 800; color: #94a3b8;">LEG 1</span>
@@ -197,15 +197,15 @@
                         <div class="multi-leg-row" data-leg="2" style="display: grid; grid-template-columns: 2fr 2fr 1.5fr 40px; gap: 12px; align-items: center; background: #f8fafc; padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1;">
                             <div>
                                 <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Flight 2 - From</label>
-                                <input type="text" class="field-input multi-from-input" name="multi_from[]" value="Mumbai (BOM)" placeholder="City / Code" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+                                <input type="text" class="field-input multi-from-input" name="multi_from[]" value="Mumbai (BOM)" placeholder="City / Code" required disabled style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
                             </div>
                             <div>
                                 <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">To</label>
-                                <input type="text" class="field-input multi-to-input" name="multi_to[]" value="Bengaluru (BLR)" placeholder="City / Code" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+                                <input type="text" class="field-input multi-to-input" name="multi_to[]" value="Bengaluru (BLR)" placeholder="City / Code" required disabled style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
                             </div>
                             <div>
                                 <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Departure Date</label>
-                                <input type="date" class="field-input" name="multi_date[]" value="<?php echo date('Y-m-d', strtotime('+6 days')); ?>" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 600; background: #ffffff;">
+                                <input type="date" class="field-input" name="multi_date[]" value="<?php echo date('Y-m-d', strtotime('+6 days')); ?>" required disabled style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 600; background: #ffffff;">
                             </div>
                             <div style="text-align: center; padding-top: 14px;">
                                 <button type="button" class="btn-remove-leg" onclick="removeMultiLeg(this)" style="background: none; border: none; color: #ef4444; font-size: 16px; cursor: pointer;" title="Remove Leg"><i class="fa-solid fa-trash-can"></i></button>
