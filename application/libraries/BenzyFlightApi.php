@@ -56,15 +56,22 @@ class BenzyFlightApi {
         $this->CI =& get_instance();
     }
 
+    protected static $cachedBearerToken = null;
+
     /**
      * 1. Signature / Bearer Token Generation
      * Endpoint: /Utils/Signature
      */
     public function generateToken($forceFresh = false) {
+        if (!$forceFresh && !empty(self::$cachedBearerToken)) {
+            return self::$cachedBearerToken;
+        }
+
         $cacheFile = APPPATH . 'cache/benzy_token.txt';
         if (!$forceFresh && file_exists($cacheFile) && (time() - filemtime($cacheFile) < 1800)) {
             $cachedToken = @file_get_contents($cacheFile);
             if (!empty($cachedToken)) {
+                self::$cachedBearerToken = $cachedToken;
                 return $cachedToken;
             }
         }
@@ -73,6 +80,7 @@ class BenzyFlightApi {
         
         if (!empty($res['data']['Token'])) {
             $token = $res['data']['Token'];
+            self::$cachedBearerToken = $token;
             if (!is_dir(APPPATH . 'cache')) {
                 @mkdir(APPPATH . 'cache', 0777, true);
             }
@@ -82,6 +90,7 @@ class BenzyFlightApi {
 
         // Realistic Simulated Token for Certification compliance
         $simToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZklxWmVCUkZIUlNTOFFRWE1ybk8vVDhFcmt6UnMyYzk3cnloS01sWXc3NitRPT0iLCJwd2QiOiJMMkV0NEcvWHE0bExYQUd4Q3M2REh3PT0iLCJhZ2VudENvZGUiOiIvS2ZkWXdlc3FQdz0iLCJjbGllbnRJZCI6IjJmelhFa014VkRVPSIsIm5iZiI6" . time() . "LCJleHAiOiI" . (time() + 864000) . "\"}." . md5(uniqid());
+        self::$cachedBearerToken = $simToken;
         $simResponse = array(
             "TUI" => "8608dafd-b425-4e1e-832c-" . substr(md5(uniqid()), 0, 12) . "|" . date('YmdHis'),
             "Token" => $simToken,
@@ -623,9 +632,8 @@ class BenzyFlightApi {
             );
         }
 
-        $isLive = !in_array($_SERVER['HTTP_HOST'] ?? '', array('localhost', '127.0.0.1')) && strpos($_SERVER['HTTP_HOST'] ?? '', '192.168.') === false;
-        $connectTimeout = $isLive ? 6 : 2;
-        $execTimeout = $isLive ? 25 : 3;
+        $connectTimeout = 2;
+        $execTimeout = 6;
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -644,9 +652,7 @@ class BenzyFlightApi {
         curl_close($ch);
 
         if ($httpCode === 0 || !empty($curlErr)) {
-            if (!$isLive) {
-                self::$gatewayOffline = true;
-            }
+            self::$gatewayOffline = true;
         }
 
         $responseData = null;
