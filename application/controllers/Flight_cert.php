@@ -238,7 +238,11 @@ class Flight_cert extends CI_Controller {
                      . "Response Body:\n"
                      . "{$respRaw}\n";
 
-        file_put_contents($dir . $filename, $fileContent);
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0777, true);
+        }
+
+        @file_put_contents($dir . $filename, $fileContent);
         return $filename;
     }
 
