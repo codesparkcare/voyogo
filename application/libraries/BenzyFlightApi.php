@@ -623,6 +623,10 @@ class BenzyFlightApi {
             );
         }
 
+        $isLive = !in_array($_SERVER['HTTP_HOST'] ?? '', array('localhost', '127.0.0.1')) && strpos($_SERVER['HTTP_HOST'] ?? '', '192.168.') === false;
+        $connectTimeout = $isLive ? 6 : 2;
+        $execTimeout = $isLive ? 25 : 3;
+
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
@@ -630,8 +634,8 @@ class BenzyFlightApi {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonPayload);
         }
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $connectTimeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $execTimeout);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $rawResponse = @curl_exec($ch);
@@ -640,7 +644,9 @@ class BenzyFlightApi {
         curl_close($ch);
 
         if ($httpCode === 0 || !empty($curlErr)) {
-            self::$gatewayOffline = true;
+            if (!$isLive) {
+                self::$gatewayOffline = true;
+            }
         }
 
         $responseData = null;
