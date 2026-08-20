@@ -136,10 +136,10 @@ class Welcome extends CI_Controller {
 
         // Fallback to GET or POST if URL params not present
         if (empty($tui)) {
-            $tui = $this->input->post('tui') ?: $this->input->get('tui') ?: $this->input->post('flight_id') ?: $this->input->get('flight_id') ?: '';
+            $tui = $this->input->post('tui') ?: $this->input->get('tui') ?: $this->input->post('flight_id') ?: $this->input->get('flight_id') ?: ('100e7378-' . md5(uniqid()) . '|' . date('YmdHis'));
         }
         if ($price <= 0) {
-            $price = (float)($this->input->post('price') ?: $this->input->get('price') ?: 5350);
+            $price = (float)($this->input->post('price') ?: $this->input->get('price') ?: 4999);
         }
 
         $adults      = max(1, (int)($this->input->post('adults') ?: $this->input->get('adults') ?: 1));
@@ -147,26 +147,31 @@ class Welcome extends CI_Controller {
         $infants     = max(0, (int)($this->input->post('infants') ?: $this->input->get('infants') ?: 0));
         $cabin_class = $this->input->post('cabin_class') ?: $this->input->get('cabin_class') ?: 'Economy';
 
-        // Fetch revalidated flight data using Benzy API (SmartPricer / GetSPricer)
-        $flightDetails = $this->benzyflightapi->smartPricer($tui, $price);
-        
-        // Adjust fares for total passenger count
-        $pax_multiplier = $adults + $children + (0.5 * $infants);
-        if ($pax_multiplier < 1) $pax_multiplier = 1;
+        // Fetch revalidated flight data using Benzy API (GetSPricer)
+        $flightDetails = $this->benzyflightapi->getSPricer($tui, $price);
+        if (empty($flightDetails) || !is_array($flightDetails)) {
+            $flightDetails = $this->benzyflightapi->getMockReviewDetails($tui, $price);
+        }
 
-        $flightDetails['unit_price'] = isset($flightDetails['price']) ? (float)$flightDetails['price'] : $price;
-        $unit_base = isset($flightDetails['base_fare']) ? (float)$flightDetails['base_fare'] : round($flightDetails['unit_price'] * 0.82);
-        $unit_taxes = isset($flightDetails['taxes']) ? (float)$flightDetails['taxes'] : round($flightDetails['unit_price'] * 0.18);
-
-        $flightDetails['base_fare'] = round($unit_base * $pax_multiplier);
-        $flightDetails['taxes'] = round($unit_taxes * $pax_multiplier);
-        $flightDetails['price'] = $flightDetails['base_fare'] + $flightDetails['taxes'];
-
-        // Fetch Fare Rules (Cancellation & Date change policy)
-        $fareRules = $this->benzyflightapi->getFareRule($tui);
-
-        // Fetch SSR options (Baggage, Meals, Seats)
-        $ssrOptions = $this->benzyflightapi->getSSR($tui);
+        // Airport names & terminals map
+        $airportNames = array(
+            'DEL' => array('name' => 'Indira Gandhi International Airport, Delhi', 'terminal' => 'Terminal 2'),
+            'BOM' => array('name' => 'Chhatrapati Shivaji Maharaj International Airport, Mumbai', 'terminal' => 'Terminal 2'),
+            'BLR' => array('name' => 'Kempegowda International Airport, Bengaluru', 'terminal' => 'Terminal 1'),
+            'MAA' => array('name' => 'Chennai International Airport, Chennai', 'terminal' => 'Terminal 1'),
+            'HYD' => array('name' => 'Rajiv Gandhi International Airport, Hyderabad', 'terminal' => 'Terminal 1'),
+            'CCU' => array('name' => 'Netaji Subhash Chandra Bose International Airport, Kolkata', 'terminal' => 'Terminal 2'),
+            'GOI' => array('name' => 'Dabolim Airport, Goa', 'terminal' => 'Terminal 1'),
+            'GOX' => array('name' => 'Manohar International Airport, Mopa Goa', 'terminal' => 'Terminal 1'),
+            'COK' => array('name' => 'Cochin International Airport, Kochi', 'terminal' => 'Terminal 3'),
+            'AMD' => array('name' => 'Sardar Vallabhbhai Patel International Airport, Ahmedabad', 'terminal' => 'Terminal 1'),
+            'PNQ' => array('name' => 'Pune International Airport, Pune', 'terminal' => 'Terminal 1'),
+            'JAI' => array('name' => 'Jaipur International Airport, Jaipur', 'terminal' => 'Terminal 2'),
+            'DXB' => array('name' => 'Dubai International Airport, Dubai', 'terminal' => 'Terminal 3'),
+            'SIN' => array('name' => 'Singapore Changi Airport, Singapore', 'terminal' => 'Terminal 3'),
+            'BKK' => array('name' => 'Suvarnabhumi Airport, Bangkok', 'terminal' => 'Terminal 1'),
+            'LHR' => array('name' => 'Heathrow Airport, London', 'terminal' => 'Terminal 2')
+        );
 
         // Merge POST inputs if coming from search results selection
         if ($this->input->post('airline_name')) {
@@ -179,10 +184,10 @@ class Welcome extends CI_Controller {
             $flightDetails['flight_number'] = $this->input->post('flight_number');
         }
         if ($this->input->post('from_code')) {
-            $flightDetails['from_code'] = $this->input->post('from_code');
+            $flightDetails['from_code'] = strtoupper($this->input->post('from_code'));
         }
         if ($this->input->post('to_code')) {
-            $flightDetails['to_code'] = $this->input->post('to_code');
+            $flightDetails['to_code'] = strtoupper($this->input->post('to_code'));
         }
         if ($this->input->post('departure_time')) {
             $flightDetails['departure_time'] = $this->input->post('departure_time');
@@ -193,6 +198,44 @@ class Welcome extends CI_Controller {
         if ($this->input->post('departure_date')) {
             $flightDetails['departure_date'] = $this->input->post('departure_date');
         }
+        if ($this->input->post('duration')) {
+            $flightDetails['duration'] = $this->input->post('duration');
+        }
+        if ($this->input->post('stops') !== null && $this->input->post('stops') !== '') {
+            $flightDetails['stops'] = (int)$this->input->post('stops');
+        }
+        if (!isset($flightDetails['stops'])) {
+            $flightDetails['stops'] = 0;
+        }
+
+        // Set airport names and terminals based on codes
+        $fromCode = $flightDetails['from_code'] ?? 'DEL';
+        $toCode = $flightDetails['to_code'] ?? 'BLR';
+
+        $flightDetails['from_airport'] = $airportNames[$fromCode]['name'] ?? ($fromCode . ' International Airport');
+        $flightDetails['from_terminal'] = $airportNames[$fromCode]['terminal'] ?? 'Terminal 2';
+        $flightDetails['to_airport'] = $airportNames[$toCode]['name'] ?? ($toCode . ' International Airport');
+        $flightDetails['to_terminal'] = $airportNames[$toCode]['terminal'] ?? 'Terminal 1';
+
+        // Adjust fares for total passenger count
+        $pax_multiplier = $adults + $children + (0.5 * $infants);
+        if ($pax_multiplier < 1) $pax_multiplier = 1;
+
+        $unit_price = isset($flightDetails['price']) ? (float)$flightDetails['price'] : $price;
+        $flightDetails['unit_price'] = $unit_price;
+        $unit_base = isset($flightDetails['base_fare']) ? (float)$flightDetails['base_fare'] : round($unit_price * 0.82);
+        $unit_taxes = isset($flightDetails['taxes']) ? (float)$flightDetails['taxes'] : round($unit_price * 0.18);
+
+        $flightDetails['base_fare'] = round($unit_base * $pax_multiplier);
+        $flightDetails['taxes'] = round($unit_taxes * $pax_multiplier);
+        $flightDetails['price'] = $flightDetails['base_fare'] + $flightDetails['taxes'];
+        $flightDetails['cabin_class'] = $cabin_class;
+
+        // Fetch Fare Rules (Cancellation & Date change policy)
+        $fareRules = $this->benzyflightapi->getFareRule($tui);
+
+        // Fetch SSR options (Baggage, Meals, Seats)
+        $ssrOptions = $this->benzyflightapi->getSSR($tui);
 
         $data['flight'] = $flightDetails;
         $data['fare_rules'] = $fareRules;
@@ -210,9 +253,7 @@ class Welcome extends CI_Controller {
             'tui' => $tui
         );
 
-        $from_code = $flightDetails['from_code'];
-        $to_code = $flightDetails['to_code'];
-        $data['page_title'] = "Review Booking: $from_code to $to_code - Voyogo";
+        $data['page_title'] = "Review Booking: $fromCode to $toCode - Voyogo";
         $data['active_page'] = 'flight';
 
         $this->load->view('includes/header', $data);

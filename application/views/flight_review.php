@@ -65,7 +65,7 @@
                                 <i class="fa-solid fa-plane" style="position: absolute; top: -7px; left: 48%; color: #2563eb; transform: rotate(0deg); font-size: 14px;"></i>
                             </div>
                             <span style="font-size: 11px; color: #16a34a; font-weight: 800; background: #dc26260a; padding: 3px 8px; border-radius: 12px; border: 1px solid #86efac;">
-                                <?php echo ($flight['stops'] == 0) ? 'Non-Stop Direct' : ($flight['stops'] . ' Stop'); ?>
+                                <?php echo (isset($flight['stops']) && $flight['stops'] > 0) ? ($flight['stops'] . ' Stop') : 'Non-Stop Direct'; ?>
                             </span>
                         </div>
 
