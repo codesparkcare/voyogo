@@ -1,21 +1,22 @@
+URL: https://voyogos.com/certification_logs/3.Oneway%20Booking%20with%20Baggage%20-%20Direct%20Flight/16.RetrieveBooking.json
 Method: POST
 Endpoint: /Utils/RetrieveBooking
-Timestamp: 2026-08-19T10:10:40.000Z
+Timestamp: 2026-08-20T08:25:17.000Z
 Request Body:
 {
-    "TransactionID": 250037931,
+    "TransactionID": 250037109,
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
 }
 
 Response Body:
 {
-    "TransactionID": 250037931,
+    "TransactionID": 250037109,
     "Status": "TO0",
-    "PNR": "WE1160",
-    "BookingReference": "VYG250037931",
+    "PNR": "WC7AF2",
+    "BookingReference": "VYG250037109",
     "AirBookingResponse": {
-        "PNR": "WE1160",
-        "BookingReference": "VYG250037931",
+        "PNR": "WC7AF2",
+        "BookingReference": "VYG250037109",
         "TicketStatus": "Ticketed",
         "Status": "TO0"
     },

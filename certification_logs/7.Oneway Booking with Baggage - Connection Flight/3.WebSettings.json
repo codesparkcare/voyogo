@@ -1,6 +1,7 @@
+URL: https://voyogos.com/certification_logs/7.Oneway%20Booking%20with%20Baggage%20-%20Connection%20Flight/3.WebSettings.json
 Method: POST
 Endpoint: /Utils/WebSettings
-Timestamp: 2026-08-19T10:10:40.000Z
+Timestamp: 2026-08-20T08:25:17.000Z
 Request Body:
 {
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",

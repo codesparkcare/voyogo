@@ -257,7 +257,13 @@ class Flight_cert extends CI_Controller {
             if ($respDec) $respRaw = json_encode($respDec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         }
 
-        $fileContent = "Method: {$method}\n"
+        $relativeDir = str_replace($this->certLogDir, '', $dir);
+        $encodedDir = str_replace(' ', '%20', trim($relativeDir, '/'));
+        $encodedFile = str_replace(' ', '%20', $filename);
+        $logUrl = "https://voyogos.com/certification_logs/{$encodedDir}/{$encodedFile}";
+
+        $fileContent = "URL: {$logUrl}\n"
+                     . "Method: {$method}\n"
                      . "Endpoint: {$endpoint}\n"
                      . "Timestamp: {$timestamp}\n"
                      . "Request Body:\n"

@@ -1,18 +1,19 @@
+URL: https://voyogos.com/certification_logs/3.Oneway%20Booking%20with%20Baggage%20-%20Direct%20Flight/11.StartPay(BookingType-HB).json
 Method: POST
 Endpoint: /Payment/StartPay
-Timestamp: 2026-08-19T10:10:40.000Z
+Timestamp: 2026-08-20T08:25:17.000Z
 Request Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-178213d52ed4|254c168c265d|20260819121040",
+    "TUI": "100e7378-e904-4f05-972a-d61ce6342f57|9436a5be2ca7|20260820102517",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "TransactionID": 250037931,
+    "TransactionID": 250037109,
     "PaymentType": "",
     "PaymentAmount": 0
 }
 
 Response Body:
 {
-    "TransactionID": 250037931,
+    "TransactionID": 250037109,
     "Status": "InProgress",
     "Code": "6033",
     "Msg": [

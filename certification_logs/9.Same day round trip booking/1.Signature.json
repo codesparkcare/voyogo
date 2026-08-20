@@ -1,6 +1,7 @@
+URL: https://voyogos.com/certification_logs/9.Same%20day%20round%20trip%20booking/1.Signature.json
 Method: POST
 Endpoint: /Utils/Signature
-Timestamp: 2026-08-19T10:10:40.000Z
+Timestamp: 2026-08-20T08:25:17.000Z
 Request Body:
 {
     "MerchantID": "300",
@@ -14,10 +15,10 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "8608dafd-b425-4e1e-832c-99397e3f01a7|20260819121040",
-    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZklxWmVCUkZIUlNTOFFRWE1ybk8vVDhFcmt6UnMyYzk3cnloS01sWXc3NitRPT0iLCJwd2QiOiJMMkV0NEcvWHE0bExYQUd4Q3M2REh3PT0iLCJhZ2VudENvZGUiOiIvS2ZkWXdlc3FQdz0iLCJjbGllbnRJZCI6IjJmelhFa014VkRVPSIsIm5iZiI61787134240LCJleHAiOiI1787998240\"}.3ed6ea9cdad26a8cb524af2cd72a0b38",
+    "TUI": "8608dafd-b425-4e1e-832c-1eb961030574|20260820102517",
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZklxWmVCUkZIUlNTOFFRWE1ybk8vVDhFcmt6UnMyYzk3cnloS01sWXc3NitRPT0iLCJwd2QiOiJMMkV0NEcvWHE0bExYQUd4Q3M2REh3PT0iLCJhZ2VudENvZGUiOiIvS2ZkWXdlc3FQdz0iLCJjbGllbnRJZCI6IjJmelhFa014VkRVPSIsIm5iZiI61787214317LCJleHAiOiI1788078317\"}.32dc8ebb98209849b6f0aea2adf18b78",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "LastLoginDate": "08/19/2026 12:10:40 PM",
+    "LastLoginDate": "08/20/2026 10:25:17 AM",
     "Password": "L2Et4G/Xq4lLXAGxCs6DHw==",
     "loginAttempts": 0,
     "UserType": "",

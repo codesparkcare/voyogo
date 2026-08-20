@@ -1,19 +1,20 @@
+URL: https://voyogos.com/certification_logs/4.Round%20Trip%20Booking%20with%20Baggage%20-%20Direct%20Flight/7.GetSPricer.json
 Method: POST
 Endpoint: /Flights/GetSPricer
-Timestamp: 2026-08-19T10:10:40.000Z
+Timestamp: 2026-08-20T08:25:17.000Z
 Request Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-5b92155a6339|74f398ce5655|20260819121040"
+    "TUI": "100e7378-e904-4f05-972a-6e802308be01|595d076666a0|20260820102517"
 }
 
 Response Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-5b92155a6339|74f398ce5655|20260819121040",
+    "TUI": "100e7378-e904-4f05-972a-6e802308be01|595d076666a0|20260820102517",
     "Trips": [
         {
             "Journeys": [
                 {
-                    "TUI": "100e7378-e904-4f05-972a-5b92155a6339|74f398ce5655|20260819121040",
+                    "TUI": "100e7378-e904-4f05-972a-6e802308be01|595d076666a0|20260820102517",
                     "Stops": 0,
                     "Duration": "2h 15m",
                     "Price": {
@@ -31,8 +32,8 @@ Response Body:
                             "ArrivalAirport": "BOM",
                             "DepartureTerminal": "2",
                             "ArrivalTerminal": "1",
-                            "DepartureTime": "2026-08-26T06:00:00",
-                            "ArrivalTime": "2026-08-26T08:15:00"
+                            "DepartureTime": "2026-08-27T06:00:00",
+                            "ArrivalTime": "2026-08-27T08:15:00"
                         }
                     ]
                 }

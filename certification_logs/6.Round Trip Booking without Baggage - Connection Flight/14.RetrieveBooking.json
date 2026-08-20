@@ -1,21 +1,22 @@
+URL: https://voyogos.com/certification_logs/6.Round%20Trip%20Booking%20without%20Baggage%20-%20Connection%20Flight/14.RetrieveBooking.json
 Method: POST
 Endpoint: /Utils/RetrieveBooking
-Timestamp: 2026-08-19T10:10:40.000Z
+Timestamp: 2026-08-20T08:25:17.000Z
 Request Body:
 {
-    "TransactionID": 250037502,
+    "TransactionID": 250037866,
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
 }
 
 Response Body:
 {
-    "TransactionID": 250037502,
+    "TransactionID": 250037866,
     "Status": "HO0,HR0",
-    "PNR": "WEB1F4",
-    "BookingReference": "VYG250037502",
+    "PNR": "W1A35D",
+    "BookingReference": "VYG250037866",
     "AirBookingResponse": {
-        "PNR": "WEB1F4",
-        "BookingReference": "VYG250037502",
+        "PNR": "W1A35D",
+        "BookingReference": "VYG250037866",
         "TicketStatus": "Hold",
         "Status": "HO0,HR0"
     },

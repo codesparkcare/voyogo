@@ -1,18 +1,19 @@
+URL: https://voyogos.com/certification_logs/9.Same%20day%20round%20trip%20booking/15.StartPay(BookingType-HP).json
 Method: POST
 Endpoint: /Payment/StartPay
-Timestamp: 2026-08-19T10:10:40.000Z
+Timestamp: 2026-08-20T08:25:17.000Z
 Request Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-e0831d0ef2b8|9ac39b8a95ec|20260819121040",
+    "TUI": "100e7378-e904-4f05-972a-f00f616f3662|6de4951fd25f|20260820102517",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "TransactionID": 250037722,
+    "TransactionID": 250037804,
     "PaymentType": "",
     "PaymentAmount": 5350
 }
 
 Response Body:
 {
-    "TransactionID": 250037722,
+    "TransactionID": 250037804,
     "Status": "InProgress",
     "Code": "6033",
     "Msg": [
