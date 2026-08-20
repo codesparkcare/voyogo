@@ -1,0 +1,796 @@
+{
+	"info": {
+		"_postman_id": "c7a8b9e0-1234-4567-89ab-cdef01234567",
+		"name": "Voyogo - Benzy Infotech / Akbar Travels B2B Flight API Collection",
+		"description": "Complete Postman Collection for all 9 Akbar Travels / Benzy Infotech B2B Flight API Certification Scenarios, Signature Generation, Repricing, SSR, and Booking Lifecycles.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrlUtils",
+			"value": "https://b2bapiutils.benzyinfotech.com",
+			"type": "string"
+		},
+		{
+			"key": "baseUrlFlights",
+			"value": "https://b2bapiflights.benzyinfotech.com",
+			"type": "string"
+		},
+		{
+			"key": "baseUrlHotels",
+			"value": "https://travelportalapi.benzyinfotech.com",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "tui",
+			"value": "8608dafd-b425-4e1e-832c-1b777a456123|20260820120000",
+			"type": "string"
+		},
+		{
+			"key": "pnr",
+			"value": "W835BB",
+			"type": "string"
+		},
+		{
+			"key": "clientID",
+			"value": "FVI6V120g22Ei5ztGK0FIQ==",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "0. Authentication & Utilities",
+			"item": [
+				{
+					"name": "1. Generate Signature (Bearer Token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.Token) {",
+									"    pm.collectionVariables.set('token', jsonData.Token);",
+									"    pm.collectionVariables.set('tui', jsonData.TUI);",
+									"    pm.collectionVariables.set('clientID', jsonData.ClientID);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"MerchantID\": \"300\",\n  \"ApiKey\": \"kXAY9yHARK\",\n  \"ClientID\": \"bitest\",\n  \"Password\": \"staging@1\",\n  \"AgentCode\": \"\",\n  \"BrowserKey\": \"caecd3cd30225512c1811070dce615c1\",\n  \"Key\": \"ef20-925c-4489-bfeb-236c8b406f7e\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlUtils}}/Utils/Signature",
+							"host": [
+								"{{baseUrlUtils}}"
+							],
+							"path": [
+								"Utils",
+								"Signature"
+							]
+						}
+					}
+				},
+				{
+					"name": "2. Web Settings",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ClientID\": \"{{clientID}}\",\n  \"MerchantID\": \"300\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlUtils}}/Utils/WebSettings",
+							"host": [
+								"{{baseUrlUtils}}"
+							],
+							"path": [
+								"Utils",
+								"WebSettings"
+							]
+						}
+					}
+				},
+				{
+					"name": "3. Get Travel CheckList",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ClientID\": \"{{clientID}}\",\n  \"MerchantID\": \"300\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlUtils}}/Utils/GetTravelCheckList",
+							"host": [
+								"{{baseUrlUtils}}"
+							],
+							"path": [
+								"Utils",
+								"GetTravelCheckList"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Scenario 1: Oneway Direct (without Baggage)",
+			"item": [
+				{
+					"name": "1. ExpressSearch (DEL -> BOM Oneway)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.TUI) {",
+									"    pm.collectionVariables.set('tui', jsonData.TUI);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"FareType\": \"ON\",\n  \"ADT\": 1,\n  \"CHD\": 0,\n  \"INF\": 0,\n  \"Cabin\": \"E\",\n  \"Source\": \"LV\",\n  \"Mode\": \"AS\",\n  \"ClientID\": \"{{clientID}}\",\n  \"IsMultipleCarrier\": false,\n  \"IsRefundable\": false,\n  \"preferedAirlines\": [\"\"],\n  \"TUI\": \"\",\n  \"SecType\": \"\",\n  \"Trips\": [\n    {\n      \"From\": \"DEL\",\n      \"To\": \"BOM\",\n      \"OnwardDate\": \"2026-09-10\",\n      \"ReturnDate\": \"\",\n      \"TUI\": \"\"\n    }\n  ],\n  \"Parameters\": {\n    \"Airlines\": \"\",\n    \"GroupType\": \"\",\n    \"Refundable\": \"\",\n    \"IsDirect\": true,\n    \"IsStudentFare\": false,\n    \"IsNearbyAirport\": false,\n    \"IsExtendedSearch\": false,\n    \"IsGDSSearch\": false,\n    \"IsLCCSearch\": true,\n    \"IsSeniorCitizen\": false\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/flights/ExpressSearch",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"flights",
+								"ExpressSearch"
+							]
+						}
+					}
+				},
+				{
+					"name": "2. GetExpSearch (Flight Results)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"ClientID\": \"{{clientID}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/flights/GetExpSearch",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"flights",
+								"GetExpSearch"
+							]
+						}
+					}
+				},
+				{
+					"name": "3. SSR (Special Service Request - Meals/Baggage)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/Flights/SSR",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"Flights",
+								"SSR"
+							]
+						}
+					}
+				},
+				{
+					"name": "4. SmartPricer (Fare Revalidation Step 1)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/flights/SmartPricer",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"flights",
+								"SmartPricer"
+							]
+						}
+					}
+				},
+				{
+					"name": "5. GetSPricer (Fare Revalidation Step 2)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/Flights/GetSPricer",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"Flights",
+								"GetSPricer"
+							]
+						}
+					}
+				},
+				{
+					"name": "6. FareRule (Cancellation & Date Change Policy)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/flights/FareRule",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"flights",
+								"FareRule"
+							]
+						}
+					}
+				},
+				{
+					"name": "7. CreateItinerary (Book Passenger Details)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"Passengers\": [\n    {\n      \"Title\": \"Mr\",\n      \"FirstName\": \"Rahul\",\n      \"LastName\": \"Sharma\",\n      \"PaxType\": \"ADT\",\n      \"Gender\": \"M\",\n      \"DOB\": \"1990-05-15\",\n      \"PassportNo\": \"\",\n      \"PassportExpiryDate\": \"\"\n    }\n  ],\n  \"ContactDetails\": {\n    \"Email\": \"booking@voyogo.com\",\n    \"Mobile\": \"9876543210\",\n    \"CountryCode\": \"+91\",\n    \"Address\": \"Connaught Place, New Delhi\"\n  },\n  \"GSTDetails\": {\n    \"GSTNumber\": \"\",\n    \"CompanyName\": \"\",\n    \"CompanyAddress\": \"\",\n    \"CompanyEmail\": \"\",\n    \"CompanyPhone\": \"\"\n  },\n  \"SSR\": []\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/Flights/CreateItinerary",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"Flights",
+								"CreateItinerary"
+							]
+						}
+					}
+				},
+				{
+					"name": "8. StartPay (Hold Booking - HB)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"BookingType\": \"HB\",\n  \"PaymentMode\": \"AG\",\n  \"PaymentDetails\": {\n    \"Amount\": 5150,\n    \"Currency\": \"INR\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/Payment/StartPay",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"Payment",
+								"StartPay"
+							]
+						}
+					}
+				},
+				{
+					"name": "9. GetItineraryStatus (Check Hold Status)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/Payment/GetItineraryStatus",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"Payment",
+								"GetItineraryStatus"
+							]
+						}
+					}
+				},
+				{
+					"name": "10. RetrieveBooking (Check PNR on Hold)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"PNR\": \"{{pnr}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlUtils}}/Utils/RetrieveBooking",
+							"host": [
+								"{{baseUrlUtils}}"
+							],
+							"path": [
+								"Utils",
+								"RetrieveBooking"
+							]
+						}
+					}
+				},
+				{
+					"name": "11. StartPay (Ticket Issuance - HP)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"BookingType\": \"HP\",\n  \"PaymentMode\": \"AG\",\n  \"PaymentDetails\": {\n    \"Amount\": 5150,\n    \"Currency\": \"INR\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/Payment/StartPay",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"Payment",
+								"StartPay"
+							]
+						}
+					}
+				},
+				{
+					"name": "12. RetrieveBooking (Confirmed Ticketed PNR)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"PNR\": \"{{pnr}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlUtils}}/Utils/RetrieveBooking",
+							"host": [
+								"{{baseUrlUtils}}"
+							],
+							"path": [
+								"Utils",
+								"RetrieveBooking"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Scenario 2: Round Trip Direct (without Baggage)",
+			"item": [
+				{
+					"name": "1. ExpressSearch (DEL <-> BOM RoundTrip)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"FareType\": \"RT\",\n  \"ADT\": 1,\n  \"CHD\": 0,\n  \"INF\": 0,\n  \"Cabin\": \"E\",\n  \"Source\": \"LV\",\n  \"Mode\": \"AS\",\n  \"ClientID\": \"{{clientID}}\",\n  \"IsMultipleCarrier\": false,\n  \"IsRefundable\": false,\n  \"preferedAirlines\": [\"\"],\n  \"TUI\": \"\",\n  \"SecType\": \"\",\n  \"Trips\": [\n    {\n      \"From\": \"DEL\",\n      \"To\": \"BOM\",\n      \"OnwardDate\": \"2026-09-10\",\n      \"ReturnDate\": \"\",\n      \"TUI\": \"\"\n    },\n    {\n      \"From\": \"BOM\",\n      \"To\": \"DEL\",\n      \"OnwardDate\": \"2026-09-15\",\n      \"ReturnDate\": \"\",\n      \"TUI\": \"\"\n    }\n  ],\n  \"Parameters\": {\n    \"Airlines\": \"\",\n    \"GroupType\": \"\",\n    \"Refundable\": \"\",\n    \"IsDirect\": true,\n    \"IsStudentFare\": false,\n    \"IsNearbyAirport\": false,\n    \"IsExtendedSearch\": false,\n    \"IsGDSSearch\": false,\n    \"IsLCCSearch\": true,\n    \"IsSeniorCitizen\": false\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/flights/ExpressSearch",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"flights",
+								"ExpressSearch"
+							]
+						}
+					}
+				},
+				{
+					"name": "2. GetExpSearch (RT Results)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"ClientID\": \"{{clientID}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/flights/GetExpSearch",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"flights",
+								"GetExpSearch"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Scenario 3: Oneway Direct (with Baggage)",
+			"item": [
+				{
+					"name": "1. ExpressSearch (with Baggage)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"FareType\": \"ON\",\n  \"ADT\": 1,\n  \"CHD\": 0,\n  \"INF\": 0,\n  \"Cabin\": \"E\",\n  \"Source\": \"LV\",\n  \"Mode\": \"AS\",\n  \"ClientID\": \"{{clientID}}\",\n  \"IsMultipleCarrier\": false,\n  \"IsRefundable\": false,\n  \"preferedAirlines\": [\"\"],\n  \"TUI\": \"\",\n  \"SecType\": \"\",\n  \"Trips\": [\n    {\n      \"From\": \"DEL\",\n      \"To\": \"BLR\",\n      \"OnwardDate\": \"2026-09-12\",\n      \"ReturnDate\": \"\",\n      \"TUI\": \"\"\n    }\n  ],\n  \"Parameters\": {\n    \"Airlines\": \"\",\n    \"GroupType\": \"\",\n    \"Refundable\": \"\",\n    \"IsDirect\": true,\n    \"IsStudentFare\": false,\n    \"IsNearbyAirport\": false,\n    \"IsExtendedSearch\": false,\n    \"IsGDSSearch\": false,\n    \"IsLCCSearch\": true,\n    \"IsSeniorCitizen\": false\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/flights/ExpressSearch",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"flights",
+								"ExpressSearch"
+							]
+						}
+					}
+				},
+				{
+					"name": "2. SSR Baggage Addon (15kg / 20kg)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"BaggageCode\": \"BAG15\",\n  \"Weight\": \"15KG\",\n  \"Amount\": 1200\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/Flights/SSR",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"Flights",
+								"SSR"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Scenario 5: Oneway Connecting (without Baggage)",
+			"item": [
+				{
+					"name": "1. ExpressSearch (DEL -> BOM Connecting via HYD)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"FareType\": \"ON\",\n  \"ADT\": 1,\n  \"CHD\": 0,\n  \"INF\": 0,\n  \"Cabin\": \"E\",\n  \"Source\": \"LV\",\n  \"Mode\": \"AS\",\n  \"ClientID\": \"{{clientID}}\",\n  \"IsMultipleCarrier\": false,\n  \"IsRefundable\": false,\n  \"preferedAirlines\": [\"\"],\n  \"TUI\": \"\",\n  \"SecType\": \"\",\n  \"Trips\": [\n    {\n      \"From\": \"DEL\",\n      \"To\": \"BOM\",\n      \"OnwardDate\": \"2026-09-14\",\n      \"ReturnDate\": \"\",\n      \"TUI\": \"\"\n    }\n  ],\n  \"Parameters\": {\n    \"Airlines\": \"\",\n    \"GroupType\": \"\",\n    \"Refundable\": \"\",\n    \"IsDirect\": false,\n    \"IsStudentFare\": false,\n    \"IsNearbyAirport\": false,\n    \"IsExtendedSearch\": false,\n    \"IsGDSSearch\": false,\n    \"IsLCCSearch\": true,\n    \"IsSeniorCitizen\": false\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/flights/ExpressSearch",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"flights",
+								"ExpressSearch"
+							]
+						}
+					}
+				},
+				{
+					"name": "2. GetExpSearch (Connecting Flights)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"ClientID\": \"{{clientID}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/flights/GetExpSearch",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"flights",
+								"GetExpSearch"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Hotel API Endpoints",
+			"item": [
+				{
+					"name": "1. Hotel Search",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ChannelID\": \"b2bIndiaDeals\",\n  \"ClientID\": \"bitest\",\n  \"City\": \"Goa\",\n  \"CheckIn\": \"2026-09-15\",\n  \"CheckOut\": \"2026-09-18\",\n  \"Rooms\": 1,\n  \"Adults\": 2,\n  \"Children\": 0\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlHotels}}/Hotels/Search",
+							"host": [
+								"{{baseUrlHotels}}"
+							],
+							"path": [
+								"Hotels",
+								"Search"
+							]
+						}
+					}
+				},
+				{
+					"name": "2. Hotel Itinerary & Rates",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"HotelID\": \"HTL_101\",\n  \"CheckIn\": \"2026-09-15\",\n  \"CheckOut\": \"2026-09-18\",\n  \"Rooms\": 1\n}"
+						},
+						"url": {
+							"raw": "https://b2bapihotels.benzyinfotech.com/Hotels/Itinerary",
+							"protocol": "https",
+							"host": [
+								"b2bapihotels",
+								"benzyinfotech",
+								"com"
+							],
+							"path": [
+								"Hotels",
+								"Itinerary"
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}

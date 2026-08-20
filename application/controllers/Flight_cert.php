@@ -86,6 +86,33 @@ class Flight_cert extends CI_Controller {
     }
 
     /**
+     * Download Postman Collection JSON
+     */
+    public function download_postman() {
+        $filePath = FCPATH . 'Voyogo_Benzy_Flight_API_Postman_Collection.json';
+        if (file_exists($filePath)) {
+            $this->load->helper('download');
+            force_download('Voyogo_Benzy_Flight_API_Postman_Collection.json', file_get_contents($filePath));
+        } else {
+            show_404();
+        }
+    }
+
+    /**
+     * Serve Raw Postman Collection JSON (for Direct URL Import in Postman)
+     */
+    public function postman_collection() {
+        $filePath = FCPATH . 'Voyogo_Benzy_Flight_API_Postman_Collection.json';
+        if (file_exists($filePath)) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo file_get_contents($filePath);
+            exit;
+        } else {
+            show_404();
+        }
+    }
+
+    /**
      * Core Execution Engine for a given Test Case
      */
     protected function executeTestCase($caseId) {

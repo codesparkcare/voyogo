@@ -367,8 +367,11 @@
                     <button id="btnRunAll" class="btn btn-primary" onclick="runAllCases()">
                         <i class="fa-solid fa-play"></i> Run All 9 Scenarios
                     </button>
+                    <a href="<?= site_url('flight_cert/download_postman'); ?>" class="btn" style="background: #f97316; color: #ffffff;">
+                        <i class="fa-solid fa-file-code"></i> Postman Collection (.json)
+                    </a>
                     <a href="<?= site_url('flight_cert/download_zip'); ?>" class="btn btn-success">
-                        <i class="fa-solid fa-download"></i> Download Certification ZIP
+                        <i class="fa-solid fa-download"></i> Download Logs ZIP
                     </a>
                 </div>
             </div>
