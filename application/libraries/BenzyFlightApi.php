@@ -794,16 +794,17 @@ class BenzyFlightApi {
         if (empty($date)) $date = date('Y-m-d', strtotime('+7 days'));
         
         $airlines = array(
-            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '06:00', 'arr' => '08:15', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4300, 'tax' => 850),
-            array('code' => 'AI', 'name' => 'Air India', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '09:30', 'arr' => '11:45', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4800, 'tax' => 920),
-            array('code' => 'SG', 'name' => 'SpiceJet', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '14:15', 'arr' => '16:30', 'dur' => '2h 15m', 'stops' => 0, 'base' => 3950, 'tax' => 800),
-            array('code' => 'QP', 'name' => 'Akasa Air', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '17:00', 'arr' => '19:15', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4100, 'tax' => 820)
+            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-2000', 'dep' => '06:00', 'arr' => '08:15', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4300, 'tax' => 850),
+            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-2134', 'dep' => '09:30', 'arr' => '11:45', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4800, 'tax' => 920),
+            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-5042', 'dep' => '14:15', 'arr' => '16:30', 'dur' => '2h 15m', 'stops' => 0, 'base' => 3950, 'tax' => 800),
+            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-6891', 'dep' => '17:00', 'arr' => '19:15', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4100, 'tax' => 820),
+            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-7205', 'dep' => '20:30', 'arr' => '22:45', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4450, 'tax' => 870)
         );
 
         if ($isConnecting) {
             $airlines = array(
-                array('code' => '6E', 'name' => 'IndiGo (Via HYD)', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '07:30', 'arr' => '13:00', 'dur' => '5h 30m', 'stops' => 1, 'base' => 3600, 'tax' => 750),
-                array('code' => 'AI', 'name' => 'Air India (Via BLR)', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '11:00', 'arr' => '16:45', 'dur' => '5h 45m', 'stops' => 1, 'base' => 3850, 'tax' => 800)
+                array('code' => '6E', 'name' => 'IndiGo (Via HYD)', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-8721', 'dep' => '07:30', 'arr' => '13:00', 'dur' => '5h 30m', 'stops' => 1, 'base' => 3600, 'tax' => 750),
+                array('code' => '6E', 'name' => 'IndiGo (Via BOM)', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-3419', 'dep' => '11:00', 'arr' => '16:45', 'dur' => '5h 45m', 'stops' => 1, 'base' => 3850, 'tax' => 800)
             );
         }
 
@@ -816,7 +817,7 @@ class BenzyFlightApi {
                 'airline_code' => $a['code'],
                 'airline_name' => $a['name'],
                 'airline_logo' => $a['logo'],
-                'flight_number' => $a['code'] . '-' . (2000 + $idx * 123),
+                'flight_number' => $a['flight_no'],
                 'from_code' => strtoupper($from),
                 'to_code' => strtoupper($to),
                 'departure_time' => $a['dep'],

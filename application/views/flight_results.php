@@ -66,21 +66,9 @@
                     <input type="checkbox" checked>
                     <span class="checkmark"></span>
                 </label>
-                <label class="custom-checkbox">
-                    <span>Air India (AI)</span>
-                    <input type="checkbox" checked>
-                    <span class="checkmark"></span>
-                </label>
-                <label class="custom-checkbox">
-                    <span>Vistara (UK)</span>
-                    <input type="checkbox" checked>
-                    <span class="checkmark"></span>
-                </label>
-                <label class="custom-checkbox">
-                    <span>Akasa Air (QP)</span>
-                    <input type="checkbox" checked>
-                    <span class="checkmark"></span>
-                </label>
+                <div style="font-size: 11px; color: #16a34a; font-weight: 600; margin-top: 6px;">
+                    <i class="fa-solid fa-circle-check"></i> Enabled for Test Sandbox
+                </div>
             </div>
 
             <div class="filter-section">
@@ -222,15 +210,15 @@
                     }
                 }
 
-                // If still empty, supply mock flights for the searched route
+                // If still empty, supply mock flights for the searched route (IndiGo test scope)
                 if (empty($flights)) {
                     $mockAirlines = array(
-                        array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '06:00', 'arr' => '08:15', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4999),
-                        array('code' => 'AI', 'name' => 'Air India', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '09:30', 'arr' => '11:45', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5450),
-                        array('code' => 'UK', 'name' => 'Vistara', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/UK.png', 'dep' => '13:15', 'arr' => '15:30', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5890),
-                        array('code' => 'QP', 'name' => 'Akasa Air', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '17:00', 'arr' => '19:15', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4750),
-                        array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '19:45', 'arr' => '22:00', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5120),
-                        array('code' => 'SG', 'name' => 'SpiceJet', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '21:30', 'arr' => '03:10', 'dur' => '5h 40m', 'stops' => 1, 'price' => 4350)
+                        array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E-2000', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '06:00', 'arr' => '08:15', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4999),
+                        array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E-2134', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '09:30', 'arr' => '11:45', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5450),
+                        array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E-5042', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '14:15', 'arr' => '16:30', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4750),
+                        array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E-6891', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '17:00', 'arr' => '19:15', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5120),
+                        array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E-7205', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '20:30', 'arr' => '22:45', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4650),
+                        array('code' => '6E', 'name' => 'IndiGo (Via HYD)', 'flight_no' => '6E-8721', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '07:30', 'arr' => '13:00', 'dur' => '5h 30m', 'stops' => 1, 'price' => 4350)
                     );
                     foreach ($mockAirlines as $mIdx => $m) {
                         $flights[] = array(
@@ -238,7 +226,7 @@
                             'AirlineCode' => $m['code'],
                             'AirlineName' => $m['name'],
                             'AirlineLogo' => $m['logo'],
-                            'FlightNumber' => $m['code'] . '-' . (2100 + $mIdx * 45),
+                            'FlightNumber' => $m['flight_no'],
                             'FromCode' => $search_query['from_code'],
                             'ToCode' => $search_query['to_code'],
                             'DepartureTime' => $m['dep'],
