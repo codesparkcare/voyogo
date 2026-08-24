@@ -411,46 +411,127 @@ class BenzyFlightApi {
     public function createItinerary($tui, $passengers = array(), $contact = array(), $bookingType = 'HB', $ssrAddons = array()) {
         $token = $this->generateToken();
 
-        if (empty($contact)) {
-            $contact = array(
-                "Title"  => "Mr",
-                "FName"  => "Nithin",
-                "LName"  => "Kumar",
-                "Mobile" => "9876543210",
-                "Email"  => "dev@voyogo.com",
-                "City"   => "Delhi",
-                "CountryCode" => "91"
-            );
-        }
+        // Standard ContactInfo matching WRC doc
+        $contactInfo = array(
+            "Title"              => isset($contact['Title']) ? $contact['Title'] : "",
+            "FName"              => isset($contact['FName']) ? $contact['FName'] : "",
+            "LName"              => isset($contact['LName']) ? $contact['LName'] : "",
+            "Mobile"             => isset($contact['Mobile']) ? $contact['Mobile'] : "8590055610",
+            "DestMob"            => isset($contact['DestMob']) ? $contact['DestMob'] : (isset($contact['Mobile']) ? $contact['Mobile'] : "8590055610"),
+            "Phone"              => isset($contact['Phone']) ? $contact['Phone'] : "",
+            "Email"              => isset($contact['Email']) ? $contact['Email'] : "robin@benzyinfotech.com",
+            "Language"           => "",
+            "Address"            => isset($contact['Address']) ? $contact['Address'] : "MRRA 4  EDAPPALLY  Edappally , EDAPPALLY , Edappally",
+            "CountryCode"        => isset($contact['CountryCode']) ? $contact['CountryCode'] : "IN",
+            "MobileCountryCode"  => "+91",
+            "DestMobCountryCode" => "+91",
+            "State"              => isset($contact['State']) ? $contact['State'] : "Kerala",
+            "City"               => isset($contact['City']) ? $contact['City'] : "Cochin",
+            "PIN"                => isset($contact['PIN']) ? $contact['PIN'] : "6865245",
+            "GSTCompanyName"     => isset($contact['GSTCompanyName']) ? $contact['GSTCompanyName'] : "",
+            "GSTTIN"             => isset($contact['GSTTIN']) ? $contact['GSTTIN'] : "",
+            "GstMobile"          => isset($contact['GstMobile']) ? $contact['GstMobile'] : "",
+            "GSTEmail"           => isset($contact['GSTEmail']) ? $contact['GSTEmail'] : "",
+            "UpdateProfile"      => false,
+            "IsGuest"            => false,
+            "SaveGST"            => false
+        );
+
+        $destContactInfo = array(
+            "Address1"          => "",
+            "Address2"          => "",
+            "City"              => "",
+            "Mobile"            => "",
+            "Phone"             => "",
+            "Email"             => "",
+            "CountryCode"       => "",
+            "MobileCountryCode" => "+91",
+            "State"             => "",
+            "PIN"               => ""
+        );
+
+        // Format Travellers matching WRC schema
+        $travellers = array();
+        $idx = 1;
+        $defaultPaxIDs = array('YWdr', 'YmFj', 'YmFh', 'YWJh', 'YmFi', 'YWJj');
 
         if (empty($passengers)) {
             $passengers = array(
-                array(
-                    "Title"     => "Mr",
-                    "FName"     => "Nithin",
-                    "LName"     => "Kumar",
-                    "PaxType"   => "ADT",
-                    "Gender"    => "M",
-                    "Age"       => 30,
-                    "DOB"       => "1994-05-15",
-                    "PassportNo"=> "",
-                    "Baggage"   => isset($ssrAddons['baggage']) ? $ssrAddons['baggage'] : "",
-                    "Meals"     => isset($ssrAddons['meal']) ? $ssrAddons['meal'] : ""
-                )
+                array("Title" => "Mr", "FName" => "TESTA", "LName" => "TESTAB", "PTC" => "ADT", "Gender" => "M", "Age" => 36, "DOB" => "1987-01-27", "PassportNo" => "HM8888HJJ6K"),
+                array("Title" => "Ms", "FName" => "TEST", "LName" => "TEST", "PTC" => "CHD", "Gender" => "F", "Age" => 11, "DOB" => "2012-02-13", "PassportNo" => "54533221"),
+                array("Title" => "Mstr", "FName" => "TEST", "LName" => "TEST", "PTC" => "INF", "Gender" => "M", "Age" => 0, "DOB" => "2022-12-07", "PassportNo" => "5351321")
             );
         }
 
+        foreach ($passengers as $p) {
+            $ptc = isset($p['PTC']) ? $p['PTC'] : (isset($p['PaxType']) ? $p['PaxType'] : 'ADT');
+            $age = isset($p['Age']) ? (int)$p['Age'] : ($ptc === 'ADT' ? 36 : ($ptc === 'CHD' ? 11 : 0));
+            $dob = isset($p['DOB']) && !empty($p['DOB']) ? $p['DOB'] : ($ptc === 'ADT' ? '1987-01-27' : ($ptc === 'CHD' ? '2012-02-13' : '2022-12-07'));
+            $gender = isset($p['Gender']) ? $p['Gender'] : 'M';
+            $title = isset($p['Title']) ? $p['Title'] : ($gender === 'F' ? ($ptc === 'CHD' ? 'Miss' : 'Ms') : ($ptc === 'INF' ? 'Mstr' : 'Mr'));
+            $fname = isset($p['FName']) ? $p['FName'] : (isset($p['first_name']) ? $p['first_name'] : 'TESTA');
+            $lname = isset($p['LName']) ? $p['LName'] : (isset($p['last_name']) ? $p['last_name'] : 'TESTAB');
+            $email = isset($p['Email']) ? $p['Email'] : ($idx === 1 ? 'mails@mail.com' : 'soumya.s@benzyinfotech.com');
+            $mobile = isset($p['PMobileNo']) ? $p['PMobileNo'] : ($idx === 1 ? '' : '8921614723');
+            $passport = isset($p['PassportNo']) ? $p['PassportNo'] : ($idx === 1 ? 'HM8888HJJ6K' : '54533221');
+            $paxId = isset($p['PaxID']) ? $p['PaxID'] : (isset($defaultPaxIDs[$idx - 1]) ? $defaultPaxIDs[$idx - 1] : base64_encode(chr(96 + $idx) . chr(100 + $idx)));
+
+            $travellers[] = array(
+                "ID"               => $idx,
+                "PaxID"            => $paxId,
+                "Operation"        => "0",
+                "Title"            => $title,
+                "FName"            => $fname,
+                "LName"            => $lname,
+                "Email"            => $email,
+                "PMobileNo"        => $mobile,
+                "Age"              => $age,
+                "DOB"              => $dob,
+                "Country"          => "",
+                "Gender"           => $gender,
+                "PTC"              => $ptc,
+                "Nationality"      => "",
+                "PassportNo"       => $passport,
+                "PLI"              => "",
+                "PDOI"             => "",
+                "PDOE"             => "",
+                "VisaType"         => ($ptc === 'ADT' ? "VISITING VISA" : ""),
+                "EmigrationCheck"  => false,
+                "isOptionSelected" => false,
+                "ApproverManagers" => array(
+                    "Managers" => array(),
+                    "Type"     => ""
+                ),
+                "DocumentType"     => ""
+            );
+            $idx++;
+        }
+
+        // Exact WRC CreateItinerary payload
         $payload = array(
-            "TUI"         => $tui,
-            "BookingType" => $bookingType,
-            "ContactInfo" => $contact,
-            "Passengers"  => $passengers,
-            "GSTDetails"  => array(
-                "GSTNumber"   => "",
-                "CompanyName" => "",
-                "Email"       => "",
-                "Mobile"      => ""
-            )
+            "TUI"                   => $tui,
+            "ServiceEnquiry"        => "",
+            "ContactInfo"           => $contactInfo,
+            "DestinationContactInfo"=> $destContactInfo,
+            "Travellers"            => $travellers,
+            "PLP"                   => array(
+                array(
+                    "FUID"  => 1,
+                    "PaxID" => 1,
+                    "FFNo"  => "ABCD1234"
+                )
+            ),
+            "SSR"                   => array(),
+            "CrossSell"             => array(),
+            "CrossSellAmount"       => 0,
+            "EnableFareMasking"     => false,
+            "SSRAmount"             => isset($ssrAddons['amount']) ? (int)$ssrAddons['amount'] : 0,
+            "ClientID"              => "FVI6V120g22Ei5ztGK0FIQ==",
+            "DeviceID"              => "",
+            "AppVersion"            => "",
+            "AgentTourCode"         => "",
+            "NetAmount"             => 0,
+            "BRulesAccepted"        => ""
         );
 
         $res = $this->callApi($this->createItineraryUrl, $payload, $token, 'POST', '/Flights/CreateItinerary');
