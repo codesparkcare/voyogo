@@ -29,6 +29,7 @@ class Mailer {
             'smtp_user'   => $settings['smtp_user'],
             'smtp_pass'   => $settings['smtp_pass'],
             'smtp_crypto' => $settings['smtp_crypto'],
+            'smtp_timeout'=> 3,
             'mailtype'    => 'html',
             'charset'     => 'utf-8',
             'wordwrap'    => TRUE,

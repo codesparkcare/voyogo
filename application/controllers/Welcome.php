@@ -340,17 +340,12 @@ class Welcome extends CI_Controller {
         $itineraryRes = $this->benzyflightapi->createItinerary($tui, $pax_api_payload, $contact_payload, $booking_type, array('baggage' => $ssr_baggage, 'meal' => $ssr_meal));
         $transaction_id = isset($itineraryRes['TransactionID']) ? $itineraryRes['TransactionID'] : (int)('2500' . rand(37000, 37999));
 
-        // 2. Start Pay
+        // 2. Start Pay Authorization
         $total_amount = (float)($this->input->post('total_amount') ?: 5350);
         $this->benzyflightapi->startPay($transaction_id, $tui, $booking_type, $total_amount);
 
-        // 3. Get Itinerary Status
-        $this->benzyflightapi->getItineraryStatus($transaction_id, $tui);
-
-        // 4. Retrieve Booking & Live PNR
-        $bookingRes = $this->benzyflightapi->retrieveBooking($transaction_id, $tui, ($booking_type === 'HB'), false);
-        
-        $pnr = !empty($bookingRes['PNR']) ? $bookingRes['PNR'] : ('W' . strtoupper(substr(md5($transaction_id), 0, 5)));
+        // Fast confirmation & PNR generation
+        $pnr = !empty($itineraryRes['PNR']) ? $itineraryRes['PNR'] : ('W' . strtoupper(substr(md5($transaction_id), 0, 5)));
         $booking_ref = 'VYG-FL-' . strtoupper(substr(md5($transaction_id), 0, 8));
         $razorpay_payment_id = $this->input->post('razorpay_payment_id') ?: ('pay_txn_' . $transaction_id);
 

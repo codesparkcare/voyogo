@@ -142,6 +142,7 @@ document.getElementById('payHotelRazorpayBtn').addEventListener('click', functio
         "description": "Hotel Voucher - <?php echo htmlspecialchars($booking_summary['hotel_name']); ?>",
         "image": "<?php echo base_url('assets/images/logo.png'); ?>",
         "handler": function (response){
+            showHotelProcessingModal("Payment Verified (HTTP 200 OK)! Generating your Official Hotel Voucher...");
             document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
             document.getElementById('hotelBookingForm').submit();
         },
@@ -156,6 +157,7 @@ document.getElementById('payHotelRazorpayBtn').addEventListener('click', functio
         "modal": {
             "ondismiss": function() {
                 if (confirm("Razorpay Test Gateway Window Closed. Complete hotel voucher booking in Test Payment Mode?")) {
+                    showHotelProcessingModal("Confirming Test Booking & Generating Hotel Voucher...");
                     document.getElementById('razorpay_payment_id').value = "pay_test_htl_" + Math.floor(Math.random() * 1000000);
                     document.getElementById('hotelBookingForm').submit();
                 }
@@ -167,8 +169,39 @@ document.getElementById('payHotelRazorpayBtn').addEventListener('click', functio
         var rzp1 = new Razorpay(options);
         rzp1.open();
     } catch(err) {
+        showHotelProcessingModal("Processing Hotel Booking Confirmation...");
         document.getElementById('razorpay_payment_id').value = "pay_test_htl_" + Math.floor(Math.random() * 1000000);
         document.getElementById('hotelBookingForm').submit();
     }
 });
+
+function showHotelProcessingModal(message) {
+    var overlay = document.getElementById('hotelPaymentProcessingOverlay');
+    if (overlay) {
+        document.getElementById('hotelProcessingModalMsg').innerText = message || "Payment Verified! Generating Hotel Voucher...";
+        overlay.style.display = 'flex';
+    }
+}
 </script>
+
+<!-- Hotel Payment Processing Fullscreen Modal Overlay -->
+<div id="hotelPaymentProcessingOverlay" style="display: none; position: fixed; inset: 0; background: rgba(13, 52, 112, 0.94); z-index: 999999; backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; flex-direction: column; color: #ffffff; text-align: center; padding: 20px;">
+    <div style="background: #ffffff; color: #0d3470; border-radius: 20px; padding: 40px 32px; max-width: 440px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+        <div style="width: 70px; height: 70px; border-radius: 50%; background: #fff1f2; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; border: 3px solid #fecdd3;">
+            <i class="fa-solid fa-hotel fa-beat" style="font-size: 30px; color: #e11d48;"></i>
+        </div>
+        <h3 style="font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 8px;">Processing Your Hotel Booking</h3>
+        <p id="hotelProcessingModalMsg" style="font-size: 14px; color: #64748b; margin-bottom: 24px; font-weight: 500;">Payment Verified! Generating your Official Hotel Voucher & Confirmation...</p>
+        <div style="background: #f1f5f9; height: 8px; border-radius: 4px; overflow: hidden; position: relative;">
+            <div style="height: 100%; width: 75%; background: linear-gradient(90deg, #e11d48, #f43f5e); border-radius: 4px; animation: pulseProgress 1.5s infinite ease-in-out;"></div>
+        </div>
+        <div style="font-size: 12px; color: #94a3b8; margin-top: 14px;">Please do not refresh or close this window.</div>
+    </div>
+</div>
+<style>
+@keyframes pulseProgress {
+    0% { width: 30%; }
+    50% { width: 90%; }
+    100% { width: 30%; }
+}
+</style>

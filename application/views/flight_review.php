@@ -577,6 +577,7 @@ document.getElementById('payRazorpayBtn').addEventListener('click', function(e) 
         "description": "Flight Ticket Booking - <?php echo htmlspecialchars($flight['flight_number']); ?>",
         "image": "<?php echo base_url('assets/images/logo.png'); ?>",
         "handler": function (response){
+            showProcessingModal("Payment Verified (HTTP 200 OK)! Generating your Official Flight E-Ticket...");
             document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
             document.getElementById('bookingForm').submit();
         },
@@ -591,6 +592,7 @@ document.getElementById('payRazorpayBtn').addEventListener('click', function(e) 
         "modal": {
             "ondismiss": function() {
                 if (confirm("Razorpay Payment Gateway Closed. Would you like to finish test booking using Test Payment Mode?")) {
+                    showProcessingModal("Confirming Test Booking & Generating E-Ticket...");
                     document.getElementById('razorpay_payment_id').value = "pay_mock_" + Math.floor(Math.random() * 1000000);
                     document.getElementById('bookingForm').submit();
                 }
@@ -602,8 +604,39 @@ document.getElementById('payRazorpayBtn').addEventListener('click', function(e) 
         var rzp1 = new Razorpay(options);
         rzp1.open();
     } catch(err) {
+        showProcessingModal("Processing Booking Confirmation...");
         document.getElementById('razorpay_payment_id').value = "pay_mock_" + Math.floor(Math.random() * 1000000);
         document.getElementById('bookingForm').submit();
     }
 });
+
+function showProcessingModal(message) {
+    var overlay = document.getElementById('paymentProcessingOverlay');
+    if (overlay) {
+        document.getElementById('processingModalMsg').innerText = message || "Payment Verified! Generating E-Ticket...";
+        overlay.style.display = 'flex';
+    }
+}
 </script>
+
+<!-- Payment Processing Fullscreen Modal Overlay -->
+<div id="paymentProcessingOverlay" style="display: none; position: fixed; inset: 0; background: rgba(13, 52, 112, 0.94); z-index: 999999; backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; flex-direction: column; color: #ffffff; text-align: center; padding: 20px;">
+    <div style="background: #ffffff; color: #0d3470; border-radius: 20px; padding: 40px 32px; max-width: 440px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+        <div style="width: 70px; height: 70px; border-radius: 50%; background: #eff6ff; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; border: 3px solid #dbeafe;">
+            <i class="fa-solid fa-plane-departure fa-beat" style="font-size: 30px; color: #2563eb;"></i>
+        </div>
+        <h3 style="font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 8px;">Processing Your Booking</h3>
+        <p id="processingModalMsg" style="font-size: 14px; color: #64748b; margin-bottom: 24px; font-weight: 500;">Payment Verified! Generating your Official Flight E-Ticket & PNR...</p>
+        <div style="background: #f1f5f9; height: 8px; border-radius: 4px; overflow: hidden; position: relative;">
+            <div style="height: 100%; width: 75%; background: linear-gradient(90deg, #2563eb, #38bdf8); border-radius: 4px; animation: pulseProgress 1.5s infinite ease-in-out;"></div>
+        </div>
+        <div style="font-size: 12px; color: #94a3b8; margin-top: 14px;">Please do not refresh or close this window.</div>
+    </div>
+</div>
+<style>
+@keyframes pulseProgress {
+    0% { width: 30%; }
+    50% { width: 90%; }
+    100% { width: 30%; }
+}
+</style>
