@@ -220,12 +220,11 @@ class BenzyFlightApi {
     public function getExpSearch($tui, $from = 'DEL', $to = 'BOM', $date = '', $isConnecting = false) {
         $token = $this->generateToken();
         $payload = array(
-            "ChannelID" => $this->channelId,
-            "ClientID"  => "FVI6V120g22Ei5ztGK0FIQ==",
-            "TUI"       => $tui
+            "TUI"      => $tui,
+            "ClientID" => "FVI6V120g22Ei5ztGK0FIQ=="
         );
 
-        $res = $this->callApi($this->getExpSearchUrl, $payload, $token, 'POST', '/flights/GetExpSearch');
+        $res = $this->callApi($this->getExpSearchUrl, $payload, $token, 'POST', '/flights/GetExpSearch', 8);
 
         if (!empty($res['data']['Trips'])) {
             return $this->parseSearchResults($res['data'], $tui);
@@ -697,7 +696,7 @@ class BenzyFlightApi {
     /**
      * Core cURL Caller
      */
-    protected function callApi($url, $payload, $token = null, $method = 'POST', $endpointName = '') {
+    protected function callApi($url, $payload, $token = null, $method = 'POST', $endpointName = '', $customTimeout = null) {
         $headers = array('Content-Type: application/json');
         if (!empty($token)) {
             $headers[] = 'Authorization: Bearer ' . $token;
@@ -721,18 +720,8 @@ class BenzyFlightApi {
             );
         }
 
-        // Check if endpoint needs extended timeout (flight search, fare pricing, ticketing status)
-        $isSearchOrPricer = (
-            strpos($url, 'GetExpSearch') !== false ||
-            strpos($url, 'GetSPricer') !== false ||
-            strpos($url, 'SmartPricer') !== false ||
-            strpos($url, 'GetItineraryStatus') !== false ||
-            strpos($url, 'ExpressSearch') !== false ||
-            strpos($url, 'CreateItinerary') !== false
-        );
-
-        $connectTimeout = 5;
-        $execTimeout = $isSearchOrPricer ? 20 : 15;
+        $connectTimeout = 3;
+        $execTimeout = $customTimeout ? $customTimeout : 6;
 
         $startTime = microtime(true);
         $ch = curl_init($url);
