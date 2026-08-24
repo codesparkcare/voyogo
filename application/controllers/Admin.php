@@ -256,6 +256,7 @@ class Admin extends CI_Controller {
                 redirect('admin/razorpay_settings');
             }
 
+            $startTime = microtime(true);
             $ch = curl_init('https://api.razorpay.com/v1/payments?count=1');
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_USERPWD, $key_id . ':' . $key_secret);
@@ -265,6 +266,21 @@ class Admin extends CI_Controller {
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $curl_error = curl_error($ch);
             curl_close($ch);
+            $durationMs = round((microtime(true) - $startTime) * 1000);
+
+            // Log Razorpay API call
+            $this->load->model('Api_log_model');
+            $this->Api_log_model->log_call(
+                'razorpay',
+                'VerifyCredentials',
+                'https://api.razorpay.com/v1/payments?count=1',
+                'GET',
+                array('key_id' => $key_id),
+                $response,
+                $http_code,
+                $durationMs,
+                $curl_error
+            );
 
             if ($http_code === 200) {
                 $this->session->set_flashdata('success', 'Razorpay Connection Successful! Credentials are verified and active (HTTP 200 OK).');
@@ -285,6 +301,108 @@ class Admin extends CI_Controller {
         $this->load->view('admin/layout/sidebar', $data);
         $this->load->view('admin/razorpay_settings', $data);
         $this->load->view('admin/layout/footer', $data);
+    }
+
+    /**
+     * API Request & Response Activity Logs Management
+     */
+    public function api_logs()
+    {
+        $this->_check_login();
+        $this->load->model('Api_log_model');
+
+        $service = $this->input->get('service') ?: 'all';
+        $status  = $this->input->get('status') ?: 'all';
+        $search  = trim($this->input->get('search') ?: '');
+        $page    = max(1, (int)($this->input->get('page') ?: 1));
+        $limit   = 30;
+        $offset  = ($page - 1) * $limit;
+
+        $filters = array(
+            'service_type' => $service,
+            'status'       => $status,
+            'search'       => $search
+        );
+
+        $total_rows = $this->Api_log_model->count_logs($filters);
+        $logs = $this->Api_log_model->get_logs($limit, $offset, $filters);
+        $stats = $this->Api_log_model->get_stats();
+
+        $total_pages = ceil($total_rows / $limit);
+
+        $data = array(
+            'logs'        => $logs,
+            'stats'       => $stats,
+            'total_rows'  => $total_rows,
+            'total_pages' => $total_pages,
+            'current_page'=> $page,
+            'service'     => $service,
+            'status'      => $status,
+            'search'      => $search,
+            'active_menu' => 'api_logs'
+        );
+
+        $this->load->view('admin/layout/header', $data);
+        $this->load->view('admin/layout/sidebar', $data);
+        $this->load->view('admin/api_logs', $data);
+        $this->load->view('admin/layout/footer', $data);
+    }
+
+    /**
+     * AJAX endpoint to view single API log payload details
+     */
+    public function api_log_detail($id)
+    {
+        $this->_check_login();
+        $this->load->model('Api_log_model');
+
+        $log = $this->Api_log_model->get_log_by_id($id);
+        if (!$log) {
+            $this->output
+                ->set_status_header(404)
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array('status' => 'error', 'message' => 'Log not found')));
+            return;
+        }
+
+        // Prettify JSON if possible
+        $reqJson = json_decode($log['request_payload'], true);
+        if ($reqJson !== null) {
+            $log['request_formatted'] = json_encode($reqJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        } else {
+            $log['request_formatted'] = $log['request_payload'];
+        }
+
+        $respJson = json_decode($log['response_payload'], true);
+        if ($respJson !== null) {
+            $log['response_formatted'] = json_encode($respJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        } else {
+            $log['response_formatted'] = $log['response_payload'];
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(array('status' => 'success', 'data' => $log)));
+    }
+
+    /**
+     * Clear API Logs
+     */
+    public function api_logs_clear()
+    {
+        $this->_check_login();
+        $this->load->model('Api_log_model');
+
+        $type = $this->input->post('type');
+        if ($type === 'all') {
+            $this->Api_log_model->clear_all_logs();
+            $this->session->set_flashdata('success', 'All API logs cleared successfully!');
+        } else {
+            $this->Api_log_model->clear_old_logs(30);
+            $this->session->set_flashdata('success', 'API logs older than 30 days cleared successfully!');
+        }
+
+        redirect('admin/api_logs');
     }
 
     /**

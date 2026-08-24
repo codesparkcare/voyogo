@@ -31,8 +31,12 @@ $route['admin/enquiries'] = 'admin/enquiries';
 $route['admin/email_settings'] = 'admin/email_settings';
 $route['admin/razorpay_settings'] = 'admin/razorpay_settings';
 $route['admin/payment_settings'] = 'admin/razorpay_settings';
+$route['admin/api_logs'] = 'admin/api_logs';
+$route['admin/api_logs/detail/(:num)'] = 'admin/api_log_detail/$1';
+$route['admin/api_logs/clear'] = 'admin/api_logs_clear';
 $route['admin/setup_db'] = 'admin/setup_db';
 $route['flight_cert'] = 'flight_cert/index';
 $route['cert'] = 'flight_cert/index';
 $route['admin/flight_cert'] = 'flight_cert/index';
+
 

@@ -37,6 +37,9 @@ class BenzyHotelApi {
     /**
      * Generate Signature (Bearer Token)
      */
+    /**
+     * Generate Signature (Bearer Token)
+     */
     public function generateToken() {
         $cacheFile = APPPATH . 'cache/benzy_hotel_token.txt';
         if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < 1800)) {
@@ -46,6 +49,7 @@ class BenzyHotelApi {
             }
         }
 
+        $startTime = microtime(true);
         $ch = curl_init($this->signatureUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -55,7 +59,12 @@ class BenzyHotelApi {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlErr = curl_error($ch);
         curl_close($ch);
+        $durationMs = round((microtime(true) - $startTime) * 1000);
+
+        $this->logCall('hotel', 'Signature', $this->signatureUrl, 'POST', $this->credentials, $response, $httpCode, $durationMs, $curlErr);
 
         $data = json_decode($response, true);
         if (isset($data['TokenId']) && !empty($data['TokenId'])) {
@@ -88,6 +97,7 @@ class BenzyHotelApi {
         );
 
         if ($token) {
+            $startTime = microtime(true);
             $ch = curl_init($this->hotelSearchUrl);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POST, true);
@@ -100,7 +110,12 @@ class BenzyHotelApi {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
             $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlErr = curl_error($ch);
             curl_close($ch);
+            $durationMs = round((microtime(true) - $startTime) * 1000);
+
+            $this->logCall('hotel', 'HotelSearch', $this->hotelSearchUrl, 'POST', $payload, $response, $httpCode, $durationMs, $curlErr);
 
             $resData = json_decode($response, true);
             if (is_array($resData) && !empty($resData['Hotels'])) {
@@ -122,6 +137,7 @@ class BenzyHotelApi {
                 "ChannelID" => $this->channelId,
                 "HotelID" => $hotelId
             );
+            $startTime = microtime(true);
             $ch = curl_init($this->itineraryUrl);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POST, true);
@@ -134,7 +150,12 @@ class BenzyHotelApi {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
             $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlErr = curl_error($ch);
             curl_close($ch);
+            $durationMs = round((microtime(true) - $startTime) * 1000);
+
+            $this->logCall('hotel', 'HotelItinerary', $this->itineraryUrl, 'POST', $payload, $response, $httpCode, $durationMs, $curlErr);
 
             $resData = json_decode($response, true);
             if (is_array($resData) && !empty($resData['HotelDetail'])) {
@@ -144,6 +165,30 @@ class BenzyHotelApi {
 
         // Fallback mock detail
         return $this->getMockHotelDetail($hotelId, $city, $checkin, $checkout);
+    }
+
+    /**
+     * Internal Logger Helper
+     */
+    protected function logCall($service, $action, $url, $method, $request, $response, $httpCode, $durationMs, $err) {
+        try {
+            if ($this->CI && isset($this->CI->load)) {
+                $this->CI->load->model('Api_log_model');
+                $this->CI->Api_log_model->log_call(
+                    $service,
+                    $action,
+                    $url,
+                    $method,
+                    $request,
+                    $response,
+                    $httpCode,
+                    $durationMs,
+                    $err
+                );
+            }
+        } catch (Exception $e) {
+            // Silently continue
+        }
     }
 
     /**

@@ -48,6 +48,11 @@
             </a>
         </li>
         <li>
+            <a href="<?php echo site_url('admin/api_logs'); ?>" class="<?php echo ($active == 'api_logs') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-clock-rotate-left" style="color: #10b981;"></i> API Activity Logs
+            </a>
+        </li>
+        <li>
             <a href="<?php echo site_url('admin/setup_db'); ?>" onclick="return confirm('Synchronize database schema and tables?');">
                 <i class="fa-solid fa-database"></i> Database Sync Tool
             </a>
@@ -86,6 +91,7 @@
                     <img src="https://ui-avatars.com/api/?name=Voyogo+Admin&background=0d3470&color=fff" alt="Admin" style="border-radius: 50%; width: 38px; height: 38px;">
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                    <li><a class="dropdown-item py-2" href="<?php echo site_url('admin/api_logs'); ?>"><i class="fa-solid fa-clock-rotate-left text-success me-2"></i> API Activity Logs</a></li>
                     <li><a class="dropdown-item py-2" href="<?php echo site_url('admin/razorpay_settings'); ?>"><i class="fa-solid fa-credit-card text-primary me-2"></i> Razorpay Settings</a></li>
                     <li><a class="dropdown-item py-2" href="<?php echo site_url('admin/email_settings'); ?>"><i class="fa-solid fa-gear me-2"></i> SMTP Settings</a></li>
                     <li><hr class="dropdown-divider"></li>

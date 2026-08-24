@@ -635,6 +635,7 @@ class BenzyFlightApi {
         $connectTimeout = 2;
         $execTimeout = 4;
 
+        $startTime = microtime(true);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
@@ -650,6 +651,7 @@ class BenzyFlightApi {
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curlErr = curl_error($ch);
         curl_close($ch);
+        $durationMs = round((microtime(true) - $startTime) * 1000);
 
         if ($httpCode !== 200 || !empty($curlErr)) {
             self::$gatewayOffline = true;
@@ -658,6 +660,28 @@ class BenzyFlightApi {
         $responseData = null;
         if (!empty($rawResponse)) {
             $responseData = json_decode($rawResponse, true);
+        }
+
+        $actionName = $endpointName ? ltrim($endpointName, '/') : basename(parse_url($url, PHP_URL_PATH));
+
+        // Save to Database API Logs
+        try {
+            if ($this->CI && isset($this->CI->load)) {
+                $this->CI->load->model('Api_log_model');
+                $this->CI->Api_log_model->log_call(
+                    'flight',
+                    $actionName,
+                    $url,
+                    $method,
+                    $jsonPayload,
+                    $rawResponse,
+                    $httpCode,
+                    $durationMs,
+                    $curlErr
+                );
+            }
+        } catch (Exception $e) {
+            // Silently continue
         }
 
         $logEntry = array(

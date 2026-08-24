@@ -86,6 +86,24 @@ CREATE TABLE IF NOT EXISTS `razorpay_settings` (
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `api_logs` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `service_type` VARCHAR(50) NOT NULL,
+  `action_name` VARCHAR(100) NOT NULL,
+  `endpoint_url` TEXT NOT NULL,
+  `request_method` VARCHAR(10) NOT NULL DEFAULT 'POST',
+  `request_payload` LONGTEXT DEFAULT NULL,
+  `response_payload` LONGTEXT DEFAULT NULL,
+  `http_code` INT DEFAULT 200,
+  `execution_time_ms` INT DEFAULT 0,
+  `error_message` TEXT DEFAULT NULL,
+  `ip_address` VARCHAR(50) DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_service_type` (`service_type`),
+  INDEX `idx_action_name` (`action_name`),
+  INDEX `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Default Admin User (Password: admin123)
 INSERT INTO `admin_users` (`username`, `password`, `email`)
 SELECT 'admin', '$2y$10$cyNdwHuPyQQEtWob3FftDuNfhwqmMkmh5Li4i.bn2CfkgU0nLHEuO', 'admin@voyogo.com'
@@ -100,4 +118,5 @@ FROM DUAL WHERE NOT EXISTS (SELECT * FROM `email_settings` WHERE `id` = 1);
 INSERT INTO `razorpay_settings` (`id`, `razorpay_key_id`, `razorpay_key_secret`, `merchant_name`, `theme_color`, `currency`, `environment`, `is_enabled`)
 SELECT 1, 'rzp_test_TTVGSNKy0V1o7B', 'na1MTEQwpH6CFfHOVghZn2GO', 'Voyogo Travels', '#0d3470', 'INR', 'test', 1
 FROM DUAL WHERE NOT EXISTS (SELECT * FROM `razorpay_settings` WHERE `id` = 1);
+
 
