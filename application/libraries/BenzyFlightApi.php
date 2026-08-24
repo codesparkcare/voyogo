@@ -34,7 +34,7 @@ class BenzyFlightApi {
     protected $createItineraryUrl = 'https://b2bapiflights.benzyinfotech.com/Flights/CreateItinerary';
     protected $startPayUrl        = 'https://b2bapiflights.benzyinfotech.com/Payment/StartPay';
     protected $itineraryStatusUrl = 'https://b2bapiflights.benzyinfotech.com/Payment/GetItineraryStatus';
-    protected $retrieveBookingUrl = 'https://b2bapiutils.benzyinfotech.com/Utils/RetrieveBooking';
+    protected $retrieveBookingUrl = 'https://b2bapiflights.benzyinfotech.com/Utils/RetrieveBooking';
     protected $cancelUrl          = 'https://b2bapiflights.benzyinfotech.com/Flights/Cancel';
 
     // API Credentials
@@ -220,8 +220,9 @@ class BenzyFlightApi {
     public function getExpSearch($tui, $from = 'DEL', $to = 'BOM', $date = '', $isConnecting = false) {
         $token = $this->generateToken();
         $payload = array(
-            "TUI" => $tui,
-            "ClientID" => "FVI6V120g22Ei5ztGK0FIQ=="
+            "ChannelID" => $this->channelId,
+            "ClientID"  => "FVI6V120g22Ei5ztGK0FIQ==",
+            "TUI"       => $tui
         );
 
         $res = $this->callApi($this->getExpSearchUrl, $payload, $token, 'POST', '/flights/GetExpSearch');
@@ -512,6 +513,8 @@ class BenzyFlightApi {
     public function getItineraryStatus($transactionId, $tui, $status = "Success") {
         $token = $this->generateToken();
         $payload = array(
+            "ChannelID"     => $this->channelId,
+            "ClientID"      => "FVI6V120g22Ei5ztGK0FIQ==",
             "TUI"           => $tui,
             "TransactionID" => (int)$transactionId
         );
@@ -540,8 +543,13 @@ class BenzyFlightApi {
     public function retrieveBooking($transactionId, $tui = '', $isHold = true, $isRoundTrip = false) {
         $token = $this->generateToken();
         $payload = array(
-            "TransactionID" => (int)$transactionId,
-            "ClientID"      => "FVI6V120g22Ei5ztGK0FIQ=="
+            "ChannelID"       => $this->channelId,
+            "ClientID"        => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ReferenceNumber" => (string)$transactionId,
+            "TransactionID"   => (int)$transactionId,
+            "ReferenceType"   => "T",
+            "ServiceType"     => "FLT",
+            "TUI"             => $tui
         );
 
         $res = $this->callApi($this->retrieveBookingUrl, $payload, $token, 'POST', '/Utils/RetrieveBooking');
