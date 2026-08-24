@@ -650,8 +650,8 @@ class BenzyFlightApi {
             strpos($url, 'CreateItinerary') !== false
         );
 
-        $connectTimeout = 5;
-        $execTimeout = $isSearchOrPricer ? 25 : 15;
+        $connectTimeout = 8;
+        $execTimeout = $isSearchOrPricer ? 35 : 20;
 
         $startTime = microtime(true);
         $ch = curl_init($url);
