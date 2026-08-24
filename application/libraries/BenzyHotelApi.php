@@ -55,7 +55,8 @@ class BenzyHotelApi {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($this->credentials));
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-        curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $response = curl_exec($ch);
@@ -106,7 +107,8 @@ class BenzyHotelApi {
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . $token
             ));
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 20);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
             $response = curl_exec($ch);
@@ -146,7 +148,8 @@ class BenzyHotelApi {
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . $token
             ));
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 20);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
             $response = curl_exec($ch);

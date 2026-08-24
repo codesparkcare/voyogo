@@ -294,18 +294,18 @@
             <div class="bg-dark px-3 pt-2 border-bottom border-secondary">
                 <ul class="nav nav-tabs border-0" id="inspectorTabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active text-white fw-bold small" id="response-tab" data-bs-toggle="tab" data-bs-target="#response-tab-pane" type="button" role="tab">
-                            <i class="fa-solid fa-cloud-arrow-down text-success me-1"></i> Response Payload (JSON)
+                        <button class="nav-link active fw-bold small px-3 py-2" id="response-tab" data-bs-toggle="tab" data-bs-target="#response-tab-pane" type="button" role="tab" style="color: #4ade80;">
+                            <i class="fa-solid fa-cloud-arrow-down me-1"></i> Response Payload (JSON)
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link text-white fw-bold small" id="request-tab" data-bs-toggle="tab" data-bs-target="#request-tab-pane" type="button" role="tab">
-                            <i class="fa-solid fa-cloud-arrow-up text-primary me-1"></i> Request Payload (JSON)
+                        <button class="nav-link fw-bold small px-3 py-2" id="request-tab" data-bs-toggle="tab" data-bs-target="#request-tab-pane" type="button" role="tab" style="color: #60a5fa;">
+                            <i class="fa-solid fa-cloud-arrow-up me-1"></i> Request Payload (JSON)
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link text-white fw-bold small" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-tab-pane" type="button" role="tab">
-                            <i class="fa-solid fa-circle-info text-info me-1"></i> Meta Details & Trace
+                        <button class="nav-link fw-bold small px-3 py-2" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-tab-pane" type="button" role="tab" style="color: #38bdf8;">
+                            <i class="fa-solid fa-circle-info me-1"></i> Meta Details & Trace
                         </button>
                     </li>
                 </ul>
@@ -423,8 +423,16 @@ function inspectLog(logId) {
                 document.getElementById('modalLatencyBadge').innerText = d.execution_time_ms + 'ms';
 
                 // Payloads
-                document.getElementById('modalResponseBody').innerText = d.response_formatted || d.response_payload || '(Empty response body)';
-                document.getElementById('modalRequestBody').innerText = d.request_formatted || d.request_payload || '(No request payload / GET)';
+                var respBody = d.response_formatted || d.response_payload;
+                if (!respBody || respBody === 'null' || respBody === '0') {
+                    if (d.http_code == 0 || d.error_message) {
+                        respBody = '/* [cURL Connection Error / Timeout] */\n' + (d.error_message || 'The request timed out before receiving a response from the API server.');
+                    } else {
+                        respBody = '/* (Empty response body received from server) */';
+                    }
+                }
+                document.getElementById('modalResponseBody').innerText = respBody;
+                document.getElementById('modalRequestBody').innerText = d.request_formatted || d.request_payload || '/* (No request payload / GET) */';
 
                 // Meta Details
                 document.getElementById('metaUrl').innerText = d.endpoint_url;

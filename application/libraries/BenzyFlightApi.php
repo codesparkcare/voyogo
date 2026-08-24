@@ -632,8 +632,18 @@ class BenzyFlightApi {
             );
         }
 
-        $connectTimeout = 2;
-        $execTimeout = 4;
+        // Check if endpoint needs extended timeout (flight search, fare pricing, ticketing status)
+        $isSearchOrPricer = (
+            strpos($url, 'GetExpSearch') !== false ||
+            strpos($url, 'GetSPricer') !== false ||
+            strpos($url, 'SmartPricer') !== false ||
+            strpos($url, 'GetItineraryStatus') !== false ||
+            strpos($url, 'ExpressSearch') !== false ||
+            strpos($url, 'CreateItinerary') !== false
+        );
+
+        $connectTimeout = 5;
+        $execTimeout = $isSearchOrPricer ? 25 : 15;
 
         $startTime = microtime(true);
         $ch = curl_init($url);
@@ -652,10 +662,6 @@ class BenzyFlightApi {
         $curlErr = curl_error($ch);
         curl_close($ch);
         $durationMs = round((microtime(true) - $startTime) * 1000);
-
-        if ($httpCode !== 200 || !empty($curlErr)) {
-            self::$gatewayOffline = true;
-        }
 
         $responseData = null;
         if (!empty($rawResponse)) {
