@@ -74,6 +74,18 @@ CREATE TABLE IF NOT EXISTS `email_settings` (
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `razorpay_settings` (
+  `id` INT PRIMARY KEY DEFAULT 1,
+  `razorpay_key_id` VARCHAR(255) DEFAULT 'rzp_test_TTVGSNKy0V1o7B',
+  `razorpay_key_secret` VARCHAR(255) DEFAULT 'na1MTEQwpH6CFfHOVghZn2GO',
+  `merchant_name` VARCHAR(100) DEFAULT 'Voyogo Travels',
+  `theme_color` VARCHAR(20) DEFAULT '#0d3470',
+  `currency` VARCHAR(10) DEFAULT 'INR',
+  `environment` VARCHAR(20) DEFAULT 'test',
+  `is_enabled` TINYINT(1) DEFAULT 1,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Default Admin User (Password: admin123)
 INSERT INTO `admin_users` (`username`, `password`, `email`)
 SELECT 'admin', '$2y$10$cyNdwHuPyQQEtWob3FftDuNfhwqmMkmh5Li4i.bn2CfkgU0nLHEuO', 'admin@voyogo.com'
@@ -83,3 +95,9 @@ FROM DUAL WHERE NOT EXISTS (SELECT * FROM `admin_users` WHERE `username` = 'admi
 INSERT INTO `email_settings` (`id`, `smtp_host`, `smtp_port`, `smtp_user`, `smtp_pass`, `smtp_crypto`, `from_email`, `from_name`)
 SELECT 1, 'smtp.gmail.com', 587, '', '', 'tls', 'noreply@voyogo.com', 'Voyogo Travels'
 FROM DUAL WHERE NOT EXISTS (SELECT * FROM `email_settings` WHERE `id` = 1);
+
+-- Default Razorpay Settings row
+INSERT INTO `razorpay_settings` (`id`, `razorpay_key_id`, `razorpay_key_secret`, `merchant_name`, `theme_color`, `currency`, `environment`, `is_enabled`)
+SELECT 1, 'rzp_test_TTVGSNKy0V1o7B', 'na1MTEQwpH6CFfHOVghZn2GO', 'Voyogo Travels', '#0d3470', 'INR', 'test', 1
+FROM DUAL WHERE NOT EXISTS (SELECT * FROM `razorpay_settings` WHERE `id` = 1);
+

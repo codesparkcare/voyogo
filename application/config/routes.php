@@ -29,7 +29,10 @@ $route['admin/flight_bookings'] = 'admin/manage_flight_bookings';
 $route['admin/hotel_bookings'] = 'admin/manage_hotel_bookings';
 $route['admin/enquiries'] = 'admin/enquiries';
 $route['admin/email_settings'] = 'admin/email_settings';
+$route['admin/razorpay_settings'] = 'admin/razorpay_settings';
+$route['admin/payment_settings'] = 'admin/razorpay_settings';
 $route['admin/setup_db'] = 'admin/setup_db';
 $route['flight_cert'] = 'flight_cert/index';
 $route['cert'] = 'flight_cert/index';
 $route['admin/flight_cert'] = 'flight_cert/index';
+

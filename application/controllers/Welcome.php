@@ -8,6 +8,7 @@ class Welcome extends CI_Controller {
         $this->load->helper(array('url', 'form'));
         $this->load->library('session');
         $this->load->model('Booking_model');
+        $this->load->model('Admin_model');
     }
 
     /**
@@ -256,6 +257,7 @@ class Welcome extends CI_Controller {
 
         $data['page_title'] = "Review Booking: $fromCode to $toCode - Voyogo";
         $data['active_page'] = 'flight';
+        $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
 
         $this->load->view('includes/header', $data);
         $this->load->view('flight_review', $data);
@@ -513,6 +515,7 @@ class Welcome extends CI_Controller {
 
         $data['page_title'] = "Review Hotel Booking: $hotel_name - Voyogo";
         $data['active_page'] = 'hotels';
+        $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
 
         $this->load->view('includes/header', $data);
         $this->load->view('hotel_review', $data);

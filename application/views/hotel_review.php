@@ -135,10 +135,10 @@ document.getElementById('payHotelRazorpayBtn').addEventListener('click', functio
     }
 
     var options = {
-        "key": "rzp_test_VoyogoTestKey",
+        "key": "<?php echo !empty($razorpay_settings['razorpay_key_id']) ? htmlspecialchars($razorpay_settings['razorpay_key_id']) : 'rzp_test_TTVGSNKy0V1o7B'; ?>",
         "amount": amountInPaise,
-        "currency": "INR",
-        "name": "Voyogo Hotel Booking",
+        "currency": "<?php echo !empty($razorpay_settings['currency']) ? htmlspecialchars($razorpay_settings['currency']) : 'INR'; ?>",
+        "name": "<?php echo !empty($razorpay_settings['merchant_name']) ? htmlspecialchars($razorpay_settings['merchant_name']) : 'Voyogo Hotel Booking'; ?>",
         "description": "Hotel Voucher - <?php echo htmlspecialchars($booking_summary['hotel_name']); ?>",
         "image": "<?php echo base_url('assets/images/logo.png'); ?>",
         "handler": function (response){
@@ -151,7 +151,7 @@ document.getElementById('payHotelRazorpayBtn').addEventListener('click', functio
             "contact": guestPhone
         },
         "theme": {
-            "color": "#fa3a3a"
+            "color": "<?php echo !empty($razorpay_settings['theme_color']) ? htmlspecialchars($razorpay_settings['theme_color']) : '#fa3a3a'; ?>"
         },
         "modal": {
             "ondismiss": function() {

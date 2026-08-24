@@ -64,4 +64,57 @@ class Admin_model extends CI_Model {
             return $this->db->insert('email_settings', $data);
         }
     }
+
+    public function get_razorpay_settings() {
+        $default = array(
+            'id'                  => 1,
+            'razorpay_key_id'     => 'rzp_test_TTVGSNKy0V1o7B',
+            'razorpay_key_secret' => 'na1MTEQwpH6CFfHOVghZn2GO',
+            'merchant_name'       => 'Voyogo Travels',
+            'theme_color'         => '#0d3470',
+            'currency'            => 'INR',
+            'environment'         => 'test',
+            'is_enabled'          => 1
+        );
+
+        if (!$this->db->table_exists('razorpay_settings')) {
+            $this->load->dbforge();
+            $fields = array(
+                'id' => array('type' => 'INT', 'constraint' => 11, 'default' => 1),
+                'razorpay_key_id' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'rzp_test_TTVGSNKy0V1o7B'),
+                'razorpay_key_secret' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'na1MTEQwpH6CFfHOVghZn2GO'),
+                'merchant_name' => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'Voyogo Travels'),
+                'theme_color' => array('type' => 'VARCHAR', 'constraint' => 20, 'default' => '#0d3470'),
+                'currency' => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'INR'),
+                'environment' => array('type' => 'VARCHAR', 'constraint' => 20, 'default' => 'test'),
+                'is_enabled' => array('type' => 'TINYINT', 'constraint' => 1, 'default' => 1),
+                'updated_at' => array('type' => 'DATETIME', 'null' => TRUE)
+            );
+            $this->dbforge->add_field($fields);
+            $this->dbforge->add_key('id', TRUE);
+            $this->dbforge->create_table('razorpay_settings', TRUE);
+            $this->db->insert('razorpay_settings', $default);
+            return $default;
+        }
+
+        $row = $this->db->get_where('razorpay_settings', array('id' => 1))->row_array();
+        if (!$row) {
+            $this->db->insert('razorpay_settings', $default);
+            return $default;
+        }
+        return $row;
+    }
+
+    public function save_razorpay_settings($data) {
+        $data['id'] = 1;
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        $existing = $this->db->get_where('razorpay_settings', array('id' => 1))->num_rows();
+        if ($existing > 0) {
+            $this->db->where('id', 1);
+            return $this->db->update('razorpay_settings', $data);
+        } else {
+            return $this->db->insert('razorpay_settings', $data);
+        }
+    }
 }
+

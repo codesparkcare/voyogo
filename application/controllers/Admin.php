@@ -226,6 +226,68 @@ class Admin extends CI_Controller {
     }
 
     /**
+     * Razorpay Payment Gateway Settings Management
+     */
+    public function razorpay_settings()
+    {
+        $this->_check_login();
+
+        if ($this->input->post('action') === 'save_settings') {
+            $save_data = array(
+                'razorpay_key_id'     => trim($this->input->post('razorpay_key_id')),
+                'razorpay_key_secret' => trim($this->input->post('razorpay_key_secret')),
+                'merchant_name'       => trim($this->input->post('merchant_name')) ?: 'Voyogo Travels',
+                'theme_color'         => trim($this->input->post('theme_color')) ?: '#0d3470',
+                'currency'            => strtoupper(trim($this->input->post('currency'))) ?: 'INR',
+                'environment'         => trim($this->input->post('environment')) ?: 'test',
+                'is_enabled'          => $this->input->post('is_enabled') ? 1 : 0
+            );
+            $this->Admin_model->save_razorpay_settings($save_data);
+            $this->session->set_flashdata('success', 'Razorpay Payment Gateway Settings saved successfully!');
+            redirect('admin/razorpay_settings');
+        }
+
+        if ($this->input->post('action') === 'test_connection') {
+            $key_id     = trim($this->input->post('test_key_id'));
+            $key_secret = trim($this->input->post('test_key_secret'));
+
+            if (empty($key_id) || empty($key_secret)) {
+                $this->session->set_flashdata('error', 'Please provide both Razorpay Key ID and Key Secret to test connection.');
+                redirect('admin/razorpay_settings');
+            }
+
+            $ch = curl_init('https://api.razorpay.com/v1/payments?count=1');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $key_id . ':' . $key_secret);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            $response = curl_exec($ch);
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curl_error = curl_error($ch);
+            curl_close($ch);
+
+            if ($http_code === 200) {
+                $this->session->set_flashdata('success', 'Razorpay Connection Successful! Credentials are verified and active (HTTP 200 OK).');
+            } elseif ($http_code === 401) {
+                $this->session->set_flashdata('error', 'Authentication Failed (HTTP 401 Unauthorized): Invalid Razorpay Key ID or Key Secret.');
+            } elseif ($curl_error) {
+                $this->session->set_flashdata('error', 'Network Connection Error: ' . $curl_error);
+            } else {
+                $this->session->set_flashdata('error', 'Razorpay API returned status code ' . $http_code . '. Response: ' . substr($response, 0, 150));
+            }
+            redirect('admin/razorpay_settings');
+        }
+
+        $data['settings'] = $this->Admin_model->get_razorpay_settings();
+        $data['active_menu'] = 'razorpay_settings';
+
+        $this->load->view('admin/layout/header', $data);
+        $this->load->view('admin/layout/sidebar', $data);
+        $this->load->view('admin/razorpay_settings', $data);
+        $this->load->view('admin/layout/footer', $data);
+    }
+
+    /**
      * Database Installer Setup Utility
      */
     public function setup_db()

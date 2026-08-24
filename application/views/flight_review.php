@@ -570,10 +570,10 @@ document.getElementById('payRazorpayBtn').addEventListener('click', function(e) 
     }
 
     var options = {
-        "key": "rzp_test_VoyogoTestKey",
+        "key": "<?php echo !empty($razorpay_settings['razorpay_key_id']) ? htmlspecialchars($razorpay_settings['razorpay_key_id']) : 'rzp_test_TTVGSNKy0V1o7B'; ?>",
         "amount": amountInPaise,
-        "currency": "INR",
-        "name": "Voyogo Travels",
+        "currency": "<?php echo !empty($razorpay_settings['currency']) ? htmlspecialchars($razorpay_settings['currency']) : 'INR'; ?>",
+        "name": "<?php echo !empty($razorpay_settings['merchant_name']) ? htmlspecialchars($razorpay_settings['merchant_name']) : 'Voyogo Travels'; ?>",
         "description": "Flight Ticket Booking - <?php echo htmlspecialchars($flight['flight_number']); ?>",
         "image": "<?php echo base_url('assets/images/logo.png'); ?>",
         "handler": function (response){
@@ -586,7 +586,7 @@ document.getElementById('payRazorpayBtn').addEventListener('click', function(e) 
             "contact": contactPhone
         },
         "theme": {
-            "color": "#0d3470"
+            "color": "<?php echo !empty($razorpay_settings['theme_color']) ? htmlspecialchars($razorpay_settings['theme_color']) : '#0d3470'; ?>"
         },
         "modal": {
             "ondismiss": function() {
