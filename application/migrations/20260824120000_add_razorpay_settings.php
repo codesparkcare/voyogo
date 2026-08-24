@@ -56,7 +56,7 @@ class Migration_Add_razorpay_settings extends CI_Migration {
                 ),
             ));
             $this->dbforge->add_key('id', TRUE);
-            $this->dbforge->create_table('razorpay_settings', TRUE, array('ENGINE' => 'InnoDB', 'DEFAULT CHARSET' => 'utf8mb4'));
+            $this->dbforge->create_table('razorpay_settings', TRUE);
 
             // Insert default Razorpay credentials
             $this->db->query("INSERT INTO `razorpay_settings` (`id`, `razorpay_key_id`, `razorpay_key_secret`, `merchant_name`, `theme_color`, `currency`, `environment`, `is_enabled`)

@@ -72,7 +72,7 @@ class Api_log_model extends CI_Model {
             $this->dbforge->add_key('id', TRUE);
             $this->dbforge->add_key('service_type');
             $this->dbforge->add_key('action_name');
-            $this->dbforge->create_table('api_logs', TRUE, array('ENGINE' => 'InnoDB', 'DEFAULT CHARSET' => 'utf8mb4'));
+            $this->dbforge->create_table('api_logs', TRUE);
         }
     }
 
