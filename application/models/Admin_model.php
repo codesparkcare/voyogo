@@ -45,7 +45,7 @@ class Admin_model extends CI_Model {
                 'smtp_host'   => 'smtpout.secureserver.net',
                 'smtp_port'   => 465,
                 'smtp_user'   => 'support@voyogos.com',
-                'smtp_pass'   => 'Voyosup@130826',
+                'smtp_pass'   => 'Voyo_support@123*#',
                 'smtp_crypto' => 'ssl',
                 'from_email'  => 'support@voyogos.com',
                 'from_name'   => 'Voyogo Travels'
