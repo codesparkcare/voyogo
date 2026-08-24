@@ -184,8 +184,8 @@
                                 <td class="ps-4 font-monospace small text-muted">#<?php echo $l['id']; ?></td>
                                 
                                 <td class="small">
-                                    <div class="fw-semibold text-dark"><?php echo date('H:i:s', strtotime($l['created_at'])); ?></div>
-                                    <div class="text-muted" style="font-size: 11px;"><?php echo date('M d, Y', strtotime($l['created_at'])); ?></div>
+                                    <div class="fw-semibold text-dark"><?php echo date('h:i:s A', strtotime($l['created_at'])); ?></div>
+                                    <div class="text-muted" style="font-size: 11px;"><?php echo date('d M Y', strtotime($l['created_at'])); ?></div>
                                 </td>
 
                                 <td>
