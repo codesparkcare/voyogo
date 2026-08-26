@@ -1545,14 +1545,23 @@ class BenzyFlightApi {
      * 12. Get Itinerary Status (Polling)
      * Endpoint: /Payment/GetItineraryStatus
      */
-    public function getItineraryStatus($transactionId, $tui, $status = "Success") {
+    public function getItineraryStatus($transactionId, $tui, $status = "Success", $pollRetries = 2) {
         $token = $this->generateToken();
         $payload = array(
             "TUI"           => $tui,
             "TransactionID" => (int)$transactionId
         );
 
-        $res = $this->callApi($this->itineraryStatusUrl, $payload, $token, 'POST', '/Payment/GetItineraryStatus');
+        $res = null;
+        for ($i = 0; $i < $pollRetries; $i++) {
+            if ($i > 0) {
+                sleep(1); // 1s buffer before polling retry
+            }
+            $res = $this->callApi($this->itineraryStatusUrl, $payload, $token, 'POST', '/Payment/GetItineraryStatus', 30);
+            if (!empty($res['data']) && (isset($res['data']['Code']) || isset($res['data']['CurrentStatus']) || isset($res['data']['PaymentStatus']))) {
+                return $res['data'];
+            }
+        }
 
         if (!empty($res['data'])) {
             return $res['data'];
