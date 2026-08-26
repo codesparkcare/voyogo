@@ -149,7 +149,8 @@ class Welcome extends CI_Controller {
         $infants     = max(0, (int)($this->input->post('infants') ?: $this->input->get('infants') ?: 0));
         $cabin_class = $this->input->post('cabin_class') ?: $this->input->get('cabin_class') ?: 'Economy';
 
-        // Fetch revalidated flight data using Benzy API (GetSPricer)
+        // Fetch revalidated flight data using Benzy API (SmartPricer & GetSPricer)
+        @$this->benzyflightapi->smartPricer($tui, $price);
         $flightDetails = $this->benzyflightapi->getSPricer($tui, $price);
         if (empty($flightDetails) || !is_array($flightDetails)) {
             $flightDetails = $this->benzyflightapi->getMockReviewDetails($tui, $price);
@@ -344,8 +345,16 @@ class Welcome extends CI_Controller {
         $total_amount = (float)($this->input->post('total_amount') ?: 5350);
         $this->benzyflightapi->startPay($transaction_id, $tui, $booking_type, $total_amount);
 
-        // Fast confirmation & PNR generation
-        $pnr = !empty($itineraryRes['PNR']) ? $itineraryRes['PNR'] : ('W' . strtoupper(substr(md5($transaction_id), 0, 5)));
+        // 3. Verify Payment & Itinerary Status via GetItineraryStatus
+        $statusRes = $this->benzyflightapi->getItineraryStatus($transaction_id, $tui);
+
+        // 4. Retrieve Booking to confirm PNR and ticketed/held itinerary
+        $originCode = strtoupper(substr($this->input->post('origin') ?: 'DEL', 0, 3));
+        $destinationCode = strtoupper(substr($this->input->post('destination') ?: 'BOM', 0, 3));
+        $retrieveRes = $this->benzyflightapi->retrieveBooking($transaction_id, $tui, ($booking_type === 'HB'), false, $originCode, $destinationCode);
+
+        // Confirmation & PNR generation
+        $pnr = !empty($retrieveRes['PNR']) ? $retrieveRes['PNR'] : (!empty($itineraryRes['PNR']) ? $itineraryRes['PNR'] : ('W' . strtoupper(substr(md5($transaction_id), 0, 5))));
         $booking_ref = 'VYG-FL-' . strtoupper(substr(md5($transaction_id), 0, 8));
         $razorpay_payment_id = $this->input->post('razorpay_payment_id') ?: ('pay_txn_' . $transaction_id);
 
