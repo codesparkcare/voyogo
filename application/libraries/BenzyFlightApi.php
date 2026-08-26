@@ -2087,8 +2087,8 @@ class BenzyFlightApi {
             );
         }
 
-        $connectTimeout = 3;
-        $execTimeout = $customTimeout ? $customTimeout : 6;
+        $connectTimeout = 5;
+        $execTimeout = $customTimeout ? $customTimeout : 15;
 
         $startTime = microtime(true);
         $ch = curl_init($url);
