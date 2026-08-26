@@ -1545,23 +1545,14 @@ class BenzyFlightApi {
      * 12. Get Itinerary Status (Polling)
      * Endpoint: /Payment/GetItineraryStatus
      */
-    public function getItineraryStatus($transactionId, $tui, $status = "Success", $pollRetries = 2) {
+    public function getItineraryStatus($transactionId, $tui, $status = "Success") {
         $token = $this->generateToken();
         $payload = array(
             "TUI"           => $tui,
             "TransactionID" => (int)$transactionId
         );
 
-        $res = null;
-        for ($i = 0; $i < $pollRetries; $i++) {
-            if ($i > 0) {
-                sleep(1); // 1s buffer before polling retry
-            }
-            $res = $this->callApi($this->itineraryStatusUrl, $payload, $token, 'POST', '/Payment/GetItineraryStatus', 30);
-            if (!empty($res['data']) && (isset($res['data']['Code']) || isset($res['data']['CurrentStatus']) || isset($res['data']['PaymentStatus']))) {
-                return $res['data'];
-            }
-        }
+        $res = $this->callApi($this->itineraryStatusUrl, $payload, $token, 'POST', '/Payment/GetItineraryStatus', 8);
 
         if (!empty($res['data'])) {
             return $res['data'];
@@ -2096,8 +2087,8 @@ class BenzyFlightApi {
             );
         }
 
-        $connectTimeout = 5;
-        $execTimeout = $customTimeout ? $customTimeout : 15;
+        $connectTimeout = 3;
+        $execTimeout = $customTimeout ? $customTimeout : 8;
 
         $startTime = microtime(true);
         $ch = curl_init($url);
