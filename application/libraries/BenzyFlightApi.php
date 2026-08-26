@@ -269,7 +269,7 @@ class BenzyFlightApi {
             "ClientID" => "FVI6V120g22Ei5ztGK0FIQ=="
         );
 
-        $res = $this->callApi($this->getExpSearchUrl, $payload, $token, 'POST', '/flights/GetExpSearch', 8);
+        $res = $this->callApi($this->getExpSearchUrl, $payload, $token, 'POST', '/flights/GetExpSearch', 45);
 
         if (!empty($res['data']['Trips'])) {
             return $this->parseSearchResults($res['data'], $tui);
@@ -1552,7 +1552,7 @@ class BenzyFlightApi {
             "TransactionID" => (int)$transactionId
         );
 
-        $res = $this->callApi($this->itineraryStatusUrl, $payload, $token, 'POST', '/Payment/GetItineraryStatus', 8);
+        $res = $this->callApi($this->itineraryStatusUrl, $payload, $token, 'POST', '/Payment/GetItineraryStatus', 30);
 
         if (!empty($res['data'])) {
             return $res['data'];
@@ -2087,8 +2087,8 @@ class BenzyFlightApi {
             );
         }
 
-        $connectTimeout = 3;
-        $execTimeout = $customTimeout ? $customTimeout : 8;
+        $connectTimeout = 10;
+        $execTimeout = $customTimeout ? $customTimeout : 30;
 
         $startTime = microtime(true);
         $ch = curl_init($url);
