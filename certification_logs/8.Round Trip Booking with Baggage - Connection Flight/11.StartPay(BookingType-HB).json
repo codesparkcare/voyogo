@@ -1,22 +1,65 @@
 URL: https://voyogos.com/certification_logs/8.Round%20Trip%20Booking%20with%20Baggage%20-%20Connection%20Flight/11.StartPay(BookingType-HB).json
 Method: POST
 Endpoint: /Payment/StartPay
-Timestamp: 2026-08-20T08:25:17.000Z
+Timestamp: 2026-08-26T07:05:40.000Z
 Request Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-6b07a161e9c6|499ee0b3a39e|20260820102517",
+    "TransactionID": 250037054,
+    "PaymentAmount": 0,
+    "NetAmount": 5350,
+    "BrowserKey": "ef20-925c-4489-bfeb-236c8b406f7e",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "TransactionID": 250037779,
+    "TUI": "92440198-dc0b-409e-b8d8-81bafc936263|fe1c7d441cdb|20260826123513",
+    "Hold": true,
+    "Promo": null,
     "PaymentType": "",
-    "PaymentAmount": 0
+    "BankCode": "",
+    "GateWayCode": "",
+    "MerchantID": "",
+    "PaymentCharge": 0,
+    "ReleaseDate": "",
+    "OnlinePayment": false,
+    "DepositPayment": true,
+    "Card": {
+        "Number": "",
+        "Expiry": "",
+        "CVV": "",
+        "CHName": "",
+        "Address": "",
+        "City": "",
+        "State": "",
+        "Country": "",
+        "PIN": "",
+        "International": false,
+        "SaveCard": false,
+        "FName": "",
+        "LName": "",
+        "EMIMonths": "0"
+    },
+    "VPA": "",
+    "CardAlias": "",
+    "QuickPay": null,
+    "RMSSignature": "",
+    "TargetCurrency": "",
+    "TargetAmount": 0,
+    "ServiceType": "ITI"
 }
 
 Response Body:
 {
-    "TransactionID": 250037779,
-    "Status": "InProgress",
+    "TUI": "92440198-dc0b-409e-b8d8-81bafc936263|fe1c7d441cdb|20260826123513",
     "Code": "6033",
     "Msg": [
         "BOOKING  INPROGRESS !"
-    ]
+    ],
+    "PaymentID": null,
+    "TransactionID": 250037054,
+    "RedirectMode": "R",
+    "PostData": null,
+    "CRSPNR": null,
+    "BookStatus": null,
+    "TUTransactionID": 0,
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "GatewayCode": "TEC",
+    "RedirectUrl": "92440198-dc0b-409e-b8d8-81bafc936263|fe1c7d441cdb|20260826123513|250037054"
 }

@@ -1,25 +1,199 @@
 URL: https://voyogos.com/certification_logs/6.Round%20Trip%20Booking%20without%20Baggage%20-%20Connection%20Flight/16.RetrieveBooking.json
 Method: POST
 Endpoint: /Utils/RetrieveBooking
-Timestamp: 2026-08-20T08:25:17.000Z
+Timestamp: 2026-08-26T07:04:19.000Z
 Request Body:
 {
-    "TransactionID": 250037866,
-    "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
+    "TUI": "92440198-dc0b-409e-b8d8-186a62acd1f5|d71a08b8ebae|20260826123337",
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "ReferenceNumber": "250037987",
+    "ReferenceType": "T",
+    "ServiceType": "FLT"
 }
 
 Response Body:
 {
-    "TransactionID": 250037866,
+    "TUI": "92440198-dc0b-409e-b8d8-186a62acd1f5|d71a08b8ebae|20260826123337",
+    "TransactionID": 250037987,
+    "NetAmount": 5154,
+    "CumulativeNetAmount": 5154,
+    "AirlineNetFare": 2904,
+    "SSRAmount": 0,
+    "CrossSellAmount": 0,
+    "GrossAmount": 5350,
+    "CancellationID": 0,
+    "RefundAmount": null,
+    "AirlineRefundAmount": null,
+    "ATOServiceCharge": null,
+    "SectorType": "D",
+    "ServiceType": "FLT",
+    "From": "DEL",
+    "To": "BOM",
+    "FromName": "Indira Gandhi International |New Delhi",
+    "ToName": "Chhatrapati Shivaji |Mumbai",
+    "OnwardDate": "2026-09-02",
+    "ReturnDate": "2026-09-07",
+    "GateWayCode": "",
+    "GateWayCharge": 0,
+    "PaymentStatus": "I8",
+    "PaymentTransactionStatus": null,
     "Status": "TO0,TR0",
-    "PNR": "W1A35D",
-    "BookingReference": "VYG250037866",
-    "AirBookingResponse": {
-        "PNR": "W1A35D",
-        "BookingReference": "VYG250037866",
-        "TicketStatus": "Ticketed",
-        "Status": "TO0,TR0"
-    },
+    "FareType": "N",
+    "BookingDate": "2026-08-26 12:34:19",
+    "TripType": "RT",
+    "Hold": false,
+    "HoldDuration": 0,
+    "CeilingInfo": null,
+    "Invoice": "",
+    "Promo": [],
+    "CrossSell": [],
+    "MCReference": [],
+    "Trips": [
+        {
+            "Journey": [
+                {
+                    "Provider": "6E",
+                    "OrderID": 1,
+                    "Stops": 0,
+                    "GrossFare": 5350,
+                    "NetFare": 4547.5,
+                    "RefundAmount": null,
+                    "AirlineRefundAmount": null,
+                    "ATOServiceCharge": null,
+                    "Status": "TO0,TR0",
+                    "RefTransactionID": 0,
+                    "AirlineContact": "1246173838",
+                    "WebCheckinUrl": "https://www.goindigo.in/web-check-in.html?linkNav=web-check-in_header",
+                    "Duration": "02h 15m ",
+                    "Segments": [
+                        {
+                            "Flight": {
+                                "FUID": 1,
+                                "VAC": "6E",
+                                "MAC": "6E",
+                                "OAC": "6E",
+                                "Airline": "IndiGo|IndiGo|IndiGo",
+                                "AirCraft": "AIRBUS JET",
+                                "FBC": "USAV",
+                                "APNR": "W9E9FE",
+                                "CRSPNR": "CRSPNR123",
+                                "FlightNo": "2134",
+                                "ArrivalTime": "2026-09-02T08:15:00",
+                                "DepartureTime": "2026-09-02T06:00:00",
+                                "ArrivalCode": "BOM",
+                                "DepartureCode": "DEL",
+                                "ArrivalTerminal": "1",
+                                "DepartureTerminal": "2",
+                                "OrginalCurrencyCode": "INR",
+                                "ArrAirportName": "Chhatrapati Shivaji |Mumbai",
+                                "DepAirportName": "Indira Gandhi International |New Delhi",
+                                "EquipmentType": "320",
+                                "RBD": "E",
+                                "Cabin": "E",
+                                "Refundable": "R",
+                                "Amenities": "",
+                                "Duration": "02h 15m ",
+                                "FareClass": "GS",
+                                "TicketInfo": [
+                                    {
+                                        "PaxID": 1226,
+                                        "TicketNo": "6E-TK-250037987",
+                                        "Status": "TO0,TR0"
+                                    }
+                                ],
+                                "Hops": [],
+                                "RefundSummary": []
+                            },
+                            "Fares": {
+                                "PTCFare": [
+                                    {
+                                        "PTC": "ADT",
+                                        "Fare": 2423,
+                                        "YQ": 0,
+                                        "PSF": 0,
+                                        "YR": 0,
+                                        "UD": 0,
+                                        "K3": 0,
+                                        "API": 0,
+                                        "OTT": "RCS,TRF,DF,ASF,CGST,SGST",
+                                        "OT": "50.00,80.00,142.00,177.00,64.00,64.00",
+                                        "Tax": 577,
+                                        "GrossFare": 3011,
+                                        "NetFare": 2903.67999999999983629095368087291717529296875,
+                                        "ST": 0,
+                                        "VATonServiceCharge": 0,
+                                        "VATonTransactionFee": 0,
+                                        "AgentMarkUp": 11,
+                                        "AddonMarkup": 0,
+                                        "AddonDiscount": 0
+                                    }
+                                ],
+                                "GrossFare": 5350,
+                                "NetFare": 4547.5,
+                                "TotalServiceTax": 0,
+                                "TotalBaseFare": 4300,
+                                "TotalTax": 850,
+                                "TotalCommission": 50,
+                                "TotalVATonServiceCharge": 0,
+                                "TotalVATonTransactionFee": 0,
+                                "TotalAgentMarkUp": 11,
+                                "TotalAddonMarkup": 0,
+                                "TotalAddonDiscount": 0
+                            }
+                        }
+                    ],
+                    "Notices": []
+                }
+            ]
+        }
+    ],
+    "Rules": [],
+    "SSR": [],
+    "Pax": [
+        {
+            "ID": 1226,
+            "PaxID": 1,
+            "Title": "Mr",
+            "FName": "Nithin",
+            "LName": "Kumar",
+            "Age": "32",
+            "DOB": "1992-05-15",
+            "Gender": "M",
+            "PTC": "ADT",
+            "Nationality": "",
+            "PassportNo": "",
+            "PLI": "",
+            "DOE": "2026-08-26",
+            "VisaType": ""
+        }
+    ],
+    "ContactInfo": [
+        {
+            "Title": "Mr",
+            "FName": "Nithin",
+            "LName": "Kumar",
+            "MobileCountryCode": "+91",
+            "Mobile": "9876543210",
+            "Phone": "9876543210",
+            "Email": "dev@voyogo.com",
+            "Address": "MRRA 4  EDAPPALLY  Edappally , EDAPPALLY , Edappally",
+            "CountryCode": "IN",
+            "State": "Kerala",
+            "City": "Cochin",
+            "PIN": "6865245",
+            "GSTCompanyName": "",
+            "GSTTIN": "",
+            "GSTMobile": "",
+            "GSTEmail": "",
+            "UpdateProfile": false,
+            "IsGuest": false
+        }
+    ],
+    "PLP": [],
+    "SeatMap": [],
+    "Auxiliaries": [],
+    "PaymentSummary": null,
+    "Remarks": [],
     "Code": "200",
     "Msg": [
         "Success"

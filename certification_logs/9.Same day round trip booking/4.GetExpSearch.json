@@ -1,43 +1,111 @@
 URL: https://voyogos.com/certification_logs/9.Same%20day%20round%20trip%20booking/4.GetExpSearch.json
 Method: POST
 Endpoint: /flights/GetExpSearch
-Timestamp: 2026-08-20T08:25:17.000Z
+Timestamp: 2026-08-26T07:06:07.000Z
 Request Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-f00f616f3662|6de4951fd25f|20260820102517",
+    "TUI": "92440198-dc0b-409e-b8d8-1210c04e42c6|71c9fb3a8c64|20260826123601",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
 }
 
 Response Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-f00f616f3662|6de4951fd25f|20260820102517",
-    "Completed": true,
+    "TUI": "92440198-dc0b-409e-b8d8-1210c04e42c6|71c9fb3a8c64|20260826123601",
+    "Completed": "False",
+    "CeilingInfo": null,
+    "CurrencyCode": "INR",
+    "Notices": [
+        {
+            "Notice": "Transit Visa is a mandatory requirement if there are via TWO Schengen countries or TWO stop in same countries.",
+            "Link": "",
+            "NoticeType": "NoticeOnAvailability"
+        },
+        {
+            "Notice": "As per instructions from the UAE Authorities passengers with single name on passport only can travelling with residence or employment visa and any other type of visa shall not be allowed to travel to and from UAE",
+            "Link": "",
+            "NoticeType": "NoticeOnAvailability"
+        },
+        {
+            "Notice": "Please be informed that Return ticket on a single PNR/Ticket on the same airline is mandatory for passengers travelling on Visit/Tourist Visa to the Eastern European countries.",
+            "Link": "",
+            "NoticeType": "NoticeOnAvailability"
+        },
+        {
+            "Notice": "All Indian nationals intending to visit Hong Kong must first apply for and successfully complete pre-arrival registration online.",
+            "Link": "https://www.immd.gov.hk/eng/services/visas/pre-arrival_registration_for_indian_nationals.html",
+            "NoticeType": "NoticeOnAvailability"
+        },
+        {
+            "Notice": "As mandated by the Maldives immigration all travellers arriving and deaprting from the maldives must update the traveller declaration within 96 hours of their flight time and possess verified QR code for scanning at the airport",
+            "Link": "https://imuga.immigration.gov.mv/ethd",
+            "NoticeType": "NoticeOnAvailability"
+        }
+    ],
     "Trips": [
         {
-            "TripType": "ON",
-            "Journeys": [
+            "Journey": [
                 {
-                    "TUI": "100e7378-e904-4f05-972a-f00f616f3662|6de4951fd25f|20260820102517",
                     "Stops": 0,
-                    "Duration": "2h 15m",
-                    "Price": {
-                        "NetFare": 4300,
-                        "Tax": 850,
-                        "GrossFare": 5150
+                    "Seats": 9,
+                    "ReturnIdentifier": 0,
+                    "Index": "6E|1",
+                    "Provider": "6E",
+                    "FlightNo": "2134",
+                    "VAC": "6E",
+                    "MAC": "6E",
+                    "OAC": "6E",
+                    "ArrivalTime": "2026-09-02T08:15:00",
+                    "DepartureTime": "2026-09-02T06:00:00",
+                    "ArrivalTerminal": "1",
+                    "DepartureTerminal": "2",
+                    "FareClass": "GS",
+                    "Duration": "02h 15m ",
+                    "GroupCount": 0,
+                    "TotalFare": null,
+                    "GrossFare": 5150,
+                    "TotalCommission": 50,
+                    "TotalTransactionFee": 0,
+                    "TotalVatOnTFee": 0,
+                    "NetFare": 4300,
+                    "WPNetFare": 0,
+                    "Hops": 0,
+                    "Notice": "",
+                    "NoticeLink": "",
+                    "NoticeType": null,
+                    "Refundable": "Y",
+                    "Alliances": "",
+                    "Amenities": "PM,PB",
+                    "Inclusions": {
+                        "Baggage": "15 Kg",
+                        "Meals": null,
+                        "PieceDescription": null
                     },
-                    "Flights": [
-                        {
-                            "FlightNo": "2134",
-                            "Carrier": {
-                                "AirlineCode": "6E",
-                                "AirlineName": "IndiGo"
-                            },
-                            "DepartureAirport": "DEL",
-                            "ArrivalAirport": "BOM",
-                            "DepartureTime": "2026-08-27T06:00:00",
-                            "ArrivalTime": "2026-08-27T08:15:00"
-                        }
-                    ]
+                    "Hold": true,
+                    "HoldInfo": "E|01:00|1.00|SE|EE",
+                    "Connections": [],
+                    "From": "DEL",
+                    "To": "BOM",
+                    "FromName": "Indira Gandhi International |New Delhi",
+                    "ToName": "Chhatrapati Shivaji International |Mumbai",
+                    "AirlineName": "IndiGo|IndiGo|IndiGo",
+                    "GDSPriority": 0,
+                    "AirCraft": "320",
+                    "RBD": "E",
+                    "Cabin": "E",
+                    "FBC": "EOWIN",
+                    "FCBegin": null,
+                    "FCEnd": null,
+                    "FCType": "",
+                    "FCGroup": "",
+                    "GFL": false,
+                    "Promo": "ATFLY",
+                    "Recommended": false,
+                    "FareType": "PB-",
+                    "TrendFare": 4300,
+                    "IsBusStation": false,
+                    "ChannelCode": null,
+                    "WpIndex": null,
+                    "JourneyKey": "6E,2134,DEL,BOM,2026-09-02T06:00:00,2026-09-02T08:15:00,2,,02h 15m "
                 }
             ]
         }

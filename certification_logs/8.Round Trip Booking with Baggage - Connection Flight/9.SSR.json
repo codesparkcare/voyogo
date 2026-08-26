@@ -1,67 +1,166 @@
 URL: https://voyogos.com/certification_logs/8.Round%20Trip%20Booking%20with%20Baggage%20-%20Connection%20Flight/9.SSR.json
 Method: POST
 Endpoint: /Flights/SSR
-Timestamp: 2026-08-20T08:25:17.000Z
+Timestamp: 2026-08-26T07:05:34.000Z
 Request Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-6b07a161e9c6|499ee0b3a39e|20260820102517",
-    "ChannelID": "b2bIndiaDeals"
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "PaidSSR": true,
+    "Source": "LV",
+    "Trips": [
+        {
+            "TUI": "92440198-dc0b-409e-b8d8-81bafc936263|fe1c7d441cdb|20260826123513",
+            "Amount": 0,
+            "OrderID": 1,
+            "Index": ""
+        }
+    ]
 }
 
 Response Body:
 {
-    "Baggage": [
+    "TUI": "92440198-dc0b-409e-b8d8-81bafc936263|fe1c7d441cdb|20260826123513",
+    "PaidSSR": true,
+    "Trips": [
         {
-            "Code": "BAG0",
-            "Description": "No Extra Baggage",
-            "Amount": 0,
-            "Weight": "15kg"
-        },
-        {
-            "Code": "BAG3",
-            "Description": "Additional 3 Kgs Check-in Baggage",
-            "Amount": 1350,
-            "Weight": "3kg"
-        },
-        {
-            "Code": "BAG5",
-            "Description": "Additional 5 Kgs Check-in Baggage",
-            "Amount": 2250,
-            "Weight": "5kg"
-        },
-        {
-            "Code": "BAG10",
-            "Description": "Additional 10 Kgs Check-in Baggage",
-            "Amount": 4500,
-            "Weight": "10kg"
-        },
-        {
-            "Code": "BAG15",
-            "Description": "Additional 15 Kgs Check-in Baggage",
-            "Amount": 6750,
-            "Weight": "15kg"
-        }
-    ],
-    "Meals": [
-        {
-            "Code": "NO_MEAL",
-            "Description": "No Meal",
-            "Amount": 0
-        },
-        {
-            "Code": "VEG_SANDWICH",
-            "Description": "Paneer Tikka Sandwich + Soft Drink",
-            "Amount": 350
-        },
-        {
-            "Code": "NONVEG_SANDWICH",
-            "Description": "Chicken Tikka Sandwich + Beverage",
-            "Amount": 400
-        },
-        {
-            "Code": "JAIN_MEAL",
-            "Description": "Jain Veg Meal Box",
-            "Amount": 380
+            "From": "DEL",
+            "To": "BLR",
+            "Journey": [
+                {
+                    "Provider": "6E",
+                    "MultiSSR": "",
+                    "ConversationID": "",
+                    "Segments": [
+                        {
+                            "FUID": "1",
+                            "VAC": "6E",
+                            "Index": null,
+                            "SSR": [
+                                {
+                                    "Code": "BOF1",
+                                    "Description": "Bagout First 1 Bag",
+                                    "PieceDescription": "",
+                                    "Charge": 100,
+                                    "VAT": 0,
+                                    "Type": "7",
+                                    "Category": "",
+                                    "PTC": "",
+                                    "ID": 8,
+                                    "IsFreeMeal": false,
+                                    "MealImage": "",
+                                    "SSRUrl": null,
+                                    "AdditionalFields": []
+                                },
+                                {
+                                    "Code": "BOF2",
+                                    "Description": "Bagout First 2 Bag",
+                                    "PieceDescription": "",
+                                    "Charge": 200,
+                                    "VAT": 0,
+                                    "Type": "7",
+                                    "Category": "",
+                                    "PTC": "",
+                                    "ID": 7,
+                                    "IsFreeMeal": false,
+                                    "MealImage": "",
+                                    "SSRUrl": null,
+                                    "AdditionalFields": []
+                                },
+                                {
+                                    "Code": "BOF3",
+                                    "Description": "Bagout First 3 Bag",
+                                    "PieceDescription": "",
+                                    "Charge": 300,
+                                    "VAT": 0,
+                                    "Type": "7",
+                                    "Category": "",
+                                    "PTC": "",
+                                    "ID": 6,
+                                    "IsFreeMeal": false,
+                                    "MealImage": "",
+                                    "SSRUrl": null,
+                                    "AdditionalFields": []
+                                },
+                                {
+                                    "Code": "EB05",
+                                    "Description": "up to 5KG",
+                                    "PieceDescription": "",
+                                    "Charge": 1900,
+                                    "VAT": 0,
+                                    "Type": "2",
+                                    "Category": "",
+                                    "PTC": "",
+                                    "ID": 5,
+                                    "IsFreeMeal": false,
+                                    "MealImage": "",
+                                    "SSRUrl": null,
+                                    "AdditionalFields": []
+                                },
+                                {
+                                    "Code": "EB10",
+                                    "Description": "up to 10KG",
+                                    "PieceDescription": "",
+                                    "Charge": 3800,
+                                    "VAT": 0,
+                                    "Type": "2",
+                                    "Category": "",
+                                    "PTC": "",
+                                    "ID": 4,
+                                    "IsFreeMeal": false,
+                                    "MealImage": "",
+                                    "SSRUrl": null,
+                                    "AdditionalFields": []
+                                },
+                                {
+                                    "Code": "PRCP",
+                                    "Description": "Priority Check-In",
+                                    "PieceDescription": "",
+                                    "Charge": 300,
+                                    "VAT": 0,
+                                    "Type": "8",
+                                    "Category": "",
+                                    "PTC": "",
+                                    "ID": 3,
+                                    "IsFreeMeal": false,
+                                    "MealImage": "",
+                                    "SSRUrl": null,
+                                    "AdditionalFields": []
+                                },
+                                {
+                                    "Code": "VCC6",
+                                    "Description": "Vegetable Daliya",
+                                    "PieceDescription": "",
+                                    "Charge": 350,
+                                    "VAT": 0,
+                                    "Type": "1",
+                                    "Category": "",
+                                    "PTC": "",
+                                    "ID": 2,
+                                    "IsFreeMeal": false,
+                                    "MealImage": "8bf135e4-6adf-4a0b-87bc-d64a94e5c850.jpg",
+                                    "SSRUrl": null,
+                                    "AdditionalFields": []
+                                },
+                                {
+                                    "Code": "VGML",
+                                    "Description": "DD",
+                                    "PieceDescription": "",
+                                    "Charge": 275,
+                                    "VAT": 0,
+                                    "Type": "1",
+                                    "Category": "",
+                                    "PTC": "",
+                                    "ID": 1,
+                                    "IsFreeMeal": false,
+                                    "MealImage": "0b176bc7-9855-43fa-ab90-d594bbab6ad5.jpg",
+                                    "SSRUrl": null,
+                                    "AdditionalFields": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     ],
     "Code": "200",

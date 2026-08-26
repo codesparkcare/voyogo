@@ -1,112 +1,384 @@
 URL: https://voyogos.com/certification_logs/9.Same%20day%20round%20trip%20booking/10.CreateItinerary.json
 Method: POST
 Endpoint: /Flights/CreateItinerary
-Timestamp: 2026-08-20T08:25:17.000Z
+Timestamp: 2026-08-26T07:06:25.000Z
 Request Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-f00f616f3662|6de4951fd25f|20260820102517",
-    "BookingType": "HB",
+    "TUI": "92440198-dc0b-409e-b8d8-1210c04e42c6|71c9fb3a8c64|20260826123601",
+    "ServiceEnquiry": "",
     "ContactInfo": {
         "Title": "Mr",
         "FName": "Nithin",
         "LName": "Kumar",
         "Mobile": "9876543210",
+        "DestMob": "9876543210",
+        "Phone": "",
         "Email": "dev@voyogo.com",
+        "Language": "",
+        "Address": "MRRA 4  EDAPPALLY  Edappally , EDAPPALLY , Edappally",
+        "CountryCode": "91",
+        "MobileCountryCode": "+91",
+        "DestMobCountryCode": "+91",
+        "State": "Kerala",
         "City": "Delhi",
-        "CountryCode": "91"
+        "PIN": "6865245",
+        "GSTCompanyName": "",
+        "GSTTIN": "",
+        "GstMobile": "",
+        "GSTEmail": "",
+        "UpdateProfile": false,
+        "IsGuest": false,
+        "SaveGST": false
     },
-    "Passengers": [
+    "DestinationContactInfo": {
+        "Address1": "",
+        "Address2": "",
+        "City": "",
+        "Mobile": "",
+        "Phone": "",
+        "Email": "",
+        "CountryCode": "",
+        "MobileCountryCode": "+91",
+        "State": "",
+        "PIN": ""
+    },
+    "Travellers": [
         {
+            "ID": 1,
+            "PaxID": "YWdr",
+            "Operation": "0",
             "Title": "Mr",
             "FName": "Nithin",
             "LName": "Kumar",
-            "PaxType": "ADT",
-            "Gender": "M",
+            "Email": "mails@mail.com",
+            "PMobileNo": "",
             "Age": 32,
             "DOB": "1992-05-15",
+            "Country": "",
+            "Gender": "M",
+            "PTC": "ADT",
+            "Nationality": "",
             "PassportNo": "",
-            "Baggage": "",
-            "Meals": "VEG_SANDWICH"
+            "PLI": "",
+            "PDOI": "",
+            "PDOE": "",
+            "VisaType": "VISITING VISA",
+            "EmigrationCheck": false,
+            "isOptionSelected": false,
+            "ApproverManagers": {
+                "Managers": [],
+                "Type": ""
+            },
+            "DocumentType": ""
         },
         {
+            "ID": 2,
+            "PaxID": "YmFj",
+            "Operation": "0",
             "Title": "Mrs",
             "FName": "Priya",
             "LName": "Kumar",
-            "PaxType": "ADT",
-            "Gender": "F",
+            "Email": "soumya.s@benzyinfotech.com",
+            "PMobileNo": "8921614723",
             "Age": 29,
             "DOB": "1995-08-20",
+            "Country": "",
+            "Gender": "F",
+            "PTC": "ADT",
+            "Nationality": "",
             "PassportNo": "",
-            "Baggage": "",
-            "Meals": "VEG_SANDWICH"
+            "PLI": "",
+            "PDOI": "",
+            "PDOE": "",
+            "VisaType": "VISITING VISA",
+            "EmigrationCheck": false,
+            "isOptionSelected": false,
+            "ApproverManagers": {
+                "Managers": [],
+                "Type": ""
+            },
+            "DocumentType": ""
         },
         {
+            "ID": 3,
+            "PaxID": "YmFh",
+            "Operation": "0",
             "Title": "Master",
             "FName": "Aarav",
             "LName": "Kumar",
-            "PaxType": "CHD",
-            "Gender": "M",
+            "Email": "soumya.s@benzyinfotech.com",
+            "PMobileNo": "8921614723",
             "Age": 6,
             "DOB": "2018-02-10",
+            "Country": "",
+            "Gender": "M",
+            "PTC": "CHD",
+            "Nationality": "",
             "PassportNo": "",
-            "Baggage": "",
-            "Meals": "JAIN_MEAL"
+            "PLI": "",
+            "PDOI": "",
+            "PDOE": "",
+            "VisaType": "",
+            "EmigrationCheck": false,
+            "isOptionSelected": false,
+            "ApproverManagers": {
+                "Managers": [],
+                "Type": ""
+            },
+            "DocumentType": ""
         },
         {
+            "ID": 4,
+            "PaxID": "YWJh",
+            "Operation": "0",
             "Title": "Miss",
             "FName": "Ananya",
             "LName": "Kumar",
-            "PaxType": "CHD",
-            "Gender": "F",
+            "Email": "soumya.s@benzyinfotech.com",
+            "PMobileNo": "8921614723",
             "Age": 4,
             "DOB": "2020-11-12",
+            "Country": "",
+            "Gender": "F",
+            "PTC": "CHD",
+            "Nationality": "",
             "PassportNo": "",
-            "Baggage": "",
-            "Meals": "JAIN_MEAL"
+            "PLI": "",
+            "PDOI": "",
+            "PDOE": "",
+            "VisaType": "",
+            "EmigrationCheck": false,
+            "isOptionSelected": false,
+            "ApproverManagers": {
+                "Managers": [],
+                "Type": ""
+            },
+            "DocumentType": ""
         },
         {
+            "ID": 5,
+            "PaxID": "YmFi",
+            "Operation": "0",
             "Title": "Infant",
             "FName": "Vivaan",
             "LName": "Kumar",
-            "PaxType": "INF",
-            "Gender": "M",
+            "Email": "soumya.s@benzyinfotech.com",
+            "PMobileNo": "8921614723",
             "Age": 1,
             "DOB": "2023-04-18",
+            "Country": "",
+            "Gender": "M",
+            "PTC": "INF",
+            "Nationality": "",
             "PassportNo": "",
-            "Baggage": "",
-            "Meals": ""
+            "PLI": "",
+            "PDOI": "",
+            "PDOE": "",
+            "VisaType": "",
+            "EmigrationCheck": false,
+            "isOptionSelected": false,
+            "ApproverManagers": {
+                "Managers": [],
+                "Type": ""
+            },
+            "DocumentType": ""
         },
         {
+            "ID": 6,
+            "PaxID": "YWJj",
+            "Operation": "0",
             "Title": "Infant",
             "FName": "Ishani",
             "LName": "Kumar",
-            "PaxType": "INF",
-            "Gender": "F",
+            "Email": "soumya.s@benzyinfotech.com",
+            "PMobileNo": "8921614723",
             "Age": 1,
             "DOB": "2023-07-22",
+            "Country": "",
+            "Gender": "F",
+            "PTC": "INF",
+            "Nationality": "",
             "PassportNo": "",
-            "Baggage": "",
-            "Meals": ""
+            "PLI": "",
+            "PDOI": "",
+            "PDOE": "",
+            "VisaType": "",
+            "EmigrationCheck": false,
+            "isOptionSelected": false,
+            "ApproverManagers": {
+                "Managers": [],
+                "Type": ""
+            },
+            "DocumentType": ""
         }
     ],
-    "GSTDetails": {
-        "GSTNumber": "",
-        "CompanyName": "",
-        "Email": "",
-        "Mobile": ""
-    }
+    "PLP": [
+        {
+            "FUID": 1,
+            "PaxID": 1,
+            "FFNo": "ABCD1234"
+        }
+    ],
+    "SSR": [],
+    "CrossSell": [],
+    "CrossSellAmount": 0,
+    "EnableFareMasking": false,
+    "SSRAmount": 0,
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "DeviceID": "",
+    "AppVersion": "",
+    "AgentTourCode": "",
+    "NetAmount": 0,
+    "BRulesAccepted": ""
 }
 
 Response Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-f00f616f3662|6de4951fd25f|20260820102517",
-    "BookingType": "HB",
-    "TransactionID": 250037804,
-    "AirItinerary": {
-        "TransactionID": 250037804,
-        "BookingReference": "VYG250037804",
-        "Status": "Hold"
-    },
+    "TUI": "92440198-dc0b-409e-b8d8-1210c04e42c6|71c9fb3a8c64|20260826123601",
+    "Mode": null,
+    "TransactionID": 250037034,
+    "ADT": 1,
+    "CHD": 0,
+    "INF": 0,
+    "NetAmount": 5154,
+    "AirlineNetFare": 2904,
+    "SSRAmount": 0,
+    "CrossSellAmount": 0,
+    "GrossAmount": 5350,
+    "Trips": [
+        {
+            "Journey": [
+                {
+                    "Provider": "6E",
+                    "Stops": "0",
+                    "Offer": "",
+                    "OrderID": 0,
+                    "GrossFare": 5350,
+                    "NetFare": 4547.5,
+                    "Promo": "ATFLY",
+                    "Segments": [
+                        {
+                            "Flight": {
+                                "FUID": "1",
+                                "VAC": "6E",
+                                "MAC": "6E",
+                                "OAC": "6E",
+                                "FBC": "USAV",
+                                "Airline": "IndiGo|IndiGo|IndiGo",
+                                "Aircraft": "Airbus",
+                                "FlightNo": "2134",
+                                "ArrivalTime": "2026-09-02T08:15:00",
+                                "DepartureTime": "2026-09-02T06:00:00",
+                                "ArrivalCode": "BOM",
+                                "DepartureCode": "DEL",
+                                "ArrAirportName": "Chhatrapati Shivaji |Mumbai",
+                                "DepAirportName": "Indira Gandhi International |New Delhi",
+                                "ArrivalTerminal": "1",
+                                "DepartureTerminal": "2",
+                                "EquipmentType": "320",
+                                "RBD": "E",
+                                "Cabin": "E",
+                                "Refundable": "R",
+                                "Amenities": null,
+                                "Duration": "02h 15m ",
+                                "Hops": null
+                            },
+                            "Fares": {
+                                "PTCFare": [
+                                    {
+                                        "PTC": "ADT",
+                                        "Fare": 2423,
+                                        "YQ": 0,
+                                        "PSF": 0,
+                                        "YR": 0,
+                                        "UD": 0,
+                                        "K3": 0,
+                                        "API": 0,
+                                        "OTT": "RCS,TRF,DF,ASF,CGST,SGST",
+                                        "OT": "50.0000,80.0000,142.00000,177.00000,64.00000,64.00000",
+                                        "Tax": 577,
+                                        "GrossFare": 3011,
+                                        "NetFare": 2903.67999999999983629095368087291717529296875,
+                                        "ST": 0,
+                                        "VATonServiceCharge": 0,
+                                        "VATonTransactionFee": 0,
+                                        "AgentMarkup": 11,
+                                        "Markup": 0
+                                    }
+                                ],
+                                "GrossFare": 5350,
+                                "NetFare": 4547.5,
+                                "TotalServiceTax": 0,
+                                "TotalBaseFare": 4300,
+                                "TotalTax": 850,
+                                "TotalCommission": 50,
+                                "TotalVATonServiceCharge": 0,
+                                "TotalVATonTransactionFee": 0,
+                                "TotalAgentMarkup": 11
+                            },
+                            "MulticityRefID": null
+                        }
+                    ],
+                    "Notices": null
+                }
+            ]
+        }
+    ],
+    "Rules": [
+        {
+            "OrginDestination": "DEL-BOM",
+            "FUID": "1",
+            "Provider": "6E",
+            "FareRuleText": null,
+            "Rule": [
+                {
+                    "Info": [
+                        {
+                            "AdultAmount": "100",
+                            "ChildAmount": "",
+                            "InfantAmount": "",
+                            "Description": "Cancellation"
+                        }
+                    ],
+                    "Head": "Cancellation Fee"
+                },
+                {
+                    "Info": [
+                        {
+                            "AdultAmount": "50",
+                            "ChildAmount": "",
+                            "InfantAmount": "",
+                            "Description": "Reissue Charge"
+                        },
+                        {
+                            "AdultAmount": "10",
+                            "ChildAmount": "",
+                            "InfantAmount": "",
+                            "Description": "STF On RAF"
+                        }
+                    ],
+                    "Head": "ATO Service Fee"
+                }
+            ]
+        }
+    ],
+    "SSR": [
+        {
+            "PTC": "ADT",
+            "PaxId": "1",
+            "FUID": "1",
+            "Code": "BAG",
+            "Description": "15 Kg, 7 Kg",
+            "PieceDescription": "",
+            "Charge": 0,
+            "Type": "2",
+            "SSRUrl": null
+        }
+    ],
+    "CrossSell": null,
+    "Auxiliaries": null,
+    "Hold": true,
+    "CeilingInfo": null,
     "Code": "200",
     "Msg": [
         "Success"

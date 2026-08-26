@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/8.Round%20Trip%20Booking%20with%20Baggage%20-%20Connection%20Flight/1.Signature.json
 Method: POST
 Endpoint: /Utils/Signature
-Timestamp: 2026-08-20T08:25:17.000Z
+Timestamp: 2026-08-26T07:05:10.000Z
 Request Body:
 {
     "MerchantID": "300",
@@ -9,19 +9,17 @@ Request Body:
     "ClientID": "bitest",
     "Password": "staging@1",
     "AgentCode": "",
-    "BrowserKey": "caecd3cd30225512c1811070dce615c1",
-    "Key": "ef20-925c-4489-bfeb-236c8b406f7e"
+    "BrowserKey": "ef20-925c-4489-bfeb-236c8b406f7e"
 }
 
 Response Body:
 {
-    "TUI": "8608dafd-b425-4e1e-832c-8c8efe5e06b5|20260820102517",
-    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZklxWmVCUkZIUlNTOFFRWE1ybk8vVDhFcmt6UnMyYzk3cnloS01sWXc3NitRPT0iLCJwd2QiOiJMMkV0NEcvWHE0bExYQUd4Q3M2REh3PT0iLCJhZ2VudENvZGUiOiIvS2ZkWXdlc3FQdz0iLCJjbGllbnRJZCI6IjJmelhFa014VkRVPSIsIm5iZiI61787214317LCJleHAiOiI1788078317\"}.895f1ec07f4e8407c8c69305bda1ba14",
+    "TUI": "af80de34-fccb-4c28-9365-867696526830|20260826123510",
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZklxWmVCUkZIUlNTOFFRWE1ybk8vVDhFcmt6UnMyYzk3cnloS01sWXc3NitRPT0iLCJwd2QiOiJMMkV0NEcvWHE0bExYQUd4Q3M2REh3PT0iLCJhZ2VudENvZGUiOiIvS2ZkWXdlc3FQdz0iLCJjbGllbnRJZCI6IjJmelhFa014VkRVPSIsIm5iZiI61787727910LCJleHAiOiI1788591910\"}.1e10d2a1df529a97813fda289ceccc16",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "LastLoginDate": "08/20/2026 10:25:17 AM",
+    "LastLoginDate": "8/26/2026 12:35:10 PM",
     "Password": "L2Et4G/Xq4lLXAGxCs6DHw==",
-    "loginAttempts": 0,
-    "UserType": "",
+    "loginAttempts": "0",
     "Code": "200",
     "Msg": [
         "Success"

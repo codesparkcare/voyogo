@@ -153,7 +153,7 @@ class Flight_cert extends CI_Controller {
         $logsWritten[] = $this->saveLogFile($caseDir, '2.ExpressSearch.json', $this->benzyflightapi->getLastLog());
 
         // 3. WebSettings
-        $this->benzyflightapi->getWebSettings();
+        $this->benzyflightapi->getWebSettings($tui);
         $logsWritten[] = $this->saveLogFile($caseDir, '3.WebSettings.json', $this->benzyflightapi->getLastLog());
 
         // 4. GetExpSearch
@@ -161,15 +161,15 @@ class Flight_cert extends CI_Controller {
         $logsWritten[] = $this->saveLogFile($caseDir, '4.GetExpSearch.json', $this->benzyflightapi->getLastLog());
 
         // 5. SSR (Baggage / Meals)
-        $this->benzyflightapi->getSSR($tui);
+        $this->benzyflightapi->getSSR($tui, $origin, $destination);
         $logsWritten[] = $this->saveLogFile($caseDir, '5.SSR.json', $this->benzyflightapi->getLastLog());
 
         // 6. SmartPricer
-        $this->benzyflightapi->smartPricer($tui, 5350);
+        $this->benzyflightapi->smartPricer($tui, 5350, '6E|1', $isRoundTrip, $origin, $destination);
         $logsWritten[] = $this->saveLogFile($caseDir, '6.SmartPricer.json', $this->benzyflightapi->getLastLog());
 
         // 7. GetSPricer
-        $this->benzyflightapi->getSPricer($tui, 5350);
+        $this->benzyflightapi->getSPricer($tui, 5421, $origin, $destination, $isRoundTrip);
         $logsWritten[] = $this->saveLogFile($caseDir, '7.GetSPricer.json', $this->benzyflightapi->getLastLog());
 
         // 8. GetTravelCheckList
@@ -177,7 +177,7 @@ class Flight_cert extends CI_Controller {
         $logsWritten[] = $this->saveLogFile($caseDir, '8.GetTravelCheckList.json', $this->benzyflightapi->getLastLog());
 
         // 9. SSR (Post-pricing baggage selection if with baggage)
-        $this->benzyflightapi->getSSR($tui);
+        $this->benzyflightapi->getSSR($tui, $origin, $destination);
         $logsWritten[] = $this->saveLogFile($caseDir, '9.SSR.json', $this->benzyflightapi->getLastLog());
 
         // 10. CreateItinerary (BookingType: HB - Hold Booking)

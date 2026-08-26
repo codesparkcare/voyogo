@@ -1,29 +1,23 @@
 URL: https://voyogos.com/certification_logs/7.Oneway%20Booking%20with%20Baggage%20-%20Connection%20Flight/2.ExpressSearch.json
 Method: POST
 Endpoint: /flights/ExpressSearch
-Timestamp: 2026-08-20T08:25:17.000Z
+Timestamp: 2026-08-26T07:04:25.000Z
 Request Body:
 {
-    "FareType": "ON",
     "ADT": 2,
     "CHD": 2,
     "INF": 2,
     "Cabin": "E",
-    "Source": "LV",
+    "Source": "CF",
     "Mode": "AS",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "IsMultipleCarrier": false,
-    "IsRefundable": false,
-    "preferedAirlines": [
-        ""
-    ],
     "TUI": "",
-    "SecType": "",
+    "FareType": "ON",
     "Trips": [
         {
             "From": "DEL",
             "To": "BLR",
-            "OnwardDate": "2026-08-27",
+            "OnwardDate": "2026-09-02",
             "ReturnDate": "",
             "TUI": ""
         }
@@ -34,25 +28,15 @@ Request Body:
         "Refundable": "",
         "IsDirect": false,
         "IsStudentFare": false,
-        "IsNearbyAirport": false,
-        "IsExtendedSearch": false,
-        "IsGDSSearch": false,
-        "IsLCCSearch": true,
-        "IsSeniorCitizen": false
+        "IsNearbyAirport": false
     }
 }
 
 Response Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-cf0ae2c8466a|6a5d23238804|20260820102517",
-    "Completed": null,
-    "CeilingInfo": null,
-    "CurrencyCode": null,
-    "Notices": null,
-    "Trips": null,
+    "TUI": "92440198-dc0b-409e-b8d8-663990cb6208|79f5808a57fe|20260826123425",
     "Code": "200",
     "Msg": [
         "Success"
-    ],
-    "success": true
+    ]
 }

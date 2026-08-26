@@ -1,22 +1,65 @@
 URL: https://voyogos.com/certification_logs/9.Same%20day%20round%20trip%20booking/15.StartPay(BookingType-HP).json
 Method: POST
 Endpoint: /Payment/StartPay
-Timestamp: 2026-08-20T08:25:17.000Z
+Timestamp: 2026-08-26T07:06:40.000Z
 Request Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-f00f616f3662|6de4951fd25f|20260820102517",
+    "TransactionID": 250037034,
+    "PaymentAmount": 5350,
+    "NetAmount": 5350,
+    "BrowserKey": "ef20-925c-4489-bfeb-236c8b406f7e",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "TransactionID": 250037804,
+    "TUI": "92440198-dc0b-409e-b8d8-1210c04e42c6|71c9fb3a8c64|20260826123601",
+    "Hold": false,
+    "Promo": null,
     "PaymentType": "",
-    "PaymentAmount": 5350
+    "BankCode": "",
+    "GateWayCode": "",
+    "MerchantID": "",
+    "PaymentCharge": 0,
+    "ReleaseDate": "",
+    "OnlinePayment": false,
+    "DepositPayment": true,
+    "Card": {
+        "Number": "",
+        "Expiry": "",
+        "CVV": "",
+        "CHName": "",
+        "Address": "",
+        "City": "",
+        "State": "",
+        "Country": "",
+        "PIN": "",
+        "International": false,
+        "SaveCard": false,
+        "FName": "",
+        "LName": "",
+        "EMIMonths": "0"
+    },
+    "VPA": "",
+    "CardAlias": "",
+    "QuickPay": null,
+    "RMSSignature": "",
+    "TargetCurrency": "",
+    "TargetAmount": 0,
+    "ServiceType": "ITI"
 }
 
 Response Body:
 {
-    "TransactionID": 250037804,
-    "Status": "InProgress",
+    "TUI": "92440198-dc0b-409e-b8d8-1210c04e42c6|71c9fb3a8c64|20260826123601",
     "Code": "6033",
     "Msg": [
         "BOOKING  INPROGRESS !"
-    ]
+    ],
+    "PaymentID": null,
+    "TransactionID": 250037034,
+    "RedirectMode": "R",
+    "PostData": null,
+    "CRSPNR": null,
+    "BookStatus": null,
+    "TUTransactionID": 0,
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "GatewayCode": "TEC",
+    "RedirectUrl": "92440198-dc0b-409e-b8d8-1210c04e42c6|71c9fb3a8c64|20260826123601|250037034"
 }

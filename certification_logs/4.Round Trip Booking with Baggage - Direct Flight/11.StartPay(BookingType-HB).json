@@ -1,22 +1,65 @@
 URL: https://voyogos.com/certification_logs/4.Round%20Trip%20Booking%20with%20Baggage%20-%20Direct%20Flight/11.StartPay(BookingType-HB).json
 Method: POST
 Endpoint: /Payment/StartPay
-Timestamp: 2026-08-20T08:25:17.000Z
+Timestamp: 2026-08-26T07:02:27.000Z
 Request Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-6e802308be01|595d076666a0|20260820102517",
+    "TransactionID": 250037067,
+    "PaymentAmount": 0,
+    "NetAmount": 5350,
+    "BrowserKey": "ef20-925c-4489-bfeb-236c8b406f7e",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "TransactionID": 250037709,
+    "TUI": "92440198-dc0b-409e-b8d8-79fb656f6da8|b0d378f8ce6b|20260826123200",
+    "Hold": true,
+    "Promo": null,
     "PaymentType": "",
-    "PaymentAmount": 0
+    "BankCode": "",
+    "GateWayCode": "",
+    "MerchantID": "",
+    "PaymentCharge": 0,
+    "ReleaseDate": "",
+    "OnlinePayment": false,
+    "DepositPayment": true,
+    "Card": {
+        "Number": "",
+        "Expiry": "",
+        "CVV": "",
+        "CHName": "",
+        "Address": "",
+        "City": "",
+        "State": "",
+        "Country": "",
+        "PIN": "",
+        "International": false,
+        "SaveCard": false,
+        "FName": "",
+        "LName": "",
+        "EMIMonths": "0"
+    },
+    "VPA": "",
+    "CardAlias": "",
+    "QuickPay": null,
+    "RMSSignature": "",
+    "TargetCurrency": "",
+    "TargetAmount": 0,
+    "ServiceType": "ITI"
 }
 
 Response Body:
 {
-    "TransactionID": 250037709,
-    "Status": "InProgress",
+    "TUI": "92440198-dc0b-409e-b8d8-79fb656f6da8|b0d378f8ce6b|20260826123200",
     "Code": "6033",
     "Msg": [
         "BOOKING  INPROGRESS !"
-    ]
+    ],
+    "PaymentID": null,
+    "TransactionID": 250037067,
+    "RedirectMode": "R",
+    "PostData": null,
+    "CRSPNR": null,
+    "BookStatus": null,
+    "TUTransactionID": 0,
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "GatewayCode": "TEC",
+    "RedirectUrl": "92440198-dc0b-409e-b8d8-79fb656f6da8|b0d378f8ce6b|20260826123200|250037067"
 }

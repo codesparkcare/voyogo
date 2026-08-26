@@ -74,7 +74,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"MerchantID\": \"300\",\n  \"ApiKey\": \"kXAY9yHARK\",\n  \"ClientID\": \"bitest\",\n  \"Password\": \"staging@1\",\n  \"AgentCode\": \"\",\n  \"BrowserKey\": \"caecd3cd30225512c1811070dce615c1\",\n  \"Key\": \"ef20-925c-4489-bfeb-236c8b406f7e\"\n}"
+							"raw": "{\n  \"MerchantID\": \"300\",\n  \"ApiKey\": \"kXAY9yHARK\",\n  \"ClientID\": \"bitest\",\n  \"Password\": \"staging@1\",\n  \"AgentCode\": \"\",\n  \"BrowserKey\": \"ef20-925c-4489-bfeb-236c8b406f7e\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlUtils}}/Utils/Signature",
@@ -104,7 +104,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"ClientID\": \"{{clientID}}\",\n  \"MerchantID\": \"300\"\n}"
+							"raw": "{\n  \"ClientID\": \"{{clientID}}\",\n  \"TUI\": \"{{tui}}\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlUtils}}/Utils/WebSettings",
@@ -134,7 +134,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"ClientID\": \"{{clientID}}\",\n  \"MerchantID\": \"300\"\n}"
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"ClientID\": \"{{clientID}}\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlUtils}}/Utils/GetTravelCheckList",
@@ -183,7 +183,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"FareType\": \"ON\",\n  \"ADT\": 1,\n  \"CHD\": 0,\n  \"INF\": 0,\n  \"Cabin\": \"E\",\n  \"Source\": \"LV\",\n  \"Mode\": \"AS\",\n  \"ClientID\": \"{{clientID}}\",\n  \"IsMultipleCarrier\": false,\n  \"IsRefundable\": false,\n  \"preferedAirlines\": [\"\"],\n  \"TUI\": \"\",\n  \"SecType\": \"\",\n  \"Trips\": [\n    {\n      \"From\": \"DEL\",\n      \"To\": \"BOM\",\n      \"OnwardDate\": \"2026-09-10\",\n      \"ReturnDate\": \"\",\n      \"TUI\": \"\"\n    }\n  ],\n  \"Parameters\": {\n    \"Airlines\": \"\",\n    \"GroupType\": \"\",\n    \"Refundable\": \"\",\n    \"IsDirect\": true,\n    \"IsStudentFare\": false,\n    \"IsNearbyAirport\": false,\n    \"IsExtendedSearch\": false,\n    \"IsGDSSearch\": false,\n    \"IsLCCSearch\": true,\n    \"IsSeniorCitizen\": false\n  }\n}"
+							"raw": "{\n  \"ADT\": 1,\n  \"CHD\": 0,\n  \"INF\": 0,\n  \"Cabin\": \"E\",\n  \"Source\": \"CF\",\n  \"Mode\": \"AS\",\n  \"ClientID\": \"{{clientID}}\",\n  \"TUI\": \"\",\n  \"FareType\": \"ON\",\n  \"Trips\": [\n    {\n      \"From\": \"DEL\",\n      \"To\": \"BOM\",\n      \"OnwardDate\": \"2026-09-10\",\n      \"ReturnDate\": \"\",\n      \"TUI\": \"\"\n    }\n  ],\n  \"Parameters\": {\n    \"Airlines\": \"\",\n    \"GroupType\": \"\",\n    \"Refundable\": \"\",\n    \"IsDirect\": true,\n    \"IsStudentFare\": false,\n    \"IsNearbyAirport\": false\n  }\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlFlights}}/flights/ExpressSearch",
@@ -213,7 +213,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"ClientID\": \"{{clientID}}\"\n}"
+							"raw": "{\n  \"ClientID\": \"{{clientID}}\",\n  \"TUI\": \"{{tui}}\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlFlights}}/flights/GetExpSearch",
@@ -243,7 +243,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\"\n}"
+							"raw": "{\n  \"ClientID\": \"{{clientID}}\",\n  \"PaidSSR\": true,\n  \"Source\": \"LV\",\n  \"Trips\": [\n    {\n      \"TUI\": \"{{tui}}\",\n      \"Amount\": 0,\n      \"OrderID\": 1,\n      \"Index\": \"\"\n    }\n  ]\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlFlights}}/Flights/SSR",
@@ -253,6 +253,36 @@
 							"path": [
 								"Flights",
 								"SSR"
+							]
+						}
+					}
+				},
+				{
+					"name": "3b. SeatLayout (Seat Availability & Pricing)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ClientID\": \"{{clientID}}\",\n  \"Source\": \"LV\",\n  \"Trips\": [\n    {\n      \"TUI\": \"{{tui}}\",\n      \"Index\": \"\",\n      \"OrderID\": 1\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/Flights/SeatLayout",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"Flights",
+								"SeatLayout"
 							]
 						}
 					}
@@ -273,7 +303,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\"\n}"
+							"raw": "{\n  \"Trips\": [\n    {\n      \"Amount\": 5150.00,\n      \"Index\": \"6E|1\",\n      \"OrderID\": 1,\n      \"TUI\": \"{{tui}}\"\n    }\n  ],\n  \"ClientID\": \"{{clientID}}\",\n  \"Mode\": \"SS\",\n  \"Options\": \"A\",\n  \"Source\": \"SF\",\n  \"TripType\": \"ON\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlFlights}}/flights/SmartPricer",
@@ -303,7 +333,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\"\n}"
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"ClientID\": \"{{clientID}}\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlFlights}}/Flights/GetSPricer",
@@ -333,7 +363,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\"\n}"
+							"raw": "{\n  \"ClientID\": \"{{clientID}}\",\n  \"Source\": \"SF\",\n  \"Trips\": [\n    {\n      \"Amount\": 5150.00,\n      \"Index\": \"6E|1\",\n      \"OrderID\": 1,\n      \"TUI\": \"{{tui}}\"\n    }\n  ]\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlFlights}}/flights/FareRule",
@@ -343,6 +373,36 @@
 							"path": [
 								"flights",
 								"FareRule"
+							]
+						}
+					}
+				},
+				{
+					"name": "6b. FlightInfo (Flight Details & Availability Check)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ClientID\": \"{{clientID}}\",\n  \"TripType\": \"ON\",\n  \"Trips\": [\n    {\n      \"TUI\": \"{{tui}}\",\n      \"Amount\": 10522,\n      \"Index\": \"6E|1\",\n      \"OrderID\": 1,\n      \"ChannelCode\": null\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/Flights/FlightInfo",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"Flights",
+								"FlightInfo"
 							]
 						}
 					}
@@ -363,7 +423,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"Passengers\": [\n    {\n      \"Title\": \"Mr\",\n      \"FirstName\": \"Rahul\",\n      \"LastName\": \"Sharma\",\n      \"PaxType\": \"ADT\",\n      \"Gender\": \"M\",\n      \"DOB\": \"1990-05-15\",\n      \"PassportNo\": \"\",\n      \"PassportExpiryDate\": \"\"\n    }\n  ],\n  \"ContactDetails\": {\n    \"Email\": \"booking@voyogo.com\",\n    \"Mobile\": \"9876543210\",\n    \"CountryCode\": \"+91\",\n    \"Address\": \"Connaught Place, New Delhi\"\n  },\n  \"GSTDetails\": {\n    \"GSTNumber\": \"\",\n    \"CompanyName\": \"\",\n    \"CompanyAddress\": \"\",\n    \"CompanyEmail\": \"\",\n    \"CompanyPhone\": \"\"\n  },\n  \"SSR\": []\n}"
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"ServiceEnquiry\": \"\",\n  \"ContactInfo\": {\n    \"Title\": \"\",\n    \"FName\": \"\",\n    \"LName\": \"\",\n    \"Mobile\": \"8590055610\",\n    \"DestMob\": \"8590055610\",\n    \"Phone\": \"\",\n    \"Email\": \"robin@benzyinfotech.com\",\n    \"Language\": \"\",\n    \"Address\": \"MRRA 4  EDAPPALLY  Edappally , EDAPPALLY , Edappally\",\n    \"CountryCode\": \"IN\",\n    \"MobileCountryCode\": \"+91\",\n    \"DestMobCountryCode\": \"+91\",\n    \"State\": \"Kerala\",\n    \"City\": \"Cochin\",\n    \"PIN\": \"6865245\",\n    \"GSTCompanyName\": \"\",\n    \"GSTTIN\": \"\",\n    \"GstMobile\": \"\",\n    \"GSTEmail\": \"\",\n    \"UpdateProfile\": false,\n    \"IsGuest\": false,\n    \"SaveGST\": false\n  },\n  \"DestinationContactInfo\": {\n    \"Address1\": \"\",\n    \"Address2\": \"\",\n    \"City\": \"\",\n    \"Mobile\": \"\",\n    \"Phone\": \"\",\n    \"Email\": \"\",\n    \"CountryCode\": \"\",\n    \"MobileCountryCode\": \"+91\",\n    \"State\": \"\",\n    \"PIN\": \"\"\n  },\n  \"Travellers\": [\n    {\n      \"ID\": 1,\n      \"PaxID\": \"YWdr\",\n      \"Operation\": \"0\",\n      \"Title\": \"Mr\",\n      \"FName\": \"TESTA\",\n      \"LName\": \"TESTAB\",\n      \"Email\": \"mails@mail.com\",\n      \"PMobileNo\": \"\",\n      \"Age\": 36,\n      \"DOB\": \"1987-01-27\",\n      \"Country\": \"\",\n      \"Gender\": \"M\",\n      \"PTC\": \"ADT\",\n      \"Nationality\": \"\",\n      \"PassportNo\": \"HM8888HJJ6K\",\n      \"PLI\": \"\",\n      \"PDOI\": \"\",\n      \"PDOE\": \"\",\n      \"VisaType\": \"VISITING VISA\",\n      \"EmigrationCheck\": false,\n      \"isOptionSelected\": false,\n      \"ApproverManagers\": {\n        \"Managers\": [],\n        \"Type\": \"\"\n      },\n      \"DocumentType\": \"\"\n    }\n  ],\n  \"PLP\": [\n    {\n      \"FUID\": 1,\n      \"PaxID\": 1,\n      \"FFNo\": \"ABCD1234\"\n    }\n  ],\n  \"SSR\": [\n    {\n      \"FUID\": 1,\n      \"PaxID\": 1,\n      \"SSID\": 6\n    }\n  ],\n  \"CrossSell\": [],\n  \"CrossSellAmount\": 0,\n  \"EnableFareMasking\": false,\n  \"SSRAmount\": 0,\n  \"ClientID\": \"{{clientID}}\",\n  \"DeviceID\": \"\",\n  \"AppVersion\": \"\",\n  \"AgentTourCode\": \"\",\n  \"NetAmount\": 5350,\n  \"BRulesAccepted\": \"\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlFlights}}/Flights/CreateItinerary",
@@ -393,7 +453,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"BookingType\": \"HB\",\n  \"PaymentMode\": \"AG\",\n  \"PaymentDetails\": {\n    \"Amount\": 5150,\n    \"Currency\": \"INR\"\n  }\n}"
+							"raw": "{\n  \"TransactionID\": {{transactionId}},\n  \"PaymentAmount\": 0,\n  \"NetAmount\": 5350,\n  \"BrowserKey\": \"ef20-925c-4489-bfeb-236c8b406f7e\",\n  \"ClientID\": \"{{clientID}}\",\n  \"TUI\": \"{{tui}}\",\n  \"Hold\": true,\n  \"Promo\": null,\n  \"PaymentType\": \"\",\n  \"BankCode\": \"\",\n  \"GateWayCode\": \"\",\n  \"MerchantID\": \"\",\n  \"PaymentCharge\": 0,\n  \"ReleaseDate\": \"\",\n  \"OnlinePayment\": false,\n  \"DepositPayment\": true,\n  \"Card\": {\n    \"Number\": \"\",\n    \"Expiry\": \"\",\n    \"CVV\": \"\",\n    \"CHName\": \"\",\n    \"Address\": \"\",\n    \"City\": \"\",\n    \"State\": \"\",\n    \"Country\": \"\",\n    \"PIN\": \"\",\n    \"International\": false,\n    \"SaveCard\": false,\n    \"FName\": \"\",\n    \"LName\": \"\",\n    \"EMIMonths\": \"0\"\n  },\n  \"VPA\": \"\",\n  \"CardAlias\": \"\",\n  \"QuickPay\": null,\n  \"RMSSignature\": \"\",\n  \"TargetCurrency\": \"\",\n  \"TargetAmount\": 0,\n  \"ServiceType\": \"ITI\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlFlights}}/Payment/StartPay",
@@ -423,7 +483,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\"\n}"
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"TransactionID\": {{transactionId}}\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlFlights}}/Payment/GetItineraryStatus",
@@ -453,7 +513,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"PNR\": \"{{pnr}}\"\n}"
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"ClientID\": \"{{clientID}}\",\n  \"ReferenceNumber\": \"{{transactionId}}\",\n  \"ReferenceType\": \"T\",\n  \"ServiceType\": \"FLT\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlUtils}}/Utils/RetrieveBooking",
@@ -483,7 +543,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"BookingType\": \"HP\",\n  \"PaymentMode\": \"AG\",\n  \"PaymentDetails\": {\n    \"Amount\": 5150,\n    \"Currency\": \"INR\"\n  }\n}"
+							"raw": "{\n  \"TransactionID\": {{transactionId}},\n  \"PaymentAmount\": 0,\n  \"NetAmount\": 5350,\n  \"BrowserKey\": \"ef20-925c-4489-bfeb-236c8b406f7e\",\n  \"ClientID\": \"{{clientID}}\",\n  \"TUI\": \"{{tui}}\",\n  \"Hold\": false,\n  \"Promo\": null,\n  \"PaymentType\": \"\",\n  \"BankCode\": \"\",\n  \"GateWayCode\": \"\",\n  \"MerchantID\": \"\",\n  \"PaymentCharge\": 0,\n  \"ReleaseDate\": \"\",\n  \"OnlinePayment\": false,\n  \"DepositPayment\": true,\n  \"Card\": {\n    \"Number\": \"\",\n    \"Expiry\": \"\",\n    \"CVV\": \"\",\n    \"CHName\": \"\",\n    \"Address\": \"\",\n    \"City\": \"\",\n    \"State\": \"\",\n    \"Country\": \"\",\n    \"PIN\": \"\",\n    \"International\": false,\n    \"SaveCard\": false,\n    \"FName\": \"\",\n    \"LName\": \"\",\n    \"EMIMonths\": \"0\"\n  },\n  \"VPA\": \"\",\n  \"CardAlias\": \"\",\n  \"QuickPay\": null,\n  \"RMSSignature\": \"\",\n  \"TargetCurrency\": \"\",\n  \"TargetAmount\": 0,\n  \"ServiceType\": \"ITI\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlFlights}}/Payment/StartPay",
@@ -513,7 +573,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"PNR\": \"{{pnr}}\"\n}"
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"ClientID\": \"{{clientID}}\",\n  \"ReferenceNumber\": \"{{transactionId}}\",\n  \"ReferenceType\": \"T\",\n  \"ServiceType\": \"FLT\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlUtils}}/Utils/RetrieveBooking",
@@ -523,6 +583,36 @@
 							"path": [
 								"Utils",
 								"RetrieveBooking"
+							]
+						}
+					}
+				},
+				{
+					"name": "13. Cancel (Ticket Cancellation)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ClientID\": \"{{clientID}}\",\n  \"ClientIP\": \"\",\n  \"Remarks\": \"Test Cancel Remarks\",\n  \"TUI\": \"{{tui}}\",\n  \"TransactionID\": {{transactionId}},\n  \"Trips\": [\n    {\n      \"Journey\": [\n        {\n          \"Segments\": [\n            {\n              \"CRSPNR\": \"TLGS8K\",\n              \"Pax\": [\n                {\n                  \"ID\": 5234,\n                  \"Ticket\": \"\"\n                }\n              ]\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrlFlights}}/Flights/Cancel",
+							"host": [
+								"{{baseUrlFlights}}"
+							],
+							"path": [
+								"Flights",
+								"Cancel"
 							]
 						}
 					}
@@ -643,7 +733,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"BaggageCode\": \"BAG15\",\n  \"Weight\": \"15KG\",\n  \"Amount\": 1200\n}"
+							"raw": "{\n  \"ClientID\": \"{{clientID}}\",\n  \"PaidSSR\": true,\n  \"Source\": \"LV\",\n  \"Trips\": [\n    {\n      \"TUI\": \"{{tui}}\",\n      \"Amount\": 0,\n      \"OrderID\": 1,\n      \"Index\": \"\"\n    }\n  ]\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlFlights}}/Flights/SSR",

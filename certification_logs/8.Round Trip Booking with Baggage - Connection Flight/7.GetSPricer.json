@@ -1,47 +1,235 @@
 URL: https://voyogos.com/certification_logs/8.Round%20Trip%20Booking%20with%20Baggage%20-%20Connection%20Flight/7.GetSPricer.json
 Method: POST
 Endpoint: /Flights/GetSPricer
-Timestamp: 2026-08-20T08:25:17.000Z
+Timestamp: 2026-08-26T07:05:28.000Z
 Request Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-6b07a161e9c6|499ee0b3a39e|20260820102517"
+    "TUI": "92440198-dc0b-409e-b8d8-81bafc936263|fe1c7d441cdb|20260826123513",
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
 }
 
 Response Body:
 {
-    "TUI": "100e7378-e904-4f05-972a-6b07a161e9c6|499ee0b3a39e|20260820102517",
+    "TUI": "92440198-dc0b-409e-b8d8-81bafc936263|fe1c7d441cdb|20260826123513",
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "CurrencyCode": "INR",
+    "From": "DEL",
+    "To": "BLR",
+    "FromName": "Indira Gandhi International |New Delhi",
+    "ToName": "Srinagar |Srinagar",
+    "OnwardDate": "2026-09-02",
+    "ReturnDate": "2026-09-07",
+    "ADT": 1,
+    "CHD": 0,
+    "INF": 0,
+    "NetAmount": 5258.3699999999998908606357872486114501953125,
+    "GrossAmount": 5421,
+    "InsPremium": 179,
+    "FareType": "RT",
+    "Source": "LV",
+    "HoldInfo": "E|10:01|10.00|SE|EE",
     "Trips": [
         {
-            "Journeys": [
+            "Journey": [
                 {
-                    "TUI": "100e7378-e904-4f05-972a-6b07a161e9c6|499ee0b3a39e|20260820102517",
-                    "Stops": 0,
-                    "Duration": "2h 15m",
-                    "Price": {
-                        "NetFare": 4300,
-                        "Tax": 850,
-                        "GrossFare": 5150
-                    },
-                    "Flights": [
+                    "Provider": "6E",
+                    "ChannelCode": "",
+                    "Stops": "0",
+                    "OrderID": 0,
+                    "GrossFare": 5421,
+                    "NetFare": 5258.3699999999998908606357872486114501953125,
+                    "Duration": "02h 45m ",
+                    "Promo": "ATFLY",
+                    "FCType": "STUDENT",
+                    "Segments": [
                         {
-                            "FlightNo": "2134",
-                            "Carrier": {
-                                "AirlineCode": "6E"
+                            "Flight": {
+                                "FUID": 1,
+                                "VAC": "6E",
+                                "MAC": "6E",
+                                "OAC": "6E",
+                                "FBC": "R0IP",
+                                "Airline": "IndiGo|IndiGo|IndiGo",
+                                "FlightNo": "2559",
+                                "ArrivalTime": "2026-09-02T14:55:00",
+                                "DepartureTime": "2026-09-02T12:10:00",
+                                "FareClass": "R",
+                                "ArrivalCode": "BLR",
+                                "DepartureCode": "DEL",
+                                "ArrivalTerminal": "1",
+                                "DepartureTerminal": "2",
+                                "ArrAirportName": "Srinagar |Srinagar",
+                                "DepAirportName": "Indira Gandhi International |New Delhi",
+                                "EquipmentType": "321",
+                                "RBD": "R",
+                                "Cabin": "E",
+                                "Refundable": "Y",
+                                "Amenities": "",
+                                "Seats": 0,
+                                "Hops": [
+                                    {
+                                        "ArrivalTime": "2026-09-02T13:30:00",
+                                        "DepartureTime": "2026-09-02T14:15:00",
+                                        "ArrivalCode": "IXJ",
+                                        "ArrAirportName": "Satwari |Jammu",
+                                        "Duration": "00h 45m ",
+                                        "ArrivalDuration": "01h 20m ",
+                                        "DepartureDuration": "00h 40m "
+                                    }
+                                ],
+                                "Duration": "02h 45m ",
+                                "AirCraft": "AIRBUS JET"
                             },
-                            "DepartureAirport": "DEL",
-                            "ArrivalAirport": "BOM",
-                            "DepartureTerminal": "2",
-                            "ArrivalTerminal": "1",
-                            "DepartureTime": "2026-08-27T06:00:00",
-                            "ArrivalTime": "2026-08-27T08:15:00"
+                            "Fares": {
+                                "PTCFare": [
+                                    {
+                                        "PTC": "ADT",
+                                        "Fare": 4500,
+                                        "YQ": 0,
+                                        "PSF": 91,
+                                        "YR": 0,
+                                        "UD": 61,
+                                        "K3": 0,
+                                        "K7": 0,
+                                        "API": 0,
+                                        "RCF": 0,
+                                        "RCS": 0,
+                                        "PHF": 0,
+                                        "CUTE": 0,
+                                        "OTT": "PHF,TTF,ASF,07GST",
+                                        "OT": "50.0000,158.00000,236.00000,235.00000",
+                                        "Tax": 831,
+                                        "GrossFare": 5421,
+                                        "NetFare": 5290,
+                                        "ST": 0,
+                                        "TransactionFee": 0,
+                                        "VATonServiceCharge": 0,
+                                        "VATonTransactionFee": 0,
+                                        "AgentMarkUp": 90,
+                                        "AddonMarkup": 0,
+                                        "ATOAddonMarkup": 0,
+                                        "AddonDiscount": 0,
+                                        "Ammendment": 0,
+                                        "AtoCharge": 0,
+                                        "ReissueCharge": 0,
+                                        "OldSSRAmount": 0
+                                    }
+                                ],
+                                "GrossFare": 5421,
+                                "NetFare": 5290,
+                                "TotalServiceTax": 0,
+                                "TotalTransactionFee": 0,
+                                "TotalBaseFare": 4500,
+                                "TotalTax": 831,
+                                "TotalCommission": 41,
+                                "TotalVATonServiceCharge": 0,
+                                "TotalVATonTransactionFee": 0,
+                                "TotalAgentMarkUp": 90,
+                                "TotalAddonMarkup": 0,
+                                "TotalAddonDiscount": 0,
+                                "TotalAtoCharge": 0,
+                                "TotalReissueCharge": 0,
+                                "OldSSRAmount": 0
+                            }
                         }
-                    ]
+                    ],
+                    "Notices": []
                 }
             ]
         }
     ],
-    "Code": "200",
-    "Msg": [
-        "Success"
-    ]
+    "Rules": [
+        {
+            "OrginDestination": "DEL-SXR",
+            "FUID": "1",
+            "Provider": "6E",
+            "FareRuleText": null,
+            "Rule": [
+                {
+                    "Info": [
+                        {
+                            "AdultAmount": "6000",
+                            "ChildAmount": "",
+                            "InfantAmount": "",
+                            "Description": "0 Days  - 4 Days  To Departure",
+                            "CurrencyCode": "INR"
+                        },
+                        {
+                            "AdultAmount": "5000",
+                            "ChildAmount": "",
+                            "InfantAmount": "",
+                            "Description": "4 Days  - 500 Days  To Departure",
+                            "CurrencyCode": "INR"
+                        },
+                        {
+                            "AdultAmount": "Non Refundable",
+                            "ChildAmount": "",
+                            "InfantAmount": "",
+                            "Description": "Up To After Departure Days ",
+                            "CurrencyCode": "INR"
+                        },
+                        {
+                            "AdultAmount": "580",
+                            "ChildAmount": "",
+                            "InfantAmount": "",
+                            "Description": "Cancellation",
+                            "CurrencyCode": "INR"
+                        }
+                    ],
+                    "Head": "Cancellation Fee"
+                },
+                {
+                    "Info": [
+                        {
+                            "AdultAmount": "3250",
+                            "ChildAmount": "",
+                            "InfantAmount": "",
+                            "Description": "0 Days  - 3 Days  To Departure",
+                            "CurrencyCode": "INR"
+                        },
+                        {
+                            "AdultAmount": "2750",
+                            "ChildAmount": "",
+                            "InfantAmount": "",
+                            "Description": "4 Days  - 500 Days  To Departure",
+                            "CurrencyCode": "INR"
+                        }
+                    ],
+                    "Head": "Change Fee"
+                },
+                {
+                    "Info": [
+                        {
+                            "AdultAmount": "10",
+                            "ChildAmount": "",
+                            "InfantAmount": "",
+                            "Description": "STF On RAF",
+                            "CurrencyCode": "INR"
+                        }
+                    ],
+                    "Head": "ATO Service Fee"
+                }
+            ]
+        }
+    ],
+    "SSR": [
+        {
+            "PTC": "ADT",
+            "FUID": "1",
+            "Code": "BAG",
+            "Description": "15 Kg, 7 Kg",
+            "PieceDescription": "",
+            "Charge": 0,
+            "Type": "2",
+            "VAT": 0,
+            "MealImage": null,
+            "AdditionalFields": null
+        }
+    ],
+    "SSRChange": null,
+    "IsPrivateFare": false,
+    "CeilingInfo": ""
 }
