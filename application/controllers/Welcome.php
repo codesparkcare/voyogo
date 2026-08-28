@@ -358,14 +358,20 @@ class Welcome extends CI_Controller {
 
         $pax_api_payload = array();
         foreach ($passengers as $p) {
+            $paxType = ($p['type'] === 'Child' || $p['type'] === 'CHD') ? 'CHD' : (($p['type'] === 'Infant' || $p['type'] === 'INF') ? 'INF' : 'ADT');
+            $paxAge = ($paxType === 'INF') ? min(2, (int)$p['age']) : (int)$p['age'];
+            $paxDob = ($paxType === 'INF') ? date('Y-m-d', strtotime('-1 year')) : date('Y-m-d', strtotime('-' . $paxAge . ' years'));
+            $paxTitle = ($p['title'] === 'Master') ? 'Mstr' : $p['title'];
+
             $pax_api_payload[] = array(
-                "Title"      => $p['title'],
+                "Title"      => $paxTitle,
                 "FName"      => explode(' ', $p['name'])[0],
                 "LName"      => isset(explode(' ', $p['name'])[1]) ? explode(' ', $p['name'])[1] : "Traveler",
-                "PaxType"    => $p['type'] === 'Child' ? 'CHD' : ($p['type'] === 'Infant' ? 'INF' : 'ADT'),
+                "PaxType"    => $paxType,
+                "PTC"        => $paxType,
                 "Gender"     => ($p['gender'] === 'Female') ? 'F' : 'M',
-                "Age"        => (int)$p['age'],
-                "DOB"        => date('Y-m-d', strtotime('-' . (int)$p['age'] . ' years')),
+                "Age"        => $paxAge,
+                "DOB"        => $paxDob,
                 "PassportNo" => "",
                 "Baggage"    => $ssr_baggage,
                 "Meals"      => $ssr_meal,

@@ -1240,14 +1240,18 @@ class BenzyFlightApi {
         foreach ($passengers as $p) {
             $ptc = isset($p['PTC']) ? $p['PTC'] : (isset($p['PaxType']) ? $p['PaxType'] : 'ADT');
             $age = isset($p['Age']) ? (int)$p['Age'] : ($ptc === 'ADT' ? 36 : ($ptc === 'CHD' ? 11 : 0));
+            if ($ptc === 'INF' && $age > 2) {
+                $age = 0;
+            }
             $dob = isset($p['DOB']) && !empty($p['DOB']) ? $p['DOB'] : ($ptc === 'ADT' ? '1987-01-27' : ($ptc === 'CHD' ? '2012-02-13' : '2022-12-07'));
             $gender = isset($p['Gender']) ? $p['Gender'] : 'M';
-            $title = isset($p['Title']) ? $p['Title'] : ($gender === 'F' ? ($ptc === 'CHD' ? 'Miss' : 'Ms') : ($ptc === 'INF' ? 'Mstr' : 'Mr'));
+            $title = !empty($p['Title']) ? $p['Title'] : ($gender === 'F' ? ($ptc === 'CHD' ? 'Miss' : 'Ms') : ($ptc === 'INF' ? 'Mstr' : 'Mr'));
+            if ($title === 'Master') $title = 'Mstr';
             $fname = isset($p['FName']) ? $p['FName'] : (isset($p['first_name']) ? $p['first_name'] : 'TESTA');
             $lname = isset($p['LName']) ? $p['LName'] : (isset($p['last_name']) ? $p['last_name'] : 'TESTAB');
             $email = isset($p['Email']) ? $p['Email'] : ($idx === 1 ? 'mails@mail.com' : 'soumya.s@benzyinfotech.com');
             $mobile = isset($p['PMobileNo']) ? $p['PMobileNo'] : ($idx === 1 ? '' : '8921614723');
-            $passport = isset($p['PassportNo']) && !empty($p['PassportNo']) ? $p['PassportNo'] : ($idx === 1 ? 'HM8888HJJ6K' : '54533221');
+            $passport = isset($p['PassportNo']) && !empty($p['PassportNo']) ? $p['PassportNo'] : ($idx === 1 ? 'HM8888HJJ6K' : ($ptc === 'INF' ? '5351321' : '54533221'));
             $paxId = isset($p['PaxID']) ? $p['PaxID'] : (isset($defaultPaxIDs[$idx - 1]) ? $defaultPaxIDs[$idx - 1] : base64_encode(chr(96 + $idx) . chr(100 + $idx)));
             $nationality = !empty($p['Nationality']) ? $p['Nationality'] : 'IN';
 
@@ -1278,7 +1282,16 @@ class BenzyFlightApi {
                     "Type"     => ""
                 ),
                 "DocumentType"     => "",
-                "NationalityName"  => "INDIA"
+                "NationalityName"  => "INDIA",
+                "DOBDay"           => "0",
+                "DOBMonth"         => "0",
+                "DOBYear"          => "0",
+                "PDOIDay"          => "0",
+                "PDOIMonth"        => "0",
+                "PDOIBYear"        => "0",
+                "PDOEDay"          => "0",
+                "PDOEMonth"        => "0",
+                "PDOEBYear"        => "0"
             );
             $idx++;
         }
