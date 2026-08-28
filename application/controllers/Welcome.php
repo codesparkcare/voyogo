@@ -144,9 +144,13 @@ class Welcome extends CI_Controller {
             $price = (float)($this->input->post('price') ?: $this->input->get('price') ?: 4999);
         }
 
-        $adults      = max(1, (int)($this->input->post('adults') ?: $this->input->get('adults') ?: 1));
-        $children    = max(0, (int)($this->input->post('children') ?: $this->input->get('children') ?: 0));
-        $infants     = max(0, (int)($this->input->post('infants') ?: $this->input->get('infants') ?: 0));
+        $posted_adults   = $this->input->post('adults') !== null ? (int)$this->input->post('adults') : ($this->input->get('adults') !== null ? (int)$this->input->get('adults') : null);
+        $posted_children = $this->input->post('children') !== null ? (int)$this->input->post('children') : ($this->input->get('children') !== null ? (int)$this->input->get('children') : null);
+        $posted_infants  = $this->input->post('infants') !== null ? (int)$this->input->post('infants') : ($this->input->get('infants') !== null ? (int)$this->input->get('infants') : null);
+
+        $adults      = ($posted_adults !== null && $posted_adults > 0) ? $posted_adults : (isset($flightDetails['raw']['ADT']) ? max(1, (int)$flightDetails['raw']['ADT']) : 1);
+        $children    = ($posted_children !== null) ? $posted_children : (isset($flightDetails['raw']['CHD']) ? max(0, (int)$flightDetails['raw']['CHD']) : 0);
+        $infants     = ($posted_infants !== null) ? $posted_infants : (isset($flightDetails['raw']['INF']) ? max(0, (int)$flightDetails['raw']['INF']) : 0);
         $cabin_class = $this->input->post('cabin_class') ?: $this->input->get('cabin_class') ?: 'Economy';
 
         // Fetch revalidated flight data using Benzy API (SmartPricer & GetSPricer)
@@ -160,13 +164,13 @@ class Welcome extends CI_Controller {
         } elseif (!empty($flightDetails['TUI'])) {
             $tui = $flightDetails['TUI'];
         }
-        if (isset($flightDetails['raw']['ADT'])) {
+        if ($posted_adults === null && isset($flightDetails['raw']['ADT'])) {
             $adults = max(1, (int)$flightDetails['raw']['ADT']);
         }
-        if (isset($flightDetails['raw']['CHD'])) {
+        if ($posted_children === null && isset($flightDetails['raw']['CHD'])) {
             $children = max(0, (int)$flightDetails['raw']['CHD']);
         }
-        if (isset($flightDetails['raw']['INF'])) {
+        if ($posted_infants === null && isset($flightDetails['raw']['INF'])) {
             $infants = max(0, (int)$flightDetails['raw']['INF']);
         }
         if (empty($flightDetails) || !is_array($flightDetails)) {
