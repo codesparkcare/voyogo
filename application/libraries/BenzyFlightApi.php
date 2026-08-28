@@ -2307,6 +2307,8 @@ class BenzyFlightApi {
                 'cabin_class'     => !empty($flight['Cabin']) ? ($flight['Cabin'] == 'B' ? 'Business' : 'Economy') : 'Economy',
                 'price'           => $grossFare,
                 'base_fare'       => $netFare,
+                'net_amount'      => $netFare,
+                'gross_amount'    => $grossFare,
                 'taxes'           => $taxes,
                 'checkin_baggage' => '15 Kgs (1 piece per pax)',
                 'cabin_baggage'   => '7 Kgs (1 piece per pax)',

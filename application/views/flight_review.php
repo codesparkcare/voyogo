@@ -162,7 +162,7 @@
                     <input type="hidden" name="destination" value="<?php echo htmlspecialchars($flight['to_code']); ?>">
                     <input type="hidden" name="departure_date" value="<?php echo htmlspecialchars($flight['departure_date']); ?>">
                     <input type="hidden" name="departure_time" value="<?php echo htmlspecialchars($flight['departure_time']); ?>">
-                    <input type="hidden" name="net_amount" value="<?php echo htmlspecialchars($flight['base_fare'] ?? $flight['price']); ?>">
+                    <input type="hidden" name="net_amount" value="<?php echo htmlspecialchars($flight['net_amount'] ?? $flight['base_fare'] ?? $flight['price']); ?>">
                     <input type="hidden" name="total_amount" id="form_total_amount" value="<?php echo htmlspecialchars($flight['price']); ?>">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
 

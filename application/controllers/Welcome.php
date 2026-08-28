@@ -237,7 +237,10 @@ class Welcome extends CI_Controller {
         $flightDetails['to_airport'] = $airportNames[$toCode]['name'] ?? ($toCode . ' International Airport');
         $flightDetails['to_terminal'] = $airportNames[$toCode]['terminal'] ?? 'Terminal 1';
 
-        // Adjust fares for total passenger count
+        // Preserve exact live Net Amount from GetSPricer
+        $live_net_amount = isset($flightDetails['net_amount']) ? (float)$flightDetails['net_amount'] : (isset($flightDetails['base_fare']) ? (float)$flightDetails['base_fare'] : 0);
+
+        // Adjust display fares for total passenger count if not already live priced
         $pax_multiplier = $adults + $children + (0.5 * $infants);
         if ($pax_multiplier < 1) $pax_multiplier = 1;
 
@@ -246,9 +249,14 @@ class Welcome extends CI_Controller {
         $unit_base = isset($flightDetails['base_fare']) ? (float)$flightDetails['base_fare'] : round($unit_price * 0.82);
         $unit_taxes = isset($flightDetails['taxes']) ? (float)$flightDetails['taxes'] : round($unit_price * 0.18);
 
-        $flightDetails['base_fare'] = round($unit_base * $pax_multiplier);
-        $flightDetails['taxes'] = round($unit_taxes * $pax_multiplier);
-        $flightDetails['price'] = $flightDetails['base_fare'] + $flightDetails['taxes'];
+        if ($live_net_amount > 0) {
+            $flightDetails['net_amount'] = $live_net_amount;
+        } else {
+            $flightDetails['base_fare'] = round($unit_base * $pax_multiplier);
+            $flightDetails['taxes'] = round($unit_taxes * $pax_multiplier);
+            $flightDetails['price'] = $flightDetails['base_fare'] + $flightDetails['taxes'];
+            $flightDetails['net_amount'] = $flightDetails['base_fare'];
+        }
         $flightDetails['cabin_class'] = $cabin_class;
 
         // Fetch Fare Rules (Cancellation & Date change policy)
