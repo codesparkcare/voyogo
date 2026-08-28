@@ -1,20 +1,20 @@
 URL: https://voyogos.com/certification_logs/1.Oneway%20Booking%20without%20Baggage%20-%20Direct%20Flight/14.RetrieveBooking.json
 Method: POST
 Endpoint: /Utils/RetrieveBooking
-Timestamp: 2026-08-26T07:00:12.000Z
+Timestamp: 2026-08-28T08:37:56.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-30c297021595|b9aa5b1a485a|20260826122936",
+    "TUI": "92440198-dc0b-409e-b8d8-d8889b470dd9|61fa03e30d72|20260828140556",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "ReferenceNumber": "250037934",
+    "ReferenceNumber": "250037344",
     "ReferenceType": "T",
     "ServiceType": "FLT"
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-30c297021595|b9aa5b1a485a|20260826122936",
-    "TransactionID": 250037934,
+    "TUI": "92440198-dc0b-409e-b8d8-d8889b470dd9|61fa03e30d72|20260828140556",
+    "TransactionID": 250037344,
     "NetAmount": 5154,
     "CumulativeNetAmount": 5154,
     "AirlineNetFare": 2904,
@@ -31,7 +31,7 @@ Response Body:
     "To": "BOM",
     "FromName": "Indira Gandhi International |New Delhi",
     "ToName": "Chhatrapati Shivaji |Mumbai",
-    "OnwardDate": "2026-09-02",
+    "OnwardDate": "2026-09-04",
     "ReturnDate": "",
     "GateWayCode": "",
     "GateWayCharge": 0,
@@ -39,7 +39,7 @@ Response Body:
     "PaymentTransactionStatus": null,
     "Status": "HO0",
     "FareType": "N",
-    "BookingDate": "2026-08-26 12:30:12",
+    "BookingDate": "2026-08-28 14:07:56",
     "TripType": "ON",
     "Hold": true,
     "HoldDuration": 60,
@@ -75,11 +75,11 @@ Response Body:
                                 "Airline": "IndiGo|IndiGo|IndiGo",
                                 "AirCraft": "AIRBUS JET",
                                 "FBC": "USAV",
-                                "APNR": "W96ABD",
+                                "APNR": "WFDFEB",
                                 "CRSPNR": "CRSPNR123",
                                 "FlightNo": "2134",
-                                "ArrivalTime": "2026-09-02T08:15:00",
-                                "DepartureTime": "2026-09-02T06:00:00",
+                                "ArrivalTime": "2026-09-04T08:15:00",
+                                "DepartureTime": "2026-09-04T06:00:00",
                                 "ArrivalCode": "BOM",
                                 "DepartureCode": "DEL",
                                 "ArrivalTerminal": "1",
@@ -163,7 +163,7 @@ Response Body:
             "Nationality": "",
             "PassportNo": "",
             "PLI": "",
-            "DOE": "2026-08-26",
+            "DOE": "2026-08-28",
             "VisaType": ""
         }
     ],

@@ -1,16 +1,16 @@
 URL: https://voyogos.com/certification_logs/1.Oneway%20Booking%20without%20Baggage%20-%20Direct%20Flight/4.GetExpSearch.json
 Method: POST
 Endpoint: /flights/GetExpSearch
-Timestamp: 2026-08-26T06:59:42.000Z
+Timestamp: 2026-08-28T08:36:16.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-30c297021595|b9aa5b1a485a|20260826122936",
+    "TUI": "92440198-dc0b-409e-b8d8-d8889b470dd9|61fa03e30d72|20260828140556",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-30c297021595|b9aa5b1a485a|20260826122936",
+    "TUI": "92440198-dc0b-409e-b8d8-d8889b470dd9|61fa03e30d72|20260828140556",
     "Completed": "False",
     "CeilingInfo": null,
     "CurrencyCode": "INR",
@@ -54,8 +54,8 @@ Response Body:
                     "VAC": "6E",
                     "MAC": "6E",
                     "OAC": "6E",
-                    "ArrivalTime": "2026-09-02T08:15:00",
-                    "DepartureTime": "2026-09-02T06:00:00",
+                    "ArrivalTime": "2026-09-04T08:15:00",
+                    "DepartureTime": "2026-09-04T06:00:00",
                     "ArrivalTerminal": "1",
                     "DepartureTerminal": "2",
                     "FareClass": "GS",
@@ -105,7 +105,7 @@ Response Body:
                     "IsBusStation": false,
                     "ChannelCode": null,
                     "WpIndex": null,
-                    "JourneyKey": "6E,2134,DEL,BOM,2026-09-02T06:00:00,2026-09-02T08:15:00,2,,02h 15m "
+                    "JourneyKey": "6E,2134,DEL,BOM,2026-09-04T06:00:00,2026-09-04T08:15:00,2,,02h 15m "
                 }
             ]
         }

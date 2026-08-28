@@ -2117,22 +2117,19 @@ class BenzyFlightApi {
 
         // Save to Database API Logs
         try {
-            if ($this->CI && isset($this->CI->load)) {
-                $db = @$this->CI->load->database('', TRUE);
-                if ($db && !empty($db->conn_id)) {
-                    $this->CI->load->model('Api_log_model');
-                    $this->CI->Api_log_model->log_call(
-                        'flight',
-                        $actionName,
-                        $url,
-                        $method,
-                        $jsonPayload,
-                        $rawResponse,
-                        $httpCode,
-                        $durationMs,
-                        $curlErr
-                    );
-                }
+            if ($this->CI && isset($this->CI->db) && !empty($this->CI->db->conn_id)) {
+                $this->CI->load->model('Api_log_model');
+                $this->CI->Api_log_model->log_call(
+                    'flight',
+                    $actionName,
+                    $url,
+                    $method,
+                    $jsonPayload,
+                    $rawResponse,
+                    $httpCode,
+                    $durationMs,
+                    $curlErr
+                );
             }
         } catch (\Throwable $e) {
             // Silently continue
@@ -2262,43 +2259,96 @@ class BenzyFlightApi {
     }
 
     protected function parseSingleFlightReview($data, $tui) {
-        if (empty($data['Trips'][0]['Journeys'][0]['Flights'][0])) return null;
+        $actualTui = !empty($data['TUI']) ? $data['TUI'] : $tui;
 
-        $journey = $data['Trips'][0]['Journeys'][0];
-        $flight  = $journey['Flights'][0];
+        // 1. Live Benzy Structure (Trips -> Journey -> Segments -> Flight)
+        if (!empty($data['Trips'][0]['Journey'][0]['Segments'][0]['Flight'])) {
+            $journey = $data['Trips'][0]['Journey'][0];
+            $seg     = $journey['Segments'][0];
+            $flight  = $seg['Flight'];
+            $fares   = isset($seg['Fares']) ? $seg['Fares'] : array();
 
-        $airlineCode = isset($flight['Carrier']['AirlineCode']) ? $flight['Carrier']['AirlineCode'] : '6E';
-        $airlineDetails = $this->getAirlineMeta($airlineCode);
+            $airlineCode = !empty($flight['VAC']) ? $flight['VAC'] : (!empty($flight['MAC']) ? $flight['MAC'] : '6E');
+            $airlineDetails = $this->getAirlineMeta($airlineCode);
 
-        $netFare = isset($journey['Price']['NetFare']) ? (float)$journey['Price']['NetFare'] : 4500;
-        $taxes   = isset($journey['Price']['Tax']) ? (float)$journey['Price']['Tax'] : 850;
-        $grossFare = isset($journey['Price']['GrossFare']) ? (float)$journey['Price']['GrossFare'] : ($netFare + $taxes);
+            $grossFare = isset($data['GrossAmount']) ? (float)$data['GrossAmount'] : (isset($journey['GrossFare']) ? (float)$journey['GrossFare'] : (isset($fares['GrossFare']) ? (float)$fares['GrossFare'] : 5421.0));
+            $netFare   = isset($data['NetAmount']) ? (float)$data['NetAmount'] : (isset($journey['NetFare']) ? (float)$journey['NetFare'] : (isset($fares['NetFare']) ? (float)$fares['NetFare'] : 5150.0));
+            $taxes     = isset($fares['TotalTax']) ? (float)$fares['TotalTax'] : ($grossFare - $netFare);
 
-        return array(
-            'tui' => $tui,
-            'airline_code' => $airlineCode,
-            'airline_name' => $airlineDetails['name'],
-            'airline_logo' => $airlineDetails['logo'],
-            'flight_number' => $airlineCode . '-' . (isset($flight['FlightNo']) ? $flight['FlightNo'] : '2134'),
-            'from_code' => isset($flight['DepartureAirport']) ? $flight['DepartureAirport'] : 'DEL',
-            'from_airport' => isset($flight['DepAirportName']) ? $flight['DepAirportName'] : 'Delhi Airport',
-            'from_terminal' => isset($flight['DepartureTerminal']) ? 'Terminal ' . $flight['DepartureTerminal'] : 'Terminal 2',
-            'to_code' => isset($flight['ArrivalAirport']) ? $flight['ArrivalAirport'] : 'BOM',
-            'to_airport' => isset($flight['ArrAirportName']) ? $flight['ArrAirportName'] : 'Mumbai Airport',
-            'to_terminal' => isset($flight['ArrivalTerminal']) ? 'Terminal ' . $flight['ArrivalTerminal'] : 'Terminal 1',
-            'departure_time' => isset($flight['DepartureTime']) ? date('H:i', strtotime($flight['DepartureTime'])) : '06:00',
-            'arrival_time' => isset($flight['ArrivalTime']) ? date('H:i', strtotime($flight['ArrivalTime'])) : '08:15',
-            'departure_date' => isset($flight['DepartureTime']) ? date('Y-m-d', strtotime($flight['DepartureTime'])) : date('Y-m-d', strtotime('+7 days')),
-            'duration' => '2h 15m',
-            'stops' => isset($journey['Stops']) ? (int)$journey['Stops'] : 0,
-            'cabin_class' => 'Economy',
-            'price' => $grossFare,
-            'base_fare' => $netFare,
-            'taxes' => $taxes,
-            'checkin_baggage' => '15 Kgs (1 piece per pax)',
-            'cabin_baggage' => '7 Kgs (1 piece per pax)',
-            'refundable' => true
-        );
+            $flightNo = !empty($flight['FlightNo']) ? $flight['FlightNo'] : '1451';
+            $flightNumber = (strpos($flightNo, $airlineCode) === 0) ? $flightNo : ($airlineCode . '-' . $flightNo);
+
+            return array(
+                'TUI'             => $actualTui,
+                'tui'             => $actualTui,
+                'airline_code'    => $airlineCode,
+                'airline_name'    => !empty($airlineDetails['name']) ? $airlineDetails['name'] : 'IndiGo',
+                'airline_logo'    => $airlineDetails['logo'],
+                'flight_number'   => $flightNumber,
+                'from_code'       => !empty($flight['DepartureCode']) ? $flight['DepartureCode'] : 'DEL',
+                'from_airport'    => !empty($flight['DepAirportName']) ? $flight['DepAirportName'] : 'Delhi Airport',
+                'from_terminal'   => !empty($flight['DepartureTerminal']) ? $flight['DepartureTerminal'] : 'Terminal 2',
+                'to_code'         => !empty($flight['ArrivalCode']) ? $flight['ArrivalCode'] : 'BOM',
+                'to_airport'      => !empty($flight['ArrAirportName']) ? $flight['ArrAirportName'] : 'Mumbai Airport',
+                'to_terminal'     => !empty($flight['ArrivalTerminal']) ? $flight['ArrivalTerminal'] : 'Terminal 1',
+                'departure_time'  => !empty($flight['DepartureTime']) ? date('H:i', strtotime($flight['DepartureTime'])) : '09:25',
+                'arrival_time'    => !empty($flight['ArrivalTime']) ? date('H:i', strtotime($flight['ArrivalTime'])) : '11:15',
+                'departure_date'  => !empty($flight['DepartureTime']) ? date('Y-m-d', strtotime($flight['DepartureTime'])) : date('Y-m-d', strtotime('+7 days')),
+                'duration'        => !empty($flight['Duration']) ? trim($flight['Duration']) : '03h 20m',
+                'stops'           => isset($journey['Stops']) ? (int)$journey['Stops'] : 0,
+                'cabin_class'     => !empty($flight['Cabin']) ? ($flight['Cabin'] == 'B' ? 'Business' : 'Economy') : 'Economy',
+                'price'           => $grossFare,
+                'base_fare'       => $netFare,
+                'taxes'           => $taxes,
+                'checkin_baggage' => '15 Kgs (1 piece per pax)',
+                'cabin_baggage'   => '7 Kgs (1 piece per pax)',
+                'refundable'      => isset($flight['Refundable']) && $flight['Refundable'] === 'Y',
+                'raw'             => $data
+            );
+        }
+
+        // 2. Simulated/Legacy Structure
+        if (!empty($data['Trips'][0]['Journeys'][0]['Flights'][0])) {
+            $journey = $data['Trips'][0]['Journeys'][0];
+            $flight  = $journey['Flights'][0];
+
+            $airlineCode = isset($flight['Carrier']['AirlineCode']) ? $flight['Carrier']['AirlineCode'] : '6E';
+            $airlineDetails = $this->getAirlineMeta($airlineCode);
+
+            $netFare = isset($journey['Price']['NetFare']) ? (float)$journey['Price']['NetFare'] : 4500;
+            $taxes   = isset($journey['Price']['Tax']) ? (float)$journey['Price']['Tax'] : 850;
+            $grossFare = isset($journey['Price']['GrossFare']) ? (float)$journey['Price']['GrossFare'] : ($netFare + $taxes);
+
+            return array(
+                'TUI'             => $actualTui,
+                'tui'             => $actualTui,
+                'airline_code'    => $airlineCode,
+                'airline_name'    => $airlineDetails['name'],
+                'airline_logo'    => $airlineDetails['logo'],
+                'flight_number'   => $airlineCode . '-' . (isset($flight['FlightNo']) ? $flight['FlightNo'] : '2134'),
+                'from_code'       => isset($flight['DepartureAirport']) ? $flight['DepartureAirport'] : 'DEL',
+                'from_airport'    => isset($flight['DepAirportName']) ? $flight['DepAirportName'] : 'Delhi Airport',
+                'from_terminal'   => isset($flight['DepartureTerminal']) ? 'Terminal ' . $flight['DepartureTerminal'] : 'Terminal 2',
+                'to_code'         => isset($flight['ArrivalAirport']) ? $flight['ArrivalAirport'] : 'BOM',
+                'to_airport'      => isset($flight['ArrAirportName']) ? $flight['ArrAirportName'] : 'Mumbai Airport',
+                'to_terminal'     => isset($flight['ArrivalTerminal']) ? 'Terminal ' . $flight['ArrivalTerminal'] : 'Terminal 1',
+                'departure_time'  => isset($flight['DepartureTime']) ? date('H:i', strtotime($flight['DepartureTime'])) : '06:00',
+                'arrival_time'    => isset($flight['ArrivalTime']) ? date('H:i', strtotime($flight['ArrivalTime'])) : '08:15',
+                'departure_date'  => isset($flight['DepartureTime']) ? date('Y-m-d', strtotime($flight['DepartureTime'])) : date('Y-m-d', strtotime('+7 days')),
+                'duration'        => '2h 15m',
+                'stops'           => isset($journey['Stops']) ? (int)$journey['Stops'] : 0,
+                'cabin_class'     => 'Economy',
+                'price'           => $grossFare,
+                'base_fare'       => $netFare,
+                'taxes'           => $taxes,
+                'checkin_baggage' => '15 Kgs (1 piece per pax)',
+                'cabin_baggage'   => '7 Kgs (1 piece per pax)',
+                'refundable'      => true,
+                'raw'             => $data
+            );
+        }
+
+        return null;
     }
 
     protected function getAirlineMeta($code) {

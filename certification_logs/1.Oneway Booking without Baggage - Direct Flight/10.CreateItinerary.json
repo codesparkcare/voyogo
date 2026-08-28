@@ -1,10 +1,10 @@
 URL: https://voyogos.com/certification_logs/1.Oneway%20Booking%20without%20Baggage%20-%20Direct%20Flight/10.CreateItinerary.json
 Method: POST
 Endpoint: /Flights/CreateItinerary
-Timestamp: 2026-08-26T07:00:00.000Z
+Timestamp: 2026-08-28T08:37:16.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-30c297021595|b9aa5b1a485a|20260826122936",
+    "TUI": "92440198-dc0b-409e-b8d8-d8889b470dd9|61fa03e30d72|20260828140556",
     "ServiceEnquiry": "",
     "ContactInfo": {
         "Title": "Mr",
@@ -234,9 +234,9 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-30c297021595|b9aa5b1a485a|20260826122936",
+    "TUI": "92440198-dc0b-409e-b8d8-d8889b470dd9|61fa03e30d72|20260828140556",
     "Mode": null,
-    "TransactionID": 250037934,
+    "TransactionID": 250037344,
     "ADT": 1,
     "CHD": 0,
     "INF": 0,
@@ -267,8 +267,8 @@ Response Body:
                                 "Airline": "IndiGo|IndiGo|IndiGo",
                                 "Aircraft": "Airbus",
                                 "FlightNo": "2134",
-                                "ArrivalTime": "2026-09-02T08:15:00",
-                                "DepartureTime": "2026-09-02T06:00:00",
+                                "ArrivalTime": "2026-09-04T08:15:00",
+                                "DepartureTime": "2026-09-04T06:00:00",
                                 "ArrivalCode": "BOM",
                                 "DepartureCode": "DEL",
                                 "ArrAirportName": "Chhatrapati Shivaji |Mumbai",

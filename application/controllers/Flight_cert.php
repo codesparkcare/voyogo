@@ -146,41 +146,43 @@ class Flight_cert extends CI_Controller {
         $logsWritten[] = $this->saveLogFile($caseDir, '1.Signature.json', $this->benzyflightapi->getLastLog());
 
         // 2. ExpressSearch
-        $tui = $this->benzyflightapi->expressSearch(
+        $searchTui = $this->benzyflightapi->expressSearch(
             $origin, $destination, $depDate, $isRoundTrip ? $retDate : '',
             2, 2, 2, 'E', $scn['fare_type'], !$isConnecting
         );
         $logsWritten[] = $this->saveLogFile($caseDir, '2.ExpressSearch.json', $this->benzyflightapi->getLastLog());
 
-        // 3. WebSettings
-        $this->benzyflightapi->getWebSettings($tui);
+        // 3. WebSettings (TUI of ExpressSearch response)
+        $this->benzyflightapi->getWebSettings($searchTui);
         $logsWritten[] = $this->saveLogFile($caseDir, '3.WebSettings.json', $this->benzyflightapi->getLastLog());
 
-        // 4. GetExpSearch
-        $this->benzyflightapi->getExpSearch($tui, $origin, $destination, $depDate, $isConnecting);
+        // 4. GetExpSearch (TUI of ExpressSearch response)
+        $this->benzyflightapi->getExpSearch($searchTui, $origin, $destination, $depDate, $isConnecting);
         $logsWritten[] = $this->saveLogFile($caseDir, '4.GetExpSearch.json', $this->benzyflightapi->getLastLog());
 
-        // 5. SSR (Baggage / Meals)
-        $this->benzyflightapi->getSSR($tui, $origin, $destination);
+        // 5. SSR (Initial Availability)
+        $this->benzyflightapi->getSSR($searchTui, $origin, $destination);
         $logsWritten[] = $this->saveLogFile($caseDir, '5.SSR.json', $this->benzyflightapi->getLastLog());
 
-        // 6. SmartPricer
-        $this->benzyflightapi->smartPricer($tui, 5350, '6E|1', $isRoundTrip, $origin, $destination);
+        // 6. SmartPricer (Takes ExpressSearch TUI in Trips[0].TUI, returns new pricing TUI)
+        $spRes = $this->benzyflightapi->smartPricer($searchTui, 5350, '6E|1', $isRoundTrip, $origin, $destination);
         $logsWritten[] = $this->saveLogFile($caseDir, '6.SmartPricer.json', $this->benzyflightapi->getLastLog());
+        $pricedTui = !empty($spRes['TUI']) ? $spRes['TUI'] : (!empty($spRes['tui']) ? $spRes['tui'] : $searchTui);
 
-        // 7. GetSPricer
-        $this->benzyflightapi->getSPricer($tui, 5421, $origin, $destination, $isRoundTrip);
+        // 7. GetSPricer (Takes TUI of SmartPricer response)
+        $getSpRes = $this->benzyflightapi->getSPricer($pricedTui, 5421, $origin, $destination, $isRoundTrip);
         $logsWritten[] = $this->saveLogFile($caseDir, '7.GetSPricer.json', $this->benzyflightapi->getLastLog());
+        $liveTui = !empty($getSpRes['TUI']) ? $getSpRes['TUI'] : (!empty($getSpRes['tui']) ? $getSpRes['tui'] : $pricedTui);
 
-        // 8. GetTravelCheckList
-        $this->benzyflightapi->getTravelCheckList($tui);
+        // 8. GetTravelCheckList (TUI of GetSPricer response)
+        $this->benzyflightapi->getTravelCheckList($liveTui);
         $logsWritten[] = $this->saveLogFile($caseDir, '8.GetTravelCheckList.json', $this->benzyflightapi->getLastLog());
 
-        // 9. SSR (Post-pricing baggage selection if with baggage)
-        $this->benzyflightapi->getSSR($tui, $origin, $destination);
+        // 9. SSR (Post-pricing ancillary selection with TUI of GetSPricer response)
+        $this->benzyflightapi->getSSR($liveTui, $origin, $destination);
         $logsWritten[] = $this->saveLogFile($caseDir, '9.SSR.json', $this->benzyflightapi->getLastLog());
 
-        // 10. CreateItinerary (BookingType: HB - Hold Booking)
+        // 10. CreateItinerary (TUI of GetSPricer response)
         $pax = array(
             array("Title" => "Mr", "FName" => "Nithin", "LName" => "Kumar", "PaxType" => "ADT", "Gender" => "M", "Age" => 32, "DOB" => "1992-05-15", "PassportNo" => "", "Baggage" => $withBaggage ? "BAG5" : "", "Meals" => "VEG_SANDWICH"),
             array("Title" => "Mrs", "FName" => "Priya", "LName" => "Kumar", "PaxType" => "ADT", "Gender" => "F", "Age" => 29, "DOB" => "1995-08-20", "PassportNo" => "", "Baggage" => $withBaggage ? "BAG5" : "", "Meals" => "VEG_SANDWICH"),
@@ -196,33 +198,39 @@ class Flight_cert extends CI_Controller {
             "City" => "Delhi", "CountryCode" => "91"
         );
 
-        $itinRes = $this->benzyflightapi->createItinerary($tui, $pax, $contact, 'HB', array('baggage' => $withBaggage ? 'BAG5' : ''));
+        $itinRes = $this->benzyflightapi->createItinerary($liveTui, $pax, $contact, 'HB', array('baggage' => $withBaggage ? 'BAG5' : ''));
         $logsWritten[] = $this->saveLogFile($caseDir, '10.CreateItinerary.json', $this->benzyflightapi->getLastLog());
 
-        $txnId = isset($itinRes['TransactionID']) ? $itinRes['TransactionID'] : 250037125;
+        $bookingTui = !empty($itinRes['TUI']) ? $itinRes['TUI'] : (!empty($itinRes['tui']) ? $itinRes['tui'] : $liveTui);
+        $txnId = !empty($itinRes['TransactionID']) ? $itinRes['TransactionID'] : 250037125;
 
-        // 11. StartPay (BookingType: HB - Hold)
-        $this->benzyflightapi->startPay($txnId, $tui, 'HB', 0);
+        // 11. StartPay (BookingType: HB - Hold, uses TUI of CreateItinerary response & TransactionID)
+        $startPayRes = $this->benzyflightapi->startPay($txnId, $bookingTui, 'HB', 0);
         $logsWritten[] = $this->saveLogFile($caseDir, '11.StartPay(BookingType-HB).json', $this->benzyflightapi->getLastLog());
+        $payTui = !empty($startPayRes['TUI']) ? $startPayRes['TUI'] : (!empty($startPayRes['tui']) ? $startPayRes['tui'] : $bookingTui);
 
-        // 12. GetItineraryStatus (Check 1)
-        $this->benzyflightapi->getItineraryStatus($txnId, $tui);
+        // 12. GetItineraryStatus (Check 1, uses TUI of StartPay response)
+        $status1Res = $this->benzyflightapi->getItineraryStatus($txnId, $payTui);
         $logsWritten[] = $this->saveLogFile($caseDir, '12.GetItineraryStatus.json', $this->benzyflightapi->getLastLog());
+        $statusTui = !empty($status1Res['TUI']) ? $status1Res['TUI'] : (!empty($status1Res['tui']) ? $status1Res['tui'] : $payTui);
 
         // 13. GetItineraryStatus (Check 2)
-        $this->benzyflightapi->getItineraryStatus($txnId, $tui);
+        $status2Res = $this->benzyflightapi->getItineraryStatus($txnId, $statusTui);
         $logsWritten[] = $this->saveLogFile($caseDir, '13.GetItineraryStatus.json', $this->benzyflightapi->getLastLog());
+        $statusTui = !empty($status2Res['TUI']) ? $status2Res['TUI'] : (!empty($status2Res['tui']) ? $status2Res['tui'] : $statusTui);
 
-        // 14. RetrieveBooking (Hold verification: HO0 or HO0,HR0)
-        $holdRes = $this->benzyflightapi->retrieveBooking($txnId, $tui, true, $isRoundTrip);
+        // 14. RetrieveBooking (Hold verification: HO0 or HO0,HR0, uses TUI of GetItineraryStatus response)
+        $holdRes = $this->benzyflightapi->retrieveBooking($txnId, $statusTui, true, $isRoundTrip);
         $logsWritten[] = $this->saveLogFile($caseDir, '14.RetrieveBooking.json', $this->benzyflightapi->getLastLog());
+        $holdTui = !empty($holdRes['TUI']) ? $holdRes['TUI'] : (!empty($holdRes['tui']) ? $holdRes['tui'] : $statusTui);
 
-        // 15. StartPay (BookingType: HP - Ticket confirmation)
-        $this->benzyflightapi->startPay($txnId, $tui, 'HP', 5350);
+        // 15. StartPay (BookingType: HP - Ticket confirmation, uses latest TUI & TransactionID)
+        $startPayHpRes = $this->benzyflightapi->startPay($txnId, $holdTui, 'HP', 5350);
         $logsWritten[] = $this->saveLogFile($caseDir, '15.StartPay(BookingType-HP).json', $this->benzyflightapi->getLastLog());
+        $payHpTui = !empty($startPayHpRes['TUI']) ? $startPayHpRes['TUI'] : (!empty($startPayHpRes['tui']) ? $startPayHpRes['tui'] : $holdTui);
 
         // 16. RetrieveBooking (Ticketed verification: TO0 or TO0,TR0)
-        $ticketRes = $this->benzyflightapi->retrieveBooking($txnId, $tui, false, $isRoundTrip);
+        $ticketRes = $this->benzyflightapi->retrieveBooking($txnId, $payHpTui, false, $isRoundTrip);
         $logsWritten[] = $this->saveLogFile($caseDir, '16.RetrieveBooking.json', $this->benzyflightapi->getLastLog());
 
         return array(

@@ -150,8 +150,16 @@ class Welcome extends CI_Controller {
         $cabin_class = $this->input->post('cabin_class') ?: $this->input->get('cabin_class') ?: 'Economy';
 
         // Fetch revalidated flight data using Benzy API (SmartPricer & GetSPricer)
-        @$this->benzyflightapi->smartPricer($tui, $price);
+        $spRes = @$this->benzyflightapi->smartPricer($tui, $price);
+        if (!empty($spRes['TUI'])) {
+            $tui = $spRes['TUI'];
+        }
         $flightDetails = $this->benzyflightapi->getSPricer($tui, $price);
+        if (!empty($flightDetails['tui'])) {
+            $tui = $flightDetails['tui'];
+        } elseif (!empty($flightDetails['TUI'])) {
+            $tui = $flightDetails['TUI'];
+        }
         if (empty($flightDetails) || !is_array($flightDetails)) {
             $flightDetails = $this->benzyflightapi->getMockReviewDetails($tui, $price);
         }
@@ -339,19 +347,22 @@ class Welcome extends CI_Controller {
 
         // 1. Create Itinerary via Benzy API
         $itineraryRes = $this->benzyflightapi->createItinerary($tui, $pax_api_payload, $contact_payload, $booking_type, array('baggage' => $ssr_baggage, 'meal' => $ssr_meal));
+        $bookingTui = !empty($itineraryRes['TUI']) ? $itineraryRes['TUI'] : (!empty($itineraryRes['tui']) ? $itineraryRes['tui'] : $tui);
         $transaction_id = isset($itineraryRes['TransactionID']) ? $itineraryRes['TransactionID'] : (int)('2500' . rand(37000, 37999));
 
         // 2. Start Pay Authorization
         $total_amount = (float)($this->input->post('total_amount') ?: 5350);
-        $this->benzyflightapi->startPay($transaction_id, $tui, $booking_type, $total_amount);
+        $startPayRes = $this->benzyflightapi->startPay($transaction_id, $bookingTui, $booking_type, $total_amount);
+        $payTui = !empty($startPayRes['TUI']) ? $startPayRes['TUI'] : (!empty($startPayRes['tui']) ? $startPayRes['tui'] : $bookingTui);
 
         // 3. Verify Payment & Itinerary Status via GetItineraryStatus
-        $statusRes = $this->benzyflightapi->getItineraryStatus($transaction_id, $tui);
+        $statusRes = $this->benzyflightapi->getItineraryStatus($transaction_id, $payTui);
+        $statusTui = !empty($statusRes['TUI']) ? $statusRes['TUI'] : (!empty($statusRes['tui']) ? $statusRes['tui'] : $payTui);
 
         // 4. Retrieve Booking to confirm PNR and ticketed/held itinerary
         $originCode = strtoupper(substr($this->input->post('origin') ?: 'DEL', 0, 3));
         $destinationCode = strtoupper(substr($this->input->post('destination') ?: 'BOM', 0, 3));
-        $retrieveRes = $this->benzyflightapi->retrieveBooking($transaction_id, $tui, ($booking_type === 'HB'), false, $originCode, $destinationCode);
+        $retrieveRes = $this->benzyflightapi->retrieveBooking($transaction_id, $statusTui, ($booking_type === 'HB'), false, $originCode, $destinationCode);
 
         // Confirmation & PNR generation
         $pnr = !empty($retrieveRes['PNR']) ? $retrieveRes['PNR'] : (!empty($itineraryRes['PNR']) ? $itineraryRes['PNR'] : ('W' . strtoupper(substr(md5($transaction_id), 0, 5))));
