@@ -72,6 +72,7 @@ class Welcome extends CI_Controller {
 
         $data['page_title'] = $is_multicity ? "Multi-City Flight Itinerary: $from to $to - Voyogo" : "Flight Search: $from to $to - Voyogo";
         $data['active_page'] = 'flight';
+        $data['search_tui']  = $tui;
         $data['search_query'] = array(
             'from' => $from_raw,
             'to'   => $to_raw,
@@ -85,7 +86,8 @@ class Welcome extends CI_Controller {
             'adults' => $adults,
             'children' => $children,
             'infants' => $infants,
-            'cabin_class' => $cabin_class
+            'cabin_class' => $cabin_class,
+            'tui' => $tui
         );
         $data['flightResults'] = $flightResults;
 

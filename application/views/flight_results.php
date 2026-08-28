@@ -138,6 +138,8 @@
                     foreach ($rawList as $idx => $item) {
                         if (!is_array($item)) continue;
 
+                        $activeSearchTui = !empty($search_tui) ? $search_tui : ($search_query['tui'] ?? '');
+
                         // Case 1: Formatted array from BenzyFlightApi (lowercase keys)
                         if (isset($item['flight_number']) || isset($item['airline_name']) || isset($item['price'])) {
                             $code = isset($item['airline_code']) ? strtoupper($item['airline_code']) : '6E';
@@ -145,7 +147,7 @@
                             $defaultName = isset($airlineMap[$code]) ? $airlineMap[$code]['name'] : ($code . ' Airlines');
 
                             $flights[] = array(
-                                'ResultID' => $item['tui'] ?? $item['ResultID'] ?? ('FL_' . ($idx + 100)),
+                                'ResultID' => (!empty($item['tui']) && strpos($item['tui'], 'FL_') !== 0) ? $item['tui'] : (!empty($activeSearchTui) ? $activeSearchTui : ($item['ResultID'] ?? ('FL_' . ($idx + 100)))),
                                 'AirlineCode' => $code,
                                 'AirlineName' => $item['airline_name'] ?? $defaultName,
                                 'AirlineLogo' => !empty($item['airline_logo']) ? $item['airline_logo'] : $defaultLogo,
@@ -166,7 +168,7 @@
                         elseif (isset($item['AirlineName']) || isset($item['FlightNumber']) || isset($item['Price'])) {
                             $code = isset($item['AirlineCode']) ? strtoupper($item['AirlineCode']) : '6E';
                             $flights[] = array(
-                                'ResultID' => $item['ResultID'] ?? $item['tui'] ?? ('FL_' . ($idx + 100)),
+                                'ResultID' => (!empty($item['ResultID']) && strpos($item['ResultID'], 'FL_') !== 0) ? $item['ResultID'] : (!empty($item['tui']) && strpos($item['tui'], 'FL_') !== 0 ? $item['tui'] : (!empty($activeSearchTui) ? $activeSearchTui : ('FL_' . ($idx + 100)))),
                                 'AirlineCode' => $code,
                                 'AirlineName' => $item['AirlineName'] ?? 'IndiGo',
                                 'AirlineLogo' => $item['AirlineLogo'] ?? 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png',
@@ -190,7 +192,7 @@
                             $aLogo = isset($airlineMap[$provider]) ? $airlineMap[$provider]['logo'] : 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png';
 
                             $flights[] = array(
-                                'ResultID' => !empty($item['TUI']) ? $item['TUI'] : ('FL_' . ($idx + 100)),
+                                'ResultID' => !empty($item['TUI']) ? $item['TUI'] : (!empty($activeSearchTui) ? $activeSearchTui : ('FL_' . ($idx + 100))),
                                 'AirlineCode' => $provider,
                                 'AirlineName' => $aName,
                                 'AirlineLogo' => $aLogo,
@@ -289,10 +291,12 @@
                             <span style="font-size:11px; color:#64748b; display:block;">per adult</span>
                         </div>
                         
-                        <div class="f-action">
+                            <?php 
+                            $cardTui = (!empty($f['ResultID']) && strpos($f['ResultID'], 'FL_') !== 0) ? $f['ResultID'] : (!empty($search_tui) ? $search_tui : ($search_query['tui'] ?? $f['ResultID']));
+                            ?>
                             <form action="<?php echo site_url('flight/review'); ?>" method="POST">
-                                <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($f['ResultID']); ?>">
-                                <input type="hidden" name="tui" value="<?php echo htmlspecialchars($f['ResultID']); ?>">
+                                <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($cardTui); ?>">
+                                <input type="hidden" name="tui" value="<?php echo htmlspecialchars($cardTui); ?>">
                                 <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($f['AirlineName']); ?>">
                                 <input type="hidden" name="airline_logo" value="<?php echo htmlspecialchars($f['AirlineLogo']); ?>">
                                 <input type="hidden" name="flight_number" value="<?php echo htmlspecialchars($f['FlightNumber']); ?>">
