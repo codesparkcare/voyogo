@@ -160,6 +160,15 @@ class Welcome extends CI_Controller {
         } elseif (!empty($flightDetails['TUI'])) {
             $tui = $flightDetails['TUI'];
         }
+        if (isset($flightDetails['raw']['ADT'])) {
+            $adults = max(1, (int)$flightDetails['raw']['ADT']);
+        }
+        if (isset($flightDetails['raw']['CHD'])) {
+            $children = max(0, (int)$flightDetails['raw']['CHD']);
+        }
+        if (isset($flightDetails['raw']['INF'])) {
+            $infants = max(0, (int)$flightDetails['raw']['INF']);
+        }
         if (empty($flightDetails) || !is_array($flightDetails)) {
             $flightDetails = $this->benzyflightapi->getMockReviewDetails($tui, $price);
         }
@@ -319,14 +328,20 @@ class Welcome extends CI_Controller {
         $ssr_baggage = $this->input->post('selected_baggage') ?: '';
         $ssr_meal = $this->input->post('selected_meal') ?: '';
 
+        $net_amount = (float)($this->input->post('net_amount') ?: $this->input->post('base_fare') ?: $this->input->post('total_amount') ?: 5150);
+
         $contact_payload = array(
-            "Title"       => "Mr",
-            "FName"       => explode(' ', $contact_name)[0],
-            "LName"       => isset(explode(' ', $contact_name)[1]) ? explode(' ', $contact_name)[1] : "Customer",
-            "Mobile"      => $contact_phone,
-            "Email"       => $contact_email,
-            "City"        => "Delhi",
-            "CountryCode" => "91"
+            "Title"              => "Mr",
+            "FName"              => explode(' ', $contact_name)[0],
+            "LName"              => isset(explode(' ', $contact_name)[1]) ? explode(' ', $contact_name)[1] : "Customer",
+            "Mobile"             => $contact_phone,
+            "DestMob"            => $contact_phone,
+            "Email"              => $contact_email,
+            "City"               => "Delhi",
+            "CountryCode"        => "IN",
+            "MobileCountryCode"  => "+91",
+            "DestMobCountryCode" => "+91",
+            "NetAmount"          => $net_amount
         );
 
         $pax_api_payload = array();
@@ -341,12 +356,13 @@ class Welcome extends CI_Controller {
                 "DOB"        => date('Y-m-d', strtotime('-' . (int)$p['age'] . ' years')),
                 "PassportNo" => "",
                 "Baggage"    => $ssr_baggage,
-                "Meals"      => $ssr_meal
+                "Meals"      => $ssr_meal,
+                "Nationality"=> "IN"
             );
         }
 
         // 1. Create Itinerary via Benzy API
-        $itineraryRes = $this->benzyflightapi->createItinerary($tui, $pax_api_payload, $contact_payload, $booking_type, array('baggage' => $ssr_baggage, 'meal' => $ssr_meal));
+        $itineraryRes = $this->benzyflightapi->createItinerary($tui, $pax_api_payload, $contact_payload, $booking_type, array('baggage' => $ssr_baggage, 'meal' => $ssr_meal, 'net_amount' => $net_amount), $net_amount);
         $bookingTui = !empty($itineraryRes['TUI']) ? $itineraryRes['TUI'] : (!empty($itineraryRes['tui']) ? $itineraryRes['tui'] : $tui);
         $transaction_id = isset($itineraryRes['TransactionID']) ? $itineraryRes['TransactionID'] : (int)('2500' . rand(37000, 37999));
 

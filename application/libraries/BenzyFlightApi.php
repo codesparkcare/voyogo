@@ -1180,8 +1180,10 @@ class BenzyFlightApi {
      * Endpoint: /Flights/CreateItinerary
      * Supports $bookingType = 'HB' (Hold Booking) or 'HP' (Ticketed)
      */
-    public function createItinerary($tui, $passengers = array(), $contact = array(), $bookingType = 'HB', $ssrAddons = array()) {
+    public function createItinerary($tui, $passengers = array(), $contact = array(), $bookingType = 'HB', $ssrAddons = array(), $netAmount = 0) {
         $token = $this->generateToken();
+
+        $countryCode = (!empty($contact['CountryCode']) && !is_numeric($contact['CountryCode']) && strlen($contact['CountryCode']) <= 3) ? strtoupper($contact['CountryCode']) : "IN";
 
         // Standard ContactInfo matching WRC doc
         $contactInfo = array(
@@ -1194,7 +1196,7 @@ class BenzyFlightApi {
             "Email"              => isset($contact['Email']) ? $contact['Email'] : "robin@benzyinfotech.com",
             "Language"           => "",
             "Address"            => isset($contact['Address']) ? $contact['Address'] : "MRRA 4  EDAPPALLY  Edappally , EDAPPALLY , Edappally",
-            "CountryCode"        => isset($contact['CountryCode']) ? $contact['CountryCode'] : "IN",
+            "CountryCode"        => $countryCode,
             "MobileCountryCode"  => "+91",
             "DestMobCountryCode" => "+91",
             "State"              => isset($contact['State']) ? $contact['State'] : "Kerala",
@@ -1245,8 +1247,9 @@ class BenzyFlightApi {
             $lname = isset($p['LName']) ? $p['LName'] : (isset($p['last_name']) ? $p['last_name'] : 'TESTAB');
             $email = isset($p['Email']) ? $p['Email'] : ($idx === 1 ? 'mails@mail.com' : 'soumya.s@benzyinfotech.com');
             $mobile = isset($p['PMobileNo']) ? $p['PMobileNo'] : ($idx === 1 ? '' : '8921614723');
-            $passport = isset($p['PassportNo']) ? $p['PassportNo'] : ($idx === 1 ? 'HM8888HJJ6K' : '54533221');
+            $passport = isset($p['PassportNo']) && !empty($p['PassportNo']) ? $p['PassportNo'] : ($idx === 1 ? 'HM8888HJJ6K' : '54533221');
             $paxId = isset($p['PaxID']) ? $p['PaxID'] : (isset($defaultPaxIDs[$idx - 1]) ? $defaultPaxIDs[$idx - 1] : base64_encode(chr(96 + $idx) . chr(100 + $idx)));
+            $nationality = !empty($p['Nationality']) ? $p['Nationality'] : 'IN';
 
             $travellers[] = array(
                 "ID"               => $idx,
@@ -1262,7 +1265,7 @@ class BenzyFlightApi {
                 "Country"          => "",
                 "Gender"           => $gender,
                 "PTC"              => $ptc,
-                "Nationality"      => "",
+                "Nationality"      => $nationality,
                 "PassportNo"       => $passport,
                 "PLI"              => "",
                 "PDOI"             => "",
@@ -1274,9 +1277,14 @@ class BenzyFlightApi {
                     "Managers" => array(),
                     "Type"     => ""
                 ),
-                "DocumentType"     => ""
+                "DocumentType"     => "",
+                "NationalityName"  => "INDIA"
             );
             $idx++;
+        }
+
+        if ($netAmount <= 0) {
+            $netAmount = isset($contact['NetAmount']) ? (float)$contact['NetAmount'] : (isset($contact['net_amount']) ? (float)$contact['net_amount'] : (isset($ssrAddons['net_amount']) ? (float)$ssrAddons['net_amount'] : (isset($contact['total_amount']) ? (float)$contact['total_amount'] : 5150.0)));
         }
 
         // Exact WRC CreateItinerary payload
@@ -1302,7 +1310,7 @@ class BenzyFlightApi {
             "DeviceID"              => "",
             "AppVersion"            => "",
             "AgentTourCode"         => "",
-            "NetAmount"             => 0,
+            "NetAmount"             => (float)$netAmount,
             "BRulesAccepted"        => ""
         );
 
