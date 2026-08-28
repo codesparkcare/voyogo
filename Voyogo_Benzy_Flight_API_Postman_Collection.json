@@ -289,6 +289,20 @@
 				},
 				{
 					"name": "4. SmartPricer (Fare Revalidation Step 1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.TUI) {",
+									"    pm.collectionVariables.set('tui', jsonData.TUI);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -319,6 +333,23 @@
 				},
 				{
 					"name": "5. GetSPricer (Fare Revalidation Step 2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.TUI) {",
+									"    pm.collectionVariables.set('tui', jsonData.TUI);",
+									"}",
+									"if (jsonData.NetAmount) {",
+									"    pm.collectionVariables.set('netAmount', jsonData.NetAmount);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -409,6 +440,23 @@
 				},
 				{
 					"name": "7. CreateItinerary (Book Passenger Details)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.TUI) {",
+									"    pm.collectionVariables.set('tui', jsonData.TUI);",
+									"}",
+									"if (jsonData.TransactionID) {",
+									"    pm.collectionVariables.set('transactionId', jsonData.TransactionID);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -423,7 +471,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"ServiceEnquiry\": \"\",\n  \"ContactInfo\": {\n    \"Title\": \"\",\n    \"FName\": \"\",\n    \"LName\": \"\",\n    \"Mobile\": \"8590055610\",\n    \"DestMob\": \"8590055610\",\n    \"Phone\": \"\",\n    \"Email\": \"robin@benzyinfotech.com\",\n    \"Language\": \"\",\n    \"Address\": \"MRRA 4  EDAPPALLY  Edappally , EDAPPALLY , Edappally\",\n    \"CountryCode\": \"IN\",\n    \"MobileCountryCode\": \"+91\",\n    \"DestMobCountryCode\": \"+91\",\n    \"State\": \"Kerala\",\n    \"City\": \"Cochin\",\n    \"PIN\": \"6865245\",\n    \"GSTCompanyName\": \"\",\n    \"GSTTIN\": \"\",\n    \"GstMobile\": \"\",\n    \"GSTEmail\": \"\",\n    \"UpdateProfile\": false,\n    \"IsGuest\": false,\n    \"SaveGST\": false\n  },\n  \"DestinationContactInfo\": {\n    \"Address1\": \"\",\n    \"Address2\": \"\",\n    \"City\": \"\",\n    \"Mobile\": \"\",\n    \"Phone\": \"\",\n    \"Email\": \"\",\n    \"CountryCode\": \"\",\n    \"MobileCountryCode\": \"+91\",\n    \"State\": \"\",\n    \"PIN\": \"\"\n  },\n  \"Travellers\": [\n    {\n      \"ID\": 1,\n      \"PaxID\": \"YWdr\",\n      \"Operation\": \"0\",\n      \"Title\": \"Mr\",\n      \"FName\": \"TESTA\",\n      \"LName\": \"TESTAB\",\n      \"Email\": \"mails@mail.com\",\n      \"PMobileNo\": \"\",\n      \"Age\": 36,\n      \"DOB\": \"1987-01-27\",\n      \"Country\": \"\",\n      \"Gender\": \"M\",\n      \"PTC\": \"ADT\",\n      \"Nationality\": \"\",\n      \"PassportNo\": \"HM8888HJJ6K\",\n      \"PLI\": \"\",\n      \"PDOI\": \"\",\n      \"PDOE\": \"\",\n      \"VisaType\": \"VISITING VISA\",\n      \"EmigrationCheck\": false,\n      \"isOptionSelected\": false,\n      \"ApproverManagers\": {\n        \"Managers\": [],\n        \"Type\": \"\"\n      },\n      \"DocumentType\": \"\"\n    }\n  ],\n  \"PLP\": [\n    {\n      \"FUID\": 1,\n      \"PaxID\": 1,\n      \"FFNo\": \"ABCD1234\"\n    }\n  ],\n  \"SSR\": [\n    {\n      \"FUID\": 1,\n      \"PaxID\": 1,\n      \"SSID\": 6\n    }\n  ],\n  \"CrossSell\": [],\n  \"CrossSellAmount\": 0,\n  \"EnableFareMasking\": false,\n  \"SSRAmount\": 0,\n  \"ClientID\": \"{{clientID}}\",\n  \"DeviceID\": \"\",\n  \"AppVersion\": \"\",\n  \"AgentTourCode\": \"\",\n  \"NetAmount\": 5350,\n  \"BRulesAccepted\": \"\"\n}"
+							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"ServiceEnquiry\": \"\",\n  \"ContactInfo\": {\n    \"Title\": \"\",\n    \"FName\": \"\",\n    \"LName\": \"\",\n    \"Mobile\": \"8590055610\",\n    \"DestMob\": \"8590055610\",\n    \"Phone\": \"\",\n    \"Email\": \"robin@benzyinfotech.com\",\n    \"Language\": \"\",\n    \"Address\": \"MRRA 4  EDAPPALLY  Edappally , EDAPPALLY , Edappally\",\n    \"CountryCode\": \"IN\",\n    \"MobileCountryCode\": \"+91\",\n    \"DestMobCountryCode\": \"+91\",\n    \"State\": \"Kerala\",\n    \"City\": \"Cochin\",\n    \"PIN\": \"6865245\",\n    \"GSTCompanyName\": \"\",\n    \"GSTTIN\": \"\",\n    \"GstMobile\": \"\",\n    \"GSTEmail\": \"\",\n    \"UpdateProfile\": false,\n    \"IsGuest\": false,\n    \"SaveGST\": false\n  },\n  \"DestinationContactInfo\": {\n    \"Address1\": \"\",\n    \"Address2\": \"\",\n    \"City\": \"\",\n    \"Mobile\": \"\",\n    \"Phone\": \"\",\n    \"Email\": \"\",\n    \"CountryCode\": \"\",\n    \"MobileCountryCode\": \"+91\",\n    \"State\": \"\",\n    \"PIN\": \"\"\n  },\n  \"Travellers\": [\n    {\n      \"ID\": 1,\n      \"PaxID\": \"YWdr\",\n      \"Operation\": \"0\",\n      \"Title\": \"Mr\",\n      \"FName\": \"TESTA\",\n      \"LName\": \"TESTAB\",\n      \"Email\": \"mails@mail.com\",\n      \"PMobileNo\": \"\",\n      \"Age\": 36,\n      \"DOB\": \"1987-01-27\",\n      \"Country\": \"\",\n      \"Gender\": \"M\",\n      \"PTC\": \"ADT\",\n      \"Nationality\": \"IN\",\n      \"PassportNo\": \"HM8888HJJ6K\",\n      \"PLI\": \"\",\n      \"PDOI\": \"\",\n      \"PDOE\": \"\",\n      \"VisaType\": \"VISITING VISA\",\n      \"EmigrationCheck\": false,\n      \"isOptionSelected\": false,\n      \"ApproverManagers\": {\n        \"Managers\": [],\n        \"Type\": \"\"\n      },\n      \"DocumentType\": \"\",\n      \"NationalityName\": \"INDIA\"\n    }\n  ],\n  \"PLP\": [\n    {\n      \"FUID\": 1,\n      \"PaxID\": 1,\n      \"FFNo\": \"ABCD1234\"\n    }\n  ],\n  \"SSR\": [\n    {\n      \"FUID\": 1,\n      \"PaxID\": 1,\n      \"SSID\": 6\n    }\n  ],\n  \"CrossSell\": [],\n  \"CrossSellAmount\": 0,\n  \"EnableFareMasking\": false,\n  \"SSRAmount\": 0,\n  \"ClientID\": \"{{clientID}}\",\n  \"DeviceID\": \"\",\n  \"AppVersion\": \"\",\n  \"AgentTourCode\": \"\",\n  \"NetAmount\": {{netAmount}},\n  \"BRulesAccepted\": \"\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrlFlights}}/Flights/CreateItinerary",
@@ -439,6 +487,20 @@
 				},
 				{
 					"name": "8. StartPay (Hold Booking - HB)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.TUI) {",
+									"    pm.collectionVariables.set('tui', jsonData.TUI);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -469,6 +531,20 @@
 				},
 				{
 					"name": "9. GetItineraryStatus (Check Hold Status)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.TUI) {",
+									"    pm.collectionVariables.set('tui', jsonData.TUI);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
