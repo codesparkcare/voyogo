@@ -155,6 +155,7 @@
                 <!-- Form Section -->
                 <form id="bookingForm" action="<?php echo site_url('flight/process_payment'); ?>" method="POST">
                     
+                    <input type="hidden" name="tui" value="<?php echo htmlspecialchars($flight['tui'] ?? $url_meta['tui'] ?? ''); ?>">
                     <input type="hidden" name="flight_number" value="<?php echo htmlspecialchars($flight['flight_number']); ?>">
                     <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($flight['airline_name']); ?>">
                     <input type="hidden" name="origin" value="<?php echo htmlspecialchars($flight['from_code']); ?>">
