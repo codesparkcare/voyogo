@@ -291,6 +291,7 @@
                             <span style="font-size:11px; color:#64748b; display:block;">per adult</span>
                         </div>
                         
+                        <div class="f-action">
                             <?php 
                             $cardTui = (!empty($f['ResultID']) && strpos($f['ResultID'], 'FL_') !== 0) ? $f['ResultID'] : (!empty($search_tui) ? $search_tui : ($search_query['tui'] ?? $f['ResultID']));
                             ?>
