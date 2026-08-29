@@ -387,34 +387,17 @@ class BenzyFlightApi {
         return $this->parseSearchResults($simResponse, $tui);
     }
 
-    /**
-     * 5. Smart Pricer (Step 1 of Repricing)
-     * Endpoint: /flights/SmartPricer
-     */
-    public function smartPricer($tui, $priceHint = 5150, $index = '6E|1', $isRoundTrip = false, $from = 'DEL', $to = 'BOM', $returnPrice = 0, $returnIndex = '6E|1') {
+    public function smartPricer($tui, $priceHint = 5150, $index = '6E|1', $isRoundTrip = false, $from = 'DEL', $to = 'BOM') {
         $token = $this->generateToken();
-        
-        $trips = array(
-            array(
-                "Amount"  => (float)($priceHint ?: 5150),
-                "Index"   => $index ?: "6E|1",
-                "OrderID" => 1,
-                "TUI"     => $tui
-            )
-        );
-
-        if ($isRoundTrip) {
-            $retAmt = (float)($returnPrice > 0 ? $returnPrice : ($priceHint ?: 5150));
-            $trips[] = array(
-                "Amount"  => $retAmt,
-                "Index"   => $returnIndex ?: "6E|1",
-                "OrderID" => 2,
-                "TUI"     => $tui
-            );
-        }
-
         $payload = array(
-            "Trips"    => $trips,
+            "Trips"    => array(
+                array(
+                    "Amount"  => (float)($priceHint ?: 5150),
+                    "Index"   => $index ?: "6E|1",
+                    "OrderID" => 1,
+                    "TUI"     => $tui
+                )
+            ),
             "ClientID" => "FVI6V120g22Ei5ztGK0FIQ==",
             "Mode"     => "SS",
             "Options"  => "A",
