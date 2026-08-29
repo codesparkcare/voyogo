@@ -192,8 +192,18 @@ class Welcome extends CI_Controller {
         $to_code_post   = strtoupper($this->input->post('to_code') ?: 'BOM');
         $return_price   = (float)($this->input->post('return_price') ?: $this->input->get('return_price') ?: $price);
 
+        $flight_number  = $this->input->post('flight_number') ?: '6E-2134';
+        $airline_code   = strtoupper(explode('-', $flight_number)[0]);
+        if (empty($airline_code)) $airline_code = '6E';
+        $onward_index   = $this->input->post('flight_index') ?: ($airline_code . '|1');
+
+        $return_flight_number = $this->input->post('return_flight_number') ?: '6E-2135';
+        $return_airline_code  = strtoupper(explode('-', $return_flight_number)[0]);
+        if (empty($return_airline_code)) $return_airline_code = '6E';
+        $return_index   = $this->input->post('return_flight_index') ?: ($return_airline_code . '|1');
+
         // Fetch revalidated flight data using Benzy API (SmartPricer & GetSPricer)
-        $spRes = @$this->benzyflightapi->smartPricer($tui, $price, '6E|1', $is_roundtrip, $from_code_post, $to_code_post, $return_price, '6E|1');
+        $spRes = @$this->benzyflightapi->smartPricer($tui, $price, $onward_index, $is_roundtrip, $from_code_post, $to_code_post, $return_price, $return_index);
         if (!empty($spRes['TUI'])) {
             $tui = $spRes['TUI'];
         }

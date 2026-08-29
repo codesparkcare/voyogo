@@ -2239,7 +2239,10 @@ class BenzyFlightApi {
                         'refundable' => (isset($j['Refundable']) && $j['Refundable'] === 'Y'),
                         'hold' => !empty($j['Hold']),
                         'hold_info' => !empty($j['HoldInfo']) ? $j['HoldInfo'] : '',
-                        'baggage' => !empty($j['Inclusions']['Baggage']) ? $j['Inclusions']['Baggage'] : '15 Kg'
+                        'baggage' => !empty($j['Inclusions']['Baggage']) ? $j['Inclusions']['Baggage'] : '15 Kg',
+                        'flight_index' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1'),
+                        'Index' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1'),
+                        'FlightIndex' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1')
                     );
                 }
                 continue;

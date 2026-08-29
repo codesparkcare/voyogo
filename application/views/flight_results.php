@@ -534,6 +534,7 @@
                             <input type="hidden" name="arrival_time" id="rt_arrival_time" value="">
                             <input type="hidden" name="departure_date" value="<?php echo htmlspecialchars($search_query['date']); ?>">
                             <input type="hidden" name="price" id="rt_onward_price" value="">
+                            <input type="hidden" name="flight_index" id="rt_flight_index" value="">
                             
                             <!-- Return Details -->
                             <input type="hidden" name="return_airline_name" id="rt_return_airline_name" value="">
@@ -545,6 +546,7 @@
                             <input type="hidden" name="return_arrival_time" id="rt_return_arrival_time" value="">
                             <input type="hidden" name="return_departure_date" value="<?php echo htmlspecialchars($search_query['return_date']); ?>">
                             <input type="hidden" name="return_price" id="rt_return_price" value="">
+                            <input type="hidden" name="return_flight_index" id="rt_return_flight_index" value="">
 
                             <!-- Pax info -->
                             <input type="hidden" name="adults" value="<?php echo htmlspecialchars($search_query['adults'] ?? 1); ?>">
@@ -608,6 +610,7 @@
                     document.getElementById('rt_departure_time').value = o.DepartureTime;
                     document.getElementById('rt_arrival_time').value = o.ArrivalTime;
                     document.getElementById('rt_onward_price').value = o.Price;
+                    document.getElementById('rt_flight_index').value = o.FlightIndex || o.flight_index || o.Index || ((o.FlightNumber ? o.FlightNumber.substring(0, 2) : '6E') + '|1');
                 }
 
                 if (r) {
@@ -620,6 +623,7 @@
                     document.getElementById('rt_return_departure_time').value = r.DepartureTime;
                     document.getElementById('rt_return_arrival_time').value = r.ArrivalTime;
                     document.getElementById('rt_return_price').value = r.Price;
+                    document.getElementById('rt_return_flight_index').value = r.FlightIndex || r.flight_index || r.Index || ((r.FlightNumber ? r.FlightNumber.substring(0, 2) : '6E') + '|1');
                 }
 
                 const total = (o ? parseFloat(o.Price) : 0) + (r ? parseFloat(r.Price) : 0);
