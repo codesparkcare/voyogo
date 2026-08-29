@@ -1,16 +1,16 @@
 URL: https://voyogos.com/certification_logs/2.Round%20Trip%20Booking%20without%20Baggage%20-%20Direct%20Flight/8.GetTravelCheckList.json
 Method: POST
 Endpoint: /Utils/GetTravelCheckList
-Timestamp: 2026-08-26T07:00:42.000Z
+Timestamp: 2026-08-29T07:54:54.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-988df3167501|5824e653c8c4|20260826123024",
+    "TUI": "92440198-dc0b-409e-b8d8-9ed064f93c61|f931bae025fd|20260829132354",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-988df3167501|5824e653c8c4|20260826123024",
+    "TUI": "92440198-dc0b-409e-b8d8-9ed064f93c61|f931bae025fd|20260829132354",
     "Code": "200",
     "Msg": [
         "Success"

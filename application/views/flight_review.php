@@ -152,6 +152,58 @@
 
                 </div>
 
+                <?php if (!empty($return_flight)): ?>
+                <!-- Return Flight Summary Card -->
+                <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 16px; margin-bottom: 18px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <img src="<?php echo htmlspecialchars($return_flight['airline_logo']); ?>" alt="logo" style="height: 38px; width: 38px; object-fit: contain; border-radius: 6px; padding: 2px; background: #f8fafc; border: 1px solid #e2e8f0;" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($return_flight['airline_name']); ?>&background=0d3470&color=fff';">
+                            <div>
+                                <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: #0d3470;">
+                                    <i class="fa-solid fa-plane-arrival" style="color: #10b981; font-size: 16px;"></i> Return Flight: <?php echo htmlspecialchars($return_flight['airline_name']); ?> 
+                                    <span style="font-size: 14px; font-weight: 600; color: #64748b;">(<?php echo htmlspecialchars($return_flight['flight_number']); ?>)</span>
+                                </h3>
+                                <span style="font-size: 12px; color: #64748b; font-weight: 500;">
+                                    Aircraft: Airbus A320 | Cabin: <strong style="color: #0d3470;"><?php echo htmlspecialchars($flight['cabin_class'] ?? 'Economy'); ?></strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="background: #f0fdf4; color: #15803d; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 12px; display: inline-block;">
+                                <?php echo date('D, d M Y', strtotime($return_flight['departure_date'])); ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Return Flight Timing & Sector Grid -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 18px 22px; border-radius: 10px; border: 1px solid #edf2f7;">
+                        <div style="text-align: left; max-width: 32%;">
+                            <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($return_flight['departure_time']); ?></span>
+                            <div style="font-size: 16px; font-weight: 800; color: #0d3470; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['from_code']); ?></div>
+                            <div style="font-size: 12px; color: #475569; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><?php echo htmlspecialchars($return_flight['from_airport'] ?? 'Airport'); ?></div>
+                            <span style="display: inline-block; font-size: 11px; font-weight: 700; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['from_terminal'] ?? 'Terminal 1'); ?></span>
+                        </div>
+
+                        <div style="text-align: center; flex: 1; margin: 0 20px;">
+                            <span style="font-size: 12px; color: #64748b; font-weight: 700;"><?php echo htmlspecialchars($return_flight['duration'] ?? '2h 15m'); ?></span>
+                            <div style="height: 2px; background: #cbd5e1; margin: 8px 0; position: relative;">
+                                <i class="fa-solid fa-plane" style="position: absolute; top: -7px; left: 48%; color: #10b981; transform: rotate(180deg); font-size: 14px;"></i>
+                            </div>
+                            <span style="font-size: 11px; color: #16a34a; font-weight: 800; background: #dc26260a; padding: 3px 8px; border-radius: 12px; border: 1px solid #86efac;">
+                                <?php echo (isset($return_flight['stops']) && $return_flight['stops'] > 0) ? ($return_flight['stops'] . ' Stop') : 'Non-Stop Direct'; ?>
+                            </span>
+                        </div>
+
+                        <div style="text-align: right; max-width: 32%;">
+                            <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($return_flight['arrival_time']); ?></span>
+                            <div style="font-size: 16px; font-weight: 800; color: #0d3470; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['to_code']); ?></div>
+                            <div style="font-size: 12px; color: #475569; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><?php echo htmlspecialchars($return_flight['to_airport'] ?? 'Airport'); ?></div>
+                            <span style="display: inline-block; font-size: 11px; font-weight: 700; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['to_terminal'] ?? 'Terminal 2'); ?></span>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+
                 <!-- Form Section -->
                 <form id="bookingForm" action="<?php echo site_url('flight/process_payment'); ?>" method="POST">
                     
@@ -165,6 +217,14 @@
                     <input type="hidden" name="net_amount" value="<?php echo htmlspecialchars($flight['net_amount'] ?? $flight['base_fare'] ?? $flight['price']); ?>">
                     <input type="hidden" name="total_amount" id="form_total_amount" value="<?php echo htmlspecialchars($flight['price']); ?>">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
+                    <input type="hidden" name="is_roundtrip" value="<?php echo !empty($is_roundtrip) ? '1' : '0'; ?>">
+
+                    <?php if (!empty($return_flight)): ?>
+                    <input type="hidden" name="return_flight_number" value="<?php echo htmlspecialchars($return_flight['flight_number']); ?>">
+                    <input type="hidden" name="return_airline_name" value="<?php echo htmlspecialchars($return_flight['airline_name']); ?>">
+                    <input type="hidden" name="return_departure_date" value="<?php echo htmlspecialchars($return_flight['departure_date']); ?>">
+                    <input type="hidden" name="return_departure_time" value="<?php echo htmlspecialchars($return_flight['departure_time']); ?>">
+                    <?php endif; ?>
 
                     <input type="hidden" name="adults" value="<?php echo htmlspecialchars($search_query['adults'] ?? 1); ?>">
                     <input type="hidden" name="children" value="<?php echo htmlspecialchars($search_query['children'] ?? 0); ?>">

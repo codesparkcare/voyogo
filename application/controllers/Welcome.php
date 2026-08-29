@@ -37,10 +37,14 @@ class Welcome extends CI_Controller {
      */
     public function search_flights()
     {
-        $trip_type  = strtolower($this->input->post('tripType') ?: $this->input->get('tripType') ?: 'oneway');
-        $multi_from = $this->input->post('multi_from');
-        $multi_to   = $this->input->post('multi_to');
-        $multi_date = $this->input->post('multi_date');
+        $trip_type   = strtolower($this->input->post('tripType') ?: $this->input->get('tripType') ?: 'oneway');
+        $multi_from  = $this->input->post('multi_from');
+        $multi_to    = $this->input->post('multi_to');
+        $multi_date  = $this->input->post('multi_date');
+        $return_date = $this->input->post('return_date') ?: $this->input->get('return_date') ?: date('Y-m-d', strtotime('+7 days'));
+
+        $is_roundtrip = ($trip_type === 'roundtrip');
+        $is_multicity = false;
 
         if ($trip_type === 'multicity' && !empty($multi_from) && is_array($multi_from)) {
             $from_raw = $multi_from[0];
@@ -51,7 +55,6 @@ class Welcome extends CI_Controller {
             $from_raw = $this->input->post('from_city') ?: $this->input->get('from') ?: 'Delhi (DEL)';
             $to_raw   = $this->input->post('to_city') ?: $this->input->get('to') ?: 'Mumbai (BOM)';
             $date     = $this->input->post('departure_date') ?: $this->input->get('date') ?: date('Y-m-d', strtotime('+3 days'));
-            $is_multicity = false;
         }
 
         $adults      = max(1, (int)($this->input->post('adults') ?: $this->input->get('adults') ?: 1));
@@ -67,18 +70,34 @@ class Welcome extends CI_Controller {
 
         $this->load->library('BenzyFlightApi');
         
-        $tui = $this->benzyflightapi->expressSearch($from, $to, $date, $adults, $children, $infants, substr($cabin_class, 0, 1));
-        $flightResults = $this->benzyflightapi->getExpSearch($tui, $from, $to, $date);
+        $fareType = 'ON';
+        if ($is_roundtrip) {
+            $fareType = ($date === $return_date) ? 'RD' : 'RT';
+            $tui = $this->benzyflightapi->expressSearch($from, $to, $date, $return_date, $adults, $children, $infants, substr($cabin_class, 0, 1), $fareType, true);
+        } else {
+            $tui = $this->benzyflightapi->expressSearch($from, $to, $date, '', $adults, $children, $infants, substr($cabin_class, 0, 1), 'ON', true);
+        }
 
-        $data['page_title'] = $is_multicity ? "Multi-City Flight Itinerary: $from to $to - Voyogo" : "Flight Search: $from to $to - Voyogo";
+        $flightResults = $this->benzyflightapi->getExpSearch($tui, $from, $to, $date);
+        $returnFlights = array();
+        if ($is_roundtrip) {
+            $returnFlights = $this->benzyflightapi->getExpSearch($tui, $to, $from, $return_date);
+        }
+
+        $data['page_title'] = $is_multicity ? "Multi-City Flight Itinerary: $from to $to - Voyogo" : ($is_roundtrip ? "Round Trip Flights: $from to $to - Voyogo" : "Flight Search: $from to $to - Voyogo");
         $data['active_page'] = 'flight';
         $data['search_tui']  = $tui;
+        $data['is_roundtrip'] = $is_roundtrip;
         $data['search_query'] = array(
             'from' => $from_raw,
             'to'   => $to_raw,
             'from_code' => $from,
             'to_code' => $to,
             'date' => $date,
+            'trip_type' => $trip_type,
+            'is_roundtrip' => $is_roundtrip,
+            'return_date' => $return_date,
+            'fare_type' => $fareType,
             'is_multicity' => $is_multicity,
             'multi_from' => $multi_from,
             'multi_to' => $multi_to,
@@ -90,6 +109,7 @@ class Welcome extends CI_Controller {
             'tui' => $tui
         );
         $data['flightResults'] = $flightResults;
+        $data['returnFlights'] = $returnFlights;
 
         $this->load->view('includes/header', $data);
         $this->load->view('flight_results', $data);
@@ -150,13 +170,17 @@ class Welcome extends CI_Controller {
         $children    = max(0, (int)($this->input->post('children') ?: $this->input->get('children') ?: 0));
         $infants     = max(0, (int)($this->input->post('infants') ?: $this->input->get('infants') ?: 0));
         $cabin_class = $this->input->post('cabin_class') ?: $this->input->get('cabin_class') ?: 'Economy';
+        $is_roundtrip = (bool)($this->input->post('is_roundtrip') ?: ($fare_type === 'RT' || $fare_type === 'RD'));
+
+        $from_code_post = strtoupper($this->input->post('from_code') ?: 'DEL');
+        $to_code_post   = strtoupper($this->input->post('to_code') ?: 'BOM');
 
         // Fetch revalidated flight data using Benzy API (SmartPricer & GetSPricer)
-        $spRes = @$this->benzyflightapi->smartPricer($tui, $price);
+        $spRes = @$this->benzyflightapi->smartPricer($tui, $price, '6E|1', $is_roundtrip, $from_code_post, $to_code_post);
         if (!empty($spRes['TUI'])) {
             $tui = $spRes['TUI'];
         }
-        $flightDetails = $this->benzyflightapi->getSPricer($tui, $price);
+        $flightDetails = $this->benzyflightapi->getSPricer($tui, $price, $from_code_post, $to_code_post, $is_roundtrip);
         if (!empty($flightDetails['tui'])) {
             $tui = $flightDetails['tui'];
         } elseif (!empty($flightDetails['TUI'])) {
@@ -230,9 +254,31 @@ class Welcome extends CI_Controller {
             $flightDetails['stops'] = 0;
         }
 
+        // Return flight details for Round Trip
+        $returnFlight = null;
+        if ($is_roundtrip || $this->input->post('return_flight_number')) {
+            $returnFlight = array(
+                'airline_name'   => $this->input->post('return_airline_name') ?: 'IndiGo',
+                'airline_logo'   => $this->input->post('return_airline_logo') ?: 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png',
+                'flight_number'  => $this->input->post('return_flight_number') ?: '6E-102',
+                'from_code'      => strtoupper($this->input->post('return_from_code') ?: ($flightDetails['to_code'] ?? 'BOM')),
+                'to_code'        => strtoupper($this->input->post('return_to_code') ?: ($flightDetails['from_code'] ?? 'DEL')),
+                'departure_time' => $this->input->post('return_departure_time') ?: '18:00',
+                'arrival_time'   => $this->input->post('return_arrival_time') ?: '20:15',
+                'departure_date' => $this->input->post('return_departure_date') ?: date('Y-m-d', strtotime('+7 days')),
+                'duration'       => $this->input->post('return_duration') ?: '02h 15m',
+                'stops'          => (int)($this->input->post('return_stops') ?: 0),
+                'price'          => (float)($this->input->post('return_price') ?: 5150)
+            );
+            $returnFlight['from_airport'] = $airportNames[$returnFlight['from_code']]['name'] ?? ($returnFlight['from_code'] . ' Airport');
+            $returnFlight['from_terminal'] = $airportNames[$returnFlight['from_code']]['terminal'] ?? 'Terminal 1';
+            $returnFlight['to_airport'] = $airportNames[$returnFlight['to_code']]['name'] ?? ($returnFlight['to_code'] . ' Airport');
+            $returnFlight['to_terminal'] = $airportNames[$returnFlight['to_code']]['terminal'] ?? 'Terminal 2';
+        }
+
         // Set airport names and terminals based on codes
         $fromCode = $flightDetails['from_code'] ?? 'DEL';
-        $toCode = $flightDetails['to_code'] ?? 'BLR';
+        $toCode = $flightDetails['to_code'] ?? 'BOM';
 
         $flightDetails['from_airport'] = $airportNames[$fromCode]['name'] ?? ($fromCode . ' International Airport');
         $flightDetails['from_terminal'] = $airportNames[$fromCode]['terminal'] ?? 'Terminal 2';
@@ -247,11 +293,14 @@ class Welcome extends CI_Controller {
         if ($pax_multiplier < 1) $pax_multiplier = 1;
 
         $unit_price = isset($flightDetails['price']) ? (float)$flightDetails['price'] : $price;
+        if ($is_roundtrip && !empty($returnFlight['price'])) {
+            $unit_price = (float)$flightDetails['price'] + (float)$returnFlight['price'];
+        }
         $flightDetails['unit_price'] = $unit_price;
         $unit_base = isset($flightDetails['base_fare']) ? (float)$flightDetails['base_fare'] : round($unit_price * 0.82);
         $unit_taxes = isset($flightDetails['taxes']) ? (float)$flightDetails['taxes'] : round($unit_price * 0.18);
 
-        if ($live_net_amount > 0) {
+        if ($live_net_amount > 0 && !$is_roundtrip) {
             $flightDetails['net_amount'] = $live_net_amount;
         } else {
             $flightDetails['base_fare'] = round($unit_base * $pax_multiplier);
@@ -260,6 +309,7 @@ class Welcome extends CI_Controller {
             $flightDetails['net_amount'] = $flightDetails['base_fare'];
         }
         $flightDetails['cabin_class'] = $cabin_class;
+        $flightDetails['is_roundtrip'] = $is_roundtrip;
 
         // Fetch Fare Rules (Cancellation & Date change policy)
         $fareRules = $this->benzyflightapi->getFareRule($tui);
@@ -268,17 +318,20 @@ class Welcome extends CI_Controller {
         $ssrOptions = $this->benzyflightapi->getSSR($tui);
 
         $data['flight'] = $flightDetails;
+        $data['return_flight'] = $returnFlight;
+        $data['is_roundtrip'] = $is_roundtrip;
         $data['fare_rules'] = $fareRules;
         $data['ssr'] = $ssrOptions;
         $data['search_query'] = array(
             'adults'      => $adults,
             'children'    => $children,
             'infants'     => $infants,
-            'cabin_class' => $cabin_class
+            'cabin_class' => $cabin_class,
+            'is_roundtrip' => $is_roundtrip
         );
         $data['url_meta'] = array(
             'type' => $type,
-            'fare_type' => $fare_type,
+            'fare_type' => $is_roundtrip ? 'RT' : $fare_type,
             'cabin' => $cabin,
             'tui' => $tui
         );

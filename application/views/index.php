@@ -37,7 +37,8 @@
             </div>
 
             <!-- Search Inputs Form -->
-            <form action="<?php echo function_exists('site_url') ? site_url('flight/search') : '#'; ?>" method="POST">
+            <form action="<?php echo function_exists('site_url') ? site_url('flight/search') : '#'; ?>" method="POST" id="flightSearchForm">
+                <input type="hidden" name="tripType" id="hiddenTripType" value="oneway">
                 <div class="search-grid" id="standardSearchGrid">
                     
                     <!-- From & To Group with Centered Swap Button -->

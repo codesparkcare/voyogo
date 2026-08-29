@@ -275,80 +275,93 @@ class BenzyFlightApi {
             return $this->parseSearchResults($res['data'], $tui);
         }
 
-        $depDateTime = date('Y-m-d\T06:00:00', strtotime($date ?: '+7 days'));
-        $arrDateTime = date('Y-m-d\T08:15:00', strtotime($date ?: '+7 days'));
-
-        $journeyItem = array(
-            "Stops"               => $isConnecting ? 1 : 0,
-            "Seats"               => 9,
-            "ReturnIdentifier"    => 0,
-            "Index"               => "6E|1",
-            "Provider"            => "6E",
-            "FlightNo"            => "2134",
-            "VAC"                 => "6E",
-            "MAC"                 => "6E",
-            "OAC"                 => "6E",
-            "ArrivalTime"         => $arrDateTime,
-            "DepartureTime"       => $depDateTime,
-            "ArrivalTerminal"     => "1",
-            "DepartureTerminal"   => "2",
-            "FareClass"           => "GS",
-            "Duration"            => $isConnecting ? "05h 30m " : "02h 15m ",
-            "GroupCount"          => 0,
-            "TotalFare"           => null,
-            "GrossFare"           => 5150.00,
-            "TotalCommission"     => 50.0,
-            "TotalTransactionFee" => 0.0,
-            "TotalVatOnTFee"      => 0.0,
-            "NetFare"             => 4300.00,
-            "WPNetFare"           => 0.0,
-            "Hops"                => 0,
-            "Notice"              => "",
-            "NoticeLink"          => "",
-            "NoticeType"          => null,
-            "Refundable"          => "Y",
-            "Alliances"           => "",
-            "Amenities"           => "PM,PB",
-            "Inclusions"          => array(
-                "Baggage"          => "15 Kg",
-                "Meals"            => null,
-                "PieceDescription" => null
-            ),
-            "Hold"                => true,
-            "HoldInfo"            => "E|01:00|1.00|SE|EE",
-            "Connections"         => $isConnecting ? array(
-                array(
-                    "Airport"        => "BOM",
-                    "ArrAirportName" => "Chhatrapati Shivaji International |Mumbai",
-                    "Duration"       => "01h 30m ",
-                    "Type"           => "C",
-                    "MAC"            => "6E|IndiGo"
-                )
-            ) : array(),
-            "From"                => strtoupper($from),
-            "To"                  => strtoupper($to),
-            "FromName"            => "Indira Gandhi International |New Delhi",
-            "ToName"              => "Chhatrapati Shivaji International |Mumbai",
-            "AirlineName"         => "IndiGo|IndiGo|IndiGo",
-            "GDSPriority"         => 0,
-            "AirCraft"            => "320",
-            "RBD"                 => "E",
-            "Cabin"               => "E",
-            "FBC"                 => "EOWIN",
-            "FCBegin"             => null,
-            "FCEnd"               => null,
-            "FCType"              => "",
-            "FCGroup"             => "",
-            "GFL"                 => false,
-            "Promo"               => "ATFLY",
-            "Recommended"         => false,
-            "FareType"            => "PB-",
-            "TrendFare"           => 4300.0000,
-            "IsBusStation"        => false,
-            "ChannelCode"         => null,
-            "WpIndex"             => null,
-            "JourneyKey"          => "6E,2134,{$from},{$to},{$depDateTime},{$arrDateTime},2,,02h 15m "
+        $flightTemplates = array(
+            array('vac' => '6E', 'fn' => '2134', 'name' => 'IndiGo', 'dep' => '06:00', 'arr' => '08:15', 'gross' => 5150.00, 'net' => 4300.00, 'dur' => ($isConnecting ? '05h 30m' : '02h 15m'), 'stops' => ($isConnecting ? 1 : 0), 'idx' => '6E|1'),
+            array('vac' => 'SG', 'fn' => '162',  'name' => 'SpiceJet', 'dep' => '09:30', 'arr' => '11:45', 'gross' => 4999.00, 'net' => 4150.00, 'dur' => ($isConnecting ? '04h 45m' : '02h 15m'), 'stops' => ($isConnecting ? 1 : 0), 'idx' => 'SG|1'),
+            array('vac' => 'AI', 'fn' => '805',  'name' => 'Air India', 'dep' => '14:15', 'arr' => '16:30', 'gross' => 5450.00, 'net' => 4600.00, 'dur' => ($isConnecting ? '05h 15m' : '02h 15m'), 'stops' => ($isConnecting ? 1 : 0), 'idx' => 'AI|1'),
+            array('vac' => 'QP', 'fn' => '1311', 'name' => 'Akasa Air', 'dep' => '18:20', 'arr' => '20:35', 'gross' => 4850.00, 'net' => 4000.00, 'dur' => ($isConnecting ? '04h 50m' : '02h 15m'), 'stops' => ($isConnecting ? 1 : 0), 'idx' => 'QP|1'),
+            array('vac' => 'UK', 'fn' => '945',  'name' => 'Vistara', 'dep' => '20:45', 'arr' => '23:00', 'gross' => 5800.00, 'net' => 4950.00, 'dur' => ($isConnecting ? '05h 20m' : '02h 15m'), 'stops' => ($isConnecting ? 1 : 0), 'idx' => 'UK|1')
         );
+
+        $journeyItems = array();
+        $dateStr = $date ?: date('Y-m-d', strtotime('+7 days'));
+
+        foreach ($flightTemplates as $ft) {
+            $depDateTime = date('Y-m-d\T' . $ft['dep'] . ':00', strtotime($dateStr));
+            $arrDateTime = date('Y-m-d\T' . $ft['arr'] . ':00', strtotime($dateStr));
+
+            $journeyItems[] = array(
+                "Stops"               => $ft['stops'],
+                "Seats"               => 9,
+                "ReturnIdentifier"    => 0,
+                "Index"               => $ft['idx'],
+                "Provider"            => $ft['vac'],
+                "FlightNo"            => $ft['fn'],
+                "VAC"                 => $ft['vac'],
+                "MAC"                 => $ft['vac'],
+                "OAC"                 => $ft['vac'],
+                "ArrivalTime"         => $arrDateTime,
+                "DepartureTime"       => $depDateTime,
+                "ArrivalTerminal"     => "1",
+                "DepartureTerminal"   => "2",
+                "FareClass"           => "GS",
+                "Duration"            => $ft['dur'],
+                "GroupCount"          => 0,
+                "TotalFare"           => null,
+                "GrossFare"           => $ft['gross'],
+                "TotalCommission"     => 50.0,
+                "TotalTransactionFee" => 0.0,
+                "TotalVatOnTFee"      => 0.0,
+                "NetFare"             => $ft['net'],
+                "WPNetFare"           => 0.0,
+                "Hops"                => 0,
+                "Notice"              => "",
+                "NoticeLink"          => "",
+                "NoticeType"          => null,
+                "Refundable"          => "Y",
+                "Alliances"           => "",
+                "Amenities"           => "PM,PB",
+                "Inclusions"          => array(
+                    "Baggage"          => "15 Kg",
+                    "Meals"            => null,
+                    "PieceDescription" => null
+                ),
+                "Hold"                => true,
+                "HoldInfo"            => "E|01:00|1.00|SE|EE",
+                "Connections"         => $ft['stops'] > 0 ? array(
+                    array(
+                        "Airport"        => "BOM",
+                        "ArrAirportName" => "Chhatrapati Shivaji International |Mumbai",
+                        "Duration"       => "01h 30m ",
+                        "Type"           => "C",
+                        "MAC"            => $ft['vac'] . '|' . $ft['name']
+                    )
+                ) : array(),
+                "From"                => strtoupper($from),
+                "To"                  => strtoupper($to),
+                "FromName"            => strtoupper($from) . " International Airport",
+                "ToName"              => strtoupper($to) . " International Airport",
+                "AirlineName"         => $ft['name'] . '|' . $ft['name'] . '|' . $ft['name'],
+                "GDSPriority"         => 0,
+                "AirCraft"            => "320",
+                "RBD"                 => "E",
+                "Cabin"               => "E",
+                "FBC"                 => "EOWIN",
+                "FCBegin"             => null,
+                "FCEnd"               => null,
+                "FCType"              => "",
+                "FCGroup"             => "",
+                "GFL"                 => false,
+                "Promo"               => "ATFLY",
+                "Recommended"         => false,
+                "FareType"            => "PB-",
+                "TrendFare"           => $ft['net'],
+                "IsBusStation"        => false,
+                "ChannelCode"         => null,
+                "WpIndex"             => null,
+                "JourneyKey"          => "{$ft['vac']},{$ft['fn']},{$from},{$to},{$depDateTime},{$arrDateTime},2,,{$ft['dur']}"
+            );
+        }
 
         $simResponse = array(
             "TUI"          => $tui,
@@ -360,31 +373,11 @@ class BenzyFlightApi {
                     "Notice"     => "Transit Visa is a mandatory requirement if there are via TWO Schengen countries or TWO stop in same countries.",
                     "Link"       => "",
                     "NoticeType" => "NoticeOnAvailability"
-                ),
-                array(
-                    "Notice"     => "As per instructions from the UAE Authorities passengers with single name on passport only can travelling with residence or employment visa and any other type of visa shall not be allowed to travel to and from UAE",
-                    "Link"       => "",
-                    "NoticeType" => "NoticeOnAvailability"
-                ),
-                array(
-                    "Notice"     => "Please be informed that Return ticket on a single PNR/Ticket on the same airline is mandatory for passengers travelling on Visit/Tourist Visa to the Eastern European countries.",
-                    "Link"       => "",
-                    "NoticeType" => "NoticeOnAvailability"
-                ),
-                array(
-                    "Notice"     => "All Indian nationals intending to visit Hong Kong must first apply for and successfully complete pre-arrival registration online.",
-                    "Link"       => "https://www.immd.gov.hk/eng/services/visas/pre-arrival_registration_for_indian_nationals.html",
-                    "NoticeType" => "NoticeOnAvailability"
-                ),
-                array(
-                    "Notice"     => "As mandated by the Maldives immigration all travellers arriving and deaprting from the maldives must update the traveller declaration within 96 hours of their flight time and possess verified QR code for scanning at the airport",
-                    "Link"       => "https://imuga.immigration.gov.mv/ethd",
-                    "NoticeType" => "NoticeOnAvailability"
                 )
             ),
             "Trips"        => array(
                 array(
-                    "Journey" => array($journeyItem)
+                    "Journey" => $journeyItems
                 )
             ),
             "Code"         => "200",

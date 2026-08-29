@@ -264,6 +264,8 @@ document.addEventListener('DOMContentLoaded', function() {
   if (tripTypeRadios.length > 0) {
     tripTypeRadios.forEach(radio => {
       radio.addEventListener('change', function() {
+        const hiddenTripType = document.getElementById('hiddenTripType');
+        if (hiddenTripType) hiddenTripType.value = this.value;
         const multiInputs = multiCitySearchContainer ? multiCitySearchContainer.querySelectorAll('input') : [];
         if (this.value === 'oneway') {
           if (standardSearchGrid) standardSearchGrid.style.display = 'grid';

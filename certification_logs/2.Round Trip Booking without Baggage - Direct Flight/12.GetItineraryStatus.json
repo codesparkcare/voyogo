@@ -1,17 +1,17 @@
 URL: https://voyogos.com/certification_logs/2.Round%20Trip%20Booking%20without%20Baggage%20-%20Direct%20Flight/12.GetItineraryStatus.json
 Method: POST
 Endpoint: /Payment/GetItineraryStatus
-Timestamp: 2026-08-26T07:00:54.000Z
+Timestamp: 2026-08-29T07:55:34.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-988df3167501|5824e653c8c4|20260826123024",
-    "TransactionID": 250037612
+    "TUI": "92440198-dc0b-409e-b8d8-9ed064f93c61|f931bae025fd|20260829132354",
+    "TransactionID": 250037103
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-988df3167501|5824e653c8c4|20260826123024",
-    "transactionID": 250037612,
+    "TUI": "92440198-dc0b-409e-b8d8-9ed064f93c61|f931bae025fd|20260829132354",
+    "transactionID": 250037103,
     "Code": "200",
     "Msg": [
         "Success"
