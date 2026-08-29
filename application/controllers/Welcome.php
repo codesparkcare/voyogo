@@ -202,15 +202,6 @@ class Welcome extends CI_Controller {
         } elseif (!empty($flightDetails['TUI'])) {
             $tui = $flightDetails['TUI'];
         }
-        if (isset($flightDetails['raw']['ADT'])) {
-            $adults = max(1, (int)$flightDetails['raw']['ADT']);
-        }
-        if (isset($flightDetails['raw']['CHD'])) {
-            $children = max(0, (int)$flightDetails['raw']['CHD']);
-        }
-        if (isset($flightDetails['raw']['INF'])) {
-            $infants = max(0, (int)$flightDetails['raw']['INF']);
-        }
         if (empty($flightDetails) || !is_array($flightDetails)) {
             $flightDetails = $this->benzyflightapi->getMockReviewDetails($tui, $price);
         }
