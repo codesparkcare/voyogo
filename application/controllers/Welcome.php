@@ -394,7 +394,7 @@ class Welcome extends CI_Controller {
         $this->load->library('BenzyFlightApi');
 
         $tui = $this->input->post('tui') ?: ('100e7378-' . md5(uniqid()) . '|' . date('YmdHis'));
-        $booking_type = $this->input->post('booking_type') ?: 'HB'; // HB = Hold Booking (Hold: true)
+        $booking_type = $this->input->post('booking_type') ?: 'HP'; // HP = Ticketed, HB = Hold Booking
         $ssr_baggage = $this->input->post('selected_baggage') ?: '';
         $ssr_meal = $this->input->post('selected_meal') ?: '';
 
