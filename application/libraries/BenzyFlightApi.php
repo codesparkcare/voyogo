@@ -391,7 +391,7 @@ class BenzyFlightApi {
      * 5. Smart Pricer (Step 1 of Repricing)
      * Endpoint: /flights/SmartPricer
      */
-    public function smartPricer($tui, $priceHint = 5150, $index = '6E|1', $isRoundTrip = false, $from = 'DEL', $to = 'BOM', $returnPrice = 0, $returnIndex = '6E|2') {
+    public function smartPricer($tui, $priceHint = 5150, $index = '6E|1', $isRoundTrip = false, $from = 'DEL', $to = 'BOM', $returnPrice = 0, $returnIndex = '6E|1') {
         $token = $this->generateToken();
         
         $trips = array(
@@ -407,7 +407,7 @@ class BenzyFlightApi {
             $retAmt = (float)($returnPrice > 0 ? $returnPrice : ($priceHint ?: 5150));
             $trips[] = array(
                 "Amount"  => $retAmt,
-                "Index"   => $returnIndex ?: "6E|2",
+                "Index"   => $returnIndex ?: "6E|1",
                 "OrderID" => 2,
                 "TUI"     => $tui
             );
@@ -423,7 +423,7 @@ class BenzyFlightApi {
         );
         
         $res = $this->callApi($this->smartPricerUrl, $payload, $token, 'POST', '/flights/SmartPricer');
-        if (!empty($res['data'])) return $res['data'];
+        if (!empty($res['data']['TUI']) && empty($res['data']['Code'])) return $res['data'];
 
         $simResponse = array(
             "TUI"         => $tui,
@@ -588,9 +588,9 @@ class BenzyFlightApi {
             "ClientID" => "FVI6V120g22Ei5ztGK0FIQ=="
         );
 
-        $res = $this->callApi($this->getSPricerUrl, $payload, $token, 'POST', '/Flights/GetSPricer');
+        $res = $this->callApi($this->getSPricerUrl, $payload, $token, 'POST', '/Flights/GetSPricer', 12);
 
-        if (!empty($res['data']['Trips'])) {
+        if (!empty($res['data']['Trips']) && empty($res['data']['Code'])) {
             return $this->parseSingleFlightReview($res['data'], $tui);
         }
 
