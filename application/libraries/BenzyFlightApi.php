@@ -1575,7 +1575,7 @@ class BenzyFlightApi {
             "TransactionID" => (int)$transactionId
         );
 
-        $res = $this->callApi($this->itineraryStatusUrl, $payload, $token, 'POST', '/Payment/GetItineraryStatus', 30);
+        $res = $this->callApi($this->itineraryStatusUrl, $payload, $token, 'POST', '/Payment/GetItineraryStatus', 12);
 
         if (!empty($res['data'])) {
             return $res['data'];
