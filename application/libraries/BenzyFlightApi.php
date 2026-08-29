@@ -269,7 +269,7 @@ class BenzyFlightApi {
             "ClientID" => "FVI6V120g22Ei5ztGK0FIQ=="
         );
 
-        $res = $this->callApi($this->getExpSearchUrl, $payload, $token, 'POST', '/flights/GetExpSearch', 15);
+        $res = $this->callApi($this->getExpSearchUrl, $payload, $token, 'POST', '/flights/GetExpSearch', 45);
 
         if (!empty($res['data']['Trips'])) {
             return $this->parseSearchResults($res['data'], $tui);
@@ -406,7 +406,7 @@ class BenzyFlightApi {
         );
         
         $res = $this->callApi($this->smartPricerUrl, $payload, $token, 'POST', '/flights/SmartPricer');
-        if (!empty($res['data']['TUI']) && empty($res['data']['Code'])) return $res['data'];
+        if (!empty($res['data'])) return $res['data'];
 
         $simResponse = array(
             "TUI"         => $tui,
@@ -571,9 +571,9 @@ class BenzyFlightApi {
             "ClientID" => "FVI6V120g22Ei5ztGK0FIQ=="
         );
 
-        $res = $this->callApi($this->getSPricerUrl, $payload, $token, 'POST', '/Flights/GetSPricer', 12);
+        $res = $this->callApi($this->getSPricerUrl, $payload, $token, 'POST', '/Flights/GetSPricer');
 
-        if (!empty($res['data']['Trips']) && empty($res['data']['Code'])) {
+        if (!empty($res['data']['Trips'])) {
             return $this->parseSingleFlightReview($res['data'], $tui);
         }
 
@@ -1318,7 +1318,7 @@ class BenzyFlightApi {
 
         $res = $this->callApi($this->createItineraryUrl, $payload, $token, 'POST', '/Flights/CreateItinerary');
 
-        if (!empty($res['data']['TransactionID']) && (int)$res['data']['TransactionID'] > 0 && empty($res['data']['Code'])) {
+        if (!empty($res['data']['TransactionID'])) {
             return $res['data'];
         }
 
@@ -1571,7 +1571,7 @@ class BenzyFlightApi {
             "TransactionID" => (int)$transactionId
         );
 
-        $res = $this->callApi($this->itineraryStatusUrl, $payload, $token, 'POST', '/Payment/GetItineraryStatus', 12);
+        $res = $this->callApi($this->itineraryStatusUrl, $payload, $token, 'POST', '/Payment/GetItineraryStatus', 30);
 
         if (!empty($res['data'])) {
             return $res['data'];

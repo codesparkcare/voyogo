@@ -192,11 +192,11 @@ class Welcome extends CI_Controller {
         $to_code_post   = strtoupper($this->input->post('to_code') ?: 'BOM');
 
         // Fetch revalidated flight data using Benzy API (SmartPricer & GetSPricer)
-        $spRes = @$this->benzyflightapi->smartPricer($tui, $price, '6E|1', $is_roundtrip, $from_code_post, $to_code_post);
+        $spRes = @$this->benzyflightapi->smartPricer($tui, $price);
         if (!empty($spRes['TUI'])) {
             $tui = $spRes['TUI'];
         }
-        $flightDetails = $this->benzyflightapi->getSPricer($tui, $price, $from_code_post, $to_code_post, $is_roundtrip);
+        $flightDetails = $this->benzyflightapi->getSPricer($tui, $price);
         if (!empty($flightDetails['tui'])) {
             $tui = $flightDetails['tui'];
         } elseif (!empty($flightDetails['TUI'])) {
