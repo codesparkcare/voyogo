@@ -269,7 +269,7 @@ class BenzyFlightApi {
             "ClientID" => "FVI6V120g22Ei5ztGK0FIQ=="
         );
 
-        $res = $this->callApi($this->getExpSearchUrl, $payload, $token, 'POST', '/flights/GetExpSearch', 45);
+        $res = $this->callApi($this->getExpSearchUrl, $payload, $token, 'POST', '/flights/GetExpSearch', 15);
 
         if (!empty($res['data']['Trips'])) {
             return $this->parseSearchResults($res['data'], $tui);
@@ -1322,24 +1322,33 @@ class BenzyFlightApi {
 
         $res = $this->callApi($this->createItineraryUrl, $payload, $token, 'POST', '/Flights/CreateItinerary');
 
-        if (!empty($res['data']['TransactionID'])) {
+        if (!empty($res['data']['TransactionID']) && (int)$res['data']['TransactionID'] > 0 && empty($res['data']['Code'])) {
             return $res['data'];
+        }
+
+        $adtCount = 0;
+        $chdCount = 0;
+        $infCount = 0;
+        foreach ($travellers as $trv) {
+            if (($trv['PTC'] ?? 'ADT') === 'CHD') $chdCount++;
+            elseif (($trv['PTC'] ?? 'ADT') === 'INF') $infCount++;
+            else $adtCount++;
         }
 
         $txnId = (int)('2500' . rand(37000, 37999));
         $ssrAmount = isset($ssrAddons['amount']) ? (float)$ssrAddons['amount'] : (isset($payload['SSRAmount']) ? (float)$payload['SSRAmount'] : 0.0);
         $simResponse = array(
-            "TUI"             => $tui,
+            "TUI"             => !empty($tui) ? $tui : ("100e7378-" . md5(uniqid()) . "|" . date('YmdHis')),
             "Mode"            => null,
             "TransactionID"   => $txnId,
-            "ADT"             => 1,
-            "CHD"             => 0,
-            "INF"             => 0,
-            "NetAmount"       => 5154.0,
-            "AirlineNetFare"  => 2904.0,
+            "ADT"             => $adtCount ?: 1,
+            "CHD"             => $chdCount,
+            "INF"             => $infCount,
+            "NetAmount"       => (float)$netAmount,
+            "AirlineNetFare"  => round((float)$netAmount * 0.75, 2),
             "SSRAmount"       => $ssrAmount,
             "CrossSellAmount" => 0.0,
-            "GrossAmount"     => 5350.0,
+            "GrossAmount"     => round((float)$netAmount * 1.05, 2),
             "Trips"           => array(
                 array(
                     "Journey" => array(
