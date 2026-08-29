@@ -78,10 +78,26 @@ class Welcome extends CI_Controller {
             $tui = $this->benzyflightapi->expressSearch($from, $to, $date, '', $adults, $children, $infants, substr($cabin_class, 0, 1), 'ON', true);
         }
 
-        $flightResults = $this->benzyflightapi->getExpSearch($tui, $from, $to, $date);
+        $rawSearchResults = $this->benzyflightapi->getExpSearch($tui, $from, $to, $date);
+        $flightResults = array();
         $returnFlights = array();
-        if ($is_roundtrip) {
-            $returnFlights = $this->benzyflightapi->getExpSearch($tui, $to, $from, $return_date);
+
+        if ($is_roundtrip && !empty($rawSearchResults) && is_array($rawSearchResults)) {
+            foreach ($rawSearchResults as $flightItem) {
+                if (isset($flightItem['from_code']) && strtoupper($flightItem['from_code']) === strtoupper($from)) {
+                    $flightResults[] = $flightItem;
+                } elseif (isset($flightItem['from_code']) && strtoupper($flightItem['from_code']) === strtoupper($to)) {
+                    $returnFlights[] = $flightItem;
+                } else {
+                    $flightResults[] = $flightItem;
+                }
+            }
+            // If return flights were in simulated template format or not tagged by sector
+            if (empty($returnFlights)) {
+                $returnFlights = $flightResults;
+            }
+        } else {
+            $flightResults = $rawSearchResults;
         }
 
         $data['page_title'] = $is_multicity ? "Multi-City Flight Itinerary: $from to $to - Voyogo" : ($is_roundtrip ? "Round Trip Flights: $from to $to - Voyogo" : "Flight Search: $from to $to - Voyogo");
@@ -450,9 +466,9 @@ class Welcome extends CI_Controller {
         $retrieveRes = $this->benzyflightapi->retrieveBooking($transaction_id, $statusTui, ($booking_type === 'HB'), false, $originCode, $destinationCode);
 
         // Confirmation & PNR generation
-        $pnr = !empty($retrieveRes['PNR']) ? $retrieveRes['PNR'] : (!empty($itineraryRes['PNR']) ? $itineraryRes['PNR'] : ('W' . strtoupper(substr(md5($transaction_id), 0, 5))));
-        $booking_ref = 'VYG-FL-' . strtoupper(substr(md5($transaction_id), 0, 8));
-        $razorpay_payment_id = $this->input->post('razorpay_payment_id') ?: ('pay_txn_' . $transaction_id);
+        $pnr = !empty($retrieveRes['PNR']) ? $retrieveRes['PNR'] : (!empty($itineraryRes['PNR']) ? $itineraryRes['PNR'] : ('W' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 5))));
+        $booking_ref = 'VYG-FL-' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 8));
+        $razorpay_payment_id = $this->input->post('razorpay_payment_id') ?: ('pay_txn_' . $transaction_id . '_' . time());
 
         $flight_number = $this->input->post('flight_number') ?: '6E-2134';
         $airline_name  = $this->input->post('airline_name') ?: 'IndiGo';
