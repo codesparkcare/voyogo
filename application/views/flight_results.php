@@ -538,6 +538,8 @@
                             <input type="hidden" name="departure_date" value="<?php echo htmlspecialchars($search_query['date']); ?>">
                             <input type="hidden" name="price" id="rt_onward_price" value="">
                             <input type="hidden" name="flight_index" id="rt_flight_index" value="">
+                            <input type="hidden" name="duration" id="rt_duration" value="">
+                            <input type="hidden" name="stops" id="rt_stops" value="">
                             
                             <!-- Return Details -->
                             <input type="hidden" name="return_airline_name" id="rt_return_airline_name" value="">
@@ -550,6 +552,8 @@
                             <input type="hidden" name="return_departure_date" value="<?php echo htmlspecialchars($search_query['return_date']); ?>">
                             <input type="hidden" name="return_price" id="rt_return_price" value="">
                             <input type="hidden" name="return_flight_index" id="rt_return_flight_index" value="">
+                            <input type="hidden" name="return_duration" id="rt_return_duration" value="">
+                            <input type="hidden" name="return_stops" id="rt_return_stops" value="">
 
                             <!-- Pax info -->
                             <input type="hidden" name="adults" value="<?php echo htmlspecialchars($search_query['adults'] ?? 1); ?>">
@@ -614,6 +618,8 @@
                     document.getElementById('rt_arrival_time').value = o.ArrivalTime;
                     document.getElementById('rt_onward_price').value = o.Price;
                     document.getElementById('rt_flight_index').value = o.FlightIndex || o.flight_index || o.Index || ((o.FlightNumber ? o.FlightNumber.substring(0, 2) : '6E') + '|1');
+                    document.getElementById('rt_duration').value = o.Duration || '02h 15m';
+                    document.getElementById('rt_stops').value = (o.Stops !== undefined) ? o.Stops : 0;
                 }
 
                 if (r) {
@@ -627,6 +633,8 @@
                     document.getElementById('rt_return_arrival_time').value = r.ArrivalTime;
                     document.getElementById('rt_return_price').value = r.Price;
                     document.getElementById('rt_return_flight_index').value = r.FlightIndex || r.flight_index || r.Index || ((r.FlightNumber ? r.FlightNumber.substring(0, 2) : '6E') + '|1');
+                    document.getElementById('rt_return_duration').value = r.Duration || '02h 15m';
+                    document.getElementById('rt_return_stops').value = (r.Stops !== undefined) ? r.Stops : 0;
                 }
 
                 const total = (o ? parseFloat(o.Price) : 0) + (r ? parseFloat(r.Price) : 0);

@@ -189,8 +189,8 @@
                             <div style="height: 2px; background: #cbd5e1; margin: 8px 0; position: relative;">
                                 <i class="fa-solid fa-plane" style="position: absolute; top: -7px; left: 48%; color: #10b981; transform: rotate(180deg); font-size: 14px;"></i>
                             </div>
-                            <span style="font-size: 11px; color: #16a34a; font-weight: 800; background: #dc26260a; padding: 3px 8px; border-radius: 12px; border: 1px solid #86efac;">
-                                <?php echo (isset($return_flight['stops']) && $return_flight['stops'] > 0) ? ($return_flight['stops'] . ' Stop') : 'Non-Stop Direct'; ?>
+                            <span style="font-size: 11px; color: <?php echo (!empty($return_flight['stops'])) ? '#b45309' : '#16a34a'; ?>; font-weight: 800; background: <?php echo (!empty($return_flight['stops'])) ? '#fef3c7' : '#f0fdf4'; ?>; padding: 3px 10px; border-radius: 12px; border: 1px solid <?php echo (!empty($return_flight['stops'])) ? '#fcd34d' : '#86efac'; ?>;">
+                                <?php echo (isset($return_flight['stops']) && (int)$return_flight['stops'] > 0) ? ($return_flight['stops'] . ' Stop (Connecting)') : 'Non-Stop Direct'; ?>
                             </span>
                         </div>
 
