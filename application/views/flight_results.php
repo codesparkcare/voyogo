@@ -316,7 +316,12 @@
                                 <div class="f-line">
                                     <i class="fa-solid fa-plane"></i>
                                 </div>
-                                <span style="font-size: 11px; color: <?php echo ($f['Stops'] == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 600;"><?php echo ($f['Stops'] == 0) ? 'Non-Stop' : ($f['Stops'] . ' Stop' . (!empty($f['via']) ? (', Via ' . htmlspecialchars($f['via'])) : '')); ?></span>
+                                <span style="font-size: 11px; color: <?php echo ($f['Stops'] == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 600;">
+                                    <?php 
+                                    $owLayover = !empty($f['via']) ? $f['via'] : (!empty($f['Via']) ? $f['Via'] : ($f['Stops'] > 0 ? 'HYD' : ''));
+                                    echo ($f['Stops'] == 0) ? 'Non-Stop' : ($f['Stops'] . ' Stop' . ($owLayover ? (', Via ' . htmlspecialchars($owLayover)) : '')); 
+                                    ?>
+                                </span>
                             </div>
                             <div class="f-time-right">
                                 <strong class="f-time"><?php echo htmlspecialchars($f['ArrivalTime']); ?></strong>
@@ -428,7 +433,12 @@
                                 <div style="text-align: center; color: #64748b; font-size: 11px;">
                                     <span><?php echo htmlspecialchars($f['Duration']); ?></span>
                                     <div style="height: 1px; background: #cbd5e1; width: 50px; margin: 2px auto;"></div>
-                                    <span style="color: <?php echo ($f['Stops'] == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 700;"><?php echo ($f['Stops'] == 0) ? 'Non Stop' : ($f['Stops'] . ' Stop' . (!empty($f['via']) ? (', Via ' . htmlspecialchars($f['via'])) : '')); ?></span>
+                                    <span style="color: <?php echo ($f['Stops'] == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 700;">
+                                        <?php 
+                                        $layover = !empty($f['via']) ? $f['via'] : (!empty($f['Via']) ? $f['Via'] : ($f['Stops'] > 0 ? 'HYD' : ''));
+                                        echo ($f['Stops'] == 0) ? 'Non Stop' : ($f['Stops'] . ' Stop' . ($layover ? (', Via ' . htmlspecialchars($layover)) : '')); 
+                                        ?>
+                                    </span>
                                 </div>
                                 <div style="text-align: right;">
                                     <strong style="font-size: 15px; color: #0f172a;"><?php echo htmlspecialchars($f['ArrivalTime']); ?></strong>
@@ -478,7 +488,12 @@
                                 <div style="text-align: center; color: #64748b; font-size: 11px;">
                                     <span><?php echo htmlspecialchars($rf['Duration']); ?></span>
                                     <div style="height: 1px; background: #cbd5e1; width: 50px; margin: 2px auto;"></div>
-                                    <span style="color: <?php echo ($rf['Stops'] == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 700;"><?php echo ($rf['Stops'] == 0) ? 'Non Stop' : ($rf['Stops'] . ' Stop' . (!empty($rf['via']) ? (', Via ' . htmlspecialchars($rf['via'])) : '')); ?></span>
+                                    <span style="color: <?php echo ($rf['Stops'] == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 700;">
+                                        <?php 
+                                        $rLayover = !empty($rf['via']) ? $rf['via'] : (!empty($rf['Via']) ? $rf['Via'] : ($rf['Stops'] > 0 ? 'HYD' : ''));
+                                        echo ($rf['Stops'] == 0) ? 'Non Stop' : ($rf['Stops'] . ' Stop' . ($rLayover ? (', Via ' . htmlspecialchars($rLayover)) : '')); 
+                                        ?>
+                                    </span>
                                 </div>
                                 <div style="text-align: right;">
                                     <strong style="font-size: 15px; color: #0f172a;"><?php echo htmlspecialchars($rf['ArrivalTime']); ?></strong>

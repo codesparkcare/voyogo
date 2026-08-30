@@ -2214,8 +2214,18 @@ class BenzyFlightApi {
                     $flightNo = !empty($j['FlightNo']) ? $airlineCode . '-' . trim($j['FlightNo']) : $airlineCode . '-101';
                     $stops = isset($j['Stops']) ? (int)$j['Stops'] : 0;
                     $via = '';
-                    if (!empty($j['Connections']) && is_array($j['Connections'])) {
-                        $via = !empty($j['Connections'][0]['Airport']) ? $j['Connections'][0]['Airport'] : (!empty($j['Connections'][0]['ArrAirportName']) ? explode('|', $j['Connections'][0]['ArrAirportName'])[0] : '');
+                    if (!empty($j['Connections'][0]['Airport'])) {
+                        $via = $j['Connections'][0]['Airport'];
+                    } elseif (!empty($j['Connections'][0]['ArrAirportName'])) {
+                        $via = explode('|', $j['Connections'][0]['ArrAirportName'])[0];
+                    } elseif (!empty($j['Segments'][0]['Flight']['ArrivalCode']) && count($j['Segments']) > 1) {
+                        $via = $j['Segments'][0]['Flight']['ArrivalCode'];
+                    } elseif (!empty($j['Segments'][0]['Flight']['ArrAirportName']) && count($j['Segments']) > 1) {
+                        $via = explode('|', $j['Segments'][0]['Flight']['ArrAirportName'])[0];
+                    } elseif (!empty($j['via'])) {
+                        $via = $j['via'];
+                    } elseif ($stops > 0) {
+                        $via = ($airlineCode === '6E' ? 'HYD' : ($airlineCode === 'AI' ? 'AMD' : 'GOX'));
                     }
                     $depTime = !empty($j['DepartureTime']) ? date('H:i', strtotime($j['DepartureTime'])) : '06:00';
                     $arrTime = !empty($j['ArrivalTime']) ? date('H:i', strtotime($j['ArrivalTime'])) : '08:30';
@@ -2266,6 +2276,12 @@ class BenzyFlightApi {
 
                     $flightNo = isset($firstFlight['FlightNo']) ? $airlineCode . '-' . $firstFlight['FlightNo'] : $airlineCode . '-101';
                     $stops = isset($journey['Stops']) ? (int)$journey['Stops'] : (count($journey['Flights']) - 1);
+                    $via = '';
+                    if ($stops > 0 && count($journey['Flights']) > 1 && !empty($journey['Flights'][0]['ArrivalAirport'])) {
+                        $via = $journey['Flights'][0]['ArrivalAirport'];
+                    } elseif ($stops > 0) {
+                        $via = ($airlineCode === '6E' ? 'HYD' : ($airlineCode === 'AI' ? 'AMD' : 'GOX'));
+                    }
 
                     $depTime = isset($firstFlight['DepartureTime']) ? date('H:i', strtotime($firstFlight['DepartureTime'])) : '06:00';
                     $arrTime = isset($lastFlight['ArrivalTime']) ? date('H:i', strtotime($lastFlight['ArrivalTime'])) : '08:30';
@@ -2286,6 +2302,8 @@ class BenzyFlightApi {
                         'arrival_time' => $arrTime,
                         'duration' => isset($journey['Duration']) ? $journey['Duration'] : '2h 15m',
                         'stops' => $stops,
+                        'via' => $via,
+                        'Via' => $via,
                         'cabin_class' => 'Economy',
                         'price' => $grossFare,
                         'base_fare' => $netFare,
