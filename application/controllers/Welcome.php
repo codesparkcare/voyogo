@@ -318,8 +318,11 @@ class Welcome extends CI_Controller {
         $unit_base = isset($flightDetails['base_fare']) ? (float)$flightDetails['base_fare'] : round($unit_price * 0.82);
         $unit_taxes = isset($flightDetails['taxes']) ? (float)$flightDetails['taxes'] : round($unit_price * 0.18);
 
-        if ($live_net_amount > 0 && !$is_roundtrip) {
+        if ($live_net_amount > 0) {
             $flightDetails['net_amount'] = $live_net_amount;
+            $flightDetails['base_fare']  = $live_net_amount;
+            $flightDetails['price']      = !empty($flightDetails['gross_amount']) ? (float)$flightDetails['gross_amount'] : ($live_net_amount + round($unit_taxes * $pax_multiplier));
+            $flightDetails['taxes']      = max(0, $flightDetails['price'] - $flightDetails['base_fare']);
         } else {
             $flightDetails['base_fare'] = round($unit_base * $pax_multiplier);
             $flightDetails['taxes'] = round($unit_taxes * $pax_multiplier);
