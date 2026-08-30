@@ -73,9 +73,9 @@ class Welcome extends CI_Controller {
         $fareType = 'ON';
         if ($is_roundtrip) {
             $fareType = ($date === $return_date) ? 'RD' : 'RT';
-            $tui = $this->benzyflightapi->expressSearch($from, $to, $date, $return_date, $adults, $children, $infants, substr($cabin_class, 0, 1), $fareType, true);
+            $tui = $this->benzyflightapi->expressSearch($from, $to, $date, $return_date, $adults, $children, $infants, substr($cabin_class, 0, 1), $fareType, false);
         } else {
-            $tui = $this->benzyflightapi->expressSearch($from, $to, $date, '', $adults, $children, $infants, substr($cabin_class, 0, 1), 'ON', true);
+            $tui = $this->benzyflightapi->expressSearch($from, $to, $date, '', $adults, $children, $infants, substr($cabin_class, 0, 1), 'ON', false);
         }
 
         $rawSearchResults = $this->benzyflightapi->getExpSearch($tui, $from, $to, $date);

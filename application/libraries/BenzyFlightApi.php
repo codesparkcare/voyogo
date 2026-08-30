@@ -269,11 +269,17 @@ class BenzyFlightApi {
         }
 
         $flightTemplates = array(
-            array('vac' => '6E', 'fn' => '2134', 'name' => 'IndiGo', 'dep' => '06:00', 'arr' => '08:15', 'gross' => 5150.00, 'net' => 4300.00, 'dur' => ($isConnecting ? '05h 30m' : '02h 15m'), 'stops' => ($isConnecting ? 1 : 0), 'idx' => '6E|1'),
-            array('vac' => 'SG', 'fn' => '162',  'name' => 'SpiceJet', 'dep' => '09:30', 'arr' => '11:45', 'gross' => 4999.00, 'net' => 4150.00, 'dur' => ($isConnecting ? '04h 45m' : '02h 15m'), 'stops' => ($isConnecting ? 1 : 0), 'idx' => 'SG|1'),
-            array('vac' => 'AI', 'fn' => '805',  'name' => 'Air India', 'dep' => '14:15', 'arr' => '16:30', 'gross' => 5450.00, 'net' => 4600.00, 'dur' => ($isConnecting ? '05h 15m' : '02h 15m'), 'stops' => ($isConnecting ? 1 : 0), 'idx' => 'AI|1'),
-            array('vac' => 'QP', 'fn' => '1311', 'name' => 'Akasa Air', 'dep' => '18:20', 'arr' => '20:35', 'gross' => 4850.00, 'net' => 4000.00, 'dur' => ($isConnecting ? '04h 50m' : '02h 15m'), 'stops' => ($isConnecting ? 1 : 0), 'idx' => 'QP|1'),
-            array('vac' => 'UK', 'fn' => '945',  'name' => 'Vistara', 'dep' => '20:45', 'arr' => '23:00', 'gross' => 5800.00, 'net' => 4950.00, 'dur' => ($isConnecting ? '05h 20m' : '02h 15m'), 'stops' => ($isConnecting ? 1 : 0), 'idx' => 'UK|1')
+            // Direct Non-Stop Flights
+            array('vac' => '6E', 'fn' => '2134', 'name' => 'IndiGo', 'dep' => '06:00', 'arr' => '08:15', 'gross' => 5150.00, 'net' => 4300.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => '6E|1'),
+            array('vac' => 'SG', 'fn' => '162',  'name' => 'SpiceJet', 'dep' => '09:30', 'arr' => '11:45', 'gross' => 4999.00, 'net' => 4150.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'SG|1'),
+            array('vac' => 'AI', 'fn' => '805',  'name' => 'Air India', 'dep' => '14:15', 'arr' => '16:30', 'gross' => 5450.00, 'net' => 4600.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'AI|1'),
+            array('vac' => 'QP', 'fn' => '1311', 'name' => 'Akasa Air', 'dep' => '18:20', 'arr' => '20:35', 'gross' => 4850.00, 'net' => 4000.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'QP|1'),
+            array('vac' => 'UK', 'fn' => '945',  'name' => 'Vistara', 'dep' => '20:45', 'arr' => '23:00', 'gross' => 5800.00, 'net' => 4950.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'UK|1'),
+
+            // 1-Stop Connecting Flights
+            array('vac' => '6E', 'fn' => '5021', 'name' => 'IndiGo', 'dep' => '07:15', 'arr' => '12:45', 'gross' => 5120.00, 'net' => 4280.00, 'dur' => '05h 30m', 'stops' => 1, 'idx' => '6E|1'),
+            array('vac' => 'SG', 'fn' => '304',  'name' => 'SpiceJet', 'dep' => '11:00', 'arr' => '15:45', 'gross' => 4890.00, 'net' => 4050.00, 'dur' => '04h 45m', 'stops' => 1, 'idx' => 'SG|1'),
+            array('vac' => 'AI', 'fn' => '631',  'name' => 'Air India', 'dep' => '13:00', 'arr' => '18:15', 'gross' => 5380.00, 'net' => 4520.00, 'dur' => '05h 15m', 'stops' => 1, 'idx' => 'AI|1')
         );
 
         $journeyItems = array();
