@@ -201,24 +201,17 @@ class BenzyFlightApi {
             $date = date('Y-m-d', strtotime('+7 days'));
         }
 
-        $trips = array();
-        $trips[] = array(
-            "From" => strtoupper($from),
-            "To" => strtoupper($to),
-            "OnwardDate" => $date,
-            "ReturnDate" => "",
-            "TUI" => ""
-        );
+        $isRoundTripFare = (!empty($returnDate) && in_array($fareType, array('RT', 'RD')));
 
-        if (!empty($returnDate) && in_array($fareType, array('RT', 'RD'))) {
-            $trips[] = array(
-                "From" => strtoupper($to),
-                "To" => strtoupper($from),
-                "OnwardDate" => $returnDate,
-                "ReturnDate" => "",
-                "TUI" => ""
-            );
-        }
+        $trips = array(
+            array(
+                "From"       => strtoupper($from),
+                "To"         => strtoupper($to),
+                "OnwardDate" => $date,
+                "ReturnDate" => $isRoundTripFare ? $returnDate : "",
+                "TUI"        => ""
+            )
+        );
 
         $payload = array(
             "ADT"        => (int)$adults,
