@@ -51,7 +51,8 @@ class Mailer {
 
         $subject = "Flight Booking Confirmed! Ref: " . $booking['booking_ref'] . " - Voyogo";
 
-        $passengerData = json_decode($booking['passenger_details'], true);
+        $rawPassengerData = json_decode($booking['passenger_details'], true);
+        $passengerData = isset($rawPassengerData['passengers']) ? $rawPassengerData['passengers'] : $rawPassengerData;
         $passengerNames = array();
         if (is_array($passengerData)) {
             foreach ($passengerData as $p) {

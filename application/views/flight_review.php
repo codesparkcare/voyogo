@@ -228,6 +228,10 @@
                     <input type="hidden" name="destination" value="<?php echo htmlspecialchars($flight['to_code']); ?>">
                     <input type="hidden" name="departure_date" value="<?php echo htmlspecialchars($flight['departure_date']); ?>">
                     <input type="hidden" name="departure_time" value="<?php echo htmlspecialchars($flight['departure_time']); ?>">
+                    <input type="hidden" name="arrival_time" value="<?php echo htmlspecialchars($flight['arrival_time'] ?? ''); ?>">
+                    <input type="hidden" name="duration" value="<?php echo htmlspecialchars($flight['duration'] ?? ''); ?>">
+                    <input type="hidden" name="stops" value="<?php echo htmlspecialchars($flight['stops'] ?? 0); ?>">
+                    <input type="hidden" name="via" value="<?php echo htmlspecialchars($flight['via'] ?? ''); ?>">
                     <input type="hidden" name="net_amount" value="<?php echo htmlspecialchars($flight['net_amount'] ?? $flight['base_fare'] ?? $flight['price']); ?>">
                     <input type="hidden" name="total_amount" id="form_total_amount" value="<?php echo htmlspecialchars($flight['price']); ?>">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
@@ -236,8 +240,14 @@
                     <?php if (!empty($return_flight)): ?>
                     <input type="hidden" name="return_flight_number" value="<?php echo htmlspecialchars($return_flight['flight_number']); ?>">
                     <input type="hidden" name="return_airline_name" value="<?php echo htmlspecialchars($return_flight['airline_name']); ?>">
+                    <input type="hidden" name="return_origin" value="<?php echo htmlspecialchars($return_flight['from_code']); ?>">
+                    <input type="hidden" name="return_destination" value="<?php echo htmlspecialchars($return_flight['to_code']); ?>">
                     <input type="hidden" name="return_departure_date" value="<?php echo htmlspecialchars($return_flight['departure_date']); ?>">
                     <input type="hidden" name="return_departure_time" value="<?php echo htmlspecialchars($return_flight['departure_time']); ?>">
+                    <input type="hidden" name="return_arrival_time" value="<?php echo htmlspecialchars($return_flight['arrival_time']); ?>">
+                    <input type="hidden" name="return_duration" value="<?php echo htmlspecialchars($return_flight['duration']); ?>">
+                    <input type="hidden" name="return_stops" value="<?php echo htmlspecialchars($return_flight['stops'] ?? 0); ?>">
+                    <input type="hidden" name="return_via" value="<?php echo htmlspecialchars($return_flight['via'] ?? ''); ?>">
                     <?php endif; ?>
 
                     <input type="hidden" name="adults" value="<?php echo htmlspecialchars($search_query['adults'] ?? 1); ?>">

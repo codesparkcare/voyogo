@@ -44,10 +44,21 @@
                     </div>
                 </div>
 
-                <!-- Route & Timing Box -->
+                <?php 
+                $meta = json_decode($booking['passenger_details'], true);
+                $passengers = isset($meta['passengers']) ? $meta['passengers'] : $meta;
+                $isRoundtrip = !empty($meta['is_roundtrip']) || !empty($meta['return_flight']);
+                $onwardDuration = !empty($meta['duration']) ? $meta['duration'] : '02h 15m';
+                $onwardStops = isset($meta['stops']) ? (int)$meta['stops'] : 0;
+                $onwardVia = !empty($meta['via']) ? $meta['via'] : 'HYD';
+                $returnFlight = $meta['return_flight'] ?? null;
+                ?>
+
+                <!-- Route & Timing Box (Departure Sector) -->
                 <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 24px;">
-                    <h3 style="font-family: var(--font-heading); font-size: 16px; color: #0d3470; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                        Flight Itinerary Details
+                    <h3 style="font-family: var(--font-heading); font-size: 16px; color: #0d3470; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span><i class="fa-solid fa-plane-departure" style="color: #2563eb;"></i> Departure Flight Itinerary</span>
+                        <span style="font-size: 13px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($booking['airline_name'] . ' ' . $booking['flight_number']); ?></span>
                     </h3>
 
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -59,7 +70,9 @@
                         </div>
 
                         <div style="text-align: center; flex: 1; margin: 0 40px;">
-                            <span style="font-size: 12px; color: #64748b; font-weight: 600;">2h 15m (Non-Stop)</span>
+                            <span style="font-size: 12px; color: <?php echo ($onwardStops > 0) ? '#b45309' : '#64748b'; ?>; font-weight: 700;">
+                                <?php echo htmlspecialchars($onwardDuration); ?> (<?php echo ($onwardStops == 0) ? 'Non-Stop' : ($onwardStops . ' Stop, Via ' . htmlspecialchars($onwardVia)); ?>)
+                            </span>
                             <div style="height: 2px; background: #cbd5e1; margin: 10px 0; position: relative;">
                                 <i class="fa-solid fa-plane" style="position: absolute; top: -7px; left: 48%; color: #0d3470;"></i>
                             </div>
@@ -74,6 +87,42 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Return Sector Box (if Round Trip) -->
+                <?php if ($isRoundtrip && !empty($returnFlight)): ?>
+                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 24px; background: #f8fafc;">
+                    <h3 style="font-family: var(--font-heading); font-size: 16px; color: #0d3470; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span><i class="fa-solid fa-plane-arrival" style="color: #10b981;"></i> Return Flight Itinerary</span>
+                        <span style="font-size: 13px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($returnFlight['airline_name'] . ' ' . $returnFlight['flight_number']); ?></span>
+                    </h3>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="text-align: left;">
+                            <div style="font-size: 13px; color: #64748b; font-weight: 600;">Departure</div>
+                            <div style="font-size: 26px; font-weight: 800; color: #09204b;"><?php echo htmlspecialchars($returnFlight['departure_time']); ?></div>
+                            <div style="font-size: 16px; font-weight: 700; color: #1e293b;"><?php echo htmlspecialchars($returnFlight['origin']); ?></div>
+                            <div style="font-size: 12px; color: #64748b;"><?php echo date('D, d M Y', strtotime($returnFlight['departure_date'])); ?></div>
+                        </div>
+
+                        <div style="text-align: center; flex: 1; margin: 0 40px;">
+                            <span style="font-size: 12px; color: <?php echo ($returnFlight['stops'] > 0) ? '#b45309' : '#64748b'; ?>; font-weight: 700;">
+                                <?php echo htmlspecialchars($returnFlight['duration']); ?> (<?php echo ($returnFlight['stops'] == 0) ? 'Non-Stop' : ($returnFlight['stops'] . ' Stop, Via ' . htmlspecialchars(!empty($returnFlight['via']) ? $returnFlight['via'] : 'HYD')); ?>)
+                            </span>
+                            <div style="height: 2px; background: #cbd5e1; margin: 10px 0; position: relative;">
+                                <i class="fa-solid fa-plane" style="position: absolute; top: -7px; left: 48%; color: #10b981; transform: rotate(180deg);"></i>
+                            </div>
+                            <span style="font-size: 11px; color: #16a34a; font-weight: 700;">Check-in: 15kg | Cabin: 7kg</span>
+                        </div>
+
+                        <div style="text-align: right;">
+                            <div style="font-size: 13px; color: #64748b; font-weight: 600;">Arrival</div>
+                            <div style="font-size: 26px; font-weight: 800; color: #09204b;"><?php echo htmlspecialchars($returnFlight['arrival_time']); ?></div>
+                            <div style="font-size: 16px; font-weight: 700; color: #1e293b;"><?php echo htmlspecialchars($returnFlight['destination']); ?></div>
+                            <div style="font-size: 12px; color: #64748b;"><?php echo date('D, d M Y', strtotime($returnFlight['departure_date'])); ?></div>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
 
                 <!-- Passenger List Box -->
                 <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 24px;">
@@ -92,13 +141,12 @@
                         </thead>
                         <tbody>
                             <?php 
-                            $passengers = json_decode($booking['passenger_details'], true);
-                            if (is_array($passengers)) {
+                            if (is_array($passengers) && count($passengers) > 0) {
                                 foreach ($passengers as $p) {
                             ?>
                             <tr>
                                 <td style="padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 700; color: #09204b;"><?php echo htmlspecialchars(($p['title'] ?? 'Mr') . ' ' . ($p['name'] ?? $booking['contact_name'])); ?></td>
-                                <td style="padding: 12px 10px; border-bottom: 1px solid #f1f5f9; color: #64748b;">Adult</td>
+                                <td style="padding: 12px 10px; border-bottom: 1px solid #f1f5f9; color: #64748b;"><?php echo htmlspecialchars($p['type'] ?? 'Adult'); ?></td>
                                 <td style="padding: 12px 10px; border-bottom: 1px solid #f1f5f9; color: #16a34a; font-weight: 600;">CONFIRMED</td>
                                 <td style="padding: 12px 10px; border-bottom: 1px solid #f1f5f9; color: #475569;">Auto-Assigned at Check-in</td>
                             </tr>

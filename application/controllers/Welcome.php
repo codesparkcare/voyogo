@@ -484,8 +484,41 @@ class Welcome extends CI_Controller {
         $destination   = $this->input->post('destination') ?: 'Mumbai (BOM)';
         $dep_date      = $this->input->post('departure_date') ?: date('Y-m-d', strtotime('+3 days'));
         $dep_time      = $this->input->post('departure_time') ?: '06:00';
+        $arr_time      = $this->input->post('arrival_time') ?: '08:30';
+        $duration      = $this->input->post('duration') ?: '02h 15m';
+        $stops         = (int)($this->input->post('stops') ?: 0);
+        $via           = $this->input->post('via') ?: ($stops > 0 ? 'HYD' : '');
+        $is_roundtrip  = (int)($this->input->post('is_roundtrip') ?: 0);
 
         $dep_datetime  = date('Y-m-d H:i:s', strtotime("$dep_date $dep_time"));
+        $arr_datetime  = date('Y-m-d H:i:s', strtotime("$dep_date $arr_time"));
+
+        $return_flight_meta = null;
+        if (!empty($this->input->post('return_flight_number'))) {
+            $rStops = (int)($this->input->post('return_stops') ?: 0);
+            $return_flight_meta = array(
+                'flight_number'  => $this->input->post('return_flight_number'),
+                'airline_name'   => $this->input->post('return_airline_name') ?: 'IndiGo',
+                'origin'         => $this->input->post('return_origin') ?: $destination,
+                'destination'    => $this->input->post('return_destination') ?: $origin,
+                'departure_date' => $this->input->post('return_departure_date') ?: date('Y-m-d', strtotime('+7 days')),
+                'departure_time' => $this->input->post('return_departure_time') ?: '01:10',
+                'arrival_time'   => $this->input->post('return_arrival_time') ?: '07:55',
+                'duration'       => $this->input->post('return_duration') ?: '02h 15m',
+                'stops'          => $rStops,
+                'via'            => $this->input->post('return_via') ?: ($rStops > 0 ? 'HYD' : '')
+            );
+        }
+
+        $itinerary_meta = array(
+            'is_roundtrip'   => $is_roundtrip,
+            'duration'       => $duration,
+            'stops'          => $stops,
+            'via'            => $via,
+            'arrival_time'   => $arr_time,
+            'return_flight'  => $return_flight_meta,
+            'passengers'     => $passengers
+        );
 
         $booking_data = array(
             'booking_ref'       => $booking_ref,
@@ -496,9 +529,9 @@ class Welcome extends CI_Controller {
             'origin'            => $origin,
             'destination'       => $destination,
             'departure_datetime'=> $dep_datetime,
-            'arrival_datetime'  => date('Y-m-d H:i:s', strtotime("$dep_datetime + 2 hours 15 mins")),
+            'arrival_datetime'  => $arr_datetime,
             'cabin_class'       => 'Economy',
-            'passenger_details' => json_encode($passengers),
+            'passenger_details' => json_encode($itinerary_meta),
             'contact_name'      => $contact_name,
             'contact_email'     => $contact_email,
             'contact_phone'     => $contact_phone,
