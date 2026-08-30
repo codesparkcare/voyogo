@@ -316,7 +316,7 @@
                                 <div class="f-line">
                                     <i class="fa-solid fa-plane"></i>
                                 </div>
-                                <span style="font-size: 11px; color: <?php echo ($f['Stops'] == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 600;"><?php echo ($f['Stops'] == 0) ? 'Non-Stop' : $f['Stops'] . ' Stop'; ?></span>
+                                <span style="font-size: 11px; color: <?php echo ($f['Stops'] == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 600;"><?php echo ($f['Stops'] == 0) ? 'Non-Stop' : ($f['Stops'] . ' Stop' . (!empty($f['via']) ? (', Via ' . htmlspecialchars($f['via'])) : '')); ?></span>
                             </div>
                             <div class="f-time-right">
                                 <strong class="f-time"><?php echo htmlspecialchars($f['ArrivalTime']); ?></strong>
@@ -416,6 +416,7 @@
                                 </div>
                                 <div style="text-align: right;">
                                     <strong style="font-size: 16px; color: #0f172a;">₹ <?php echo number_format($f['Price']); ?></strong>
+                                    <span style="font-size: 10px; color: #64748b; display: block;"><?php echo ($total_travelers > 1) ? 'total for ' . $total_travelers . ' travelers' : 'per adult'; ?></span>
                                 </div>
                             </div>
 
@@ -427,7 +428,7 @@
                                 <div style="text-align: center; color: #64748b; font-size: 11px;">
                                     <span><?php echo htmlspecialchars($f['Duration']); ?></span>
                                     <div style="height: 1px; background: #cbd5e1; width: 50px; margin: 2px auto;"></div>
-                                    <span style="color: <?php echo ($f['Stops'] == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 700;"><?php echo ($f['Stops'] == 0) ? 'Non Stop' : ($f['Stops'] . ' Stop'); ?></span>
+                                    <span style="color: <?php echo ($f['Stops'] == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 700;"><?php echo ($f['Stops'] == 0) ? 'Non Stop' : ($f['Stops'] . ' Stop' . (!empty($f['via']) ? (', Via ' . htmlspecialchars($f['via'])) : '')); ?></span>
                                 </div>
                                 <div style="text-align: right;">
                                     <strong style="font-size: 15px; color: #0f172a;"><?php echo htmlspecialchars($f['ArrivalTime']); ?></strong>
@@ -465,6 +466,7 @@
                                 </div>
                                 <div style="text-align: right;">
                                     <strong style="font-size: 16px; color: #0f172a;">₹ <?php echo number_format($rf['Price']); ?></strong>
+                                    <span style="font-size: 10px; color: #64748b; display: block;"><?php echo ($total_travelers > 1) ? 'total for ' . $total_travelers . ' travelers' : 'per adult'; ?></span>
                                 </div>
                             </div>
 
@@ -476,7 +478,7 @@
                                 <div style="text-align: center; color: #64748b; font-size: 11px;">
                                     <span><?php echo htmlspecialchars($rf['Duration']); ?></span>
                                     <div style="height: 1px; background: #cbd5e1; width: 50px; margin: 2px auto;"></div>
-                                    <span style="color: #16a34a; font-weight: 700;"><?php echo ($rf['Stops'] == 0) ? 'Non Stop' : ($rf['Stops'] . ' Stop'); ?></span>
+                                    <span style="color: <?php echo ($rf['Stops'] == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 700;"><?php echo ($rf['Stops'] == 0) ? 'Non Stop' : ($rf['Stops'] . ' Stop' . (!empty($rf['via']) ? (', Via ' . htmlspecialchars($rf['via'])) : '')); ?></span>
                                 </div>
                                 <div style="text-align: right;">
                                     <strong style="font-size: 15px; color: #0f172a;"><?php echo htmlspecialchars($rf['ArrivalTime']); ?></strong>

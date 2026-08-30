@@ -277,9 +277,9 @@ class BenzyFlightApi {
             array('vac' => 'UK', 'fn' => '945',  'name' => 'Vistara', 'dep' => '20:45', 'arr' => '23:00', 'gross' => 5800.00, 'net' => 4950.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'UK|1'),
 
             // 1-Stop Connecting Flights
-            array('vac' => '6E', 'fn' => '5021', 'name' => 'IndiGo', 'dep' => '07:15', 'arr' => '12:45', 'gross' => 5120.00, 'net' => 4280.00, 'dur' => '05h 30m', 'stops' => 1, 'idx' => '6E|1'),
-            array('vac' => 'SG', 'fn' => '304',  'name' => 'SpiceJet', 'dep' => '11:00', 'arr' => '15:45', 'gross' => 4890.00, 'net' => 4050.00, 'dur' => '04h 45m', 'stops' => 1, 'idx' => 'SG|1'),
-            array('vac' => 'AI', 'fn' => '631',  'name' => 'Air India', 'dep' => '13:00', 'arr' => '18:15', 'gross' => 5380.00, 'net' => 4520.00, 'dur' => '05h 15m', 'stops' => 1, 'idx' => 'AI|1')
+            array('vac' => '6E', 'fn' => '5021', 'name' => 'IndiGo', 'dep' => '07:15', 'arr' => '12:45', 'gross' => 5120.00, 'net' => 4280.00, 'dur' => '05h 30m', 'stops' => 1, 'idx' => '6E|1', 'via' => 'HYD'),
+            array('vac' => 'SG', 'fn' => '304',  'name' => 'SpiceJet', 'dep' => '11:00', 'arr' => '15:45', 'gross' => 4890.00, 'net' => 4050.00, 'dur' => '04h 45m', 'stops' => 1, 'idx' => 'SG|1', 'via' => 'GOX'),
+            array('vac' => 'AI', 'fn' => '631',  'name' => 'Air India', 'dep' => '13:00', 'arr' => '18:15', 'gross' => 5380.00, 'net' => 4520.00, 'dur' => '05h 15m', 'stops' => 1, 'idx' => 'AI|1', 'via' => 'AMD')
         );
 
         $journeyItems = array();
@@ -329,8 +329,8 @@ class BenzyFlightApi {
                 "HoldInfo"            => "E|01:00|1.00|SE|EE",
                 "Connections"         => $ft['stops'] > 0 ? array(
                     array(
-                        "Airport"        => "BOM",
-                        "ArrAirportName" => "Chhatrapati Shivaji International |Mumbai",
+                        "Airport"        => !empty($ft['via']) ? $ft['via'] : 'HYD',
+                        "ArrAirportName" => (!empty($ft['via']) && $ft['via'] === 'GOX' ? 'Mopa International Airport, Goa' : (!empty($ft['via']) && $ft['via'] === 'AMD' ? 'Sardar Vallabhbhai Patel |Ahmedabad' : 'Rajiv Gandhi International |Hyderabad')),
                         "Duration"       => "01h 30m ",
                         "Type"           => "C",
                         "MAC"            => $ft['vac'] . '|' . $ft['name']
@@ -2213,6 +2213,10 @@ class BenzyFlightApi {
                     $airlineDetails = $this->getAirlineMeta($airlineCode);
                     $flightNo = !empty($j['FlightNo']) ? $airlineCode . '-' . trim($j['FlightNo']) : $airlineCode . '-101';
                     $stops = isset($j['Stops']) ? (int)$j['Stops'] : 0;
+                    $via = '';
+                    if (!empty($j['Connections']) && is_array($j['Connections'])) {
+                        $via = !empty($j['Connections'][0]['Airport']) ? $j['Connections'][0]['Airport'] : (!empty($j['Connections'][0]['ArrAirportName']) ? explode('|', $j['Connections'][0]['ArrAirportName'])[0] : '');
+                    }
                     $depTime = !empty($j['DepartureTime']) ? date('H:i', strtotime($j['DepartureTime'])) : '06:00';
                     $arrTime = !empty($j['ArrivalTime']) ? date('H:i', strtotime($j['ArrivalTime'])) : '08:30';
                     $netFare = isset($j['NetFare']) ? (float)$j['NetFare'] : 4300;
@@ -2231,6 +2235,8 @@ class BenzyFlightApi {
                         'arrival_time' => $arrTime,
                         'duration' => !empty($j['Duration']) ? trim($j['Duration']) : '02h 15m',
                         'stops' => $stops,
+                        'via' => $via,
+                        'Via' => $via,
                         'cabin_class' => !empty($j['Cabin']) ? $j['Cabin'] : 'Economy',
                         'price' => $grossFare,
                         'base_fare' => $netFare,
