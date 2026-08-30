@@ -271,10 +271,12 @@ class Welcome extends CI_Controller {
         if (!isset($flightDetails['stops'])) {
             $flightDetails['stops'] = 0;
         }
+        $flightDetails['via'] = $this->input->post('via') ?: ($flightDetails['stops'] > 0 ? 'HYD' : '');
 
         // Return flight details for Round Trip
         $returnFlight = null;
         if ($is_roundtrip || $this->input->post('return_flight_number')) {
+            $returnStops = (int)($this->input->post('return_stops') ?: 0);
             $returnFlight = array(
                 'airline_name'   => $this->input->post('return_airline_name') ?: 'IndiGo',
                 'airline_logo'   => $this->input->post('return_airline_logo') ?: 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png',
@@ -285,7 +287,8 @@ class Welcome extends CI_Controller {
                 'arrival_time'   => $this->input->post('return_arrival_time') ?: '20:15',
                 'departure_date' => $this->input->post('return_departure_date') ?: date('Y-m-d', strtotime('+7 days')),
                 'duration'       => $this->input->post('return_duration') ?: '02h 15m',
-                'stops'          => (int)($this->input->post('return_stops') ?: 0),
+                'stops'          => $returnStops,
+                'via'            => $this->input->post('return_via') ?: ($returnStops > 0 ? 'HYD' : ''),
                 'price'          => (float)($this->input->post('return_price') ?: 5150)
             );
             $returnFlight['from_airport'] = $airportNames[$returnFlight['from_code']]['name'] ?? ($returnFlight['from_code'] . ' Airport');

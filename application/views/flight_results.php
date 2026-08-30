@@ -356,6 +356,7 @@
                                 <input type="hidden" name="arrival_time" value="<?php echo htmlspecialchars($f['ArrivalTime']); ?>">
                                 <input type="hidden" name="duration" value="<?php echo htmlspecialchars($f['Duration']); ?>">
                                 <input type="hidden" name="stops" value="<?php echo htmlspecialchars($f['Stops'] ?? 0); ?>">
+                                <input type="hidden" name="via" value="<?php echo htmlspecialchars(!empty($f['via']) ? $f['via'] : (!empty($f['Via']) ? $f['Via'] : ($f['Stops'] > 0 ? 'HYD' : ''))); ?>">
                                 <input type="hidden" name="departure_date" value="<?php echo htmlspecialchars($search_query['date']); ?>">
                                 <input type="hidden" name="price" value="<?php echo htmlspecialchars($f['Price']); ?>">
                                 <input type="hidden" name="adults" value="<?php echo htmlspecialchars($search_query['adults'] ?? 1); ?>">
@@ -557,6 +558,7 @@
                             <input type="hidden" name="flight_index" id="rt_flight_index" value="">
                             <input type="hidden" name="duration" id="rt_duration" value="">
                             <input type="hidden" name="stops" id="rt_stops" value="">
+                            <input type="hidden" name="via" id="rt_via" value="">
                             
                             <!-- Return Details -->
                             <input type="hidden" name="return_airline_name" id="rt_return_airline_name" value="">
@@ -571,6 +573,7 @@
                             <input type="hidden" name="return_flight_index" id="rt_return_flight_index" value="">
                             <input type="hidden" name="return_duration" id="rt_return_duration" value="">
                             <input type="hidden" name="return_stops" id="rt_return_stops" value="">
+                            <input type="hidden" name="return_via" id="rt_return_via" value="">
 
                             <!-- Pax info -->
                             <input type="hidden" name="adults" value="<?php echo htmlspecialchars($search_query['adults'] ?? 1); ?>">
@@ -637,6 +640,7 @@
                     document.getElementById('rt_flight_index').value = o.FlightIndex || o.flight_index || o.Index || ((o.FlightNumber ? o.FlightNumber.substring(0, 2) : '6E') + '|1');
                     document.getElementById('rt_duration').value = o.Duration || '02h 15m';
                     document.getElementById('rt_stops').value = (o.Stops !== undefined) ? o.Stops : 0;
+                    document.getElementById('rt_via').value = o.via || o.Via || (o.Stops > 0 ? 'HYD' : '');
                 }
 
                 if (r) {
@@ -652,6 +656,7 @@
                     document.getElementById('rt_return_flight_index').value = r.FlightIndex || r.flight_index || r.Index || ((r.FlightNumber ? r.FlightNumber.substring(0, 2) : '6E') + '|1');
                     document.getElementById('rt_return_duration').value = r.Duration || '02h 15m';
                     document.getElementById('rt_return_stops').value = (r.Stops !== undefined) ? r.Stops : 0;
+                    document.getElementById('rt_return_via').value = r.via || r.Via || (r.Stops > 0 ? 'HYD' : '');
                 }
 
                 const total = (o ? parseFloat(o.Price) : 0) + (r ? parseFloat(r.Price) : 0);

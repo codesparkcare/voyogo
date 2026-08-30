@@ -65,7 +65,14 @@
                                 <i class="fa-solid fa-plane" style="position: absolute; top: -7px; left: 48%; color: #2563eb; transform: rotate(0deg); font-size: 14px;"></i>
                             </div>
                             <span style="font-size: 11px; color: <?php echo (!empty($flight['stops'])) ? '#b45309' : '#16a34a'; ?>; font-weight: 800; background: <?php echo (!empty($flight['stops'])) ? '#fef3c7' : '#f0fdf4'; ?>; padding: 3px 10px; border-radius: 12px; border: 1px solid <?php echo (!empty($flight['stops'])) ? '#fcd34d' : '#86efac'; ?>;">
-                                <?php echo (isset($flight['stops']) && (int)$flight['stops'] > 0) ? ($flight['stops'] . ' Stop (Connecting)') : 'Non-Stop Direct'; ?>
+                                <?php 
+                                if (isset($flight['stops']) && (int)$flight['stops'] > 0) {
+                                    $v = !empty($flight['via']) ? $flight['via'] : 'HYD';
+                                    echo $flight['stops'] . ' Stop (Via ' . htmlspecialchars($v) . ')';
+                                } else {
+                                    echo 'Non-Stop Direct';
+                                }
+                                ?>
                             </span>
                         </div>
 
@@ -190,7 +197,14 @@
                                 <i class="fa-solid fa-plane" style="position: absolute; top: -7px; left: 48%; color: #10b981; transform: rotate(180deg); font-size: 14px;"></i>
                             </div>
                             <span style="font-size: 11px; color: <?php echo (!empty($return_flight['stops'])) ? '#b45309' : '#16a34a'; ?>; font-weight: 800; background: <?php echo (!empty($return_flight['stops'])) ? '#fef3c7' : '#f0fdf4'; ?>; padding: 3px 10px; border-radius: 12px; border: 1px solid <?php echo (!empty($return_flight['stops'])) ? '#fcd34d' : '#86efac'; ?>;">
-                                <?php echo (isset($return_flight['stops']) && (int)$return_flight['stops'] > 0) ? ($return_flight['stops'] . ' Stop (Connecting)') : 'Non-Stop Direct'; ?>
+                                <?php 
+                                if (isset($return_flight['stops']) && (int)$return_flight['stops'] > 0) {
+                                    $rv = !empty($return_flight['via']) ? $return_flight['via'] : 'HYD';
+                                    echo $return_flight['stops'] . ' Stop (Via ' . htmlspecialchars($rv) . ')';
+                                } else {
+                                    echo 'Non-Stop Direct';
+                                }
+                                ?>
                             </span>
                         </div>
 
