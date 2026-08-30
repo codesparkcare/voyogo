@@ -1353,11 +1353,11 @@ class BenzyFlightApi {
                     "FFNo"  => "ABCD1234"
                 )
             ),
-            "SSR"                   => $ssrList,
+            "SSR"                   => array(),
             "CrossSell"             => array(),
             "CrossSellAmount"       => 0,
             "EnableFareMasking"     => false,
-            "SSRAmount"             => (int)$totalSsrAmount,
+            "SSRAmount"             => 0,
             "ClientID"              => "FVI6V120g22Ei5ztGK0FIQ==",
             "DeviceID"              => "",
             "AppVersion"            => "",
