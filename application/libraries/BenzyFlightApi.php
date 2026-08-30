@@ -1305,38 +1305,38 @@ class BenzyFlightApi {
         $ssrList = array();
         $totalSsrAmount = 0;
 
-        if (!empty($ssrAddons['baggage']) || !empty($ssrAddons['baggage_code'])) {
+        if (!empty($ssrAddons['baggage_code']) || !empty($ssrAddons['baggage'])) {
             $bCode = !empty($ssrAddons['baggage_code']) ? $ssrAddons['baggage_code'] : $ssrAddons['baggage'];
-            $bAmt = isset($ssrAddons['baggage_amount']) ? (float)$ssrAddons['baggage_amount'] : (isset($ssrAddons['amount']) ? (float)$ssrAddons['amount'] : 2100);
-            $bDesc = !empty($ssrAddons['baggage_desc']) ? $ssrAddons['baggage_desc'] : 'Prepaid Excess Baggage – 3 Kg';
-            $ssrList[] = array(
-                "FUID"        => "1",
-                "PaxID"       => 1,
-                "Code"        => $bCode,
-                "Description" => $bDesc,
-                "Charge"      => (float)$bAmt,
-                "Type"        => "2"
-            );
-            $totalSsrAmount += $bAmt;
+            $bAmt = isset($ssrAddons['baggage_amount']) ? (float)$ssrAddons['baggage_amount'] : (isset($ssrAddons['amount']) ? (float)$ssrAddons['amount'] : 0);
+            $bDesc = !empty($ssrAddons['baggage_desc']) ? $ssrAddons['baggage_desc'] : 'Prepaid Excess Baggage';
+            if ($bAmt > 0 && !in_array($bCode, array('FREE', 'BAG0', 'NO_BAGGAGE', ''))) {
+                $ssrList[] = array(
+                    "FUID"        => "1",
+                    "PaxID"       => 1,
+                    "Code"        => $bCode,
+                    "Description" => $bDesc,
+                    "Charge"      => (float)$bAmt,
+                    "Type"        => "2"
+                );
+                $totalSsrAmount += $bAmt;
+            }
         }
 
-        if (!empty($ssrAddons['meal']) || !empty($ssrAddons['meal_code'])) {
+        if (!empty($ssrAddons['meal_code']) || !empty($ssrAddons['meal'])) {
             $mCode = !empty($ssrAddons['meal_code']) ? $ssrAddons['meal_code'] : $ssrAddons['meal'];
-            $mAmt = isset($ssrAddons['meal_amount']) ? (float)$ssrAddons['meal_amount'] : 400;
+            $mAmt = isset($ssrAddons['meal_amount']) ? (float)$ssrAddons['meal_amount'] : 0;
             $mDesc = !empty($ssrAddons['meal_desc']) ? $ssrAddons['meal_desc'] : 'Veg Meal';
-            $ssrList[] = array(
-                "FUID"        => "1",
-                "PaxID"       => 1,
-                "Code"        => $mCode,
-                "Description" => $mDesc,
-                "Charge"      => (float)$mAmt,
-                "Type"        => "1"
-            );
-            $totalSsrAmount += $mAmt;
-        }
-
-        if ($totalSsrAmount <= 0 && !empty($ssrAddons['amount'])) {
-            $totalSsrAmount = (float)$ssrAddons['amount'];
+            if ($mAmt > 0 && !in_array($mCode, array('NO_MEAL', 'FREE', ''))) {
+                $ssrList[] = array(
+                    "FUID"        => "1",
+                    "PaxID"       => 1,
+                    "Code"        => $mCode,
+                    "Description" => $mDesc,
+                    "Charge"      => (float)$mAmt,
+                    "Type"        => "1"
+                );
+                $totalSsrAmount += $mAmt;
+            }
         }
 
         // Exact WRC CreateItinerary payload

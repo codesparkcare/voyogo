@@ -392,26 +392,88 @@
 
                     <!-- SSR Add-on Services Card (Meals, Extra Baggage, Seats) -->
                     <?php
-                    $baggageList = !empty($ssr['Baggage']) ? $ssr['Baggage'] : (!empty($ssr['baggage']) ? $ssr['baggage'] : array());
-                    $mealsList = !empty($ssr['Meals']) ? $ssr['Meals'] : (!empty($ssr['meals']) ? $ssr['meals'] : array());
+                    $baggageList = array();
+                    $mealsList = array();
 
-                    if (empty($baggageList)) {
+                    // Parse dynamic SSR returned by Benzy Flights/SSR
+                    if (!empty($ssr['Trips']) && is_array($ssr['Trips'])) {
+                        foreach ($ssr['Trips'] as $tr) {
+                            if (!empty($tr['Journey']) && is_array($tr['Journey'])) {
+                                foreach ($tr['Journey'] as $jrn) {
+                                    if (!empty($jrn['Segments']) && is_array($jrn['Segments'])) {
+                                        foreach ($jrn['Segments'] as $seg) {
+                                            if (!empty($seg['SSR']) && is_array($seg['SSR'])) {
+                                                foreach ($seg['SSR'] as $item) {
+                                                    $type = (string)($item['Type'] ?? '');
+                                                    $code = $item['Code'] ?? '';
+                                                    $desc = $item['Description'] ?? '';
+                                                    $charge = isset($item['Charge']) ? (float)$item['Charge'] : (isset($item['SSRNetAmount']) ? (float)$item['SSRNetAmount'] : 0);
+
+                                                    if ($type === '2' || stripos($desc, 'baggage') !== false || stripos($code, 'XBP') !== false || stripos($code, 'IXB') !== false) {
+                                                        if (!isset($baggageList[$code]) && !empty($code)) {
+                                                            $baggageList[$code] = array(
+                                                                'Code'        => $code,
+                                                                'Description' => $desc,
+                                                                'Amount'      => $charge
+                                                            );
+                                                        }
+                                                    } elseif ($type === '1' || stripos($desc, 'meal') !== false || stripos($desc, 'sandwich') !== false || stripos($desc, 'combo') !== false || stripos($desc, 'biryani') !== false) {
+                                                        if (!isset($mealsList[$code]) && !empty($code)) {
+                                                            $mealsList[$code] = array(
+                                                                'Code'        => $code,
+                                                                'Description' => $desc,
+                                                                'Amount'      => $charge
+                                                            );
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    $baggageList = array_values($baggageList);
+                    $mealsList = array_values($mealsList);
+
+                    // Always prepend standard Free baggage option at index 0
+                    array_unshift($baggageList, array(
+                        "Code"        => "FREE",
+                        "Description" => "Standard Cabin (7kg) + Check-in (15kg) - Included",
+                        "Amount"      => 0
+                    ));
+
+                    // Always prepend "No Meal" option at index 0
+                    array_unshift($mealsList, array(
+                        "Code"        => "NO_MEAL",
+                        "Description" => "No In-Flight Meal",
+                        "Amount"      => 0
+                    ));
+
+                    // If still empty, use official live IndiGo Benzy SSR rates
+                    if (count($baggageList) <= 1) {
                         $baggageList = array(
-                            array("Code" => "BAG0", "Description" => "Standard Cabin (7kg) + Check-in (15kg) - Included", "Amount" => 0),
-                            array("Code" => "BAG3", "Description" => "Additional 3 Kgs Check-in Baggage", "Amount" => 1350),
-                            array("Code" => "BAG5", "Description" => "Additional 5 Kgs Check-in Baggage", "Amount" => 2250),
-                            array("Code" => "BAG10", "Description" => "Additional 10 Kgs Check-in Baggage", "Amount" => 4500),
-                            array("Code" => "BAG15", "Description" => "Additional 15 Kgs Check-in Baggage", "Amount" => 6750),
+                            array("Code" => "FREE", "Description" => "Standard Cabin (7kg) + Check-in (15kg) - Included", "Amount" => 0),
+                            array("Code" => "XBPE", "Description" => "Prepaid Excess Baggage – 3 Kg", "Amount" => 2100),
+                            array("Code" => "XBPA", "Description" => "Prepaid Excess Baggage – 5 Kg", "Amount" => 3250),
+                            array("Code" => "XBPB", "Description" => "Prepaid Excess Baggage – 10 Kg", "Amount" => 6250),
+                            array("Code" => "XBPC", "Description" => "Prepaid Excess Baggage – 15 Kg", "Amount" => 9400),
+                            array("Code" => "XBPJ", "Description" => "Prepaid Excess Baggage – 20 Kg", "Amount" => 12000),
+                            array("Code" => "XBPD", "Description" => "Prepaid Excess Baggage – 30 Kg", "Amount" => 19500),
                         );
                     }
 
-                    if (empty($mealsList)) {
+                    if (count($mealsList) <= 1) {
                         $mealsList = array(
                             array("Code" => "NO_MEAL", "Description" => "No In-Flight Meal", "Amount" => 0),
-                            array("Code" => "VEG_SANDWICH", "Description" => "Paneer Tikka Sandwich + Soft Drink", "Amount" => 350),
-                            array("Code" => "NONVEG_SANDWICH", "Description" => "Chicken Tikka Sandwich + Beverage", "Amount" => 400),
-                            array("Code" => "HOT_MEAL_VEG", "Description" => "Hot Indian Veg Meal Box", "Amount" => 450),
-                            array("Code" => "HOT_MEAL_NONVEG", "Description" => "Hot Butter Chicken with Rice Box", "Amount" => 500),
+                            array("Code" => "VGML", "Description" => "Veg Meal (For Retail Fare)", "Amount" => 400),
+                            array("Code" => "VCSW", "Description" => "6E Eats choice of the day (veg) + beverage", "Amount" => 400),
+                            array("Code" => "VBIR", "Description" => "VEG BIRYANI Combo", "Amount" => 400),
+                            array("Code" => "AGSW", "Description" => "#IndiaByIndiGo regional favourite (veg) + beverage", "Amount" => 400),
+                            array("Code" => "PTSW", "Description" => "Paneer Tikka Sandwich Combo", "Amount" => 500),
+                            array("Code" => "CJSW", "Description" => "Chicken Junglee Sandwich Combo", "Amount" => 500),
                         );
                     }
                     ?>
