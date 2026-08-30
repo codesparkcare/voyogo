@@ -331,7 +331,7 @@
                         
                         <div class="f-price">
                             <strong>₹ <?php echo number_format($f['Price']); ?></strong>
-                            <span style="font-size:11px; color:#64748b; display:block;">per adult</span>
+                            <span style="font-size:11px; color:#64748b; display:block;"><?php echo ($total_travelers > 1) ? 'total for ' . $total_travelers . ' travelers' : 'per adult'; ?></span>
                         </div>
                         
                         <div class="f-action">
