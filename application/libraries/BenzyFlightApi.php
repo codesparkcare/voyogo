@@ -1301,6 +1301,44 @@ class BenzyFlightApi {
             $netAmount = isset($contact['NetAmount']) ? (float)$contact['NetAmount'] : (isset($contact['net_amount']) ? (float)$contact['net_amount'] : (isset($ssrAddons['net_amount']) ? (float)$ssrAddons['net_amount'] : (isset($contact['total_amount']) ? (float)$contact['total_amount'] : 5150.0)));
         }
 
+        // Build SSR items for Baggage / Meal
+        $ssrList = array();
+        $totalSsrAmount = 0;
+
+        if (!empty($ssrAddons['baggage']) || !empty($ssrAddons['baggage_code'])) {
+            $bCode = !empty($ssrAddons['baggage_code']) ? $ssrAddons['baggage_code'] : $ssrAddons['baggage'];
+            $bAmt = isset($ssrAddons['baggage_amount']) ? (float)$ssrAddons['baggage_amount'] : (isset($ssrAddons['amount']) ? (float)$ssrAddons['amount'] : 2100);
+            $bDesc = !empty($ssrAddons['baggage_desc']) ? $ssrAddons['baggage_desc'] : 'Prepaid Excess Baggage – 3 Kg';
+            $ssrList[] = array(
+                "FUID"        => "1",
+                "PaxID"       => 1,
+                "Code"        => $bCode,
+                "Description" => $bDesc,
+                "Charge"      => (float)$bAmt,
+                "Type"        => "2"
+            );
+            $totalSsrAmount += $bAmt;
+        }
+
+        if (!empty($ssrAddons['meal']) || !empty($ssrAddons['meal_code'])) {
+            $mCode = !empty($ssrAddons['meal_code']) ? $ssrAddons['meal_code'] : $ssrAddons['meal'];
+            $mAmt = isset($ssrAddons['meal_amount']) ? (float)$ssrAddons['meal_amount'] : 400;
+            $mDesc = !empty($ssrAddons['meal_desc']) ? $ssrAddons['meal_desc'] : 'Veg Meal';
+            $ssrList[] = array(
+                "FUID"        => "1",
+                "PaxID"       => 1,
+                "Code"        => $mCode,
+                "Description" => $mDesc,
+                "Charge"      => (float)$mAmt,
+                "Type"        => "1"
+            );
+            $totalSsrAmount += $mAmt;
+        }
+
+        if ($totalSsrAmount <= 0 && !empty($ssrAddons['amount'])) {
+            $totalSsrAmount = (float)$ssrAddons['amount'];
+        }
+
         // Exact WRC CreateItinerary payload
         $payload = array(
             "TUI"                   => $tui,
@@ -1315,11 +1353,11 @@ class BenzyFlightApi {
                     "FFNo"  => "ABCD1234"
                 )
             ),
-            "SSR"                   => array(),
+            "SSR"                   => $ssrList,
             "CrossSell"             => array(),
             "CrossSellAmount"       => 0,
             "EnableFareMasking"     => false,
-            "SSRAmount"             => isset($ssrAddons['amount']) ? (int)$ssrAddons['amount'] : 0,
+            "SSRAmount"             => (int)$totalSsrAmount,
             "ClientID"              => "FVI6V120g22Ei5ztGK0FIQ==",
             "DeviceID"              => "",
             "AppVersion"            => "",

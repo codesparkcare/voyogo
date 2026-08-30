@@ -52,6 +52,13 @@
                 $onwardStops = isset($meta['stops']) ? (int)$meta['stops'] : 0;
                 $onwardVia = !empty($meta['via']) ? $meta['via'] : 'HYD';
                 $returnFlight = $meta['return_flight'] ?? null;
+
+                $baggageAllowance = 'Check-in: 15kg | Cabin: 7kg';
+                if (!empty($meta['ssr_addons']['baggage_desc'])) {
+                    $baggageAllowance = 'Check-in: 15kg + ' . htmlspecialchars($meta['ssr_addons']['baggage_desc']) . ' | Cabin: 7kg';
+                } elseif (!empty($meta['ssr_addons']['baggage_amount']) && $meta['ssr_addons']['baggage_amount'] > 0) {
+                    $baggageAllowance = 'Check-in: 15kg + 3kg Extra | Cabin: 7kg';
+                }
                 ?>
 
                 <!-- Route & Timing Box (Departure Sector) -->
@@ -76,7 +83,7 @@
                             <div style="height: 2px; background: #cbd5e1; margin: 10px 0; position: relative;">
                                 <i class="fa-solid fa-plane" style="position: absolute; top: -7px; left: 48%; color: #0d3470;"></i>
                             </div>
-                            <span style="font-size: 11px; color: #16a34a; font-weight: 700;">Check-in: 15kg | Cabin: 7kg</span>
+                            <span style="font-size: 11px; color: #16a34a; font-weight: 700;"><?php echo $baggageAllowance; ?></span>
                         </div>
 
                         <div style="text-align: right;">
@@ -111,7 +118,7 @@
                             <div style="height: 2px; background: #cbd5e1; margin: 10px 0; position: relative;">
                                 <i class="fa-solid fa-plane" style="position: absolute; top: -7px; left: 48%; color: #10b981; transform: rotate(180deg);"></i>
                             </div>
-                            <span style="font-size: 11px; color: #16a34a; font-weight: 700;">Check-in: 15kg | Cabin: 7kg</span>
+                            <span style="font-size: 11px; color: #16a34a; font-weight: 700;"><?php echo $baggageAllowance; ?></span>
                         </div>
 
                         <div style="text-align: right;">

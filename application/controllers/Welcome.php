@@ -412,8 +412,14 @@ class Welcome extends CI_Controller {
 
         $tui = $this->input->post('tui') ?: ('100e7378-' . md5(uniqid()) . '|' . date('YmdHis'));
         $booking_type = $this->input->post('booking_type') ?: 'HP'; // HP = Ticketed, HB = Hold Booking
-        $ssr_baggage = $this->input->post('selected_baggage') ?: '';
-        $ssr_meal = $this->input->post('selected_meal') ?: '';
+        
+        $ssr_baggage_code = $this->input->post('ssr_baggage_code') ?: $this->input->post('selected_baggage') ?: '';
+        $ssr_baggage_amount = (float)($this->input->post('ssr_baggage_amount') ?: $this->input->post('extra_baggage') ?: 0);
+        $ssr_baggage_desc = $this->input->post('ssr_baggage_desc') ?: ($ssr_baggage_amount > 0 ? 'Prepaid Excess Baggage - 3 Kg' : '');
+
+        $ssr_meal_code = $this->input->post('ssr_meal_code') ?: $this->input->post('selected_meal') ?: '';
+        $ssr_meal_amount = (float)($this->input->post('ssr_meal_amount') ?: $this->input->post('meal_selection') ?: 0);
+        $ssr_meal_desc = $this->input->post('ssr_meal_desc') ?: ($ssr_meal_amount > 0 ? 'Veg Meal' : '');
 
         $net_amount = (float)($this->input->post('net_amount') ?: $this->input->post('base_fare') ?: $this->input->post('total_amount') ?: 5150);
 
@@ -448,14 +454,27 @@ class Welcome extends CI_Controller {
                 "Age"        => $paxAge,
                 "DOB"        => $paxDob,
                 "PassportNo" => "",
-                "Baggage"    => $ssr_baggage,
-                "Meals"      => $ssr_meal,
+                "Baggage"    => $ssr_baggage_code,
+                "Meals"      => $ssr_meal_code,
                 "Nationality"=> "IN"
             );
         }
 
+        $ssrAddons = array(
+            'baggage'        => $ssr_baggage_code,
+            'baggage_code'   => $ssr_baggage_code,
+            'baggage_amount' => $ssr_baggage_amount,
+            'baggage_desc'   => $ssr_baggage_desc,
+            'meal'           => $ssr_meal_code,
+            'meal_code'      => $ssr_meal_code,
+            'meal_amount'    => $ssr_meal_amount,
+            'meal_desc'      => $ssr_meal_desc,
+            'amount'         => $ssr_baggage_amount + $ssr_meal_amount,
+            'net_amount'     => $net_amount
+        );
+
         // 1. Create Itinerary via Benzy API
-        $itineraryRes = $this->benzyflightapi->createItinerary($tui, $pax_api_payload, $contact_payload, $booking_type, array('baggage' => $ssr_baggage, 'meal' => $ssr_meal, 'net_amount' => $net_amount), $net_amount);
+        $itineraryRes = $this->benzyflightapi->createItinerary($tui, $pax_api_payload, $contact_payload, $booking_type, $ssrAddons, $net_amount);
         $bookingTui = !empty($itineraryRes['TUI']) ? $itineraryRes['TUI'] : (!empty($itineraryRes['tui']) ? $itineraryRes['tui'] : $tui);
         $transaction_id = isset($itineraryRes['TransactionID']) ? $itineraryRes['TransactionID'] : (int)('2500' . rand(37000, 37999));
 
@@ -517,6 +536,7 @@ class Welcome extends CI_Controller {
             'via'            => $via,
             'arrival_time'   => $arr_time,
             'return_flight'  => $return_flight_meta,
+            'ssr_addons'     => $ssrAddons,
             'passengers'     => $passengers
         );
 

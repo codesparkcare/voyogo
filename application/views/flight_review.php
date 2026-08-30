@@ -250,6 +250,13 @@
                     <input type="hidden" name="return_via" value="<?php echo htmlspecialchars($return_flight['via'] ?? ''); ?>">
                     <?php endif; ?>
 
+                    <input type="hidden" name="ssr_baggage_code" id="ssr_baggage_code" value="">
+                    <input type="hidden" name="ssr_baggage_amount" id="ssr_baggage_amount" value="0">
+                    <input type="hidden" name="ssr_baggage_desc" id="ssr_baggage_desc" value="">
+                    <input type="hidden" name="ssr_meal_code" id="ssr_meal_code" value="">
+                    <input type="hidden" name="ssr_meal_amount" id="ssr_meal_amount" value="0">
+                    <input type="hidden" name="ssr_meal_desc" id="ssr_meal_desc" value="">
+
                     <input type="hidden" name="adults" value="<?php echo htmlspecialchars($search_query['adults'] ?? 1); ?>">
                     <input type="hidden" name="children" value="<?php echo htmlspecialchars($search_query['children'] ?? 0); ?>">
                     <input type="hidden" name="infants" value="<?php echo htmlspecialchars($search_query['infants'] ?? 0); ?>">
@@ -423,8 +430,9 @@
                                     <?php foreach ($baggageList as $bag): 
                                         $desc = $bag['Description'] ?? $bag['description'] ?? $bag['Name'] ?? 'Extra Baggage';
                                         $amt = isset($bag['Amount']) ? (float)$bag['Amount'] : (isset($bag['amount']) ? (float)$bag['amount'] : (isset($bag['Price']) ? (float)$bag['Price'] : (isset($bag['price']) ? (float)$bag['price'] : 0)));
+                                        $bCode = $bag['Code'] ?? $bag['code'] ?? ($amt > 0 ? 'XBPE' : '');
                                     ?>
-                                        <option value="<?php echo $amt; ?>">
+                                        <option value="<?php echo $amt; ?>" data-code="<?php echo htmlspecialchars($bCode); ?>" data-desc="<?php echo htmlspecialchars($desc); ?>">
                                             <?php echo htmlspecialchars($desc); ?> <?php echo ($amt > 0) ? '(+₹' . number_format($amt) . ')' : ''; ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -440,8 +448,9 @@
                                     <?php foreach ($mealsList as $meal): 
                                         $desc = $meal['Description'] ?? $meal['description'] ?? $meal['Name'] ?? 'Meal Selection';
                                         $amt = isset($meal['Amount']) ? (float)$meal['Amount'] : (isset($meal['amount']) ? (float)$meal['amount'] : (isset($meal['Price']) ? (float)$meal['Price'] : (isset($meal['price']) ? (float)$meal['price'] : 0)));
+                                        $mCode = $meal['Code'] ?? $meal['code'] ?? ($amt > 0 ? 'VGML' : '');
                                     ?>
-                                        <option value="<?php echo $amt; ?>">
+                                        <option value="<?php echo $amt; ?>" data-code="<?php echo htmlspecialchars($mCode); ?>" data-desc="<?php echo htmlspecialchars($desc); ?>">
                                             <?php echo htmlspecialchars($desc); ?> <?php echo ($amt > 0) ? '(+₹' . number_format($amt) . ')' : ''; ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -597,9 +606,27 @@ function switchReviewTab(tabId, btn) {
 }
 
 function calculateTotalAddons() {
-    var baggagePrice = parseFloat(document.getElementById('extraBaggageSelect').value || 0);
-    var mealPrice = parseFloat(document.getElementById('mealSelect').value || 0);
+    var bagSel = document.getElementById('extraBaggageSelect');
+    var optBag = bagSel ? bagSel.options[bagSel.selectedIndex] : null;
+    var bagCode = optBag ? (optBag.getAttribute('data-code') || '') : '';
+    var bagDesc = optBag ? (optBag.getAttribute('data-desc') || '') : '';
+    var baggagePrice = parseFloat(bagSel ? (bagSel.value || 0) : 0);
+
+    var mealSel = document.getElementById('mealSelect');
+    var optMeal = mealSel ? mealSel.options[mealSel.selectedIndex] : null;
+    var mealCode = optMeal ? (optMeal.getAttribute('data-code') || '') : '';
+    var mealDesc = optMeal ? (optMeal.getAttribute('data-desc') || '') : '';
+    var mealPrice = parseFloat(mealSel ? (mealSel.value || 0) : 0);
+
     var totalAddons = baggagePrice + mealPrice;
+
+    if (document.getElementById('ssr_baggage_code')) document.getElementById('ssr_baggage_code').value = baggagePrice > 0 ? bagCode : '';
+    if (document.getElementById('ssr_baggage_amount')) document.getElementById('ssr_baggage_amount').value = baggagePrice;
+    if (document.getElementById('ssr_baggage_desc')) document.getElementById('ssr_baggage_desc').value = baggagePrice > 0 ? bagDesc : '';
+
+    if (document.getElementById('ssr_meal_code')) document.getElementById('ssr_meal_code').value = mealPrice > 0 ? mealCode : '';
+    if (document.getElementById('ssr_meal_amount')) document.getElementById('ssr_meal_amount').value = mealPrice;
+    if (document.getElementById('ssr_meal_desc')) document.getElementById('ssr_meal_desc').value = mealPrice > 0 ? mealDesc : '';
 
     document.getElementById('summaryAddons').innerText = totalAddons.toLocaleString('en-IN');
     
