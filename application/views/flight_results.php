@@ -344,10 +344,13 @@
                                 <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($f['AirlineName']); ?>">
                                 <input type="hidden" name="airline_logo" value="<?php echo htmlspecialchars($f['AirlineLogo']); ?>">
                                 <input type="hidden" name="flight_number" value="<?php echo htmlspecialchars($f['FlightNumber']); ?>">
+                                <input type="hidden" name="flight_index" value="<?php echo htmlspecialchars($f['FlightIndex'] ?? $f['flight_index'] ?? ($f['Index'] ?? '6E|1')); ?>">
                                 <input type="hidden" name="from_code" value="<?php echo htmlspecialchars($search_query['from_code']); ?>">
                                 <input type="hidden" name="to_code" value="<?php echo htmlspecialchars($search_query['to_code']); ?>">
                                 <input type="hidden" name="departure_time" value="<?php echo htmlspecialchars($f['DepartureTime']); ?>">
                                 <input type="hidden" name="arrival_time" value="<?php echo htmlspecialchars($f['ArrivalTime']); ?>">
+                                <input type="hidden" name="duration" value="<?php echo htmlspecialchars($f['Duration']); ?>">
+                                <input type="hidden" name="stops" value="<?php echo htmlspecialchars($f['Stops'] ?? 0); ?>">
                                 <input type="hidden" name="departure_date" value="<?php echo htmlspecialchars($search_query['date']); ?>">
                                 <input type="hidden" name="price" value="<?php echo htmlspecialchars($f['Price']); ?>">
                                 <input type="hidden" name="adults" value="<?php echo htmlspecialchars($search_query['adults'] ?? 1); ?>">
