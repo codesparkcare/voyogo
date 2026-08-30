@@ -404,7 +404,7 @@
 
                     <div style="background: #ffffff; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 10px 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px;" id="onwardFlightGroup">
                         <?php foreach ($onwardFlights as $idx => $f): ?>
-                        <label class="rt-card onward-card <?php echo ($idx === 0) ? 'selected-rt-card' : ''; ?>" style="display: block; cursor: pointer; border: 2px solid <?php echo ($idx === 0) ? '#2563eb' : '#e2e8f0'; ?>; border-radius: 8px; padding: 12px; transition: all 0.2s; background: <?php echo ($idx === 0) ? '#eff6ff' : '#fff'; ?>;">
+                        <label class="rt-card onward-card <?php echo ($idx === 0) ? 'selected-rt-card' : ''; ?>" data-stops="<?php echo (int)($f['Stops'] ?? 0); ?>" data-airline="<?php echo htmlspecialchars($f['AirlineCode'] ?? '6E'); ?>" data-price="<?php echo (float)$f['Price']; ?>" style="display: block; cursor: pointer; border: 2px solid <?php echo ($idx === 0) ? '#2563eb' : '#e2e8f0'; ?>; border-radius: 8px; padding: 12px; transition: all 0.2s; background: <?php echo ($idx === 0) ? '#eff6ff' : '#fff'; ?>;">
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <input type="radio" name="selected_onward_idx" value="<?php echo $idx; ?>" <?php echo ($idx === 0) ? 'checked' : ''; ?> style="accent-color: #2563eb;" onchange="updateRoundTripSelection()">
@@ -427,7 +427,7 @@
                                 <div style="text-align: center; color: #64748b; font-size: 11px;">
                                     <span><?php echo htmlspecialchars($f['Duration']); ?></span>
                                     <div style="height: 1px; background: #cbd5e1; width: 50px; margin: 2px auto;"></div>
-                                    <span style="color: #16a34a; font-weight: 700;"><?php echo ($f['Stops'] == 0) ? 'Non Stop' : ($f['Stops'] . ' Stop'); ?></span>
+                                    <span style="color: <?php echo ($f['Stops'] == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 700;"><?php echo ($f['Stops'] == 0) ? 'Non Stop' : ($f['Stops'] . ' Stop'); ?></span>
                                 </div>
                                 <div style="text-align: right;">
                                     <strong style="font-size: 15px; color: #0f172a;"><?php echo htmlspecialchars($f['ArrivalTime']); ?></strong>
@@ -453,7 +453,7 @@
 
                     <div style="background: #ffffff; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 10px 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px;" id="returnFlightGroup">
                         <?php foreach ($inboundFlights as $rIdx => $rf): ?>
-                        <label class="rt-card return-card <?php echo ($rIdx === 0) ? 'selected-rt-card' : ''; ?>" style="display: block; cursor: pointer; border: 2px solid <?php echo ($rIdx === 0) ? '#2563eb' : '#e2e8f0'; ?>; border-radius: 8px; padding: 12px; transition: all 0.2s; background: <?php echo ($rIdx === 0) ? '#eff6ff' : '#fff'; ?>;">
+                        <label class="rt-card return-card <?php echo ($rIdx === 0) ? 'selected-rt-card' : ''; ?>" data-stops="<?php echo (int)($rf['Stops'] ?? 0); ?>" data-airline="<?php echo htmlspecialchars($rf['AirlineCode'] ?? '6E'); ?>" data-price="<?php echo (float)$rf['Price']; ?>" style="display: block; cursor: pointer; border: 2px solid <?php echo ($rIdx === 0) ? '#2563eb' : '#e2e8f0'; ?>; border-radius: 8px; padding: 12px; transition: all 0.2s; background: <?php echo ($rIdx === 0) ? '#eff6ff' : '#fff'; ?>;">
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <input type="radio" name="selected_return_idx" value="<?php echo $rIdx; ?>" <?php echo ($rIdx === 0) ? 'checked' : ''; ?> style="accent-color: #2563eb;" onchange="updateRoundTripSelection()">
@@ -643,12 +643,11 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Dynamic Filter and Sort Script for One-Way
+    // 1. Dynamic Sort Script for One-Way
     const cards = Array.from(document.querySelectorAll('.f-card'));
     const container = document.getElementById('flightListContainer');
     
     if (container && cards.length > 0) {
-        // Sort Tabs
         const sortTabs = document.querySelectorAll('.sort-tab');
         sortTabs.forEach(tab => {
             tab.addEventListener('click', function() {
@@ -673,24 +672,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 sortedCards.forEach(c => container.appendChild(c));
             });
         });
-
-        // Sidebar Stop Filter Click
-        const stopBoxes = document.querySelectorAll('.stop-box');
-        stopBoxes.forEach(box => {
-            box.addEventListener('click', function() {
-                stopBoxes.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                const isNonStop = this.querySelector('.stop-name').textContent.toLowerCase().includes('non');
-                cards.forEach(card => {
-                    const stops = parseInt(card.getAttribute('data-stops') || 0);
-                    if (isNonStop) {
-                        card.style.display = (stops === 0) ? 'block' : 'none';
-                    } else {
-                        card.style.display = (stops > 0) ? 'block' : 'none';
-                    }
-                });
-            });
-        });
     }
+
+    // 2. Sidebar Stop Filter Click (One-Way & Round-Trip Dual Sector Support)
+    const stopBoxes = document.querySelectorAll('.stop-box');
+    stopBoxes.forEach(box => {
+        box.addEventListener('click', function() {
+            stopBoxes.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const isNonStop = this.querySelector('.stop-name').textContent.toLowerCase().includes('non');
+            
+            // Filter One-Way Cards
+            document.querySelectorAll('.f-card').forEach(card => {
+                const stops = parseInt(card.getAttribute('data-stops') || 0);
+                card.style.display = (isNonStop ? stops === 0 : stops > 0) ? 'block' : 'none';
+            });
+
+            // Filter Round-Trip Departure Cards
+            let firstVisibleOnward = null;
+            document.querySelectorAll('.onward-card').forEach(card => {
+                const stops = parseInt(card.getAttribute('data-stops') || 0);
+                const isMatch = (isNonStop ? stops === 0 : stops > 0);
+                card.style.display = isMatch ? 'block' : 'none';
+                if (isMatch && !firstVisibleOnward) {
+                    firstVisibleOnward = card.querySelector('input[type="radio"]');
+                }
+            });
+            if (firstVisibleOnward) {
+                firstVisibleOnward.checked = true;
+            }
+
+            // Filter Round-Trip Return Cards
+            let firstVisibleReturn = null;
+            document.querySelectorAll('.return-card').forEach(card => {
+                const stops = parseInt(card.getAttribute('data-stops') || 0);
+                const isMatch = (isNonStop ? stops === 0 : stops > 0);
+                card.style.display = isMatch ? 'block' : 'none';
+                if (isMatch && !firstVisibleReturn) {
+                    firstVisibleReturn = card.querySelector('input[type="radio"]');
+                }
+            });
+            if (firstVisibleReturn) {
+                firstVisibleReturn.checked = true;
+            }
+
+            if (typeof updateRoundTripSelection === 'function') {
+                updateRoundTripSelection();
+            }
+        });
+    });
 });
 </script>
