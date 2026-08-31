@@ -201,36 +201,15 @@ class BenzyFlightApi {
             $date = date('Y-m-d', strtotime('+7 days'));
         }
 
-        $normalizedFareType = (in_array($fareType, array('RT', 'RD')) || !empty($returnDate)) ? 'RT' : 'ON';
-
-        if ($normalizedFareType === 'RT') {
-            $trips = array(
-                array(
-                    "From"       => strtoupper($from),
-                    "To"         => strtoupper($to),
-                    "OnwardDate" => $date,
-                    "ReturnDate" => "",
-                    "TUI"        => ""
-                ),
-                array(
-                    "From"       => strtoupper($to),
-                    "To"         => strtoupper($from),
-                    "OnwardDate" => $returnDate ?: $date,
-                    "ReturnDate" => "",
-                    "TUI"        => ""
-                )
-            );
-        } else {
-            $trips = array(
-                array(
-                    "From"       => strtoupper($from),
-                    "To"         => strtoupper($to),
-                    "OnwardDate" => $date,
-                    "ReturnDate" => "",
-                    "TUI"        => ""
-                )
-            );
-        }
+        $trips = array(
+            array(
+                "From"       => strtoupper($from),
+                "To"         => strtoupper($to),
+                "OnwardDate" => $date,
+                "ReturnDate" => !empty($returnDate) ? $returnDate : "",
+                "TUI"        => ""
+            )
+        );
 
         $payload = array(
             "ADT"        => (int)$adults,
@@ -241,7 +220,7 @@ class BenzyFlightApi {
             "Mode"       => "AS",
             "ClientID"   => "FVI6V120g22Ei5ztGK0FIQ==",
             "TUI"        => "",
-            "FareType"   => $normalizedFareType,
+            "FareType"   => !empty($returnDate) ? "RT" : "ON",
             "Trips"      => $trips,
             "Parameters" => array(
                 "Airlines"        => "",
@@ -256,7 +235,7 @@ class BenzyFlightApi {
         $token = $this->generateToken();
         $res = $this->callApi($this->expressSearchUrl, $payload, $token, 'POST', '/flights/ExpressSearch');
 
-        if (!empty($res['data']['TUI'])) {
+        if (!empty($res['data']['TUI']) && (empty($res['data']['Code']) || $res['data']['Code'] == '200')) {
             return $res['data']['TUI'];
         }
 
