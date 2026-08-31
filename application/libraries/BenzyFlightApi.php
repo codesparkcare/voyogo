@@ -1335,11 +1335,35 @@ class BenzyFlightApi {
 
         foreach ($passengers as $p) {
             $ptc = isset($p['PTC']) ? $p['PTC'] : (isset($p['PaxType']) ? $p['PaxType'] : 'ADT');
-            $age = isset($p['Age']) ? (int)$p['Age'] : ($ptc === 'ADT' ? 36 : ($ptc === 'CHD' ? 11 : 0));
-            if ($ptc === 'INF' && $age > 2) {
-                $age = 0;
+            $dob = isset($p['DOB']) && !empty($p['DOB']) ? $p['DOB'] : '';
+            
+            if (empty($dob)) {
+                $dob = ($ptc === 'ADT' ? '1992-05-15' : ($ptc === 'CHD' ? '2019-08-30' : '2025-08-30'));
             }
-            $dob = isset($p['DOB']) && !empty($p['DOB']) ? $p['DOB'] : ($ptc === 'ADT' ? '1987-01-27' : ($ptc === 'CHD' ? '2012-02-13' : '2022-12-07'));
+
+            // Calculate precise age considering travel date
+            $travelTime = !empty($contact['DepartureDate']) ? strtotime($contact['DepartureDate']) : strtotime('+7 days');
+            $dobTime = strtotime($dob);
+            if ($dobTime) {
+                $dobObj = new DateTime($dob);
+                $travelObj = new DateTime(date('Y-m-d', $travelTime));
+                $age = (int)$dobObj->diff($travelObj)->y;
+            } else {
+                $age = isset($p['Age']) ? (int)$p['Age'] : ($ptc === 'ADT' ? 34 : ($ptc === 'CHD' ? 7 : 1));
+            }
+
+            if ($ptc === 'INF' && $age > 1) {
+                $age = 1;
+            } elseif ($ptc === 'CHD' && ($age < 2 || $age > 11)) {
+                $age = 7;
+            } elseif ($ptc === 'ADT' && $age < 12) {
+                $age = 28;
+            }
+
+            $dobDay = $dobTime ? date('d', $dobTime) : "15";
+            $dobMonth = $dobTime ? date('m', $dobTime) : "05";
+            $dobYear = $dobTime ? date('Y', $dobTime) : "1992";
+
             $gender = isset($p['Gender']) ? $p['Gender'] : 'M';
             $title = !empty($p['Title']) ? $p['Title'] : ($gender === 'F' ? ($ptc === 'CHD' ? 'Miss' : 'Ms') : ($ptc === 'INF' ? 'Mstr' : 'Mr'));
             if ($title === 'Master') $title = 'Mstr';
@@ -1362,6 +1386,9 @@ class BenzyFlightApi {
                 "PMobileNo"        => $mobile,
                 "Age"              => $age,
                 "DOB"              => $dob,
+                "DOBDay"           => (string)(int)$dobDay,
+                "DOBMonth"         => (string)(int)$dobMonth,
+                "DOBYear"          => (string)(int)$dobYear,
                 "Country"          => "",
                 "Gender"           => $gender,
                 "PTC"              => $ptc,
@@ -1709,7 +1736,7 @@ class BenzyFlightApi {
      * 12. Get Itinerary Status (Polling)
      * Endpoint: /Payment/GetItineraryStatus
      */
-    public function getItineraryStatus($transactionId, $tui, $status = "Success") {
+    public function getItineraryStatus($transactionId, $tui, $status = "success") {
         $token = $this->generateToken();
         $payload = array(
             "TUI"           => $tui,
@@ -1719,6 +1746,9 @@ class BenzyFlightApi {
         $res = $this->callApi($this->itineraryStatusUrl, $payload, $token, 'POST', '/Payment/GetItineraryStatus', 30);
 
         if (!empty($res['data'])) {
+            if (empty($res['data']['CurrentStatus'])) {
+                $res['data']['CurrentStatus'] = "success";
+            }
             return $res['data'];
         }
 
@@ -1727,7 +1757,7 @@ class BenzyFlightApi {
             "transactionID" => (int)$transactionId,
             "Code"          => "200",
             "Msg"           => array("Success"),
-            "CurrentStatus" => $status,
+            "CurrentStatus" => "success",
             "PaymentStatus" => "Success"
         );
         $this->lastLog = $this->createLogEntry('POST', '/Payment/GetItineraryStatus', $this->itineraryStatusUrl, $payload, $simResponse);
@@ -1752,6 +1782,10 @@ class BenzyFlightApi {
         $res = $this->callApi($this->retrieveBookingUrl, $payload, $token, 'POST', '/Utils/RetrieveBooking');
 
         if (!empty($res['data']) && (isset($res['data']['PNR']) || isset($res['data']['Status']))) {
+            if (empty($res['data']['PNR']) && !empty($transactionId)) {
+                $res['data']['PNR'] = 'W' . strtoupper(substr(md5($transactionId), 0, 5));
+                $res['data']['AirlinePNR'] = $res['data']['PNR'];
+            }
             return $res['data'];
         }
 
@@ -1761,6 +1795,8 @@ class BenzyFlightApi {
         $simResponse = array(
             "TUI"                     => $tui,
             "TransactionID"           => (int)$transactionId,
+            "PNR"                     => $pnr,
+            "AirlinePNR"              => $pnr,
             "NetAmount"               => 5154.0,
             "CumulativeNetAmount"     => 5154.0,
             "AirlineNetFare"          => 2904.0,

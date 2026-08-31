@@ -183,19 +183,27 @@ class Flight_cert extends CI_Controller {
         $logsWritten[] = $this->saveLogFile($caseDir, '9.SSR.json', $this->benzyflightapi->getLastLog());
 
         // 10. CreateItinerary (TUI of GetSPricer response)
+        $dobA1 = date('Y-m-d', strtotime('-32 years', strtotime($depDate)));
+        $dobA2 = date('Y-m-d', strtotime('-29 years', strtotime($depDate)));
+        $dobC1 = date('Y-m-d', strtotime('-6 years', strtotime($depDate)));
+        $dobC2 = date('Y-m-d', strtotime('-4 years', strtotime($depDate)));
+        $dobI1 = date('Y-m-d', strtotime('-14 months', strtotime($depDate)));
+        $dobI2 = date('Y-m-d', strtotime('-6 months', strtotime($depDate)));
+
         $pax = array(
-            array("Title" => "Mr", "FName" => "Nithin", "LName" => "Kumar", "PaxType" => "ADT", "Gender" => "M", "Age" => 32, "DOB" => "1992-05-15", "PassportNo" => "", "Baggage" => $withBaggage ? "BAG5" : "", "Meals" => "VEG_SANDWICH"),
-            array("Title" => "Mrs", "FName" => "Priya", "LName" => "Kumar", "PaxType" => "ADT", "Gender" => "F", "Age" => 29, "DOB" => "1995-08-20", "PassportNo" => "", "Baggage" => $withBaggage ? "BAG5" : "", "Meals" => "VEG_SANDWICH"),
-            array("Title" => "Master", "FName" => "Aarav", "LName" => "Kumar", "PaxType" => "CHD", "Gender" => "M", "Age" => 6, "DOB" => "2018-02-10", "PassportNo" => "", "Baggage" => "", "Meals" => "JAIN_MEAL"),
-            array("Title" => "Miss", "FName" => "Ananya", "LName" => "Kumar", "PaxType" => "CHD", "Gender" => "F", "Age" => 4, "DOB" => "2020-11-12", "PassportNo" => "", "Baggage" => "", "Meals" => "JAIN_MEAL"),
-            array("Title" => "Infant", "FName" => "Vivaan", "LName" => "Kumar", "PaxType" => "INF", "Gender" => "M", "Age" => 1, "DOB" => "2023-04-18", "PassportNo" => "", "Baggage" => "", "Meals" => ""),
-            array("Title" => "Infant", "FName" => "Ishani", "LName" => "Kumar", "PaxType" => "INF", "Gender" => "F", "Age" => 1, "DOB" => "2023-07-22", "PassportNo" => "", "Baggage" => "", "Meals" => "")
+            array("Title" => "Mr", "FName" => "Nithin", "LName" => "Kumar", "PaxType" => "ADT", "PTC" => "ADT", "Gender" => "M", "Age" => 32, "DOB" => $dobA1, "PassportNo" => "", "Baggage" => $withBaggage ? "BAG5" : "", "Meals" => "VEG_SANDWICH"),
+            array("Title" => "Mrs", "FName" => "Priya", "LName" => "Kumar", "PaxType" => "ADT", "PTC" => "ADT", "Gender" => "F", "Age" => 29, "DOB" => $dobA2, "PassportNo" => "", "Baggage" => $withBaggage ? "BAG5" : "", "Meals" => "VEG_SANDWICH"),
+            array("Title" => "Master", "FName" => "Aarav", "LName" => "Kumar", "PaxType" => "CHD", "PTC" => "CHD", "Gender" => "M", "Age" => 6, "DOB" => $dobC1, "PassportNo" => "", "Baggage" => "", "Meals" => "JAIN_MEAL"),
+            array("Title" => "Miss", "FName" => "Ananya", "LName" => "Kumar", "PaxType" => "CHD", "PTC" => "CHD", "Gender" => "F", "Age" => 4, "DOB" => $dobC2, "PassportNo" => "", "Baggage" => "", "Meals" => "JAIN_MEAL"),
+            array("Title" => "Mstr", "FName" => "Vivaan", "LName" => "Kumar", "PaxType" => "INF", "PTC" => "INF", "Gender" => "M", "Age" => 1, "DOB" => $dobI1, "PassportNo" => "", "Baggage" => "", "Meals" => ""),
+            array("Title" => "Miss", "FName" => "Ishani", "LName" => "Kumar", "PaxType" => "INF", "PTC" => "INF", "Gender" => "F", "Age" => 0, "DOB" => $dobI2, "PassportNo" => "", "Baggage" => "", "Meals" => "")
         );
 
         $contact = array(
             "Title" => "Mr", "FName" => "Nithin", "LName" => "Kumar",
             "Mobile" => "9876543210", "Email" => "dev@voyogo.com",
-            "City" => "Delhi", "CountryCode" => "91"
+            "City" => "Delhi", "CountryCode" => "IN",
+            "DepartureDate" => $depDate
         );
 
         $itinRes = $this->benzyflightapi->createItinerary($liveTui, $pax, $contact, 'HB', array('baggage' => $withBaggage ? 'BAG5' : ''));

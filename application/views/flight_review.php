@@ -270,8 +270,11 @@
                     ?>
 
                     <!-- Adult Passenger Cards -->
-                    <?php for ($a = 1; $a <= $adult_count; $a++): $p_index++; ?>
-                    <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
+                    <?php 
+                    $flight_dep_date = !empty($flightDetails['departure_date']) ? $flightDetails['departure_date'] : date('Y-m-d', strtotime('+7 days'));
+                    for ($a = 1; $a <= $adult_count; $a++): $p_index++; 
+                    ?>
+                    <div class="passenger-card" style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
                             <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-users" style="color: #ef4444;"></i> Passenger Information (Adult <?php echo $a; ?>)
@@ -281,7 +284,7 @@
 
                         <input type="hidden" name="passenger_type[]" value="Adult">
 
-                        <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div style="display: grid; grid-template-columns: 1fr 2fr 1.5fr 1fr; gap: 14px; margin-bottom: 16px;">
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Title *</label>
                                 <select name="passenger_title[]" class="field-input" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #fff;">
@@ -295,8 +298,12 @@
                                 <input type="text" name="passenger_name[]" class="field-input" required placeholder="Enter First & Last Name" value="<?php echo ($p_index === 1) ? 'Rahul Sharma' : ''; ?>" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
+                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Date of Birth (DOB) *</label>
+                                <input type="date" name="passenger_dob[]" class="field-input dob-input" required value="1996-05-15" max="<?php echo date('Y-m-d', strtotime('-12 years', strtotime($flight_dep_date))); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                            </div>
+                            <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Age *</label>
-                                <input type="number" name="passenger_age[]" class="field-input" required value="28" min="12" max="99" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="number" name="passenger_age[]" class="field-input age-input" required value="28" min="12" max="99" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f8fafc;">
                             </div>
                         </div>
 
@@ -312,7 +319,7 @@
 
                     <!-- Child Passenger Cards -->
                     <?php for ($c = 1; $c <= $child_count; $c++): $p_index++; ?>
-                    <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
+                    <div class="passenger-card" style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
                             <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-child" style="color: #3b82f6;"></i> Passenger Information (Child <?php echo $c; ?> - Age 2-12 yrs)
@@ -322,7 +329,7 @@
 
                         <input type="hidden" name="passenger_type[]" value="Child">
 
-                        <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div style="display: grid; grid-template-columns: 1fr 2fr 1.5fr 1fr; gap: 14px; margin-bottom: 16px;">
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Title *</label>
                                 <select name="passenger_title[]" class="field-input" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #fff;">
@@ -335,8 +342,12 @@
                                 <input type="text" name="passenger_name[]" class="field-input" required placeholder="Enter Child's Name" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
+                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Date of Birth (DOB) *</label>
+                                <input type="date" name="passenger_dob[]" class="field-input dob-input" required value="2019-08-30" min="<?php echo date('Y-m-d', strtotime('-12 years', strtotime($flight_dep_date))); ?>" max="<?php echo date('Y-m-d', strtotime('-2 years', strtotime($flight_dep_date))); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                            </div>
+                            <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Age *</label>
-                                <input type="number" name="passenger_age[]" class="field-input" required value="7" min="2" max="11" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="number" name="passenger_age[]" class="field-input age-input" required value="7" min="2" max="11" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f8fafc;">
                             </div>
                         </div>
 
@@ -352,7 +363,7 @@
 
                     <!-- Infant Passenger Cards -->
                     <?php for ($i_cnt = 1; $i_cnt <= $infant_count; $i_cnt++): $p_index++; ?>
-                    <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
+                    <div class="passenger-card" style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
                             <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-baby" style="color: #10b981;"></i> Passenger Information (Infant <?php echo $i_cnt; ?> - Below 2 yrs)
@@ -362,7 +373,7 @@
 
                         <input type="hidden" name="passenger_type[]" value="Infant">
 
-                        <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div style="display: grid; grid-template-columns: 1fr 2fr 1.5fr 1fr; gap: 14px; margin-bottom: 16px;">
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Title *</label>
                                 <select name="passenger_title[]" class="field-input" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #fff;">
@@ -375,8 +386,12 @@
                                 <input type="text" name="passenger_name[]" class="field-input" required placeholder="Enter Infant's Name" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
+                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Date of Birth (DOB) *</label>
+                                <input type="date" name="passenger_dob[]" class="field-input dob-input" required value="2025-08-30" min="<?php echo date('Y-m-d', strtotime('-2 years', strtotime($flight_dep_date))); ?>" max="<?php echo date('Y-m-d', strtotime($flight_dep_date)); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                            </div>
+                            <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Age *</label>
-                                <input type="number" name="passenger_age[]" class="field-input" required value="1" min="0" max="2" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="number" name="passenger_age[]" class="field-input age-input" required value="1" min="0" max="2" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f8fafc;">
                             </div>
                         </div>
 
@@ -784,6 +799,27 @@ document.getElementById('payRazorpayBtn').addEventListener('click', function(e) 
         document.getElementById('bookingForm').submit();
     }
 });
+
+function calculatePassengerAge(input) {
+    if (!input || !input.value) return;
+    var travelDateStr = input.getAttribute('data-travel-date') || '<?php echo date("Y-m-d"); ?>';
+    var dob = new Date(input.value);
+    var travel = new Date(travelDateStr);
+    if (isNaN(dob.getTime()) || isNaN(travel.getTime())) return;
+    var age = travel.getFullYear() - dob.getFullYear();
+    var m = travel.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && travel.getDate() < dob.getDate())) {
+        age--;
+    }
+    age = Math.max(0, age);
+    var card = input.closest('.passenger-card');
+    if (card) {
+        var ageInput = card.querySelector('.age-input');
+        if (ageInput) {
+            ageInput.value = age;
+        }
+    }
+}
 
 function showProcessingModal(message) {
     var overlay = document.getElementById('paymentProcessingOverlay');

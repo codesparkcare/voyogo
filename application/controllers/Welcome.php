@@ -418,8 +418,11 @@ class Welcome extends CI_Controller {
         
         $titles  = $this->input->post('passenger_title');
         $names   = $this->input->post('passenger_name');
+        $dobs    = $this->input->post('passenger_dob');
         $ages    = $this->input->post('passenger_age');
         $types   = $this->input->post('passenger_type');
+        $titles  = $this->input->post('passenger_title');
+        $flight_date = $this->input->post('flight_date') ?: date('Y-m-d', strtotime('+7 days'));
 
         $passengers = array();
         if (is_array($names) && count($names) > 0) {
@@ -429,7 +432,8 @@ class Welcome extends CI_Controller {
                 $passengers[] = array(
                     'title'  => isset($titles[$i]) ? $titles[$i] : 'Mr',
                     'name'   => !empty($names[$i]) ? $names[$i] : 'Passenger ' . $p_idx,
-                    'age'    => isset($ages[$i]) ? $ages[$i] : '25',
+                    'dob'    => isset($dobs[$i]) ? $dobs[$i] : '',
+                    'age'    => isset($ages[$i]) ? $ages[$i] : '28',
                     'gender' => $gender,
                     'type'   => isset($types[$i]) ? $types[$i] : 'Adult'
                 );
@@ -439,7 +443,8 @@ class Welcome extends CI_Controller {
                 array(
                     'title'  => $this->input->post('passenger_title') ?: 'Mr',
                     'name'   => $this->input->post('passenger_name') ?: $contact_name,
-                    'age'    => $this->input->post('passenger_age') ?: '30',
+                    'dob'    => $this->input->post('passenger_dob') ?: '1996-05-15',
+                    'age'    => $this->input->post('passenger_age') ?: '28',
                     'gender' => $this->input->post('passenger_gender') ?: 'Male',
                     'type'   => 'Adult'
                 )
@@ -478,8 +483,30 @@ class Welcome extends CI_Controller {
         $pax_api_payload = array();
         foreach ($passengers as $p) {
             $paxType = ($p['type'] === 'Child' || $p['type'] === 'CHD') ? 'CHD' : (($p['type'] === 'Infant' || $p['type'] === 'INF') ? 'INF' : 'ADT');
-            $paxAge = ($paxType === 'INF') ? min(2, (int)$p['age']) : (int)$p['age'];
-            $paxDob = ($paxType === 'INF') ? date('Y-m-d', strtotime('-1 year')) : date('Y-m-d', strtotime('-' . $paxAge . ' years'));
+            $paxDob = !empty($p['dob']) ? $p['dob'] : '';
+            
+            if (!empty($paxDob)) {
+                try {
+                    $dobObj = new DateTime($paxDob);
+                    $travelObj = new DateTime($flight_date);
+                    $paxAge = (int)$dobObj->diff($travelObj)->y;
+                } catch (Exception $e) {
+                    $paxAge = (int)$p['age'];
+                }
+            } else {
+                $paxAge = (int)$p['age'];
+                if ($paxType === 'INF') $paxAge = min(1, $paxAge);
+                $paxDob = date('Y-m-d', strtotime("-{$paxAge} years", strtotime($flight_date)));
+            }
+
+            if ($paxType === 'INF' && $paxAge > 1) {
+                $paxAge = 1;
+            } elseif ($paxType === 'CHD' && ($paxAge < 2 || $paxAge > 11)) {
+                $paxAge = 7;
+            } elseif ($paxType === 'ADT' && $paxAge < 12) {
+                $paxAge = 28;
+            }
+
             $paxTitle = ($p['title'] === 'Master') ? 'Mstr' : $p['title'];
 
             $pax_api_payload[] = array(
