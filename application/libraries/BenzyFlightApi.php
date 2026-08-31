@@ -201,7 +201,9 @@ class BenzyFlightApi {
             $date = date('Y-m-d', strtotime('+7 days'));
         }
 
-        if ($fareType === 'RD') {
+        $normalizedFareType = (in_array($fareType, array('RT', 'RD')) || !empty($returnDate)) ? 'RT' : 'ON';
+
+        if ($normalizedFareType === 'RT') {
             $trips = array(
                 array(
                     "From"       => strtoupper($from),
@@ -224,7 +226,7 @@ class BenzyFlightApi {
                     "From"       => strtoupper($from),
                     "To"         => strtoupper($to),
                     "OnwardDate" => $date,
-                    "ReturnDate" => ($fareType === 'RT' && !empty($returnDate)) ? $returnDate : "",
+                    "ReturnDate" => "",
                     "TUI"        => ""
                 )
             );
@@ -239,7 +241,7 @@ class BenzyFlightApi {
             "Mode"       => "AS",
             "ClientID"   => "FVI6V120g22Ei5ztGK0FIQ==",
             "TUI"        => "",
-            "FareType"   => $fareType,
+            "FareType"   => $normalizedFareType,
             "Trips"      => $trips,
             "Parameters" => array(
                 "Airlines"        => "",
