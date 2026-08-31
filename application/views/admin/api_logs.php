@@ -17,6 +17,11 @@
             <p class="text-muted small mb-0">Real-time recording, debugging, and JSON payload inspection for Flight, Hotel, and Payment APIs</p>
         </div>
         <div class="d-flex align-items-center gap-2">
+            <!-- Download Single Log File Button -->
+            <a href="<?php echo site_url('admin/api_logs/export?service='.$service.'&status='.$status.'&search='.urlencode($search)); ?>" class="btn btn-sm btn-primary fw-semibold rounded-pill px-3 shadow-sm" title="Download all API requests and responses in one single formatted text file">
+                <i class="fa-solid fa-file-arrow-down me-1"></i> Download Logs in One File
+            </a>
+
             <!-- Clear Logs Dropdown -->
             <div class="dropdown">
                 <button class="btn btn-outline-danger btn-sm dropdown-toggle fw-semibold rounded-pill px-3 shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">

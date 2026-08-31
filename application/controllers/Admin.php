@@ -386,6 +386,70 @@ class Admin extends CI_Controller {
     }
 
     /**
+     * Export / Download all API logs in a single structured text/JSON file
+     */
+    public function api_logs_export()
+    {
+        $this->_check_login();
+        $this->load->model('Api_log_model');
+
+        $service = $this->input->get('service') ?: 'all';
+        $status  = $this->input->get('status') ?: 'all';
+        $search  = trim($this->input->get('search') ?: '');
+        $limit   = max(1, min(500, (int)($this->input->get('limit') ?: 200)));
+
+        $filters = array(
+            'service_type' => $service,
+            'status'       => $status,
+            'search'       => $search
+        );
+
+        $logs = $this->Api_log_model->get_logs($limit, 0, $filters);
+
+        // Sort in chronological order (oldest to newest) for readable booking sequence
+        $logs = array_reverse($logs);
+
+        $filename = 'Voyogo_API_Logs_' . date('Ymd_His') . '.txt';
+
+        $output = "================================================================================\n";
+        $output .= "VOYOGO API ACTIVITY & PAYLOAD LOG REPORT\n";
+        $output .= "Generated At: " . date('Y-m-d H:i:s T') . "\n";
+        $output .= "Total Entries: " . count($logs) . "\n";
+        $output .= "Filter: Service=" . strtoupper($service) . ", Status=" . strtoupper($status) . "\n";
+        $output .= "================================================================================\n\n";
+
+        $step = 1;
+        foreach ($logs as $log) {
+            $reqJson = json_decode($log['request_payload'], true);
+            $reqFormatted = ($reqJson !== null) ? json_encode($reqJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : $log['request_payload'];
+
+            $respJson = json_decode($log['response_payload'], true);
+            $respFormatted = ($respJson !== null) ? json_encode($respJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : $log['response_payload'];
+
+            $output .= "--------------------------------------------------------------------------------\n";
+            $output .= "STEP #{$step} | LOG ID: #{$log['id']} | TIMESTAMP: {$log['created_at']}\n";
+            $output .= "API NAME / ACTION: {$log['action_name']}\n";
+            $output .= "SERVICE: " . strtoupper($log['service_type']) . " | METHOD: " . strtoupper(isset($log['http_method']) ? $log['http_method'] : 'POST') . "\n";
+            $output .= "ENDPOINT URL: {$log['endpoint_url']}\n";
+            $output .= "HTTP STATUS: {$log['http_code']} | LATENCY: {$log['execution_time_ms']} ms | CLIENT IP: {$log['ip_address']}\n";
+            if (!empty($log['error_message'])) {
+                $output .= "ERROR: {$log['error_message']}\n";
+            }
+            $output .= "--------------------------------------------------------------------------------\n";
+            $output .= "REQUEST BODY:\n";
+            $output .= (!empty($reqFormatted) ? $reqFormatted : "{}") . "\n\n";
+            $output .= "RESPONSE BODY:\n";
+            $output .= (!empty($respFormatted) ? $respFormatted : "{}") . "\n";
+            $output .= "================================================================================\n\n";
+
+            $step++;
+        }
+
+        $this->load->helper('download');
+        force_download($filename, $output);
+    }
+
+    /**
      * Clear API Logs
      */
     public function api_logs_clear()
