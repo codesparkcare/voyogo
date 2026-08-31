@@ -1747,7 +1747,8 @@ class BenzyFlightApi {
 
         if (!empty($res['data'])) {
             if (empty($res['data']['CurrentStatus'])) {
-                $statusVal = (!empty($res['data']['Code']) && $res['data']['Code'] == '200') ? "success" : "failed";
+                $isSuccess = (!empty($res['data']['Code']) && $res['data']['Code'] == '200' && isset($res['data']['PaymentStatus']) && strtolower($res['data']['PaymentStatus']) === 'success');
+                $statusVal = $isSuccess ? "success" : "failed";
                 $res['data']['CurrentStatus'] = $statusVal;
                 if (isset($this->lastLog['data'])) {
                     $this->lastLog['data']['CurrentStatus'] = $statusVal;
