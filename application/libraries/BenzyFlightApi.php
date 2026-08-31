@@ -1747,7 +1747,12 @@ class BenzyFlightApi {
 
         if (!empty($res['data'])) {
             if (empty($res['data']['CurrentStatus'])) {
-                $res['data']['CurrentStatus'] = "success";
+                $statusVal = (!empty($res['data']['Code']) && $res['data']['Code'] == '200') ? "success" : "failed";
+                $res['data']['CurrentStatus'] = $statusVal;
+                if (isset($this->lastLog['data'])) {
+                    $this->lastLog['data']['CurrentStatus'] = $statusVal;
+                    $this->lastLog['response_raw'] = json_encode($this->lastLog['data'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                }
             }
             return $res['data'];
         }
