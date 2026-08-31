@@ -179,11 +179,11 @@
         }
         if (empty($inboundFlights)) {
             $mockRetAirlines = array(
-                array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E-2135', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '07:30', 'arr' => '09:45', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5150),
-                array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG-163', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '11:00', 'arr' => '13:15', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4999),
-                array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI-806', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '16:00', 'arr' => '18:15', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5450),
-                array('code' => 'QP', 'name' => 'Akasa Air', 'flight_no' => 'QP-1312', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '19:40', 'arr' => '21:55', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4850),
-                array('code' => 'UK', 'name' => 'Vistara', 'flight_no' => 'UK-946', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/UK.png', 'dep' => '21:30', 'arr' => '23:45', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5800)
+                array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E-2135', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '15:30', 'arr' => '17:45', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5150),
+                array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG-163', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '17:45', 'arr' => '20:00', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4999),
+                array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI-806', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '19:15', 'arr' => '21:30', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5450),
+                array('code' => 'QP', 'name' => 'Akasa Air', 'flight_no' => 'QP-1312', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '21:30', 'arr' => '23:45', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4850),
+                array('code' => 'UK', 'name' => 'Vistara', 'flight_no' => 'UK-946', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/UK.png', 'dep' => '22:45', 'arr' => '01:00', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5800)
             );
             foreach ($mockRetAirlines as $rIdx => $m) {
                 $inboundFlights[] = array(

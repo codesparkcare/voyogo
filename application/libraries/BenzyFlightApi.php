@@ -255,7 +255,7 @@ class BenzyFlightApi {
      * 4. Get Express Search Results (Step 2 of Search)
      * Endpoint: /flights/GetExpSearch
      */
-    public function getExpSearch($tui, $from = 'DEL', $to = 'BOM', $date = '', $isConnecting = false) {
+    public function getExpSearch($tui, $from = 'DEL', $to = 'BOM', $date = '', $isConnecting = false, $isRoundtrip = false, $returnDate = '') {
         $token = $this->generateToken();
         $payload = array(
             "TUI"      => $tui,
@@ -268,6 +268,7 @@ class BenzyFlightApi {
             return $this->parseSearchResults($res['data'], $tui);
         }
 
+        // Onward Flight Templates (Morning / Day)
         $flightTemplates = array(
             // Direct Non-Stop Flights
             array('vac' => '6E', 'fn' => '2134', 'name' => 'IndiGo', 'dep' => '06:00', 'arr' => '08:15', 'gross' => 5150.00, 'net' => 4300.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => '6E|1'),
@@ -360,6 +361,102 @@ class BenzyFlightApi {
                 "WpIndex"             => null,
                 "JourneyKey"          => "{$ft['vac']},{$ft['fn']},{$from},{$to},{$depDateTime},{$arrDateTime},2,,{$ft['dur']}"
             );
+        }
+
+        // Return Flight Templates (Afternoon / Evening Schedules)
+        if ($isRoundtrip || !empty($returnDate)) {
+            $returnFlightTemplates = array(
+                // Direct Return Flights (Afternoon / Evening)
+                array('vac' => '6E', 'fn' => '2135', 'name' => 'IndiGo', 'dep' => '15:30', 'arr' => '17:45', 'gross' => 5150.00, 'net' => 4300.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => '6E|1'),
+                array('vac' => 'SG', 'fn' => '163',  'name' => 'SpiceJet', 'dep' => '17:45', 'arr' => '20:00', 'gross' => 4999.00, 'net' => 4150.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'SG|1'),
+                array('vac' => 'AI', 'fn' => '806',  'name' => 'Air India', 'dep' => '19:15', 'arr' => '21:30', 'gross' => 5450.00, 'net' => 4600.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'AI|1'),
+                array('vac' => 'QP', 'fn' => '1312', 'name' => 'Akasa Air', 'dep' => '21:30', 'arr' => '23:45', 'gross' => 4850.00, 'net' => 4000.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'QP|1'),
+                array('vac' => 'UK', 'fn' => '946',  'name' => 'Vistara', 'dep' => '22:45', 'arr' => '01:00', 'gross' => 5800.00, 'net' => 4950.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'UK|1'),
+
+                // 1-Stop Connecting Return Flights
+                array('vac' => '6E', 'fn' => '5022', 'name' => 'IndiGo', 'dep' => '16:00', 'arr' => '21:30', 'gross' => 5120.00, 'net' => 4280.00, 'dur' => '05h 30m', 'stops' => 1, 'idx' => '6E|1', 'via' => 'HYD'),
+                array('vac' => 'SG', 'fn' => '305',  'name' => 'SpiceJet', 'dep' => '18:15', 'arr' => '23:00', 'gross' => 4890.00, 'net' => 4050.00, 'dur' => '04h 45m', 'stops' => 1, 'idx' => 'SG|1', 'via' => 'GOX'),
+                array('vac' => 'AI', 'fn' => '632',  'name' => 'Air India', 'dep' => '19:45', 'arr' => '01:00', 'gross' => 5380.00, 'net' => 4520.00, 'dur' => '05h 15m', 'stops' => 1, 'idx' => 'AI|1', 'via' => 'AMD')
+            );
+
+            $returnDateStr = $returnDate ?: $dateStr;
+
+            foreach ($returnFlightTemplates as $rft) {
+                $rDepDateTime = date('Y-m-d\T' . $rft['dep'] . ':00', strtotime($returnDateStr));
+                $rArrDateTime = date('Y-m-d\T' . $rft['arr'] . ':00', strtotime($returnDateStr));
+
+                $journeyItems[] = array(
+                    "Stops"               => $rft['stops'],
+                    "Seats"               => 9,
+                    "ReturnIdentifier"    => 1,
+                    "Index"               => $rft['idx'],
+                    "Provider"            => $rft['vac'],
+                    "FlightNo"            => $rft['fn'],
+                    "VAC"                 => $rft['vac'],
+                    "MAC"                 => $rft['vac'],
+                    "OAC"                 => $rft['vac'],
+                    "ArrivalTime"         => $rArrDateTime,
+                    "DepartureTime"       => $rDepDateTime,
+                    "ArrivalTerminal"     => "1",
+                    "DepartureTerminal"   => "2",
+                    "FareClass"           => "GS",
+                    "Duration"            => $rft['dur'],
+                    "GroupCount"          => 0,
+                    "TotalFare"           => null,
+                    "GrossFare"           => $rft['gross'],
+                    "TotalCommission"     => 50.0,
+                    "TotalTransactionFee" => 0.0,
+                    "TotalVatOnTFee"      => 0.0,
+                    "NetFare"             => $rft['net'],
+                    "WPNetFare"           => 0.0,
+                    "Hops"                => 0,
+                    "Notice"              => "",
+                    "NoticeLink"          => "",
+                    "NoticeType"          => null,
+                    "Refundable"          => "Y",
+                    "Alliances"           => "",
+                    "Amenities"           => "PM,PB",
+                    "Inclusions"          => array(
+                        "Baggage"          => "15 Kg",
+                        "Meals"            => null,
+                        "PieceDescription" => null
+                    ),
+                    "Hold"                => true,
+                    "HoldInfo"            => "E|01:00|1.00|SE|EE",
+                    "Connections"         => $rft['stops'] > 0 ? array(
+                        array(
+                            "Airport"        => !empty($rft['via']) ? $rft['via'] : 'HYD',
+                            "ArrAirportName" => (!empty($rft['via']) && $rft['via'] === 'GOX' ? 'Mopa International Airport, Goa' : (!empty($rft['via']) && $rft['via'] === 'AMD' ? 'Sardar Vallabhbhai Patel |Ahmedabad' : 'Rajiv Gandhi International |Hyderabad')),
+                            "Duration"       => "01h 30m ",
+                            "Type"           => "C",
+                            "MAC"            => $rft['vac'] . '|' . $rft['name']
+                        )
+                    ) : array(),
+                    "From"                => strtoupper($to),
+                    "To"                  => strtoupper($from),
+                    "FromName"            => strtoupper($to) . " International Airport",
+                    "ToName"              => strtoupper($from) . " International Airport",
+                    "AirlineName"         => $rft['name'] . '|' . $rft['name'] . '|' . $rft['name'],
+                    "GDSPriority"         => 0,
+                    "AirCraft"            => "320",
+                    "RBD"                 => "E",
+                    "Cabin"               => "E",
+                    "FBC"                 => "EOWIN",
+                    "FCBegin"             => null,
+                    "FCEnd"               => null,
+                    "FCType"              => "",
+                    "FCGroup"             => "",
+                    "GFL"                 => false,
+                    "Promo"               => "ATFLY",
+                    "Recommended"         => false,
+                    "FareType"            => "PB-",
+                    "TrendFare"           => $rft['net'],
+                    "IsBusStation"        => false,
+                    "ChannelCode"         => null,
+                    "WpIndex"             => null,
+                    "JourneyKey"          => "{$rft['vac']},{$rft['fn']},{$to},{$from},{$rDepDateTime},{$rArrDateTime},2,,{$rft['dur']}"
+                );
+            }
         }
 
         $simResponse = array(
@@ -2295,7 +2392,9 @@ class BenzyFlightApi {
                         'baggage' => !empty($j['Inclusions']['Baggage']) ? $j['Inclusions']['Baggage'] : '15 Kg',
                         'flight_index' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1'),
                         'Index' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1'),
-                        'FlightIndex' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1')
+                        'FlightIndex' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1'),
+                        'return_identifier' => isset($j['ReturnIdentifier']) ? (int)$j['ReturnIdentifier'] : 0,
+                        'departure_date' => !empty($j['DepartureTime']) ? date('Y-m-d', strtotime($j['DepartureTime'])) : ''
                     );
                 }
                 continue;
