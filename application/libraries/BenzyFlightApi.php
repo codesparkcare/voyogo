@@ -2319,6 +2319,15 @@ class BenzyFlightApi {
             $responseData = json_decode($rawResponse, true);
         }
 
+        // Ensure GetItineraryStatus always has a non-empty CurrentStatus (Success or Failed)
+        if (!empty($responseData) && (strpos($url, 'GetItineraryStatus') !== false || strpos($endpointName, 'GetItineraryStatus') !== false)) {
+            if (isset($responseData['CurrentStatus']) && $responseData['CurrentStatus'] === '') {
+                $isSuccess = (!empty($responseData['Code']) && $responseData['Code'] == '200' && isset($responseData['PaymentStatus']) && strtolower($responseData['PaymentStatus']) === 'success');
+                $responseData['CurrentStatus'] = $isSuccess ? 'Success' : 'Failed';
+                $rawResponse = json_encode($responseData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            }
+        }
+
         $actionName = $endpointName ? ltrim($endpointName, '/') : basename(parse_url($url, PHP_URL_PATH));
 
         // Save to Database API Logs
