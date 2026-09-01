@@ -1,20 +1,22 @@
 URL: https://voyogos.com/certification_logs/7.Oneway%20Booking%20with%20Baggage%20-%20Connection%20Flight/16.RetrieveBooking.json
 Method: POST
 Endpoint: /Utils/RetrieveBooking
-Timestamp: 2026-08-26T07:05:07.000Z
+Timestamp: 2026-08-31T14:20:16.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-663990cb6208|79f5808a57fe|20260826123425",
+    "TUI": "92440198-dc0b-409e-b8d8-b954694155aa|1de3dcdda5bc|20260831194852",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "ReferenceNumber": "250037624",
+    "ReferenceNumber": "250037335",
     "ReferenceType": "T",
     "ServiceType": "FLT"
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-663990cb6208|79f5808a57fe|20260826123425",
-    "TransactionID": 250037624,
+    "TUI": "92440198-dc0b-409e-b8d8-b954694155aa|1de3dcdda5bc|20260831194852",
+    "TransactionID": 250037335,
+    "PNR": "W0F324",
+    "AirlinePNR": "W0F324",
     "NetAmount": 5154,
     "CumulativeNetAmount": 5154,
     "AirlineNetFare": 2904,
@@ -31,7 +33,7 @@ Response Body:
     "To": "BOM",
     "FromName": "Indira Gandhi International |New Delhi",
     "ToName": "Chhatrapati Shivaji |Mumbai",
-    "OnwardDate": "2026-09-02",
+    "OnwardDate": "2026-09-07",
     "ReturnDate": "",
     "GateWayCode": "",
     "GateWayCharge": 0,
@@ -39,7 +41,7 @@ Response Body:
     "PaymentTransactionStatus": null,
     "Status": "TO0",
     "FareType": "N",
-    "BookingDate": "2026-08-26 12:35:07",
+    "BookingDate": "2026-08-31 19:50:16",
     "TripType": "ON",
     "Hold": false,
     "HoldDuration": 0,
@@ -75,11 +77,11 @@ Response Body:
                                 "Airline": "IndiGo|IndiGo|IndiGo",
                                 "AirCraft": "AIRBUS JET",
                                 "FBC": "USAV",
-                                "APNR": "W7965A",
+                                "APNR": "W0F324",
                                 "CRSPNR": "CRSPNR123",
                                 "FlightNo": "2134",
-                                "ArrivalTime": "2026-09-02T08:15:00",
-                                "DepartureTime": "2026-09-02T06:00:00",
+                                "ArrivalTime": "2026-09-07T08:15:00",
+                                "DepartureTime": "2026-09-07T06:00:00",
                                 "ArrivalCode": "BOM",
                                 "DepartureCode": "DEL",
                                 "ArrivalTerminal": "1",
@@ -97,7 +99,7 @@ Response Body:
                                 "TicketInfo": [
                                     {
                                         "PaxID": 1226,
-                                        "TicketNo": "6E-TK-250037624",
+                                        "TicketNo": "6E-TK-250037335",
                                         "Status": "TO0"
                                     }
                                 ],
@@ -163,7 +165,7 @@ Response Body:
             "Nationality": "",
             "PassportNo": "",
             "PLI": "",
-            "DOE": "2026-08-26",
+            "DOE": "2026-08-31",
             "VisaType": ""
         }
     ],

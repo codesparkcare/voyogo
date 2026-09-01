@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/2.Round%20Trip%20Booking%20without%20Baggage%20-%20Direct%20Flight/2.ExpressSearch.json
 Method: POST
 Endpoint: /flights/ExpressSearch
-Timestamp: 2026-08-29T07:53:54.000Z
+Timestamp: 2026-09-01T10:07:43.000Z
 Request Body:
 {
     "ADT": 2,
@@ -17,15 +17,8 @@ Request Body:
         {
             "From": "DEL",
             "To": "BOM",
-            "OnwardDate": "2026-09-05",
-            "ReturnDate": "",
-            "TUI": ""
-        },
-        {
-            "From": "BOM",
-            "To": "DEL",
-            "OnwardDate": "2026-09-10",
-            "ReturnDate": "",
+            "OnwardDate": "2026-09-08",
+            "ReturnDate": "2026-09-13",
             "TUI": ""
         }
     ],
@@ -41,7 +34,7 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-9ed064f93c61|f931bae025fd|20260829132354",
+    "TUI": "92440198-dc0b-409e-b8d8-ad290ab0b34c|d76d271c4c2c|20260901153743",
     "Code": "200",
     "Msg": [
         "Success"

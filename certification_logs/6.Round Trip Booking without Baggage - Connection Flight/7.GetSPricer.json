@@ -1,16 +1,16 @@
 URL: https://voyogos.com/certification_logs/6.Round%20Trip%20Booking%20without%20Baggage%20-%20Connection%20Flight/7.GetSPricer.json
 Method: POST
 Endpoint: /Flights/GetSPricer
-Timestamp: 2026-08-26T07:03:52.000Z
+Timestamp: 2026-08-31T14:17:45.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-186a62acd1f5|d71a08b8ebae|20260826123337",
+    "TUI": "92440198-dc0b-409e-b8d8-9d2ef04f4cc0|1a5f095bf7fe|20260831194715",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-186a62acd1f5|d71a08b8ebae|20260826123337",
+    "TUI": "92440198-dc0b-409e-b8d8-9d2ef04f4cc0|1a5f095bf7fe|20260831194715",
     "Code": "200",
     "Msg": [
         "Success"
@@ -20,8 +20,8 @@ Response Body:
     "To": "BLR",
     "FromName": "Indira Gandhi International |New Delhi",
     "ToName": "Srinagar |Srinagar",
-    "OnwardDate": "2026-09-02",
-    "ReturnDate": "2026-09-07",
+    "OnwardDate": "2026-09-07",
+    "ReturnDate": "2026-09-12",
     "ADT": 1,
     "CHD": 0,
     "INF": 0,
@@ -54,8 +54,8 @@ Response Body:
                                 "FBC": "R0IP",
                                 "Airline": "IndiGo|IndiGo|IndiGo",
                                 "FlightNo": "2559",
-                                "ArrivalTime": "2026-09-02T14:55:00",
-                                "DepartureTime": "2026-09-02T12:10:00",
+                                "ArrivalTime": "2026-09-07T14:55:00",
+                                "DepartureTime": "2026-09-07T12:10:00",
                                 "FareClass": "R",
                                 "ArrivalCode": "BLR",
                                 "DepartureCode": "DEL",
@@ -71,8 +71,8 @@ Response Body:
                                 "Seats": 0,
                                 "Hops": [
                                     {
-                                        "ArrivalTime": "2026-09-02T13:30:00",
-                                        "DepartureTime": "2026-09-02T14:15:00",
+                                        "ArrivalTime": "2026-09-07T13:30:00",
+                                        "DepartureTime": "2026-09-07T14:15:00",
                                         "ArrivalCode": "IXJ",
                                         "ArrAirportName": "Satwari |Jammu",
                                         "Duration": "00h 45m ",

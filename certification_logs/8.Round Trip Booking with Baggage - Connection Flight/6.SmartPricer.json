@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/8.Round%20Trip%20Booking%20with%20Baggage%20-%20Connection%20Flight/6.SmartPricer.json
 Method: POST
 Endpoint: /flights/SmartPricer
-Timestamp: 2026-08-26T07:05:25.000Z
+Timestamp: 2026-08-31T14:20:57.000Z
 Request Body:
 {
     "Trips": [
@@ -9,7 +9,13 @@ Request Body:
             "Amount": 5350,
             "Index": "6E|1",
             "OrderID": 1,
-            "TUI": "92440198-dc0b-409e-b8d8-81bafc936263|fe1c7d441cdb|20260826123513"
+            "TUI": "92440198-dc0b-409e-b8d8-57497f88a0e0|bb1bdc75ef70|20260831195031"
+        },
+        {
+            "Amount": 5350,
+            "Index": "6E|1",
+            "OrderID": 2,
+            "TUI": "92440198-dc0b-409e-b8d8-57497f88a0e0|bb1bdc75ef70|20260831195031"
         }
     ],
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
@@ -21,7 +27,7 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-81bafc936263|fe1c7d441cdb|20260826123513",
+    "TUI": "92440198-dc0b-409e-b8d8-57497f88a0e0|bb1bdc75ef70|20260831195031",
     "Code": "200",
     "Msg": [
         "Success"
@@ -30,8 +36,8 @@ Response Body:
     "To": "BLR",
     "FromName": "Indira Gandhi International |New Delhi",
     "ToName": "Chhatrapati Shivaji |Mumbai",
-    "OnwardDate": "2026-09-02",
-    "ReturnDate": "2026-09-07",
+    "OnwardDate": "2026-09-07",
+    "ReturnDate": "2026-09-12",
     "ADT": 2,
     "CHD": 2,
     "INF": 2,
@@ -61,8 +67,8 @@ Response Body:
                                 "FBC": "EOWIN",
                                 "Airline": "IndiGo|IndiGo|IndiGo",
                                 "FlightNo": "2134",
-                                "ArrivalTime": "2026-09-02T08:15:00",
-                                "DepartureTime": "2026-09-02T06:00:00",
+                                "ArrivalTime": "2026-09-07T08:15:00",
+                                "DepartureTime": "2026-09-07T06:00:00",
                                 "FareClass": "GS",
                                 "ArrivalCode": "BLR",
                                 "DepartureCode": "DEL",

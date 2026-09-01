@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/5.Oneway%20Booking%20without%20Baggage%20-%20Connection%20Flight/5.SSR.json
 Method: POST
 Endpoint: /Flights/SSR
-Timestamp: 2026-08-26T07:02:58.000Z
+Timestamp: 2026-08-31T14:15:57.000Z
 Request Body:
 {
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
@@ -9,7 +9,7 @@ Request Body:
     "Source": "LV",
     "Trips": [
         {
-            "TUI": "92440198-dc0b-409e-b8d8-6ece48094022|8ead58d9ae97|20260826123249",
+            "TUI": "92440198-dc0b-409e-b8d8-2246225a832e|e8e0adf2b571|20260831194537",
             "Amount": 0,
             "OrderID": 1,
             "Index": ""
@@ -19,7 +19,7 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-6ece48094022|8ead58d9ae97|20260826123249",
+    "TUI": "92440198-dc0b-409e-b8d8-2246225a832e|e8e0adf2b571|20260831194537",
     "PaidSSR": true,
     "Trips": [
         {
