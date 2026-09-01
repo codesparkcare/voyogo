@@ -549,7 +549,7 @@ class Welcome extends CI_Controller {
         // 1. Create Itinerary via Benzy API
         $itineraryRes = $this->benzyflightapi->createItinerary($tui, $pax_api_payload, $contact_payload, $booking_type, $ssrAddons, $net_amount);
         $bookingTui = !empty($itineraryRes['TUI']) ? $itineraryRes['TUI'] : (!empty($itineraryRes['tui']) ? $itineraryRes['tui'] : $tui);
-        $transaction_id = isset($itineraryRes['TransactionID']) ? $itineraryRes['TransactionID'] : (int)('2500' . rand(37000, 37999));
+        $transaction_id = !empty($itineraryRes['TransactionID']) ? (int)$itineraryRes['TransactionID'] : (!empty($itineraryRes['Msg'][0]) && is_numeric($itineraryRes['Msg'][0]) ? (int)$itineraryRes['Msg'][0] : (int)('2500' . rand(37000, 37999)));
 
         // 2. Start Pay Authorization
         $total_amount = (float)($this->input->post('total_amount') ?: 5350);

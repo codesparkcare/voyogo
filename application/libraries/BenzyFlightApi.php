@@ -1490,8 +1490,21 @@ class BenzyFlightApi {
 
         $res = $this->callApi($this->createItineraryUrl, $payload, $token, 'POST', '/Flights/CreateItinerary');
 
-        if (!empty($res['data']['TransactionID'])) {
-            return $res['data'];
+        if (!empty($res['data'])) {
+            $liveTxnId = 0;
+            if (!empty($res['data']['TransactionID'])) {
+                $liveTxnId = (int)$res['data']['TransactionID'];
+            } elseif (!empty($res['data']['Msg']) && is_array($res['data']['Msg']) && is_numeric($res['data']['Msg'][0])) {
+                $liveTxnId = (int)$res['data']['Msg'][0];
+                $res['data']['TransactionID'] = $liveTxnId;
+            }
+
+            if (!empty($liveTxnId)) {
+                if (empty($res['data']['TUI'])) {
+                    $res['data']['TUI'] = $tui;
+                }
+                return $res['data'];
+            }
         }
 
         $adtCount = 0;
