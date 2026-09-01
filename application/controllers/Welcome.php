@@ -78,6 +78,11 @@ class Welcome extends CI_Controller {
             $tui = $this->benzyflightapi->expressSearch($from, $to, $date, '', $adults, $children, $infants, substr($cabin_class, 0, 1), 'ON', false);
         }
 
+        // Call Utils/WebSettings with ExpressSearch TUI
+        if (!empty($tui)) {
+            $this->benzyflightapi->getWebSettings($tui);
+        }
+
         $rawSearchResults = $this->benzyflightapi->getExpSearch($tui, $from, $to, $date, false, $is_roundtrip, $return_date);
         $flightResults = array();
         $returnFlights = array();
