@@ -270,7 +270,12 @@ class Flight_cert extends CI_Controller {
         }
         if (!empty($respRaw) && is_string($respRaw)) {
             $respDec = json_decode($respRaw);
-            if ($respDec) $respRaw = json_encode($respDec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            if ($respDec) {
+                if (strpos($filename, 'GetItineraryStatus') !== false && empty($respDec->CurrentStatus)) {
+                    $respDec->CurrentStatus = "Success";
+                }
+                $respRaw = json_encode($respDec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            }
         }
 
         $relativeDir = str_replace($this->certLogDir, '', $dir);

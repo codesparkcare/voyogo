@@ -543,6 +543,9 @@ class Welcome extends CI_Controller {
             'net_amount'     => $net_amount
         );
 
+        // 0. Retrieve Airline Travel Checklist before CreateItinerary
+        $this->benzyflightapi->getTravelCheckList($tui);
+
         // 1. Create Itinerary via Benzy API
         $itineraryRes = $this->benzyflightapi->createItinerary($tui, $pax_api_payload, $contact_payload, $booking_type, $ssrAddons, $net_amount);
         $bookingTui = !empty($itineraryRes['TUI']) ? $itineraryRes['TUI'] : (!empty($itineraryRes['tui']) ? $itineraryRes['tui'] : $tui);
@@ -553,9 +556,21 @@ class Welcome extends CI_Controller {
         $startPayRes = $this->benzyflightapi->startPay($transaction_id, $bookingTui, $booking_type, $total_amount);
         $payTui = !empty($startPayRes['TUI']) ? $startPayRes['TUI'] : (!empty($startPayRes['tui']) ? $startPayRes['tui'] : $bookingTui);
 
-        // 3. Verify Payment & Itinerary Status via GetItineraryStatus
-        $statusRes = $this->benzyflightapi->getItineraryStatus($transaction_id, $payTui);
-        $statusTui = !empty($statusRes['TUI']) ? $statusRes['TUI'] : (!empty($statusRes['tui']) ? $statusRes['tui'] : $payTui);
+        // 3. Verify Payment & Itinerary Status via GetItineraryStatus (poll until Success or Failed)
+        $statusRes = null;
+        $statusTui = $payTui;
+        for ($attempt = 1; $attempt <= 3; $attempt++) {
+            $statusRes = $this->benzyflightapi->getItineraryStatus($transaction_id, $statusTui);
+            if (!empty($statusRes['TUI'])) {
+                $statusTui = $statusRes['TUI'];
+            }
+            if (!empty($statusRes['CurrentStatus']) && in_array(strtolower($statusRes['CurrentStatus']), array('success', 'failed'))) {
+                break;
+            }
+            if ($attempt < 3) {
+                sleep(1);
+            }
+        }
 
         // 4. Retrieve Booking to confirm PNR and ticketed/held itinerary
         $originCode = strtoupper(substr($this->input->post('origin') ?: 'DEL', 0, 3));
