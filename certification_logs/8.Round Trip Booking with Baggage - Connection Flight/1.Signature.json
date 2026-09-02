@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/8.Round%20Trip%20Booking%20with%20Baggage%20-%20Connection%20Flight/1.Signature.json
 Method: POST
 Endpoint: /Utils/Signature
-Timestamp: 2026-08-31T14:20:26.000Z
+Timestamp: 2026-09-02T06:46:23.000Z
 Request Body:
 {
     "MerchantID": "300",
@@ -14,10 +14,10 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "af80de34-fccb-4c28-9365-07debec12bed|20260831195026",
-    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZklxWmVCUkZIUlNTOFFRWE1ybk8vVDhFcmt6UnMyYzk3cnloS01sWXc3NitRPT0iLCJwd2QiOiJMMkV0NEcvWHE0bExYQUd4Q3M2REh3PT0iLCJhZ2VudENvZGUiOiIvS2ZkWXdlc3FQdz0iLCJjbGllbnRJZCI6IjJmelhFa014VkRVPSIsIm5iZiI61788186026LCJleHAiOiI1789050026\"}.d1e305c5843118a97160138a5f71359b",
+    "TUI": "af80de34-fccb-4c28-9365-cf1081d8aa48|20260902121623",
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZklxWmVCUkZIUlNTOFFRWE1ybk8vVDhFcmt6UnMyYzk3cnloS01sWXc3NitRPT0iLCJwd2QiOiJMMkV0NEcvWHE0bExYQUd4Q3M2REh3PT0iLCJhZ2VudENvZGUiOiIvS2ZkWXdlc3FQdz0iLCJjbGllbnRJZCI6IjJmelhFa014VkRVPSIsIm5iZiI61788331583LCJleHAiOiI1789195583\"}.86749b331a4b6b5b074def231c154289",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "LastLoginDate": "8/31/2026 7:50:26 PM",
+    "LastLoginDate": "9/2/2026 12:16:23 PM",
     "Password": "L2Et4G/Xq4lLXAGxCs6DHw==",
     "loginAttempts": "0",
     "Code": "200",

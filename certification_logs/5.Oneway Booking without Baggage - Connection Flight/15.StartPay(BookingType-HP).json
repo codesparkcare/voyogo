@@ -1,15 +1,15 @@
 URL: https://voyogos.com/certification_logs/5.Oneway%20Booking%20without%20Baggage%20-%20Connection%20Flight/15.StartPay(BookingType-HP).json
 Method: POST
 Endpoint: /Payment/StartPay
-Timestamp: 2026-08-31T14:16:54.000Z
+Timestamp: 2026-09-02T06:39:33.000Z
 Request Body:
 {
-    "TransactionID": 250037974,
+    "TransactionID": 250037149,
     "PaymentAmount": 5350,
     "NetAmount": 5350,
     "BrowserKey": "ef20-925c-4489-bfeb-236c8b406f7e",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "TUI": "92440198-dc0b-409e-b8d8-2246225a832e|e8e0adf2b571|20260831194537",
+    "TUI": "92440198-dc0b-409e-b8d8-cb3dbf76a865|2d0d3c45d94c|20260902120723",
     "Hold": false,
     "Promo": null,
     "PaymentType": "",
@@ -47,13 +47,13 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-2246225a832e|e8e0adf2b571|20260831194537",
+    "TUI": "92440198-dc0b-409e-b8d8-cb3dbf76a865|2d0d3c45d94c|20260902120723",
     "Code": "6033",
     "Msg": [
         "BOOKING  INPROGRESS !"
     ],
     "PaymentID": null,
-    "TransactionID": 250037974,
+    "TransactionID": 250037149,
     "RedirectMode": "R",
     "PostData": null,
     "CRSPNR": null,
@@ -61,5 +61,5 @@ Response Body:
     "TUTransactionID": 0,
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
     "GatewayCode": "TEC",
-    "RedirectUrl": "92440198-dc0b-409e-b8d8-2246225a832e|e8e0adf2b571|20260831194537|250037974"
+    "RedirectUrl": "92440198-dc0b-409e-b8d8-cb3dbf76a865|2d0d3c45d94c|20260902120723|250037149"
 }

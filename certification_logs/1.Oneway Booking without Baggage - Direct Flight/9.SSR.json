@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/1.Oneway%20Booking%20without%20Baggage%20-%20Direct%20Flight/9.SSR.json
 Method: POST
 Endpoint: /Flights/SSR
-Timestamp: 2026-09-01T10:06:13.000Z
+Timestamp: 2026-09-02T06:39:19.000Z
 Request Body:
 {
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
@@ -9,7 +9,7 @@ Request Body:
     "Source": "LV",
     "Trips": [
         {
-            "TUI": "92440198-dc0b-409e-b8d8-3271c835ec22|bbeaed3c2e8b|20260901153503",
+            "TUI": "92440198-dc0b-409e-b8d8-459583f84b91|4e0ec1d6e9e5|20260902120809",
             "Amount": 0,
             "OrderID": 1,
             "Index": ""
@@ -19,7 +19,7 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-3271c835ec22|bbeaed3c2e8b|20260901153503",
+    "TUI": "92440198-dc0b-409e-b8d8-459583f84b91|4e0ec1d6e9e5|20260902120809",
     "PaidSSR": true,
     "Trips": [
         {

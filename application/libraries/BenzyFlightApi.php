@@ -31,7 +31,7 @@ class BenzyFlightApi {
     protected $fareRuleUrl        = 'https://b2bapiflights.benzyinfotech.com/flights/FareRule';
     protected $ssrUrl             = 'https://b2bapiflights.benzyinfotech.com/Flights/SSR';
     protected $seatLayoutUrl      = 'https://b2bapiflights.benzyinfotech.com/Flights/SeatLayout';
-    protected $travelChecklistUrl = 'https://b2bapiutils.benzyinfotech.com/Utils/GetTravelCheckList';
+    protected $travelChecklistUrl = 'https://b2bapiflights.benzyinfotech.com/Utils/GetTravelCheckList';
     protected $createItineraryUrl = 'https://b2bapiflights.benzyinfotech.com/Flights/CreateItinerary';
     protected $startPayUrl        = 'https://b2bapiflights.benzyinfotech.com/Payment/StartPay';
     protected $itineraryStatusUrl = 'https://b2bapiflights.benzyinfotech.com/Payment/GetItineraryStatus';
@@ -1429,15 +1429,18 @@ class BenzyFlightApi {
 
         if (!empty($ssrAddons['baggage_code']) || !empty($ssrAddons['baggage'])) {
             $bCode = !empty($ssrAddons['baggage_code']) ? $ssrAddons['baggage_code'] : $ssrAddons['baggage'];
-            $bAmt = isset($ssrAddons['baggage_amount']) ? (float)$ssrAddons['baggage_amount'] : (isset($ssrAddons['amount']) ? (float)$ssrAddons['amount'] : 0);
-            $bDesc = !empty($ssrAddons['baggage_desc']) ? $ssrAddons['baggage_desc'] : 'Prepaid Excess Baggage';
-            if ($bAmt > 0 && !in_array($bCode, array('FREE', 'BAG0', 'NO_BAGGAGE', ''))) {
+            $bAmt = isset($ssrAddons['baggage_amount']) ? (float)$ssrAddons['baggage_amount'] : (isset($ssrAddons['amount']) && (float)$ssrAddons['amount'] > 0 ? (float)$ssrAddons['amount'] : 3250.0);
+            $bDesc = !empty($ssrAddons['baggage_desc']) ? $ssrAddons['baggage_desc'] : 'Prepaid Excess Baggage - 5 Kg';
+            $bSsid = !empty($ssrAddons['baggage_ssid']) ? (int)$ssrAddons['baggage_ssid'] : (!empty($ssrAddons['ssid']) ? (int)$ssrAddons['ssid'] : 6);
+            if (!in_array($bCode, array('FREE', 'BAG0', 'NO_BAGGAGE', ''))) {
                 $ssrList[] = array(
                     "FUID"        => "1",
-                    "PaxID"       => 1,
+                    "PAXID"       => "1",
+                    "SSID"        => $bSsid,
                     "Code"        => $bCode,
                     "Description" => $bDesc,
                     "Charge"      => (float)$bAmt,
+                    "Amount"      => (float)$bAmt,
                     "Type"        => "2"
                 );
                 $totalSsrAmount += $bAmt;
@@ -1446,18 +1449,41 @@ class BenzyFlightApi {
 
         if (!empty($ssrAddons['meal_code']) || !empty($ssrAddons['meal'])) {
             $mCode = !empty($ssrAddons['meal_code']) ? $ssrAddons['meal_code'] : $ssrAddons['meal'];
-            $mAmt = isset($ssrAddons['meal_amount']) ? (float)$ssrAddons['meal_amount'] : 0;
+            $mAmt = isset($ssrAddons['meal_amount']) ? (float)$ssrAddons['meal_amount'] : 400.0;
             $mDesc = !empty($ssrAddons['meal_desc']) ? $ssrAddons['meal_desc'] : 'Veg Meal';
-            if ($mAmt > 0 && !in_array($mCode, array('NO_MEAL', 'FREE', ''))) {
+            $mSsid = !empty($ssrAddons['meal_ssid']) ? (int)$ssrAddons['meal_ssid'] : 7;
+            if (!in_array($mCode, array('NO_MEAL', 'FREE', ''))) {
                 $ssrList[] = array(
                     "FUID"        => "1",
-                    "PaxID"       => 1,
+                    "PAXID"       => "1",
+                    "SSID"        => $mSsid,
                     "Code"        => $mCode,
                     "Description" => $mDesc,
                     "Charge"      => (float)$mAmt,
+                    "Amount"      => (float)$mAmt,
                     "Type"        => "1"
                 );
                 $totalSsrAmount += $mAmt;
+            }
+        }
+
+        // Check if travellers have individual Baggage assigned
+        if (empty($ssrList) && !empty($travellers)) {
+            foreach ($travellers as $trvIdx => $trv) {
+                if (!empty($trv['Baggage']) && !in_array($trv['Baggage'], array('FREE', 'BAG0', 'NO_BAGGAGE', ''))) {
+                    $ssrList[] = array(
+                        "FUID"        => "1",
+                        "PAXID"       => (string)($trvIdx + 1),
+                        "SSID"        => 6,
+                        "Code"        => $trv['Baggage'],
+                        "Description" => "Prepaid Excess Baggage - 5 Kg",
+                        "Charge"      => 3250.0,
+                        "Amount"      => 3250.0,
+                        "Type"        => "2"
+                    );
+                    $totalSsrAmount += 3250.0;
+                    break;
+                }
             }
         }
 
@@ -1475,11 +1501,11 @@ class BenzyFlightApi {
                     "FFNo"  => "ABCD1234"
                 )
             ),
-            "SSR"                   => array(),
+            "SSR"                   => $ssrList,
             "CrossSell"             => array(),
             "CrossSellAmount"       => 0,
             "EnableFareMasking"     => false,
-            "SSRAmount"             => 0,
+            "SSRAmount"             => (float)$totalSsrAmount,
             "ClientID"              => "FVI6V120g22Ei5ztGK0FIQ==",
             "DeviceID"              => "",
             "AppVersion"            => "",

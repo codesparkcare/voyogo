@@ -1,16 +1,16 @@
 URL: https://voyogos.com/certification_logs/7.Oneway%20Booking%20with%20Baggage%20-%20Connection%20Flight/8.GetTravelCheckList.json
 Method: POST
 Endpoint: /Utils/GetTravelCheckList
-Timestamp: 2026-08-31T14:19:33.000Z
+Timestamp: 2026-09-02T06:43:43.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-b954694155aa|1de3dcdda5bc|20260831194852",
+    "TUI": "92440198-dc0b-409e-b8d8-52498a41c1d6|d4e89eeda448|20260902121243",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-b954694155aa|1de3dcdda5bc|20260831194852",
+    "TUI": "92440198-dc0b-409e-b8d8-52498a41c1d6|d4e89eeda448|20260902121243",
     "Code": "200",
     "Msg": [
         "Success"

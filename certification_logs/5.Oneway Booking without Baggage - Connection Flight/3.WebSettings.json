@@ -1,11 +1,11 @@
 URL: https://voyogos.com/certification_logs/5.Oneway%20Booking%20without%20Baggage%20-%20Connection%20Flight/3.WebSettings.json
 Method: POST
 Endpoint: /Utils/WebSettings
-Timestamp: 2026-08-31T14:15:47.000Z
+Timestamp: 2026-09-02T06:48:59.000Z
 Request Body:
 {
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "TUI": "92440198-dc0b-409e-b8d8-2246225a832e|e8e0adf2b571|20260831194537"
+    "TUI": "92440198-dc0b-409e-b8d8-f347e84a5568|d7cfba314846|20260902121849"
 }
 
 Response Body:
@@ -14,7 +14,7 @@ Response Body:
     "Msg": [
         "Success"
     ],
-    "TUI": "92440198-dc0b-409e-b8d8-2246225a832e|e8e0adf2b571|20260831194537",
+    "TUI": "92440198-dc0b-409e-b8d8-f347e84a5568|d7cfba314846|20260902121849",
     "Settings": [
         {
             "Key": "DomLCCchannelcode",

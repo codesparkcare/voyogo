@@ -137,9 +137,9 @@
 							"raw": "{\n  \"TUI\": \"{{tui}}\",\n  \"ClientID\": \"{{clientID}}\"\n}"
 						},
 						"url": {
-							"raw": "{{baseUrlUtils}}/Utils/GetTravelCheckList",
+							"raw": "{{baseUrlFlights}}/Utils/GetTravelCheckList",
 							"host": [
-								"{{baseUrlUtils}}"
+								"{{baseUrlFlights}}"
 							],
 							"path": [
 								"Utils",

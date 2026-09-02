@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/6.Round%20Trip%20Booking%20without%20Baggage%20-%20Connection%20Flight/5.SSR.json
 Method: POST
 Endpoint: /Flights/SSR
-Timestamp: 2026-08-31T14:17:35.000Z
+Timestamp: 2026-09-02T06:40:33.000Z
 Request Body:
 {
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
@@ -9,7 +9,7 @@ Request Body:
     "Source": "LV",
     "Trips": [
         {
-            "TUI": "92440198-dc0b-409e-b8d8-9d2ef04f4cc0|1a5f095bf7fe|20260831194715",
+            "TUI": "92440198-dc0b-409e-b8d8-2fc54b57a8b8|bfdb60cb6781|20260902121003",
             "Amount": 0,
             "OrderID": 1,
             "Index": ""
@@ -19,7 +19,7 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-9d2ef04f4cc0|1a5f095bf7fe|20260831194715",
+    "TUI": "92440198-dc0b-409e-b8d8-2fc54b57a8b8|bfdb60cb6781|20260902121003",
     "PaidSSR": true,
     "Trips": [
         {

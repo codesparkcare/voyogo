@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/5.Oneway%20Booking%20without%20Baggage%20-%20Connection%20Flight/2.ExpressSearch.json
 Method: POST
 Endpoint: /flights/ExpressSearch
-Timestamp: 2026-08-31T14:15:37.000Z
+Timestamp: 2026-09-02T06:48:49.000Z
 Request Body:
 {
     "ADT": 2,
@@ -17,7 +17,7 @@ Request Body:
         {
             "From": "DEL",
             "To": "BLR",
-            "OnwardDate": "2026-09-07",
+            "OnwardDate": "2026-09-09",
             "ReturnDate": "",
             "TUI": ""
         }
@@ -34,7 +34,7 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-2246225a832e|e8e0adf2b571|20260831194537",
+    "TUI": "92440198-dc0b-409e-b8d8-f347e84a5568|d7cfba314846|20260902121849",
     "Code": "200",
     "Msg": [
         "Success"

@@ -1,10 +1,10 @@
 URL: https://voyogos.com/certification_logs/5.Oneway%20Booking%20without%20Baggage%20-%20Connection%20Flight/10.CreateItinerary.json
 Method: POST
 Endpoint: /Flights/CreateItinerary
-Timestamp: 2026-08-31T14:16:28.000Z
+Timestamp: 2026-09-02T06:38:43.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-2246225a832e|e8e0adf2b571|20260831194537",
+    "TUI": "92440198-dc0b-409e-b8d8-cb3dbf76a865|2d0d3c45d94c|20260902120723",
     "ServiceEnquiry": "",
     "ContactInfo": {
         "Title": "Mr",
@@ -53,7 +53,7 @@ Request Body:
             "Email": "mails@mail.com",
             "PMobileNo": "",
             "Age": 32,
-            "DOB": "1994-09-07",
+            "DOB": "1994-09-09",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -91,7 +91,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 29,
-            "DOB": "1997-09-07",
+            "DOB": "1997-09-09",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -99,7 +99,7 @@ Request Body:
             "Gender": "F",
             "PTC": "ADT",
             "Nationality": "IN",
-            "PassportNo": "54533221",
+            "PassportNo": "HM8888HJJ7K",
             "PLI": "",
             "PDOI": "",
             "PDOE": "",
@@ -129,7 +129,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 6,
-            "DOB": "2020-09-07",
+            "DOB": "2020-09-09",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -167,7 +167,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 4,
-            "DOB": "2022-09-07",
+            "DOB": "2022-09-09",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -175,7 +175,7 @@ Request Body:
             "Gender": "F",
             "PTC": "CHD",
             "Nationality": "IN",
-            "PassportNo": "54533221",
+            "PassportNo": "54533222",
             "PLI": "",
             "PDOI": "",
             "PDOE": "",
@@ -205,7 +205,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 1,
-            "DOB": "2025-07-07",
+            "DOB": "2025-07-09",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -243,7 +243,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 0,
-            "DOB": "2026-03-07",
+            "DOB": "2026-03-09",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -251,7 +251,7 @@ Request Body:
             "Gender": "F",
             "PTC": "INF",
             "Nationality": "IN",
-            "PassportNo": "5351321",
+            "PassportNo": "5351322",
             "PLI": "",
             "PDOI": "",
             "PDOE": "",
@@ -294,9 +294,9 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-2246225a832e|e8e0adf2b571|20260831194537",
+    "TUI": "92440198-dc0b-409e-b8d8-cb3dbf76a865|2d0d3c45d94c|20260902120723",
     "Mode": null,
-    "TransactionID": 250037974,
+    "TransactionID": 250037149,
     "ADT": 2,
     "CHD": 2,
     "INF": 2,
@@ -327,8 +327,8 @@ Response Body:
                                 "Airline": "IndiGo|IndiGo|IndiGo",
                                 "Aircraft": "Airbus",
                                 "FlightNo": "2134",
-                                "ArrivalTime": "2026-09-07T08:15:00",
-                                "DepartureTime": "2026-09-07T06:00:00",
+                                "ArrivalTime": "2026-09-09T08:15:00",
+                                "DepartureTime": "2026-09-09T06:00:00",
                                 "ArrivalCode": "BOM",
                                 "DepartureCode": "DEL",
                                 "ArrAirportName": "Chhatrapati Shivaji |Mumbai",

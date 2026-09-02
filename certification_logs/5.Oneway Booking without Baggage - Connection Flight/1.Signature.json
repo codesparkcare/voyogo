@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/5.Oneway%20Booking%20without%20Baggage%20-%20Connection%20Flight/1.Signature.json
 Method: POST
 Endpoint: /Utils/Signature
-Timestamp: 2026-08-31T14:15:32.000Z
+Timestamp: 2026-09-02T06:48:39.000Z
 Request Body:
 {
     "MerchantID": "300",
@@ -14,10 +14,10 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "af80de34-fccb-4c28-9365-85e95db03912|20260831194532",
-    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZklxWmVCUkZIUlNTOFFRWE1ybk8vVDhFcmt6UnMyYzk3cnloS01sWXc3NitRPT0iLCJwd2QiOiJMMkV0NEcvWHE0bExYQUd4Q3M2REh3PT0iLCJhZ2VudENvZGUiOiIvS2ZkWXdlc3FQdz0iLCJjbGllbnRJZCI6IjJmelhFa014VkRVPSIsIm5iZiI61788185732LCJleHAiOiI1789049732\"}.7b2381eb6c3a30b9dd4ac708966dba23",
+    "TUI": "af80de34-fccb-4c28-9365-f2c90525025e|20260902121839",
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZklxWmVCUkZIUlNTOFFRWE1ybk8vVDhFcmt6UnMyYzk3cnloS01sWXc3NitRPT0iLCJwd2QiOiJMMkV0NEcvWHE0bExYQUd4Q3M2REh3PT0iLCJhZ2VudENvZGUiOiIvS2ZkWXdlc3FQdz0iLCJjbGllbnRJZCI6IjJmelhFa014VkRVPSIsIm5iZiI61788331719LCJleHAiOiI1789195719\"}.f3d6e1328f812626c55dd3b6729ccd97",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "LastLoginDate": "8/31/2026 7:45:32 PM",
+    "LastLoginDate": "9/2/2026 12:18:39 PM",
     "Password": "L2Et4G/Xq4lLXAGxCs6DHw==",
     "loginAttempts": "0",
     "Code": "200",

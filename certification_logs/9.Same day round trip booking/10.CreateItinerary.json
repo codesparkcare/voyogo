@@ -1,10 +1,10 @@
 URL: https://voyogos.com/certification_logs/9.Same%20day%20round%20trip%20booking/10.CreateItinerary.json
 Method: POST
 Endpoint: /Flights/CreateItinerary
-Timestamp: 2026-08-31T14:23:00.000Z
+Timestamp: 2026-09-01T10:27:43.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-ab0ec63c6cec|0bc56b28aa53|20260831195209",
+    "TUI": "92440198-dc0b-409e-b8d8-9ff7aeb774ab|c02bfcf6078f|20260901155623",
     "ServiceEnquiry": "",
     "ContactInfo": {
         "Title": "Mr",
@@ -53,7 +53,7 @@ Request Body:
             "Email": "mails@mail.com",
             "PMobileNo": "",
             "Age": 32,
-            "DOB": "1994-09-07",
+            "DOB": "1994-09-08",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -91,7 +91,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 29,
-            "DOB": "1997-09-07",
+            "DOB": "1997-09-08",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -129,7 +129,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 6,
-            "DOB": "2020-09-07",
+            "DOB": "2020-09-08",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -167,7 +167,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 4,
-            "DOB": "2022-09-07",
+            "DOB": "2022-09-08",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -205,7 +205,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 1,
-            "DOB": "2025-07-07",
+            "DOB": "2025-07-08",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -243,7 +243,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 0,
-            "DOB": "2026-03-07",
+            "DOB": "2026-03-08",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -294,9 +294,9 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-ab0ec63c6cec|0bc56b28aa53|20260831195209",
+    "TUI": "92440198-dc0b-409e-b8d8-9ff7aeb774ab|c02bfcf6078f|20260901155623",
     "Mode": null,
-    "TransactionID": 250037463,
+    "TransactionID": 250037795,
     "ADT": 2,
     "CHD": 2,
     "INF": 2,
@@ -327,8 +327,8 @@ Response Body:
                                 "Airline": "IndiGo|IndiGo|IndiGo",
                                 "Aircraft": "Airbus",
                                 "FlightNo": "2134",
-                                "ArrivalTime": "2026-09-07T08:15:00",
-                                "DepartureTime": "2026-09-07T06:00:00",
+                                "ArrivalTime": "2026-09-08T08:15:00",
+                                "DepartureTime": "2026-09-08T06:00:00",
                                 "ArrivalCode": "BOM",
                                 "DepartureCode": "DEL",
                                 "ArrAirportName": "Chhatrapati Shivaji |Mumbai",

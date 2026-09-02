@@ -1,10 +1,10 @@
 URL: https://voyogos.com/certification_logs/1.Oneway%20Booking%20without%20Baggage%20-%20Direct%20Flight/10.CreateItinerary.json
 Method: POST
 Endpoint: /Flights/CreateItinerary
-Timestamp: 2026-09-01T10:06:23.000Z
+Timestamp: 2026-09-02T06:39:29.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-3271c835ec22|bbeaed3c2e8b|20260901153503",
+    "TUI": "92440198-dc0b-409e-b8d8-459583f84b91|4e0ec1d6e9e5|20260902120809",
     "ServiceEnquiry": "",
     "ContactInfo": {
         "Title": "Mr",
@@ -53,7 +53,7 @@ Request Body:
             "Email": "mails@mail.com",
             "PMobileNo": "",
             "Age": 32,
-            "DOB": "1994-09-08",
+            "DOB": "1994-09-09",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -91,7 +91,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 29,
-            "DOB": "1997-09-08",
+            "DOB": "1997-09-09",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -99,7 +99,7 @@ Request Body:
             "Gender": "F",
             "PTC": "ADT",
             "Nationality": "IN",
-            "PassportNo": "54533221",
+            "PassportNo": "HM8888HJJ7K",
             "PLI": "",
             "PDOI": "",
             "PDOE": "",
@@ -129,7 +129,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 6,
-            "DOB": "2020-09-08",
+            "DOB": "2020-09-09",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -167,7 +167,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 4,
-            "DOB": "2022-09-08",
+            "DOB": "2022-09-09",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -175,7 +175,7 @@ Request Body:
             "Gender": "F",
             "PTC": "CHD",
             "Nationality": "IN",
-            "PassportNo": "54533221",
+            "PassportNo": "54533222",
             "PLI": "",
             "PDOI": "",
             "PDOE": "",
@@ -205,7 +205,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 1,
-            "DOB": "2025-07-08",
+            "DOB": "2025-07-09",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -243,7 +243,7 @@ Request Body:
             "Email": "soumya.s@benzyinfotech.com",
             "PMobileNo": "8921614723",
             "Age": 0,
-            "DOB": "2026-03-08",
+            "DOB": "2026-03-09",
             "DOBDay": "0",
             "DOBMonth": "0",
             "DOBYear": "0",
@@ -251,7 +251,7 @@ Request Body:
             "Gender": "F",
             "PTC": "INF",
             "Nationality": "IN",
-            "PassportNo": "5351321",
+            "PassportNo": "5351322",
             "PLI": "",
             "PDOI": "",
             "PDOE": "",
@@ -279,11 +279,22 @@ Request Body:
             "FFNo": "ABCD1234"
         }
     ],
-    "SSR": [],
+    "SSR": [
+        {
+            "FUID": "1",
+            "PAXID": "1",
+            "SSID": 6,
+            "Code": "XBPA",
+            "Description": "Prepaid Excess Baggage \u2013 5 Kg",
+            "Charge": 3250,
+            "Amount": 3250,
+            "Type": "2"
+        }
+    ],
     "CrossSell": [],
     "CrossSellAmount": 0,
     "EnableFareMasking": false,
-    "SSRAmount": 0,
+    "SSRAmount": 3250,
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
     "DeviceID": "",
     "AppVersion": "",
@@ -294,15 +305,15 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-3271c835ec22|bbeaed3c2e8b|20260901153503",
+    "TUI": "92440198-dc0b-409e-b8d8-459583f84b91|4e0ec1d6e9e5|20260902120809",
     "Mode": null,
-    "TransactionID": 250037732,
+    "TransactionID": 250037508,
     "ADT": 2,
     "CHD": 2,
     "INF": 2,
     "NetAmount": 5150,
     "AirlineNetFare": 3862.5,
-    "SSRAmount": 0,
+    "SSRAmount": 3250,
     "CrossSellAmount": 0,
     "GrossAmount": 5407.5,
     "Trips": [
@@ -327,8 +338,8 @@ Response Body:
                                 "Airline": "IndiGo|IndiGo|IndiGo",
                                 "Aircraft": "Airbus",
                                 "FlightNo": "2134",
-                                "ArrivalTime": "2026-09-08T08:15:00",
-                                "DepartureTime": "2026-09-08T06:00:00",
+                                "ArrivalTime": "2026-09-09T08:15:00",
+                                "DepartureTime": "2026-09-09T06:00:00",
                                 "ArrivalCode": "BOM",
                                 "DepartureCode": "DEL",
                                 "ArrAirportName": "Chhatrapati Shivaji |Mumbai",
