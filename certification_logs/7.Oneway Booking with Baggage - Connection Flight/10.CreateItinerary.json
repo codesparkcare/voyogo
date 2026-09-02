@@ -1,10 +1,10 @@
 URL: https://voyogos.com/certification_logs/7.Oneway%20Booking%20with%20Baggage%20-%20Connection%20Flight/10.CreateItinerary.json
 Method: POST
 Endpoint: /Flights/CreateItinerary
-Timestamp: 2026-09-02T06:44:03.000Z
+Timestamp: 2026-09-02T06:55:29.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-52498a41c1d6|d4e89eeda448|20260902121243",
+    "TUI": "92440198-dc0b-409e-b8d8-2d29e35a74dc|2224ad9fea61|20260902122409",
     "ServiceEnquiry": "",
     "ContactInfo": {
         "Title": "Mr",
@@ -305,9 +305,9 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-52498a41c1d6|d4e89eeda448|20260902121243",
+    "TUI": "92440198-dc0b-409e-b8d8-2d29e35a74dc|2224ad9fea61|20260902122409",
     "Mode": null,
-    "TransactionID": 250037434,
+    "TransactionID": 250037045,
     "ADT": 2,
     "CHD": 2,
     "INF": 2,

@@ -1,16 +1,16 @@
 URL: https://voyogos.com/certification_logs/7.Oneway%20Booking%20with%20Baggage%20-%20Connection%20Flight/4.GetExpSearch.json
 Method: POST
 Endpoint: /flights/GetExpSearch
-Timestamp: 2026-09-02T06:43:03.000Z
+Timestamp: 2026-09-02T06:54:29.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-52498a41c1d6|d4e89eeda448|20260902121243",
+    "TUI": "92440198-dc0b-409e-b8d8-2d29e35a74dc|2224ad9fea61|20260902122409",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-52498a41c1d6|d4e89eeda448|20260902121243",
+    "TUI": "92440198-dc0b-409e-b8d8-2d29e35a74dc|2224ad9fea61|20260902122409",
     "Completed": "False",
     "CeilingInfo": null,
     "CurrencyCode": "INR",

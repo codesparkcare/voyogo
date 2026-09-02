@@ -1,17 +1,17 @@
 URL: https://voyogos.com/certification_logs/7.Oneway%20Booking%20with%20Baggage%20-%20Connection%20Flight/12.GetItineraryStatus.json
 Method: POST
 Endpoint: /Payment/GetItineraryStatus
-Timestamp: 2026-09-02T06:44:23.000Z
+Timestamp: 2026-09-02T06:55:49.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-52498a41c1d6|d4e89eeda448|20260902121243",
-    "TransactionID": 250037434
+    "TUI": "92440198-dc0b-409e-b8d8-2d29e35a74dc|2224ad9fea61|20260902122409",
+    "TransactionID": 250037045
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-52498a41c1d6|d4e89eeda448|20260902121243",
-    "transactionID": 250037434,
+    "TUI": "92440198-dc0b-409e-b8d8-2d29e35a74dc|2224ad9fea61|20260902122409",
+    "transactionID": 250037045,
     "Code": "200",
     "Msg": [
         "Success"

@@ -1,11 +1,11 @@
 URL: https://voyogos.com/certification_logs/9.Same%20day%20round%20trip%20booking/3.WebSettings.json
 Method: POST
 Endpoint: /Utils/WebSettings
-Timestamp: 2026-09-02T06:49:23.000Z
+Timestamp: 2026-09-02T06:59:39.000Z
 Request Body:
 {
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "TUI": "92440198-dc0b-409e-b8d8-73956d7ca3a8|51e150203f2c|20260902121913"
+    "TUI": "92440198-dc0b-409e-b8d8-d722646effa3|bbc0c92f30bb|20260902122929"
 }
 
 Response Body:
@@ -14,7 +14,7 @@ Response Body:
     "Msg": [
         "Success"
     ],
-    "TUI": "92440198-dc0b-409e-b8d8-73956d7ca3a8|51e150203f2c|20260902121913",
+    "TUI": "92440198-dc0b-409e-b8d8-d722646effa3|bbc0c92f30bb|20260902122929",
     "Settings": [
         {
             "Key": "DomLCCchannelcode",

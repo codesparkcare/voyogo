@@ -1,10 +1,10 @@
 URL: https://voyogos.com/certification_logs/9.Same%20day%20round%20trip%20booking/10.CreateItinerary.json
 Method: POST
 Endpoint: /Flights/CreateItinerary
-Timestamp: 2026-09-02T06:50:33.000Z
+Timestamp: 2026-09-02T07:00:49.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-73956d7ca3a8|51e150203f2c|20260902121913",
+    "TUI": "92440198-dc0b-409e-b8d8-d722646effa3|bbc0c92f30bb|20260902122929",
     "ServiceEnquiry": "",
     "ContactInfo": {
         "Title": "Mr",
@@ -305,9 +305,9 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-73956d7ca3a8|51e150203f2c|20260902121913",
+    "TUI": "92440198-dc0b-409e-b8d8-d722646effa3|bbc0c92f30bb|20260902122929",
     "Mode": null,
-    "TransactionID": 250037928,
+    "TransactionID": 250037369,
     "ADT": 2,
     "CHD": 2,
     "INF": 2,

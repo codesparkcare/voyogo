@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/9.Same%20day%20round%20trip%20booking/5.SSR.json
 Method: POST
 Endpoint: /Flights/SSR
-Timestamp: 2026-09-02T06:49:43.000Z
+Timestamp: 2026-09-02T06:59:59.000Z
 Request Body:
 {
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
@@ -9,7 +9,7 @@ Request Body:
     "Source": "LV",
     "Trips": [
         {
-            "TUI": "92440198-dc0b-409e-b8d8-73956d7ca3a8|51e150203f2c|20260902121913",
+            "TUI": "92440198-dc0b-409e-b8d8-d722646effa3|bbc0c92f30bb|20260902122929",
             "Amount": 0,
             "OrderID": 1,
             "Index": ""
@@ -19,7 +19,7 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-73956d7ca3a8|51e150203f2c|20260902121913",
+    "TUI": "92440198-dc0b-409e-b8d8-d722646effa3|bbc0c92f30bb|20260902122929",
     "PaidSSR": true,
     "Trips": [
         {

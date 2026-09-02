@@ -1,22 +1,22 @@
 URL: https://voyogos.com/certification_logs/6.Round%20Trip%20Booking%20without%20Baggage%20-%20Connection%20Flight/16.RetrieveBooking.json
 Method: POST
 Endpoint: /Utils/RetrieveBooking
-Timestamp: 2026-09-02T06:42:23.000Z
+Timestamp: 2026-09-02T06:53:49.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-2fc54b57a8b8|bfdb60cb6781|20260902121003",
+    "TUI": "92440198-dc0b-409e-b8d8-1b831000cb63|175c7f8ba35c|20260902122129",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "ReferenceNumber": "250037108",
+    "ReferenceNumber": "250037324",
     "ReferenceType": "T",
     "ServiceType": "FLT"
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-2fc54b57a8b8|bfdb60cb6781|20260902121003",
-    "TransactionID": 250037108,
-    "PNR": "W8FB95",
-    "AirlinePNR": "W8FB95",
+    "TUI": "92440198-dc0b-409e-b8d8-1b831000cb63|175c7f8ba35c|20260902122129",
+    "TransactionID": 250037324,
+    "PNR": "W117D9",
+    "AirlinePNR": "W117D9",
     "NetAmount": 5154,
     "CumulativeNetAmount": 5154,
     "AirlineNetFare": 2904,
@@ -41,7 +41,7 @@ Response Body:
     "PaymentTransactionStatus": null,
     "Status": "TO0,TR0",
     "FareType": "N",
-    "BookingDate": "2026-09-02 12:12:23",
+    "BookingDate": "2026-09-02 12:23:49",
     "TripType": "RT",
     "Hold": false,
     "HoldDuration": 0,
@@ -77,7 +77,7 @@ Response Body:
                                 "Airline": "IndiGo|IndiGo|IndiGo",
                                 "AirCraft": "AIRBUS JET",
                                 "FBC": "USAV",
-                                "APNR": "W8FB95",
+                                "APNR": "W117D9",
                                 "CRSPNR": "CRSPNR123",
                                 "FlightNo": "2134",
                                 "ArrivalTime": "2026-09-09T08:15:00",
@@ -99,7 +99,7 @@ Response Body:
                                 "TicketInfo": [
                                     {
                                         "PaxID": 1226,
-                                        "TicketNo": "6E-TK-250037108",
+                                        "TicketNo": "6E-TK-250037324",
                                         "Status": "TO0,TR0"
                                     }
                                 ],
