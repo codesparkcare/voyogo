@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/6.Round%20Trip%20Booking%20without%20Baggage%20-%20Connection%20Flight/6.SmartPricer.json
 Method: POST
 Endpoint: /flights/SmartPricer
-Timestamp: 2026-09-02T06:40:43.000Z
+Timestamp: 2026-09-02T06:52:09.000Z
 Request Body:
 {
     "Trips": [
@@ -9,13 +9,13 @@ Request Body:
             "Amount": 5350,
             "Index": "6E|1",
             "OrderID": 1,
-            "TUI": "92440198-dc0b-409e-b8d8-2fc54b57a8b8|bfdb60cb6781|20260902121003"
+            "TUI": "92440198-dc0b-409e-b8d8-1b831000cb63|175c7f8ba35c|20260902122129"
         },
         {
             "Amount": 5350,
             "Index": "6E|1",
             "OrderID": 2,
-            "TUI": "92440198-dc0b-409e-b8d8-2fc54b57a8b8|bfdb60cb6781|20260902121003"
+            "TUI": "92440198-dc0b-409e-b8d8-1b831000cb63|175c7f8ba35c|20260902122129"
         }
     ],
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
@@ -27,7 +27,7 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-2fc54b57a8b8|bfdb60cb6781|20260902121003",
+    "TUI": "92440198-dc0b-409e-b8d8-1b831000cb63|175c7f8ba35c|20260902122129",
     "Code": "200",
     "Msg": [
         "Success"

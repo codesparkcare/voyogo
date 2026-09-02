@@ -1,10 +1,10 @@
 URL: https://voyogos.com/certification_logs/5.Oneway%20Booking%20without%20Baggage%20-%20Connection%20Flight/10.CreateItinerary.json
 Method: POST
 Endpoint: /Flights/CreateItinerary
-Timestamp: 2026-09-02T06:38:43.000Z
+Timestamp: 2026-09-02T06:50:09.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-cb3dbf76a865|2d0d3c45d94c|20260902120723",
+    "TUI": "92440198-dc0b-409e-b8d8-f347e84a5568|d7cfba314846|20260902121849",
     "ServiceEnquiry": "",
     "ContactInfo": {
         "Title": "Mr",
@@ -279,11 +279,22 @@ Request Body:
             "FFNo": "ABCD1234"
         }
     ],
-    "SSR": [],
+    "SSR": [
+        {
+            "FUID": "1",
+            "PAXID": "1",
+            "SSID": 6,
+            "Code": "XBPA",
+            "Description": "Prepaid Excess Baggage \u2013 5 Kg",
+            "Charge": 3250,
+            "Amount": 3250,
+            "Type": "2"
+        }
+    ],
     "CrossSell": [],
     "CrossSellAmount": 0,
     "EnableFareMasking": false,
-    "SSRAmount": 0,
+    "SSRAmount": 3250,
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
     "DeviceID": "",
     "AppVersion": "",
@@ -294,15 +305,15 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-cb3dbf76a865|2d0d3c45d94c|20260902120723",
+    "TUI": "92440198-dc0b-409e-b8d8-f347e84a5568|d7cfba314846|20260902121849",
     "Mode": null,
-    "TransactionID": 250037149,
+    "TransactionID": 250037614,
     "ADT": 2,
     "CHD": 2,
     "INF": 2,
     "NetAmount": 5150,
     "AirlineNetFare": 3862.5,
-    "SSRAmount": 0,
+    "SSRAmount": 3250,
     "CrossSellAmount": 0,
     "GrossAmount": 5407.5,
     "Trips": [

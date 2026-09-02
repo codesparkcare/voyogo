@@ -1,17 +1,17 @@
 URL: https://voyogos.com/certification_logs/9.Same%20day%20round%20trip%20booking/13.GetItineraryStatus.json
 Method: POST
 Endpoint: /Payment/GetItineraryStatus
-Timestamp: 2026-09-01T10:28:13.000Z
+Timestamp: 2026-09-02T06:51:03.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-9ff7aeb774ab|c02bfcf6078f|20260901155623",
-    "TransactionID": 250037795
+    "TUI": "92440198-dc0b-409e-b8d8-73956d7ca3a8|51e150203f2c|20260902121913",
+    "TransactionID": 250037928
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-9ff7aeb774ab|c02bfcf6078f|20260901155623",
-    "transactionID": 250037795,
+    "TUI": "92440198-dc0b-409e-b8d8-73956d7ca3a8|51e150203f2c|20260902121913",
+    "transactionID": 250037928,
     "Code": "200",
     "Msg": [
         "Success"

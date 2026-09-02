@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/5.Oneway%20Booking%20without%20Baggage%20-%20Connection%20Flight/6.SmartPricer.json
 Method: POST
 Endpoint: /flights/SmartPricer
-Timestamp: 2026-09-02T06:38:03.000Z
+Timestamp: 2026-09-02T06:49:29.000Z
 Request Body:
 {
     "Trips": [
@@ -9,7 +9,7 @@ Request Body:
             "Amount": 5350,
             "Index": "6E|1",
             "OrderID": 1,
-            "TUI": "92440198-dc0b-409e-b8d8-cb3dbf76a865|2d0d3c45d94c|20260902120723"
+            "TUI": "92440198-dc0b-409e-b8d8-f347e84a5568|d7cfba314846|20260902121849"
         }
     ],
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
@@ -21,7 +21,7 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-cb3dbf76a865|2d0d3c45d94c|20260902120723",
+    "TUI": "92440198-dc0b-409e-b8d8-f347e84a5568|d7cfba314846|20260902121849",
     "Code": "200",
     "Msg": [
         "Success"

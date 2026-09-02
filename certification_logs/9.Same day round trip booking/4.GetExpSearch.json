@@ -1,16 +1,16 @@
 URL: https://voyogos.com/certification_logs/9.Same%20day%20round%20trip%20booking/4.GetExpSearch.json
 Method: POST
 Endpoint: /flights/GetExpSearch
-Timestamp: 2026-09-02T06:49:01.000Z
+Timestamp: 2026-09-02T06:49:33.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-fe57a2eeee06|9a907f26c3e5|20260902121841",
+    "TUI": "92440198-dc0b-409e-b8d8-73956d7ca3a8|51e150203f2c|20260902121913",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-fe57a2eeee06|9a907f26c3e5|20260902121841",
+    "TUI": "92440198-dc0b-409e-b8d8-73956d7ca3a8|51e150203f2c|20260902121913",
     "Completed": "False",
     "CeilingInfo": null,
     "CurrencyCode": "INR",
