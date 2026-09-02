@@ -1423,16 +1423,44 @@ class BenzyFlightApi {
             $netAmount = isset($contact['NetAmount']) ? (float)$contact['NetAmount'] : (isset($contact['net_amount']) ? (float)$contact['net_amount'] : (isset($ssrAddons['net_amount']) ? (float)$ssrAddons['net_amount'] : (isset($contact['total_amount']) ? (float)$contact['total_amount'] : 5150.0)));
         }
 
+        // Baggage & Meal dictionary matching Benzy/6E SSR catalogue
+        $baggageMap = array(
+            'XBPE' => array('ssid' => 2, 'charge' => 2100.0, 'desc' => 'Prepaid Excess Baggage – 3 Kg'),
+            'XBPA' => array('ssid' => 6, 'charge' => 3250.0, 'desc' => 'Prepaid Excess Baggage – 5 Kg'),
+            'XBPB' => array('ssid' => 5, 'charge' => 6250.0, 'desc' => 'Prepaid Excess Baggage – 10 Kg'),
+            'XBPC' => array('ssid' => 4, 'charge' => 9400.0, 'desc' => 'Prepaid Excess Baggage – 15 Kg'),
+            'XBPJ' => array('ssid' => 1, 'charge' => 12000.0, 'desc' => 'Prepaid Excess Baggage - 20Kg'),
+            'XBPD' => array('ssid' => 3, 'charge' => 19500.0, 'desc' => 'Prepaid Excess Baggage – 30 Kg'),
+            'IXBA' => array('ssid' => 13, 'charge' => 5000.0, 'desc' => 'International Connections Baggage - 8kgs'),
+            'IXBB' => array('ssid' => 12, 'charge' => 9000.0, 'desc' => 'International Connections Baggage - 15kgs'),
+            'IXBC' => array('ssid' => 11, 'charge' => 18000.0, 'desc' => 'International Connections Baggage - 30kgs'),
+        );
+
+        $mealMap = array(
+            'VGML' => array('ssid' => 7, 'charge' => 400.0, 'desc' => 'Veg Meal (For Retail Fare)'),
+            'VCSW' => array('ssid' => 8, 'charge' => 400.0, 'desc' => '6E Eats choice of the day (veg) + beverage'),
+            'VBIR' => array('ssid' => 9, 'charge' => 400.0, 'desc' => 'VEG BIRYANI Combo'),
+            'AGSW' => array('ssid' => 17, 'charge' => 400.0, 'desc' => '#IndiaByIndiGo regional favourite (veg) + beverage'),
+            'PTSW' => array('ssid' => 10, 'charge' => 500.0, 'desc' => 'Paneer Tikka Sandwich Combo'),
+            'CJSW' => array('ssid' => 16, 'charge' => 500.0, 'desc' => 'Chicken Junglee Sandwich Combo'),
+            'FFWD' => array('ssid' => 14, 'charge' => 650.0, 'desc' => 'Priority Check-In'),
+            'CPML' => array('ssid' => 15, 'charge' => 650.0, 'desc' => 'Meal Code'),
+        );
+
         // Build SSR items for Baggage / Meal
         $ssrList = array();
         $totalSsrAmount = 0;
 
         if (!empty($ssrAddons['baggage_code']) || !empty($ssrAddons['baggage'])) {
-            $bCode = !empty($ssrAddons['baggage_code']) ? $ssrAddons['baggage_code'] : $ssrAddons['baggage'];
-            $bAmt = isset($ssrAddons['baggage_amount']) ? (float)$ssrAddons['baggage_amount'] : (isset($ssrAddons['amount']) && (float)$ssrAddons['amount'] > 0 ? (float)$ssrAddons['amount'] : 3250.0);
-            $bDesc = !empty($ssrAddons['baggage_desc']) ? $ssrAddons['baggage_desc'] : 'Prepaid Excess Baggage - 5 Kg';
-            $bSsid = !empty($ssrAddons['baggage_ssid']) ? (int)$ssrAddons['baggage_ssid'] : (!empty($ssrAddons['ssid']) ? (int)$ssrAddons['ssid'] : 6);
-            if (!in_array($bCode, array('FREE', 'BAG0', 'NO_BAGGAGE', ''))) {
+            $bCode = strtoupper(!empty($ssrAddons['baggage_code']) ? $ssrAddons['baggage_code'] : $ssrAddons['baggage']);
+            if (!in_array($bCode, array('FREE', 'BAG0', 'NO_BAGGAGE', 'NONE', ''))) {
+                $bInfo = isset($baggageMap[$bCode]) ? $baggageMap[$bCode] : null;
+                $bAmt = isset($ssrAddons['baggage_amount']) && (float)$ssrAddons['baggage_amount'] > 0 
+                        ? (float)$ssrAddons['baggage_amount'] 
+                        : ($bInfo ? $bInfo['charge'] : (isset($ssrAddons['amount']) ? (float)$ssrAddons['amount'] : 3250.0));
+                $bDesc = !empty($ssrAddons['baggage_desc']) ? $ssrAddons['baggage_desc'] : ($bInfo ? $bInfo['desc'] : 'Prepaid Excess Baggage');
+                $bSsid = !empty($ssrAddons['baggage_ssid']) ? (int)$ssrAddons['baggage_ssid'] : ($bInfo ? $bInfo['ssid'] : (!empty($ssrAddons['ssid']) ? (int)$ssrAddons['ssid'] : 6));
+
                 $ssrList[] = array(
                     "FUID"        => "1",
                     "PAXID"       => "1",
@@ -1448,11 +1476,15 @@ class BenzyFlightApi {
         }
 
         if (!empty($ssrAddons['meal_code']) || !empty($ssrAddons['meal'])) {
-            $mCode = !empty($ssrAddons['meal_code']) ? $ssrAddons['meal_code'] : $ssrAddons['meal'];
-            $mAmt = isset($ssrAddons['meal_amount']) ? (float)$ssrAddons['meal_amount'] : 400.0;
-            $mDesc = !empty($ssrAddons['meal_desc']) ? $ssrAddons['meal_desc'] : 'Veg Meal';
-            $mSsid = !empty($ssrAddons['meal_ssid']) ? (int)$ssrAddons['meal_ssid'] : 7;
-            if (!in_array($mCode, array('NO_MEAL', 'FREE', ''))) {
+            $mCode = strtoupper(!empty($ssrAddons['meal_code']) ? $ssrAddons['meal_code'] : $ssrAddons['meal']);
+            if (!in_array($mCode, array('NO_MEAL', 'FREE', 'NONE', ''))) {
+                $mInfo = isset($mealMap[$mCode]) ? $mealMap[$mCode] : null;
+                $mAmt = isset($ssrAddons['meal_amount']) && (float)$ssrAddons['meal_amount'] > 0 
+                        ? (float)$ssrAddons['meal_amount'] 
+                        : ($mInfo ? $mInfo['charge'] : 400.0);
+                $mDesc = !empty($ssrAddons['meal_desc']) ? $ssrAddons['meal_desc'] : ($mInfo ? $mInfo['desc'] : 'Veg Meal');
+                $mSsid = !empty($ssrAddons['meal_ssid']) ? (int)$ssrAddons['meal_ssid'] : ($mInfo ? $mInfo['ssid'] : 7);
+
                 $ssrList[] = array(
                     "FUID"        => "1",
                     "PAXID"       => "1",
@@ -1467,22 +1499,30 @@ class BenzyFlightApi {
             }
         }
 
-        // Check if travellers have individual Baggage assigned
+        // Check if travellers have individual Baggage assigned and not already added
         if (empty($ssrList) && !empty($travellers)) {
             foreach ($travellers as $trvIdx => $trv) {
-                if (!empty($trv['Baggage']) && !in_array($trv['Baggage'], array('FREE', 'BAG0', 'NO_BAGGAGE', ''))) {
-                    $ssrList[] = array(
-                        "FUID"        => "1",
-                        "PAXID"       => (string)($trvIdx + 1),
-                        "SSID"        => 6,
-                        "Code"        => $trv['Baggage'],
-                        "Description" => "Prepaid Excess Baggage - 5 Kg",
-                        "Charge"      => 3250.0,
-                        "Amount"      => 3250.0,
-                        "Type"        => "2"
-                    );
-                    $totalSsrAmount += 3250.0;
-                    break;
+                if (!empty($trv['Baggage'])) {
+                    $bCode = strtoupper($trv['Baggage']);
+                    if (!in_array($bCode, array('FREE', 'BAG0', 'NO_BAGGAGE', 'NONE', ''))) {
+                        $bInfo = isset($baggageMap[$bCode]) ? $baggageMap[$bCode] : null;
+                        $bAmt = $bInfo ? $bInfo['charge'] : 3250.0;
+                        $bSsid = $bInfo ? $bInfo['ssid'] : 6;
+                        $bDesc = $bInfo ? $bInfo['desc'] : 'Prepaid Excess Baggage';
+
+                        $ssrList[] = array(
+                            "FUID"        => "1",
+                            "PAXID"       => (string)($trvIdx + 1),
+                            "SSID"        => $bSsid,
+                            "Code"        => $bCode,
+                            "Description" => $bDesc,
+                            "Charge"      => (float)$bAmt,
+                            "Amount"      => (float)$bAmt,
+                            "Type"        => "2"
+                        );
+                        $totalSsrAmount += $bAmt;
+                        break;
+                    }
                 }
             }
         }
