@@ -86,6 +86,33 @@ CREATE TABLE IF NOT EXISTS `razorpay_settings` (
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `flight_api_settings` (
+  `id` INT PRIMARY KEY DEFAULT 1,
+  `environment` VARCHAR(20) DEFAULT 'live',
+  `live_client_id` VARCHAR(100) DEFAULT 'APISKYPLANETN',
+  `live_password` VARCHAR(255) DEFAULT 'SUB@908#54961',
+  `live_merchant_id` VARCHAR(50) DEFAULT '200',
+  `live_api_key` VARCHAR(255) DEFAULT 'kXAY9yHARK',
+  `live_browser_key` VARCHAR(255) DEFAULT '069ab7973ac12116ccc1802546ad52bf',
+  `live_agent_code` VARCHAR(50) DEFAULT ' ',
+  `live_utils_url` VARCHAR(255) DEFAULT 'https://apiutilsagents.akbartravelsonline.com',
+  `live_flight_url` VARCHAR(255) DEFAULT 'https://apiagents.akbartravelsonline.com',
+  `sandbox_client_id` VARCHAR(100) DEFAULT 'bitest',
+  `sandbox_password` VARCHAR(255) DEFAULT 'staging@1',
+  `sandbox_merchant_id` VARCHAR(50) DEFAULT '300',
+  `sandbox_api_key` VARCHAR(255) DEFAULT 'kXAY9yHARK',
+  `sandbox_browser_key` VARCHAR(255) DEFAULT 'ef20-925c-4489-bfeb-236c8b406f7e',
+  `sandbox_agent_code` VARCHAR(50) DEFAULT ' ',
+  `sandbox_utils_url` VARCHAR(255) DEFAULT 'https://b2bapiutils.benzyinfotech.com',
+  `sandbox_flight_url` VARCHAR(255) DEFAULT 'https://b2bapiflights.benzyinfotech.com',
+  `channel_id` VARCHAR(100) DEFAULT 'b2bIndiaDeals',
+  `is_enabled` TINYINT(1) DEFAULT 1,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT IGNORE INTO `flight_api_settings` (`id`, `environment`, `live_client_id`, `live_password`, `live_merchant_id`, `live_api_key`, `live_browser_key`, `live_agent_code`, `live_utils_url`, `live_flight_url`, `sandbox_client_id`, `sandbox_password`, `sandbox_merchant_id`, `sandbox_api_key`, `sandbox_browser_key`, `sandbox_agent_code`, `sandbox_utils_url`, `sandbox_flight_url`, `channel_id`, `is_enabled`)
+VALUES (1, 'live', 'APISKYPLANETN', 'SUB@908#54961', '200', 'kXAY9yHARK', '069ab7973ac12116ccc1802546ad52bf', ' ', 'https://apiutilsagents.akbartravelsonline.com', 'https://apiagents.akbartravelsonline.com', 'bitest', 'staging@1', '300', 'kXAY9yHARK', 'ef20-925c-4489-bfeb-236c8b406f7e', ' ', 'https://b2bapiutils.benzyinfotech.com', 'https://b2bapiflights.benzyinfotech.com', 'b2bIndiaDeals', 1);
+
 CREATE TABLE IF NOT EXISTS `api_logs` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
   `service_type` VARCHAR(50) NOT NULL,
