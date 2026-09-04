@@ -1,30 +1,13 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?php echo isset($title) ? $title : 'Voyogo - Luxury Cruise Packages & Ocean Voyages'; ?></title>
-  <meta name="description" content="Book luxury international cruise packages with Voyogo. Explore Singapore, Caribbean, Mediterranean, and Alaska cruises with exclusive cabin offers.">
-  
-  <!-- CSS Stylesheet -->
-  <link rel="stylesheet" href="<?php echo base_url('assets/css/style.css'); ?>">
-  
-  <!-- Google Fonts: Plus Jakarta Sans, Outfit, Poppins matching design typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-</head>
-<body>
 
   <!-- HERO BANNER SECTION WITH IMAGE SLIDER & CRUISE ENQUIRY FORM -->
   <section class="hero-section cruises-hero">
     <!-- Hero Background Slider Track using uploaded cruise images -->
     <div class="hero-slider">
-      <div class="slide active" style="background-image: url('<?php echo base_url('assets/images/holidayslide1.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide2.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide4.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide3.png'); ?>');"></div>
+      <div class="slide active" style="background-image: url('<?php echo base_url('assets/images/cruise_slider1.png'); ?>');"></div>
+      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/cruise_slider2.png'); ?>');"></div>
+      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/voyogo cruise 1.png'); ?>');"></div>
+      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/voyogo cruise 2.png'); ?>');"></div>
     </div>
 
     <!-- Navigation Controls -->
@@ -660,8 +643,8 @@
     </div>
   </div>
 
-  <!-- JS Dependencies -->
-  <script src="<?php echo base_url('assets/js/main.js'); ?>"></script>
+  <!-- Cruise Pages Script -->
+  <script src="<?php echo base_url('assets/js/pages_main.js'); ?>"></script>
 
   <script>
     function scrollToElement(id) {
@@ -669,5 +652,3 @@
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
   </script>
-</body>
-</html>

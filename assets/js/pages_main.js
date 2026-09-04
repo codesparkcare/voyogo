@@ -1,5 +1,5 @@
 /**
- * Voyogo Holidays - Main Interactivity Script
+ * Voyogo Holidays & Services - Main Interactivity Script
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,60 +7,71 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ==========================================
      1. HERO SLIDER LOGIC
      ========================================== */
-  const slides = document.querySelectorAll('.slide');
-  const dots = document.querySelectorAll('.dot');
-  const prevBtn = document.querySelector('.slider-arrow.prev');
-  const nextBtn = document.querySelector('.slider-arrow.next');
-  let currentSlide = 0;
-  let slideInterval;
+  const heroSlider = document.querySelector('.hero-slider');
+  if (heroSlider) {
+    const slides = heroSlider.querySelectorAll('.slide');
+    const heroSection = heroSlider.closest('.hero-section') || document.querySelector('.hero-section');
+    const dots = heroSection ? heroSection.querySelectorAll('.slider-dots .dot') : document.querySelectorAll('.slider-dots .dot');
+    const prevBtn = heroSection ? heroSection.querySelector('.slider-arrow.prev') : document.querySelector('.slider-arrow.prev');
+    const nextBtn = heroSection ? heroSection.querySelector('.slider-arrow.next') : document.querySelector('.slider-arrow.next');
+    let currentSlide = 0;
+    let slideInterval = null;
 
-  function showSlide(index) {
-    slides.forEach((slide, i) => {
-      slide.classList.toggle('active', i === index);
-    });
-    dots.forEach((dot, i) => {
-      dot.classList.toggle('active', i === index);
-    });
-    currentSlide = index;
-  }
-
-  function nextSlide() {
-    let next = (currentSlide + 1) % slides.length;
-    showSlide(next);
-  }
-
-  function prevSlide() {
-    let prev = (currentSlide - 1 + slides.length) % slides.length;
-    showSlide(prev);
-  }
-
-  function startAutoSlide() {
-    slideInterval = setInterval(nextSlide, 5000);
-  }
-
-  function stopAutoSlide() {
-    clearInterval(slideInterval);
-  }
-
-  if (slides.length > 0) {
-    if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); stopAutoSlide(); startAutoSlide(); });
-    if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); stopAutoSlide(); startAutoSlide(); });
-
-    dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => {
-        showSlide(i);
-        stopAutoSlide();
-        startAutoSlide();
+    function showSlide(index) {
+      if (!slides.length) return;
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
       });
-    });
-
-    const heroSection = document.querySelector('.hero-section');
-    if (heroSection) {
-      heroSection.addEventListener('mouseenter', stopAutoSlide);
-      heroSection.addEventListener('mouseleave', startAutoSlide);
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+      currentSlide = index;
     }
 
-    startAutoSlide();
+    function nextSlide() {
+      if (!slides.length) return;
+      let next = (currentSlide + 1) % slides.length;
+      showSlide(next);
+    }
+
+    function prevSlide() {
+      if (!slides.length) return;
+      let prev = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(prev);
+    }
+
+    function startAutoSlide() {
+      stopAutoSlide();
+      slideInterval = setInterval(nextSlide, 4000);
+    }
+
+    function stopAutoSlide() {
+      if (slideInterval) {
+        clearInterval(slideInterval);
+        slideInterval = null;
+      }
+    }
+
+    if (slides.length > 0) {
+      if (nextBtn) nextBtn.addEventListener('click', (e) => { e.preventDefault(); nextSlide(); startAutoSlide(); });
+      if (prevBtn) prevBtn.addEventListener('click', (e) => { e.preventDefault(); prevSlide(); startAutoSlide(); });
+
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          showSlide(i);
+          startAutoSlide();
+        });
+      });
+
+      if (heroSection) {
+        heroSection.addEventListener('mouseenter', stopAutoSlide);
+        heroSection.addEventListener('mouseleave', startAutoSlide);
+      }
+
+      // Initial active state
+      showSlide(0);
+      startAutoSlide();
+    }
   }
 
   /* ==========================================

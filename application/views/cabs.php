@@ -1,26 +1,4 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?php echo isset($title) ? $title : 'Voyogo - Reliable Cab & Taxi Bookings'; ?></title>
-  <meta name="description"
-    content="Book outstation cabs, airport transfers, and local rental taxis at best rates with Voyogo. Clean cars, verified drivers, transparent pricing.">
-
-  <!-- CSS Stylesheet -->
-  <link rel="stylesheet" href="<?php echo base_url('assets/css/style.css'); ?>">
-
-  <!-- Google Fonts: Plus Jakarta Sans, Outfit, Poppins matching design typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Poppins:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
-</head>
-
-<body>
 
   <!-- HERO BANNER SECTION WITH IMAGE SLIDER & CAB ENQUIRY FORM -->
   <section class="hero-section cabs-hero">
@@ -662,6 +640,5 @@
       }
     }
   </script>
-</body>
-
-</html>
+  <!-- Cab Pages Script -->
+  <script src="<?php echo base_url('assets/js/pages_main.js'); ?>"></script>

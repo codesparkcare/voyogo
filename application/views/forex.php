@@ -1,39 +1,13 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?php echo isset($title) ? $title : 'Voyogo - Currency Forex Exchange & Multi-Currency Cards'; ?></title>
-  <meta name="description"
-    content="Buy, sell, or reload foreign currency notes and multi-currency forex cards at live market rates with Voyogo.">
-
-  <!-- CSS Stylesheet -->
-  <link rel="stylesheet" href="<?php echo base_url('assets/css/style.css'); ?>">
-
-  <!-- Google Fonts: Plus Jakarta Sans, Outfit, Poppins matching design typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Poppins:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
-</head>
-
-<body>
 
   <!-- HERO BANNER SECTION WITH IMAGE SLIDER & FOREX BUY/SELL FORM -->
   <section class="hero-section forex-hero">
     <!-- Hero Background Slider Track -->
     <div class="hero-slider">
-      <div class="slide active"
-        style="background-image: url('<?php echo base_url('assets/images/holidayslide1.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide2.png'); ?>');">
-      </div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide4.png'); ?>');">
-      </div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide3.png'); ?>');">
-      </div>
+      <div class="slide active" style="background-image: url('<?php echo base_url('assets/images/currency-card-exchange.png'); ?>');"></div>
+      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide1.png'); ?>');"></div>
+      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide2.png'); ?>');"></div>
+      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide3.png'); ?>');"></div>
     </div>
 
     <!-- Navigation Controls -->
@@ -632,6 +606,5 @@
       }
     }
   </script>
-</body>
-
-</html>
+  <!-- Forex Pages Script -->
+  <script src="<?php echo base_url('assets/js/pages_main.js'); ?>"></script>
