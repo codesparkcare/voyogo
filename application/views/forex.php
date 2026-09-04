@@ -4,9 +4,9 @@
   <section class="hero-section forex-hero">
     <!-- Hero Background Slider Track -->
     <div class="hero-slider">
-      <div class="slide active" style="background-image: url('<?php echo base_url('assets/images/currency-card-exchange.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide1.png'); ?>');"></div>
+      <div class="slide active" style="background-image: url('<?php echo base_url('assets/images/holidayslide1.png'); ?>');"></div>
       <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide2.png'); ?>');"></div>
+      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide4.png'); ?>');"></div>
       <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide3.png'); ?>');"></div>
     </div>
 
