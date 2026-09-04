@@ -1557,6 +1557,12 @@ class BenzyFlightApi {
         $res = $this->callApi($this->createItineraryUrl, $payload, $token, 'POST', '/Flights/CreateItinerary');
 
         if (!empty($res['data'])) {
+            // Check if Benzy returned code 6688 (Duplicate Passenger Warning) - Retry with ConfirmDuplicateBooking: true
+            if (isset($res['data']['Code']) && (string)$res['data']['Code'] === '6688') {
+                $payload['ConfirmDuplicateBooking'] = true;
+                $res = $this->callApi($this->createItineraryUrl, $payload, $token, 'POST', '/Flights/CreateItinerary');
+            }
+
             $liveTxnId = 0;
             if (!empty($res['data']['TransactionID'])) {
                 $liveTxnId = (int)$res['data']['TransactionID'];
