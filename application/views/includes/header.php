@@ -17,6 +17,11 @@
     
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="<?php echo function_exists('base_url') ? base_url('assets/css/style.css?v=' . time()) : '/assets/css/style.css?v=' . time(); ?>">
+    
+    <?php if (isset($active_page) && in_array($active_page, array('holidays', 'visa', 'forex', 'cruises', 'cabs', 'buses'))): ?>
+    <!-- Pages Stylesheet -->
+    <link rel="stylesheet" href="<?php echo function_exists('base_url') ? base_url('assets/css/pages_style.css') : '/assets/css/pages_style.css'; ?>">
+    <?php endif; ?>
 </head>
 <body>
 
@@ -77,27 +82,33 @@
                         </a>
                     </div>
                     <div class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="<?php echo function_exists('site_url') ? site_url('holidays') : '/index.php/holidays'; ?>" class="nav-link <?php echo ($current_page == 'holidays') ? 'active' : ''; ?>">
                             <i class="fa-solid fa-umbrella-beach"></i>
                             <span>Holidays</span>
                         </a>
                     </div>
                     <div class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="<?php echo function_exists('site_url') ? site_url('visa') : '/index.php/visa'; ?>" class="nav-link <?php echo ($current_page == 'visa') ? 'active' : ''; ?>">
                             <i class="fa-solid fa-passport"></i>
                             <span>Visas</span>
                         </a>
                     </div>
                     <div class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="<?php echo function_exists('site_url') ? site_url('forex') : '/index.php/forex'; ?>" class="nav-link <?php echo ($current_page == 'forex') ? 'active' : ''; ?>">
                             <i class="fa-solid fa-money-bill-transfer"></i>
                             <span>Forex</span>
                         </a>
                     </div>
                     <div class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fa-solid fa-bus"></i>
-                            <span>Buses</span>
+                        <a href="<?php echo function_exists('site_url') ? site_url('cruises') : '/index.php/cruises'; ?>" class="nav-link <?php echo ($current_page == 'cruises') ? 'active' : ''; ?>">
+                            <i class="fa-solid fa-ship"></i>
+                            <span>Cruises</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="<?php echo function_exists('site_url') ? site_url('cabs') : '/index.php/cabs'; ?>" class="nav-link <?php echo ($current_page == 'cabs') ? 'active' : ''; ?>">
+                            <i class="fa-solid fa-taxi"></i>
+                            <span>Cabs</span>
                         </a>
                     </div>
                 </nav>

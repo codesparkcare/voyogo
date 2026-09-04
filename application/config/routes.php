@@ -21,6 +21,13 @@ $route['hotels/review'] = 'welcome/hotel_review';
 $route['hotels/process_payment'] = 'welcome/process_hotel_payment';
 $route['hotels/confirmation/(:any)'] = 'welcome/hotel_confirmation/$1';
 
+/* Voyogo Pages & Services Routes */
+$route['holidays'] = 'holidays';
+$route['visa']     = 'visa';
+$route['forex']    = 'forex';
+$route['cruises']  = 'cruises';
+$route['cabs']     = 'cabs';
+
 /* Voyogo Super Admin Routes */
 $route['admin'] = 'admin/index';
 $route['admin/login'] = 'admin/login';
