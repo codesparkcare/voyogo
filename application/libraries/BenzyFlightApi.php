@@ -38,14 +38,14 @@ class BenzyFlightApi {
     protected $retrieveBookingUrl = 'https://b2bapiflights.benzyinfotech.com/Utils/RetrieveBooking';
     protected $cancelUrl          = 'https://b2bapiflights.benzyinfotech.com/Flights/Cancel';
 
-    // API Credentials
+    // API Credentials (Defaults, dynamically overridden by database settings)
     protected $credentials = array(
-        "MerchantID" => "300",
+        "MerchantID" => "200",
         "ApiKey"     => "kXAY9yHARK",
-        "ClientID"   => "bitest",
-        "Password"   => "staging@1",
-        "AgentCode"  => "",
-        "BrowserKey" => "ef20-925c-4489-bfeb-236c8b406f7e"
+        "ClientID"   => "APISKYPLANETN",
+        "Password"   => "SUB@908#54961",
+        "AgentCode"  => " ",
+        "BrowserKey" => "069ab7973ac12116ccc1802546ad52bf"
     );
 
     protected $channelId = "b2bIndiaDeals";
@@ -54,6 +54,73 @@ class BenzyFlightApi {
 
     public function __construct() {
         $this->CI =& get_instance();
+        $this->loadSettings();
+    }
+
+    /**
+     * Load Dynamic Flight API Settings from Database (Live / Sandbox)
+     */
+    public function loadSettings() {
+        try {
+            if (!empty($this->CI)) {
+                if (!isset($this->CI->Admin_model)) {
+                    $this->CI->load->model('Admin_model');
+                }
+                if (isset($this->CI->Admin_model) && method_exists($this->CI->Admin_model, 'get_flight_api_settings')) {
+                    $settings = $this->CI->Admin_model->get_flight_api_settings();
+                    if (!empty($settings)) {
+                        $env = $settings['environment'] ?? 'live';
+                        if ($env === 'live') {
+                            $this->credentials = array(
+                                "MerchantID" => $settings['live_merchant_id'] ?? '200',
+                                "ApiKey"     => $settings['live_api_key'] ?? 'kXAY9yHARK',
+                                "ClientID"   => $settings['live_client_id'] ?? 'APISKYPLANETN',
+                                "Password"   => $settings['live_password'] ?? 'SUB@908#54961',
+                                "AgentCode"  => $settings['live_agent_code'] ?? ' ',
+                                "BrowserKey" => $settings['live_browser_key'] ?? '069ab7973ac12116ccc1802546ad52bf'
+                            );
+                            $utilsBase  = rtrim($settings['live_utils_url'] ?? 'https://apiutilsagents.akbartravelsonline.com', '/');
+                            $flightBase = rtrim($settings['live_flight_url'] ?? 'https://apiagents.akbartravelsonline.com', '/');
+                        } else {
+                            $this->credentials = array(
+                                "MerchantID" => $settings['sandbox_merchant_id'] ?? '300',
+                                "ApiKey"     => $settings['sandbox_api_key'] ?? 'kXAY9yHARK',
+                                "ClientID"   => $settings['sandbox_client_id'] ?? 'bitest',
+                                "Password"   => $settings['sandbox_password'] ?? 'staging@1',
+                                "AgentCode"  => $settings['sandbox_agent_code'] ?? ' ',
+                                "BrowserKey" => $settings['sandbox_browser_key'] ?? 'ef20-925c-4489-bfeb-236c8b406f7e'
+                            );
+                            $utilsBase  = rtrim($settings['sandbox_utils_url'] ?? 'https://b2bapiutils.benzyinfotech.com', '/');
+                            $flightBase = rtrim($settings['sandbox_flight_url'] ?? 'https://b2bapiflights.benzyinfotech.com', '/');
+                        }
+
+                        $this->signatureUrl       = $utilsBase . '/Utils/Signature';
+                        $this->webSettingsUrl     = $utilsBase . '/Utils/WebSettings';
+                        $this->retrieveBookingUrl = $utilsBase . '/Utils/RetrieveBooking';
+                        
+                        $this->expressSearchUrl   = $flightBase . '/flights/ExpressSearch';
+                        $this->getExpSearchUrl    = $flightBase . '/flights/GetExpSearch';
+                        $this->smartPricerUrl     = $flightBase . '/flights/SmartPricer';
+                        $this->getSPricerUrl      = $flightBase . '/Flights/GetSPricer';
+                        $this->flightInfoUrl      = $flightBase . '/Flights/FlightInfo';
+                        $this->fareRuleUrl        = $flightBase . '/flights/FareRule';
+                        $this->ssrUrl             = $flightBase . '/Flights/SSR';
+                        $this->seatLayoutUrl      = $flightBase . '/Flights/SeatLayout';
+                        $this->travelChecklistUrl = $flightBase . '/Utils/GetTravelCheckList';
+                        $this->createItineraryUrl = $flightBase . '/Flights/CreateItinerary';
+                        $this->startPayUrl        = $flightBase . '/Payment/StartPay';
+                        $this->itineraryStatusUrl = $flightBase . '/Payment/GetItineraryStatus';
+                        $this->cancelUrl          = $flightBase . '/Flights/Cancel';
+
+                        if (!empty($settings['channel_id'])) {
+                            $this->channelId = $settings['channel_id'];
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // Fail gracefully to static properties
+        }
     }
 
     protected static $cachedBearerToken = null;

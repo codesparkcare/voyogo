@@ -304,6 +304,127 @@ class Admin extends CI_Controller {
     }
 
     /**
+     * Akbar / Benzy Flight API Settings Management
+     */
+    public function flight_api_settings()
+    {
+        $this->_check_login();
+
+        if ($this->input->post('action') === 'save') {
+            $saveData = array(
+                'environment'         => $this->input->post('environment') ?: 'live',
+                'live_client_id'      => trim($this->input->post('live_client_id')),
+                'live_password'       => trim($this->input->post('live_password')),
+                'live_merchant_id'    => trim($this->input->post('live_merchant_id')),
+                'live_api_key'        => trim($this->input->post('live_api_key')),
+                'live_browser_key'    => trim($this->input->post('live_browser_key')),
+                'live_agent_code'     => trim($this->input->post('live_agent_code')),
+                'live_utils_url'      => trim($this->input->post('live_utils_url')),
+                'live_flight_url'     => trim($this->input->post('live_flight_url')),
+                'sandbox_client_id'   => trim($this->input->post('sandbox_client_id')),
+                'sandbox_password'    => trim($this->input->post('sandbox_password')),
+                'sandbox_merchant_id' => trim($this->input->post('sandbox_merchant_id')),
+                'sandbox_api_key'     => trim($this->input->post('sandbox_api_key')),
+                'sandbox_browser_key' => trim($this->input->post('sandbox_browser_key')),
+                'sandbox_agent_code'  => trim($this->input->post('sandbox_agent_code')),
+                'sandbox_utils_url'   => trim($this->input->post('sandbox_utils_url')),
+                'sandbox_flight_url'  => trim($this->input->post('sandbox_flight_url')),
+                'channel_id'          => trim($this->input->post('channel_id')) ?: 'b2bIndiaDeals',
+                'is_enabled'          => $this->input->post('is_enabled') ? 1 : 0
+            );
+
+            $this->Admin_model->save_flight_api_settings($saveData);
+
+            // Invalidate cached token on credential or environment change
+            $cacheFile = APPPATH . 'cache/benzy_token.txt';
+            if (file_exists($cacheFile)) {
+                @unlink($cacheFile);
+            }
+
+            $this->session->set_flashdata('success', 'Flight API settings updated successfully! Environment is now set to ' . strtoupper($saveData['environment']) . '.');
+            redirect('admin/flight_api_settings');
+        }
+
+        if ($this->input->post('action') === 'test_connection') {
+            $settings = $this->Admin_model->get_flight_api_settings();
+            $env = $settings['environment'];
+
+            $clientId   = ($env === 'live') ? $settings['live_client_id'] : $settings['sandbox_client_id'];
+            $password   = ($env === 'live') ? $settings['live_password'] : $settings['sandbox_password'];
+            $merchantId = ($env === 'live') ? $settings['live_merchant_id'] : $settings['sandbox_merchant_id'];
+            $apiKey     = ($env === 'live') ? $settings['live_api_key'] : $settings['sandbox_api_key'];
+            $browserKey = ($env === 'live') ? $settings['live_browser_key'] : $settings['sandbox_browser_key'];
+            $agentCode  = ($env === 'live') ? $settings['live_agent_code'] : $settings['sandbox_agent_code'];
+            $utilsUrl   = ($env === 'live') ? $settings['live_utils_url'] : $settings['sandbox_utils_url'];
+            $signatureUrl = rtrim($utilsUrl, '/') . '/Utils/Signature';
+
+            $payload = array(
+                "MerchantID" => $merchantId,
+                "ApiKey"     => $apiKey,
+                "ClientID"   => $clientId,
+                "Password"   => $password,
+                "AgentCode"  => $agentCode ?: " ",
+                "BrowserKey" => $browserKey
+            );
+
+            $startTime = microtime(true);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $signatureUrl);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+
+            $response = curl_exec($ch);
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curl_error = curl_error($ch);
+            curl_close($ch);
+            $durationMs = round((microtime(true) - $startTime) * 1000);
+
+            $this->load->model('Api_log_model');
+            $this->Api_log_model->log_request(
+                'AkbarFlight',
+                'SignatureTest',
+                $signatureUrl,
+                'POST',
+                $payload,
+                $response,
+                $http_code,
+                $durationMs,
+                $curl_error
+            );
+
+            $resArr = json_decode($response, true);
+            $tokenFound = !empty($resArr['Token']) ? $resArr['Token'] : (!empty($resArr['token']) ? $resArr['token'] : '');
+
+            if ($http_code === 200 && !empty($tokenFound)) {
+                $this->session->set_flashdata('success', 'Akbar/Benzy Connection Successful! Bearer Token generated successfully in ' . $durationMs . 'ms. [Token: ' . substr($tokenFound, 0, 15) . '...]');
+            } elseif ($http_code === 200) {
+                $msg = !empty($resArr['Msg'][0]) ? $resArr['Msg'][0] : 'Unexpected response structure';
+                $this->session->set_flashdata('error', 'Connected (HTTP 200), but token was not returned. Response: ' . $msg);
+            } elseif ($http_code === 403 || $http_code === 401) {
+                $this->session->set_flashdata('error', 'HTTP ' . $http_code . ' Access Denied. Please ensure your Server Static IP is whitelisted by Akbar / Benzy API Support.');
+            } elseif ($curl_error) {
+                $this->session->set_flashdata('error', 'Network Connection Error: ' . $curl_error);
+            } else {
+                $this->session->set_flashdata('error', 'Akbar API returned HTTP ' . $http_code . '. Response: ' . substr($response, 0, 200));
+            }
+            redirect('admin/flight_api_settings');
+        }
+
+        $data['settings'] = $this->Admin_model->get_flight_api_settings();
+        $data['server_ip'] = $_SERVER['SERVER_ADDR'] ?? gethostbyname(gethostname());
+        $data['active_menu'] = 'flight_api_settings';
+
+        $this->load->view('admin/layout/header', $data);
+        $this->load->view('admin/layout/sidebar', $data);
+        $this->load->view('admin/flight_api_settings', $data);
+        $this->load->view('admin/layout/footer', $data);
+    }
+
+    /**
      * API Request & Response Activity Logs Management
      */
     public function api_logs()
