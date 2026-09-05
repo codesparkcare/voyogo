@@ -77,7 +77,7 @@
             <label class="form-label fw-bold small text-secondary">Username</label>
             <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-user text-muted"></i></span>
-                <input type="text" name="username" class="form-control bg-light border-start-0" placeholder="admin" required value="admin">
+                <input type="text" name="username" class="form-control bg-light border-start-0" placeholder="Enter username" required value="">
             </div>
         </div>
 
@@ -85,7 +85,7 @@
             <label class="form-label fw-bold small text-secondary">Password</label>
             <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-key text-muted"></i></span>
-                <input type="password" name="password" class="form-control bg-light border-start-0" placeholder="admin123" required value="admin123">
+                <input type="password" name="password" class="form-control bg-light border-start-0" placeholder="Enter password" required value="">
             </div>
         </div>
 
