@@ -13,7 +13,7 @@ class Hotels extends CI_Controller {
         $this->load->library('session');
         $this->load->library('BenzyHotelApi');
         $this->load->model('Hotel_model');
-        $this->load->model('Razorpay_model');
+        $this->load->model('Admin_model');
     }
 
     /**
@@ -125,7 +125,7 @@ class Hotels extends CI_Controller {
             'grand_total'   => $grandTotal
         );
 
-        $data['razorpay_settings'] = $this->Razorpay_model->get_settings();
+        $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
         $data['page_title'] = "Review Booking: $hotel_name - Voyogo";
         $data['active_page'] = 'hotels';
 
