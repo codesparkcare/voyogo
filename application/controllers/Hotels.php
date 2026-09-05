@@ -32,11 +32,12 @@ class Hotels extends CI_Controller {
      * 2. Hotel Search Results Action
      */
     public function search() {
-        $city     = $this->input->post('city') ?: ($this->input->get('city') ?: 'Goa, India');
-        $checkin  = $this->input->post('checkin_date') ?: ($this->input->get('checkin') ?: date('Y-m-d', strtotime('+2 days')));
-        $checkout = $this->input->post('checkout_date') ?: ($this->input->get('checkout') ?: date('Y-m-d', strtotime('+5 days')));
-        $rooms    = (int)($this->input->post('rooms') ?: ($this->input->get('rooms') ?: 1));
-        $adults   = (int)($this->input->post('adults') ?: ($this->input->get('adults') ?: 2));
+        $rawCity  = $this->input->post('city') ?: ($this->input->get('city') ?: 'Tirunelveli');
+        $city     = trim(explode(',', $rawCity)[0]); // Clean city name without country
+        $checkin  = $this->input->post('checkin_date') ?: ($this->input->get('checkin') ?: date('Y-m-d', strtotime('+3 days')));
+        $checkout = $this->input->post('checkout_date') ?: ($this->input->get('checkout') ?: date('Y-m-d', strtotime('+7 days')));
+        $rooms    = (int)($this->input->post('rooms') ?: ($this->input->get('rooms') ?: 2));
+        $adults   = (int)($this->input->post('adults') ?: ($this->input->get('adults') ?: 4));
         $children = (int)($this->input->post('children') ?: ($this->input->get('children') ?: 0));
 
         $hotelResults = $this->benzyhotelapi->searchHotels($city, $checkin, $checkout, $rooms, $adults, $children);

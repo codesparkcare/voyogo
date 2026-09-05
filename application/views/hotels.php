@@ -392,28 +392,36 @@ $defaultNights   = 4;
             <form action="<?php echo site_url('hotels/search'); ?>" method="POST" id="akbarHotelForm" class="akbar-search-form">
                 
                 <!-- 1. Destination / Property -->
-                <div class="akbar-search-col" id="akbarDestCol" style="flex: 2.2;">
+                <div class="akbar-search-col" id="akbarDestCol" style="flex: 2.2; position: relative;">
                     <div class="akbar-col-label">
                         <span>ENTER YOUR DESTINATION OR PROPERTY</span>
                     </div>
-                    <div class="akbar-col-value" id="akbarDestDisplay">Enter City/Hotel/Area/building</div>
-                    <input type="hidden" name="city" id="akbarCityInput" value="Goa, India">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 4px;">
+                        <div>
+                            <div id="akbarDestCity" style="font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1.1;">Tirunelveli</div>
+                            <div id="akbarDestSub" style="font-size: 12px; color: #64748b; margin-top: 3px;">Tirunelveli</div>
+                        </div>
+                        <i class="fa-solid fa-crosshairs" style="color: #94a3b8; font-size: 16px; margin-right: 6px;"></i>
+                    </div>
+                    <input type="hidden" name="city" id="akbarCityInput" value="Tirunelveli">
 
                     <!-- Destination Autocomplete Dropdown -->
                     <div class="akbar-dropdown-panel" id="akbarDestDropdown" style="width: 360px; padding: 14px;" onclick="event.stopPropagation();">
                         <div style="position: relative; margin-bottom: 12px;">
                             <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 12px; color: #64748b; font-size: 13px;"></i>
-                            <input type="text" id="akbarDestSearchInput" placeholder="Type your destination (e.g. Goa, Mumbai, Dubai)..." style="width: 100%; padding: 10px 12px 10px 34px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none;">
+                            <input type="text" id="akbarDestSearchInput" placeholder="Type your destination (e.g. Tirunelveli, Goa, Mumbai)..." style="width: 100%; padding: 10px 12px 10px 34px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none;">
                         </div>
                         
                         <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 8px;">Popular Hotel Destinations</div>
                         <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;" id="akbarPopularPills">
-                            <span class="ak-pill" onclick="selectAkbarCity('Goa, India', 'Popular: Baga, Calangute, Panjim')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Goa</span>
-                            <span class="ak-pill" onclick="selectAkbarCity('Mumbai, India', 'Popular: Marine Drive, Juhu, Bandra')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Mumbai</span>
-                            <span class="ak-pill" onclick="selectAkbarCity('Delhi NCR, India', 'Popular: Connaught Place, Aerocity')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Delhi NCR</span>
-                            <span class="ak-pill" onclick="selectAkbarCity('Dubai, UAE', 'Popular: Downtown, Marina, Palm')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Dubai</span>
-                            <span class="ak-pill" onclick="selectAkbarCity('Jaipur, India', 'Popular: Pink City, Amer, Mansarovar')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Jaipur</span>
-                            <span class="ak-pill" onclick="selectAkbarCity('Maldives', 'Popular: Male, Maafushi, Overwater')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Maldives</span>
+                            <span class="ak-pill" onclick="selectAkbarCity('Tirunelveli', 'Tamil Nadu, India')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Tirunelveli</span>
+                            <span class="ak-pill" onclick="selectAkbarCity('Goa', 'Goa, India')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Goa</span>
+                            <span class="ak-pill" onclick="selectAkbarCity('Mumbai', 'Maharashtra, India')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Mumbai</span>
+                            <span class="ak-pill" onclick="selectAkbarCity('Delhi NCR', 'Delhi, India')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Delhi NCR</span>
+                            <span class="ak-pill" onclick="selectAkbarCity('Dubai', 'United Arab Emirates')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Dubai</span>
+                            <span class="ak-pill" onclick="selectAkbarCity('Madurai', 'Tamil Nadu, India')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Madurai</span>
+                            <span class="ak-pill" onclick="selectAkbarCity('Jaipur', 'Rajasthan, India')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Jaipur</span>
+                            <span class="ak-pill" onclick="selectAkbarCity('Maldives', 'South Asia')" style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #0d3470; cursor: pointer;">Maldives</span>
                         </div>
 
                         <div id="akbarDestList" style="max-height: 200px; overflow-y: auto; border: 1px solid #f1f5f9; border-radius: 6px;">
@@ -534,6 +542,20 @@ $defaultNights   = 4;
 
             </form>
 
+        </div>
+
+        <!-- You've Searched Recent Pill Strip (Matching Akbar Travels) -->
+        <div id="akbarRecentSearchesStrip" style="display: flex; align-items: center; gap: 12px; margin-top: 14px; flex-wrap: wrap;">
+            <span style="font-size: 12px; font-weight: 700; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">You've Searched</span>
+            <div onclick="selectAkbarCity('Dubai', 'United Arab Emirates')" style="background: rgba(255, 255, 255, 0.95); border-radius: 6px; padding: 6px 14px; font-size: 11px; color: #0f172a; cursor: pointer; display: flex; flex-direction: column; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+                <strong>Dubai, United Arab Emirates</strong>
+                <span style="color: #64748b; font-size: 10px;">08 Sep 26 - 12 Sep 26 | 4 Guests, 2 Rooms</span>
+            </div>
+            <div onclick="selectAkbarCity('Madurai', 'Tamil Nadu, India')" style="background: rgba(255, 255, 255, 0.95); border-radius: 6px; padding: 6px 14px; font-size: 11px; color: #0f172a; cursor: pointer; display: flex; flex-direction: column; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+                <strong>Madurai, Tamil Nadu, India</strong>
+                <span style="color: #64748b; font-size: 10px;">08 Sep 26 - 12 Sep 26 | 4 Guests, 2 Rooms</span>
+            </div>
+            <span style="font-size: 11px; font-weight: 700; color: #cbd5e1; cursor: pointer; text-decoration: underline;" onclick="document.getElementById('akbarRecentSearchesStrip').style.display='none';">Clear All</span>
         </div>
 
         <!-- Quick Secondary Services Strip (Academy, Umrah, Passport, Cargo, etc.) -->
@@ -752,32 +774,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 1. Destination Dropdown Logic
     var cities = [
-        { name: "Goa, India", sub: "Popular: Baga Beach, Calangute, Panjim, Candolim" },
-        { name: "Mumbai, India", sub: "Popular: Marine Drive, Juhu, Bandra, Andheri" },
-        { name: "Delhi NCR, India", sub: "Popular: Connaught Place, South Delhi, Aerocity" },
-        { name: "Dubai, UAE", sub: "Popular: Downtown, Dubai Marina, Palm Jumeirah" },
-        { name: "Jaipur, India", sub: "Popular: Pink City, Amer, Mansarovar, MI Road" },
-        { name: "Maldives", sub: "Popular: Male, Maafushi, Overwater Villas" },
-        { name: "Bengaluru, India", sub: "Popular: MG Road, Indiranagar, Whitefield" },
-        { name: "Bangkok, Thailand", sub: "Popular: Sukhumvit, Siam, Silom, Riverside" },
-        { name: "Singapore", sub: "Popular: Marina Bay, Orchard Road, Sentosa" },
-        { name: "Udaipur, India", sub: "Popular: Lake Pichola, Fatehsagar, City Palace" }
+        { city: "Tirunelveli", sub: "Tamil Nadu, India" },
+        { city: "Goa", sub: "Goa, India" },
+        { city: "Mumbai", sub: "Maharashtra, India" },
+        { city: "Delhi NCR", sub: "Delhi, India" },
+        { city: "Dubai", sub: "United Arab Emirates" },
+        { city: "Madurai", sub: "Tamil Nadu, India" },
+        { city: "Jaipur", sub: "Rajasthan, India" },
+        { city: "Chennai", sub: "Tamil Nadu, India" },
+        { city: "Bengaluru", sub: "Karnataka, India" },
+        { city: "Maldives", sub: "South Asia" },
+        { city: "Hyderabad", sub: "Telangana, India" },
+        { city: "Kochi", sub: "Kerala, India" },
+        { city: "Bangkok", sub: "Thailand" },
+        { city: "Singapore", sub: "Singapore" }
     ];
 
     function renderCities(filter) {
         var query = (filter || '').toLowerCase().trim();
         var html = '';
         var matches = cities.filter(function(c) {
-            return c.name.toLowerCase().indexOf(query) !== -1 || c.sub.toLowerCase().indexOf(query) !== -1;
+            return c.city.toLowerCase().indexOf(query) !== -1 || c.sub.toLowerCase().indexOf(query) !== -1;
         });
 
         if (matches.length === 0) {
             html = '<div style="padding: 12px; font-size: 13px; color: #64748b; text-align: center;">No destinations found matching "' + query + '"</div>';
         } else {
             matches.forEach(function(c) {
-                html += '<div onclick="selectAkbarCity(\'' + c.name + '\', \'' + c.sub + '\')" style="padding: 10px 14px; border-bottom: 1px solid #f8fafc; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.1s ease;" onmouseover="this.style.background=\'#f1f5f9\'" onmouseout="this.style.background=\'#fff\'">';
+                html += '<div onclick="selectAkbarCity(\'' + c.city + '\', \'' + c.sub + '\')" style="padding: 10px 14px; border-bottom: 1px solid #f8fafc; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.1s ease;" onmouseover="this.style.background=\'#f1f5f9\'" onmouseout="this.style.background=\'#fff\'">';
                 html += '<i class="fa-solid fa-hotel" style="color: #eb2027; font-size: 14px;"></i>';
-                html += '<div><div style="font-size: 14px; font-weight: 700; color: #0f172a;">' + c.name + '</div><div style="font-size: 11px; color: #64748b;">' + c.sub + '</div></div>';
+                html += '<div><div style="font-size: 14px; font-weight: 700; color: #0f172a;">' + c.city + '</div><div style="font-size: 11px; color: #64748b;">' + c.sub + '</div></div>';
                 html += '</div>';
             });
         }
@@ -787,8 +813,11 @@ document.addEventListener('DOMContentLoaded', function() {
     renderCities('');
 
     window.selectAkbarCity = function(cityName, sub) {
-        destDisplay.innerHTML = cityName;
-        destHiddenInp.value = cityName;
+        var destCityEl = document.getElementById('akbarDestCity');
+        var destSubEl  = document.getElementById('akbarDestSub');
+        if (destCityEl) destCityEl.textContent = cityName;
+        if (destSubEl) destSubEl.textContent = sub || cityName;
+        if (destHiddenInp) destHiddenInp.value = cityName;
         closeAkbarDropdowns();
     };
 
