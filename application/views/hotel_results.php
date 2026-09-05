@@ -1,12 +1,22 @@
+<?php
+$qCity     = $search_query['city'] ?? ($city ?? 'Goa, India');
+$qCheckin  = $search_query['checkin'] ?? ($checkin ?? date('Y-m-d', strtotime('+2 days')));
+$qCheckout = $search_query['checkout'] ?? ($checkout ?? date('Y-m-d', strtotime('+5 days')));
+$qNights   = isset($search_query['nights']) ? $search_query['nights'] : (isset($nights) ? $nights : max(1, round((strtotime($qCheckout) - strtotime($qCheckin)) / 86400)));
+$qRooms    = $search_query['rooms'] ?? ($rooms ?? 1);
+$qAdults   = $search_query['adults'] ?? ($adults ?? 2);
+$qChildren = $search_query['children'] ?? ($children ?? 0);
+$hotels    = isset($hotelResults['Hotels']) ? $hotelResults['Hotels'] : (is_array($hotelResults) ? $hotelResults : array());
+?>
 <div style="background-color: #f5f7fa; padding-bottom: 60px;">
     
     <!-- Top Search Summary Header -->
     <div style="background: linear-gradient(135deg, #09204b, #153e7e); color: #ffffff; padding: 24px 0;">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <h1 style="font-family: var(--font-heading); font-size: 24px; margin: 0; color: #ffffff;">Hotels in <?php echo htmlspecialchars($search_query['city']); ?></h1>
+                <h1 style="font-family: var(--font-heading); font-size: 24px; margin: 0; color: #ffffff;">Hotels in <?php echo htmlspecialchars($qCity); ?></h1>
                 <p style="font-size: 13px; color: #cbd5e1; margin: 4px 0 0 0;">
-                    <i class="fa-solid fa-calendar-days"></i> <?php echo date('d M Y', strtotime($search_query['checkin'])); ?> &rarr; <?php echo date('d M Y', strtotime($search_query['checkout'])); ?> (3 Nights) | 1 Room, 2 Guests
+                    <i class="fa-solid fa-calendar-days"></i> <?php echo date('d M Y', strtotime($qCheckin)); ?> &rarr; <?php echo date('d M Y', strtotime($qCheckout)); ?> (<?php echo $qNights; ?> Nights) | <?php echo $qRooms; ?> Room, <?php echo $qAdults + $qChildren; ?> Guests
                 </p>
             </div>
             <div>
@@ -125,7 +135,7 @@
                             <div style="text-align: right;">
                                 <div style="font-size: 12px; color: #64748b;">Starts From</div>
                                 <div style="font-size: 22px; font-weight: 800; color: #ef4444;">₹ <?php echo number_format($h['price_per_night']); ?> <small style="font-size: 12px; color: #64748b; font-weight: 400;">/night</small></div>
-                                <a href="<?php echo site_url('hotels/detail/' . $h['id'] . '?city=' . urlencode($search_query['city']) . '&checkin=' . $search_query['checkin'] . '&checkout=' . $search_query['checkout']); ?>" class="btn-search" style="padding: 8px 20px; font-size: 13px; text-decoration: none; display: inline-flex; margin-top: 6px; background: linear-gradient(135deg, #0d3470, #fa3a3a);">
+                                <a href="<?php echo site_url('hotels/detail/' . $h['id'] . '?city=' . urlencode($qCity) . '&checkin=' . $qCheckin . '&checkout=' . $qCheckout . '&rooms=' . $qRooms . '&adults=' . $qAdults . '&children=' . $qChildren); ?>" class="btn-search" style="padding: 8px 20px; font-size: 13px; text-decoration: none; display: inline-flex; margin-top: 6px; background: linear-gradient(135deg, #0d3470, #fa3a3a); border-radius: 6px; font-weight: 700; color: #fff;">
                                     VIEW ROOMS <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
                                 </a>
                             </div>

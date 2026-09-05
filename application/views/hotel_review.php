@@ -1,3 +1,15 @@
+<?php
+$bSummary = isset($booking_summary) ? $booking_summary : (isset($booking_data) ? $booking_data : array());
+$hotel_id = $bSummary['hotel_id'] ?? 'HTL_101';
+$hotel_name = $bSummary['hotel_name'] ?? 'Luxury Resort';
+$hotel_address = $bSummary['hotel_address'] ?? 'Goa, India';
+$hotel_image = $bSummary['hotel_image'] ?? 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80';
+$room_type = $bSummary['room_type'] ?? 'Deluxe Room';
+$checkin_date = $bSummary['checkin_date'] ?? ($bSummary['checkin'] ?? date('Y-m-d', strtotime('+2 days')));
+$checkout_date = $bSummary['checkout_date'] ?? ($bSummary['checkout'] ?? date('Y-m-d', strtotime('+5 days')));
+$nights = $bSummary['nights'] ?? max(1, round((strtotime($checkout_date) - strtotime($checkin_date)) / 86400));
+$total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
+?>
 <div style="background-color: #f5f7fa; padding: 30px 0 60px 0;">
     <div class="container">
         
@@ -20,13 +32,13 @@
             <div>
                 <!-- Hotel Summary Card -->
                 <div style="background: #ffffff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; display: flex; gap: 20px;">
-                    <img src="<?php echo htmlspecialchars($booking_summary['hotel_image']); ?>" alt="hotel" style="width: 140px; height: 110px; object-fit: cover; border-radius: 8px;">
+                    <img src="<?php echo htmlspecialchars($hotel_image); ?>" alt="hotel" style="width: 140px; height: 110px; object-fit: cover; border-radius: 8px;">
                     <div>
-                        <h3 style="margin: 0 0 6px 0; font-size: 18px; color: #0d3470;"><?php echo htmlspecialchars($booking_summary['hotel_name']); ?></h3>
-                        <p style="font-size: 13px; color: #64748b; margin: 0 0 8px 0;"><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> <?php echo htmlspecialchars($booking_summary['hotel_address']); ?></p>
-                        <div style="font-size: 14px; font-weight: 700; color: #16a34a;"><?php echo htmlspecialchars($booking_summary['room_type']); ?></div>
+                        <h3 style="margin: 0 0 6px 0; font-size: 18px; color: #0d3470;"><?php echo htmlspecialchars($hotel_name); ?></h3>
+                        <p style="font-size: 13px; color: #64748b; margin: 0 0 8px 0;"><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> <?php echo htmlspecialchars($hotel_address); ?></p>
+                        <div style="font-size: 14px; font-weight: 700; color: #16a34a;"><?php echo htmlspecialchars($room_type); ?></div>
                         <div style="font-size: 12px; color: #64748b; margin-top: 4px;">
-                            Check-In: <strong><?php echo date('D, d M Y', strtotime($booking_summary['checkin_date'])); ?></strong> &nbsp;|&nbsp; Check-Out: <strong><?php echo date('D, d M Y', strtotime($booking_summary['checkout_date'])); ?></strong> (<?php echo $booking_summary['nights']; ?> Nights)
+                            Check-In: <strong><?php echo date('D, d M Y', strtotime($checkin_date)); ?></strong> &nbsp;|&nbsp; Check-Out: <strong><?php echo date('D, d M Y', strtotime($checkout_date)); ?></strong> (<?php echo $nights; ?> Nights)
                         </div>
                     </div>
                 </div>
@@ -34,14 +46,14 @@
                 <!-- Main Guest Form -->
                 <form id="hotelBookingForm" action="<?php echo site_url('hotels/process_payment'); ?>" method="POST">
                     
-                    <input type="hidden" name="hotel_id" value="<?php echo htmlspecialchars($booking_summary['hotel_id']); ?>">
-                    <input type="hidden" name="hotel_name" value="<?php echo htmlspecialchars($booking_summary['hotel_name']); ?>">
-                    <input type="hidden" name="hotel_address" value="<?php echo htmlspecialchars($booking_summary['hotel_address']); ?>">
-                    <input type="hidden" name="hotel_image" value="<?php echo htmlspecialchars($booking_summary['hotel_image']); ?>">
-                    <input type="hidden" name="room_type" value="<?php echo htmlspecialchars($booking_summary['room_type']); ?>">
-                    <input type="hidden" name="checkin_date" value="<?php echo htmlspecialchars($booking_summary['checkin_date']); ?>">
-                    <input type="hidden" name="checkout_date" value="<?php echo htmlspecialchars($booking_summary['checkout_date']); ?>">
-                    <input type="hidden" name="total_amount" value="<?php echo htmlspecialchars($booking_summary['total_amount']); ?>">
+                    <input type="hidden" name="hotel_id" value="<?php echo htmlspecialchars($hotel_id); ?>">
+                    <input type="hidden" name="hotel_name" value="<?php echo htmlspecialchars($hotel_name); ?>">
+                    <input type="hidden" name="hotel_address" value="<?php echo htmlspecialchars($hotel_address); ?>">
+                    <input type="hidden" name="hotel_image" value="<?php echo htmlspecialchars($hotel_image); ?>">
+                    <input type="hidden" name="room_type" value="<?php echo htmlspecialchars($room_type); ?>">
+                    <input type="hidden" name="checkin_date" value="<?php echo htmlspecialchars($checkin_date); ?>">
+                    <input type="hidden" name="checkout_date" value="<?php echo htmlspecialchars($checkout_date); ?>">
+                    <input type="hidden" name="total_amount" value="<?php echo htmlspecialchars($total_amount); ?>">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
 
                     <!-- Primary Guest Card -->
@@ -80,7 +92,7 @@
                     <!-- Payment Action Button -->
                     <div style="text-align: right;">
                         <button type="button" id="payHotelRazorpayBtn" class="btn-search" style="padding: 14px 32px; font-size: 16px; background: linear-gradient(135deg, #09204b, #fa3a3a); border-radius: 8px; cursor: pointer;">
-                            <i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Pay ₹ <?php echo number_format($booking_summary['total_amount']); ?> & Confirm Voucher
+                            <i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Pay ₹ <?php echo number_format($total_amount); ?> & Confirm Voucher
                         </button>
                     </div>
 
@@ -95,8 +107,8 @@
                     </h3>
 
                     <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
-                        <span style="color: #64748b;">Room Charges (<?php echo $booking_summary['nights']; ?> Nights)</span>
-                        <strong style="color: #1e293b;">₹ <?php echo number_format($booking_summary['total_amount']); ?></strong>
+                        <span style="color: #64748b;">Room Charges (<?php echo $nights; ?> Nights)</span>
+                        <strong style="color: #1e293b;">₹ <?php echo number_format($total_amount); ?></strong>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
                         <span style="color: #64748b;">Hotel Taxes & Service Charges</span>
@@ -105,7 +117,7 @@
 
                     <div style="border-top: 2px dashed #cbd5e1; padding-top: 14px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 16px; font-weight: 800; color: #09204b;">Total Amount</span>
-                        <strong style="font-size: 22px; color: #ef4444;">₹ <?php echo number_format($booking_summary['total_amount']); ?></strong>
+                        <strong style="font-size: 22px; color: #ef4444;">₹ <?php echo number_format($total_amount); ?></strong>
                     </div>
 
                     <div style="background: #f8fafc; border-radius: 8px; padding: 12px; margin-top: 20px; font-size: 12px; color: #64748b;">
@@ -124,7 +136,7 @@
 document.getElementById('payHotelRazorpayBtn').addEventListener('click', function(e) {
     e.preventDefault();
 
-    var amountInPaise = <?php echo (int)($booking_summary['total_amount'] * 100); ?>;
+    var amountInPaise = <?php echo (int)($total_amount * 100); ?>;
     var guestName = document.querySelector('input[name="primary_guest_name"]').value;
     var guestEmail = document.querySelector('input[name="guest_email"]').value;
     var guestPhone = document.querySelector('input[name="guest_phone"]').value;
@@ -139,7 +151,7 @@ document.getElementById('payHotelRazorpayBtn').addEventListener('click', functio
         "amount": amountInPaise,
         "currency": "<?php echo !empty($razorpay_settings['currency']) ? htmlspecialchars($razorpay_settings['currency']) : 'INR'; ?>",
         "name": "<?php echo !empty($razorpay_settings['merchant_name']) ? htmlspecialchars($razorpay_settings['merchant_name']) : 'Voyogo Hotel Booking'; ?>",
-        "description": "Hotel Voucher - <?php echo htmlspecialchars($booking_summary['hotel_name']); ?>",
+        "description": "Hotel Voucher - <?php echo htmlspecialchars($hotel_name); ?>",
         "image": "<?php echo base_url('assets/images/logo.png'); ?>",
         "handler": function (response){
             showHotelProcessingModal("Payment Verified (HTTP 200 OK)! Generating your Official Hotel Voucher...");

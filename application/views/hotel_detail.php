@@ -1,3 +1,11 @@
+<?php
+$qCity     = isset($search_query['city']) ? $search_query['city'] : (isset($city) ? $city : 'Goa, India');
+$qCheckin  = isset($search_query['checkin']) ? $search_query['checkin'] : (isset($checkin) ? $checkin : date('Y-m-d', strtotime('+2 days')));
+$qCheckout = isset($search_query['checkout']) ? $search_query['checkout'] : (isset($checkout) ? $checkout : date('Y-m-d', strtotime('+5 days')));
+$qRooms    = isset($search_query['rooms']) ? $search_query['rooms'] : (isset($rooms) ? $rooms : 1);
+$qAdults   = isset($search_query['adults']) ? $search_query['adults'] : (isset($adults) ? $adults : 2);
+$qChildren = isset($search_query['children']) ? $search_query['children'] : (isset($children) ? $children : 0);
+?>
 <div style="background-color: #f5f7fa; padding-bottom: 60px;">
     
     <!-- Hero Detail Section -->
@@ -68,8 +76,12 @@
                             <input type="hidden" name="hotel_image" value="<?php echo htmlspecialchars($hotel['image']); ?>">
                             <input type="hidden" name="room_type" value="<?php echo htmlspecialchars($r['name']); ?>">
                             <input type="hidden" name="price" value="<?php echo htmlspecialchars($r['price']); ?>">
-                            <input type="hidden" name="checkin_date" value="<?php echo htmlspecialchars($search_query['checkin']); ?>">
-                            <input type="hidden" name="checkout_date" value="<?php echo htmlspecialchars($search_query['checkout']); ?>">
+                            <input type="hidden" name="checkin_date" value="<?php echo htmlspecialchars($qCheckin); ?>">
+                            <input type="hidden" name="checkout_date" value="<?php echo htmlspecialchars($qCheckout); ?>">
+                            <input type="hidden" name="city" value="<?php echo htmlspecialchars($qCity); ?>">
+                            <input type="hidden" name="rooms" value="<?php echo htmlspecialchars($qRooms); ?>">
+                            <input type="hidden" name="adults" value="<?php echo htmlspecialchars($qAdults); ?>">
+                            <input type="hidden" name="children" value="<?php echo htmlspecialchars($qChildren); ?>">
                             <button type="submit" class="btn-search" style="padding: 10px 24px; font-size: 14px; background: linear-gradient(135deg, #09204b, #2563eb);">
                                 SELECT ROOM <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
                             </button>

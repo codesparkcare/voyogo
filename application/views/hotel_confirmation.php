@@ -1,3 +1,17 @@
+<?php
+$b = isset($booking) && is_array($booking) ? $booking : array();
+$b['booking_ref']   = $b['booking_ref'] ?? 'HTL-CONF-' . strtoupper(substr(md5(time()), 0, 8));
+$b['created_at']    = $b['created_at'] ?? date('Y-m-d H:i:s');
+$b['hotel_name']    = $b['hotel_name'] ?? 'Luxury Resort';
+$b['hotel_address'] = $b['hotel_address'] ?? 'Goa, India';
+$b['hotel_image']   = $b['hotel_image'] ?? 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80';
+$b['room_type']     = $b['room_type'] ?? 'Deluxe Garden View Room';
+$b['checkin_date']  = $b['checkin_date'] ?? date('Y-m-d', strtotime('+2 days'));
+$b['checkout_date'] = $b['checkout_date'] ?? date('Y-m-d', strtotime('+5 days'));
+$b['rooms_count']   = $b['rooms_count'] ?? 1;
+$b['guests_count']  = $b['guests_count'] ?? 2;
+$booking = $b;
+?>
 <div style="background-color: #f5f7fa; padding: 40px 0 80px 0;">
     <div class="container" style="max-width: 800px;">
         

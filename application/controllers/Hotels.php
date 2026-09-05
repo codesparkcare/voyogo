@@ -40,15 +40,26 @@ class Hotels extends CI_Controller {
         $children = (int)($this->input->post('children') ?: ($this->input->get('children') ?: 0));
 
         $hotelResults = $this->benzyhotelapi->searchHotels($city, $checkin, $checkout, $rooms, $adults, $children);
+        $nights = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
 
         $data['page_title']    = "Hotels in $city - Best Hotel Deals | Voyogo";
         $data['active_page']   = 'hotels';
         $data['city']          = $city;
         $data['checkin']       = $checkin;
         $data['checkout']      = $checkout;
+        $data['nights']        = $nights;
         $data['rooms']         = $rooms;
         $data['adults']        = $adults;
         $data['children']      = $children;
+        $data['search_query']  = array(
+            'city'     => $city,
+            'checkin'  => $checkin,
+            'checkout' => $checkout,
+            'nights'   => $nights,
+            'rooms'    => $rooms,
+            'adults'   => $adults,
+            'children' => $children
+        );
         $data['hotelResults']  = $hotelResults;
 
         $this->load->view('includes/header', $data);
@@ -76,6 +87,14 @@ class Hotels extends CI_Controller {
         $data['rooms']        = $rooms;
         $data['adults']       = $adults;
         $data['children']     = $children;
+        $data['search_query'] = array(
+            'city'     => $city,
+            'checkin'  => $checkin,
+            'checkout' => $checkout,
+            'rooms'    => $rooms,
+            'adults'   => $adults,
+            'children' => $children
+        );
         $data['page_title']   = ($hotel['name'] ?? 'Hotel') . " - Voyogo Hotels";
         $data['active_page']  = 'hotels';
 
@@ -96,8 +115,8 @@ class Hotels extends CI_Controller {
         $room_id        = $this->input->post('room_id') ?: 'RM_DLX_01';
         $board_type     = $this->input->post('board_type') ?: 'Breakfast Included';
         $city           = $this->input->post('city') ?: 'Goa, India';
-        $checkin        = $this->input->post('checkin') ?: date('Y-m-d', strtotime('+2 days'));
-        $checkout       = $this->input->post('checkout') ?: date('Y-m-d', strtotime('+5 days'));
+        $checkin        = $this->input->post('checkin_date') ?: ($this->input->post('checkin') ?: date('Y-m-d', strtotime('+2 days')));
+        $checkout       = $this->input->post('checkout_date') ?: ($this->input->post('checkout') ?: date('Y-m-d', strtotime('+5 days')));
         $rooms          = (int)($this->input->post('rooms') ?: 1);
         $adults         = (int)($this->input->post('adults') ?: 2);
         $children       = (int)($this->input->post('children') ?: 0);
@@ -111,7 +130,7 @@ class Hotels extends CI_Controller {
         $taxes = round($baseTotal * 0.12);
         $grandTotal = $baseTotal + $taxes;
 
-        $data['booking_data'] = array(
+        $bookingArray = array(
             'hotel_id'      => $hotel_id,
             'hotel_name'    => $hotel_name,
             'hotel_address' => $hotel_address,
@@ -122,6 +141,8 @@ class Hotels extends CI_Controller {
             'city'          => $city,
             'checkin'       => $checkin,
             'checkout'      => $checkout,
+            'checkin_date'  => $checkin,
+            'checkout_date' => $checkout,
             'nights'        => $nights,
             'rooms'         => $rooms,
             'adults'        => $adults,
@@ -129,9 +150,12 @@ class Hotels extends CI_Controller {
             'price'         => $price,
             'base_total'    => $baseTotal,
             'taxes'         => $taxes,
-            'grand_total'   => $grandTotal
+            'grand_total'   => $grandTotal,
+            'total_amount'  => $grandTotal
         );
 
+        $data['booking_data']    = $bookingArray;
+        $data['booking_summary'] = $bookingArray;
         $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
         $data['page_title'] = "Review Booking: $hotel_name - Voyogo";
         $data['active_page'] = 'hotels';
