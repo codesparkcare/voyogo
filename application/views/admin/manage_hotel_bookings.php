@@ -34,35 +34,44 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($bookings)): foreach ($bookings as $b): ?>
+                        <?php if (!empty($bookings)): foreach ($bookings as $b): 
+                            $ref = $b['booking_reference'] ?? ($b['booking_ref'] ?? ('VOY-HTL-' . $b['id']));
+                            $guestName = $b['lead_guest_name'] ?? ($b['primary_guest_name'] ?? 'Guest');
+                            $guestEmail = $b['lead_guest_email'] ?? ($b['guest_email'] ?? '');
+                            $guestPhone = $b['lead_guest_phone'] ?? ($b['guest_phone'] ?? '');
+                            $roomsCount = $b['rooms_count'] ?? 1;
+                            $guestsCount = isset($b['guests_count']) ? $b['guests_count'] : (($b['adults_count'] ?? 2) + ($b['children_count'] ?? 0));
+                            $bStatus = ucfirst(strtolower($b['booking_status'] ?? 'Confirmed'));
+                            $pStatus = ucfirst(strtolower($b['payment_status'] ?? 'Paid'));
+                        ?>
                         <tr>
                             <td>
-                                <strong class="text-danger"><?php echo htmlspecialchars($b['booking_ref']); ?></strong>
+                                <strong class="text-danger"><?php echo htmlspecialchars($ref); ?></strong>
                                 <div class="text-muted small" style="font-size: 11px;"><?php echo date('d M Y, H:i', strtotime($b['created_at'])); ?></div>
                             </td>
                             <td>
-                                <div class="fw-bold text-dark"><?php echo htmlspecialchars($b['hotel_name']); ?></div>
-                                <div class="text-muted small"><?php echo htmlspecialchars($b['hotel_address']); ?></div>
+                                <div class="fw-bold text-dark"><?php echo htmlspecialchars($b['hotel_name'] ?? 'Hotel'); ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($b['hotel_address'] ?? ($b['destination_city'] ?? '')); ?></div>
                             </td>
                             <td>
-                                <div class="fw-bold"><?php echo htmlspecialchars($b['primary_guest_name']); ?></div>
-                                <div class="text-muted small"><?php echo htmlspecialchars($b['guest_email']); ?> | <?php echo htmlspecialchars($b['guest_phone']); ?></div>
+                                <div class="fw-bold"><?php echo htmlspecialchars($guestName); ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($guestEmail); ?> | <?php echo htmlspecialchars($guestPhone); ?></div>
                             </td>
                             <td>
-                                <div class="fw-bold text-primary"><?php echo htmlspecialchars($b['room_type']); ?></div>
+                                <div class="fw-bold text-primary"><?php echo htmlspecialchars($b['room_type'] ?? 'Room'); ?></div>
                                 <span class="badge bg-light text-dark border"><?php echo date('d M Y', strtotime($b['checkin_date'])); ?> &rarr; <?php echo date('d M Y', strtotime($b['checkout_date'])); ?></span>
                             </td>
-                            <td><?php echo $b['rooms_count']; ?> Room, <?php echo $b['guests_count']; ?> Guests</td>
+                            <td><?php echo $roomsCount; ?> Room, <?php echo $guestsCount; ?> Guests</td>
                             <td class="fw-bold text-success">₹ <?php echo number_format($b['total_amount']); ?></td>
-                            <td><small class="text-muted font-monospace"><?php echo htmlspecialchars($b['payment_id']); ?></small></td>
+                            <td><small class="text-muted font-monospace"><?php echo htmlspecialchars($b['supplier_reference'] ?? ($b['payment_id'] ?? '-')); ?></small></td>
                             <td>
-                                <span class="badge <?php echo ($b['booking_status'] == 'Confirmed') ? 'bg-success' : (($b['booking_status'] == 'Cancelled') ? 'bg-danger' : 'bg-warning'); ?>">
-                                    <?php echo htmlspecialchars($b['booking_status']); ?>
+                                <span class="badge <?php echo ($bStatus == 'Confirmed') ? 'bg-success' : (($bStatus == 'Cancelled') ? 'bg-danger' : 'bg-warning'); ?>">
+                                    <?php echo htmlspecialchars($bStatus); ?>
                                 </span>
                             </td>
                             <td class="text-end">
                                 <div class="btn-group">
-                                    <a href="<?php echo site_url('hotels/confirmation/' . $b['booking_ref']); ?>" target="_blank" class="btn btn-sm btn-outline-danger" title="Print Voucher">
+                                    <a href="<?php echo site_url('hotels/confirmation/' . $ref); ?>" target="_blank" class="btn btn-sm btn-outline-danger" title="Print Voucher">
                                         <i class="fa-solid fa-print"></i> Voucher
                                     </a>
                                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editHotelModal<?php echo $b['id']; ?>" title="Edit Status">

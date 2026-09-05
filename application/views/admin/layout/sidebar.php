@@ -14,37 +14,49 @@
             </a>
         </li>
         
-        <li class="menu-title">Booking Management</li>
+        <li class="menu-title"><i class="fa-solid fa-plane me-1"></i> Flight Management</li>
         <li>
             <a href="<?php echo site_url('admin/flight_bookings'); ?>" class="<?php echo ($active == 'flight_bookings') ? 'active' : ''; ?>">
-                <i class="fa-solid fa-plane"></i> Flight Bookings
+                <i class="fa-solid fa-ticket"></i> Flight Bookings
             </a>
         </li>
         <li>
-            <a href="<?php echo site_url('admin/hotel_bookings'); ?>" class="<?php echo ($active == 'hotel_bookings') ? 'active' : ''; ?>">
-                <i class="fa-solid fa-hotel"></i> Hotel Bookings
+            <a href="<?php echo site_url('admin/flight_api_settings'); ?>" class="<?php echo ($active == 'flight_api_settings') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-sliders" style="color: #0284c7;"></i> Flight API Settings
             </a>
         </li>
+        <li>
+            <a href="<?php echo site_url('flight_cert'); ?>" class="<?php echo ($active == 'flight_cert') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-certificate" style="color: #f59e0b;"></i> Flight Certification Suite
+            </a>
+        </li>
+
+        <li class="menu-title"><i class="fa-solid fa-hotel me-1"></i> Hotel Management</li>
+        <li>
+            <a href="<?php echo site_url('admin/hotel_bookings'); ?>" class="<?php echo ($active == 'hotel_bookings') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-bed" style="color: #6366f1;"></i> Hotel Bookings
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo site_url('admin/hotel_api_settings'); ?>" class="<?php echo ($active == 'hotel_api_settings') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-gear" style="color: #ec4899;"></i> Hotel API Settings
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo site_url('admin/hotel_api_logs'); ?>" class="<?php echo ($active == 'hotel_api_logs') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-clock-rotate-left" style="color: #8b5cf6;"></i> Hotel API Logs Checker
+            </a>
+        </li>
+
+        <li class="menu-title">Common & System</li>
         <li>
             <a href="<?php echo site_url('admin/enquiries'); ?>" class="<?php echo ($active == 'enquiries') ? 'active' : ''; ?>">
                 <i class="fa-solid fa-envelope-open-text"></i> Customer Enquiries
             </a>
         </li>
-
-        <li class="menu-title">Settings & Tools</li>
         <li>
-            <a href="<?php echo site_url('admin/flight_api_settings'); ?>" class="<?php echo ($active == 'flight_api_settings') ? 'active' : ''; ?>">
-                <i class="fa-solid fa-plane-departure" style="color: #0284c7;"></i> Flight API Settings
-            </a>
-        </li>
-        <li>
-            <a href="<?php echo site_url('flight_cert'); ?>" class="<?php echo ($active == 'flight_cert') ? 'active' : ''; ?>">
-                <i class="fa-solid fa-certificate" style="color: #f59e0b;"></i> API Certification Suite
-            </a>
-        </li>
-        <li>
-            <a href="<?php echo site_url('admin/email_settings'); ?>" class="<?php echo ($active == 'email_settings') ? 'active' : ''; ?>">
-                <i class="fa-solid fa-sliders"></i> SMTP Email Settings
+            <a href="<?php echo site_url('admin/api_logs'); ?>" class="<?php echo ($active == 'api_logs') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-list-check" style="color: #10b981;"></i> All API Activity Logs
             </a>
         </li>
         <li>
@@ -53,8 +65,8 @@
             </a>
         </li>
         <li>
-            <a href="<?php echo site_url('admin/api_logs'); ?>" class="<?php echo ($active == 'api_logs') ? 'active' : ''; ?>">
-                <i class="fa-solid fa-clock-rotate-left" style="color: #10b981;"></i> API Activity Logs
+            <a href="<?php echo site_url('admin/email_settings'); ?>" class="<?php echo ($active == 'email_settings') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-envelope"></i> SMTP Email Settings
             </a>
         </li>
         <li>

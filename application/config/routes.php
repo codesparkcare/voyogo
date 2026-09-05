@@ -13,13 +13,14 @@ $route['flight/process_payment'] = 'welcome/process_flight_payment';
 $route['flight/confirmation/(:any)'] = 'welcome/flight_confirmation/$1';
 $route['flight'] = 'welcome/index';
 
-/* Voyogo Custom Hotel Routes */
-$route['hotels'] = 'welcome/hotels';
-$route['hotels/search'] = 'welcome/search_hotels';
-$route['hotels/detail/(:any)'] = 'welcome/hotel_detail/$1';
-$route['hotels/review'] = 'welcome/hotel_review';
-$route['hotels/process_payment'] = 'welcome/process_hotel_payment';
-$route['hotels/confirmation/(:any)'] = 'welcome/hotel_confirmation/$1';
+/* Voyogo Custom Hotel Routes (Isolated Controller) */
+$route['hotels'] = 'hotels/index';
+$route['hotels/search'] = 'hotels/search';
+$route['hotels/detail/(:any)'] = 'hotels/detail/$1';
+$route['hotels/review'] = 'hotels/review';
+$route['hotels/process_payment'] = 'hotels/process_payment';
+$route['hotels/confirmation/(:any)'] = 'hotels/confirmation/$1';
+$route['hotels/autosuggest'] = 'hotels/autosuggest';
 
 /* Voyogo Pages & Services Routes */
 $route['holidays'] = 'holidays';
@@ -33,7 +34,11 @@ $route['admin'] = 'admin/index';
 $route['admin/login'] = 'admin/login';
 $route['admin/logout'] = 'admin/logout';
 $route['admin/flight_bookings'] = 'admin/manage_flight_bookings';
+$route['admin/flight_api_settings'] = 'admin/flight_api_settings';
 $route['admin/hotel_bookings'] = 'admin/manage_hotel_bookings';
+$route['admin/hotel_api_settings'] = 'admin/hotel_api_settings';
+$route['admin/hotel_api_logs'] = 'admin/hotel_api_logs';
+$route['admin/hotel_api_logs/clear'] = 'admin/hotel_api_logs_clear';
 $route['admin/enquiries'] = 'admin/enquiries';
 $route['admin/email_settings'] = 'admin/email_settings';
 $route['admin/razorpay_settings'] = 'admin/razorpay_settings';

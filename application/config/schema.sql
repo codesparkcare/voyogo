@@ -113,6 +113,71 @@ CREATE TABLE IF NOT EXISTS `flight_api_settings` (
 INSERT IGNORE INTO `flight_api_settings` (`id`, `environment`, `live_client_id`, `live_password`, `live_merchant_id`, `live_api_key`, `live_browser_key`, `live_agent_code`, `live_utils_url`, `live_flight_url`, `sandbox_client_id`, `sandbox_password`, `sandbox_merchant_id`, `sandbox_api_key`, `sandbox_browser_key`, `sandbox_agent_code`, `sandbox_utils_url`, `sandbox_flight_url`, `channel_id`, `is_enabled`)
 VALUES (1, 'live', 'APISKYPLANETN', 'SUB@908#54961', '200', 'kXAY9yHARK', '069ab7973ac12116ccc1802546ad52bf', ' ', 'https://apiutilsagents.akbartravelsonline.com', 'https://apiagents.akbartravelsonline.com', 'bitest', 'staging@1', '300', 'kXAY9yHARK', 'ef20-925c-4489-bfeb-236c8b406f7e', ' ', 'https://b2bapiutils.benzyinfotech.com', 'https://b2bapiflights.benzyinfotech.com', 'b2bIndiaDeals', 1);
 
+CREATE TABLE IF NOT EXISTS `hotel_api_settings` (
+  `id` INT PRIMARY KEY DEFAULT 1,
+  `environment` VARCHAR(20) DEFAULT 'live',
+  `live_client_id` VARCHAR(100) DEFAULT 'APISKYPLANETN',
+  `live_password` VARCHAR(255) DEFAULT 'SUB@908#54961',
+  `live_merchant_id` VARCHAR(50) DEFAULT '200',
+  `live_api_key` VARCHAR(255) DEFAULT '069ab7973ac12116ccc1802546ad52bf',
+  `live_browser_key` VARCHAR(255) DEFAULT '069ab7973ac12116ccc1802546ad52bf',
+  `live_agent_code` VARCHAR(50) DEFAULT ' ',
+  `live_utils_url` VARCHAR(255) DEFAULT 'https://apiutilsagents.akbartravelsonline.com',
+  `live_hotel_url` VARCHAR(255) DEFAULT 'https://apiagents.akbartravelsonline.com',
+  `sandbox_client_id` VARCHAR(100) DEFAULT 'bitest',
+  `sandbox_password` VARCHAR(255) DEFAULT 'staging@1',
+  `sandbox_merchant_id` VARCHAR(50) DEFAULT '300',
+  `sandbox_api_key` VARCHAR(255) DEFAULT 'kXAY9yHARK',
+  `sandbox_browser_key` VARCHAR(255) DEFAULT 'caecd3cd30225512c1811070dce615c1',
+  `sandbox_agent_code` VARCHAR(50) DEFAULT ' ',
+  `sandbox_utils_url` VARCHAR(255) DEFAULT 'https://b2bapiutils.benzyinfotech.com',
+  `sandbox_hotel_url` VARCHAR(255) DEFAULT 'https://travelportalapi.benzyinfotech.com',
+  `channel_id` VARCHAR(100) DEFAULT 'b2bIndiaDeals',
+  `is_enabled` TINYINT(1) DEFAULT 1,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT IGNORE INTO `hotel_api_settings` (`id`, `environment`, `live_client_id`, `live_password`, `live_merchant_id`, `live_api_key`, `live_browser_key`, `live_agent_code`, `live_utils_url`, `live_hotel_url`, `sandbox_client_id`, `sandbox_password`, `sandbox_merchant_id`, `sandbox_api_key`, `sandbox_browser_key`, `sandbox_agent_code`, `sandbox_utils_url`, `sandbox_hotel_url`, `channel_id`, `is_enabled`)
+VALUES (1, 'live', 'APISKYPLANETN', 'SUB@908#54961', '200', '069ab7973ac12116ccc1802546ad52bf', '069ab7973ac12116ccc1802546ad52bf', ' ', 'https://apiutilsagents.akbartravelsonline.com', 'https://apiagents.akbartravelsonline.com', 'bitest', 'staging@1', '300', 'kXAY9yHARK', 'caecd3cd30225512c1811070dce615c1', ' ', 'https://b2bapiutils.benzyinfotech.com', 'https://travelportalapi.benzyinfotech.com', 'b2bIndiaDeals', 1);
+
+CREATE TABLE IF NOT EXISTS `hotel_bookings` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `booking_reference` VARCHAR(100) NOT NULL,
+  `supplier_reference` VARCHAR(100) DEFAULT NULL,
+  `transaction_id` VARCHAR(100) DEFAULT NULL,
+  `voucher_number` VARCHAR(100) DEFAULT NULL,
+  `hotel_id` VARCHAR(100) NOT NULL,
+  `hotel_name` VARCHAR(255) NOT NULL,
+  `hotel_address` TEXT DEFAULT NULL,
+  `hotel_image` TEXT DEFAULT NULL,
+  `star_rating` INT DEFAULT 3,
+  `room_type` VARCHAR(255) NOT NULL,
+  `board_type` VARCHAR(255) DEFAULT NULL,
+  `destination_city` VARCHAR(100) NOT NULL,
+  `checkin_date` DATE NOT NULL,
+  `checkout_date` DATE NOT NULL,
+  `nights_count` INT DEFAULT 1,
+  `rooms_count` INT DEFAULT 1,
+  `adults_count` INT DEFAULT 2,
+  `children_count` INT DEFAULT 0,
+  `lead_guest_title` VARCHAR(10) DEFAULT 'Mr',
+  `lead_guest_name` VARCHAR(150) NOT NULL,
+  `lead_guest_email` VARCHAR(150) NOT NULL,
+  `lead_guest_phone` VARCHAR(30) NOT NULL,
+  `guest_details_json` LONGTEXT DEFAULT NULL,
+  `special_requests` TEXT DEFAULT NULL,
+  `total_amount` DECIMAL(10,2) DEFAULT '0.00',
+  `tax_amount` DECIMAL(10,2) DEFAULT '0.00',
+  `currency` VARCHAR(10) DEFAULT 'INR',
+  `payment_status` VARCHAR(50) DEFAULT 'pending',
+  `booking_status` VARCHAR(50) DEFAULT 'confirmed',
+  `cancellation_policy` TEXT DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX `idx_hotel_booking_ref` (`booking_reference`),
+  INDEX `idx_hotel_status` (`booking_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS `api_logs` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
   `service_type` VARCHAR(50) NOT NULL,

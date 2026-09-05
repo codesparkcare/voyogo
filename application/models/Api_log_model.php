@@ -181,22 +181,34 @@ class Api_log_model extends CI_Model {
     /**
      * Get high-level API logs statistics
      */
-    public function get_stats() {
-        $total = $this->db->count_all('api_logs');
+    public function get_stats($service_type = null) {
+        if ($service_type) {
+            $this->db->where('service_type', strtolower($service_type));
+        }
+        $total = $this->db->count_all_results('api_logs');
 
         $flight_calls = $this->db->where('service_type', 'flight')->count_all_results('api_logs');
         $hotel_calls  = $this->db->where('service_type', 'hotel')->count_all_results('api_logs');
         $razorpay_calls = $this->db->where('service_type', 'razorpay')->count_all_results('api_logs');
 
+        if ($service_type) {
+            $this->db->where('service_type', strtolower($service_type));
+        }
         $this->db->where('http_code >=', 200)->where('http_code <', 300);
         $success_count = $this->db->count_all_results('api_logs');
         $error_count   = $total - $success_count;
 
+        if ($service_type) {
+            $this->db->where('service_type', strtolower($service_type));
+        }
         $this->db->select_avg('execution_time_ms', 'avg_time');
         $avg_row = $this->db->get('api_logs')->row_array();
         $avg_time = round($avg_row['avg_time'] ?? 0);
 
         $today_date = date('Y-m-d 00:00:00');
+        if ($service_type) {
+            $this->db->where('service_type', strtolower($service_type));
+        }
         $this->db->where('created_at >=', $today_date);
         $today_calls = $this->db->count_all_results('api_logs');
 
