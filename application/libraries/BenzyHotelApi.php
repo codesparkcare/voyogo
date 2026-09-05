@@ -339,42 +339,102 @@ class BenzyHotelApi {
         }));
     }
 
-    public function getFallbackHotels($city = 'Goa', $checkin = null, $checkout = null) {
+    public function getFallbackHotels($city = 'Tirunelveli', $checkin = null, $checkout = null) {
+        $cityName = trim(explode(',', $city)[0]);
+        if (empty($cityName)) $cityName = 'Tirunelveli';
+
+        if (stripos($cityName, 'Tirunelveli') !== false) {
+            return array(
+                array(
+                    'id'            => 'HTL_TNV_101',
+                    'name'          => 'Regency Tirunelveli by GRT Hotels',
+                    'star_rating'   => 4,
+                    'rating'        => '4.8',
+                    'reviews_count' => 840,
+                    'location'      => 'Trivandrum Road, Palayamkottai, Tirunelveli',
+                    'price_per_night' => 3800,
+                    'image'         => 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
+                    'amenities'     => array('Multi-Cuisine Restaurant', 'Free High-Speed WiFi', 'Fitness Center', 'Free Breakfast', 'Free Cancellation'),
+                    'free_breakfast'=> true,
+                    'free_cancellation' => true
+                ),
+                array(
+                    'id'            => 'HTL_TNV_102',
+                    'name'          => 'Hotel Apple Tt Grand',
+                    'star_rating'   => 4,
+                    'rating'        => '4.6',
+                    'reviews_count' => 520,
+                    'location'      => 'North Bypass Road, Vannarpettai, Tirunelveli',
+                    'price_per_night' => 2950,
+                    'image'         => 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80',
+                    'amenities'     => array('Bar & Lounge', 'Airport Shuttle', 'Free Breakfast', 'Room Service', 'Free Cancellation'),
+                    'free_breakfast'=> true,
+                    'free_cancellation' => true
+                ),
+                array(
+                    'id'            => 'HTL_TNV_103',
+                    'name'          => 'Hotel Palmyra Grand Suite',
+                    'star_rating'   => 4,
+                    'rating'        => '4.7',
+                    'reviews_count' => 410,
+                    'location'      => 'Near New Bus Stand, Tirunelveli Junction',
+                    'price_per_night' => 3400,
+                    'image'         => 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80',
+                    'amenities'     => array('Swimming Pool', 'Coffee Shop', 'Kids Friendly', 'Free WiFi'),
+                    'free_breakfast'=> true,
+                    'free_cancellation' => true
+                ),
+                array(
+                    'id'            => 'HTL_TNV_104',
+                    'name'          => 'Hotel Sree Annamalaiyar Park',
+                    'star_rating'   => 3,
+                    'rating'        => '4.4',
+                    'reviews_count' => 380,
+                    'location'      => 'Madurai Road, Tirunelveli',
+                    'price_per_night' => 2200,
+                    'image'         => 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=600&q=80',
+                    'amenities'     => array('Free Parking', 'Restaurant', 'Free WiFi', '24h Front Desk'),
+                    'free_breakfast'=> true,
+                    'free_cancellation' => true
+                )
+            );
+        }
+
         return array(
             array(
                 'id'            => 'HTL_101',
-                'name'          => 'Taj Exotica Resort & Spa',
+                'name'          => 'Grand ' . $cityName . ' Luxury Resort & Spa',
                 'star_rating'   => 5,
                 'rating'        => '4.8',
                 'reviews_count' => 842,
-                'location'      => 'Benaulim Beach, South Goa',
-                'price_per_night' => 14500,
+                'location'      => 'City Center, ' . $cityName,
+                'price_per_night' => 4500,
                 'image'         => 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
-                'amenities'     => array('Private Beach Access', 'Infinity Pool', 'Luxury Spa', 'Free High-speed WiFi', 'Free Breakfast'),
+                'amenities'     => array('Private Pool Access', 'Infinity Pool', 'Luxury Spa', 'Free High-speed WiFi', 'Free Breakfast'),
                 'free_breakfast'=> true,
                 'free_cancellation' => true
             ),
             array(
                 'id'            => 'HTL_102',
-                'name'          => 'The Leela Luxury Beach Resort',
+                'name'          => 'The Royal Palace Hotel ' . $cityName,
                 'star_rating'   => 5,
                 'rating'        => '4.9',
                 'reviews_count' => 1120,
-                'location'      => 'Mobor Beach, Cavelossim',
-                'price_per_night' => 17200,
+                'location'      => 'Downtown, ' . $cityName,
+                'price_per_night' => 5800,
                 'image'         => 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80',
-                'amenities'     => array('Golf Course', '12-hole Mini Golf', 'Free Breakfast', 'Airport Shuttle', 'Free Cancellation'),
+                'amenities'     => array('Golf Course', 'Free Breakfast', 'Airport Shuttle', 'Free Cancellation'),
                 'free_breakfast'=> true,
                 'free_cancellation' => true
             ),
             array(
                 'id'            => 'HTL_103',
-                'name'          => 'Grand Hyatt Resort & Waterfront',
-                'star_rating'   => 5,
+                'name'          => 'Radisson Blu Hotel ' . $cityName,
+                'star_rating'   => 4,
                 'rating'        => '4.7',
                 'reviews_count' => 670,
-                'location'      => 'Bambolim Bay, North Goa',
-                'price_per_night' => 11800,
+                'location'      => 'Commercial Hub, ' . $cityName,
+                'price_per_night' => 3800,
                 'image'         => 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80',
                 'amenities'     => array('Indoor & Outdoor Pool', 'Sailing Activities', 'Kids Play Zone', 'Free WiFi'),
                 'free_breakfast'=> true,
@@ -382,14 +442,14 @@ class BenzyHotelApi {
             ),
             array(
                 'id'            => 'HTL_104',
-                'name'          => 'Novotel Goa Candolim Resort',
+                'name'          => 'Novotel Executive Inn ' . $cityName,
                 'star_rating'   => 4,
                 'rating'        => '4.5',
                 'reviews_count' => 450,
-                'location'      => 'Candolim, North Goa',
-                'price_per_night' => 6900,
+                'location'      => 'Airport Expressway, ' . $cityName,
+                'price_per_night' => 2900,
                 'image'         => 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=600&q=80',
-                'amenities'     => array('Shuttle to Beach', 'Pool Bar', 'Fitness Center', 'Free Breakfast'),
+                'amenities'     => array('Shuttle Service', 'Pool Bar', 'Fitness Center', 'Free Breakfast'),
                 'free_breakfast'=> true,
                 'free_cancellation' => true
             )

@@ -95,7 +95,16 @@ $hotels    = isset($hotelResults['Hotels']) ? $hotelResults['Hotels'] : (is_arra
 
             <div class="hotel-list">
                 <?php 
-                $hotels = isset($hotelResults['Hotels']) ? $hotelResults['Hotels'] : array();
+                if (isset($hotelResults['Hotels'])) {
+                    $hotels = $hotelResults['Hotels'];
+                } elseif (isset($hotelResults['hotels'])) {
+                    $hotels = $hotelResults['hotels'];
+                } elseif (is_array($hotelResults)) {
+                    $hotels = $hotelResults;
+                } else {
+                    $hotels = array();
+                }
+
                 if (!empty($hotels)) {
                     foreach ($hotels as $h) {
                 ?>
