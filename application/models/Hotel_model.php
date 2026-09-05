@@ -70,48 +70,62 @@ class Hotel_model extends CI_Model {
             $this->db->insert('hotel_api_settings', $default);
         }
 
-        // 2. hotel_bookings table
+        // 2. hotel_bookings table (Self-Healing Table & Missing Column Migration)
+        $booking_fields = array(
+            'id'                  => array('type' => 'INT', 'constraint' => 11, 'auto_increment' => TRUE),
+            'booking_reference'   => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'booking_ref'         => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'supplier_reference'  => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'transaction_id'      => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'voucher_number'      => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'hotel_id'            => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'hotel_name'          => array('type' => 'VARCHAR', 'constraint' => 255, 'null' => TRUE),
+            'hotel_address'       => array('type' => 'TEXT', 'null' => TRUE),
+            'hotel_image'         => array('type' => 'TEXT', 'null' => TRUE),
+            'star_rating'         => array('type' => 'INT', 'constraint' => 2, 'default' => 3),
+            'room_type'           => array('type' => 'VARCHAR', 'constraint' => 255, 'null' => TRUE),
+            'board_type'          => array('type' => 'VARCHAR', 'constraint' => 255, 'null' => TRUE),
+            'destination_city'    => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'checkin_date'        => array('type' => 'DATE', 'null' => TRUE),
+            'checkout_date'       => array('type' => 'DATE', 'null' => TRUE),
+            'nights_count'        => array('type' => 'INT', 'constraint' => 4, 'default' => 1),
+            'rooms_count'         => array('type' => 'INT', 'constraint' => 4, 'default' => 1),
+            'adults_count'        => array('type' => 'INT', 'constraint' => 4, 'default' => 2),
+            'children_count'      => array('type' => 'INT', 'constraint' => 4, 'default' => 0),
+            'guests_count'        => array('type' => 'INT', 'constraint' => 4, 'default' => 2),
+            'lead_guest_title'    => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'Mr'),
+            'lead_guest_name'     => array('type' => 'VARCHAR', 'constraint' => 150, 'null' => TRUE),
+            'primary_guest_name'  => array('type' => 'VARCHAR', 'constraint' => 150, 'null' => TRUE),
+            'lead_guest_email'    => array('type' => 'VARCHAR', 'constraint' => 150, 'null' => TRUE),
+            'guest_email'         => array('type' => 'VARCHAR', 'constraint' => 150, 'null' => TRUE),
+            'lead_guest_phone'    => array('type' => 'VARCHAR', 'constraint' => 30, 'null' => TRUE),
+            'guest_phone'         => array('type' => 'VARCHAR', 'constraint' => 30, 'null' => TRUE),
+            'guest_details_json'  => array('type' => 'LONGTEXT', 'null' => TRUE),
+            'special_requests'    => array('type' => 'TEXT', 'null' => TRUE),
+            'total_amount'        => array('type' => 'DECIMAL', 'constraint' => '10,2', 'default' => '0.00'),
+            'tax_amount'          => array('type' => 'DECIMAL', 'constraint' => '10,2', 'default' => '0.00'),
+            'currency'            => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'INR'),
+            'payment_id'          => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'payment_status'      => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => 'paid'),
+            'booking_status'      => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => 'confirmed'),
+            'cancellation_policy' => array('type' => 'TEXT', 'null' => TRUE),
+            'created_at'          => array('type' => 'DATETIME', 'null' => TRUE),
+            'updated_at'          => array('type' => 'DATETIME', 'null' => TRUE)
+        );
+
         if (!$this->db->table_exists('hotel_bookings')) {
-            $booking_fields = array(
-                'id'                      => array('type' => 'INT', 'constraint' => 11, 'auto_increment' => TRUE),
-                'booking_reference'       => array('type' => 'VARCHAR', 'constraint' => 100),
-                'supplier_reference'      => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
-                'transaction_id'          => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
-                'voucher_number'          => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
-                'hotel_id'                => array('type' => 'VARCHAR', 'constraint' => 100),
-                'hotel_name'              => array('type' => 'VARCHAR', 'constraint' => 255),
-                'hotel_address'           => array('type' => 'TEXT', 'null' => TRUE),
-                'hotel_image'             => array('type' => 'TEXT', 'null' => TRUE),
-                'star_rating'             => array('type' => 'INT', 'constraint' => 2, 'default' => 3),
-                'room_type'               => array('type' => 'VARCHAR', 'constraint' => 255),
-                'board_type'              => array('type' => 'VARCHAR', 'constraint' => 255, 'null' => TRUE),
-                'destination_city'        => array('type' => 'VARCHAR', 'constraint' => 100),
-                'checkin_date'            => array('type' => 'DATE'),
-                'checkout_date'           => array('type' => 'DATE'),
-                'nights_count'            => array('type' => 'INT', 'constraint' => 4, 'default' => 1),
-                'rooms_count'             => array('type' => 'INT', 'constraint' => 4, 'default' => 1),
-                'adults_count'            => array('type' => 'INT', 'constraint' => 4, 'default' => 2),
-                'children_count'          => array('type' => 'INT', 'constraint' => 4, 'default' => 0),
-                'lead_guest_title'        => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'Mr'),
-                'lead_guest_name'         => array('type' => 'VARCHAR', 'constraint' => 150),
-                'lead_guest_email'        => array('type' => 'VARCHAR', 'constraint' => 150),
-                'lead_guest_phone'        => array('type' => 'VARCHAR', 'constraint' => 30),
-                'guest_details_json'      => array('type' => 'LONGTEXT', 'null' => TRUE),
-                'special_requests'        => array('type' => 'TEXT', 'null' => TRUE),
-                'total_amount'            => array('type' => 'DECIMAL', 'constraint' => '10,2', 'default' => '0.00'),
-                'tax_amount'              => array('type' => 'DECIMAL', 'constraint' => '10,2', 'default' => '0.00'),
-                'currency'                => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'INR'),
-                'payment_status'          => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => 'pending'),
-                'booking_status'          => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => 'confirmed'),
-                'cancellation_policy'     => array('type' => 'TEXT', 'null' => TRUE),
-                'created_at'              => array('type' => 'DATETIME'),
-                'updated_at'              => array('type' => 'DATETIME', 'null' => TRUE)
-            );
             $this->dbforge->add_field($booking_fields);
             $this->dbforge->add_key('id', TRUE);
-            $this->dbforge->add_key('booking_reference');
-            $this->dbforge->add_key('booking_status');
             $this->dbforge->create_table('hotel_bookings', TRUE);
+        } else {
+            // Check for missing columns and add them automatically
+            $existing_columns = $this->db->list_fields('hotel_bookings');
+            foreach ($booking_fields as $col_name => $col_def) {
+                if ($col_name === 'id') continue;
+                if (!in_array($col_name, $existing_columns)) {
+                    $this->dbforge->add_column('hotel_bookings', array($col_name => $col_def));
+                }
+            }
         }
     }
 
@@ -158,15 +172,54 @@ class Hotel_model extends CI_Model {
      * Get Hotel Booking By Reference
      */
     public function get_hotel_booking_by_ref($ref) {
-        return $this->db->get_where('hotel_bookings', array('booking_reference' => $ref))->row_array();
+        $this->ensure_tables_exist();
+        $row = $this->db->group_start()
+                        ->where('booking_reference', $ref)
+                        ->or_where('booking_ref', $ref)
+                        ->group_end()
+                        ->get('hotel_bookings')
+                        ->row_array();
+        if ($row) {
+            if (empty($row['booking_reference'])) $row['booking_reference'] = $row['booking_ref'] ?? $ref;
+            if (empty($row['lead_guest_name'])) $row['lead_guest_name'] = $row['primary_guest_name'] ?? 'Guest';
+            if (empty($row['lead_guest_email'])) $row['lead_guest_email'] = $row['guest_email'] ?? '';
+            if (empty($row['lead_guest_phone'])) $row['lead_guest_phone'] = $row['guest_phone'] ?? '';
+        }
+        return $row;
     }
 
     /**
      * Save New Hotel Booking
      */
     public function save_hotel_booking($data) {
+        $this->ensure_tables_exist();
         $data['created_at'] = date('Y-m-d H:i:s');
-        $this->db->insert('hotel_bookings', $data);
+
+        // Populate alias fields for backwards and forward schema compatibility
+        if (isset($data['booking_reference']) && !isset($data['booking_ref'])) {
+            $data['booking_ref'] = $data['booking_reference'];
+        } elseif (isset($data['booking_ref']) && !isset($data['booking_reference'])) {
+            $data['booking_reference'] = $data['booking_ref'];
+        }
+
+        if (isset($data['lead_guest_name']) && !isset($data['primary_guest_name'])) {
+            $data['primary_guest_name'] = $data['lead_guest_name'];
+        }
+        if (isset($data['lead_guest_email']) && !isset($data['guest_email'])) {
+            $data['guest_email'] = $data['lead_guest_email'];
+        }
+        if (isset($data['lead_guest_phone']) && !isset($data['guest_phone'])) {
+            $data['guest_phone'] = $data['lead_guest_phone'];
+        }
+        if (!isset($data['guests_count'])) {
+            $data['guests_count'] = ($data['adults_count'] ?? 1) + ($data['children_count'] ?? 0);
+        }
+
+        // Only insert columns that actually exist in the table to prevent MySQL 1054 error
+        $existingFields = $this->db->list_fields('hotel_bookings');
+        $filteredData = array_intersect_key($data, array_flip($existingFields));
+
+        $this->db->insert('hotel_bookings', $filteredData);
         return $this->db->insert_id();
     }
 
