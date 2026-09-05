@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" lang="en-US">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8" lang="en-US">
+<![endif]-->
+<!--[if !(IE 7) & !(IE 8)]><!-->
+<html lang="en-US">
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Retrieve Booking | Web Connect Resource Center</title>
+<link rel="profile" href="http://gmpg.org/xfn/11" />
+<link rel="pingback" href="https://wrc.benzyinfotech.com/xmlrpc.php" />
+<!--[if lt IE 9]>
+<script src="https://wrc.benzyinfotech.com/wp-content/themes/twentytwelve/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+<meta name='robots' content='max-image-preview:large' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel="alternate" type="application/rss+xml" title="Web Connect Resource Center &raquo; Feed" href="https://wrc.benzyinfotech.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Web Connect Resource Center &raquo; Comments Feed" href="https://wrc.benzyinfotech.com/comments/feed/" />
+<script type="text/javascript">
+/* <![CDATA[ */
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/15.0.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/15.0.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/wrc.benzyinfotech.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.5.10"}};
+/*! This file is auto-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83d\udc26\u200d\u2b1b","\ud83d\udc26\u200b\u2b1b")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+/* ]]> */
+</script>
+<link rel='stylesheet' id='otw_grid_manager-css' href='https://wrc.benzyinfotech.com/wp-content/plugins/widgetize-pages-light/include/otw_components/otw_grid_manager_light/css/otw-grid.css?ver=1.1' type='text/css' media='all' />
+<link rel='stylesheet' id='bootstrap_tab-css' href='https://wrc.benzyinfotech.com/wp-content/plugins/easy-responsive-tabs/assets/css/bootstrap_tab.min.css?ver=6.5.10' type='text/css' media='all' />
+<link rel='stylesheet' id='bootstrap_dropdown-css' href='https://wrc.benzyinfotech.com/wp-content/plugins/easy-responsive-tabs/assets/css/bootstrap_dropdown.min.css?ver=6.5.10' type='text/css' media='all' />
+<link rel='stylesheet' id='ert_tab_icon_css-css' href='https://wrc.benzyinfotech.com/wp-content/plugins/easy-responsive-tabs/assets/css/res_tab_icon.css?ver=6.5.10' type='text/css' media='all' />
+<link rel='stylesheet' id='sweetalert2-css' href='https://wrc.benzyinfotech.com/wp-content/plugins/user-registration/assets/css/sweetalert2/sweetalert2.min.css?ver=10.16.7' type='text/css' media='all' />
+<link rel='stylesheet' id='user-registration-general-css' href='https://wrc.benzyinfotech.com/wp-content/plugins/user-registration/assets/css/user-registration.css?ver=3.2.1.1' type='text/css' media='all' />
+<link rel='stylesheet' id='user-registration-smallscreen-css' href='https://wrc.benzyinfotech.com/wp-content/plugins/user-registration/assets/css/user-registration-smallscreen.css?ver=3.2.1.1' type='text/css' media='only screen and (max-width: 768px)' />
+<link rel='stylesheet' id='user-registration-my-account-layout-css' href='https://wrc.benzyinfotech.com/wp-content/plugins/user-registration/assets/css/my-account-layout.css?ver=3.2.1.1' type='text/css' media='all' />
+<link rel='stylesheet' id='dashicons-css' href='https://wrc.benzyinfotech.com/wp-includes/css/dashicons.min.css?ver=6.5.10' type='text/css' media='all' />
+<style id='wp-emoji-styles-inline-css' type='text/css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<link rel='stylesheet' id='wp-block-library-css' href='https://wrc.benzyinfotech.com/wp-includes/css/dist/block-library/style.min.css?ver=6.5.10' type='text/css' media='all' />
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}body .is-layout-grid{display: grid;}body .is-layout-grid > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='sp-news-public-css' href='https://wrc.benzyinfotech.com/wp-content/plugins/sp-news-and-widget/assets/css/wpnw-public.css?ver=5.0.6' type='text/css' media='all' />
+<link rel='stylesheet' id='twentytwelve-fonts-css' href='https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700&#038;subset=latin,latin-ext' type='text/css' media='all' />
+<link rel='stylesheet' id='twentytwelve-style-css' href='https://wrc.benzyinfotech.com/wp-content/themes/twentytwelve/style.css?ver=6.5.10' type='text/css' media='all' />
+<!--[if lt IE 9]>
+<link rel='stylesheet' id='twentytwelve-ie-css' href='https://wrc.benzyinfotech.com/wp-content/themes/twentytwelve/css/ie.css?ver=20121010' type='text/css' media='all' />
+<![endif]-->
+<link rel='stylesheet' id='tablepress-default-css' href='https://wrc.benzyinfotech.com/wp-content/plugins/tablepress/css/default.min.css?ver=1.6.1' type='text/css' media='all' />
+<script type="text/javascript" src="https://wrc.benzyinfotech.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
+<script type="text/javascript" src="https://wrc.benzyinfotech.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" id="jquery-migrate-js"></script>
+<link rel="https://api.w.org/" href="https://wrc.benzyinfotech.com/wp-json/" /><link rel="alternate" type="application/json" href="https://wrc.benzyinfotech.com/wp-json/wp/v2/pages/3692" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://wrc.benzyinfotech.com/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress 6.5.10" />
+<link rel="canonical" href="https://wrc.benzyinfotech.com/hotels/retrieve-booking/" />
+<link rel='shortlink' href='https://wrc.benzyinfotech.com/?p=3692' />
+<link rel="alternate" type="application/json+oembed" href="https://wrc.benzyinfotech.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwrc.benzyinfotech.com%2Fhotels%2Fretrieve-booking%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://wrc.benzyinfotech.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwrc.benzyinfotech.com%2Fhotels%2Fretrieve-booking%2F&#038;format=xml" />
+<!-- start Simple Custom CSS and JS -->
+<style type="text/css">
+/* Add your CSS code here.
+
+For example:
+.example {
+    color: red;
+}
+
+For brushing up on your CSS knowledge, check out http://www.w3schools.com/css/css_syntax.asp
+
+End of comment */ 
+
+.main-navigation li ul li a {
+	background: #007fc0 ;
+}</style>
+<!-- end Simple Custom CSS and JS -->
+<style type="text/css" id="syntaxhighlighteranchor"></style>
+<link rel="icon" href="https://wrc.benzyinfotech.com/wp-content/uploads/2015/09/ben.png" sizes="32x32" />
+<link rel="icon" href="https://wrc.benzyinfotech.com/wp-content/uploads/2015/09/ben.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://wrc.benzyinfotech.com/wp-content/uploads/2015/09/ben.png" />
+<meta name="msapplication-TileImage" content="https://wrc.benzyinfotech.com/wp-content/uploads/2015/09/ben.png" />
+</head>
+
+<body class="page-template-default page page-id-3692 page-child parent-pageid-3375 logged-in user-registration-page full-width custom-font-enabled single-author">
+<div id="page" class="hfeed site">
+	<header id="masthead" class="site-header" role="banner">
+    <div class="container headercontainer topradius">
+      <div class="logocontainer "><a href="#" class="spriteimage"></a> </div>
+      <div class="welcomecontainer">
+        <div class="userdetails">
+          <div class="accountdetails">
+            <div class="accountdetailswelcometxt">Welcome-</div>
+            <div class="usertext">Akbar Travels PVT. LTD. </div>
+            <!-- <div class="logout"><a href="#">Logout</a></div> -->
+          </div>
+          <div class="userimage spriteimage"></div>
+        </div>
+        <!-- <div class="searchcontainer">
+          <form action=" ">
+            <div class="searchtb">
+              <input class="spriteimage" name="textfield" type="text" id="textfield" value="Search" />
+            </div>
+            <div class="searchbt"><a href="#" class="spriteimage"></a></div>
+          </form>
+        </div> -->
+      </div>
+    </div>
+		
+		<nav id="site-navigation" class="main-navigation container menubg" role="navigation">
+        
+			<button class="menu-toggle">Menu</button>
+			<a class="assistive-text" href="#content" title="Skip to content">Skip to content</a>
+			<div class="menu-main-menu-container"><ul id="menu-main-menu" class="nav-menu menu"><li id="menu-item-17" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-17"><a title="Home" href="https://wrc.benzyinfotech.com/">Home</a></li>
+<li id="menu-item-3387" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3387"><a href="https://wrc.benzyinfotech.com/home/b2b-revamp-flight/flight/">Flight</a></li>
+<li id="menu-item-4430" class="menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor menu-item-4430"><a href="https://wrc.benzyinfotech.com/hotels/">Hotels</a></li>
+<li id="menu-item-4481" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4481"><a href="https://wrc.benzyinfotech.com/insurance/">Insurance</a></li>
+<li id="menu-item-3386" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3386"><a href="https://wrc.benzyinfotech.com/home/b2b-revamp-flight/utilities/">Utilities</a></li>
+</ul></div>		</nav><!-- #site-navigation -->
+
+			</header><!-- #masthead -->
+
+	<div id="main" class="wrapper contentcontainer bottomradius">
+	<div id="primary" class="site-content">
+		<div id="content" role="main">
+
+							<div class="rightcontainer">
+	<article id="post-3692" class="post-3692 page type-page status-publish hentry">
+		<header class="entry-header">
+									            <div class="headerbg topradius">
+            <div class="headercontent spriteimage">
+			<h1 class="entry-title">Retrieve Booking</h1>
+            </div>
+            </div>
+		</header>
+
+		<div class="entry-content">
+        <div class="contentbrdr bottomradius">
+        <div class="contentarea">
+       			<div class="breadcrumbs" xmlns:v="http://rdf.data-vocabulary.org/#">
+    <!-- Breadcrumb NavXT 7.3.0 -->
+<span typeof="v:Breadcrumb"><a rel="v:url" property="v:title" title="Go to Web Connect Resource Center." href="https://wrc.benzyinfotech.com" class="home">Home</a></span> &gt; <span typeof="v:Breadcrumb"><a rel="v:url" property="v:title" title="Go to Hotels." href="https://wrc.benzyinfotech.com/hotels/" class="post post-page">Hotels</a></span> &gt; <span typeof="v:Breadcrumb"><span property="v:title">Retrieve Booking</span></span></div>
+						
+			
+        
+			<div style="margin-top: 25px; margin-bottom: 25px;">
+<p>This Api retrieves an existing itinerary.</p>
+<p><b>End Point : </b> {HotelBookingURL}/Utils/RetrieveBooking</p>
+<p><b>Method :</b> POST</p>
+</div>
+<div class="osc-res-tab tabbable   osc-tabs-left"><div style="clear:both;width: 100%;"><ul class="nav osc-res-nav nav-tabs osc-tabs-left-ul" id="oscitas-restabs-1-retrieve-booking-26371"><li class="active"><a href="#ert_pane1-0" data-toggle="tab">Request</a></li><li class=""><a href="#ert_pane1-1" data-toggle="tab">Response</a></li></ul></div><div style="clear:both;width: 100%;"><ul class="tab-content" id="oscitas-restabcontent-1-retrieve-booking-26371"><li class="tab-pane active" id="ert_pane1-0"></p>
+<div style="padding: 10px;">
+<pre><code>
+{
+   "TUI": null,
+   "ReferenceType": "T",
+   "ReferenceNumber": "1234214",
+   "ServiceType": null,
+   "ClientID": "asdf",
+   "RequestMode": "RB",
+   "Contact": null,
+   "Name": null
+}
+
+</code></pre>
+</div>
+<p>
+<table id="tablepress-447" class="tablepress tablepress-id-447">
+<thead>
+<tr class="row-1 odd">
+	<th class="column-1">Field Name</th><th class="column-2">Description</th><th class="column-3">Sample Data</th>
+</tr>
+</thead>
+<tbody class="row-hover">
+<tr class="row-2 even">
+	<td class="column-1">TUI</td><td class="column-2">Transaction Unique Identifier</td><td class="column-3"></td>
+</tr>
+<tr class="row-3 odd">
+	<td class="column-1">ReferenceType</td><td class="column-2">Reference Type</td><td class="column-3">T</td>
+</tr>
+<tr class="row-4 even">
+	<td class="column-1">ReferenceNumber</td><td class="column-2">Reference Number</td><td class="column-3">6345647</td>
+</tr>
+<tr class="row-5 odd">
+	<td class="column-1">ServiceType</td><td class="column-2">Service Type</td><td class="column-3"></td>
+</tr>
+<tr class="row-6 even">
+	<td class="column-1">ClientID</td><td class="column-2">Client ID</td><td class="column-3">Hdshdk</td>
+</tr>
+<tr class="row-7 odd">
+	<td class="column-1">RequestMode</td><td class="column-2">Request Mode</td><td class="column-3">RB</td>
+</tr>
+<tr class="row-8 even">
+	<td class="column-1">Contact</td><td class="column-2">Contact</td><td class="column-3"></td>
+</tr>
+<tr class="row-9 odd">
+	<td class="column-1">Name</td><td class="column-2">Name</td><td class="column-3"></td>
+</tr>
+</tbody>
+</table>
+<br /></li><li class="tab-pane " id="ert_pane1-1"></p>
+<div style="padding: 10px;">
+<pre><code>
+{
+   "TUI": "281e2665-5219-488a-9211-a5a250c9b7be|601eda5f-2d72-4e02-aa54-d630cdade1ff|20200423090747",
+   "TransactionId": 1234214,
+   "ServiceType": "HTL",
+   "BookingConfirmationId": "ASDF",
+   "BookingStatus": "B0",
+   "CurrentStatus": "B0",
+   "CheckInDate": "2021-03-04 12:0:00 AM",
+   "CheckOutDate": "2021-03-05 12:0:00 AM",
+   "CheckInTime": "12:00 PM",
+   "CheckOutTime": "11:00 AM",
+   "GrossFare": 1637.48,
+   "NetFare": 920,
+   "PaymentType": "",
+   "PaymentStatus": "I8",
+   "PaymentMode": "",
+   "Nationality": "",
+   "CountryOfResidence": "",
+   "IssuedDate": "2020-04-23 09:6:47 AM",
+   "IsBadlyMapped": "False",
+   "SuspectCategory": "",
+   "TravelingFor": "",
+   "GateWayCode": "",
+   "GateWayCharge": 0,
+   "InvoiceDate": "23-04-2020",
+   "HotelInfo": {
+      "Code": "15402936",
+      "Name": "FabHotel Khems Ooty",
+      "heroimage": "https://i.travelapi.com/hotels/17000000/16210000/16202000/16201997/8929e70e_b.jpg",
+      "Latitude": "11.409338",
+      "Longitude": "76.70985",
+      "LocationName": "",
+      "Distance": 0,
+      "AllowedCreditCards": "",
+      "AllowedCountries": "",
+      "SpecialRequestSupported": "False",
+      "LeadPaxInfoRequired": "False",
+      "IsCardRequired": "False",
+      "GuaranteeRequired": "False",
+      "Phone": "91-91-7042424242",
+      "StarRating": "3",
+      "HotelAddress": {
+         "City": "Ooty",
+         "State": "",
+         "Country": "IN",
+         "ZIP": "643001",
+         "AddressLine1": "Shoreham Palace Road",
+         "AddressLine2": "Off Ettiness Road"
+      }
+   },
+   "Rooms": [
+      {
+         "ID": "983",
+         "RoomId": "cf243f1f-151f-4a73-9b04-7dbd1a804b51",
+         "GuestCode": "|1|1:A:25",
+         "RoomGroupId": "6878352d-956a-4c5b-9812-882b3f725335",
+         "Name": "Deluxe Room",
+         "Description": "",
+         "Capacity": "1",
+         "NumberOfAdults": "1",
+         "NumberOfChildren": "0",
+         "NumberOfExtraBeds": "0",
+         "SupplierConfirmationNumber": "",
+         "SupplierId": "450",
+         "RecommendationId": "aab02f5b-b699-42c2-9ed7-65712d93400c",
+         "Refundable": "True",
+         "Guests": [
+            {
+               "Title": "Ms",
+               "FirstName": "asdf",
+               "LastName": "asdf",
+               "Email": "asdf@asdf.com",
+               "MobileNumber": "1234123412",
+               "PaxType": "A",
+               "Age": "0",
+               "AadharNo": "",
+               "Pan": ""
+            }
+         ],
+         "RoomRates": [
+            {
+               "TotalRate": 920.24,
+               "BaseRate": 999,
+               "Discount": 0,
+               "ServiceCharge": 14.98,
+               "Commission": 98.68,
+               "TDSOnCommission": 4.93,
+               "PromoAmount": 0,
+               "AddonMarkup": 0,
+               "AddonDiscount": 0,
+               "AgentMarkup": 623.49,
+               "Tax": {
+                  "Description": "tax_and_service_fee",
+                  "Amount": 0
+               },
+               "AdditionalCharges": {
+                  "Amount": 0,
+                  "Description": "",
+                  "Currency": "",
+                  "Type": "",
+                  "Unit": "",
+                  "Frequency": "",
+                  "Text": ""
+               }
+            }
+         ],
+         "CancellationPolicy": [
+            {
+               "text": "Cancellation charge from 2020-04-23 03:37:13 AM to 2021-03-03 12:0:00 AM is INR: 0",
+               "policy": "",
+               "fromDate": "2020-04-23 03:37:13 AM",
+               "toDate": "2021-03-03 12:0:00 AM",
+               "amount": "0"
+            },
+            {
+               "text": "Cancellation charge from 2021-03-03 12:0:00 AM to 2021-03-04 12:0:00 AM is INR: 1013.98",
+               "policy": "",
+               "fromDate": "2021-03-03 12:0:00 AM",
+               "toDate": "2021-03-04 12:0:00 AM",
+               "amount": "1014"
+            }
+         ],
+         "RoomFacilities": [],
+         "RoomInclusions": [],
+         "RoomBoardBasis": [],
+         "RoomPolicies": []
+      }
+   ],
+   "HotelFacilities": [
+      {
+         "name": "Free breakfast"
+      },
+      {
+         "name": "Restaurant"
+      },
+      {
+         "name": "Luggage storage"
+      },
+      {
+         "name": "Accessible bathroom"
+      },
+      {
+         "name": "Free self parking"
+      },
+      {
+         "name": "Free WiFi"
+      },
+      {
+         "name": "Smoke-free property"
+      },
+      {
+         "name": "Free newspapers in lobby"
+      },
+      {
+         "name": "24-hour front desk"
+      },
+      {
+         "name": ""
+      }
+   ],
+   "ContactInfo": {
+      "Title": "Ms",
+      "FName": "asdf",
+      "LName": "asdf",
+      "Mobile": "91xxxxxxxx03",
+      "Phone": "",
+      "Email": "asxx@xxxxxxxxxsdf.com",
+      "Address": "ASDFASDF DASFDASFDSAFDAS",
+      "CountryCode": "IN",
+      "State": "Maharashtra",
+      "City": "ASDFSADF DASFDASF DSF",
+      "PIN": "123412",
+      "GSTCompanyName": "",
+      "GSTTIN": "",
+      "GSTMobile": "",
+      "GSTEmail": "",
+      "GSTAddress": "ASDFASDF ASDF DASFDSAF",
+      "GSTState": "Maharashtra",
+      "UpdateProfile": false,
+      "IsGuest": false
+   },
+   "MoreInfo": [
+      {
+         "Field1": "",
+         "Field2": "",
+         "Field3": "",
+         "Field4": "",
+         "Code": "Policy",
+         "Description": " Couples wishing to share a room must provide proof of marriage. Only registered guests are allowed in the guestrooms. ",
+         "Name": "know before you go"
+      },
+      {
+         "Field1": "",
+         "Field2": "",
+         "Field3": "",
+         "Field4": "",
+         "Code": "CheckinTime",
+         "Description": "Check-In Time is 12:00 PM",
+         "Name": "CheckinTime"
+      },
+      {
+         "Field1": "",
+         "Field2": "",
+         "Field3": "",
+         "Field4": "",
+         "Code": "CheckinInstructions",
+         "Description": "Extra-person charges may apply and vary depending on property policy. Government-issued photo identification and a credit card, debit card, or cash deposit are required at check-in for incidental charges. Special requests are subject to availability upon check-in and may incur additional charges. Special requests cannot be guaranteed. Only bookings from non-local guests are accepted. Guests whose residence is within the same city as the property will not be allowed to check in. Please note that cultural norms and guest policies may differ by country and by property. The policies listed are provided by the property. ",
+         "Name": "CheckinInstructions"
+      },
+      {
+         "Field1": "",
+         "Field2": "",
+         "Field3": "",
+         "Field4": "",
+         "Code": "CheckinSpecialInstructions",
+         "Description": "This property doesn't offer after-hours check-in. Guests arriving late won't be able to check in until the next morning. Taxes are subject to change based on Goods and Services Tax (GST) implementation. For more details, please contact the property using the information on the reservation confirmation received after booking. Please note that PAN cards are not accepted as identification at this property. For more details, please contact the office using the information on the reservation confirmation received after booking.",
+         "Name": "CheckinSpecialInstructions"
+      },
+      {
+         "Field1": "",
+         "Field2": "",
+         "Field3": "",
+         "Field4": "",
+         "Code": "CheckoutTime",
+         "Description": "Check-Out Time is 11:00 AM",
+         "Name": "CheckoutTime"
+      }
+   ],
+   "ItineryStatus": {
+      "Remarks": "",
+      "BookingStatus": "B0",
+      "CurrentStatus": "B0",
+      "ServiceType": "HTL",
+      "StatusDetails": [
+         {
+            "Status": "B0",
+            "PaxSectorID": ""
+         }
+      ]
+   },
+   "Rules": null,
+   "Promo": [
+      {
+         "Code": "",
+         "Amount": 0,
+         "EmployeeID": null,
+         "ConvenienceFee": 0
+      }
+   ],
+   "Auxiliaries": [
+      {
+         "Code": "",
+         "EmployeeID": null,
+         "Amount": 0
+      }
+   ],
+   "PaymentSummary": [],
+   "Remarks": null,
+   "Code": "200",
+   "Msg": [
+      "Success"
+   ]
+}
+
+</code></pre>
+</div>
+<p>
+<table id="tablepress-448" class="tablepress tablepress-id-448">
+<thead>
+<tr class="row-1 odd">
+	<th class="column-1">Field Name</th><th class="column-2">Description</th><th class="column-3">Sample Data</th>
+</tr>
+</thead>
+<tbody class="row-hover">
+<tr class="row-2 even">
+	<td class="column-1">TUI</td><td class="column-2">Transaction Unique Identifier</td><td class="column-3">Dsfsda89sdfsd-dsf8sdfsf-465237ghkj-ghf59-gfhdgfh</td>
+</tr>
+<tr class="row-3 odd">
+	<td class="column-1">TransactionID</td><td class="column-2">Transaction ID</td><td class="column-3">5688534</td>
+</tr>
+<tr class="row-4 even">
+	<td class="column-1">ServiceType</td><td class="column-2">Service Type</td><td class="column-3">HTL</td>
+</tr>
+<tr class="row-5 odd">
+	<td class="column-1"></td><td class="column-2">HTL – Hotel</td><td class="column-3"></td>
+</tr>
+<tr class="row-6 even">
+	<td class="column-1">BookingConfirmationId</td><td class="column-2">Booking Confirmation ID</td><td class="column-3">GDSH</td>
+</tr>
+<tr class="row-7 odd">
+	<td class="column-1">BookingStatus</td><td class="column-2">Booking Status</td><td class="column-3">B0</td>
+</tr>
+<tr class="row-8 even">
+	<td class="column-1">CurrentStatus</td><td class="column-2">The CurrentStatus  will returns the current status of the booking</td><td class="column-3">B0</td>
+</tr>
+<tr class="row-9 odd">
+	<td class="column-1">CheckInDate</td><td class="column-2">Check In Date</td><td class="column-3">44116</td>
+</tr>
+<tr class="row-10 even">
+	<td class="column-1">CheckOutDate</td><td class="column-2">Check Out Date</td><td class="column-3">44117</td>
+</tr>
+<tr class="row-11 odd">
+	<td class="column-1">CheckInTime</td><td class="column-2">Check In Time</td><td class="column-3">12.00.00 PM</td>
+</tr>
+<tr class="row-12 even">
+	<td class="column-1">CheckOutTime</td><td class="column-2">Check Out Time</td><td class="column-3">11.00.00 AM</td>
+</tr>
+<tr class="row-13 odd">
+	<td class="column-1">GrossFare</td><td class="column-2">Gross Fare</td><td class="column-3"></td>
+</tr>
+<tr class="row-14 even">
+	<td class="column-1">NetFare</td><td class="column-2">Net Fare</td><td class="column-3"></td>
+</tr>
+<tr class="row-15 odd">
+	<td class="column-1">PaymentType</td><td class="column-2">Payment Type</td><td class="column-3"></td>
+</tr>
+<tr class="row-16 even">
+	<td class="column-1">PaymentStatus</td><td class="column-2">Payment Status</td><td class="column-3">IS</td>
+</tr>
+<tr class="row-17 odd">
+	<td class="column-1">PaymentMode</td><td class="column-2">Payment Mode</td><td class="column-3"></td>
+</tr>
+<tr class="row-18 even">
+	<td class="column-1">Nationality</td><td class="column-2">Nationality</td><td class="column-3"></td>
+</tr>
+<tr class="row-19 odd">
+	<td class="column-1">CountryOfResidence</td><td class="column-2">Country of residence</td><td class="column-3"></td>
+</tr>
+<tr class="row-20 even">
+	<td class="column-1">IssuedDate</td><td class="column-2">Issued Date</td><td class="column-3"></td>
+</tr>
+<tr class="row-21 odd">
+	<td class="column-1">IsBadlyMapped</td><td class="column-2">Whether bad mapping</td><td class="column-3"></td>
+</tr>
+<tr class="row-22 even">
+	<td class="column-1">SuspectCategory</td><td class="column-2">Suspect Category</td><td class="column-3"></td>
+</tr>
+<tr class="row-23 odd">
+	<td class="column-1">TravelingFor</td><td class="column-2">Travelling For</td><td class="column-3"></td>
+</tr>
+<tr class="row-24 even">
+	<td class="column-1">GatewayCode</td><td class="column-2">Payment Gateway Code</td><td class="column-3"></td>
+</tr>
+<tr class="row-25 odd">
+	<td class="column-1">GateWayCharge</td><td class="column-2">Payment Gateway Charge</td><td class="column-3"></td>
+</tr>
+<tr class="row-26 even">
+	<td class="column-1">InvoiceDate</td><td class="column-2">Invoice Date</td><td class="column-3"></td>
+</tr>
+<tr class="row-27 odd">
+	<td class="column-1">HotelInfo.Code</td><td class="column-2">Hotel Code</td><td class="column-3">43536546</td>
+</tr>
+<tr class="row-28 even">
+	<td class="column-1">HotelInfo.Name</td><td class="column-2">Hotel Name</td><td class="column-3">FabHotel Khems Ooty</td>
+</tr>
+<tr class="row-29 odd">
+	<td class="column-1">HotelInfo.heroimage</td><td class="column-2">Image</td><td class="column-3"></td>
+</tr>
+<tr class="row-30 even">
+	<td class="column-1">HotelInfo.LocationName</td><td class="column-2">Location Name</td><td class="column-3"></td>
+</tr>
+<tr class="row-31 odd">
+	<td class="column-1">HotelInfo.Distance</td><td class="column-2">Distance from city center</td><td class="column-3"></td>
+</tr>
+<tr class="row-32 even">
+	<td class="column-1">HotelInfo.AllowedCreditCards</td><td class="column-2">Allowed Credit Cards</td><td class="column-3"></td>
+</tr>
+<tr class="row-33 odd">
+	<td class="column-1">HotelInfo.AllowedCountries</td><td class="column-2">Allowed countries</td><td class="column-3"></td>
+</tr>
+<tr class="row-34 even">
+	<td class="column-1">HotelInfo.SpecialRequestSupported</td><td class="column-2">Whether special request are supported</td><td class="column-3"></td>
+</tr>
+<tr class="row-35 odd">
+	<td class="column-1">HotelInfo.LeadPaxInfoRequired</td><td class="column-2">Whether lead pax info required</td><td class="column-3"></td>
+</tr>
+<tr class="row-36 even">
+	<td class="column-1">HotelInfo.IsCardRequired</td><td class="column-2">Whether card required for booking</td><td class="column-3"></td>
+</tr>
+<tr class="row-37 odd">
+	<td class="column-1">HotelInfo.GuaranteeRequired</td><td class="column-2">Whether guarantee required</td><td class="column-3"></td>
+</tr>
+<tr class="row-38 even">
+	<td class="column-1">HotelInfo.Phone</td><td class="column-2">Phone</td><td class="column-3"></td>
+</tr>
+<tr class="row-39 odd">
+	<td class="column-1">HotelInfo.StarRating</td><td class="column-2">Star Rating</td><td class="column-3"></td>
+</tr>
+<tr class="row-40 even">
+	<td class="column-1">Rooms.ID</td><td class="column-2">ID</td><td class="column-3">5734</td>
+</tr>
+<tr class="row-41 odd">
+	<td class="column-1">Rooms.RoomId</td><td class="column-2">Room ID</td><td class="column-3">Fdsafa789dsf-sagsdfg4sagds-sg89fgfg-dfsgdsj6746rtr2</td>
+</tr>
+<tr class="row-42 even">
+	<td class="column-1">Rooms.GuestCode</td><td class="column-2">Guest Code</td><td class="column-3">|1|1.A.25</td>
+</tr>
+<tr class="row-43 odd">
+	<td class="column-1">Rooms.RoomGroupId</td><td class="column-2">Room Group Id</td><td class="column-3">Fdsafs-dfghdsg78dgfhgfj-54gfh</td>
+</tr>
+<tr class="row-44 even">
+	<td class="column-1">Rooms.Name</td><td class="column-2">Name</td><td class="column-3"></td>
+</tr>
+<tr class="row-45 odd">
+	<td class="column-1">Rooms.Description</td><td class="column-2">Description</td><td class="column-3"></td>
+</tr>
+<tr class="row-46 even">
+	<td class="column-1">Rooms.Capacity</td><td class="column-2">Capacity</td><td class="column-3">1</td>
+</tr>
+<tr class="row-47 odd">
+	<td class="column-1">Rooms.NumberOfAdults</td><td class="column-2">Number of adults</td><td class="column-3"></td>
+</tr>
+<tr class="row-48 even">
+	<td class="column-1">Rooms.NumberOfChildren</td><td class="column-2">Number of Children</td><td class="column-3"></td>
+</tr>
+<tr class="row-49 odd">
+	<td class="column-1">Rooms.NumberOfExtraBeds</td><td class="column-2">Number of extra beds</td><td class="column-3"></td>
+</tr>
+<tr class="row-50 even">
+	<td class="column-1">Rooms.SupplierConfirmationNumber</td><td class="column-2">Supplier confirmation number</td><td class="column-3"></td>
+</tr>
+<tr class="row-51 odd">
+	<td class="column-1">Rooms.SupplierId</td><td class="column-2">Supplier ID</td><td class="column-3"></td>
+</tr>
+<tr class="row-52 even">
+	<td class="column-1">Rooms.RecommendationId</td><td class="column-2">Recommendation id</td><td class="column-3">Sfgfg-g5435gfhdf67dghdgf-gh78gfhjhfgj-h54546</td>
+</tr>
+<tr class="row-53 odd">
+	<td class="column-1">Rooms.Refundable</td><td class="column-2">Whether refundable</td><td class="column-3"></td>
+</tr>
+<tr class="row-54 even">
+	<td class="column-1">Rooms.Guests.Title</td><td class="column-2">Title</td><td class="column-3">Mr</td>
+</tr>
+<tr class="row-55 odd">
+	<td class="column-1">Rooms.Guests.FirstName</td><td class="column-2">First Name</td><td class="column-3"></td>
+</tr>
+<tr class="row-56 even">
+	<td class="column-1">Rooms.Guests.LastName</td><td class="column-2">Last Name</td><td class="column-3"></td>
+</tr>
+<tr class="row-57 odd">
+	<td class="column-1">Rooms.Guests.Email</td><td class="column-2">Email</td><td class="column-3"></td>
+</tr>
+<tr class="row-58 even">
+	<td class="column-1">Rooms.Guests.MobileNumber</td><td class="column-2">Mobile Number</td><td class="column-3"></td>
+</tr>
+<tr class="row-59 odd">
+	<td class="column-1">Rooms.Guests.PaxType</td><td class="column-2">PaxType<br />
+A- Adult<br />
+C - Child</td><td class="column-3">A</td>
+</tr>
+<tr class="row-60 even">
+	<td class="column-1">Rooms.Guests.Age</td><td class="column-2">Age</td><td class="column-3"></td>
+</tr>
+<tr class="row-61 odd">
+	<td class="column-1">Rooms.Guests.AadharNo</td><td class="column-2">Aadhar Number</td><td class="column-3"></td>
+</tr>
+<tr class="row-62 even">
+	<td class="column-1">Rooms.Guests.Pan</td><td class="column-2">Pan Card Number</td><td class="column-3"></td>
+</tr>
+<tr class="row-63 odd">
+	<td class="column-1">Rooms.RoomRates.TotalRate</td><td class="column-2">Total Rate</td><td class="column-3"></td>
+</tr>
+<tr class="row-64 even">
+	<td class="column-1">Rooms.RoomRates.BaseRate</td><td class="column-2">Base Rate</td><td class="column-3"></td>
+</tr>
+<tr class="row-65 odd">
+	<td class="column-1">Rooms.RoomRates.Discount</td><td class="column-2">Discount</td><td class="column-3"></td>
+</tr>
+<tr class="row-66 even">
+	<td class="column-1">Rooms.RoomRates.ServiceCharge</td><td class="column-2">Service Charge</td><td class="column-3"></td>
+</tr>
+<tr class="row-67 odd">
+	<td class="column-1">Rooms.RoomRates.Commission</td><td class="column-2">Commission</td><td class="column-3"></td>
+</tr>
+<tr class="row-68 even">
+	<td class="column-1">Rooms.RoomRates.TDSOnCommission</td><td class="column-2">TDS on commission</td><td class="column-3"></td>
+</tr>
+<tr class="row-69 odd">
+	<td class="column-1">Rooms.RoomRates.PromoAmount</td><td class="column-2">Promo Amount</td><td class="column-3"></td>
+</tr>
+<tr class="row-70 even">
+	<td class="column-1">Rooms.RoomRates.AddonMarkup</td><td class="column-2">Add-On markup</td><td class="column-3"></td>
+</tr>
+<tr class="row-71 odd">
+	<td class="column-1">Rooms.RoomRates.AddonDiscount</td><td class="column-2">Add-on discount</td><td class="column-3"></td>
+</tr>
+<tr class="row-72 even">
+	<td class="column-1">Rooms.RoomRates.AgentMarkup</td><td class="column-2">Agent Markup</td><td class="column-3"></td>
+</tr>
+<tr class="row-73 odd">
+	<td class="column-1">Rooms.RoomRates.CancellationPolicy.text</td><td class="column-2">Cancellation Policy</td><td class="column-3"></td>
+</tr>
+<tr class="row-74 even">
+	<td class="column-1">Rooms.RoomRates. CancellationPolicy.fromDate</td><td class="column-2">From Date</td><td class="column-3"></td>
+</tr>
+<tr class="row-75 odd">
+	<td class="column-1">Rooms.RoomRates. CancellationPolicy.toDate</td><td class="column-2">To Date</td><td class="column-3"></td>
+</tr>
+<tr class="row-76 even">
+	<td class="column-1">Rooms.RoomRates. CancellationPolicy.amount</td><td class="column-2">Policy Amount</td><td class="column-3"></td>
+</tr>
+</tbody>
+</table>
+<br /></li></ul></div></div>
+ 			          </div>
+          </div>
+            <div class="copy-rgt">
+       	  Copyright © 2015-2016 <a href="#">Benzy Infotech Pvt. Ltd.</a> All rights reserved | <a href="#">Legal Notice</a></div>
+		</div><!-- .entry-content -->
+		<!-- .entry-meta -->
+	</article><!-- #post -->
+    </div>
+				
+<div id="comments" class="comments-area" style="display:none">
+
+	
+	
+	
+</div><!-- #comments .comments-area -->			
+		</div><!-- #content -->
+	</div><!-- #primary -->
+
+
+		</div><!-- #main .wrapper -->
+	<!--<footer id="colophon" role="contentinfo">-->
+		<!-- .site-info -->
+<!--	</footer>--><!-- #colophon -->
+</div><!-- #page -->
+
+<link rel='stylesheet' id='ert_tab_css-css' href='https://wrc.benzyinfotech.com/wp-content/plugins/easy-responsive-tabs/assets/css/tabdrop.css?ver=6.5.10' type='text/css' media='all' />
+<link rel='stylesheet' id='ert_css-css' href='https://wrc.benzyinfotech.com/wp-content/plugins/easy-responsive-tabs/assets/css/ert_css.php?ver=6.5.10' type='text/css' media='all' />
+<script type="text/javascript" src="https://wrc.benzyinfotech.com/wp-content/themes/twentytwelve/js/navigation.js?ver=20140711" id="twentytwelve-navigation-js"></script>
+<script type="text/javascript" src="https://wrc.benzyinfotech.com/wp-content/plugins/easy-responsive-tabs/assets/js/bootstrap-dropdown.js?ver=3.0" id="bootstrap_dropdown-js"></script>
+<script type="text/javascript" src="https://wrc.benzyinfotech.com/wp-content/plugins/easy-responsive-tabs/assets/js/bootstrap-tab.js?ver=3.0" id="bootstrap_tab-js"></script>
+<script type="text/javascript" src="https://wrc.benzyinfotech.com/wp-content/plugins/easy-responsive-tabs/assets/js/bootstrap-tabdrop.js?ver=3.0" id="ert_tab_js-js"></script>
+<script type="text/javascript" src="https://wrc.benzyinfotech.com/wp-content/plugins/easy-responsive-tabs/assets/js/ert_js.php?ver=3.0" id="ert_js-js"></script>
+<script type="text/javascript" src="https://wrc.benzyinfotech.com/wp-content/plugins/tablepress/js/jquery.datatables.min.js?ver=1.6.1" id="tablepress-datatables-js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function($){
+$('#tablepress-447').dataTable({"order":[],"orderClasses":false,"stripeClasses":['even','odd'],"pagingType":"simple"});
+$('#tablepress-448').dataTable({"order":[],"orderClasses":false,"stripeClasses":['even','odd'],"pagingType":"simple"});
+});
+</script></body>
+</html>

@@ -1,0 +1,1987 @@
+[
+  {
+    "name": "Signature",
+    "desc": "Signature API generates a JWT Token to be passed in the header of all API calls.",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "{\r\n   \"MerchantID\": \"****\",\r\n    \"ApiKey\": \"************\",\r\n    \"ClientID\": \"************\",\r\n    \"Password\": \"*************\",\r\n    \"AgentCode\": \"*******\",\r\n    \"BrowserKey\": \"gh53h3e8cdge01dhsaa1bf972f43b\"\r\n\r\n}",
+    "res_json": "{\r\n      \"TUI\": \"c4f5d16f-bc04-4742-948c-7dc48deccc70|62ba31a2-55dc-4341-845c-387e4a6c22d4|20200506132416\",\r\n      \"Token\": \"1dfgeyJhbGhgfdutyutryutysInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMSIsIkFnZW50SW5mbyI6IjdwRDZUTzVQeVhNNjdRQ2w0Rk1LM2x0bGVEUG90aityM0h3Sy8rREZ0UGs9IiwicHdkIjoibmZZVUpWMDVtd3RkRG93TEd5VXgfhdgfhNPZz09IiwiYWdlbnRDhgfdhb2RlIjoiL0tmZFl3ZXNxUHc9IiwiY2xpZW50SWQiOiIxRGlkUEhaTTRoaWxhUjBab0FXVHZnPT0iLCJCcm93c2VyS2V5IjoiVHBlaVpUbEpXT3ZpemtGbG0zQzQvMk96K2hTa1hUY0pUOUlrOFYzRkIzWmREb3dMR3lVc09nPT0iLCJuYmYiOjE1ODg3NTE2NTYsImV4cCI6MTU5NzM5MTY1NiwiaWF0IjoxNTg4NzUxNjU2LCJpc3MiOiJ3ZWJj5474ghjghfjb25uZWN0IiwiYXVkIjoiY2xpZW50In0.uGudrgRSxaayGMJ_o47A-D6M6vSxOkNHFNTpAAF2D654Y6\",\r\n      \"ClientID\": \"dsg6546hgfdhdfgh896789kl=\",\r\n      \"LastLoginDate\": \"5/6/2020 11:16:54 AM\",\r\n      \"Password\": \"*************\",\r\n      \"loginAttempts\": 0,\r\n      \"Code\": \"200\",\r\n      \"Msg\": [\r\n         \"Success\"\r\n      ]   \r\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "TUI",
+        "Transaction Unique Identifier.",
+        "af80de34-fccb-4c28-9365-6740b775265b|4913ba1b-4ecd-4909-9c1e-e1a47161c31c|20200625105832"
+      ],
+      [
+        "Token",
+        "Token\nThis value needs to be passed into the next API request.",
+        "eyJhbGciOiJIUzI1NiIsInRsdf5cCI6IkpXVCJ9.eyJ1bm lxdWVfbmFtZSI6IjEwMCIsIkFnZW50SW5mbyI6Im9 telV5OW85WDdrdkE3Q0YvTmovclVrQ0JLakh4R0YxU zF3QnNRck9neDg9IiwicHdkIjoiZVNTOEhSVnlBaWVTR U9lQ nNSc1dVdz09IiwiYWdlbnRDb2RlIjoiL0tmZFl3ZXNxUH c9IiwiY2xpZW50SWQiOiJZL1p5U2hSRmdZOD0iLCJCcm 93c2VyS2V5IjoiQXQyRzRWMVZkVWNGRjgxdUZGY1gzS kJQR3h1TVNDUlJvc1ZWaXc4NisrbGREb3dMR3lVc09nP T0iLCJuYmYiOjE1OTMsfwNjI5MTIsImV4cCI6MTYwMTcw MjkxMiwiaWF0IjoxNTkzMDYyOTEyLCJpc3MiOiJ3ZWJjb25 uZWN0IiwiYXVkIjoiY2xpZW50In0.rflINXNwcZxWVclYju9s ds6Oa-Uenf22jIhlbtOPE7I"
+      ],
+      [
+        "ClientID",
+        "Client ID",
+        ""
+      ],
+      [
+        "LastLoginDate",
+        "Last Logged in Date",
+        ""
+      ],
+      [
+        "Password",
+        "Password",
+        ""
+      ],
+      [
+        "LoginAttempts",
+        "Login Attempts",
+        "0"
+      ],
+      [
+        "Code",
+        "Response Code",
+        "200"
+      ],
+      [
+        "Msg",
+        "Response Message",
+        "Success"
+      ]
+    ]
+  },
+  {
+    "name": "AutoSuggest",
+    "desc": "Auto Suggest",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "",
+    "res_json": "{\r\n  \"locations\": [\r\n    {\r\n      \"id\": \"376416\",\r\n      \"name\": \"Boma (BOA)\",\r\n      \"fullName\": \"Boma, Democratic Republic of the Congo (BOA)\",\r\n      \"code\": \"boa\",\r\n      \"type\": \"airport\",\r\n      \"city\": null,\r\n      \"state\": null,\r\n      \"country\": \"CD\",\r\n      \"score\": 0,\r\n      \"referenceId\": null,\r\n      \"coordinates\": {\r\n        \"lat\": -5.856491,\r\n        \"long\": 13.061516\r\n      }\r\n    },\r\n    {\r\n      \"id\": \"247112\",\r\n      \"name\": \"Mumbai (BOM-Chhatrapati Shivaji Intl.)\",\r\n      \"fullName\": \"Mumbai, India (BOM-Chhatrapati Shivaji Intl.)\",\r\n      \"code\": \"bom\",\r\n      \"type\": \"airport\",\r\n      \"city\": null,\r\n      \"state\": null,\r\n      \"country\": \"IN\",\r\n      \"score\": 0,\r\n      \"referenceId\": null,\r\n      \"coordinates\": {\r\n        \"lat\": 19.099533,\r\n        \"long\": 72.874331\r\n      }\r\n    },\r\n    {\r\n      \"id\": \"588820\",\r\n      \"name\": \"Bommern\",\r\n      \"fullName\": \"Bommern, Witten, North Rhine-Westphalia, Germany\",\r\n      \"code\": null,\r\n      \"type\": \"neighborhood\",\r\n      \"city\": null,\r\n      \"state\": null,\r\n      \"country\": \"DE\",\r\n      \"score\": 0,\r\n      \"referenceId\": null,\r\n      \"coordinates\": {\r\n        \"lat\": 51.413364,\r\n        \"long\": 7.333714\r\n      }\r\n    }\r\n   \r\n  ],\r\n  \"status\": \"success\"\r\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "id",
+        "Location ID",
+        "376416"
+      ],
+      [
+        "name",
+        "Location Name",
+        "Bommern"
+      ],
+      [
+        "fullName",
+        "Location Full Name",
+        "Bommern, Witten, North Rhine-Westphalia, Germany"
+      ],
+      [
+        "code",
+        "Location Code",
+        "null"
+      ],
+      [
+        "type",
+        "Location Type",
+        "neighborhood"
+      ],
+      [
+        "city",
+        "City",
+        ""
+      ],
+      [
+        "state",
+        "State",
+        ""
+      ],
+      [
+        "country",
+        "Country",
+        "DE"
+      ],
+      [
+        "score",
+        "Not Used",
+        "0"
+      ],
+      [
+        "referenceId",
+        "Not Used",
+        "null"
+      ],
+      [
+        "coordinates.lat",
+        "Lattitude",
+        "51.413364"
+      ],
+      [
+        "coordinates.long",
+        "Longitude",
+        "7.333714"
+      ],
+      [
+        "status",
+        "Response Status",
+        "Success"
+      ]
+    ]
+  },
+  {
+    "name": "Init",
+    "desc": "This API initiates a hotel search based on geo-codes and returns a SearchID which is to be passed into following API Call. A Search ID is valid for 1 hour only.",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "{\n  \"geoCode\": {\n    \"lat\": \"9.931233\",\n    \"long\": \"76.267304\"\n  },\n  \"locationId\": \"329184\",\n  \"currency\": \"INR\",\n  \"culture\": \"en-US\",\n  \"checkIn\": \"04/23/2024\",\n  \"checkOut\": \"04/24/2024\",\n  \"rooms\": [\n    {\n      \"adults\": \"1\",\n      \"children\": \"0\",\n      \"childAges\": []\n    }\n  ],\n  \"agentCode\": \"xxxxxx\",\n  \"destinationCountryCode\": \"IN\",\n  \"nationality\": \"IN\",\n  \"countryOfResidence\": \"IN\",\n  \"channelId\": \"b2bIndiaDeals\",\n  \"affiliateRegion\": \"B2B_India\",\n  \"segmentId\": \"\",\n  \"companyId\": \"1\",\n  \"gstPercentage\": 0,\n  \"tdsPercentage\": 0\n}",
+    "res_json": "{\n      \"searchId\": \"fdc1d9fc-7df3-45ef-8474-79d300efb669\",\n      \"searchTracingKey\": \"3496447b-df4b-410b-91ad-0029ad872cca\",\n      \"status\": \"success\"\n   }",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "searchId",
+        "Search ID",
+        "fdc1d9fc-7df3-45ef-8474-79d300efb669"
+      ],
+      [
+        "searchTracingKey",
+        "Search Tracing Key",
+        "3496447b-df4b-410b-91ad-0029ad872cca"
+      ],
+      [
+        "status",
+        "Status",
+        "success"
+      ]
+    ]
+  },
+  {
+    "name": "Hotel Content",
+    "desc": "It returns static details of hotel like name, city, star- rating etc.",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "{\n   \"limit\": \"50\",\n   \"offset\": \"-1\",\n   \"filterdata\": \"false\"\n}",
+    "res_json": "{\n    \"searchId\": \"90ffddc1-6546-4d5c-8a61-736814f44f0e\",\n    \"locationId\": \"246673\",\n    \"locationName\": \"Singapore\",\n    \"hotels\": [\n        {\n            \"id\": \"38688811\",\n            \"name\": \"Resorts World Sentosa - Hotel Ora\",\n            \"starRating\": 5.0,\n            \"address\": \"8 Sentosa Gateway, Resorts World Sentosa, Singapore, SG 098269\",\n            \"distance\": 5.27,\n            \"heroImage\": \"https://i.travelapi.com/lodging/10000000/9630000/9623700/9623643/2d3922c3_b.jpg\",\n            \"facilities\": [\n                {\n                    \"id\": 62,\n                    \"groupId\": 62,\n                    \"name\": \"Elevator\"\n                },\n                {\n                    \"id\": 1,\n                    \"groupId\": 1,\n                    \"name\": \"Parking\"\n                },\n                {\n                    \"id\": 32,\n                    \"groupId\": 32,\n                    \"name\": \"Safe deposit box\"\n                },\n                {\n                    \"id\": 2,\n                    \"groupId\": 2,\n                    \"name\": \"Lounge\"\n                },\n                {\n                    \"id\": 34,\n                    \"groupId\": 34,\n                    \"name\": \"Disable Friendly\"\n                },\n                {\n                    \"id\": 4,\n                    \"groupId\": 4,\n                    \"name\": \"Casino\"\n                },\n                {\n                    \"id\": 5,\n                    \"groupId\": 5,\n                    \"name\": \"Breakfast\"\n                },\n                {\n                    \"id\": 68,\n                    \"groupId\": 68,\n                    \"name\": \"Electric car charging stations\"\n                },\n                {\n                    \"id\": 6,\n                    \"groupId\": 6,\n                    \"name\": \"Business Center\"\n                },\n                {\n                    \"id\": 8,\n                    \"groupId\": 8,\n                    \"name\": \"Bar\"\n                },\n                {\n                    \"id\": 11,\n                    \"groupId\": 11,\n                    \"name\": \"Television\"\n                },\n              {\n                \"id\": 12,\n                \"groupId\": 12,\n                \"name\": \"Laundry Services\"\n              },\n                {\n                    \"id\": 13,\n                    \"groupId\": 13,\n                    \"name\": \"Swimming Pool\"\n                },\n                {\n                    \"id\": 14,\n                    \"groupId\": 14,\n                    \"name\": \"Restaurant\"\n                },\n                {\n                    \"id\": 76,\n                    \"groupId\": 76,\n                    \"name\": \"ThingsToDo\"\n                },\n                {\n                    \"id\": 77,\n                    \"groupId\": 77,\n                    \"name\": \"GuestServices\"\n                },\n                {\n                    \"id\": 16,\n                    \"groupId\": 16,\n                    \"name\": \"Internet\"\n                },\n                {\n                    \"id\": 17,\n                    \"groupId\": 17,\n                    \"name\": \"Fitness Facility\"\n                },\n                {\n                    \"id\": 49,\n                    \"groupId\": 49,\n                    \"name\": \"Concierge Services\"\n                },\n                {\n                    \"id\": 80,\n                    \"groupId\": 80,\n                    \"name\": \"Conveniences\"\n                }\n            ],\n            \"geoCode\": {\n                \"lat\": 1.255084,\n                \"long\": 103.82029\n            },\n            \"provider\": \"EAN\",\n            \"userReview\": {\n                \"provider\": \"EAN\",\n                \"count\": 33,\n                \"rating\": 4.2,\n                \"url\": null,\n                \"reviews\": null\n            },\n            \"relevanceScore\": 35.0,\n            \"rate\": null,\n            \"isRecommended\": null,\n            \"isRefundable\": null,\n            \"payAtHotel\": null,\n            \"moreRatesExpected\": false,\n            \"isSoldOut\": false,\n            \"freeBreakfast\": null,\n            \"freeCancellation\": null,\n            \"chainName\": \"Resorts World Sentosa\",\n            \"locationName\": null,\n            \"propertyType\": \"Hotel\",\n            \"images\": []\n        },\n        {\n            \"id\": \"38946658\",\n            \"name\": \"Resorts World Sentosa - Equarius Hotel\",\n            \"starRating\": 5.0,\n            \"address\": \"8 Sentosa Gateway, Sentosa Island, Singapore, SG 098269\",\n            \"distance\": 5.27,\n            \"heroImage\": \"https://i.travelapi.com/lodging/6000000/5420000/5415100/5415025/9da4f2fb_b.jpg\",\n            \"facilities\": [\n                {\n                    \"id\": 62,\n                    \"groupId\": 62,\n                    \"name\": \"Elevator\"\n                },\n                {\n                    \"id\": 1,\n                    \"groupId\": 1,\n                    \"name\": \"Parking\"\n                },\n                {\n                    \"id\": 32,\n                    \"groupId\": 32,\n                    \"name\": \"Safe deposit box\"\n                },\n                {\n                    \"id\": 2,\n                    \"groupId\": 2,\n                    \"name\": \"Lounge\"\n                },\n                {\n                    \"id\": 34,\n                    \"groupId\": 34,\n                    \"name\": \"Disable Friendly\"\n                },\n                {\n                    \"id\": 4,\n                    \"groupId\": 4,\n                    \"name\": \"Casino\"\n                },\n                {\n                    \"id\": 5,\n                    \"groupId\": 5,\n                    \"name\": \"Breakfast\"\n                },\n                {\n                    \"id\": 67,\n                    \"groupId\": 67,\n                    \"name\": \"Garden\"\n                },\n                {\n                    \"id\": 68,\n                    \"groupId\": 68,\n                    \"name\": \"Electric car charging stations\"\n                },\n                {\n                    \"id\": 6,\n                    \"groupId\": 6,\n                    \"name\": \"Business Center\"\n                },\n                {\n                    \"id\": 10,\n                    \"groupId\": 10,\n                    \"name\": \"Non Smoking\"\n                },\n                {\n                    \"id\": 11,\n                    \"groupId\": 11,\n                    \"name\": \"Television\"\n                },\n                {\n                    \"id\": 12,\n                    \"groupId\": 12,\n                    \"name\": \"Laundry Services\"\n                },\n                {\n                    \"id\": 13,\n                    \"groupId\": 13,\n                    \"name\": \"Swimming Pool\"\n                },\n                {\n                    \"id\": 14,\n                    \"groupId\": 14,\n                    \"name\": \"Restaurant\"\n                },\n                {\n                    \"id\": 76,\n                    \"groupId\": 76,\n                    \"name\": \"ThingsToDo\"\n                },\n                {\n                    \"id\": 77,\n                    \"groupId\": 77,\n                    \"name\": \"GuestServices\"\n                },\n                {\n                    \"id\": 16,\n                    \"groupId\": 16,\n                    \"name\": \"Internet\"\n                },\n                {\n                    \"id\": 17,\n                    \"groupId\": 17,\n                    \"name\": \"Fitness Facility\"\n                },\n                {\n                    \"id\": 49,\n                    \"groupId\": 49,\n                    \"name\": \"Concierge Services\"\n                },\n                {\n                    \"id\": 80,\n                    \"groupId\": 80,\n                    \"name\": \"Conveniences\"\n                },\n                {\n                    \"id\": 29,\n                    \"groupId\": 29,\n                    \"name\": \"Banquet\"\n                }\n            ],\n            \"geoCode\": {\n                \"lat\": 1.255065,\n                \"long\": 103.82028\n            },\n            \"provider\": \"EAN\",\n            \"userReview\": {\n                \"provider\": \"EAN\",\n                \"count\": 570,\n                \"rating\": 4.2,\n                \"url\": null,\n                \"reviews\": null\n            },\n            \"relevanceScore\": 35.0,\n            \"rate\": null,\n            \"isRecommended\": null,\n            \"isRefundable\": null,\n            \"payAtHotel\": null,\n            \"moreRatesExpected\": false,\n            \"isSoldOut\": false,\n            \"freeBreakfast\": null,\n            \"freeCancellation\": null,\n            \"chainName\": \"Resorts World Sentosa\",\n            \"locationName\": null,\n            \"propertyType\": \"Hotel\",\n            \"images\": []\n        }   ],\n    \"filters\": null,\n    \"total\": 791,\n    \"status\": \"success\"\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "searchId",
+        "Search ID",
+        "90ffddc1-6546-4d5c-8a61-736814f44f0e"
+      ],
+      [
+        "locationId",
+        "Location ID",
+        "246673"
+      ],
+      [
+        "locationName",
+        "Location Name",
+        "Singapore"
+      ],
+      [
+        "hotels.id",
+        "Hotel ID",
+        "1001077774"
+      ],
+      [
+        "hotels.name",
+        "Hotel Name",
+        "Sri Krishna residency"
+      ],
+      [
+        "hotels.starRating",
+        "Hotel Star Rating",
+        "0"
+      ],
+      [
+        "hotels.address",
+        "address",
+        ""
+      ],
+      [
+        "hotels.distance",
+        "Distance from city center in Km",
+        "0.02"
+      ],
+      [
+        "hotels.heroImage",
+        "heroImage",
+        "https://cdn-images.innstant-servers.com/500x250/25/366/25366892.jpg"
+      ],
+      [
+        "hotels.facilities",
+        "Facilities",
+        ""
+      ],
+      [
+        "hotels.geoCode",
+        "Latitude and Longitude\nEither geo code or location id required. Google geo co-ordinates can be passed if not using autosuggest API",
+        "\"lat\": 11.40737,\n\"long\": 76.70396"
+      ],
+      [
+        "hotels.provider",
+        "Provider",
+        "Innstant"
+      ],
+      [
+        "hotels.userReview",
+        "User Review",
+        ""
+      ],
+      [
+        "hotels.relevanceScore",
+        "Relevance Score",
+        ""
+      ],
+      [
+        "hotels.rate",
+        "Tariff",
+        ""
+      ],
+      [
+        "hotels.isRecommended",
+        "Whether Recommended",
+        ""
+      ],
+      [
+        "hotels.isRefundable",
+        "Whether rate is refundable",
+        ""
+      ],
+      [
+        "hotels.payAtHotel",
+        "Whether Pay At Hotel facility availabile",
+        "false"
+      ],
+      [
+        "hotels.moreRatesExpected",
+        "Whether more rates expected",
+        "false"
+      ],
+      [
+        "hotels.isSoldOut",
+        "Whether sold out",
+        "false"
+      ],
+      [
+        "hotels.freeBreakfast",
+        "Whether free breakfast provided",
+        ""
+      ],
+      [
+        "hotels.freeCancellation",
+        "Whether cancellation is free of cost.",
+        ""
+      ],
+      [
+        "hotels.chainName",
+        "Hotel Chain Name",
+        ""
+      ],
+      [
+        "hotels.locationName",
+        "Location Name",
+        ""
+      ],
+      [
+        "hotels.propertyType",
+        "Property Type",
+        ""
+      ],
+      [
+        "hotels.images",
+        "Hotel Images",
+        "[\n               \"https://cdn-images.innstant-servers.com/500x250/25/366/25366892.jpg\",\n               \"https://cdn-images.innstant-servers.com/500x250/25/366/25366893.jpg\",\n               \"https://cdn-images.innstant-servers.com/375x500/25/366/25366894.jpg\",\n               \"https://cdn-images.innstant-servers.com/500x286/25/366/25366895.jpg\",\n               \"https://cdn-images.innstant-servers.com/500x375/25/366/25366896.jpg\"\n            ]"
+      ],
+      [
+        "hotels.filters",
+        "filters",
+        ""
+      ],
+      [
+        "hotels.total",
+        "Itinerary count",
+        "398"
+      ],
+      [
+        "hotels.status",
+        "Status",
+        "Success"
+      ]
+    ]
+  },
+  {
+    "name": "Hotel Rate",
+    "desc": "It returns hotel indicative fare details from multiple providers.",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "",
+    "res_json": "{\r\n   \"searchStatus\": \"completed\",\r\n   \"hotels\": [\r\n      {\r\n         \"id\": \"16179257\",\r\n         \"rate\": {\r\n            \"total\": 860.36,\r\n            \"baseRate\": 934,\r\n            \"commission\": 93.4,\r\n            \"discounts\": 0,\r\n            \"taxes\": 0,\r\n            \"provider\": \"Fab\",\r\n            \"pointEquivalent\": 0,\r\n            \"otherRateComponents\": [\r\n               {\r\n                  \"amount\": 5,\r\n                  \"description\": \"Agency Markup\",\r\n                  \"type\": \"AgencyMarkup\"\r\n               },\r\n               {\r\n                  \"amount\": 14.01,\r\n                  \"description\": \"ATO Markup\",\r\n                  \"type\": \"Markup\"\r\n               },\r\n               {\r\n                  \"amount\": 92.26,\r\n                  \"description\": \"PassOnCommission\",\r\n                  \"type\": \"PassOnCommission\"\r\n               },\r\n               {\r\n                  \"amount\": 4.61,\r\n                  \"description\": \"TdsOnCommission\",\r\n                  \"type\": \"TdsOnCommission\"\r\n               }\r\n            ],\r\n            \"offer\": null,\r\n            \"gstOnCommission\": 1.236\r\n         },\r\n         \"isRecommended\": true,\r\n         \"moreRatesExpected\": true,\r\n         \"isRefundable\": true,\r\n         \"freeBreakfast\": null,\r\n         \"payAtHotel\": false,\r\n         \"freeCancellation\": true\r\n      },\r\n      {\r\n         \"id\": \"16352945\",\r\n         \"rate\": {\r\n            \"total\": 860.36,\r\n            \"baseRate\": 934,\r\n            \"commission\": 93.4,\r\n            \"discounts\": 0,\r\n            \"taxes\": 0,\r\n            \"provider\": \"Fab\",\r\n            \"pointEquivalent\": 0,\r\n            \"otherRateComponents\": [\r\n               {\r\n                  \"amount\": 5,\r\n                  \"description\": \"Agency Markup\",\r\n                  \"type\": \"AgencyMarkup\"\r\n               },\r\n               {\r\n                  \"amount\": 14.01,\r\n                  \"description\": \"ATO Markup\",\r\n                  \"type\": \"Markup\"\r\n               },\r\n               {\r\n                  \"amount\": 92.26,\r\n                  \"description\": \"PassOnCommission\",\r\n                  \"type\": \"PassOnCommission\"\r\n               },\r\n               {\r\n                  \"amount\": 4.61,\r\n                  \"description\": \"TdsOnCommission\",\r\n                  \"type\": \"TdsOnCommission\"\r\n               }\r\n            ],\r\n            \"offer\": null,\r\n            \"gstOnCommission\": 1.236\r\n         },\r\n         \"isRecommended\": true,\r\n         \"moreRatesExpected\": true,\r\n         \"isRefundable\": true,\r\n         \"freeBreakfast\": null,\r\n         \"payAtHotel\": false,\r\n         \"freeCancellation\": true\r\n      },\r\n      {\r\n         \"id\": \"16284317\",\r\n         \"rate\": {\r\n            \"total\": 860.36,\r\n            \"baseRate\": 934,\r\n            \"commission\": 93.4,\r\n            \"discounts\": 0,\r\n            \"taxes\": 0,\r\n            \"provider\": \"Fab\",\r\n            \"pointEquivalent\": 0,\r\n            \"otherRateComponents\": [\r\n               {\r\n                  \"amount\": 5,\r\n                  \"description\": \"Agency Markup\",\r\n                  \"type\": \"AgencyMarkup\"\r\n               },\r\n               {\r\n                  \"amount\": 14.01,\r\n                  \"description\": \"ATO Markup\",\r\n                  \"type\": \"Markup\"\r\n               },\r\n               {\r\n                  \"amount\": 92.26,\r\n                  \"description\": \"PassOnCommission\",\r\n                  \"type\": \"PassOnCommission\"\r\n               },\r\n               {\r\n                  \"amount\": 4.61,\r\n                  \"description\": \"TdsOnCommission\",\r\n                  \"type\": \"TdsOnCommission\"\r\n               }\r\n            ],\r\n            \"offer\": null,\r\n            \"gstOnCommission\": 1.236\r\n         },\r\n         \"isRecommended\": true,\r\n         \"moreRatesExpected\": true,\r\n         \"isRefundable\": true,\r\n         \"freeBreakfast\": null,\r\n         \"payAtHotel\": false,\r\n         \"freeCancellation\": true\r\n      }\r\n   ],\r\n   \"currency\": \"INR\",\r\n   \"total\": 66,\r\n   \"status\": \"success\"\r\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "searchStatus",
+        "Need to call the API again until searchStatus is \"Completed\"\n\nPossible values are \"Completed\" and \"In Progress\".",
+        "Completed"
+      ],
+      [
+        "hotels.id",
+        "Hotel ID",
+        "ID"
+      ],
+      [
+        "hotels.rate.total",
+        "Total Rate",
+        ""
+      ],
+      [
+        "hotels.rate.baseRate",
+        "Rate",
+        ""
+      ],
+      [
+        "hotels.rate.commission",
+        "Commission",
+        ""
+      ],
+      [
+        "hotels.rate.discounts",
+        "Discounts",
+        ""
+      ],
+      [
+        "hotels.rate.taxes",
+        "Taxes",
+        ""
+      ],
+      [
+        "hotels.rate.provider",
+        "Provider",
+        "Fab"
+      ],
+      [
+        "hotels.rate.pointEquivalent",
+        "Point Equivalent",
+        ""
+      ],
+      [
+        "hotels.rate.otherRateComponents.amount",
+        "Amount",
+        "5"
+      ],
+      [
+        "hotels.rate.otherRateComponents.description",
+        "Description",
+        "Agency Markup"
+      ],
+      [
+        "hotels.rate.otherRateComponents.type",
+        "Type",
+        "AgencyMarkup"
+      ],
+      [
+        "hotels.rate.offer",
+        "offer",
+        ""
+      ],
+      [
+        "hotels.rate.gstOnCommission",
+        "GST on commission",
+        "1.236"
+      ],
+      [
+        "hotels.isRecommended",
+        "Whether Recommended",
+        ""
+      ],
+      [
+        "hotels.isRefundable",
+        "Whether rate is refundable",
+        ""
+      ],
+      [
+        "hotels.moreRatesExpected",
+        "Whether more rates expected",
+        "false"
+      ],
+      [
+        "hotels.freeBreakfast",
+        "Whether free breakfast provided",
+        ""
+      ],
+      [
+        "currency",
+        "Currency",
+        "INR"
+      ],
+      [
+        "total",
+        "Total Count",
+        "66"
+      ],
+      [
+        "status",
+        "Status",
+        "Success"
+      ]
+    ]
+  },
+  {
+    "name": "Filter Data",
+    "desc": "Filter data API is used to bind filters like price range, nearest attractions, chain properties, amenities etc.",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "",
+    "res_json": "{ \r\n   \"JSON\": { \r\n      \"filters\": [ \r\n         { \r\n            \"name\": \"Hotel Name\",\r\n            \"category\": \"HotelName\",\r\n            \"type\": \"text\",\r\n            \"options\": null\r\n         },\r\n         { \r\n            \"name\": \"Price Group\",\r\n            \"category\": \"PriceGroup\",\r\n            \"type\": \"range\",\r\n            \"options\": [ \r\n               { \r\n                  \"min\": 0,\r\n                  \"max\": 7000,\r\n                  \"label\": \"Upto \u20b97000\",\r\n                  \"count\": 58\r\n               },\r\n               { \r\n                  \"min\": 7000,\r\n                  \"max\": 12000,\r\n                  \"label\": \"\u20b97000 to \u20b912000\",\r\n                  \"count\": 5\r\n               },\r\n               { \r\n                  \"min\": 12000,\r\n                  \"max\": 28000,\r\n                  \"label\": \"\u20b912000 to \u20b928000\",\r\n                  \"count\": 2\r\n               },\r\n               { \r\n                  \"min\": 28000,\r\n                  \"max\": -1,\r\n                  \"label\": \"\u20b928000 & More\",\r\n                  \"count\": 1\r\n               }\r\n            ]\r\n         },\r\n         { \r\n            \"name\": \"Locations\",\r\n            \"category\": \"Locations\",\r\n            \"type\": \"list\",\r\n            \"options\": [ \r\n               { \r\n                  \"category\": null,\r\n                  \"value\": \"1000982903,1001027212,15402977,1000971858,16551193,15403210,17202690,15402703,15402924,15773110,15610776,16273038,15586282,16454855,16448917,15775369,16352945,15730776,16179257,16184510,16095678,15271802,16222262,16358369,1001126283,15197738,15541578,17514660,15403229,17210035,15777505,16274562,16073390,16298223,1001192571,16796461,16131420,17371280,16291017,17237844,1001031206,1000819533,17350830,1001180647,16459424,29129562,1000793292,16432867\",\r\n                  \"label\": \"Kandal\",\r\n                  \"count\": 48\r\n               \r\n            ]\r\n         },\r\n\r\n         { \r\n            \"name\": \"Attraction\",\r\n            \"category\": \"Attraction\",\r\n            \"type\": \"list\",\r\n            \"options\": [ \r\n               { \r\n                  \"value\": \"11.404128,76.70798\",\r\n                  \"label\": \"Muniswarar Temple\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.418877,76.71145\",\r\n                  \"label\": \"Government Botanical Gardens\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.412778,76.69174\",\r\n                  \"label\": \"Government Museum\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.412968,76.69929\",\r\n                  \"label\": \"Upper Bhavani Lake\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.4,76.7\",\r\n                  \"label\": \"Second World War Memorial Pillar\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.408446,76.70756\",\r\n                  \"label\": \"Diyanamyam Mutt\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.421812,76.710686\",\r\n                  \"label\": \"Raj Bhavan\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.4,76.7\",\r\n                  \"label\": \"Lady Canning's Seat\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.403322,76.67638\",\r\n                  \"label\": \"Arranmore Palace\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.406774,76.68799\",\r\n                  \"label\": \"Thread Garden\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.40597,76.69987\",\r\n                  \"label\": \"Mudumalai National Park\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.396089,76.68945\",\r\n                  \"label\": \"Cairn Hill\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.421812,76.710686\",\r\n                  \"label\": \"Raj Bhawan\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.394449,76.70555\",\r\n                  \"label\": \"Sri Mariamman Temple\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.40106,76.73578\",\r\n                  \"label\": \"Doddabetta Peak\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.414729,76.70205\",\r\n                  \"label\": \"St. Stephen's Church\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.404617,76.70873\",\r\n                  \"label\": \"Ooty Rose Garden\",\r\n                  \"count\": 0\r\n               },\r\n               { \r\n                  \"value\": \"11.40432,76.68764\",\r\n                  \"label\": \"Ooty Lake\",\r\n                  \"count\": 0\r\n               }\r\n            ]\r\n         }\r\n      ],\r\n      \"status\": \"success\"\r\n   }\r\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "filters.name",
+        "Filter Name",
+        "Hotel Name"
+      ],
+      [
+        "category",
+        "Category",
+        "Hotel Name"
+      ],
+      [
+        "type",
+        "Filter Type",
+        "Text"
+      ],
+      [
+        "options.min",
+        "Minimum Value",
+        "0"
+      ],
+      [
+        "options.max",
+        "Maximum Value",
+        "7000"
+      ],
+      [
+        "options.label",
+        "Label",
+        "Upto Rs.7000"
+      ],
+      [
+        "options.count",
+        "Count",
+        "56"
+      ],
+      [
+        "status",
+        "Status",
+        "Success"
+      ]
+    ]
+  },
+  {
+    "name": "More Rooms - Content",
+    "desc": "It returns static Room content details.",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "",
+    "res_json": "{ \r\n   \"hotel\": {\r\n      \"id\": \"16093845\",\r\n      \"name\": \"Sai Hill Top Resorts\",\r\n      \"relevanceScore\": 0,\r\n      \"providerFamily\": \"Agoda\",\r\n      \"providerHotelId\": \"5047791\",\r\n      \"language\": null,\r\n      \"providerName\": \"Agoda\",\r\n      \"geoCode\": {\r\n         \"lat\": 11.409,\r\n         \"long\": 76.7016\r\n      },\r\n      \"neighbourhoods\": [],\r\n      \"contact\": {\r\n         \"address\": {\r\n            \"line1\": \"2F, Sathya Sai Nagar,Valley View,Coonoor Road,Ooty 643 001,Tamil Nadu 643001 Ooty\",\r\n            \"line2\": \"\",\r\n            \"destinationCode\": null,\r\n            \"city\": \"Ooty\",\r\n            \"state\": \"\",\r\n            \"country\": \"IN\",\r\n            \"postalCode\": \"643001\"\r\n         },\r\n         \"phones\": null,\r\n         \"faxes\": null,\r\n         \"emails\": null,\r\n         \"website\": \"https://www.agoda.com/partners/partnersearch.aspx?hid=5047791\"\r\n      },\r\n      \"chainCode\": \"0\",\r\n      \"chainName\": \"No chain\",\r\n      \"type\": \"Hotel\",\r\n      \"website\": \"https://www.agoda.com/partners/partnersearch.aspx?hid=5047791\",\r\n      \"descriptions\": [\r\n         {\r\n            \"type\": \"description\",\r\n            \"text\": \"\"\r\n         }\r\n      ],\r\n      \"category\": \"Hotel\",\r\n      \"starRating\": 3,\r\n      \"facilityGroups\": [],\r\n      \"facilities\": [],\r\n      \"nearByAttractions\": [],\r\n      \"images\": [],\r\n      \"policies\": [\r\n         {\r\n            \"type\": \"children policy\",\r\n            \"text\": \"Age between 0 to 0 is considered children. Up to 0 years is considered infant. Minimum allowed age for this hotel is 0. \"\r\n         }\r\n      ],\r\n      \"fees\": [],\r\n      \"reviews\": [\r\n         {\r\n            \"provider\": \"Agoda\",\r\n            \"count\": 0,\r\n            \"rating\": 0,\r\n            \"url\": null,\r\n            \"reviews\": null\r\n         }\r\n      ],\r\n      \"checkinInfo\": {\r\n         \"beginTime\": null,\r\n         \"endTime\": null,\r\n         \"instructions\": null,\r\n         \"specialInstructions\": null,\r\n         \"minAge\": 0\r\n      },\r\n      \"checkoutInfo\": {\r\n         \"time\": null\r\n      },\r\n      \"heroImage\": null,\r\n      \"distance\": 0,\r\n      \"locationName\": null\r\n   },\r\n   \"status\": \"success\"\r\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "hotel.id",
+        "Hotel ID",
+        "16093845"
+      ],
+      [
+        "hotel.name",
+        "Hotel Name",
+        "Sai Hill Top Resorts"
+      ],
+      [
+        "hotel.relevanceScore",
+        "Relevance Score",
+        "0"
+      ],
+      [
+        "hotel.providerFamily",
+        "Provider Family",
+        "Agoda"
+      ],
+      [
+        "hotel.providerHotelId",
+        "Provider Hotel ID",
+        "5047791"
+      ],
+      [
+        "hotel.language",
+        "Language",
+        ""
+      ],
+      [
+        "hotel.providerName",
+        "Provider Name",
+        "Agoda"
+      ],
+      [
+        "hotel.geoCode",
+        "Latitude and Longitude",
+        "\"lat\": 11.409,\n\"long\": 76.7016"
+      ],
+      [
+        "hotel.contact.address.line1",
+        "Address",
+        ""
+      ],
+      [
+        "hotel.contact.address.line2",
+        "Address",
+        ""
+      ],
+      [
+        "hotel.contact.address.destinationCode",
+        "Destination Code",
+        ""
+      ],
+      [
+        "hotel.contact.address.city",
+        "City",
+        "Ooty"
+      ],
+      [
+        "hotel.contact.address.state",
+        "State",
+        ""
+      ],
+      [
+        "hotel.contact.address.country",
+        "Country",
+        "IN"
+      ],
+      [
+        "hotel.contact.address.postalCode",
+        "Postal Code",
+        "643001"
+      ],
+      [
+        "hotel.contact.phones",
+        "Phones",
+        ""
+      ],
+      [
+        "hotel.contact.faxes",
+        "Faxes",
+        ""
+      ],
+      [
+        "hotel.contact.emails",
+        "E Mails",
+        ""
+      ],
+      [
+        "hotel.contact.website",
+        "Website",
+        "https://www.agoda.com/partners/partnersearch.aspx?hid=5047791"
+      ],
+      [
+        "hotel.chainCode",
+        "Hotel Chain Code",
+        ""
+      ],
+      [
+        "hotel.chainName",
+        "Hotel Chain Name",
+        "No Chain"
+      ],
+      [
+        "hotel.website",
+        "Hotel Website",
+        "https://www.agoda.com/partners/partnersearch.aspx?hid=5047791"
+      ],
+      [
+        "hotel.descriptions.type",
+        "Description Type",
+        "Description"
+      ],
+      [
+        "hotel.descriptions.text",
+        "Description",
+        ""
+      ],
+      [
+        "hotel.category",
+        "Category",
+        "Hotel"
+      ],
+      [
+        "hotel.starRating",
+        "Star Rating",
+        "3"
+      ],
+      [
+        "hotel.facilityGroups",
+        "Facility Groups",
+        ""
+      ],
+      [
+        "hotel.facilities",
+        "Facilities",
+        ""
+      ],
+      [
+        "hotel.nearByAttractions",
+        "Nearby Attractions",
+        ""
+      ],
+      [
+        "hotel.images",
+        "Images",
+        ""
+      ],
+      [
+        "hotel.policies.type",
+        "Policy Type",
+        "Children policy"
+      ],
+      [
+        "hotel.policies.text",
+        "Policy",
+        "Age between 0 to 0 is considered children. Up to 0 years is considered infant. Minimum allowed age for this hotel is 0."
+      ],
+      [
+        "hotel.fees",
+        "fees",
+        ""
+      ],
+      [
+        "hotel.reviews.provider",
+        "Reviews provider",
+        ""
+      ],
+      [
+        "hotel.reviews.count",
+        "Count",
+        ""
+      ],
+      [
+        "hotel.reviews.rating",
+        "Rating",
+        ""
+      ],
+      [
+        "hotel.reviews.url",
+        "URL",
+        ""
+      ],
+      [
+        "hotel.reviews.reviews",
+        "Reviews",
+        ""
+      ],
+      [
+        "hotel.checkinInfo.beginTime",
+        "Check in  Begin Time",
+        ""
+      ],
+      [
+        "hotel.checkinInfo.endTime",
+        "Check in End Time",
+        ""
+      ],
+      [
+        "hotel.checkinInfo.instructions",
+        "Instructions",
+        ""
+      ],
+      [
+        "hotel.checkinInfo.specialInstructions",
+        "Special Instructions",
+        ""
+      ],
+      [
+        "hotel.checkinInfo.minAge",
+        "Minimum Age for Check In",
+        ""
+      ],
+      [
+        "hotel.checkoutInfo.time",
+        "Checkout Time",
+        ""
+      ],
+      [
+        "hotel.heroImage",
+        "Hero Image",
+        ""
+      ],
+      [
+        "hotel.distance",
+        "Distance from city center",
+        ""
+      ],
+      [
+        "hotel.locationName",
+        "Location Name",
+        ""
+      ],
+      [
+        "status",
+        "Status",
+        "Success"
+      ]
+    ]
+  },
+  {
+    "name": "More Rooms",
+    "desc": "It returns room details with multiple fare options.",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "",
+    "res_json": "{\r\n      \"recommendations\": [\r\n         {\r\n            \"id\": \"998d5021-6c8d-4b21-9488-22737f00fab2\",\r\n            \"roomGroup\": [\r\n               {\r\n                  \"id\": \"05172c85-8019-4c0b-9ca8-7dd1e8636db0\",\r\n                  \"code\": null,\r\n                  \"availability\": 1,\r\n                  \"description\": null,\r\n                  \"needsPriceCheck\": true,\r\n                  \"isPackageRate\": null,\r\n                  \"providerId\": \"20016\",\r\n                  \"providerName\": \"travelguru\",\r\n                  \"room\": {\r\n                     \"id\": \"e9dcfda9-b2ca-427d-a789-ef64a62391a0\",\r\n                     \"standardRoomId\": \"1\",\r\n                     \"standardRoomName\": \"Double Ac\",\r\n                     \"name\": \"Double Non AC\",\r\n                     \"description\": \"\",\r\n                     \"beds\": null,\r\n                     \"smokingAllowed\": false,\r\n                     \"facilities\": [],\r\n                     \"images\": []\r\n                  },\r\n                  \"roomCount\": 1,\r\n                  \"occupancies\": [\r\n                     {\r\n                        \"occupancyId\": 1,\r\n                        \"numOfAdults\": 1,\r\n                        \"numOfChildren\": 0,\r\n                        \"childAges\": []\r\n                     }\r\n                  ],\r\n                  \"type\": \"negotiated\",\r\n                  \"baseRate\": 1440,\r\n                  \"totalRate\": 1499.27,\r\n                  \"minSellingRate\": 0,\r\n                  \"publishedRate\": 0,\r\n                  \"taxes\": [\r\n                     {\r\n                        \"amount\": 172.8,\r\n                        \"description\": null,\r\n                        \"type\": null\r\n                     }\r\n                  ],\r\n                  \"fees\": null,\r\n                  \"discounts\": [],\r\n                  \"otherRateComponents\": [\r\n                     {\r\n                        \"amount\": 142.24,\r\n                        \"description\": \"PassOnCommission\",\r\n                        \"type\": \"PassOnCommission\"\r\n                     },\r\n                     {\r\n                        \"amount\": 7.11,\r\n                        \"description\": \"TdsOnCommission\",\r\n                        \"type\": \"TdsOnCommission\"\r\n                     },\r\n                     {\r\n                        \"amount\": 21.6,\r\n                        \"description\": \"ATO Markup applied on baseAmount\",\r\n                        \"type\": \"Markup\"\r\n                     },\r\n                     {\r\n                        \"amount\": 5,\r\n                        \"description\": \"Agency Markup calculated on baseAmount\",\r\n                        \"type\": \"AgencyMarkup\"\r\n                     }\r\n                  ],\r\n                  \"commission\": {\r\n                     \"amount\": 144,\r\n                     \"description\": \"Agency Commission\",\r\n                     \"type\": null\r\n                  },\r\n                  \"dailyRates\": [\r\n                     {\r\n                        \"amount\": 1326.47,\r\n                        \"date\": \"2020-12-31T18:30:00+00:00\",\r\n                        \"taxIncluded\": false,\r\n                        \"discount\": 0\r\n                     }\r\n                  ],\r\n                  \"pointEquivalent\": 0,\r\n                  \"refundable\": true,\r\n                  \"allGuestsInfoRequired\": true,\r\n                  \"onlineCancellable\": false,\r\n                  \"specialRequestSupported\": false,\r\n                  \"payAtHotel\": null,\r\n                  \"cardRequired\": false,\r\n                  \"policies\": null,\r\n                  \"boardBasis\": {\r\n                     \"description\": null,\r\n                     \"type\": \"Other\"\r\n                  },\r\n                  \"offers\": [],\r\n                  \"cancellationPolicies\": [\r\n                     {\r\n                        \"text\": \"Full refund if you cancel this booking by 31-Dec-20 12:00 PM IST.No refund if you cancel this booking later than 31-Dec-20 12:00 PM IST.You might be charged upto the full cost of stay (including taxes & service charge) if you do not check-in to the hotel.\",\r\n                        \"rules\": null\r\n                     }\r\n                  ],\r\n                  \"includes\": [],\r\n                  \"additionalCharges\": null,\r\n                  \"depositRequired\": false,\r\n                  \"gstAllowed\": true,\r\n                  \"depositAmount\": null,\r\n                  \"guaranteeRequired\": false,\r\n                  \"gstOnCommission\": 1.236\r\n               }\r\n            ],\r\n            \"total\": 1499.27,\r\n            \"publishedRate\": 0,\r\n            \"groupId\": 1\r\n         }\r\n      ],\r\n      \"stayPeriod\": {\r\n         \"start\": \"01/01/2021\",\r\n         \"end\": \"01/02/2021\"\r\n      },\r\n      \"searchId\": \"fdc1d9fc-7df3-45ef-8474-79d300efb669\",\r\n      \"searchTracingKey\": null,\r\n      \"status\": \"success\"   \r\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "recommendations.id",
+        "Recommendation ID",
+        "998d5021-6c8d-4b21-9488-22737f00fab2"
+      ],
+      [
+        "recommendations.roomGroup.id",
+        "Room Group ID",
+        "05172c85-8019-4c0b-9ca8-7dd1e8636db0"
+      ],
+      [
+        "recommendations.roomGroup.code",
+        "Room Group Code",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.availability",
+        "Availability",
+        "1"
+      ],
+      [
+        "recommendations.roomGroup.description",
+        "Description",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.needsPriceCheck",
+        "Whether Price Check needed",
+        "false"
+      ],
+      [
+        "recommendations.roomGroup.isPackageRate",
+        "Whether Package Rate",
+        "false"
+      ],
+      [
+        "recommendations.roomGroup.providerId",
+        "Provider ID",
+        "20127"
+      ],
+      [
+        "recommendations.roomGroup.providerName",
+        "Provider Name",
+        "travelguru"
+      ],
+      [
+        "recommendations.roomGroup.room.id",
+        "Room ID",
+        "e9dcfda9-b2ca-427d-a789-ef64a62391a0"
+      ],
+      [
+        "recommendations.roomGroup.room.standardRoomId",
+        "Standard Room ID",
+        "1"
+      ],
+      [
+        "recommendations.roomGroup.room.standardRoomName",
+        "Standard Room Name",
+        "Double Ac"
+      ],
+      [
+        "recommendations.roomGroup.room.name",
+        "Room Name",
+        "Double Non AC"
+      ],
+      [
+        "recommendations.roomGroup.room.description",
+        "Description",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.room.beds",
+        "Beds",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.room.smokingAllowed",
+        "Whether smoking allowed",
+        "false"
+      ],
+      [
+        "recommendations.roomGroup.room.facilities",
+        "Facilities",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.room.images",
+        "Room Images",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.roomCount",
+        "Room Count",
+        "1"
+      ],
+      [
+        "recommendations.roomGroup.occupancies.occupancyId",
+        "Occupancy ID",
+        "1"
+      ],
+      [
+        "recommendations.roomGroup.occupancies.numOfAdults",
+        "Number of Adults",
+        "1"
+      ],
+      [
+        "recommendations.roomGroup.occupancies.numOfChildren",
+        "Number of Children",
+        "0"
+      ],
+      [
+        "recommendations.roomGroup.occupancies.childAges",
+        "Ages of children",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.type",
+        "Group Type",
+        "negotiated"
+      ],
+      [
+        "recommendations.roomGroup.baseRate",
+        "Base Rate",
+        "1440"
+      ],
+      [
+        "recommendations.roomGroup.totalRate",
+        "Total Rate",
+        "1499.77"
+      ],
+      [
+        "recommendations.roomGroup.minSellingRate",
+        "Minimum Selling Rate",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.publishedRate",
+        "Published Rate",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.taxes.amount",
+        "Tax Amount",
+        "172.00"
+      ],
+      [
+        "recommendations.roomGroup.taxes.description",
+        "Description",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.taxes.type",
+        "Tax Type",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.fees",
+        "Fees",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.discounts",
+        "Discounts",
+        "[ ]"
+      ],
+      [
+        "recommendations.roomGroup.otherRateComponents.amount",
+        "otherRateComponents",
+        "142.32"
+      ],
+      [
+        "recommendations.roomGroup.otherRateComponents.description",
+        "Description",
+        "PassOnCommission"
+      ],
+      [
+        "recommendations.roomGroup.otherRateComponents.type",
+        "Type",
+        "PassOnCommission"
+      ],
+      [
+        "recommendations.roomGroup.pointEquivalent",
+        "Point Equivalent",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.refundable",
+        "Whether fare is Refundable",
+        "true"
+      ],
+      [
+        "recommendations.roomGroup.allGuestsInfoRequired",
+        "Whether all guests Info required",
+        "true"
+      ],
+      [
+        "recommendations.roomGroup.onlineCancellable",
+        "Whether Online Cancellation possible",
+        "true"
+      ],
+      [
+        "recommendations.roomGroup.specialRequestSupported",
+        "Whether special requests are supported",
+        "false"
+      ],
+      [
+        "recommendations.roomGroup.payAtHotel",
+        "Whether Pay at Hotel",
+        "false"
+      ],
+      [
+        "recommendations.roomGroup.cardRequired",
+        "Whether Credit Card required",
+        "false"
+      ],
+      [
+        "recommendations.roomGroup.policies",
+        "policies",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.boardBasis.description",
+        "Description",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.boardBasis.type",
+        "Type",
+        "Other"
+      ],
+      [
+        "recommendations.roomGroup.offers",
+        "Offers",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.cancellationPolicies.text",
+        "Cancellation Policy Text",
+        "ull refund if you cancel this booking by 31-Dec-20 12:00 PM IST.No refund if you cancel this booking later than 31-Dec-20 12:00 PM IST.You might be charged upto the full cost of stay (including taxes &amp; service charge) if you do not check-in to the hotel."
+      ],
+      [
+        "recommendations.roomGroup.cancellationPolicies.rules",
+        "Cancellation Rules",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.includes",
+        "Includes",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.additionalCharges",
+        "Additional Charges",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.depositRequired",
+        "Deposit Required",
+        "false"
+      ],
+      [
+        "recommendations.roomGroup.gstAllowed",
+        "Whether GST allowed",
+        "false"
+      ],
+      [
+        "recommendations.roomGroup.depositAmount",
+        "Deposit Amount",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.guaranteeRequired",
+        "Whether guarantee required",
+        "false"
+      ],
+      [
+        "recommendations.roomGroup.gstOnCommission",
+        "GST on commission",
+        ""
+      ],
+      [
+        "recommendations.roomGroup.total",
+        "Total",
+        "1499.27"
+      ],
+      [
+        "recommendations.roomGroup.publishedRate",
+        "PublishedRate",
+        ""
+      ],
+      [
+        "stayPeriod.start",
+        "Stay period from date",
+        "01/01/2021"
+      ],
+      [
+        "stayPeriod.end",
+        "Stay period to date",
+        "01/02/2021"
+      ],
+      [
+        "searchId",
+        "Search ID",
+        "fdc1d9fc-7df3-45ef-8474-79d300efb669"
+      ],
+      [
+        "searchTracingKey",
+        "Search Tracing Key",
+        ""
+      ],
+      [
+        "status",
+        "Status",
+        "success"
+      ]
+    ]
+  },
+  {
+    "name": "Pricing Content",
+    "desc": "It returns pricing content details of specific rooms for a specific provider",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "",
+    "res_json": "{\r\n   \"hotel\": {\r\n      \"id\": \"15254729\",\r\n      \"name\": \"Capitol Kempinski Singapore\",\r\n      \"relevanceScore\": 0,\r\n      \"providerFamily\": \"DOTW\",\r\n      \"providerHotelId\": \"2305585\",\r\n      \"language\": null,\r\n      \"providerName\": \"DOTW\",\r\n      \"geoCode\": {\r\n         \"lat\": 1.29419,\r\n         \"long\": 103.85061\r\n      },\r\n      \"neighbourhoods\": [],\r\n      \"contact\": {\r\n         \"address\": {\r\n            \"line1\": \"15 Stamford Road\",\r\n            \"line2\": null,\r\n            \"destinationCode\": \"0\",\r\n            \"city\": \"SINGAPORE\",\r\n            \"state\": null,\r\n            \"country\": \"SG\",\r\n            \"postalCode\": \"178906\"\r\n         },\r\n         \"phones\": [\r\n            \"+65 6368 8888\"\r\n         ],\r\n         \"faxes\": null,\r\n         \"emails\": null,\r\n         \"website\": null\r\n      },\r\n      \"chainCode\": \"1160\",\r\n      \"chainName\": \"Kempinski Hotels And Resorts\",\r\n      \"type\": \"\",\r\n      \"website\": null,\r\n      \"descriptions\": [\r\n         {\r\n            \"type\": \"General\",\r\n            \"text\": \"Located in Singapore\u2019s civic and cultural district, the iconic Capitol Building and Stamford House have been masterfully restored to house The Capitol Kempinski Hotel Singapore.\\nThe 157 rooms and suites of the ultra-luxury hotel feature contemporary interior design and state-of-the-art technology. A proud member of The Leading Hotels of The World, this exclusive retreat guarantees peace, tranquillity and privacy in this vibrant city and offers Singapore\u2019s first saltwater relaxation pool.\\nThe hotel offers direct access to the legendary Capitol Theatre, once a jewel of Singapore\u2019s cinema scene, which can be used for festive galas, conferences and extraordinary events today.\"\r\n         },\r\n         {\r\n            \"type\": \"General\",\r\n            \"text\": \"The Capitol Kempinski Singapore is a  hotel.\"\r\n         }\r\n      ],\r\n      \"category\": \"\",\r\n      \"starRating\": 5,\r\n      \"facilityGroups\": [\r\n         {\r\n            \"id\": 1,\r\n            \"groupId\": 1,\r\n            \"name\": \"Parking\"\r\n         },\r\n         {\r\n            \"id\": 6,\r\n            \"groupId\": 6,\r\n            \"name\": \"Business Center\"\r\n         },\r\n         {\r\n            \"id\": 7,\r\n            \"groupId\": 7,\r\n            \"name\": \"Currency Exchange\"\r\n         },\r\n         {\r\n            \"id\": 8,\r\n            \"groupId\": 8,\r\n            \"name\": \"Bar\"\r\n         },\r\n         {\r\n            \"id\": 9,\r\n            \"groupId\": 9,\r\n            \"name\": \"Spa\"\r\n         },\r\n         {\r\n            \"id\": 12,\r\n            \"groupId\": 12,\r\n            \"name\": \"Laundry Services\"\r\n         },\r\n         {\r\n            \"id\": 13,\r\n            \"groupId\": 13,\r\n            \"name\": \"Swimming Pool\"\r\n         },\r\n         {\r\n            \"id\": 14,\r\n            \"groupId\": 14,\r\n            \"name\": \"Restaurant\"\r\n         },\r\n         {\r\n            \"id\": 16,\r\n            \"groupId\": 16,\r\n            \"name\": \"Internet\"\r\n         },\r\n         {\r\n            \"id\": 17,\r\n            \"groupId\": 17,\r\n            \"name\": \"Fitness Facility\"\r\n         },\r\n         {\r\n            \"id\": 24,\r\n            \"groupId\": 24,\r\n            \"name\": \"Room service\"\r\n         }\r\n      ],\r\n      \"facilities\": [\r\n         {\r\n            \"id\": 17956,\r\n            \"groupId\": 0,\r\n            \"name\": \"Adjoining Rooms\"\r\n         },\r\n         {\r\n            \"id\": 719,\r\n            \"groupId\": 0,\r\n            \"name\": \"Air Conditioning\"\r\n         },\r\n         {\r\n            \"id\": 3174,\r\n            \"groupId\": 0,\r\n            \"name\": \"Banquet Hall\"\r\n         },\r\n         {\r\n            \"id\": 3134,\r\n            \"groupId\": 8,\r\n            \"name\": \"Bar\"\r\n         },\r\n         {\r\n            \"id\": 663,\r\n            \"groupId\": 1,\r\n            \"name\": \"Car Parking - Onsite Paid\"\r\n         },\r\n         {\r\n            \"id\": 18776,\r\n            \"groupId\": 0,\r\n            \"name\": \"Complimentary In-Room Coffee Or Tea\"\r\n         },\r\n         {\r\n            \"id\": 48325,\r\n            \"groupId\": 16,\r\n            \"name\": \"Complimentary Wifi Access\"\r\n         },\r\n         {\r\n            \"id\": 646,\r\n            \"groupId\": 0,\r\n            \"name\": \"Concierge\"\r\n         },\r\n         {\r\n            \"id\": 3084,\r\n            \"groupId\": 0,\r\n            \"name\": \"Doctor On Call\"\r\n         },\r\n         {\r\n            \"id\": 3871,\r\n            \"groupId\": 7,\r\n            \"name\": \"Foreign Currency Exchange\"\r\n         },\r\n         {\r\n            \"id\": 3214,\r\n            \"groupId\": 0,\r\n            \"name\": \"Hair Dresser\"\r\n         },\r\n         {\r\n            \"id\": 18316,\r\n            \"groupId\": 0,\r\n            \"name\": \"Housekeeping-Daily\"\r\n         },\r\n         {\r\n            \"id\": 18366,\r\n            \"groupId\": 12,\r\n            \"name\": \"Laundry Service\"\r\n         },\r\n         {\r\n            \"id\": 18856,\r\n            \"groupId\": 0,\r\n            \"name\": \"Limousine Service - Paid\"\r\n         },\r\n         {\r\n            \"id\": 3074,\r\n            \"groupId\": 0,\r\n            \"name\": \"Multilingual Staff\"\r\n         },\r\n         {\r\n            \"id\": 641,\r\n            \"groupId\": 14,\r\n            \"name\": \"Restaurant\"\r\n         },\r\n         {\r\n            \"id\": 18446,\r\n            \"groupId\": 24,\r\n            \"name\": \"Room Service - 24 Hours\"\r\n         },\r\n         {\r\n            \"id\": 1993,\r\n            \"groupId\": 0,\r\n            \"name\": \"Safety Deposit Box\"\r\n         },\r\n         {\r\n            \"id\": 1995,\r\n            \"groupId\": 0,\r\n            \"name\": \"Wheelchair Access\"\r\n         },\r\n         {\r\n            \"id\": 620,\r\n            \"groupId\": 0,\r\n            \"name\": \"Av Equipment Available\"\r\n         },\r\n         {\r\n            \"id\": 3694,\r\n            \"groupId\": 6,\r\n            \"name\": \"Conference Rooms\"\r\n         },\r\n         {\r\n            \"id\": 17536,\r\n            \"groupId\": 0,\r\n            \"name\": \"Meeting Rooms\"\r\n         },\r\n         {\r\n            \"id\": 17246,\r\n            \"groupId\": 0,\r\n            \"name\": \"Post/Courier Services\"\r\n         },\r\n         {\r\n            \"id\": 47935,\r\n            \"groupId\": 17,\r\n            \"name\": \"Gymnasium\"\r\n         },\r\n         {\r\n            \"id\": 3891,\r\n            \"groupId\": 0,\r\n            \"name\": \"Jacuzzi\"\r\n         },\r\n         {\r\n            \"id\": 1985,\r\n            \"groupId\": 9,\r\n            \"name\": \"Spa\"\r\n         },\r\n         {\r\n            \"id\": 616,\r\n            \"groupId\": 13,\r\n            \"name\": \"Swimming Pool- Outdoor\"\r\n         }\r\n      ],\r\n      \"nearByAttractions\": [\r\n         {\r\n            \"name\": \"Changi International Airport\",\r\n            \"distance\": \"20\",\r\n            \"unit\": \"km\",\r\n            \"description\": null,\r\n            \"type\": null\r\n         },\r\n         {\r\n            \"name\": \"Woodlands Trains Checkpoint\",\r\n            \"distance\": \"15\",\r\n            \"unit\": \"km\",\r\n            \"description\": null,\r\n            \"type\": null\r\n         },\r\n         {\r\n            \"name\": \"Marina Bay Cruise Centre\",\r\n            \"distance\": \"8\",\r\n            \"unit\": \"km\",\r\n            \"description\": null,\r\n            \"type\": null\r\n         },\r\n         {\r\n            \"name\": \"City Hall MRT Station\",\r\n            \"distance\": \"0.15\",\r\n            \"unit\": \"km\",\r\n            \"description\": null,\r\n            \"type\": null\r\n         }\r\n      ],\r\n      \"images\": [\r\n         {\r\n            \"caption\": \"\",\r\n            \"category\": \"Exterior\",\r\n            \"type\": null,\r\n            \"roomCodes\": [],\r\n            \"size\": \"Standard\",\r\n            \"url\": \"https://us.dotwconnect.com/poze_hotel/23/2305585/9OeFOwBk_ea0323f5ac1a2b11042a523c8a2c49a1.jpg\"\r\n         },\r\n         {\r\n            \"caption\": \"HOTEL ROOM\",\r\n            \"category\": \"Hotel Rooms\",\r\n            \"type\": null,\r\n            \"roomCodes\": [],\r\n            \"size\": \"Standard\",\r\n            \"url\": \"https://us.dotwconnect.com/poze_hotel/23/2305585/ZzxGGzHd_76b325fd3f2a88574da26ed8fc4a5b76.jpg\"\r\n         },\r\n         {\r\n            \"caption\": \"HOTEL ROOM\",\r\n            \"category\": \"Hotel Rooms\",\r\n            \"type\": null,\r\n            \"roomCodes\": [],\r\n            \"size\": \"Standard\",\r\n            \"url\": \"https://us.dotwconnect.com/poze_hotel/23/2305585/RZbIfCXf_2ad1418a75a3c247be4936a3b218fd43.jpg\"\r\n         },\r\n         {\r\n            \"caption\": \"HOTEL ROOM\",\r\n            \"category\": \"Hotel Rooms\",\r\n            \"type\": null,\r\n            \"roomCodes\": [],\r\n            \"size\": \"Standard\",\r\n            \"url\": \"https://us.dotwconnect.com/poze_hotel/23/2305585/IVmpkRtx_05fdcf04b060d8d75a2db20a114feb8d.jpg\"\r\n         },\r\n         {\r\n            \"caption\": \"LOUNGE\",\r\n            \"category\": \"Amenities and Services\",\r\n            \"type\": null,\r\n            \"roomCodes\": [],\r\n            \"size\": \"Standard\",\r\n            \"url\": \"https://us.dotwconnect.com/poze_hotel/23/2305585/FD14THpr_b31cc90118ff2763bfdae83c0c56cdf5.jpg\"\r\n         },\r\n         {\r\n            \"caption\": \"DINING\",\r\n            \"category\": \"Amenities and Services\",\r\n            \"type\": null,\r\n            \"roomCodes\": [],\r\n            \"size\": \"Standard\",\r\n            \"url\": \"https://us.dotwconnect.com/poze_hotel/23/2305585/LoSHRd2k_1841865ece3f5973cc98653a69ab213d.jpg\"\r\n         },\r\n         {\r\n            \"caption\": \"DINING\",\r\n            \"category\": \"Amenities and Services\",\r\n            \"type\": null,\r\n            \"roomCodes\": [],\r\n            \"size\": \"Standard\",\r\n            \"url\": \"https://us.dotwconnect.com/poze_hotel/23/2305585/oq2uZLTp_52822276deec6ef3f472797eb17d21b5.jpg\"\r\n         },\r\n         {\r\n            \"caption\": \"SPA\",\r\n            \"category\": \"Leisure and Sport Facilities\",\r\n            \"type\": null,\r\n            \"roomCodes\": [],\r\n            \"size\": \"Standard\",\r\n            \"url\": \"https://us.dotwconnect.com/poze_hotel/23/2305585/hGiUv9x7_c8b607a58ed03f6d2e52e8039bfbd262.jpg\"\r\n         },\r\n         {\r\n            \"caption\": \"GYM\",\r\n            \"category\": \"Leisure and Sport Facilities\",\r\n            \"type\": null,\r\n            \"roomCodes\": [],\r\n            \"size\": \"Standard\",\r\n            \"url\": \"https://us.dotwconnect.com/poze_hotel/23/2305585/HKr2JuPH_3e41bb2fa76c04460bc709dc46fe2243.jpg\"\r\n         },\r\n         {\r\n            \"caption\": \"SWIMMING POOL\",\r\n            \"category\": \"Leisure and Sport Facilities\",\r\n            \"type\": null,\r\n            \"roomCodes\": [],\r\n            \"size\": \"Standard\",\r\n            \"url\": \"https://us.dotwconnect.com/poze_hotel/23/2305585/zJf4MNC8_91af4e3eb7cff66fc2aa8ce9fe0fa6db.jpg\"\r\n         }\r\n      ],\r\n      \"policies\": [],\r\n      \"fees\": [],\r\n      \"reviews\": [],\r\n      \"checkinInfo\": {\r\n         \"beginTime\": \"12:00 AM\",\r\n         \"endTime\": null,\r\n         \"instructions\": null,\r\n         \"specialInstructions\": null,\r\n         \"minAge\": 18\r\n      },\r\n      \"checkoutInfo\": {\r\n         \"time\": \"12:00 AM\"\r\n      },\r\n      \"heroImage\": \"https://us.dotwconnect.com/poze_hotel/23/2305585/9OeFOwBk_ea0323f5ac1a2b11042a523c8a2c49a1.jpg\",\r\n      \"distance\": 0,\r\n      \"locationName\": \"Colonial\"\r\n   },\r\n   \"status\": \"success\"\r\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "id",
+        "Hotel ID",
+        "12356764"
+      ],
+      [
+        "name",
+        "Hotel Name",
+        "Capitol Kempinski Singapore"
+      ],
+      [
+        "relevanceScore",
+        "Relevance Score",
+        "0"
+      ],
+      [
+        "providerFamily",
+        "Provider Family",
+        "DOTW"
+      ],
+      [
+        "providerHotelId",
+        "Provider Hotel ID",
+        "3436547"
+      ],
+      [
+        "language",
+        "Language",
+        ""
+      ],
+      [
+        "providerName",
+        "Provider Name",
+        "DOTW"
+      ],
+      [
+        "genCode",
+        "Latitude and Longitude",
+        "\"lat\" :  1.29419 ,"
+      ],
+      [
+        "",
+        "",
+        "\"long\" :  103.85061"
+      ],
+      [
+        "Neighbourhoods",
+        "Neighbourhoods",
+        ""
+      ],
+      [
+        "chainCode",
+        "Hotel Chain Code",
+        "1160"
+      ],
+      [
+        "chainName",
+        "Hotel Chain Name",
+        "Kempinski Hotels And Resorts"
+      ],
+      [
+        "type",
+        "Type",
+        ""
+      ],
+      [
+        "website",
+        "Website",
+        ""
+      ],
+      [
+        "descriptions:type",
+        "Type",
+        ""
+      ],
+      [
+        "descriptions:text",
+        "Text/Description",
+        ""
+      ],
+      [
+        "category",
+        "Category",
+        ""
+      ],
+      [
+        "starRating",
+        "StarRating",
+        "3"
+      ],
+      [
+        "nearByAttractions:name",
+        "Nearby attraction",
+        ""
+      ],
+      [
+        "nearByAttractions:distance",
+        "Distance",
+        ""
+      ],
+      [
+        "nearByAttractions:unit",
+        "Distance Unit",
+        "Km"
+      ],
+      [
+        "nearByAttractions:description",
+        "Description",
+        ""
+      ],
+      [
+        "nearByAttractions:type",
+        "Type",
+        ""
+      ]
+    ]
+  },
+  {
+    "name": "Pricing",
+    "desc": "It returns the pricing details of specific rooms for a specific provider.",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "",
+    "res_json": "{\r\n   \"hotelId\": \"15254729\",\r\n   \"roomGroup\": [\r\n      {\r\n         \"id\": \"4452e3d6-3550-4230-b3e1-8e59183aecd6\",\r\n         \"code\": null,\r\n         \"availability\": 19,\r\n         \"description\": null,\r\n         \"needsPriceCheck\": true,\r\n         \"isPackageRate\": false,\r\n         \"providerId\": \"600\",\r\n         \"providerName\": \"Agoda\",\r\n         \"room\": {\r\n            \"id\": \"88013886\",\r\n            \"standardRoomId\": null,\r\n            \"standardRoomName\": null,\r\n            \"name\": \"Classic Room with King Bed\",\r\n            \"description\": null,\r\n            \"beds\": null,\r\n            \"smokingAllowed\": false,\r\n            \"facilities\": null,\r\n            \"images\": null\r\n         },\r\n         \"roomCount\": 1,\r\n         \"occupancies\": [\r\n            {\r\n               \"occupancyId\": 1,\r\n               \"numOfAdults\": 1,\r\n               \"numOfChildren\": 0,\r\n               \"childAges\": []\r\n            }\r\n         ],\r\n         \"type\": \"negotiated\",\r\n         \"baseRate\": 19273.91,\r\n         \"totalRate\": 22685.39,\r\n         \"minSellingRate\": 0,\r\n         \"publishedRate\": 22685.39,\r\n         \"taxes\": [\r\n            {\r\n               \"amount\": 1569.16,\r\n               \"description\": \"Tax\",\r\n               \"type\": null\r\n            },\r\n            {\r\n               \"amount\": 1842.32,\r\n               \"description\": \"Fees\",\r\n               \"type\": null\r\n            }\r\n         ],\r\n         \"fees\": null,\r\n         \"discounts\": null,\r\n         \"otherRateComponents\": null,\r\n         \"commission\": null,\r\n         \"dailyRates\": null,\r\n         \"pointEquivalent\": 0,\r\n         \"refundable\": false,\r\n         \"allGuestsInfoRequired\": false,\r\n         \"onlineCancellable\": false,\r\n         \"specialRequestSupported\": false,\r\n         \"payAtHotel\": null,\r\n         \"cardRequired\": true,\r\n         \"policies\": [],\r\n         \"boardBasis\": {\r\n            \"description\": \"Room only\",\r\n            \"type\": \"RoomOnly\"\r\n         },\r\n         \"offers\": [],\r\n         \"cancellationPolicies\": [\r\n            {\r\n               \"text\": null,\r\n               \"rules\": [\r\n                  {\r\n                     \"value\": 22685.39,\r\n                     \"valueType\": \"Amount\",\r\n                     \"estimatedValue\": 22685.39,\r\n                     \"start\": \"2020-05-08T00:00:00\",\r\n                     \"end\": \"2020-05-09T00:00:00\"\r\n                  }\r\n               ]\r\n            }\r\n         ],\r\n         \"includes\": null,\r\n         \"additionalCharges\": [],\r\n         \"depositRequired\": false,\r\n         \"gstAllowed\": false,\r\n         \"depositAmount\": null,\r\n         \"guaranteeRequired\": false,\r\n         \"gstOnCommission\": 0\r\n      }\r\n   ],\r\n   \"priceId\": \"5a1bd93e-7f4d-4729-bec8-f3bd411fc398\",\r\n   \"isPotentialSuspect\": false,\r\n   \"suspectCategory\": null,\r\n   \"status\": \"success\"\r\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "hotelId",
+        "Hotel ID",
+        "2674745"
+      ],
+      [
+        "roomGroup.id",
+        "Room Group ID",
+        "Sf24-dsf234234-245fftg245"
+      ],
+      [
+        "roomGroup.code",
+        "Code",
+        ""
+      ],
+      [
+        "roomGroup.availability",
+        "Availability",
+        "19"
+      ],
+      [
+        "roomGroup.description",
+        "Description",
+        ""
+      ],
+      [
+        "roomGroup.needsPriceCheck",
+        "Whether price check needed",
+        "1"
+      ],
+      [
+        "roomGroup.isPackageRate",
+        "Whether package Rate",
+        ""
+      ],
+      [
+        "roomGroup.providerId",
+        "Provider ID",
+        "600"
+      ],
+      [
+        "roomGroup.providerName",
+        "Provider Name",
+        "Agoda"
+      ],
+      [
+        "roomGroup.room.id",
+        "Room ID",
+        "786785678"
+      ],
+      [
+        "roomGroup.room.standardRoomId",
+        "Standard Room ID",
+        ""
+      ],
+      [
+        "roomGroup.room.standardRoomName",
+        "Standard Room Name",
+        ""
+      ],
+      [
+        "roomGroup.room.beds",
+        "Beds",
+        ""
+      ],
+      [
+        "roomGroup.room.smokingAllowed",
+        "Whether smoking is allowed",
+        ""
+      ],
+      [
+        "roomCount",
+        "Number of Rooms",
+        "1"
+      ],
+      [
+        "occupancies.occupancyId",
+        "Occupancy ID",
+        ""
+      ],
+      [
+        "occupancies.numOfAdults",
+        "Number of Adults",
+        "1"
+      ],
+      [
+        "occupancies.numOfChildren",
+        "Number of Children",
+        "0"
+      ],
+      [
+        "occupancies.childAges",
+        "Ages of children",
+        ""
+      ],
+      [
+        "occupancies.type",
+        "Type",
+        "Negotiated"
+      ],
+      [
+        "occupancies.baseRate",
+        "Base Rate",
+        ""
+      ],
+      [
+        "occupancies.totalRate",
+        "Total Rate",
+        ""
+      ],
+      [
+        "occupancies.minSallingRate",
+        "Minimum selling Rate",
+        ""
+      ],
+      [
+        "occupancies.publishedRate",
+        "Published Rate",
+        ""
+      ],
+      [
+        "taxes.amount",
+        "Tax",
+        ""
+      ],
+      [
+        "taxes.description",
+        "Tax Description",
+        ""
+      ],
+      [
+        "taxes.type",
+        "Tax Type",
+        ""
+      ],
+      [
+        "fees",
+        "Fees",
+        ""
+      ],
+      [
+        "discounts",
+        "Discounts",
+        ""
+      ],
+      [
+        "Commission",
+        "Commission",
+        ""
+      ],
+      [
+        "pointEquivalent",
+        "Point Equivalent",
+        "0"
+      ],
+      [
+        "refundable",
+        "Whether refundable",
+        ""
+      ],
+      [
+        "allGuestInfoRequired",
+        "Whether information of all guests required",
+        ""
+      ],
+      [
+        "onlineCancellable",
+        "Whether cancellable online",
+        ""
+      ],
+      [
+        "specialRequestSupported",
+        "Whether special requests are supported",
+        ""
+      ],
+      [
+        "payAtHotel",
+        "Whether pay at hotel allowed",
+        ""
+      ],
+      [
+        "cardRequired",
+        "Whether Credit Card is mandatory",
+        ""
+      ],
+      [
+        "priceId",
+        "Price ID",
+        ""
+      ],
+      [
+        "isPotentialSuspect",
+        "Whether a potential suspect",
+        ""
+      ],
+      [
+        "suspectCategory",
+        "Category of suspect",
+        ""
+      ],
+      [
+        "status",
+        "Status",
+        "Success"
+      ]
+    ]
+  },
+  {
+    "name": "Create Itinerary",
+    "desc": "Creates an itinerary and returns a TransactionID.",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "{\n   \"TUI\": \"281e2665-5219-488a-9211-a5a250c9b7be\",\n   \"ServiceEnquiry\": \"\",\n   \"SpecialServiceRequest\": \"early checkin\",\n   \"ContactInfo\": {\n      \"Title\": \"Ms\",\n      \"FName\": \"REXY\",\n      \"LName\": \"RAJU\",\n      \"Mobile\": \"1234123412\",\n      \"Email\": \"test@test.com\",\n      \"Address\": \"AKBAR ONLINE BOOKING COMPANY PVT LTD\",\n      \"State\": \"Maharashtra\",\n      \"City\": \"Near Crawford market Mumbai\",\n      \"PIN\": \"400003\",\n      \"GSTCompanyName\": \"\",\n      \"GSTTIN\": \"\",\n      \"GSTMobile\": \"\",\n      \"GSTEmail\": \"\",\n      \"UpdateProfile\": true,\n      \"IsGuest\": false,\n      \"CountryCode\": \"IN\",\n      \"MobileCountryCode\": \"+91\",\n      \"NetAmount\": \"\"\n   },\n   \"Auxiliaries\": [\n      {\n         \"Code\": \"PROMO\",\n         \"Parameters\": [\n            {\n               \"Type\": \"Code\",\n               \"Value\": \"\"\n            },\n            {\n               \"Type\": \"ID\",\n               \"Value\": \"\"\n            },\n            {\n               \"Type\": \"Amount\",\n               \"Value\": \"\"\n            }\n         ]\n      },\n      {\n            \"Code\": \"CUSTOMER DETAILS\",\n            \"parameters\": [\n                {\n                    \"Type\": \"Nationality\",\n                    \"Value\": \"IN\"\n                },\n                {\n                    \"Type\": \"Country of Residence\",\n                    \"Value\": \"IN\"\n                }\n            ]\n        }\n   ],\n   \"Rooms\": [\n      {\n         \"RoomId\": \"cf243f1f-151f-4a73-9b04-7dbd1a804b51\",\n         \"GuestCode\": \"|1|1:A:25|\",\n         \"SupplierName\": \"Fab\",\n         \"RoomGroupId\": \"6878352d-956a-4c5b-9812-882b3f725335\",\n         \"Guests\": [\n            {\n               \"GuestID\": \"YGVj\",\n               \"Operation\": \"U\",\n               \"Title\": \"Ms\",\n               \"FirstName\": \"REXY\",\n               \"MiddleName\": \"\",\n               \"LastName\": \"RAJU\",\n               \"MobileNo\": \"\",\n               \"PaxType\": \"A\",\n               \"Age\": \"\",\n               \"Email\": \"\",\n               \"Pan\": \"H123456P\"\n            }\n         ]\n      }\n   ],\n   \"NetAmount\": \"1637\",\n   \"ClientID\": \"Duh0NJDTryMpAfQvqvWnPw==\",\n   \"DeviceID\": \"\",\n   \"AppVersion\": \"\",\n   \"SearchId\": \"36c42725-fcf0-4faf-8ad8-7f9b21368c45\",\n   \"RecommendationId\": \"aab02f5b-b699-42c2-9ed7-65712d93400c\",\n   \"LocationName\": null,\n   \"HotelCode\": \"15402936\",\n   \"CheckInDate\": \"2021-03-04\",\n   \"CheckOutDate\": \"2021-03-05\",\n   \"TravelingFor\": \"NTF\"\n}",
+    "res_json": "{\n    \"TUI\": \"42e7e4fc-3def-4f87-9d1c-8071bf92e04f|8004f249-0941-4443-94fc-008b3493e1ca|20200623204818\",\n    \"TransactionID\": 200002450,\n    \"NetAmount\": 3689,\n    \"Code\": \"200\",\n    \"Msg\": [\n        \"Success\"\n    ]\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "TUI",
+        "Transaction Unique Identifier.",
+        "af80de34-fccb-4c28-9365-6740b775265b|4913ba1b-4ecd-4909-9c1e-e1a47161c31c|20200625105832"
+      ],
+      [
+        "TransactionID",
+        "TransactionID",
+        "200002450"
+      ],
+      [
+        "NetAmount",
+        "Net Amount",
+        "3689"
+      ],
+      [
+        "Code",
+        "Response Code",
+        "200"
+      ],
+      [
+        "Msg",
+        "Response Message",
+        "Success"
+      ]
+    ]
+  },
+  {
+    "name": "Start Pay",
+    "desc": "This API initiates the payment with multiple payment options and initiates booking if the payment is successful. There are two possible modes Deposit mode and Multi payment mode. In deposit mode booking is done after debiting the agent and in multi-payment, booking is initiated in another API call, CommitPay, which is initiated automatically initiated, after deducting the amount from bank.",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "{\r\n   \"SID\": null,\r\n   \"TUI\": \"281e2665-5219-488a-9211-a5a250c9b7be|8c0895a5-f7ed-453e-a581-7352dbd63594|20200423090649\",\r\n   \"ClientID\": \"test\",\r\n   \"Email\": null,\r\n   \"Promo\": null,\r\n   \"TransactionID\": 1234124,\r\n   \"PaymentType\": \"\",\r\n   \"BankCode\": \"\",\r\n   \"GateWayCode\": \"\",\r\n   \"MerchantID\": 0,\r\n   \"PaymentAmount\": 920,\r\n   \"PaymentCharge\": 0,\r\n   \"Card\": { \r\n      \"Number\": \"\",\r\n      \"Expiry\": \"\",\r\n      \"CVV\": \"\",\r\n      \"CHName\": \"\",\r\n      \"FName\": null,\r\n      \"LName\": null,\r\n      \"Address\": \"\",\r\n      \"City\": \"\",\r\n      \"State\": \"\",\r\n      \"Country\": \"\",\r\n      \"PIN\": \"\",\r\n      \"International\": false,\r\n      \"SaveCard\": false,\r\n      \"EMIMonths\": \"0\",\r\n      \"Token\": null,\r\n      \"NumberAlias\": null\r\n   },\r\n   \"VPA\": \"\",\r\n   \"CardAlias\": \"\",\r\n   \"QuickPay\": null,\r\n   \"RMSSignature\": \"\",\r\n   \"TargetCurrency\": \"\",\r\n   \"TargetAmount\": 0,\r\n   \"ThirdPartyInfo\": null,\r\n   \"Hold\": false,\r\n   \"TripType\": null,\r\n   \"Authorization\": \"Bearer sdfdsf.eyJ1bmlxdWVfbmFtZSI6IjMzMyIsIkFnZW50SW5mbyI6ImNoOHROYmpKajJUdHRBc1ZtQUlRMFc0YlNYeEtYTXg0dkhYMTZvb0ZVWVE9IiwicHdkIjoiS0Z0YWpLT2lsOUJkRG93TEd5VXNPZz09IiwiYWdlbnRDb2RlIjdsfoiL0tmZFl3ZXNxUHc9IiwiY2xpZW50SWQiOiJ3NS9rSWNKdm9KYz0iLCJCcm93c2VyS2V5IjoiY2NzdWwyVmEwYXhKWThwdTl0Y0FLOUc5ZXdNRnlIOHNBcTZidWNId0tUaGREb3dMR3lVc09nPT0iLCJuYmYiOjE1ODc2MTI4NjEsImV4cCI6MTU5NjI1Mjg2MSwiaWF0IjoxNTg3NjEyODYxLCJpc3MiOiJ3ZWJjb25uZWN0IiwiYXVkIjoiY2xpZW50In0.UBEXBm-apH3otK5eG_t3FFBy7PhE9mmsfdmwaERsadf\",\r\n   \"QTransactionID\": 0,\r\n   \"NetAmount\": 920,\r\n   \"OnlinePayment\": false,\r\n   \"DepositPayment\": true,\r\n   \"ReleaseDate\": \"/Date(-62135596800000)/\",\r\n   \"BrowserKey\": \"b80b98aafbba086e46e6643566cd67d7\",\r\n   \"BrowserKeyFromToken\": \"b80b98aafbba086e46e6643566cd67d7\",\r\n   \"AgentInfo\": \"333-1234-asdf-551234-1-306\"\r\n}",
+    "res_json": "{\r\n   \"TUI\": \"281e2665-5219-488a-9211-a5a250c9b7be|3ab975e2-736f-4f1d-8723-337f314a60bb|20200423090716\",\r\n   \"Code\": \"200\",\r\n   \"Msg\": [\r\n      \"Success\"\r\n   ],\r\n   \"PaymentID\": null,\r\n   \"TransactionID\": 12344,\r\n   \"RedirectMode\": \"R\",\r\n   \"PostData\": null,\r\n   \"CRSPNR\": \"ASDFF\",\r\n   \"BookStatus\": \"B0\",\r\n   \"TUTransactionID\": 0,\r\n   \"ClientID\": \"asdffdfasdf==\",\r\n   \"GatewayCode\": \"\",\r\n   \"RedirectUrl\": \"*******************/hotel/hotelconfirmation/281e2665-5219-488a-9211-a5a250c9b7be|3ab975e2-736f-4f1d-8723-337f314a60bb|20200423090716/200008119\"\r\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "TUI",
+        "Transaction Unique Identifier",
+        "Dsafs78678-dsfs8234234-sdf76sdf-hgjahh2354fbg"
+      ],
+      [
+        "Code",
+        "Code",
+        "200"
+      ],
+      [
+        "Msg",
+        "Message",
+        "Success"
+      ],
+      [
+        "PaymentID",
+        "Payment ID",
+        ""
+      ],
+      [
+        "TransactionID",
+        "Transaction ID",
+        "4577"
+      ],
+      [
+        "RedirectMode",
+        "Redirect Mode",
+        "R"
+      ],
+      [
+        "PostData",
+        "Post Data",
+        ""
+      ],
+      [
+        "CRSPNR",
+        "CRS PNR",
+        "JHFHJDD"
+      ],
+      [
+        "BookStatus",
+        "Booking Status",
+        "B0"
+      ],
+      [
+        "TUTransactionID",
+        "TU Transaction ID",
+        ""
+      ],
+      [
+        "ClientID",
+        "Client ID",
+        "Dgfsfgs%df+="
+      ],
+      [
+        "GatewayCode",
+        "Payment Gateway Code",
+        ""
+      ],
+      [
+        "RedirectUrl",
+        "Redirect URL",
+        ""
+      ]
+    ]
+  },
+  {
+    "name": "RetrieveBooking",
+    "desc": "This Api retrieves an existing itinerary.",
+    "endpoint": "",
+    "method": "POST",
+    "req_json": "{\n   \"TUI\": null,\n   \"ReferenceType\": \"T\",\n   \"ReferenceNumber\": \"1234214\",\n   \"ServiceType\": null,\n   \"ClientID\": \"asdf\",\n   \"RequestMode\": \"RB\",\n   \"Contact\": null,\n   \"Name\": null\n}",
+    "res_json": "{\n   \"TUI\": \"281e2665-5219-488a-9211-a5a250c9b7be|601eda5f-2d72-4e02-aa54-d630cdade1ff|20200423090747\",\n   \"TransactionId\": 1234214,\n   \"ServiceType\": \"HTL\",\n   \"BookingConfirmationId\": \"ASDF\",\n   \"BookingStatus\": \"B0\",\n   \"CurrentStatus\": \"B0\",\n   \"CheckInDate\": \"2021-03-04 12:0:00 AM\",\n   \"CheckOutDate\": \"2021-03-05 12:0:00 AM\",\n   \"CheckInTime\": \"12:00 PM\",\n   \"CheckOutTime\": \"11:00 AM\",\n   \"GrossFare\": 1637.48,\n   \"NetFare\": 920,\n   \"PaymentType\": \"\",\n   \"PaymentStatus\": \"I8\",\n   \"PaymentMode\": \"\",\n   \"Nationality\": \"\",\n   \"CountryOfResidence\": \"\",\n   \"IssuedDate\": \"2020-04-23 09:6:47 AM\",\n   \"IsBadlyMapped\": \"False\",\n   \"SuspectCategory\": \"\",\n   \"TravelingFor\": \"\",\n   \"GateWayCode\": \"\",\n   \"GateWayCharge\": 0,\n   \"InvoiceDate\": \"23-04-2020\",\n   \"HotelInfo\": {\n      \"Code\": \"15402936\",\n      \"Name\": \"FabHotel Khems Ooty\",\n      \"heroimage\": \"https://i.travelapi.com/hotels/17000000/16210000/16202000/16201997/8929e70e_b.jpg\",\n      \"Latitude\": \"11.409338\",\n      \"Longitude\": \"76.70985\",\n      \"LocationName\": \"\",\n      \"Distance\": 0,\n      \"AllowedCreditCards\": \"\",\n      \"AllowedCountries\": \"\",\n      \"SpecialRequestSupported\": \"False\",\n      \"LeadPaxInfoRequired\": \"False\",\n      \"IsCardRequired\": \"False\",\n      \"GuaranteeRequired\": \"False\",\n      \"Phone\": \"91-91-7042424242\",\n      \"StarRating\": \"3\",\n      \"HotelAddress\": {\n         \"City\": \"Ooty\",\n         \"State\": \"\",\n         \"Country\": \"IN\",\n         \"ZIP\": \"643001\",\n         \"AddressLine1\": \"Shoreham Palace Road\",\n         \"AddressLine2\": \"Off Ettiness Road\"\n      }\n   },\n   \"Rooms\": [\n      {\n         \"ID\": \"983\",\n         \"RoomId\": \"cf243f1f-151f-4a73-9b04-7dbd1a804b51\",\n         \"GuestCode\": \"|1|1:A:25\",\n         \"RoomGroupId\": \"6878352d-956a-4c5b-9812-882b3f725335\",\n         \"Name\": \"Deluxe Room\",\n         \"Description\": \"\",\n         \"Capacity\": \"1\",\n         \"NumberOfAdults\": \"1\",\n         \"NumberOfChildren\": \"0\",\n         \"NumberOfExtraBeds\": \"0\",\n         \"SupplierConfirmationNumber\": \"\",\n         \"SupplierId\": \"450\",\n         \"RecommendationId\": \"aab02f5b-b699-42c2-9ed7-65712d93400c\",\n         \"Refundable\": \"True\",\n         \"Guests\": [\n            {\n               \"Title\": \"Ms\",\n               \"FirstName\": \"asdf\",\n               \"LastName\": \"asdf\",\n               \"Email\": \"asdf@asdf.com\",\n               \"MobileNumber\": \"1234123412\",\n               \"PaxType\": \"A\",\n               \"Age\": \"0\",\n               \"AadharNo\": \"\",\n               \"Pan\": \"\"\n            }\n         ],\n         \"RoomRates\": [\n            {\n               \"TotalRate\": 920.24,\n               \"BaseRate\": 999,\n               \"Discount\": 0,\n               \"ServiceCharge\": 14.98,\n               \"Commission\": 98.68,\n               \"TDSOnCommission\": 4.93,\n               \"PromoAmount\": 0,\n               \"AddonMarkup\": 0,\n               \"AddonDiscount\": 0,\n               \"AgentMarkup\": 623.49,\n               \"Tax\": {\n                  \"Description\": \"tax_and_service_fee\",\n                  \"Amount\": 0\n               },\n               \"AdditionalCharges\": {\n                  \"Amount\": 0,\n                  \"Description\": \"\",\n                  \"Currency\": \"\",\n                  \"Type\": \"\",\n                  \"Unit\": \"\",\n                  \"Frequency\": \"\",\n                  \"Text\": \"\"\n               }\n            }\n         ],\n         \"CancellationPolicy\": [\n            {\n               \"text\": \"Cancellation charge from 2020-04-23 03:37:13 AM to 2021-03-03 12:0:00 AM is INR: 0\",\n               \"policy\": \"\",\n               \"fromDate\": \"2020-04-23 03:37:13 AM\",\n               \"toDate\": \"2021-03-03 12:0:00 AM\",\n               \"amount\": \"0\"\n            },\n            {\n               \"text\": \"Cancellation charge from 2021-03-03 12:0:00 AM to 2021-03-04 12:0:00 AM is INR: 1013.98\",\n               \"policy\": \"\",\n               \"fromDate\": \"2021-03-03 12:0:00 AM\",\n               \"toDate\": \"2021-03-04 12:0:00 AM\",\n               \"amount\": \"1014\"\n            }\n         ],\n         \"RoomFacilities\": [],\n         \"RoomInclusions\": [],\n         \"RoomBoardBasis\": [],\n         \"RoomPolicies\": []\n      }\n   ],\n   \"HotelFacilities\": [\n      {\n         \"name\": \"Free breakfast\"\n      },\n      {\n         \"name\": \"Restaurant\"\n      },\n      {\n         \"name\": \"Luggage storage\"\n      },\n      {\n         \"name\": \"Accessible bathroom\"\n      },\n      {\n         \"name\": \"Free self parking\"\n      },\n      {\n         \"name\": \"Free WiFi\"\n      },\n      {\n         \"name\": \"Smoke-free property\"\n      },\n      {\n         \"name\": \"Free newspapers in lobby\"\n      },\n      {\n         \"name\": \"24-hour front desk\"\n      },\n      {\n         \"name\": \"\"\n      }\n   ],\n   \"ContactInfo\": {\n      \"Title\": \"Ms\",\n      \"FName\": \"asdf\",\n      \"LName\": \"asdf\",\n      \"Mobile\": \"91xxxxxxxx03\",\n      \"Phone\": \"\",\n      \"Email\": \"asxx@xxxxxxxxxsdf.com\",\n      \"Address\": \"ASDFASDF DASFDASFDSAFDAS\",\n      \"CountryCode\": \"IN\",\n      \"State\": \"Maharashtra\",\n      \"City\": \"ASDFSADF DASFDASF DSF\",\n      \"PIN\": \"123412\",\n      \"GSTCompanyName\": \"\",\n      \"GSTTIN\": \"\",\n      \"GSTMobile\": \"\",\n      \"GSTEmail\": \"\",\n      \"GSTAddress\": \"ASDFASDF ASDF DASFDSAF\",\n      \"GSTState\": \"Maharashtra\",\n      \"UpdateProfile\": false,\n      \"IsGuest\": false\n   },\n   \"MoreInfo\": [\n      {\n         \"Field1\": \"\",\n         \"Field2\": \"\",\n         \"Field3\": \"\",\n         \"Field4\": \"\",\n         \"Code\": \"Policy\",\n         \"Description\": \" Couples wishing to share a room must provide proof of marriage. Only registered guests are allowed in the guestrooms. \",\n         \"Name\": \"know before you go\"\n      },\n      {\n         \"Field1\": \"\",\n         \"Field2\": \"\",\n         \"Field3\": \"\",\n         \"Field4\": \"\",\n         \"Code\": \"CheckinTime\",\n         \"Description\": \"Check-In Time is 12:00 PM\",\n         \"Name\": \"CheckinTime\"\n      },\n      {\n         \"Field1\": \"\",\n         \"Field2\": \"\",\n         \"Field3\": \"\",\n         \"Field4\": \"\",\n         \"Code\": \"CheckinInstructions\",\n         \"Description\": \"Extra-person charges may apply and vary depending on property policy. Government-issued photo identification and a credit card, debit card, or cash deposit are required at check-in for incidental charges. Special requests are subject to availability upon check-in and may incur additional charges. Special requests cannot be guaranteed. Only bookings from non-local guests are accepted. Guests whose residence is within the same city as the property will not be allowed to check in. Please note that cultural norms and guest policies may differ by country and by property. The policies listed are provided by the property. \",\n         \"Name\": \"CheckinInstructions\"\n      },\n      {\n         \"Field1\": \"\",\n         \"Field2\": \"\",\n         \"Field3\": \"\",\n         \"Field4\": \"\",\n         \"Code\": \"CheckinSpecialInstructions\",\n         \"Description\": \"This property doesn't offer after-hours check-in. Guests arriving late won't be able to check in until the next morning. Taxes are subject to change based on Goods and Services Tax (GST) implementation. For more details, please contact the property using the information on the reservation confirmation received after booking. Please note that PAN cards are not accepted as identification at this property. For more details, please contact the office using the information on the reservation confirmation received after booking.\",\n         \"Name\": \"CheckinSpecialInstructions\"\n      },\n      {\n         \"Field1\": \"\",\n         \"Field2\": \"\",\n         \"Field3\": \"\",\n         \"Field4\": \"\",\n         \"Code\": \"CheckoutTime\",\n         \"Description\": \"Check-Out Time is 11:00 AM\",\n         \"Name\": \"CheckoutTime\"\n      }\n   ],\n   \"ItineryStatus\": {\n      \"Remarks\": \"\",\n      \"BookingStatus\": \"B0\",\n      \"CurrentStatus\": \"B0\",\n      \"ServiceType\": \"HTL\",\n      \"StatusDetails\": [\n         {\n            \"Status\": \"B0\",\n            \"PaxSectorID\": \"\"\n         }\n      ]\n   },\n   \"Rules\": null,\n   \"Promo\": [\n      {\n         \"Code\": \"\",\n         \"Amount\": 0,\n         \"EmployeeID\": null,\n         \"ConvenienceFee\": 0\n      }\n   ],\n   \"Auxiliaries\": [\n      {\n         \"Code\": \"\",\n         \"EmployeeID\": null,\n         \"Amount\": 0\n      }\n   ],\n   \"PaymentSummary\": [],\n   \"Remarks\": null,\n   \"Code\": \"200\",\n   \"Msg\": [\n      \"Success\"\n   ]\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "TUI",
+        "Transaction Unique Identifier",
+        "Dsfsda89sdfsd-dsf8sdfsf-465237ghkj-ghf59-gfhdgfh"
+      ],
+      [
+        "TransactionID",
+        "Transaction ID",
+        "5688534"
+      ],
+      [
+        "ServiceType",
+        "Service Type",
+        "HTL"
+      ],
+      [
+        "",
+        "HTL \u2013 Hotel",
+        ""
+      ],
+      [
+        "BookingConfirmationId",
+        "Booking Confirmation ID",
+        "GDSH"
+      ],
+      [
+        "BookingStatus",
+        "Booking Status",
+        "B0"
+      ],
+      [
+        "CurrentStatus",
+        "The CurrentStatus  will returns the current status of the booking",
+        "B0"
+      ],
+      [
+        "CheckInDate",
+        "Check In Date",
+        "44116"
+      ],
+      [
+        "CheckOutDate",
+        "Check Out Date",
+        "44117"
+      ],
+      [
+        "CheckInTime",
+        "Check In Time",
+        "12.00.00 PM"
+      ],
+      [
+        "CheckOutTime",
+        "Check Out Time",
+        "11.00.00 AM"
+      ],
+      [
+        "GrossFare",
+        "Gross Fare",
+        ""
+      ],
+      [
+        "NetFare",
+        "Net Fare",
+        ""
+      ],
+      [
+        "PaymentType",
+        "Payment Type",
+        ""
+      ],
+      [
+        "PaymentStatus",
+        "Payment Status",
+        "IS"
+      ],
+      [
+        "PaymentMode",
+        "Payment Mode",
+        ""
+      ],
+      [
+        "Nationality",
+        "Nationality",
+        ""
+      ],
+      [
+        "CountryOfResidence",
+        "Country of residence",
+        ""
+      ],
+      [
+        "IssuedDate",
+        "Issued Date",
+        ""
+      ],
+      [
+        "IsBadlyMapped",
+        "Whether bad mapping",
+        ""
+      ],
+      [
+        "SuspectCategory",
+        "Suspect Category",
+        ""
+      ],
+      [
+        "TravelingFor",
+        "Travelling For",
+        ""
+      ],
+      [
+        "GatewayCode",
+        "Payment Gateway Code",
+        ""
+      ],
+      [
+        "GateWayCharge",
+        "Payment Gateway Charge",
+        ""
+      ],
+      [
+        "InvoiceDate",
+        "Invoice Date",
+        ""
+      ],
+      [
+        "HotelInfo.Code",
+        "Hotel Code",
+        "43536546"
+      ],
+      [
+        "HotelInfo.Name",
+        "Hotel Name",
+        "FabHotel Khems Ooty"
+      ],
+      [
+        "HotelInfo.heroimage",
+        "Image",
+        ""
+      ],
+      [
+        "HotelInfo.LocationName",
+        "Location Name",
+        ""
+      ],
+      [
+        "HotelInfo.Distance",
+        "Distance from city center",
+        ""
+      ],
+      [
+        "HotelInfo.AllowedCreditCards",
+        "Allowed Credit Cards",
+        ""
+      ],
+      [
+        "HotelInfo.AllowedCountries",
+        "Allowed countries",
+        ""
+      ],
+      [
+        "HotelInfo.SpecialRequestSupported",
+        "Whether special request are supported",
+        ""
+      ],
+      [
+        "HotelInfo.LeadPaxInfoRequired",
+        "Whether lead pax info required",
+        ""
+      ],
+      [
+        "HotelInfo.IsCardRequired",
+        "Whether card required for booking",
+        ""
+      ],
+      [
+        "HotelInfo.GuaranteeRequired",
+        "Whether guarantee required",
+        ""
+      ],
+      [
+        "HotelInfo.Phone",
+        "Phone",
+        ""
+      ],
+      [
+        "HotelInfo.StarRating",
+        "Star Rating",
+        ""
+      ],
+      [
+        "Rooms.ID",
+        "ID",
+        "5734"
+      ],
+      [
+        "Rooms.RoomId",
+        "Room ID",
+        "Fdsafa789dsf-sagsdfg4sagds-sg89fgfg-dfsgdsj6746rtr2"
+      ],
+      [
+        "Rooms.GuestCode",
+        "Guest Code",
+        "|1|1.A.25"
+      ],
+      [
+        "Rooms.RoomGroupId",
+        "Room Group Id",
+        "Fdsafs-dfghdsg78dgfhgfj-54gfh"
+      ],
+      [
+        "Rooms.Name",
+        "Name",
+        ""
+      ],
+      [
+        "Rooms.Description",
+        "Description",
+        ""
+      ],
+      [
+        "Rooms.Capacity",
+        "Capacity",
+        "1"
+      ],
+      [
+        "Rooms.NumberOfAdults",
+        "Number of adults",
+        ""
+      ],
+      [
+        "Rooms.NumberOfChildren",
+        "Number of Children",
+        ""
+      ],
+      [
+        "Rooms.NumberOfExtraBeds",
+        "Number of extra beds",
+        ""
+      ],
+      [
+        "Rooms.SupplierConfirmationNumber",
+        "Supplier confirmation number",
+        ""
+      ],
+      [
+        "Rooms.SupplierId",
+        "Supplier ID",
+        ""
+      ],
+      [
+        "Rooms.RecommendationId",
+        "Recommendation id",
+        "Sfgfg-g5435gfhdf67dghdgf-gh78gfhjhfgj-h54546"
+      ],
+      [
+        "Rooms.Refundable",
+        "Whether refundable",
+        ""
+      ],
+      [
+        "Rooms.Guests.Title",
+        "Title",
+        "Mr"
+      ],
+      [
+        "Rooms.Guests.FirstName",
+        "First Name",
+        ""
+      ],
+      [
+        "Rooms.Guests.LastName",
+        "Last Name",
+        ""
+      ],
+      [
+        "Rooms.Guests.Email",
+        "Email",
+        ""
+      ],
+      [
+        "Rooms.Guests.MobileNumber",
+        "Mobile Number",
+        ""
+      ],
+      [
+        "Rooms.Guests.PaxType",
+        "PaxType\nA- Adult\nC - Child",
+        "A"
+      ],
+      [
+        "Rooms.Guests.Age",
+        "Age",
+        ""
+      ],
+      [
+        "Rooms.Guests.AadharNo",
+        "Aadhar Number",
+        ""
+      ],
+      [
+        "Rooms.Guests.Pan",
+        "Pan Card Number",
+        ""
+      ],
+      [
+        "Rooms.RoomRates.TotalRate",
+        "Total Rate",
+        ""
+      ],
+      [
+        "Rooms.RoomRates.BaseRate",
+        "Base Rate",
+        ""
+      ],
+      [
+        "Rooms.RoomRates.Discount",
+        "Discount",
+        ""
+      ],
+      [
+        "Rooms.RoomRates.ServiceCharge",
+        "Service Charge",
+        ""
+      ],
+      [
+        "Rooms.RoomRates.Commission",
+        "Commission",
+        ""
+      ],
+      [
+        "Rooms.RoomRates.TDSOnCommission",
+        "TDS on commission",
+        ""
+      ],
+      [
+        "Rooms.RoomRates.PromoAmount",
+        "Promo Amount",
+        ""
+      ],
+      [
+        "Rooms.RoomRates.AddonMarkup",
+        "Add-On markup",
+        ""
+      ],
+      [
+        "Rooms.RoomRates.AddonDiscount",
+        "Add-on discount",
+        ""
+      ],
+      [
+        "Rooms.RoomRates.AgentMarkup",
+        "Agent Markup",
+        ""
+      ],
+      [
+        "Rooms.RoomRates.CancellationPolicy.text",
+        "Cancellation Policy",
+        ""
+      ],
+      [
+        "Rooms.RoomRates. CancellationPolicy.fromDate",
+        "From Date",
+        ""
+      ],
+      [
+        "Rooms.RoomRates. CancellationPolicy.toDate",
+        "To Date",
+        ""
+      ],
+      [
+        "Rooms.RoomRates. CancellationPolicy.amount",
+        "Policy Amount",
+        ""
+      ]
+    ]
+  },
+  {
+    "name": "Cancel",
+    "desc": "This API initiates cancellation of a hotel booking.",
+    "endpoint": "{HotelItineraryURL}",
+    "method": "POST",
+    "req_json": "{\n  \"Remarks\": \"test\",\n  \"TUI\": \"32d0991a-a135-4c13-240f-957e52dc0618|c5c28b91-9e14-4214-84fe-235f00ac87c6|20231103085148\",\n  \"TransactionID\": 1234123412,\n  \"YearType\": \"19\"\n}",
+    "res_json": "{\n  \"TUI\": \"a2d099da-a135-4c13-b40f-957e52dc0618|c5ca8b95-9eb4-4114-83ff-285f00ac87c6|20231103085148\",\n  \"Msg\": [\n    \"Success\"\n  ],\n  \"Code\": \"200\",\n  \"CancellationID\": 24001303134,\n  \"AutoCancellation\": true\n}",
+    "params": [
+      [
+        "Field Name",
+        "Description",
+        "Sample Data"
+      ],
+      [
+        "TUI",
+        "Transaction Unique Identifier.",
+        "af80de34-fccb-4c28-9365-6740b775265b|4913ba1b-4ecd-4909-9c1e-e1a47161c31c|20200625105832"
+      ],
+      [
+        "AutoCancellation",
+        "AutoCancellation",
+        "true"
+      ],
+      [
+        "CancellationID",
+        "CancellationID",
+        "39002903176"
+      ],
+      [
+        "Code",
+        "Response Code",
+        "200"
+      ],
+      [
+        "Msg",
+        "Response Message",
+        "Success"
+      ]
+    ]
+  }
+]
