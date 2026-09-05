@@ -51,8 +51,23 @@ $total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
                     <input type="hidden" name="hotel_address" value="<?php echo htmlspecialchars($hotel_address); ?>">
                     <input type="hidden" name="hotel_image" value="<?php echo htmlspecialchars($hotel_image); ?>">
                     <input type="hidden" name="room_type" value="<?php echo htmlspecialchars($room_type); ?>">
+                    <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($booking_data['room_id'] ?? 'RM_01'); ?>">
+                    <input type="hidden" name="room_group_id" value="<?php echo htmlspecialchars($booking_data['room_group_id'] ?? 'RGRP_01'); ?>">
+                    <input type="hidden" name="recommendation_id" value="<?php echo htmlspecialchars($booking_data['recommendation_id'] ?? 'REC_01'); ?>">
+                    <input type="hidden" name="search_id" value="<?php echo htmlspecialchars($booking_data['search_id'] ?? ''); ?>">
+                    <input type="hidden" name="tui" value="<?php echo htmlspecialchars($booking_data['tui'] ?? ($booking_data['search_tracing_key'] ?? '')); ?>">
+                    <input type="hidden" name="board_type" value="<?php echo htmlspecialchars($booking_data['board_type'] ?? 'Breakfast Included'); ?>">
+                    <input type="hidden" name="city" value="<?php echo htmlspecialchars($booking_data['city'] ?? 'Goa'); ?>">
+                    <input type="hidden" name="checkin" value="<?php echo htmlspecialchars($checkin_date); ?>">
+                    <input type="hidden" name="checkout" value="<?php echo htmlspecialchars($checkout_date); ?>">
                     <input type="hidden" name="checkin_date" value="<?php echo htmlspecialchars($checkin_date); ?>">
                     <input type="hidden" name="checkout_date" value="<?php echo htmlspecialchars($checkout_date); ?>">
+                    <input type="hidden" name="rooms" value="<?php echo htmlspecialchars($booking_data['rooms'] ?? 1); ?>">
+                    <input type="hidden" name="adults" value="<?php echo htmlspecialchars($booking_data['adults'] ?? 2); ?>">
+                    <input type="hidden" name="children" value="<?php echo htmlspecialchars($booking_data['children'] ?? 0); ?>">
+                    <input type="hidden" name="nights" value="<?php echo htmlspecialchars($booking_data['nights'] ?? 1); ?>">
+                    <input type="hidden" name="grand_total" value="<?php echo htmlspecialchars($total_amount); ?>">
+                    <input type="hidden" name="taxes" value="<?php echo htmlspecialchars($booking_data['taxes'] ?? 0); ?>">
                     <input type="hidden" name="total_amount" value="<?php echo htmlspecialchars($total_amount); ?>">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
 

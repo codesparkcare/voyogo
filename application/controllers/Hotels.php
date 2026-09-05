@@ -195,20 +195,37 @@ class Hotels extends CI_Controller {
         $lead_phone     = $this->input->post('guest_phone') ?: '9876543210';
         $special_req    = $this->input->post('special_requests') ?: 'Non-smoking room';
 
-        // 1. Benzy Create Itinerary API Call
+        // 1. Benzy Create Itinerary API Call (Exact WRC B2B Schema)
         $itineraryPayload = array(
-            'hotelId'   => $hotel_id,
-            'roomId'    => $room_id,
-            'checkIn'   => $checkin,
-            'checkOut'  => $checkout,
-            'leadGuest' => array('name' => $lead_name, 'email' => $lead_email, 'phone' => $lead_phone)
+            'TUI'                   => $this->input->post('tui') ?: ('TUI-' . uniqid()),
+            'SearchId'              => $this->input->post('search_id') ?: ('SRCH-' . uniqid()),
+            'RecommendationId'      => $this->input->post('recommendation_id') ?: ('REC-' . uniqid()),
+            'HotelCode'             => $hotel_id,
+            'RoomId'                => $room_id,
+            'RoomGroupId'           => $this->input->post('room_group_id') ?: ('RGRP_' . uniqid()),
+            'CheckInDate'           => $checkin,
+            'CheckOutDate'          => $checkout,
+            'NetAmount'             => $total_amount,
+            'SpecialServiceRequest' => $special_req,
+            'ContactInfo'           => array(
+                'Title'             => $lead_title,
+                'FName'             => $lead_fname,
+                'LName'             => $lead_lname,
+                'Mobile'            => $lead_phone,
+                'Email'             => $lead_email,
+                'City'              => $city,
+                'CountryCode'       => 'IN',
+                'MobileCountryCode' => '+91'
+            )
         );
-        $txnId = $this->benzyhotelapi->createItinerary($itineraryPayload);
+        $itinResult = $this->benzyhotelapi->createItinerary($itineraryPayload);
+        $txnId = is_array($itinResult) ? ($itinResult['transactionId'] ?? 200002450) : $itinResult;
+        $tui = is_array($itinResult) ? ($itinResult['tui'] ?? ($itineraryPayload['TUI'])) : $itineraryPayload['TUI'];
 
-        // 2. Benzy Start Pay API Call
-        $payResult = $this->benzyhotelapi->startPay($txnId, $total_amount);
-        $suppRef = $payResult['supplierReference'] ?? ('AKB_HTL_' . rand(100000, 999999));
-        $voucherNum = $payResult['voucherNumber'] ?? ('VOY-HTL-' . strtoupper(substr(md5(time()), 0, 8)));
+        // 2. Benzy Start Pay API Call (Deposit / Auto-Payment mode)
+        $payResult = $this->benzyhotelapi->startPay($txnId, $total_amount, $tui);
+        $suppRef = $payResult['CRSPNR'] ?? ($payResult['supplierReference'] ?? ('AKB_HTL_' . rand(100000, 999999)));
+        $voucherNum = 'VOY-VCH-' . strtoupper(substr(md5($txnId . time()), 0, 8));
         $bookingRef = 'VOY-HTL-' . date('Ymd') . '-' . rand(1000, 9999);
 
         // 3. Save to database
