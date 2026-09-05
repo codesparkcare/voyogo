@@ -12,26 +12,61 @@ class Admin extends CI_Controller {
     }
 
     /**
-     * Check Session Helper - Auto-authenticates for direct admin access
+     * Check Session Helper
      */
     private function _check_login() {
         if (!$this->session->userdata('admin_logged_in')) {
-            $this->session->set_userdata(array(
-                'admin_id'        => 1,
-                'admin_username'  => 'admin',
-                'admin_email'     => 'admin@voyogo.com',
-                'admin_logged_in' => TRUE
-            ));
+            redirect('admin/login');
         }
     }
 
     /**
-     * Admin Login - Auto-redirects directly to dashboard
+     * Admin Dashboard
+     */
+    public function index()
+    {
+        $this->_check_login();
+
+        $data['stats'] = $this->Admin_model->get_dashboard_stats();
+        $data['recent_flights'] = $this->Booking_model->get_all_flight_bookings(5);
+        $data['recent_hotels']  = $this->Booking_model->get_all_hotel_bookings(5);
+        $data['active_menu'] = 'dashboard';
+
+        $this->load->view('admin/layout/header', $data);
+        $this->load->view('admin/layout/sidebar', $data);
+        $this->load->view('admin/dashboard', $data);
+        $this->load->view('admin/layout/footer', $data);
+    }
+
+    /**
+     * Admin Login View & Action
      */
     public function login()
     {
-        $this->_check_login();
-        redirect('admin');
+        if ($this->session->userdata('admin_logged_in')) {
+            redirect('admin');
+        }
+
+        if ($this->input->post()) {
+            $username = $this->input->post('username');
+            $password = $this->input->post('password');
+
+            $user = $this->Admin_model->verify_login($username, $password);
+
+            if ($user) {
+                $this->session->set_userdata(array(
+                    'admin_id' => $user['id'],
+                    'admin_username' => $user['username'],
+                    'admin_email' => $user['email'],
+                    'admin_logged_in' => TRUE
+                ));
+                redirect('admin');
+            } else {
+                $data['error'] = 'Invalid Username or Password!';
+            }
+        }
+
+        $this->load->view('admin/login', isset($data) ? $data : NULL);
     }
 
     /**
@@ -39,7 +74,9 @@ class Admin extends CI_Controller {
      */
     public function logout()
     {
-        redirect('admin');
+        $this->session->unset_userdata(array('admin_id', 'admin_username', 'admin_email', 'admin_logged_in'));
+        $this->session->sess_destroy();
+        redirect('admin/login');
     }
 
     /**
