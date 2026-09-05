@@ -405,6 +405,214 @@ $defaultNights   = 4;
     font-weight: 700;
 }
 
+/* Akbar Multi-Room Guest Popover */
+.akbar-guests-panel {
+    width: 380px;
+    max-width: 95vw;
+    padding: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    left: auto;
+    right: 0;
+    top: calc(100% + 10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.22);
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    z-index: 999999;
+}
+@media (max-width: 768px) {
+    .akbar-guests-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        max-height: 90vh;
+        overflow-y: auto;
+        width: 92vw;
+    }
+}
+.akbar-rooms-list-container {
+    max-height: 380px;
+    overflow-y: auto;
+}
+.akbar-room-card {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 16px 20px;
+    transition: background 0.15s ease;
+    background: #ffffff;
+}
+.akbar-room-card.collapsed {
+    background: #f8fafc;
+    padding: 12px 20px;
+    cursor: pointer;
+}
+.akbar-room-card.collapsed:hover {
+    background: #f1f5f9;
+}
+.akbar-room-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.akbar-room-card.collapsed .akbar-room-head {
+    margin-bottom: 0;
+}
+.akbar-room-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+}
+.akbar-room-summary-text {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 600;
+    margin-top: 2px;
+}
+.akbar-room-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.akbar-room-row-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+}
+.akbar-room-row-sub {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+}
+.akbar-counter-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.akbar-counter-val {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    min-width: 16px;
+    text-align: center;
+}
+.akbar-counter-btn-group {
+    display: flex;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.akbar-counter-btn {
+    background: #ffffff;
+    border: none;
+    width: 32px;
+    height: 30px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #334155;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.1s;
+}
+.akbar-counter-btn:hover:not(:disabled) {
+    background: #f1f5f9;
+    color: #0d3470;
+}
+.akbar-counter-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: #f8fafc;
+}
+.akbar-counter-btn:first-child {
+    border-right: 1px solid #cbd5e1;
+}
+.akbar-child-age-box {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #e2e8f0;
+}
+.akbar-child-age-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+.akbar-child-age-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+.akbar-child-select-wrap {
+    position: relative;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 3px 8px 3px 8px;
+    background: #ffffff;
+}
+.akbar-child-select-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    display: block;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+.akbar-child-select {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    cursor: pointer;
+}
+.akbar-guests-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+}
+.akbar-add-room-btn {
+    background: none;
+    border: none;
+    color: #eb2027;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+}
+.akbar-add-room-btn:hover {
+    text-decoration: underline;
+}
+.akbar-done-btn {
+    background: #eb2027;
+    color: #ffffff;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.akbar-done-btn:hover {
+    background: #d61a20;
+}
+
 /* Exclusive Deals Section */
 .exclusive-deals-section {
     padding: 40px 0;
@@ -707,54 +915,22 @@ $defaultNights   = 4;
                     <input type="hidden" name="adults" id="akbarHiddenAdults" value="4">
                     <input type="hidden" name="children" id="akbarHiddenChildren" value="0">
 
-                    <!-- Guests Configuration Popover -->
-                    <div class="akbar-dropdown-panel" id="akbarGuestsDropdown" style="width: 320px; padding: 18px;" onclick="event.stopPropagation();">
+                    <!-- Akbar Multi-Room & Guests Configuration Popover -->
+                    <div class="akbar-dropdown-panel akbar-guests-panel" id="akbarGuestsDropdown" onclick="event.stopPropagation();">
                         
-                        <div style="font-size: 14px; font-weight: 800; color: #0d3470; margin-bottom: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
-                            Select Rooms & Guests
+                        <!-- Scrollable Room Cards List Container -->
+                        <div class="akbar-rooms-list-container" id="akbarRoomsListContainer">
+                            <!-- Populated dynamically by JS -->
                         </div>
 
-                        <!-- Rooms Counter -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                            <div>
-                                <div style="font-size: 13px; font-weight: 700; color: #0f172a;">Rooms</div>
-                                <div style="font-size: 11px; color: #64748b;">Max 10 rooms</div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <button type="button" onclick="modifyAkbarGuests('rooms', -1)" style="width: 28px; height: 28px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff; font-weight: 700; cursor: pointer;">-</button>
-                                <span id="akbarRoomsCounterVal" style="font-weight: 700; font-size: 14px; min-width: 18px; text-align: center;">2</span>
-                                <button type="button" onclick="modifyAkbarGuests('rooms', 1)" style="width: 28px; height: 28px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff; font-weight: 700; cursor: pointer;">+</button>
-                            </div>
-                        </div>
-
-                        <!-- Adults Counter -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                            <div>
-                                <div style="font-size: 13px; font-weight: 700; color: #0f172a;">Adults</div>
-                                <div style="font-size: 11px; color: #64748b;">12+ yrs per room</div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <button type="button" onclick="modifyAkbarGuests('adults', -1)" style="width: 28px; height: 28px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff; font-weight: 700; cursor: pointer;">-</button>
-                                <span id="akbarAdultsCounterVal" style="font-weight: 700; font-size: 14px; min-width: 18px; text-align: center;">4</span>
-                                <button type="button" onclick="modifyAkbarGuests('adults', 1)" style="width: 28px; height: 28px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff; font-weight: 700; cursor: pointer;">+</button>
-                            </div>
-                        </div>
-
-                        <!-- Children Counter -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <div>
-                                <div style="font-size: 13px; font-weight: 700; color: #0f172a;">Children</div>
-                                <div style="font-size: 11px; color: #64748b;">0-11 yrs per room</div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <button type="button" onclick="modifyAkbarGuests('children', -1)" style="width: 28px; height: 28px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff; font-weight: 700; cursor: pointer;">-</button>
-                                <span id="akbarChildrenCounterVal" style="font-weight: 700; font-size: 14px; min-width: 18px; text-align: center;">0</span>
-                                <button type="button" onclick="modifyAkbarGuests('children', 1)" style="width: 28px; height: 28px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff; font-weight: 700; cursor: pointer;">+</button>
-                            </div>
-                        </div>
-
-                        <div style="text-align: right;">
-                            <button type="button" onclick="closeAkbarDropdowns();" style="background: #eb2027; color: #ffffff; border: none; padding: 8px 22px; border-radius: 6px; font-weight: 800; font-size: 13px; cursor: pointer;">APPLY</button>
+                        <!-- Footer: Add Room + Done -->
+                        <div class="akbar-guests-footer">
+                            <button type="button" class="akbar-add-room-btn" id="akbarAddRoomBtn" onclick="addAkbarRoom()">
+                                <i class="fa-solid fa-plus"></i> Add Another Room
+                            </button>
+                            <button type="button" class="akbar-done-btn" onclick="closeAkbarDropdowns()">
+                                DONE
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1288,41 +1464,201 @@ document.addEventListener('DOMContentLoaded', function() {
     renderCalendarMonths();
 
     // =========================================================================
-    // 3. GUESTS SELECTOR LOGIC
+    // 3. AKBAR MULTI-ROOM & GUESTS ENGINE
     // =========================================================================
-    var akRooms = 2;
-    var akAdults = 4;
-    var akChildren = 0;
+    var akbarRoomsData = [
+        { adults: 2, children: 0, childAges: [] },
+        { adults: 2, children: 0, childAges: [] }
+    ];
+    var activeEditRoomIndex = 0;
+
+    var roomsListContainer = document.getElementById('akbarRoomsListContainer');
+    var addRoomBtn = document.getElementById('akbarAddRoomBtn');
+
+    window.renderAkbarRooms = function() {
+        if (!roomsListContainer) return;
+        roomsListContainer.innerHTML = '';
+
+        var totalAdults = 0;
+        var totalChildren = 0;
+        var totalRooms = akbarRoomsData.length;
+
+        akbarRoomsData.forEach(function(room, idx) {
+            totalAdults += room.adults;
+            totalChildren += room.children;
+
+            var isExpanded = (idx === activeEditRoomIndex || totalRooms === 1);
+            var card = document.createElement('div');
+            card.className = 'akbar-room-card' + (isExpanded ? '' : ' collapsed');
+
+            if (isExpanded) {
+                var html = '';
+                html += '<div class="akbar-room-head">';
+                html += '  <div class="akbar-room-title">Room ' + (idx + 1) + '</div>';
+                if (totalRooms > 1) {
+                    html += '  <i class="fa-solid fa-xmark" onclick="event.stopPropagation(); removeAkbarRoom(' + idx + ');" style="font-size: 16px; color: #94a3b8; cursor: pointer;" title="Remove Room"></i>';
+                }
+                html += '</div>';
+
+                // Adults Row
+                html += '<div class="akbar-room-row">';
+                html += '  <div><div class="akbar-room-row-label">Adults</div><div class="akbar-room-row-sub">12+ yrs</div></div>';
+                html += '  <div class="akbar-counter-wrap">';
+                html += '    <span class="akbar-counter-val">' + room.adults + '</span>';
+                html += '    <div class="akbar-counter-btn-group">';
+                html += '      <button type="button" class="akbar-counter-btn" onclick="updateRoomAdults(' + idx + ', -1)" ' + (room.adults <= 1 ? 'disabled' : '') + '>-</button>';
+                html += '      <button type="button" class="akbar-counter-btn" onclick="updateRoomAdults(' + idx + ', 1)" ' + (room.adults >= 8 ? 'disabled' : '') + '>+</button>';
+                html += '    </div>';
+                html += '  </div>';
+                html += '</div>';
+
+                // Children Row
+                html += '<div class="akbar-room-row">';
+                html += '  <div><div class="akbar-room-row-label">Children</div><div class="akbar-room-row-sub">0- 12 Years</div></div>';
+                html += '  <div class="akbar-counter-wrap">';
+                html += '    <span class="akbar-counter-val">' + room.children + '</span>';
+                html += '    <div class="akbar-counter-btn-group">';
+                html += '      <button type="button" class="akbar-counter-btn" onclick="updateRoomChildren(' + idx + ', -1)" ' + (room.children <= 0 ? 'disabled' : '') + '>-</button>';
+                html += '      <button type="button" class="akbar-counter-btn" onclick="updateRoomChildren(' + idx + ', 1)" ' + (room.children >= 4 ? 'disabled' : '') + '>+</button>';
+                html += '    </div>';
+                html += '  </div>';
+                html += '</div>';
+
+                // Children Ages Box
+                if (room.children > 0) {
+                    html += '<div class="akbar-child-age-box">';
+                    html += '  <div class="akbar-child-age-title">CHILDREN\'S AGE</div>';
+                    html += '  <div class="akbar-child-age-grid">';
+                    for (var c = 0; c < room.children; c++) {
+                        var childAge = room.childAges[c] !== undefined ? room.childAges[c] : 0;
+                        html += '    <div class="akbar-child-select-wrap">';
+                        html += '      <label class="akbar-child-select-label">Child ' + (c + 1) + '</label>';
+                        html += '      <select class="akbar-child-select" onchange="updateChildAge(' + idx + ', ' + c + ', this.value)">';
+                        html += '        <option value="0"' + (childAge === 0 ? ' selected' : '') + '>Under 1</option>';
+                        for (var a = 1; a <= 12; a++) {
+                            html += '        <option value="' + a + '"' + (childAge === a ? ' selected' : '') + '>' + a + ' ' + (a === 1 ? 'yr' : 'yrs') + '</option>';
+                        }
+                        html += '      </select>';
+                        html += '    </div>';
+                    }
+                    html += '  </div>';
+                    html += '</div>';
+                }
+
+                card.innerHTML = html;
+            } else {
+                // Collapsed View
+                var html = '';
+                html += '<div class="akbar-room-head">';
+                html += '  <div>';
+                html += '    <div class="akbar-room-title">Room ' + (idx + 1) + '</div>';
+                html += '    <div class="akbar-room-summary-text"><strong>' + room.adults + '</strong> Adults <strong>' + room.children + '</strong> Children</div>';
+                html += '  </div>';
+                html += '  <div style="display: flex; gap: 12px; align-items: center;">';
+                html += '    <i class="fa-solid fa-pen" onclick="event.stopPropagation(); editAkbarRoom(' + idx + ');" style="font-size: 13px; color: #64748b; cursor: pointer;" title="Edit Room"></i>';
+                if (totalRooms > 1) {
+                    html += '    <i class="fa-solid fa-xmark" onclick="event.stopPropagation(); removeAkbarRoom(' + idx + ');" style="font-size: 16px; color: #94a3b8; cursor: pointer;" title="Remove Room"></i>';
+                }
+                html += '  </div>';
+                html += '</div>';
+
+                card.innerHTML = html;
+                card.onclick = function() {
+                    editAkbarRoom(idx);
+                };
+            }
+
+            roomsListContainer.appendChild(card);
+        });
+
+        // Update Add Room button visibility
+        if (addRoomBtn) {
+            addRoomBtn.style.display = (totalRooms >= 8) ? 'none' : 'inline-flex';
+        }
+
+        // Update Search Display
+        var totalGuests = totalAdults + totalChildren;
+        var roomsDisplay = document.getElementById('akbarRoomsDisplay');
+        var guestsDisplay = document.getElementById('akbarGuestsDisplay');
+        var guestSubtitle = document.getElementById('akbarGuestSubtitle');
+
+        if (roomsDisplay) roomsDisplay.textContent = totalRooms;
+        if (guestsDisplay) guestsDisplay.textContent = totalGuests;
+        if (guestSubtitle) {
+            var childStr = totalChildren === 1 ? '1 Child' : totalChildren + ' Children';
+            guestSubtitle.textContent = totalAdults + ' Adults, ' + childStr;
+        }
+
+        var hiddenRooms = document.getElementById('akbarHiddenRooms');
+        var hiddenAdults = document.getElementById('akbarHiddenAdults');
+        var hiddenChildren = document.getElementById('akbarHiddenChildren');
+
+        if (hiddenRooms) hiddenRooms.value = totalRooms;
+        if (hiddenAdults) hiddenAdults.value = totalAdults;
+        if (hiddenChildren) hiddenChildren.value = totalChildren;
+    };
+
+    window.addAkbarRoom = function() {
+        if (akbarRoomsData.length < 8) {
+            akbarRoomsData.push({ adults: 1, children: 0, childAges: [] });
+            activeEditRoomIndex = akbarRoomsData.length - 1;
+            renderAkbarRooms();
+        }
+    };
+
+    window.removeAkbarRoom = function(idx) {
+        if (akbarRoomsData.length > 1) {
+            akbarRoomsData.splice(idx, 1);
+            if (activeEditRoomIndex >= akbarRoomsData.length) {
+                activeEditRoomIndex = akbarRoomsData.length - 1;
+            }
+            renderAkbarRooms();
+        }
+    };
+
+    window.editAkbarRoom = function(idx) {
+        activeEditRoomIndex = idx;
+        renderAkbarRooms();
+    };
+
+    window.updateRoomAdults = function(idx, delta) {
+        if (akbarRoomsData[idx]) {
+            akbarRoomsData[idx].adults = Math.max(1, Math.min(8, akbarRoomsData[idx].adults + delta));
+            renderAkbarRooms();
+        }
+    };
+
+    window.updateRoomChildren = function(idx, delta) {
+        if (akbarRoomsData[idx]) {
+            var newCount = Math.max(0, Math.min(4, akbarRoomsData[idx].children + delta));
+            akbarRoomsData[idx].children = newCount;
+            while (akbarRoomsData[idx].childAges.length < newCount) {
+                akbarRoomsData[idx].childAges.push(0);
+            }
+            if (akbarRoomsData[idx].childAges.length > newCount) {
+                akbarRoomsData[idx].childAges.length = newCount;
+            }
+            renderAkbarRooms();
+        }
+    };
+
+    window.updateChildAge = function(roomIdx, childIdx, age) {
+        if (akbarRoomsData[roomIdx] && akbarRoomsData[roomIdx].childAges) {
+            akbarRoomsData[roomIdx].childAges[childIdx] = parseInt(age) || 0;
+        }
+    };
 
     if (guestsCol) {
         guestsCol.addEventListener('click', function(e) {
             e.stopPropagation();
             closeAkbarDropdowns();
+            renderAkbarRooms();
             if (guestsDropdown) guestsDropdown.classList.add('show');
         });
     }
 
-    window.modifyAkbarGuests = function(type, delta) {
-        if (type === 'rooms') {
-            akRooms = Math.max(1, Math.min(10, akRooms + delta));
-            document.getElementById('akbarRoomsCounterVal').textContent = akRooms;
-        } else if (type === 'adults') {
-            akAdults = Math.max(1, Math.min(30, akAdults + delta));
-            document.getElementById('akbarAdultsCounterVal').textContent = akAdults;
-        } else if (type === 'children') {
-            akChildren = Math.max(0, Math.min(10, akChildren + delta));
-            document.getElementById('akbarChildrenCounterVal').textContent = akChildren;
-        }
-
-        var totalGuests = akAdults + akChildren;
-        document.getElementById('akbarRoomsDisplay').textContent = akRooms;
-        document.getElementById('akbarGuestsDisplay').textContent = totalGuests;
-        document.getElementById('akbarGuestSubtitle').textContent = akAdults + " Adults, " + akChildren + " Children";
-
-        document.getElementById('akbarHiddenRooms').value = akRooms;
-        document.getElementById('akbarHiddenAdults').value = akAdults;
-        document.getElementById('akbarHiddenChildren').value = akChildren;
-    };
+    // Initial render of rooms
+    renderAkbarRooms();
 
     window.closeAkbarDropdowns = function() {
         if (destDropdown) destDropdown.classList.remove('show');
