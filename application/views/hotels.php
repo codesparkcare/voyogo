@@ -111,18 +111,22 @@ $defaultNights   = 4;
     justify-content: center;
     width: 0;
     z-index: 12;
+    pointer-events: none;
 }
 .akbar-nights-pill {
     background: #ffffff;
     border: 1.5px solid #cbd5e1;
     border-radius: 20px;
-    padding: 3px 9px;
-    font-size: 11px;
+    padding: 2px 8px;
+    font-size: 10px;
     font-weight: 800;
     color: #334155;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     white-space: nowrap;
     text-align: center;
+    transform: translateX(-50%);
+    position: absolute;
+    letter-spacing: 0.3px;
 }
 
 /* Guest Selector Styling */
@@ -606,7 +610,7 @@ $defaultNights   = 4;
                 </div>
 
                 <!-- 2. Check In Date -->
-                <div class="akbar-search-col" id="akbarCheckinCol" style="flex: 1.2; cursor: pointer;">
+                <div class="akbar-search-col" id="akbarCheckinCol" style="flex: 1.25; padding-right: 28px; cursor: pointer;">
                     <div class="akbar-col-label">
                         <span>CHECK IN</span> <i class="fa-solid fa-chevron-down" style="font-size: 9px; color: #64748b;"></i>
                     </div>
@@ -626,7 +630,7 @@ $defaultNights   = 4;
                 </div>
 
                 <!-- 3. Check Out Date -->
-                <div class="akbar-search-col" id="akbarCheckoutCol" style="flex: 1.2; padding-left: 24px; cursor: pointer;">
+                <div class="akbar-search-col" id="akbarCheckoutCol" style="flex: 1.25; padding-left: 44px; cursor: pointer;">
                     <div class="akbar-col-label">
                         <span>CHECK OUT</span> <i class="fa-solid fa-chevron-down" style="font-size: 9px; color: #64748b;"></i>
                     </div>
