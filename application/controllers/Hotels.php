@@ -22,7 +22,10 @@ class Hotels extends CI_Controller {
     public function index() {
         $data['page_title']  = 'Book Luxury Hotels & Cheap Resorts at Lowest Rates - Voyogo';
         $data['active_page'] = 'hotels';
+
+        $this->load->view('includes/header', $data);
         $this->load->view('hotels', $data);
+        $this->load->view('includes/footer', $data);
     }
 
     /**
@@ -48,7 +51,9 @@ class Hotels extends CI_Controller {
         $data['children']      = $children;
         $data['hotelResults']  = $hotelResults;
 
+        $this->load->view('includes/header', $data);
         $this->load->view('hotel_results', $data);
+        $this->load->view('includes/footer', $data);
     }
 
     /**
@@ -74,7 +79,9 @@ class Hotels extends CI_Controller {
         $data['page_title']   = ($hotel['name'] ?? 'Hotel') . " - Voyogo Hotels";
         $data['active_page']  = 'hotels';
 
+        $this->load->view('includes/header', $data);
         $this->load->view('hotel_detail', $data);
+        $this->load->view('includes/footer', $data);
     }
 
     /**
@@ -129,7 +136,9 @@ class Hotels extends CI_Controller {
         $data['page_title'] = "Review Booking: $hotel_name - Voyogo";
         $data['active_page'] = 'hotels';
 
+        $this->load->view('includes/header', $data);
         $this->load->view('hotel_review', $data);
+        $this->load->view('includes/footer', $data);
     }
 
     /**
@@ -228,7 +237,9 @@ class Hotels extends CI_Controller {
         $data['page_title']  = 'Hotel Booking Confirmed - ' . $booking['booking_reference'] . ' | Voyogo';
         $data['active_page'] = 'hotels';
 
+        $this->load->view('includes/header', $data);
         $this->load->view('hotel_confirmation', $data);
+        $this->load->view('includes/footer', $data);
     }
 
     /**
