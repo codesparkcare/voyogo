@@ -226,6 +226,181 @@ $defaultNights   = 4;
     display: block;
 }
 
+/* Akbar Dual-Month Calendar Dropdown */
+.akbar-calendar-panel {
+    width: 620px;
+    max-width: 95vw;
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    left: 20%;
+    top: calc(100% + 10px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    z-index: 999999;
+}
+@media (max-width: 991px) {
+    .akbar-calendar-panel {
+        left: 0;
+        width: 100%;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+.akbar-cal-header-tabs {
+    display: flex;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+.akbar-cal-tab {
+    flex: 1;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+}
+.akbar-cal-tab.active {
+    background: #ffffff;
+    border-bottom-color: #0d3470;
+}
+.akbar-cal-tab-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+}
+.akbar-cal-tab.active .akbar-cal-tab-label {
+    color: #0d3470;
+}
+.akbar-cal-tab-val {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-top: 3px;
+    display: block;
+}
+.akbar-cal-body {
+    display: flex;
+    gap: 20px;
+    padding: 18px 20px 22px;
+}
+@media (max-width: 640px) {
+    .akbar-cal-body {
+        flex-direction: column;
+    }
+}
+.akbar-cal-month-wrap {
+    flex: 1;
+}
+.akbar-cal-month-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    height: 32px;
+}
+.akbar-cal-month-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #0d3470;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex: 1;
+    text-align: center;
+}
+.akbar-cal-nav-btn {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 700;
+    color: #0f172a;
+    transition: all 0.15s;
+    font-size: 14px;
+}
+.akbar-cal-nav-btn:hover:not(:disabled) {
+    background: #0d3470;
+    color: #ffffff;
+    border-color: #0d3470;
+}
+.akbar-cal-nav-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+.akbar-cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+.akbar-cal-weekdays span.sun {
+    color: #ef4444;
+}
+.akbar-cal-days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 4px;
+    text-align: center;
+}
+.akbar-cal-day {
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.1s ease;
+    border-radius: 4px;
+}
+.akbar-cal-day:hover:not(.disabled):not(.selected-in):not(.selected-out) {
+    background: #e2e8f0;
+    color: #0d3470;
+}
+.akbar-cal-day.sun:not(.disabled):not(.selected-in):not(.selected-out) {
+    color: #ef4444;
+}
+.akbar-cal-day.disabled {
+    color: #cbd5e1;
+    cursor: not-allowed;
+    background: transparent;
+}
+.akbar-cal-day.selected-in {
+    background: #0d3470 !important;
+    color: #ffffff !important;
+    font-weight: 800;
+    border-radius: 4px;
+}
+.akbar-cal-day.selected-out {
+    background: #0d3470 !important;
+    color: #ffffff !important;
+    font-weight: 800;
+    border-radius: 4px;
+}
+.akbar-cal-day.in-range {
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 0;
+    font-weight: 700;
+}
+
 /* Exclusive Deals Section */
 .exclusive-deals-section {
     padding: 40px 0;
@@ -431,7 +606,7 @@ $defaultNights   = 4;
                 </div>
 
                 <!-- 2. Check In Date -->
-                <div class="akbar-search-col" id="akbarCheckinCol" style="flex: 1.2;">
+                <div class="akbar-search-col" id="akbarCheckinCol" style="flex: 1.2; cursor: pointer;">
                     <div class="akbar-col-label">
                         <span>CHECK IN</span> <i class="fa-solid fa-chevron-down" style="font-size: 9px; color: #64748b;"></i>
                     </div>
@@ -440,7 +615,7 @@ $defaultNights   = 4;
                         <span class="akbar-date-month" id="akbarCheckinMon"><?php echo date("M'y", strtotime($defaultCheckin)); ?></span>
                     </div>
                     <div class="akbar-date-day" id="akbarCheckinDay"><?php echo date('l', strtotime($defaultCheckin)); ?></div>
-                    <input type="date" id="akbarCheckinInput" name="checkin_date" value="<?php echo $defaultCheckin; ?>" style="position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer;">
+                    <input type="hidden" id="akbarCheckinInput" name="checkin_date" value="<?php echo $defaultCheckin; ?>">
                 </div>
 
                 <!-- Floating Nights Divider Badge -->
@@ -451,7 +626,7 @@ $defaultNights   = 4;
                 </div>
 
                 <!-- 3. Check Out Date -->
-                <div class="akbar-search-col" id="akbarCheckoutCol" style="flex: 1.2; padding-left: 24px;">
+                <div class="akbar-search-col" id="akbarCheckoutCol" style="flex: 1.2; padding-left: 24px; cursor: pointer;">
                     <div class="akbar-col-label">
                         <span>CHECK OUT</span> <i class="fa-solid fa-chevron-down" style="font-size: 9px; color: #64748b;"></i>
                     </div>
@@ -460,7 +635,55 @@ $defaultNights   = 4;
                         <span class="akbar-date-month" id="akbarCheckoutMon"><?php echo date("M'y", strtotime($defaultCheckout)); ?></span>
                     </div>
                     <div class="akbar-date-day" id="akbarCheckoutDay"><?php echo date('l', strtotime($defaultCheckout)); ?></div>
-                    <input type="date" id="akbarCheckoutInput" name="checkout_date" value="<?php echo $defaultCheckout; ?>" style="position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer;">
+                    <input type="hidden" id="akbarCheckoutInput" name="checkout_date" value="<?php echo $defaultCheckout; ?>">
+                </div>
+
+                <!-- Akbar Interactive Dual-Month Calendar Dropdown Panel -->
+                <div class="akbar-dropdown-panel akbar-calendar-panel" id="akbarCalendarDropdown" onclick="event.stopPropagation();">
+                    <!-- Top Switcher Tabs -->
+                    <div class="akbar-cal-header-tabs">
+                        <div class="akbar-cal-tab active" id="akbarTabCheckin" onclick="switchAkbarCalTab('checkin')">
+                            <span class="akbar-cal-tab-label">CHECK-IN</span>
+                            <span class="akbar-cal-tab-val" id="akbarCalTabCheckinVal"><?php echo date('M d, Y', strtotime($defaultCheckin)); ?></span>
+                        </div>
+                        <div class="akbar-cal-tab" id="akbarTabCheckout" onclick="switchAkbarCalTab('checkout')">
+                            <span class="akbar-cal-tab-label">CHECK-OUT</span>
+                            <span class="akbar-cal-tab-val" id="akbarCalTabCheckoutVal"><?php echo date('M d, Y', strtotime($defaultCheckout)); ?></span>
+                        </div>
+                    </div>
+
+                    <!-- Dual Month Calendars Body -->
+                    <div class="akbar-cal-body">
+                        <!-- Left Month -->
+                        <div class="akbar-cal-month-wrap">
+                            <div class="akbar-cal-month-head">
+                                <button type="button" class="akbar-cal-nav-btn" id="akbarCalPrevBtn" onclick="navigateAkbarCal(-1)">&larr;</button>
+                                <span class="akbar-cal-month-title" id="akbarCalMonth1Title">SEPTEMBER 2026</span>
+                                <span style="width: 30px;"></span>
+                            </div>
+                            <div class="akbar-cal-weekdays">
+                                <span class="sun">Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                            </div>
+                            <div class="akbar-cal-days-grid" id="akbarCalDays1">
+                                <!-- Days injected via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Right Month -->
+                        <div class="akbar-cal-month-wrap">
+                            <div class="akbar-cal-month-head">
+                                <span style="width: 30px;"></span>
+                                <span class="akbar-cal-month-title" id="akbarCalMonth2Title">OCTOBER 2026</span>
+                                <button type="button" class="akbar-cal-nav-btn" id="akbarCalNextBtn" onclick="navigateAkbarCal(1)">&rarr;</button>
+                            </div>
+                            <div class="akbar-cal-weekdays">
+                                <span class="sun">Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                            </div>
+                            <div class="akbar-cal-days-grid" id="akbarCalDays2">
+                                <!-- Days injected via JS -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 4. Rooms & Guests -->
@@ -769,6 +992,22 @@ document.addEventListener('DOMContentLoaded', function() {
     var checkoutDay    = document.getElementById('akbarCheckoutDay');
     var nightsVal      = document.getElementById('akbarNightsVal');
 
+    var checkinCol     = document.getElementById('akbarCheckinCol');
+    var checkoutCol    = document.getElementById('akbarCheckoutCol');
+    var calDropdown    = document.getElementById('akbarCalendarDropdown');
+
+    var tabCheckin     = document.getElementById('akbarTabCheckin');
+    var tabCheckout    = document.getElementById('akbarTabCheckout');
+    var tabCheckinVal  = document.getElementById('akbarCalTabCheckinVal');
+    var tabCheckoutVal = document.getElementById('akbarCalTabCheckoutVal');
+
+    var calMonth1Title = document.getElementById('akbarCalMonth1Title');
+    var calMonth2Title = document.getElementById('akbarCalMonth2Title');
+    var calDays1       = document.getElementById('akbarCalDays1');
+    var calDays2       = document.getElementById('akbarCalDays2');
+    var calPrevBtn     = document.getElementById('akbarCalPrevBtn');
+    var calNextBtn     = document.getElementById('akbarCalNextBtn');
+
     var guestsCol      = document.getElementById('akbarGuestsCol');
     var guestsDropdown = document.getElementById('akbarGuestsDropdown');
 
@@ -807,7 +1046,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 html += '</div>';
             });
         }
-        destList.innerHTML = html;
+        if (destList) destList.innerHTML = html;
     }
 
     renderCities('');
@@ -825,7 +1064,7 @@ document.addEventListener('DOMContentLoaded', function() {
         destCol.addEventListener('click', function(e) {
             e.stopPropagation();
             closeAkbarDropdowns();
-            destDropdown.classList.add('show');
+            if (destDropdown) destDropdown.classList.add('show');
             setTimeout(function() { if (destSearchInp) destSearchInp.focus(); }, 100);
         });
     }
@@ -836,37 +1075,217 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 2. Date Formatting & Calculation
-    function updateDateDisplays() {
-        var dIn = new Date(checkinInput.value);
-        var dOut = new Date(checkoutInput.value);
+    // =========================================================================
+    // 2. AKBAR DUAL-MONTH CALENDAR ENGINE
+    // =========================================================================
+    var monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+    var shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-        if (dOut <= dIn) {
-            dOut = new Date(dIn);
-            dOut.setDate(dOut.getDate() + 1);
-            checkoutInput.value = dOut.toISOString().split('T')[0];
-        }
+    var selCheckin = new Date(checkinInput.value || Date.now());
+    var selCheckout = new Date(checkoutInput.value || (Date.now() + 86400000 * 4));
+    selCheckin.setHours(0,0,0,0);
+    selCheckout.setHours(0,0,0,0);
 
-        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var calViewYear = selCheckin.getFullYear();
+    var calViewMonth = selCheckin.getMonth(); // 0-indexed
+    var calActiveTab = 'checkin'; // 'checkin' or 'checkout'
 
-        checkinNum.textContent = String(dIn.getDate()).padStart(2, '0');
-        checkinMon.textContent = months[dIn.getMonth()] + "'" + String(dIn.getFullYear()).slice(-2);
-        checkinDay.textContent = days[dIn.getDay()];
-
-        checkoutNum.textContent = String(dOut.getDate()).padStart(2, '0');
-        checkoutMon.textContent = months[dOut.getMonth()] + "'" + String(dOut.getFullYear()).slice(-2);
-        checkoutDay.textContent = days[dOut.getDay()];
-
-        var diffTime = Math.abs(dOut - dIn);
-        var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        nightsVal.textContent = diffDays;
+    function formatDateIso(d) {
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, '0');
+        var day = String(d.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + day;
     }
 
-    if (checkinInput) checkinInput.addEventListener('change', updateDateDisplays);
-    if (checkoutInput) checkoutInput.addEventListener('change', updateDateDisplays);
+    function formatTabDate(d) {
+        return shortMonths[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    }
 
-    // 3. Guests Selector Logic
+    function updateMainDateDisplays() {
+        if (!checkinInput || !checkoutInput) return;
+
+        checkinInput.value = formatDateIso(selCheckin);
+        checkoutInput.value = formatDateIso(selCheckout);
+
+        if (checkinNum) checkinNum.textContent = String(selCheckin.getDate()).padStart(2, '0');
+        if (checkinMon) checkinMon.textContent = shortMonths[selCheckin.getMonth()] + "'" + String(selCheckin.getFullYear()).slice(-2);
+        if (checkinDay) checkinDay.textContent = dayNames[selCheckin.getDay()];
+
+        if (checkoutNum) checkoutNum.textContent = String(selCheckout.getDate()).padStart(2, '0');
+        if (checkoutMon) checkoutMon.textContent = shortMonths[selCheckout.getMonth()] + "'" + String(selCheckout.getFullYear()).slice(-2);
+        if (checkoutDay) checkoutDay.textContent = dayNames[selCheckout.getDay()];
+
+        var diffTime = selCheckout.getTime() - selCheckin.getTime();
+        var diffDays = Math.max(1, Math.round(diffTime / (1000 * 60 * 60 * 24)));
+        if (nightsVal) nightsVal.textContent = diffDays;
+
+        if (tabCheckinVal) tabCheckinVal.textContent = formatTabDate(selCheckin);
+        if (tabCheckoutVal) tabCheckoutVal.textContent = formatTabDate(selCheckout);
+    }
+
+    window.switchAkbarCalTab = function(tab) {
+        calActiveTab = tab;
+        if (tab === 'checkin') {
+            tabCheckin.classList.add('active');
+            tabCheckout.classList.remove('active');
+            calViewYear = selCheckin.getFullYear();
+            calViewMonth = selCheckin.getMonth();
+        } else {
+            tabCheckout.classList.add('active');
+            tabCheckin.classList.remove('active');
+            calViewYear = selCheckout.getFullYear();
+            calViewMonth = selCheckout.getMonth();
+        }
+        renderCalendarMonths();
+    };
+
+    window.navigateAkbarCal = function(dir) {
+        calViewMonth += dir;
+        if (calViewMonth < 0) {
+            calViewMonth = 11;
+            calViewYear--;
+        } else if (calViewMonth > 11) {
+            calViewMonth = 0;
+            calViewYear++;
+        }
+        renderCalendarMonths();
+    };
+
+    function renderMonthGrid(year, month, container) {
+        container.innerHTML = '';
+        var today = new Date();
+        today.setHours(0,0,0,0);
+
+        var firstDayIndex = new Date(year, month, 1).getDay();
+        var daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // 1. Empty padding days
+        for (var i = 0; i < firstDayIndex; i++) {
+            var emptyCell = document.createElement('div');
+            emptyCell.className = 'akbar-cal-day disabled';
+            container.appendChild(emptyCell);
+        }
+
+        // 2. Real days
+        for (var d = 1; d <= daysInMonth; d++) {
+            var dateObj = new Date(year, month, d);
+            dateObj.setHours(0,0,0,0);
+
+            var cell = document.createElement('div');
+            cell.className = 'akbar-cal-day';
+            cell.textContent = d;
+
+            var dayOfWeek = dateObj.getDay();
+            if (dayOfWeek === 0) cell.classList.add('sun');
+
+            var isPast = dateObj.getTime() < today.getTime();
+            if (isPast) {
+                cell.classList.add('disabled');
+            } else {
+                var dTime = dateObj.getTime();
+                var inTime = selCheckin.getTime();
+                var outTime = selCheckout.getTime();
+
+                if (dTime === inTime) {
+                    cell.classList.add('selected-in');
+                } else if (dTime === outTime) {
+                    cell.classList.add('selected-out');
+                } else if (dTime > inTime && dTime < outTime) {
+                    cell.classList.add('in-range');
+                }
+
+                (function(selectedDate) {
+                    cell.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        handleDateSelection(selectedDate);
+                    });
+                })(dateObj);
+            }
+
+            container.appendChild(cell);
+        }
+    }
+
+    function handleDateSelection(chosenDate) {
+        if (calActiveTab === 'checkin') {
+            selCheckin = new Date(chosenDate);
+            // If checkout is on or before new checkin, move checkout to next day
+            if (selCheckout.getTime() <= selCheckin.getTime()) {
+                selCheckout = new Date(selCheckin.getTime() + 86400000);
+            }
+            updateMainDateDisplays();
+            // Automatically switch to checkout selection tab
+            switchAkbarCalTab('checkout');
+        } else {
+            // Checkout mode
+            if (chosenDate.getTime() <= selCheckin.getTime()) {
+                // If user clicks a date before checkin, reset checkin to that date
+                selCheckin = new Date(chosenDate);
+                selCheckout = new Date(selCheckin.getTime() + 86400000);
+                updateMainDateDisplays();
+                switchAkbarCalTab('checkout');
+            } else {
+                selCheckout = new Date(chosenDate);
+                updateMainDateDisplays();
+                renderCalendarMonths();
+                // Both dates chosen -> close dropdown smoothly
+                setTimeout(function() {
+                    closeAkbarDropdowns();
+                }, 200);
+            }
+        }
+    }
+
+    function renderCalendarMonths() {
+        var m1Year = calViewYear;
+        var m1Month = calViewMonth;
+
+        var m2Year = m1Month === 11 ? m1Year + 1 : m1Year;
+        var m2Month = m1Month === 11 ? 0 : m1Month + 1;
+
+        if (calMonth1Title) calMonth1Title.textContent = monthNames[m1Month] + ' ' + m1Year;
+        if (calMonth2Title) calMonth2Title.textContent = monthNames[m2Month] + ' ' + m2Year;
+
+        // Check if prev button should be disabled (cannot navigate before current month)
+        var realToday = new Date();
+        var currentRealMonth = realToday.getMonth();
+        var currentRealYear = realToday.getFullYear();
+        if (calPrevBtn) {
+            calPrevBtn.disabled = (m1Year < currentRealYear || (m1Year === currentRealYear && m1Month <= currentRealMonth));
+        }
+
+        if (calDays1) renderMonthGrid(m1Year, m1Month, calDays1);
+        if (calDays2) renderMonthGrid(m2Year, m2Month, calDays2);
+    }
+
+    // Trigger Calendar on Check-In click
+    if (checkinCol) {
+        checkinCol.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeAkbarDropdowns();
+            switchAkbarCalTab('checkin');
+            if (calDropdown) calDropdown.classList.add('show');
+        });
+    }
+
+    // Trigger Calendar on Check-Out click
+    if (checkoutCol) {
+        checkoutCol.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeAkbarDropdowns();
+            switchAkbarCalTab('checkout');
+            if (calDropdown) calDropdown.classList.add('show');
+        });
+    }
+
+    // Initial render of calendar and dates
+    updateMainDateDisplays();
+    renderCalendarMonths();
+
+    // =========================================================================
+    // 3. GUESTS SELECTOR LOGIC
+    // =========================================================================
     var akRooms = 2;
     var akAdults = 4;
     var akChildren = 0;
@@ -875,7 +1294,7 @@ document.addEventListener('DOMContentLoaded', function() {
         guestsCol.addEventListener('click', function(e) {
             e.stopPropagation();
             closeAkbarDropdowns();
-            guestsDropdown.classList.add('show');
+            if (guestsDropdown) guestsDropdown.classList.add('show');
         });
     }
 
@@ -903,6 +1322,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.closeAkbarDropdowns = function() {
         if (destDropdown) destDropdown.classList.remove('show');
+        if (calDropdown) calDropdown.classList.remove('show');
         if (guestsDropdown) guestsDropdown.classList.remove('show');
     };
 
