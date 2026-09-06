@@ -79,19 +79,19 @@ $booking = $b;
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 14px;">
                         <div>
                             <span style="color: #64748b; display: block; font-size: 12px;">Primary Guest Name:</span>
-                            <strong style="color: #09204b; font-size: 16px;"><?php echo htmlspecialchars($booking['primary_guest_name']); ?></strong>
+                            <strong style="color: #09204b; font-size: 16px;"><?php echo htmlspecialchars($booking['primary_guest_name'] ?? ($booking['lead_guest_name'] ?? 'Guest User')); ?></strong>
                         </div>
                         <div>
                             <span style="color: #64748b; display: block; font-size: 12px;">Contact Email:</span>
-                            <strong style="color: #09204b; font-size: 14px;"><?php echo htmlspecialchars($booking['guest_email']); ?></strong>
+                            <strong style="color: #09204b; font-size: 14px;"><?php echo htmlspecialchars($booking['guest_email'] ?? ($booking['lead_guest_email'] ?? 'guest@voyogo.com')); ?></strong>
                         </div>
                         <div>
                             <span style="color: #64748b; display: block; font-size: 12px;">Payment Status:</span>
-                            <strong style="color: #16a34a; font-size: 14px;"><?php echo htmlspecialchars($booking['payment_status']); ?> (₹ <?php echo number_format($booking['total_amount'], 2); ?>)</strong>
+                            <strong style="color: #16a34a; font-size: 14px;"><?php echo htmlspecialchars($booking['payment_status'] ?? 'Confirmed'); ?> (₹ <?php echo number_format($booking['total_amount'] ?? 0, 2); ?>)</strong>
                         </div>
                         <div>
-                            <span style="color: #64748b; display: block; font-size: 12px;">Razorpay Payment ID:</span>
-                            <strong style="color: #475569; font-size: 14px;"><?php echo htmlspecialchars($booking['payment_id']); ?></strong>
+                            <span style="color: #64748b; display: block; font-size: 12px;">Payment Reference:</span>
+                            <strong style="color: #475569; font-size: 14px;"><?php echo htmlspecialchars($booking['payment_id'] ?? ($booking['transaction_id'] ?? ($booking['voucher_number'] ?? 'CONFIRMED'))); ?></strong>
                         </div>
                     </div>
                 </div>

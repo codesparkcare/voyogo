@@ -57,11 +57,20 @@ class BenzyHotelApi {
     /**
      * Helper to perform CURL API calls with automated Hotel API logging
      */
-    protected function makeRequest($actionName, $url, $payload = array(), $method = 'POST', $token = null) {
+    protected function makeRequest($actionName, $url, $payload = array(), $method = 'POST', $token = null, $customHeaders = array()) {
         $startTime = microtime(true);
         $headers = array('Content-Type: application/json');
         if ($token) {
             $headers[] = 'Authorization: Bearer ' . $token;
+        }
+        if (!empty($customHeaders)) {
+            foreach ($customHeaders as $k => $v) {
+                if (is_numeric($k)) {
+                    $headers[] = $v;
+                } else {
+                    $headers[] = $k . ': ' . $v;
+                }
+            }
         }
 
         $ch = curl_init();
@@ -109,11 +118,12 @@ class BenzyHotelApi {
     // 1. SIGNATURE / AUTHENTICATION (/Utils/Signature)
     // =========================================================================
     public function generateToken() {
-        $cacheKey = APPPATH . 'cache/benzy_hotel_token_' . $this->environment . '.txt';
+        $cacheKey = APPPATH . 'cache/benzy_hotel_token_' . $this->environment . '.json';
         if (file_exists($cacheKey) && (time() - filemtime($cacheKey) < 1800)) {
-            $cached = @file_get_contents($cacheKey);
-            if (!empty($cached)) {
-                return $cached;
+            $cached = @json_decode(file_get_contents($cacheKey), true);
+            if (!empty($cached['Token'])) {
+                $this->tokenDetails = $cached;
+                return $cached['Token'];
             }
         }
 
@@ -123,11 +133,19 @@ class BenzyHotelApi {
         if ($res['http_code'] === 200 && !empty($res['json'])) {
             $token = $res['json']['Token'] ?? ($res['json']['TokenId'] ?? ($res['json']['token'] ?? ''));
             if (!empty($token)) {
-                @file_put_contents($cacheKey, $token);
+                $this->tokenDetails = $res['json'];
+                @file_put_contents($cacheKey, json_encode($res['json']));
                 return $token;
             }
         }
         return false;
+    }
+
+    public function getTokenDetails() {
+        if (empty($this->tokenDetails)) {
+            $this->generateToken();
+        }
+        return $this->tokenDetails ?? array();
     }
 
     // =========================================================================
@@ -500,9 +518,12 @@ class BenzyHotelApi {
     // =========================================================================
     public function createItinerary($bookingData) {
         $token = $this->generateToken();
+        $tokenDetails = $this->getTokenDetails();
+        $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'VoyogoClient');
+
         $url = $this->hotelUrl . '/Hotel/CreateItinerary';
 
-        // Format compliant B2B WRC payload
+        // Format compliant B2B WRC payload (PDF Page 39-40)
         $tui = $bookingData['TUI'] ?? ($bookingData['searchTracingKey'] ?? ('TUI-' . uniqid()));
         $searchId = $bookingData['SearchId'] ?? ($bookingData['searchId'] ?? ('SRCH-' . uniqid()));
         $recId = $bookingData['RecommendationId'] ?? ($bookingData['recommendationId'] ?? ('REC-' . uniqid()));
@@ -538,7 +559,7 @@ class BenzyHotelApi {
                 'GSTTIN'            => '',
                 'GSTMobile'         => '',
                 'GSTEmail'          => '',
-                'UpdateProfile'     => false,
+                'UpdateProfile'     => true,
                 'IsGuest'           => false,
                 'CountryCode'       => 'IN',
                 'MobileCountryCode' => '+91',
@@ -565,7 +586,7 @@ class BenzyHotelApi {
                 array(
                     'RoomId'       => $roomId,
                     'GuestCode'    => '|1|1:A:25|',
-                    'SupplierName' => $bookingData['SupplierName'] ?? 'Fab',
+                    'SupplierName' => $bookingData['SupplierName'] ?? 'CleartripAPI',
                     'RoomGroupId'  => $roomGroupId,
                     'Guests'       => array(
                         array(
@@ -585,7 +606,7 @@ class BenzyHotelApi {
                 )
             ),
             'NetAmount'        => (string)$netAmount,
-            'ClientID'         => $this->credentials['ClientID'] ?? 'VoyogoClient',
+            'ClientID'         => $clientId,
             'DeviceID'         => '',
             'AppVersion'       => '1.0',
             'SearchId'         => $searchId,
@@ -597,10 +618,12 @@ class BenzyHotelApi {
             'TravelingFor'     => 'NTF'
         );
 
-        $res = $this->makeRequest('CreateItinerary', $url, $payload, 'POST', $token);
+        $customHeaders = array('search-tracing-key' => $tui);
+        $res = $this->makeRequest('CreateItinerary', $url, $payload, 'POST', $token, $customHeaders);
+
         if ($res['http_code'] !== 200 || empty($res['json']['TransactionID'])) {
             $altUrl = $this->utilsUrl . '/Hotel/CreateItinerary';
-            $res = $this->makeRequest('CreateItinerary_Alt', $altUrl, $payload, 'POST', $token);
+            $res = $this->makeRequest('CreateItinerary_Alt', $altUrl, $payload, 'POST', $token, $customHeaders);
         }
 
         if ($res['http_code'] === 200 && !empty($res['json']['TransactionID'])) {
@@ -625,19 +648,22 @@ class BenzyHotelApi {
     // =========================================================================
     public function startPay($transactionId, $amount, $tui = null) {
         $token = $this->generateToken();
+        $tokenDetails = $this->getTokenDetails();
+        $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'VoyogoClient');
+
         $url = $this->hotelUrl . '/Payment/StartPay';
 
         $payload = array(
             'SID'                 => null,
             'TUI'                 => $tui ?? ('TUI-' . uniqid()),
-            'ClientID'            => $this->credentials['ClientID'] ?? 'VoyogoClient',
+            'ClientID'            => $clientId,
             'Email'               => null,
             'Promo'               => null,
             'TransactionID'       => (int)$transactionId,
             'PaymentType'         => '',
             'BankCode'            => '',
             'GateWayCode'         => '',
-            'MerchantID'          => (int)($this->credentials['MerchantID'] ?? 0),
+            'MerchantID'          => (int)($this->credentials['MerchantID'] ?? 300),
             'PaymentAmount'       => (float)$amount,
             'PaymentCharge'       => 0,
             'TargetCurrency'      => 'INR',
@@ -653,10 +679,12 @@ class BenzyHotelApi {
             'AgentInfo'           => ($this->credentials['AgentCode'] ?? '')
         );
 
-        $res = $this->makeRequest('StartPay', $url, $payload, 'POST', $token);
+        $customHeaders = array('search-tracing-key' => $tui);
+        $res = $this->makeRequest('StartPay', $url, $payload, 'POST', $token, $customHeaders);
+
         if ($res['http_code'] !== 200 || empty($res['json']['BookStatus'])) {
-            $altUrl = $this->hotelUrl . '/Hotel/StartPay';
-            $res = $this->makeRequest('StartPay_Alt', $altUrl, $payload, 'POST', $token);
+            $altUrl = $this->utilsUrl . '/Payment/StartPay';
+            $res = $this->makeRequest('StartPay_Alt', $altUrl, $payload, 'POST', $token, $customHeaders);
         }
 
         if ($res['http_code'] === 200 && !empty($res['json'])) {

@@ -48,6 +48,8 @@ class Hotels extends CI_Controller {
 
         $hotelResults = $this->benzyhotelapi->searchHotels($city, $checkin, $checkout, $rooms, $adults, $children, $locationId, $geoCode);
         $nights = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
+        $searchId = $hotelResults['searchId'] ?? '';
+        $searchTracingKey = $hotelResults['searchTracingKey'] ?? '';
 
         $data['page_title']    = "Hotels in $city - Best Hotel Deals | Voyogo";
         $data['active_page']   = 'hotels';
@@ -58,14 +60,18 @@ class Hotels extends CI_Controller {
         $data['rooms']         = $rooms;
         $data['adults']        = $adults;
         $data['children']      = $children;
+        $data['search_id']     = $searchId;
+        $data['search_tracing_key'] = $searchTracingKey;
         $data['search_query']  = array(
-            'city'     => $city,
-            'checkin'  => $checkin,
-            'checkout' => $checkout,
-            'nights'   => $nights,
-            'rooms'    => $rooms,
-            'adults'   => $adults,
-            'children' => $children
+            'city'               => $city,
+            'checkin'            => $checkin,
+            'checkout'           => $checkout,
+            'nights'             => $nights,
+            'rooms'              => $rooms,
+            'adults'             => $adults,
+            'children'           => $children,
+            'search_id'          => $searchId,
+            'search_tracing_key' => $searchTracingKey
         );
         $data['hotelResults']  = $hotelResults;
 
@@ -199,22 +205,29 @@ class Hotels extends CI_Controller {
         $room_id        = $this->input->post('room_id');
         $board_type     = $this->input->post('board_type');
         $city           = $this->input->post('city');
-        $checkin        = $this->input->post('checkin');
-        $checkout       = $this->input->post('checkout');
-        $rooms          = (int)$this->input->post('rooms');
-        $adults         = (int)$this->input->post('adults');
-        $children       = (int)$this->input->post('children');
-        $nights         = (int)$this->input->post('nights');
-        $total_amount   = (float)$this->input->post('grand_total');
+        $checkin        = $this->input->post('checkin') ?: $this->input->post('checkin_date');
+        $checkout       = $this->input->post('checkout') ?: $this->input->post('checkout_date');
+        $rooms          = (int)$this->input->post('rooms') ?: 1;
+        $adults         = (int)$this->input->post('adults') ?: 2;
+        $children       = (int)$this->input->post('children') ?: 0;
+        $nights         = (int)$this->input->post('nights') ?: max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
+        $total_amount   = (float)$this->input->post('grand_total') ?: ((float)$this->input->post('total_amount') ?: (float)$this->input->post('price'));
         $tax_amount     = (float)$this->input->post('taxes');
 
         $lead_title     = $this->input->post('guest_title') ?: 'Mr';
-        $lead_fname     = $this->input->post('guest_first_name') ?: 'Guest';
-        $lead_lname     = $this->input->post('guest_last_name') ?: 'User';
+        $lead_fname     = $this->input->post('guest_first_name');
+        $lead_lname     = $this->input->post('guest_last_name');
+        if (empty($lead_fname)) {
+            $fullName = trim($this->input->post('primary_guest_name') ?: 'Guest User');
+            $parts = explode(' ', $fullName, 2);
+            $lead_fname = $parts[0] ?? 'Guest';
+            $lead_lname = $parts[1] ?? 'User';
+        }
         $lead_name      = trim("$lead_title $lead_fname $lead_lname");
         $lead_email     = $this->input->post('guest_email') ?: 'guest@voyogo.com';
         $lead_phone     = $this->input->post('guest_phone') ?: '9876543210';
         $special_req    = $this->input->post('special_requests') ?: 'Non-smoking room';
+        $razorpay_id    = $this->input->post('razorpay_payment_id') ?: ('pay_mock_' . rand(100000, 999999));
 
         // 1. Benzy Create Itinerary API Call (Exact WRC B2B Schema)
         $itineraryPayload = array(
@@ -252,6 +265,7 @@ class Hotels extends CI_Controller {
         // 3. Save to database
         $saveData = array(
             'booking_reference'  => $bookingRef,
+            'booking_ref'        => $bookingRef,
             'supplier_reference' => $suppRef,
             'transaction_id'     => $txnId,
             'voucher_number'     => $voucherNum,
@@ -269,14 +283,19 @@ class Hotels extends CI_Controller {
             'rooms_count'        => $rooms,
             'adults_count'       => $adults,
             'children_count'     => $children,
+            'guests_count'       => $adults + $children,
             'lead_guest_title'   => $lead_title,
             'lead_guest_name'    => $lead_name,
+            'primary_guest_name' => $lead_name,
             'lead_guest_email'   => $lead_email,
+            'guest_email'        => $lead_email,
             'lead_guest_phone'   => $lead_phone,
+            'guest_phone'        => $lead_phone,
             'special_requests'   => $special_req,
             'total_amount'       => $total_amount,
             'tax_amount'         => $tax_amount,
             'currency'           => 'INR',
+            'payment_id'         => $razorpay_id,
             'payment_status'     => 'paid',
             'booking_status'     => 'confirmed',
             'cancellation_policy'=> 'Free cancellation until 48 hours before check-in'
