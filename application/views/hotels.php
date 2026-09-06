@@ -788,9 +788,14 @@ $defaultNights   = 4;
                             <div id="akbarDestCity" style="font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1.1;">Tirunelveli</div>
                             <div id="akbarDestSub" style="font-size: 12px; color: #64748b; margin-top: 3px;">Tirunelveli</div>
                         </div>
-                        <i class="fa-solid fa-crosshairs" style="color: #94a3b8; font-size: 16px; margin-right: 6px;"></i>
+                        <div id="akbarLocationBtn" title="Use Current Location" style="cursor: pointer; padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
+                            <i class="fa-solid fa-crosshairs" style="color: #94a3b8; font-size: 17px;"></i>
+                        </div>
                     </div>
                     <input type="hidden" name="city" id="akbarCityInput" value="Tirunelveli">
+                    <input type="hidden" name="lat" id="akbarLatInput" value="">
+                    <input type="hidden" name="lng" id="akbarLngInput" value="">
+                    <input type="hidden" name="location_id" id="akbarLocationIdInput" value="">
 
                     <!-- Destination Autocomplete Dropdown -->
                     <div class="akbar-dropdown-panel" id="akbarDestDropdown" style="width: 360px; padding: 14px;" onclick="event.stopPropagation();">
@@ -1239,6 +1244,77 @@ document.addEventListener('DOMContentLoaded', function() {
         if (destHiddenInp) destHiddenInp.value = cityName;
         closeAkbarDropdowns();
     };
+
+    // Location crosshair button handler (Akbar Travels style Geolocation)
+    var locationBtn = document.getElementById('akbarLocationBtn');
+    if (locationBtn) {
+        locationBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var icon = locationBtn.querySelector('i');
+            if (icon) {
+                icon.className = 'fa-solid fa-spinner fa-spin';
+                icon.style.color = '#eb2027';
+            }
+
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser.');
+                if (icon) { icon.className = 'fa-solid fa-crosshairs'; icon.style.color = '#94a3b8'; }
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                var lat = pos.coords.latitude;
+                var lng = pos.coords.longitude;
+                var latInp = document.getElementById('akbarLatInput');
+                var lngInp = document.getElementById('akbarLngInput');
+                if (latInp) latInp.value = lat;
+                if (lngInp) lngInp.value = lng;
+
+                // Reverse geocoding via OpenStreetMap Nominatim
+                fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&zoom=10')
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        var city = '';
+                        var state = '';
+                        var country = '';
+                        if (data && data.address) {
+                            city = data.address.city || data.address.town || data.address.village || data.address.county || data.address.state_district || 'My Location';
+                            state = data.address.state || '';
+                            country = data.address.country || 'India';
+                        } else {
+                            city = 'Current Location';
+                        }
+                        var sub = (state ? state + ', ' : '') + country;
+                        selectAkbarCity(city, sub);
+
+                        if (icon) {
+                            icon.className = 'fa-solid fa-crosshairs';
+                            icon.style.color = '#10b981';
+                            setTimeout(function() { icon.style.color = '#94a3b8'; }, 2000);
+                        }
+                    })
+                    .catch(function() {
+                        selectAkbarCity('Current Location', 'GPS (' + lat.toFixed(2) + ', ' + lng.toFixed(2) + ')');
+                        if (icon) {
+                            icon.className = 'fa-solid fa-crosshairs';
+                            icon.style.color = '#10b981';
+                            setTimeout(function() { icon.style.color = '#94a3b8'; }, 2000);
+                        }
+                    });
+            }, function(err) {
+                if (icon) { icon.className = 'fa-solid fa-crosshairs'; icon.style.color = '#94a3b8'; }
+                if (err.code === 1) {
+                    alert('Location access was denied. Please allow location access in your browser settings.');
+                } else {
+                    alert('Unable to detect location. Please select your city from the list.');
+                }
+            }, {
+                enableHighAccuracy: true,
+                timeout: 8000,
+                maximumAge: 60000
+            });
+        });
+    }
 
     if (destCol) {
         destCol.addEventListener('click', function(e) {

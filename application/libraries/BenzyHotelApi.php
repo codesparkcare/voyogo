@@ -156,6 +156,56 @@ class BenzyHotelApi {
     // =========================================================================
     // 3. INIT SEARCH (/api/hotels/search/init or /Hotel/Init)
     // =========================================================================
+    public function resolveGeoCode($city, $geoCode = null) {
+        if (!empty($geoCode) && is_array($geoCode) && !empty($geoCode['lat']) && !empty($geoCode['long'])) {
+            return array(
+                'lat'  => (string)$geoCode['lat'],
+                'long' => (string)$geoCode['long']
+            );
+        }
+
+        $knownCities = array(
+            'tirunelveli' => array('lat' => '8.713913', 'long' => '77.756653'),
+            'goa'         => array('lat' => '15.299326', 'long' => '74.123996'),
+            'mumbai'      => array('lat' => '19.076090', 'long' => '72.877426'),
+            'delhi'       => array('lat' => '28.613939', 'long' => '77.209021'),
+            'new delhi'   => array('lat' => '28.613939', 'long' => '77.209021'),
+            'bengaluru'   => array('lat' => '12.971599', 'long' => '77.594563'),
+            'bangalore'   => array('lat' => '12.971599', 'long' => '77.594563'),
+            'chennai'     => array('lat' => '13.082680', 'long' => '80.270718'),
+            'madurai'     => array('lat' => '9.925201', 'long' => '78.119775'),
+            'hyderabad'   => array('lat' => '17.385044', 'long' => '78.486671'),
+            'kochi'       => array('lat' => '9.931233', 'long' => '76.267304'),
+            'cochin'      => array('lat' => '9.931233', 'long' => '76.267304'),
+            'jaipur'      => array('lat' => '26.912434', 'long' => '75.787271'),
+            'dubai'       => array('lat' => '25.204849', 'long' => '55.270783'),
+            'singapore'   => array('lat' => '1.352083', 'long' => '103.819836'),
+            'bangkok'     => array('lat' => '13.756331', 'long' => '100.501765'),
+            'london'      => array('lat' => '51.507351', 'long' => '-0.127758'),
+            'paris'       => array('lat' => '48.856614', 'long' => '2.352222'),
+            'maldives'    => array('lat' => '4.175496', 'long' => '73.509347'),
+            'male'        => array('lat' => '4.175496', 'long' => '73.509347'),
+            'bali'        => array('lat' => '-8.409518', 'long' => '115.188916'),
+            'pune'        => array('lat' => '18.520430', 'long' => '73.856744'),
+            'kolkata'     => array('lat' => '22.572646', 'long' => '88.363895'),
+            'ahmedabad'   => array('lat' => '23.022505', 'long' => '72.571362')
+        );
+
+        $clean = strtolower(trim(explode(',', $city)[0]));
+        if (isset($knownCities[$clean])) {
+            return $knownCities[$clean];
+        }
+
+        foreach ($knownCities as $k => $coords) {
+            if (stripos($clean, $k) !== false || stripos($k, $clean) !== false) {
+                return $coords;
+            }
+        }
+
+        // Default to Tirunelveli / Southern Hub if unknown
+        return array('lat' => '8.713913', 'long' => '77.756653');
+    }
+
     public function initSearch($city, $checkin, $checkout, $rooms = 1, $adults = 2, $children = 0, $locationId = null, $geoCode = null) {
         $token = $this->generateToken();
         $url = $this->hotelUrl . '/api/hotels/search/init';
@@ -169,19 +219,21 @@ class BenzyHotelApi {
             );
         }
 
+        $resolvedGeo = $this->resolveGeoCode($city, $geoCode);
+
         $payload = array(
             'currency'               => 'INR',
             'culture'                => 'en-US',
             'checkIn'                => date('m/d/Y', strtotime($checkin)),
             'checkOut'               => date('m/d/Y', strtotime($checkout)),
             'rooms'                  => $roomArr,
-            'agentCode'              => $this->credentials['AgentCode'] ?? ' ',
+            'agentCode'              => $this->credentials['AgentCode'] ?? '',
             'destinationCountryCode' => 'IN',
             'nationality'            => 'IN',
             'countryOfResidence'     => 'IN',
             'channelId'              => $this->channelId,
             'affiliateRegion'        => 'B2B_India',
-            'segmentId'              => '',
+            'segmentId'              => 'NewRevamp',
             'companyId'              => '1',
             'gstPercentage'          => 0,
             'tdsPercentage'          => 0
@@ -189,14 +241,12 @@ class BenzyHotelApi {
 
         if (!empty($locationId)) {
             $payload['locationId'] = (string)$locationId;
-        } elseif (!empty($geoCode) && is_array($geoCode)) {
-            $payload['geoCode'] = array(
-                'lat'  => (string)$geoCode['lat'],
-                'long' => (string)$geoCode['long']
-            );
         } else {
-            // Default geocode/location name fallback
-            $payload['locationName'] = $city;
+            // Benzy API requires either locationId or geoCode (lat/long)
+            $payload['geoCode'] = array(
+                'lat'  => (string)$resolvedGeo['lat'],
+                'long' => (string)$resolvedGeo['long']
+            );
         }
 
         $res = $this->makeRequest('Init', $url, $payload, 'POST', $token);
@@ -225,8 +275,8 @@ class BenzyHotelApi {
     // =========================================================================
     // 4. HOTEL SEARCH (Coordinates Content + Rate APIs)
     // =========================================================================
-    public function searchHotels($city, $checkin, $checkout, $rooms = 1, $adults = 2, $children = 0, $locationId = null) {
-        $initData = $this->initSearch($city, $checkin, $checkout, $rooms, $adults, $children, $locationId);
+    public function searchHotels($city, $checkin, $checkout, $rooms = 1, $adults = 2, $children = 0, $locationId = null, $geoCode = null) {
+        $initData = $this->initSearch($city, $checkin, $checkout, $rooms, $adults, $children, $locationId, $geoCode);
         $searchId = $initData['searchId'];
         $searchTracingKey = $initData['searchTracingKey'];
         $token = $this->generateToken();

@@ -40,7 +40,13 @@ class Hotels extends CI_Controller {
         $adults   = (int)($this->input->post('adults') ?: ($this->input->get('adults') ?: 4));
         $children = (int)($this->input->post('children') ?: ($this->input->get('children') ?: 0));
 
-        $hotelResults = $this->benzyhotelapi->searchHotels($city, $checkin, $checkout, $rooms, $adults, $children);
+        $lat = $this->input->post('lat') ?: $this->input->get('lat');
+        $lng = $this->input->post('lng') ?: $this->input->get('lng');
+        $locationId = $this->input->post('location_id') ?: $this->input->get('location_id');
+
+        $geoCode = (!empty($lat) && !empty($lng)) ? array('lat' => $lat, 'long' => $lng) : null;
+
+        $hotelResults = $this->benzyhotelapi->searchHotels($city, $checkin, $checkout, $rooms, $adults, $children, $locationId, $geoCode);
         $nights = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
 
         $data['page_title']    = "Hotels in $city - Best Hotel Deals | Voyogo";
