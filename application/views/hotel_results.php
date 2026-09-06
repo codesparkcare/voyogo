@@ -143,8 +143,11 @@ $hotels    = isset($hotelResults['Hotels']) ? $hotelResults['Hotels'] : (is_arra
                             </div>
                             <div style="text-align: right;">
                                 <div style="font-size: 12px; color: #64748b;">Starts From</div>
-                                <div style="font-size: 22px; font-weight: 800; color: #ef4444;">₹ <?php echo number_format($h['price_per_night']); ?> <small style="font-size: 12px; color: #64748b; font-weight: 400;">/night</small></div>
-                                <a href="<?php echo site_url('hotels/detail/' . $h['id'] . '?city=' . urlencode($qCity) . '&checkin=' . $qCheckin . '&checkout=' . $qCheckout . '&rooms=' . $qRooms . '&adults=' . $qAdults . '&children=' . $qChildren); ?>" class="btn-search" style="padding: 8px 20px; font-size: 13px; text-decoration: none; display: inline-flex; margin-top: 6px; background: linear-gradient(135deg, #0d3470, #fa3a3a); border-radius: 6px; font-weight: 700; color: #fff;">
+                                <?php 
+                                $sId = $h['searchId'] ?? ($hotelResults['searchId'] ?? '');
+                                $sTrace = $h['searchTracingKey'] ?? ($hotelResults['searchTracingKey'] ?? '');
+                                ?>
+                                <a href="<?php echo site_url('hotels/detail/' . $h['id'] . '?city=' . urlencode($qCity) . '&checkin=' . $qCheckin . '&checkout=' . $qCheckout . '&rooms=' . $qRooms . '&adults=' . $qAdults . '&children=' . $qChildren . (!empty($sId) ? '&search_id=' . urlencode($sId) : '') . (!empty($sTrace) ? '&search_tracing_key=' . urlencode($sTrace) : '')); ?>" class="btn-search" style="padding: 8px 20px; font-size: 13px; text-decoration: none; display: inline-flex; margin-top: 6px; background: linear-gradient(135deg, #0d3470, #fa3a3a); border-radius: 6px; font-weight: 700; color: #fff;">
                                     VIEW ROOMS <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
                                 </a>
                             </div>

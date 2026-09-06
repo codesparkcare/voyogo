@@ -78,23 +78,29 @@ class Hotels extends CI_Controller {
         $rooms    = (int)($this->input->get('rooms') ?: 1);
         $adults   = (int)($this->input->get('adults') ?: 2);
         $children = (int)($this->input->get('children') ?: 0);
+        $search_id = $this->input->get('search_id') ?: null;
+        $search_tracing_key = $this->input->get('search_tracing_key') ?: null;
 
-        $hotel = $this->benzyhotelapi->getHotelDetails($hotel_id, $city, $checkin, $checkout);
+        $hotel = $this->benzyhotelapi->getHotelDetails($hotel_id, $search_id, $city, $checkin, $checkout);
 
-        $data['hotel']        = $hotel;
-        $data['city']         = $city;
-        $data['checkin']      = $checkin;
-        $data['checkout']     = $checkout;
-        $data['rooms']        = $rooms;
-        $data['adults']       = $adults;
-        $data['children']     = $children;
+        $data['hotel']              = $hotel;
+        $data['city']               = $city;
+        $data['checkin']            = $checkin;
+        $data['checkout']           = $checkout;
+        $data['rooms']              = $rooms;
+        $data['adults']             = $adults;
+        $data['children']           = $children;
+        $data['search_id']          = $search_id;
+        $data['search_tracing_key'] = $search_tracing_key;
         $data['search_query'] = array(
-            'city'     => $city,
-            'checkin'  => $checkin,
-            'checkout' => $checkout,
-            'rooms'    => $rooms,
-            'adults'   => $adults,
-            'children' => $children
+            'city'               => $city,
+            'checkin'            => $checkin,
+            'checkout'           => $checkout,
+            'rooms'              => $rooms,
+            'adults'             => $adults,
+            'children'           => $children,
+            'search_id'          => $search_id,
+            'search_tracing_key' => $search_tracing_key
         );
         $data['page_title']   = ($hotel['name'] ?? 'Hotel') . " - Voyogo Hotels";
         $data['active_page']  = 'hotels';
@@ -113,18 +119,22 @@ class Hotels extends CI_Controller {
         $hotel_address  = $this->input->post('hotel_address') ?: 'Benaulim Beach, Goa';
         $hotel_image    = $this->input->post('hotel_image') ?: 'https://images.unsplash.com/photo-1566073771259-6a8506099945';
         $room_type      = $this->input->post('room_type') ?: 'Deluxe Garden View Room';
-        $room_id        = $this->input->post('room_id') ?: 'RM_DLX_01';
-        $board_type     = $this->input->post('board_type') ?: 'Breakfast Included';
-        $city           = $this->input->post('city') ?: 'Goa, India';
-        $checkin        = $this->input->post('checkin_date') ?: ($this->input->post('checkin') ?: date('Y-m-d', strtotime('+2 days')));
-        $checkout       = $this->input->post('checkout_date') ?: ($this->input->post('checkout') ?: date('Y-m-d', strtotime('+5 days')));
-        $rooms          = (int)($this->input->post('rooms') ?: 1);
-        $adults         = (int)($this->input->post('adults') ?: 2);
-        $children       = (int)($this->input->post('children') ?: 0);
-        $price          = (float)($this->input->post('price') ?: 14500);
+        $room_id           = $this->input->post('room_id') ?: 'RM_DLX_01';
+        $room_group_id     = $this->input->post('room_group_id') ?: 'RGRP_01';
+        $recommendation_id = $this->input->post('recommendation_id') ?: '';
+        $search_id         = $this->input->post('search_id') ?: '';
+        $tui               = $this->input->post('tui') ?: '';
+        $board_type        = $this->input->post('board_type') ?: 'Breakfast Included';
+        $city              = $this->input->post('city') ?: 'Goa, India';
+        $checkin           = $this->input->post('checkin_date') ?: ($this->input->post('checkin') ?: date('Y-m-d', strtotime('+2 days')));
+        $checkout          = $this->input->post('checkout_date') ?: ($this->input->post('checkout') ?: date('Y-m-d', strtotime('+5 days')));
+        $rooms             = (int)($this->input->post('rooms') ?: 1);
+        $adults            = (int)($this->input->post('adults') ?: 2);
+        $children          = (int)($this->input->post('children') ?: 0);
+        $price             = (float)($this->input->post('price') ?: 14500);
 
         // Validate Live Pricing with API
-        $this->benzyhotelapi->repriceRoom($hotel_id, $room_id);
+        $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, 'Innstant', $search_id, $recommendation_id);
 
         $nights = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
         $baseTotal = $price * $rooms * $nights;
@@ -132,27 +142,31 @@ class Hotels extends CI_Controller {
         $grandTotal = $baseTotal + $taxes;
 
         $bookingArray = array(
-            'hotel_id'      => $hotel_id,
-            'hotel_name'    => $hotel_name,
-            'hotel_address' => $hotel_address,
-            'hotel_image'   => $hotel_image,
-            'room_type'     => $room_type,
-            'room_id'       => $room_id,
-            'board_type'    => $board_type,
-            'city'          => $city,
-            'checkin'       => $checkin,
-            'checkout'      => $checkout,
-            'checkin_date'  => $checkin,
-            'checkout_date' => $checkout,
-            'nights'        => $nights,
-            'rooms'         => $rooms,
-            'adults'        => $adults,
-            'children'      => $children,
-            'price'         => $price,
-            'base_total'    => $baseTotal,
-            'taxes'         => $taxes,
-            'grand_total'   => $grandTotal,
-            'total_amount'  => $grandTotal
+            'hotel_id'          => $hotel_id,
+            'hotel_name'        => $hotel_name,
+            'hotel_address'     => $hotel_address,
+            'hotel_image'       => $hotel_image,
+            'room_type'         => $room_type,
+            'room_id'           => $room_id,
+            'room_group_id'     => $room_group_id,
+            'recommendation_id' => $recommendation_id,
+            'search_id'         => $search_id,
+            'tui'               => $tui,
+            'board_type'        => $board_type,
+            'city'              => $city,
+            'checkin'           => $checkin,
+            'checkout'          => $checkout,
+            'checkin_date'      => $checkin,
+            'checkout_date'     => $checkout,
+            'nights'            => $nights,
+            'rooms'             => $rooms,
+            'adults'            => $adults,
+            'children'          => $children,
+            'price'             => $price,
+            'base_total'        => $baseTotal,
+            'taxes'             => $taxes,
+            'grand_total'       => $grandTotal,
+            'total_amount'      => $grandTotal
         );
 
         $data['booking_data']    = $bookingArray;

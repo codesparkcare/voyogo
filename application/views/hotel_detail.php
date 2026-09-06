@@ -72,9 +72,13 @@ $qChildren = isset($search_query['children']) ? $search_query['children'] : (iss
                         <form action="<?php echo site_url('hotels/review'); ?>" method="POST" style="margin-top: 8px;">
                             <input type="hidden" name="hotel_id" value="<?php echo htmlspecialchars($hotel['id']); ?>">
                             <input type="hidden" name="hotel_name" value="<?php echo htmlspecialchars($hotel['name']); ?>">
-                            <input type="hidden" name="hotel_address" value="<?php echo htmlspecialchars($hotel['location']); ?>">
+                            <input type="hidden" name="hotel_address" value="<?php echo htmlspecialchars($hotel['location'] ?? ($hotel['address'] ?? '')); ?>">
                             <input type="hidden" name="hotel_image" value="<?php echo htmlspecialchars($hotel['image']); ?>">
                             <input type="hidden" name="room_type" value="<?php echo htmlspecialchars($r['name']); ?>">
+                            <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($r['type_id'] ?? ($r['room_id'] ?? 'RM_01')); ?>">
+                            <input type="hidden" name="room_group_id" value="<?php echo htmlspecialchars($r['room_group_id'] ?? ($r['roomGroupId'] ?? 'RGRP_01')); ?>">
+                            <input type="hidden" name="recommendation_id" value="<?php echo htmlspecialchars($r['recommendation_id'] ?? ($r['recommendationId'] ?? '')); ?>">
+                            <input type="hidden" name="board_type" value="<?php echo htmlspecialchars($r['board'] ?? 'Breakfast Included'); ?>">
                             <input type="hidden" name="price" value="<?php echo htmlspecialchars($r['price']); ?>">
                             <input type="hidden" name="checkin_date" value="<?php echo htmlspecialchars($qCheckin); ?>">
                             <input type="hidden" name="checkout_date" value="<?php echo htmlspecialchars($qCheckout); ?>">
@@ -82,7 +86,9 @@ $qChildren = isset($search_query['children']) ? $search_query['children'] : (iss
                             <input type="hidden" name="rooms" value="<?php echo htmlspecialchars($qRooms); ?>">
                             <input type="hidden" name="adults" value="<?php echo htmlspecialchars($qAdults); ?>">
                             <input type="hidden" name="children" value="<?php echo htmlspecialchars($qChildren); ?>">
-                            <button type="submit" class="btn-search" style="padding: 10px 24px; font-size: 14px; background: linear-gradient(135deg, #09204b, #2563eb);">
+                            <input type="hidden" name="search_id" value="<?php echo htmlspecialchars($search_id ?? ($search_query['search_id'] ?? '')); ?>">
+                            <input type="hidden" name="tui" value="<?php echo htmlspecialchars($search_tracing_key ?? ($search_query['search_tracing_key'] ?? '')); ?>">
+                            <button type="submit" class="btn-search" style="padding: 10px 24px; font-size: 14px; background: linear-gradient(135deg, #09204b, #2563eb); border: none; border-radius: 6px; color: #fff; font-weight: 700; cursor: pointer;">
                                 SELECT ROOM <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
                             </button>
                         </form>

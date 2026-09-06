@@ -531,23 +531,80 @@ class BenzyHotelApi {
     }
 
     // =========================================================================
+    // 11. FILTER DATA (/api/hotels/search/result/{searchId}/filterdata)
+    // =========================================================================
+    public function getFilterData($searchId) {
+        $token = $this->generateToken();
+        $url = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/filterdata';
+        $res = $this->makeRequest('FilterData', $url, array(), 'GET', $token);
+        if ($res['http_code'] === 200 && !empty($res['json'])) {
+            return $res['json'];
+        }
+        return false;
+    }
+
+    // =========================================================================
+    // 12. PRICING CONTENT (/api/hotels/{searchId}/{hotelId}/content?priceProvider=...)
+    // =========================================================================
+    public function getPricingContent($searchId, $hotelId, $priceProvider) {
+        $token = $this->generateToken();
+        $url = $this->hotelUrl . '/api/hotels/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/content?priceProvider=' . urlencode($priceProvider);
+        $res = $this->makeRequest('PricingContent', $url, array(), 'GET', $token);
+        if ($res['http_code'] === 200 && !empty($res['json'])) {
+            return $res['json'];
+        }
+        return false;
+    }
+
+    // =========================================================================
     // HELPERS & FALLBACKS
     // =========================================================================
     protected function formatHotelResults($apiHotels, $searchId, $searchTracingKey = '') {
         $formatted = array();
         foreach ($apiHotels as $h) {
+            // Support both nested rate object (per spec) and flat rate value
+            $pricePerNight = 4500;
+            if (isset($h['rate'])) {
+                if (is_array($h['rate'])) {
+                    $pricePerNight = (float)($h['rate']['total'] ?? ($h['rate']['baseRate'] ?? 4500));
+                } else {
+                    $pricePerNight = (float)$h['rate'];
+                }
+            }
+
+            // Facilities normalization
+            $amenitiesList = array();
+            if (!empty($h['facilities'])) {
+                if (is_array($h['facilities'])) {
+                    foreach ($h['facilities'] as $fac) {
+                        if (is_array($fac) && !empty($fac['name'])) {
+                            $amenitiesList[] = $fac['name'];
+                        } elseif (is_string($fac)) {
+                            $amenitiesList[] = $fac;
+                        }
+                    }
+                } elseif (is_string($h['facilities'])) {
+                    $amenitiesList = explode(',', $h['facilities']);
+                }
+            }
+            if (empty($amenitiesList)) {
+                $amenitiesList = array('Free WiFi', 'Swimming Pool', 'Breakfast Included', 'Spa', 'Free Cancellation');
+            }
+
             $formatted[] = array(
-                'id'            => $h['id'] ?? 'HTL_' . rand(100, 999),
-                'name'          => $h['name'] ?? 'Luxury Resort & Spa',
-                'star_rating'   => (int)($h['starRating'] ?? 4),
-                'rating'        => number_format(rand(42, 49) / 10, 1),
-                'reviews_count' => rand(120, 850),
-                'location'      => $h['address'] ?? ($h['locationName'] ?? 'City Center'),
-                'price_per_night' => (float)($h['rate'] ?? rand(4500, 18500)),
-                'image'         => !empty($h['heroImage']) ? $h['heroImage'] : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
-                'amenities'     => !empty($h['facilities']) ? (is_array($h['facilities']) ? $h['facilities'] : explode(',', $h['facilities'])) : array('Free WiFi', 'Swimming Pool', 'Breakfast Included', 'Spa', 'Free Cancellation'),
-                'free_breakfast'=> !empty($h['freeBreakfast']) || rand(0, 1) === 1,
-                'free_cancellation' => !empty($h['freeCancellation']) || true
+                'id'              => $h['id'] ?? 'HTL_' . rand(100, 999),
+                'name'            => $h['name'] ?? 'Luxury Resort & Spa',
+                'star_rating'     => (int)($h['starRating'] ?? 4),
+                'rating'          => !empty($h['userReview']['rating']) ? number_format($h['userReview']['rating'], 1) : number_format(rand(42, 49) / 10, 1),
+                'reviews_count'   => !empty($h['userReview']['count']) ? (int)$h['userReview']['count'] : rand(120, 850),
+                'location'        => $h['address'] ?? ($h['locationName'] ?? 'City Center'),
+                'price_per_night' => $pricePerNight,
+                'image'           => !empty($h['heroImage']) ? $h['heroImage'] : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
+                'amenities'       => $amenitiesList,
+                'free_breakfast'  => !empty($h['freeBreakfast']) || rand(0, 1) === 1,
+                'free_cancellation' => isset($h['freeCancellation']) ? (bool)$h['freeCancellation'] : true,
+                'searchId'        => $searchId,
+                'searchTracingKey'=> $searchTracingKey
             );
         }
         return $formatted;
