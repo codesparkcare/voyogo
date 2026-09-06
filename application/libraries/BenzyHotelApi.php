@@ -324,24 +324,113 @@ class BenzyHotelApi {
     // =========================================================================
     public function getHotelDetails($hotelId, $searchId = null, $city = 'Goa', $checkin = null, $checkout = null) {
         $token = $this->generateToken();
+        $fallbackDetail = $this->getFallbackHotelDetail($hotelId, $city, $checkin, $checkout);
 
+        $apiRoomsData = null;
         if ($searchId) {
             $url = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/rooms';
             $res = $this->makeRequest('MoreRooms', $url, array(), 'GET', $token);
 
             if ($res['http_code'] === 200 && (!empty($res['json']['recommendations']) || !empty($res['json']['rooms']))) {
-                return $res['json'];
+                $apiRoomsData = $res['json'];
             }
         }
 
-        // Alternate POST MoreRooms
-        $altUrl = $this->hotelUrl . '/Hotel/MoreRooms';
-        $res = $this->makeRequest('MoreRooms_POST', $altUrl, array('hotelId' => $hotelId), 'POST', $token);
-        if ($res['http_code'] === 200 && !empty($res['json']['rooms'])) {
-            return $res['json'];
+        if (!$apiRoomsData) {
+            // Alternate POST MoreRooms
+            $altUrl = $this->hotelUrl . '/Hotel/MoreRooms';
+            $res = $this->makeRequest('MoreRooms_POST', $altUrl, array('hotelId' => $hotelId), 'POST', $token);
+            if ($res['http_code'] === 200 && (!empty($res['json']['recommendations']) || !empty($res['json']['rooms']))) {
+                $apiRoomsData = $res['json'];
+            }
         }
 
-        return $this->getFallbackHotelDetail($hotelId, $city, $checkin, $checkout);
+        if ($apiRoomsData) {
+            return $this->formatHotelDetailResponse($hotelId, $apiRoomsData, $fallbackDetail, $city);
+        }
+
+        return $fallbackDetail;
+    }
+
+    protected function formatHotelDetailResponse($hotelId, $apiData, $fallbackDetail, $city) {
+        $hotel = $fallbackDetail;
+        $hotel['id'] = $hotelId;
+
+        // If API returns hotel metadata
+        if (!empty($apiData['hotel'])) {
+            $hotel['name'] = $apiData['hotel']['name'] ?? $hotel['name'];
+            $hotel['location'] = $apiData['hotel']['address'] ?? ($apiData['hotel']['locationName'] ?? $hotel['location']);
+            $hotel['star_rating'] = (int)($apiData['hotel']['starRating'] ?? $hotel['star_rating']);
+            if (!empty($apiData['hotel']['heroImage'])) {
+                $hotel['image'] = $apiData['hotel']['heroImage'];
+            }
+        }
+
+        // Parse recommendations / rooms into room_types
+        $roomTypes = array();
+        if (!empty($apiData['recommendations']) && is_array($apiData['recommendations'])) {
+            foreach ($apiData['recommendations'] as $rec) {
+                $recId = $rec['id'] ?? ('REC_' . uniqid());
+                $totalPrice = (float)($rec['total'] ?? ($rec['totalRate'] ?? 2500));
+                
+                if (!empty($rec['roomGroup']) && is_array($rec['roomGroup'])) {
+                    foreach ($rec['roomGroup'] as $rg) {
+                        $rgId = $rg['id'] ?? ('RG_' . uniqid());
+                        $roomObj = $rg['room'] ?? array();
+                        $roomId = $roomObj['id'] ?? ('RM_' . uniqid());
+                        $roomName = $roomObj['name'] ?? ($roomObj['standardRoomName'] ?? 'Standard Room');
+                        $rate = (float)($rg['totalRate'] ?? ($rg['baseRate'] ?? $totalPrice));
+                        
+                        $boardName = 'Breakfast Included';
+                        if (!empty($rg['boardBasis']['description'])) {
+                            $boardName = $rg['boardBasis']['description'];
+                        } elseif (!empty($rg['boardBasis']['type']) && $rg['boardBasis']['type'] !== 'Other') {
+                            $boardName = $rg['boardBasis']['type'];
+                        }
+
+                        $cancelText = 'Free cancellation until 48 hours before check-in';
+                        if (!empty($rg['cancellationPolicies'][0]['text'])) {
+                            $cancelText = strip_tags($rg['cancellationPolicies'][0]['text']);
+                        }
+
+                        $roomTypes[] = array(
+                            'type_id'          => $roomId,
+                            'room_id'          => $roomId,
+                            'room_group_id'    => $rgId,
+                            'recommendation_id'=> $recId,
+                            'name'             => $roomName,
+                            'price'            => $rate > 0 ? $rate : 2500,
+                            'board'            => $boardName,
+                            'refundable'       => !empty($rg['refundable']),
+                            'cancellation'     => $cancelText,
+                            'inclusions'       => array('Free High-Speed WiFi', '24h Room Service', 'Complimentary Bottled Water')
+                        );
+                    }
+                }
+            }
+        } elseif (!empty($apiData['rooms']) && is_array($apiData['rooms'])) {
+            foreach ($apiData['rooms'] as $rm) {
+                $roomTypes[] = array(
+                    'type_id'          => $rm['id'] ?? ('RM_' . uniqid()),
+                    'room_id'          => $rm['id'] ?? ('RM_' . uniqid()),
+                    'room_group_id'    => $rm['roomGroupId'] ?? ('RG_' . uniqid()),
+                    'recommendation_id'=> $rm['recommendationId'] ?? '',
+                    'name'             => $rm['name'] ?? 'Deluxe Room',
+                    'price'            => (float)($rm['totalRate'] ?? ($rm['price'] ?? 2500)),
+                    'board'            => $rm['board'] ?? 'Breakfast Included',
+                    'refundable'       => true,
+                    'cancellation'     => 'Free cancellation until 48 hours before check-in',
+                    'inclusions'       => array('Free WiFi', 'Tea/Coffee Maker')
+                );
+            }
+        }
+
+        if (!empty($roomTypes)) {
+            $hotel['room_types'] = $roomTypes;
+            $hotel['price_per_night'] = $roomTypes[0]['price'];
+        }
+
+        return $hotel;
     }
 
     // =========================================================================

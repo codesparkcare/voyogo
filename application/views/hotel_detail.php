@@ -5,6 +5,14 @@ $qCheckout = isset($search_query['checkout']) ? $search_query['checkout'] : (iss
 $qRooms    = isset($search_query['rooms']) ? $search_query['rooms'] : (isset($rooms) ? $rooms : 1);
 $qAdults   = isset($search_query['adults']) ? $search_query['adults'] : (isset($adults) ? $adults : 2);
 $qChildren = isset($search_query['children']) ? $search_query['children'] : (isset($children) ? $children : 0);
+
+$hName      = $hotel['name'] ?? ($hotel['hotel']['name'] ?? 'Luxury Resort & Spa');
+$hStar      = (int)($hotel['star_rating'] ?? ($hotel['starRating'] ?? 4));
+$hLocation  = $hotel['location'] ?? ($hotel['address'] ?? ($hotel['hotel']['address'] ?? ($qCity . ', India')));
+$hRating    = $hotel['rating'] ?? ($hotel['userReview']['rating'] ?? '4.8');
+$hReviews   = $hotel['reviews_count'] ?? ($hotel['userReview']['count'] ?? 380);
+$hImage     = !empty($hotel['image']) ? $hotel['image'] : (!empty($hotel['heroImage']) ? $hotel['heroImage'] : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80');
+$hPrice     = $hotel['price_per_night'] ?? 3500;
 ?>
 <div style="background-color: #f5f7fa; padding-bottom: 60px;">
     
@@ -14,24 +22,24 @@ $qChildren = isset($search_query['children']) ? $search_query['children'] : (iss
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                 <div>
                     <span style="background: #09204b; color: #ffffff; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 700; display: inline-block; margin-bottom: 8px;">
-                        <?php echo str_repeat('★', $hotel['star_rating']); ?> <?php echo $hotel['star_rating']; ?> STAR LUXURY PROPERTY
+                        <?php echo str_repeat('★', max(1, $hStar)); ?> <?php echo $hStar; ?> STAR LUXURY PROPERTY
                     </span>
-                    <h1 style="font-family: var(--font-heading); font-size: 28px; color: #0d3470; margin: 0 0 6px 0;"><?php echo htmlspecialchars($hotel['name']); ?></h1>
+                    <h1 style="font-family: var(--font-heading); font-size: 28px; color: #0d3470; margin: 0 0 6px 0;"><?php echo htmlspecialchars($hName); ?></h1>
                     <p style="font-size: 14px; color: #64748b; margin: 0;">
-                        <i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> <?php echo htmlspecialchars($hotel['location']); ?>
+                        <i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> <?php echo htmlspecialchars($hLocation); ?>
                     </p>
                 </div>
                 <div style="text-align: right;">
                     <div style="background: #16a34a; color: #ffffff; font-weight: 800; padding: 8px 16px; border-radius: 8px; font-size: 18px; display: inline-block;">
-                        <?php echo $hotel['rating']; ?> / 5
+                        <?php echo $hRating; ?> / 5
                     </div>
-                    <div style="font-size: 13px; color: #64748b; margin-top: 4px;"><?php echo $hotel['reviews_count']; ?> Verified Guest Reviews</div>
+                    <div style="font-size: 13px; color: #64748b; margin-top: 4px;"><?php echo $hReviews; ?> Verified Guest Reviews</div>
                 </div>
             </div>
 
             <!-- Image Gallery Banner -->
             <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-top: 24px; border-radius: 12px; overflow: hidden; height: 360px;">
-                <img src="<?php echo htmlspecialchars($hotel['image']); ?>" alt="main" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="<?php echo htmlspecialchars($hImage); ?>" alt="main" style="width: 100%; height: 100%; object-fit: cover;">
                 <div style="display: grid; grid-template-rows: 1fr 1fr; gap: 16px;">
                     <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80" alt="img2" style="width: 100%; height: 100%; object-fit: cover;">
                     <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80" alt="img3" style="width: 100%; height: 100%; object-fit: cover;">
@@ -50,36 +58,44 @@ $qChildren = isset($search_query['children']) ? $search_query['children'] : (iss
             <div style="display: flex; flex-direction: column; gap: 20px;">
                 <?php 
                 $rooms = isset($hotel['room_types']) ? $hotel['room_types'] : array(
-                    array('type_id' => 'RM_101A', 'name' => 'Deluxe Garden View Room', 'price' => $hotel['price_per_night'], 'board' => 'Breakfast Included'),
-                    array('type_id' => 'RM_101B', 'name' => 'Premium Sea View Suite', 'price' => $hotel['price_per_night'] + 3500, 'board' => 'Breakfast & Dinner Included')
+                    array('type_id' => 'RM_101A', 'name' => 'Deluxe Garden View Room', 'price' => $hPrice, 'board' => 'Breakfast Included'),
+                    array('type_id' => 'RM_101B', 'name' => 'Premium Sea View Suite', 'price' => $hPrice + 3500, 'board' => 'Breakfast & Dinner Included')
                 );
 
+                $hId = $hotel['id'] ?? ($hotel_id ?? 'HTL_101');
+
                 foreach ($rooms as $r):
+                    $rPrice = (float)($r['price'] ?? $hPrice);
+                    $rName = $r['name'] ?? 'Deluxe Room';
+                    $rBoard = $r['board'] ?? 'Breakfast Included';
+                    $rId = $r['type_id'] ?? ($r['room_id'] ?? 'RM_01');
+                    $rGroupId = $r['room_group_id'] ?? ($r['roomGroupId'] ?? 'RGRP_01');
+                    $rRecId = $r['recommendation_id'] ?? ($r['recommendationId'] ?? '');
                 ?>
                 <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
                     <div>
-                        <h3 style="font-size: 18px; color: #09204b; margin: 0 0 6px 0;"><?php echo htmlspecialchars($r['name']); ?></h3>
+                        <h3 style="font-size: 18px; color: #09204b; margin: 0 0 6px 0;"><?php echo htmlspecialchars($rName); ?></h3>
                         <div style="font-size: 13px; color: #16a34a; font-weight: 700; margin-bottom: 6px;">
-                            <i class="fa-solid fa-utensils"></i> <?php echo htmlspecialchars($r['board']); ?>
+                            <i class="fa-solid fa-utensils"></i> <?php echo htmlspecialchars($rBoard); ?>
                         </div>
                         <div style="font-size: 12px; color: #64748b;">
-                            <i class="fa-solid fa-user-group"></i> Max 2 Adults, 1 Child | <i class="fa-solid fa-bed"></i> 1 King Bed or 2 Twin Beds | <i class="fa-solid fa-shield-halved"></i> Free Cancellation up to 24h before Check-In
+                            <i class="fa-solid fa-user-group"></i> Max <?php echo $qAdults; ?> Adults, <?php echo $qChildren; ?> Child | <i class="fa-solid fa-bed"></i> 1 King Bed or 2 Twin Beds | <i class="fa-solid fa-shield-halved"></i> <?php echo htmlspecialchars($r['cancellation'] ?? 'Free Cancellation up to 24h before Check-In'); ?>
                         </div>
                     </div>
 
                     <div style="text-align: right;">
-                        <div style="font-size: 22px; font-weight: 800; color: #ef4444;">₹ <?php echo number_format($r['price']); ?> <small style="font-size: 12px; color: #64748b; font-weight: 400;">/night</small></div>
+                        <div style="font-size: 22px; font-weight: 800; color: #ef4444;">₹ <?php echo number_format($rPrice); ?> <small style="font-size: 12px; color: #64748b; font-weight: 400;">/night</small></div>
                         <form action="<?php echo site_url('hotels/review'); ?>" method="POST" style="margin-top: 8px;">
-                            <input type="hidden" name="hotel_id" value="<?php echo htmlspecialchars($hotel['id']); ?>">
-                            <input type="hidden" name="hotel_name" value="<?php echo htmlspecialchars($hotel['name']); ?>">
-                            <input type="hidden" name="hotel_address" value="<?php echo htmlspecialchars($hotel['location'] ?? ($hotel['address'] ?? '')); ?>">
-                            <input type="hidden" name="hotel_image" value="<?php echo htmlspecialchars($hotel['image']); ?>">
-                            <input type="hidden" name="room_type" value="<?php echo htmlspecialchars($r['name']); ?>">
-                            <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($r['type_id'] ?? ($r['room_id'] ?? 'RM_01')); ?>">
-                            <input type="hidden" name="room_group_id" value="<?php echo htmlspecialchars($r['room_group_id'] ?? ($r['roomGroupId'] ?? 'RGRP_01')); ?>">
-                            <input type="hidden" name="recommendation_id" value="<?php echo htmlspecialchars($r['recommendation_id'] ?? ($r['recommendationId'] ?? '')); ?>">
-                            <input type="hidden" name="board_type" value="<?php echo htmlspecialchars($r['board'] ?? 'Breakfast Included'); ?>">
-                            <input type="hidden" name="price" value="<?php echo htmlspecialchars($r['price']); ?>">
+                            <input type="hidden" name="hotel_id" value="<?php echo htmlspecialchars($hId); ?>">
+                            <input type="hidden" name="hotel_name" value="<?php echo htmlspecialchars($hName); ?>">
+                            <input type="hidden" name="hotel_address" value="<?php echo htmlspecialchars($hLocation); ?>">
+                            <input type="hidden" name="hotel_image" value="<?php echo htmlspecialchars($hImage); ?>">
+                            <input type="hidden" name="room_type" value="<?php echo htmlspecialchars($rName); ?>">
+                            <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($rId); ?>">
+                            <input type="hidden" name="room_group_id" value="<?php echo htmlspecialchars($rGroupId); ?>">
+                            <input type="hidden" name="recommendation_id" value="<?php echo htmlspecialchars($rRecId); ?>">
+                            <input type="hidden" name="board_type" value="<?php echo htmlspecialchars($rBoard); ?>">
+                            <input type="hidden" name="price" value="<?php echo htmlspecialchars($rPrice); ?>">
                             <input type="hidden" name="checkin_date" value="<?php echo htmlspecialchars($qCheckin); ?>">
                             <input type="hidden" name="checkout_date" value="<?php echo htmlspecialchars($qCheckout); ?>">
                             <input type="hidden" name="city" value="<?php echo htmlspecialchars($qCity); ?>">
