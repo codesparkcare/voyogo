@@ -138,9 +138,10 @@ class Hotels extends CI_Controller {
         $adults            = (int)($this->input->post('adults') ?: 2);
         $children          = (int)($this->input->post('children') ?: 0);
         $price             = (float)($this->input->post('price') ?: 14500);
+        $provider          = $this->input->post('provider') ?: 'CleartripAPI';
 
         // Validate Live Pricing with API
-        $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, 'Innstant', $search_id, $recommendation_id);
+        $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, $provider, $search_id, $recommendation_id);
 
         $nights = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
         $baseTotal = $price * $rooms * $nights;

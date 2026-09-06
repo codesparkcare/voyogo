@@ -94,6 +94,7 @@ $hPrice     = $hotel['price_per_night'] ?? 3500;
                             <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($rId); ?>">
                             <input type="hidden" name="room_group_id" value="<?php echo htmlspecialchars($rGroupId); ?>">
                             <input type="hidden" name="recommendation_id" value="<?php echo htmlspecialchars($rRecId); ?>">
+                            <input type="hidden" name="provider" value="<?php echo htmlspecialchars($r['provider'] ?? 'CleartripAPI'); ?>">
                             <input type="hidden" name="board_type" value="<?php echo htmlspecialchars($rBoard); ?>">
                             <input type="hidden" name="price" value="<?php echo htmlspecialchars($rPrice); ?>">
                             <input type="hidden" name="checkin_date" value="<?php echo htmlspecialchars($qCheckin); ?>">

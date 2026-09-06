@@ -320,67 +320,101 @@ class BenzyHotelApi {
     }
 
     // =========================================================================
-    // 5. MORE ROOMS & CONTENT (/api/hotels/search/result/{searchId}/{hotelId}/rooms)
+    // 5. MORE ROOMS & CONTENT (/api/hotels/{searchId}/{hotelId}/content & /rooms)
     // =========================================================================
     public function getHotelDetails($hotelId, $searchId = null, $city = 'Goa', $checkin = null, $checkout = null) {
         $token = $this->generateToken();
         $fallbackDetail = $this->getFallbackHotelDetail($hotelId, $city, $checkin, $checkout);
 
+        $apiContentData = null;
         $apiRoomsData = null;
-        if ($searchId) {
-            $url = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/rooms';
-            $res = $this->makeRequest('MoreRooms', $url, array(), 'GET', $token);
 
-            if ($res['http_code'] === 200 && (!empty($res['json']['recommendations']) || !empty($res['json']['rooms']))) {
-                $apiRoomsData = $res['json'];
+        if ($searchId) {
+            // 1. More Rooms - Content: {HotelSearchURL}/api/hotels/{searchId}/{hotelId}/content (PDF Page 22)
+            $contentUrl = $this->hotelUrl . '/api/hotels/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/content';
+            $contentRes = $this->makeRequest('HotelDetails_Content', $contentUrl, array(), 'GET', $token);
+            if ($contentRes['http_code'] === 200 && !empty($contentRes['json']['hotel'])) {
+                $apiContentData = $contentRes['json']['hotel'];
+            }
+
+            // 2. More Rooms - Rates: {HotelSearchURL}/api/hotels/search/result/{searchId}/{hotelId}/rooms (PDF Page 24)
+            $roomsUrl = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/rooms';
+            $roomsRes = $this->makeRequest('MoreRooms', $roomsUrl, array(), 'GET', $token);
+            if ($roomsRes['http_code'] === 200 && (!empty($roomsRes['json']['recommendations']) || !empty($roomsRes['json']['rooms']))) {
+                $apiRoomsData = $roomsRes['json'];
             }
         }
 
         if (!$apiRoomsData) {
-            // Alternate POST MoreRooms
             $altUrl = $this->hotelUrl . '/Hotel/MoreRooms';
-            $res = $this->makeRequest('MoreRooms_POST', $altUrl, array('hotelId' => $hotelId), 'POST', $token);
-            if ($res['http_code'] === 200 && (!empty($res['json']['recommendations']) || !empty($res['json']['rooms']))) {
-                $apiRoomsData = $res['json'];
+            $roomsRes = $this->makeRequest('MoreRooms_POST', $altUrl, array('hotelId' => $hotelId), 'POST', $token);
+            if ($roomsRes['http_code'] === 200 && (!empty($roomsRes['json']['recommendations']) || !empty($roomsRes['json']['rooms']))) {
+                $apiRoomsData = $roomsRes['json'];
             }
         }
 
-        if ($apiRoomsData) {
-            return $this->formatHotelDetailResponse($hotelId, $apiRoomsData, $fallbackDetail, $city);
+        if ($apiContentData || $apiRoomsData) {
+            return $this->formatHotelDetailResponse($hotelId, $apiContentData, $apiRoomsData, $fallbackDetail, $city);
         }
 
         return $fallbackDetail;
     }
 
-    protected function formatHotelDetailResponse($hotelId, $apiData, $fallbackDetail, $city) {
+    protected function formatHotelDetailResponse($hotelId, $apiContent, $apiRooms, $fallbackDetail, $city) {
         $hotel = $fallbackDetail;
         $hotel['id'] = $hotelId;
 
-        // If API returns hotel metadata
-        if (!empty($apiData['hotel'])) {
-            $hotel['name'] = $apiData['hotel']['name'] ?? $hotel['name'];
-            $hotel['location'] = $apiData['hotel']['address'] ?? ($apiData['hotel']['locationName'] ?? $hotel['location']);
-            $hotel['star_rating'] = (int)($apiData['hotel']['starRating'] ?? $hotel['star_rating']);
-            if (!empty($apiData['hotel']['heroImage'])) {
-                $hotel['image'] = $apiData['hotel']['heroImage'];
+        if (!empty($apiContent)) {
+            $hotel['name'] = $apiContent['name'] ?? $hotel['name'];
+            $hotel['star_rating'] = (int)($apiContent['starRating'] ?? $hotel['star_rating']);
+            
+            if (!empty($apiContent['contact']['address']['line1'])) {
+                $hotel['location'] = $apiContent['contact']['address']['line1'] . (!empty($apiContent['contact']['address']['city']) ? ', ' . $apiContent['contact']['address']['city'] : '');
+            } elseif (!empty($apiContent['address'])) {
+                $hotel['location'] = $apiContent['address'];
+            } elseif (!empty($apiContent['locationName'])) {
+                $hotel['location'] = $apiContent['locationName'];
+            }
+
+            if (!empty($apiContent['heroImage'])) {
+                $hotel['image'] = $apiContent['heroImage'];
+            }
+
+            // Photo Gallery
+            if (!empty($apiContent['images']) && is_array($apiContent['images'])) {
+                $gallery = array();
+                foreach ($apiContent['images'] as $img) {
+                    if (!empty($img['url'])) {
+                        $gallery[] = $img['url'];
+                    }
+                }
+                if (!empty($gallery)) {
+                    $hotel['gallery'] = $gallery;
+                }
+            }
+
+            if (!empty($apiContent['reviews'][0]['rating'])) {
+                $hotel['rating'] = (string)$apiContent['reviews'][0]['rating'];
+                $hotel['reviews_count'] = (int)($apiContent['reviews'][0]['count'] ?? 120);
             }
         }
 
-        // Parse recommendations / rooms into room_types
+        // Room categories
         $roomTypes = array();
-        if (!empty($apiData['recommendations']) && is_array($apiData['recommendations'])) {
-            foreach ($apiData['recommendations'] as $rec) {
+        if (!empty($apiRooms['recommendations']) && is_array($apiRooms['recommendations'])) {
+            foreach ($apiRooms['recommendations'] as $rec) {
                 $recId = $rec['id'] ?? ('REC_' . uniqid());
-                $totalPrice = (float)($rec['total'] ?? ($rec['totalRate'] ?? 2500));
-                
+                $totalRate = (float)($rec['total'] ?? 2500);
+
                 if (!empty($rec['roomGroup']) && is_array($rec['roomGroup'])) {
                     foreach ($rec['roomGroup'] as $rg) {
                         $rgId = $rg['id'] ?? ('RG_' . uniqid());
+                        $providerName = $rg['providerName'] ?? ($rg['provider'] ?? 'CleartripAPI');
                         $roomObj = $rg['room'] ?? array();
                         $roomId = $roomObj['id'] ?? ('RM_' . uniqid());
-                        $roomName = $roomObj['name'] ?? ($roomObj['standardRoomName'] ?? 'Standard Room');
-                        $rate = (float)($rg['totalRate'] ?? ($rg['baseRate'] ?? $totalPrice));
-                        
+                        $roomName = $roomObj['name'] ?? ($roomObj['standardRoomName'] ?? 'Superior Room');
+                        $rate = (float)($rg['totalRate'] ?? ($rg['baseRate'] ?? $totalRate));
+
                         $boardName = 'Breakfast Included';
                         if (!empty($rg['boardBasis']['description'])) {
                             $boardName = $rg['boardBasis']['description'];
@@ -398,23 +432,25 @@ class BenzyHotelApi {
                             'room_id'          => $roomId,
                             'room_group_id'    => $rgId,
                             'recommendation_id'=> $recId,
+                            'provider'         => $providerName,
                             'name'             => $roomName,
                             'price'            => $rate > 0 ? $rate : 2500,
                             'board'            => $boardName,
                             'refundable'       => !empty($rg['refundable']),
                             'cancellation'     => $cancelText,
-                            'inclusions'       => array('Free High-Speed WiFi', '24h Room Service', 'Complimentary Bottled Water')
+                            'inclusions'       => !empty($rg['includes']) ? $rg['includes'] : array('Free High-Speed WiFi', '24h Room Service', 'Complimentary Bottled Water')
                         );
                     }
                 }
             }
-        } elseif (!empty($apiData['rooms']) && is_array($apiData['rooms'])) {
-            foreach ($apiData['rooms'] as $rm) {
+        } elseif (!empty($apiRooms['rooms']) && is_array($apiRooms['rooms'])) {
+            foreach ($apiRooms['rooms'] as $rm) {
                 $roomTypes[] = array(
                     'type_id'          => $rm['id'] ?? ('RM_' . uniqid()),
                     'room_id'          => $rm['id'] ?? ('RM_' . uniqid()),
                     'room_group_id'    => $rm['roomGroupId'] ?? ('RG_' . uniqid()),
                     'recommendation_id'=> $rm['recommendationId'] ?? '',
+                    'provider'         => $rm['providerName'] ?? 'CleartripAPI',
                     'name'             => $rm['name'] ?? 'Deluxe Room',
                     'price'            => (float)($rm['totalRate'] ?? ($rm['price'] ?? 2500)),
                     'board'            => $rm['board'] ?? 'Breakfast Included',
@@ -436,7 +472,7 @@ class BenzyHotelApi {
     // =========================================================================
     // 6. PRICING RECHECK (/api/hotels/search/{searchId}/{hotelId}/price/{provider}/{recommendationId})
     // =========================================================================
-    public function repriceRoom($hotelId, $roomId, $provider = 'Innstant', $searchId = null, $recommendationId = null) {
+    public function repriceRoom($hotelId, $roomId, $provider = 'CleartripAPI', $searchId = null, $recommendationId = null) {
         $token = $this->generateToken();
 
         if ($searchId && $recommendationId) {
@@ -510,6 +546,14 @@ class BenzyHotelApi {
             ),
             'Auxiliaries'           => array(
                 array(
+                    'Code'       => 'PROMO',
+                    'Parameters' => array(
+                        array('Type' => 'Code', 'Value' => ''),
+                        array('Type' => 'ID', 'Value' => ''),
+                        array('Type' => 'Amount', 'Value' => '')
+                    )
+                ),
+                array(
                     'Code'       => 'CUSTOMER DETAILS',
                     'parameters' => array(
                         array('Type' => 'Nationality', 'Value' => 'IN'),
@@ -554,6 +598,11 @@ class BenzyHotelApi {
         );
 
         $res = $this->makeRequest('CreateItinerary', $url, $payload, 'POST', $token);
+        if ($res['http_code'] !== 200 || empty($res['json']['TransactionID'])) {
+            $altUrl = $this->utilsUrl . '/Hotel/CreateItinerary';
+            $res = $this->makeRequest('CreateItinerary_Alt', $altUrl, $payload, 'POST', $token);
+        }
+
         if ($res['http_code'] === 200 && !empty($res['json']['TransactionID'])) {
             return array(
                 'transactionId' => $res['json']['TransactionID'],
