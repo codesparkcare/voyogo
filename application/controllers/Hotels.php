@@ -255,9 +255,11 @@ class Hotels extends CI_Controller {
         $itinResult = $this->benzyhotelapi->createItinerary($itineraryPayload);
         $txnId = is_array($itinResult) ? ($itinResult['transactionId'] ?? 200002450) : $itinResult;
         $tui = is_array($itinResult) ? ($itinResult['tui'] ?? ($itineraryPayload['TUI'])) : $itineraryPayload['TUI'];
+        // Per Benzy technical support (Roopesh): Pass the exact NetAmount returned from CreateItinerary into StartPay
+        $exactPayAmount = (is_array($itinResult) && !empty($itinResult['netAmount'])) ? (float)$itinResult['netAmount'] : (float)$total_amount;
 
         // 2. Benzy Start Pay API Call (Deposit / Auto-Payment mode)
-        $payResult = $this->benzyhotelapi->startPay($txnId, $total_amount, $tui);
+        $payResult = $this->benzyhotelapi->startPay($txnId, $exactPayAmount, $tui);
         $suppRef = $payResult['CRSPNR'] ?? ($payResult['supplierReference'] ?? ('AKB_HTL_' . rand(100000, 999999)));
         $voucherNum = 'VOY-VCH-' . strtoupper(substr(md5($txnId . time()), 0, 8));
         $bookingRef = 'VOY-HTL-' . date('Ymd') . '-' . rand(1000, 9999);
