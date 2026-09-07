@@ -671,28 +671,27 @@ class BenzyHotelApi {
         // Confirmed Test URL: https://b2bapiflights.benzyinfotech.com/Payment/StartPay
         $url = $this->bookingUrl . '/Payment/StartPay';
 
+        // Exact WRC B2B Hotel StartPay Schema (docs/hotels/api/Start_Pay.html)
         $payload = array(
-            'TransactionID'   => (int)$transactionId,
-            'PaymentAmount'   => (float)$amount,
-            'NetAmount'       => (float)$amount,
-            'BrowserKey'      => $browserKey,
-            'ClientID'        => $clientId,
-            'TUI'             => $tui ?? ('TUI-' . uniqid()),
-            'Hold'            => false,
-            'Promo'           => null,
-            'PaymentType'     => '',
-            'BankCode'        => '',
-            'GateWayCode'     => '',
-            'MerchantID'      => '',
-            'PaymentCharge'   => 0,
-            'ReleaseDate'     => '',
-            'OnlinePayment'   => false,
-            'DepositPayment'  => true,
-            'Card'            => array(
+            'SID'                 => null,
+            'TUI'                 => $tui ?? ('TUI-' . uniqid()),
+            'ClientID'            => $clientId,
+            'Email'               => null,
+            'Promo'               => null,
+            'TransactionID'       => (int)$transactionId,
+            'PaymentType'         => '',
+            'BankCode'            => '',
+            'GateWayCode'         => '',
+            'MerchantID'          => 0,
+            'PaymentAmount'       => (float)$amount,
+            'PaymentCharge'       => 0,
+            'Card'                => array(
                 'Number'        => '',
                 'Expiry'        => '',
                 'CVV'           => '',
                 'CHName'        => '',
+                'FName'         => null,
+                'LName'         => null,
                 'Address'       => '',
                 'City'          => '',
                 'State'         => '',
@@ -700,17 +699,28 @@ class BenzyHotelApi {
                 'PIN'           => '',
                 'International' => false,
                 'SaveCard'      => false,
-                'FName'         => '',
-                'LName'         => '',
-                'EMIMonths'     => '0'
+                'EMIMonths'     => '0',
+                'Token'         => null,
+                'NumberAlias'   => null
             ),
-            'VPA'             => '',
-            'CardAlias'       => '',
-            'QuickPay'        => null,
-            'RMSSignature'    => '',
-            'TargetCurrency'  => '',
-            'TargetAmount'    => 0,
-            'ServiceType'     => 'ITI'
+            'VPA'                 => '',
+            'CardAlias'           => '',
+            'QuickPay'            => null,
+            'RMSSignature'        => '',
+            'TargetCurrency'      => '',
+            'TargetAmount'        => 0,
+            'ThirdPartyInfo'      => null,
+            'Hold'                => false,
+            'TripType'            => null,
+            'Authorization'       => 'Bearer ' . $token,
+            'QTransactionID'      => 0,
+            'NetAmount'           => (float)$amount,
+            'OnlinePayment'       => false,
+            'DepositPayment'      => true,
+            'ReleaseDate'         => '/Date(-62135596800000)/',
+            'BrowserKey'          => $browserKey,
+            'BrowserKeyFromToken' => $browserKey,
+            'AgentInfo'           => $this->credentials['AgentCode'] ?? ''
         );
 
         $customHeaders = array('search-tracing-key' => $tui);
