@@ -665,35 +665,52 @@ class BenzyHotelApi {
     public function startPay($transactionId, $amount, $tui = null) {
         $token = $this->generateToken();
         $tokenDetails = $this->getTokenDetails();
-        $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'VoyogoClient');
+        $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'FVI6V120g22Ei5ztGK0FIQ==');
+        $browserKey = $tokenDetails['BrowserKey'] ?? ($this->credentials['BrowserKey'] ?? 'caecd3cd30225512c1811070dce615c1');
 
         // Confirmed Test URL: https://b2bapiflights.benzyinfotech.com/Payment/StartPay
         $url = $this->bookingUrl . '/Payment/StartPay';
 
         $payload = array(
-            'SID'                 => null,
-            'TUI'                 => $tui ?? ('TUI-' . uniqid()),
-            'ClientID'            => $clientId,
-            'Email'               => null,
-            'Promo'               => null,
-            'TransactionID'       => (int)$transactionId,
-            'PaymentType'         => '',
-            'BankCode'            => '',
-            'GateWayCode'         => '',
-            'MerchantID'          => (int)($this->credentials['MerchantID'] ?? 300),
-            'PaymentAmount'       => (float)$amount,
-            'PaymentCharge'       => 0,
-            'TargetCurrency'      => 'INR',
-            'TargetAmount'        => (float)$amount,
-            'Hold'                => false,
-            'Authorization'       => 'Bearer ' . $token,
-            'QTransactionID'      => 0,
-            'NetAmount'           => (float)$amount,
-            'OnlinePayment'       => false,
-            'DepositPayment'      => true,
-            'BrowserKey'          => $this->credentials['BrowserKey'] ?? '',
-            'BrowserKeyFromToken' => $this->credentials['BrowserKey'] ?? '',
-            'AgentInfo'           => ($this->credentials['AgentCode'] ?? '')
+            'TransactionID'   => (int)$transactionId,
+            'PaymentAmount'   => (float)$amount,
+            'NetAmount'       => (float)$amount,
+            'BrowserKey'      => $browserKey,
+            'ClientID'        => $clientId,
+            'TUI'             => $tui ?? ('TUI-' . uniqid()),
+            'Hold'            => false,
+            'Promo'           => null,
+            'PaymentType'     => '',
+            'BankCode'        => '',
+            'GateWayCode'     => '',
+            'MerchantID'      => '',
+            'PaymentCharge'   => 0,
+            'ReleaseDate'     => '',
+            'OnlinePayment'   => false,
+            'DepositPayment'  => true,
+            'Card'            => array(
+                'Number'        => '',
+                'Expiry'        => '',
+                'CVV'           => '',
+                'CHName'        => '',
+                'Address'       => '',
+                'City'          => '',
+                'State'         => '',
+                'Country'       => '',
+                'PIN'           => '',
+                'International' => false,
+                'SaveCard'      => false,
+                'FName'         => '',
+                'LName'         => '',
+                'EMIMonths'     => '0'
+            ),
+            'VPA'             => '',
+            'CardAlias'       => '',
+            'QuickPay'        => null,
+            'RMSSignature'    => '',
+            'TargetCurrency'  => '',
+            'TargetAmount'    => 0,
+            'ServiceType'     => 'ITI'
         );
 
         $customHeaders = array('search-tracing-key' => $tui);
