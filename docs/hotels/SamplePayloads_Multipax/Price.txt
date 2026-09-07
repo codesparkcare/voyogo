@@ -1,0 +1,314 @@
+Endpoint: {HotelSearchURL}/api/hotels/search/cf3b8d4c-6355-4483-913f-929e90c871ba.DSlVHdCViVRfi821XHvuYw/41629285/price/hotelbeds/906a3d9a-09ec-4e22-9696-c26509c94bdf?roomFare=1717
+
+Price:
+
+{
+    "hotelId": "41629285",
+    "roomGroup": [
+        {
+            "id": "7f8fc44a-cee9-435c-9000-30d83c8910f1",
+            "code": null,
+            "availability": 20,
+            "description": null,
+            "needsPriceCheck": false,
+            "isPackageRate": true,
+            "providerId": "395",
+            "providerName": "hotelbeds",
+            "isPreffered": null,
+            "room": {
+                "id": "59e699d0-ecf5-4c16-be0c-36e277aba60e",
+                "standardRoomId": "",
+                "standardRoomName": "Bed in dormitory BASIC",
+                "name": "Bed in dormitory BASIC",
+                "description": "Bed in dormitory BASIC",
+                "beds": [],
+                "smokingAllowed": false,
+                "facilities": [],
+                "images": null,
+                "maxGuestAllowed": null,
+                "maxAdultAllowed": null,
+                "maxChildrenAllowed": null,
+                "area": null,
+                "views": null,
+                "type": null
+            },
+            "otherProviderRates": null,
+            "roomCount": 1,
+            "occupancies": [
+                {
+                    "occupancyId": 1,
+                    "numOfAdults": 2,
+                    "numOfChildren": 2,
+                    "childAges": [
+                        3,
+                        7
+                    ]
+                }
+            ],
+            "type": "negotiated",
+            "baseRate": 858.58,
+            "totalRate": 858.58,
+            "tcsOnTotal": 0.0,
+            "minSellingRate": 0.0,
+            "publishedRate": 0.0,
+            "taxes": null,
+            "fees": null,
+            "discounts": null,
+            "otherRateComponents": [
+                {
+                    "amount": 85.86,
+                    "description": "Agency Markup applied on BaseFare",
+                    "type": "AgencyMarkup"
+                }
+            ],
+            "hotelServiceCharge": 0.0,
+            "commission": null,
+            "dailyRates": [
+                {
+                    "amount": 858.58,
+                    "date": "2027-01-22T00:00:00Z",
+                    "taxIncluded": false,
+                    "discount": 0.0
+                }
+            ],
+            "pointEquivalent": 0,
+            "refundability": "Refundable",
+            "refundable": true,
+            "allGuestsInfoRequired": true,
+            "onlineCancellable": false,
+            "specialRequestSupported": false,
+            "payAtHotel": false,
+            "cardRequired": false,
+            "policies": [
+                {
+                    "type": "HotelCheckinInstructions",
+                    "text": ".  Check-in hour 12:00-.Car park YES (Without additional debit notes).Check-out hour -11:00. Included: Free valet parking. Included: Free WiFi. Included: Free self parking."
+                }
+            ],
+            "boardBasis": {
+                "description": "ROOM ONLY",
+                "type": "RoomOnly"
+            },
+            "offers": [
+                {
+                    "title": "ExclusiveDeal",
+                    "description": "3",
+                    "type": null,
+                    "discountOffer": 0.0,
+                    "percentageDiscountOffer": 0,
+                    "stayOffer": null
+                }
+            ],
+            "cancellationPolicies": [
+                {
+                    "text": "All times are in the local timezone of the hotel",
+                    "rules": [
+                        {
+                            "value": 0.0,
+                            "valueType": "Amount",
+                            "estimatedValue": 0.0,
+                            "start": "2026-09-02T00:00:00Z",
+                            "end": "2027-01-19T12:29:00Z"
+                        },
+                        {
+                            "value": 858.58,
+                            "valueType": "Amount",
+                            "estimatedValue": 858.58,
+                            "start": "2027-01-19T12:30:00Z",
+                            "end": "2027-01-22T00:00:00Z"
+                        }
+                    ]
+                }
+            ],
+            "includes": null,
+            "additionalCharges": null,
+            "depositRequired": false,
+            "gstAllowed": false,
+            "depositAmount": null,
+            "guaranteeRequired": false,
+            "gstOnCommission": 0.0,
+            "bookNowPayLaterDate": null,
+            "conversionRate": null,
+            "travelType": "D",
+            "additionalInformation": [
+                {
+                    "type": "RoomIdentifierKey",
+                    "text": "BED.Z1"
+                },
+                {
+                    "type": "SupplierRateIdentifierKey",
+                    "text": "1065579|BED.Z1|NOR|1-2-2|RO|True|"
+                }
+            ],
+            "ratePerNight": 0.0
+        },
+        {
+            "id": "c04856ab-09a7-4c46-a18f-91b4ef433c84",
+            "code": null,
+            "availability": 20,
+            "description": null,
+            "needsPriceCheck": false,
+            "isPackageRate": true,
+            "providerId": "395",
+            "providerName": "hotelbeds",
+            "isPreffered": null,
+            "room": {
+                "id": "59e699d0-ecf5-4c16-be0c-36e277aba60e",
+                "standardRoomId": "",
+                "standardRoomName": "Bed in dormitory BASIC",
+                "name": "Bed in dormitory BASIC",
+                "description": "Bed in dormitory BASIC",
+                "beds": [],
+                "smokingAllowed": false,
+                "facilities": [],
+                "images": null,
+                "maxGuestAllowed": null,
+                "maxAdultAllowed": null,
+                "maxChildrenAllowed": null,
+                "area": null,
+                "views": null,
+                "type": null
+            },
+            "otherProviderRates": null,
+            "roomCount": 1,
+            "occupancies": [
+                {
+                    "occupancyId": 2,
+                    "numOfAdults": 2,
+                    "numOfChildren": 2,
+                    "childAges": [
+                        4,
+                        6
+                    ]
+                }
+            ],
+            "type": "negotiated",
+            "baseRate": 858.58,
+            "totalRate": 858.58,
+            "tcsOnTotal": 0.0,
+            "minSellingRate": 0.0,
+            "publishedRate": 0.0,
+            "taxes": null,
+            "fees": null,
+            "discounts": null,
+            "otherRateComponents": [
+                {
+                    "amount": 85.86,
+                    "description": "Agency Markup applied on BaseFare",
+                    "type": "AgencyMarkup"
+                }
+            ],
+            "hotelServiceCharge": 0.0,
+            "commission": null,
+            "dailyRates": [
+                {
+                    "amount": 858.58,
+                    "date": "2027-01-22T00:00:00Z",
+                    "taxIncluded": false,
+                    "discount": 0.0
+                }
+            ],
+            "pointEquivalent": 0,
+            "refundability": "Refundable",
+            "refundable": true,
+            "allGuestsInfoRequired": true,
+            "onlineCancellable": false,
+            "specialRequestSupported": false,
+            "payAtHotel": false,
+            "cardRequired": false,
+            "policies": [
+                {
+                    "type": "HotelCheckinInstructions",
+                    "text": ".  Check-in hour 12:00-.Car park YES (Without additional debit notes).Check-out hour -11:00. Included: Free valet parking. Included: Free WiFi. Included: Free self parking."
+                }
+            ],
+            "boardBasis": {
+                "description": "ROOM ONLY",
+                "type": "RoomOnly"
+            },
+            "offers": [
+                {
+                    "title": "ExclusiveDeal",
+                    "description": "3",
+                    "type": null,
+                    "discountOffer": 0.0,
+                    "percentageDiscountOffer": 0,
+                    "stayOffer": null
+                }
+            ],
+            "cancellationPolicies": [
+                {
+                    "text": "All times are in the local timezone of the hotel",
+                    "rules": [
+                        {
+                            "value": 0.0,
+                            "valueType": "Amount",
+                            "estimatedValue": 0.0,
+                            "start": "2026-09-02T00:00:00Z",
+                            "end": "2027-01-19T12:29:00Z"
+                        },
+                        {
+                            "value": 858.58,
+                            "valueType": "Amount",
+                            "estimatedValue": 858.58,
+                            "start": "2027-01-19T12:30:00Z",
+                            "end": "2027-01-22T00:00:00Z"
+                        }
+                    ]
+                }
+            ],
+            "includes": null,
+            "additionalCharges": null,
+            "depositRequired": false,
+            "gstAllowed": false,
+            "depositAmount": null,
+            "guaranteeRequired": false,
+            "gstOnCommission": 0.0,
+            "bookNowPayLaterDate": null,
+            "conversionRate": null,
+            "travelType": "D",
+            "additionalInformation": [
+                {
+                    "type": "RoomIdentifierKey",
+                    "text": "BED.Z1"
+                },
+                {
+                    "type": "SupplierRateIdentifierKey",
+                    "text": "1065579|BED.Z1|NOR|1-2-2|RO|True|"
+                }
+            ],
+            "ratePerNight": 0.0
+        }
+    ],
+    "priceId": "516c3657-457f-4617-b9ef-4832912b9763",
+    "isPotentialSuspect": true,
+    "suspectCategory": "StarRating",
+    "stayPeriod": {
+        "start": "01/22/2027 12:00:00 AM",
+        "end": "01/23/2027 12:00:00 AM"
+    },
+    "priceInfo": null,
+    "agentCode": null,
+    "ishold": true,
+    "holdreleasedate": "1/17/2027 12:29:00 PM",
+    "mappings": [
+        {
+            "fieldName": "HotelName",
+            "prevValue": "ASRA DORMITORY",
+            "currentValue": "Asra Dormitory"
+        },
+        {
+            "fieldName": "HotelAddress",
+            "prevValue": "Ghatkopar Link Rd, near Apex Hospital",
+            "currentValue": "Ghatkopar Link Rd Near Apex Hospital"
+        },
+        {
+            "fieldName": "HotelStarRating",
+            "prevValue": "2",
+            "currentValue": "0"
+        }
+    ],
+    "isGSTInvoiceAvailable": false,
+    "isPANRequired": false,
+    "status": "success"
+}

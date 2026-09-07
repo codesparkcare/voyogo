@@ -1,0 +1,52 @@
+Endpoint: {HotelSearchURL}/api/hotels/search/init
+
+Init Request:
+
+{
+    "geoCode": {
+        "lat": "19.075986",
+        "long": "72.877663"
+    },
+    "locationId": "357389",
+    "currency": "INR",
+    "culture": "en-US",
+    "checkIn": "01/22/2027",
+    "checkOut": "01/23/2027",
+    "rooms": [
+        {
+            "adults": "2",
+            "children": "2",
+            "childAges": [
+                "7",
+                "3"
+            ]
+        },
+        {
+            "adults": "2",
+            "children": "2",
+            "childAges": [
+                "4",
+                "6"
+            ]
+        }
+    ],
+    "agentCode": "14005",
+    "destinationCountryCode": "IN",
+    "nationality": "IN",
+    "countryOfResidence": "IN",
+    "channelId": "b2bIndiaDealsElastic",
+    "affiliateRegion": "B2B_India",
+    "segmentId": "",
+    "companyId": "1",
+    "gstPercentage": 0,
+    "tdsPercentage": 0
+}
+
+
+Response:
+
+{
+    "searchId": "cf3b8d4c-6355-4483-913f-929e90c871ba.DSlVHdCViVRfi821XHvuYw",
+    "searchTracingKey": "f01a4acc-1b36-4ef3-ad69-e3516f955232",
+    "status": "success"
+}

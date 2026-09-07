@@ -1,0 +1,308 @@
+Endpoint: {HotelSearchURL}/api/hotels/cf3b8d4c-6355-4483-913f-929e90c871ba.DSlVHdCViVRfi821XHvuYw/41629285/content?priceProvider=hotelbeds
+
+Price Content: 
+
+{
+    "hotel": {
+        "id": "41629285",
+        "name": "Asra Dormitory",
+        "relevanceScore": 0.0,
+        "providerFamily": "HotelBeds",
+        "providerHotelId": "1065579",
+        "language": "en-US",
+        "providerName": "HotelBeds",
+        "geoCode": {
+            "lat": 19.099571,
+            "long": 72.891716
+        },
+        "neighbourhoods": [],
+        "contact": {
+            "address": {
+                "line1": "Ghatkopar Link Rd Near Apex Hospital",
+                "line2": null,
+                "destinationCode": "BOM",
+                "city": "Mumbai",
+                "state": "IN",
+                "country": "IN",
+                "postalCode": null
+            },
+            "phones": [
+                "+919702297976"
+            ],
+            "faxes": null,
+            "emails": null,
+            "website": null
+        },
+        "chainCode": null,
+        "chainName": null,
+        "type": "Hotel",
+        "website": null,
+        "descriptions": [
+            {
+                "type": "General",
+                "text": "Take in the views from a garden and make use of amenities such as complimentary wireless internet access and tour/ticket assistance. Featured amenities include express check-out, dry cleaning/laundry services, and a 24-hour front desk. Free valet parking is available onsite. Make yourself at home in one of the 25 air-conditioned guestrooms. Rooms have private balconies or patios. Complimentary wireless internet access is available to keep you connected. Bathrooms have shower/tub combinations and slippers. Distances are displayed to the nearest 0. 1 mile and kilometer. Phoenix Market City Mall - 2. 3 km / 1. 4 mi- MIDC Industrial Estate - 3. 5 km / 2. 2 mi- R City Mall - 3. 7 km / 2. 3 mi- KidZania Mumbai - 4. 1 km / 2. 5 mi- Hiranandani Business Park - Powai - 4. 2 km / 2. 6 mi- Indian Institute of Technology Bombay - 4. 4 km / 2. 7 mi- Powai Lake - 4. 4 km / 2. 7 mi- Sanjay Gandhi National Park - 5. 5 km / 3. 4 mi- U. S. Consulate General - 5. 5 km / 3. 4 mi- Nita Mukesh Ambani Cultural Centre - 5."
+            }
+        ],
+        "category": "Hotel",
+        "starRating": 0.0,
+        "facilityGroups": [
+            {
+                "id": 1,
+                "groupId": 1,
+                "name": "Parking"
+            },
+            {
+                "id": 67,
+                "groupId": 67,
+                "name": "Garden"
+            },
+            {
+                "id": 12,
+                "groupId": 12,
+                "name": "Laundry Services"
+            },
+            {
+                "id": 16,
+                "groupId": 16,
+                "name": "Internet"
+            }
+        ],
+        "facilities": [
+            {
+                "id": 10,
+                "groupId": 0,
+                "name": "hotel"
+            },
+            {
+                "id": 320,
+                "groupId": 1,
+                "name": "Car park"
+            },
+            {
+                "id": 30,
+                "groupId": 0,
+                "name": "24-hour reception"
+            },
+            {
+                "id": 550,
+                "groupId": 16,
+                "name": "Wi-fi"
+            },
+            {
+                "id": 280,
+                "groupId": 12,
+                "name": "Laundry service"
+            },
+            {
+                "id": 125,
+                "groupId": 67,
+                "name": "Garden"
+            }
+        ],
+        "nearByAttractions": [],
+        "images": [
+            {
+                "caption": "Room",
+                "category": "9",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_009.jpg?20241224104029?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "8",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_008.jpg?20241224104028?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "19",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_019.jpg?20250220161417?20250424111611?20250713040433"
+            },
+            {
+                "caption": "Room",
+                "category": "5",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_005.jpg?20241224104026?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "18",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_018.jpg?20250220161416?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "4",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_004.jpg?20241224104024?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "17",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_017.jpg?20250220161414?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "7",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_007.jpg?20241224104027?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "16",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_016.jpg?20241224104034?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "6",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_006.jpg?20241224104026?20250424111611?20250713040433"
+            },
+            {
+                "caption": "Room",
+                "category": "15",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_015.jpg?20241224104034?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "14",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_014.jpg?20241224104033?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "13",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_013.jpg?20241224104032?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "12",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_012.jpg?20241224104031?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "20",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_020_20250424_091612.jpg?20250424111612?20250713040432"
+            },
+            {
+                "caption": "Lobby",
+                "category": "1",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_l_001.jpg?20241224104021?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "1",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_001.jpg?20241224104022?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "3",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_003.jpg?20241224104023?20250424111611?20250713040432"
+            },
+            {
+                "caption": "Room",
+                "category": "2",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_w_002.jpg?20241224104022?20250424111611?20250713040432"
+            },
+            {
+                "caption": "General view",
+                "category": "1",
+                "type": null,
+                "roomCodes": null,
+                "size": "Standard",
+                "url": "https://photos.hotelbeds.com/giata/bigger/10/1065579/1065579a_hb_a_001.jpg?20241224104025?20250424111611?20250713040432"
+            }
+        ],
+        "policies": [],
+        "fees": [],
+        "reviews": [
+            {
+                "provider": "HotelBeds",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            }
+        ],
+        "checkinInfo": {
+            "beginTime": null,
+            "endTime": null,
+            "instructions": null,
+            "specialInstructions": [
+                "We never guarantee on Extra Bed for Extra Adult, It will be subject to availability and may be Chargeable also.",
+                "During Christmas & New year ,Hotel May Request You to pay for Gala Dinner Charges at the time of Check-inn.",
+                "These additional charge are not included in the booking amount and will be collected directly at the hotel.",
+                "Tourism Taxes, City Taxes, Resort Fee, Etc Hotel May request You to pay at the time of Check-inn(Local Currency).",
+                "As per the hotel policy, there might be peak season and long weekend surcharges, which would be payable by guest directly at the hotel.",
+                "In case of peak dates or technical issues causing the hotel to be sold out, an alternative hotel of equal booking value or a full refund will be provided."
+            ],
+            "minAge": 0
+        },
+        "checkoutInfo": {
+            "time": null
+        },
+        "heroImage": "https://photos.hotelbeds.com/giata/xl/10/1065579/1065579a_hb_a_001.jpg?20241224104025?20250424111611?20250713040432",
+        "distance": 0.0,
+        "locationName": null,
+        "mappings": null,
+        "destinationCode": null,
+        "line1": null,
+        "city": null
+    },
+    "curatedHotels": {
+        "id": "41629285",
+        "name": "Asra Dormitory",
+        "ratings": "3",
+        "addressLine1": "Ghatkopar Link Rd, near Apex Hospital"
+    },
+    "status": "success"
+}

@@ -1,0 +1,169 @@
+Endpoint: {HotelSearchURL}/api/content/autosuggest?term=Mumbai
+
+Autosuggest:
+
+{
+    "locations": [
+        {
+            "id": "357389",
+            "name": "Mumbai",
+            "fullName": "Mumbai, Maharashtra, India",
+            "code": null,
+            "type": "city",
+            "city": null,
+            "state": "Maharashtra",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 19.075986,
+                "long": 72.877663
+            }
+        },
+        {
+            "id": "247112",
+            "name": "Mumbai (BOM-Chhatrapati Shivaji Intl.)",
+            "fullName": "Mumbai, India (BOM-Chhatrapati Shivaji Intl.)",
+            "code": "bom",
+            "type": "airport",
+            "city": null,
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 19.099533,
+                "long": 72.874331
+            }
+        },
+        {
+            "id": "311206",
+            "name": "NMIMS Mumbai",
+            "fullName": "NMIMS Mumbai, Mumbai, Maharashtra, India",
+            "code": null,
+            "type": "pointOfInterest",
+            "city": null,
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 19.103054,
+                "long": 72.837349
+            }
+        },
+        {
+            "id": "328995",
+            "name": "Mumbai (and vicinity)",
+            "fullName": "Mumbai (and vicinity), Maharashtra, India",
+            "code": null,
+            "type": "multiCity",
+            "city": null,
+            "state": "Maharashtra",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 19.107168,
+                "long": 72.891596
+            }
+        },
+        {
+            "id": "310439",
+            "name": "Mumbai Central",
+            "fullName": "Mumbai Central, Mumbai, Maharashtra, India",
+            "code": null,
+            "type": "neighborhood",
+            "city": null,
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 18.969019,
+                "long": 72.820525
+            }
+        },
+        {
+            "id": "340852",
+            "name": "South Mumbai",
+            "fullName": "South Mumbai, India",
+            "code": null,
+            "type": "region",
+            "city": null,
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 18.964883,
+                "long": 72.828923
+            }
+        },
+        {
+            "id": "9970925450",
+            "name": "Mumbai",
+            "fullName": "Mumbai, Nairobi, Nairobi, KE",
+            "code": null,
+            "type": "hotel",
+            "city": "Nairobi",
+            "state": "Nairobi",
+            "country": "KE",
+            "score": 0,
+            "referenceId": "70925450",
+            "coordinates": {
+                "lat": -1.289823,
+                "long": 36.785892
+            }
+        },
+        {
+            "id": "9972402567",
+            "name": "Riya’s Dormitory",
+            "fullName": "Riya’s Dormitory, Mumbai, Maharashtra, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Mumbai",
+            "state": "Maharashtra",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "72402567",
+            "coordinates": {
+                "lat": 18.943087,
+                "long": 72.82718
+            }
+        },
+        {
+            "id": "9972405372",
+            "name": "Roy Bari- Luxurious 3 BHK Apartment- CBD Belapur",
+            "fullName": "Roy Bari- Luxurious 3 BHK Apartment- CBD Belapur, Mumbai, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Mumbai",
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": "72405372",
+            "coordinates": {
+                "lat": 19.012604,
+                "long": 73.03698
+            }
+        },
+        {
+            "id": "9939980391",
+            "name": "Ashrafi Dormitory AC DELUXE",
+            "fullName": "Ashrafi Dormitory AC DELUXE, Mumbai, Maharashtra, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Mumbai",
+            "state": "Maharashtra",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "39980391",
+            "coordinates": {
+                "lat": 19.10348,
+                "long": 72.8879
+            }
+        }
+    ],
+    "status": "success"
+}

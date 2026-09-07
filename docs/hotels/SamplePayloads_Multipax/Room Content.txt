@@ -1,0 +1,557 @@
+EndPoint: {HotelSearchURL}/api/hotels/cf3b8d4c-6355-4483-913f-929e90c871ba.DSlVHdCViVRfi821XHvuYw/41629285/content
+
+Rooms Content:
+
+{
+    "hotel": {
+        "id": "41629285",
+        "name": "ASRA DORMITORY",
+        "relevanceScore": 0.0,
+        "providerFamily": "EAN",
+        "providerHotelId": "107612742",
+        "language": "en-US",
+        "providerName": "EAN",
+        "geoCode": {
+            "lat": 19.099571,
+            "long": 72.891716
+        },
+        "neighbourhoods": [],
+        "contact": {
+            "address": {
+                "line1": "Ghatkopar Link Rd, near Apex Hospital",
+                "line2": "Opp. BMC School",
+                "destinationCode": null,
+                "city": "Mumbai",
+                "state": "Maharashtra",
+                "country": "IN",
+                "postalCode": "400072"
+            },
+            "phones": [
+                "91-9702297976"
+            ],
+            "faxes": null,
+            "emails": null,
+            "website": null
+        },
+        "chainCode": "0",
+        "chainName": "Independent",
+        "type": "Hotel",
+        "website": null,
+        "descriptions": [
+            {
+                "type": "amenities",
+                "text": "Take in the views from a garden and make use of amenities such as complimentary wireless internet access and tour/ticket assistance."
+            },
+            {
+                "type": "business_amenities",
+                "text": "Featured amenities include express check-out, dry cleaning/laundry services, and a 24-hour front desk. Free valet parking is available onsite."
+            },
+            {
+                "type": "rooms",
+                "text": "Make yourself at home in one of the 25 air-conditioned guestrooms. Rooms have private balconies or patios. Complimentary wireless internet access is available to keep you connected. Bathrooms have shower/tub combinations and slippers."
+            },
+            {
+                "type": "attractions",
+                "text": "Distances are displayed to the nearest 0.1 mile and kilometer. <br /> <p>Phoenix Market City Mall - 2.3 km / 1.4 mi <br /> SevenHills Hospital - 2.8 km / 1.7 mi <br /> MIDC Industrial Estate - 3.5 km / 2.2 mi <br /> R City Mall - 3.7 km / 2.3 mi <br /> Hiranandani Business Park - Powai - 4.2 km / 2.6 mi <br /> Indian Institute of Technology Bombay - 4.4 km / 2.7 mi <br /> Powai Lake - 4.4 km / 2.7 mi <br /> Sanjay Gandhi National Park - 5.5 km / 3.4 mi <br /> U.S. Consulate General - 5.5 km / 3.4 mi <br /> University of Mumbai - 5.9 km / 3.7 mi <br /> Nita Mukesh Ambani Cultural Centre - 5.9 km / 3.7 mi <br /> Jio World Convention Centre - 6 km / 3.8 mi <br /> Bharat Diamond Bourse - 6 km / 3.8 mi <br /> Mahakali Caves - 6.1 km / 3.8 mi <br /> MMRDA Grounds - 7 km / 4.4 mi <br /> </p><p>The nearest airports are:<br />Chhatrapati Shivaji International Airport (BOM) - 3.5 km / 2.2 mi<br /> Navi Mumbai Intl. Airport (NMI) - 31.3 km / 19.5 mi<br /> </p><p></p>"
+            },
+            {
+                "type": "location",
+                "text": "With a stay at ASRA DORMITORY  in Mumbai (Saki Naka), you'll be within a 10-minute drive of U.S. Consulate General and SevenHills Hospital.  This hotel is 6 mi (9.6 km) from Juhu Beach and 13.3 mi (21.5 km) from Marine Drive."
+            },
+            {
+                "type": "headline",
+                "text": "In Mumbai (Saki Naka)"
+            },
+            {
+                "type": "spoken_languages",
+                "text": "Hindi, Arabic, English, Urdu"
+            },
+            {
+                "type": "onsite_payments",
+                "text": "Debit cards not accepted, Cash, Cash-only property"
+            }
+        ],
+        "category": "Hotel",
+        "starRating": 2.0,
+        "facilityGroups": [
+            {
+                "id": 32,
+                "groupId": 32,
+                "name": "Safe Deposit Box"
+            },
+            {
+                "id": 1,
+                "groupId": 1,
+                "name": "Parking"
+            },
+            {
+                "id": 67,
+                "groupId": 67,
+                "name": "Garden"
+            },
+            {
+                "id": 12,
+                "groupId": 12,
+                "name": "Laundry Services"
+            },
+            {
+                "id": 16,
+                "groupId": 16,
+                "name": "Internet"
+            },
+            {
+                "id": 48,
+                "groupId": 48,
+                "name": "ATM"
+            },
+            {
+                "id": 80,
+                "groupId": 80,
+                "name": "Conveniences"
+            }
+        ],
+        "facilities": [
+            {
+                "id": 2070,
+                "groupId": 12,
+                "name": "Dry cleaning/laundry service"
+            },
+            {
+                "id": 1073744273,
+                "groupId": 1,
+                "name": "Uncovered parking"
+            },
+            {
+                "id": 1073744740,
+                "groupId": 0,
+                "name": "Wheelchair accessible – no"
+            },
+            {
+                "id": 1073745332,
+                "groupId": 0,
+                "name": "No accessible shuttle"
+            },
+            {
+                "id": 4003,
+                "groupId": 80,
+                "name": "Luggage storage"
+            },
+            {
+                "id": 3761,
+                "groupId": 1,
+                "name": "Parking (limited spaces)"
+            },
+            {
+                "id": 1073743884,
+                "groupId": 32,
+                "name": "Lockers available"
+            },
+            {
+                "id": 2067,
+                "groupId": 0,
+                "name": "Express check-out"
+            },
+            {
+                "id": 1073744831,
+                "groupId": 0,
+                "name": "Change of bed sheets (on request)"
+            },
+            {
+                "id": 2063,
+                "groupId": 80,
+                "name": "24-hour front desk"
+            },
+            {
+                "id": 2390,
+                "groupId": 16,
+                "name": "Free WiFi"
+            },
+            {
+                "id": 2349,
+                "groupId": 0,
+                "name": "Designated smoking areas"
+            },
+            {
+                "id": 1073744828,
+                "groupId": 0,
+                "name": "Change of towels (on request)"
+            },
+            {
+                "id": 378,
+                "groupId": 67,
+                "name": "Garden"
+            },
+            {
+                "id": 369,
+                "groupId": 12,
+                "name": "Laundry facilities"
+            },
+            {
+                "id": 2387,
+                "groupId": 0,
+                "name": "Tours/ticket assistance"
+            },
+            {
+                "id": 3861,
+                "groupId": 1,
+                "name": "Free self parking"
+            },
+            {
+                "id": 3863,
+                "groupId": 1,
+                "name": "Free valet parking"
+            },
+            {
+                "id": 41,
+                "groupId": 48,
+                "name": "ATM/banking"
+            }
+        ],
+        "nearByAttractions": [
+            {
+                "name": "Phoenix Market City Mall",
+                "distance": "2.3",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "SevenHills Hospital",
+                "distance": "2.8",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "MIDC Industrial Estate",
+                "distance": "3.5",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "R City Mall",
+                "distance": "3.7",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Hiranandani Business Park - Powai",
+                "distance": "4.2",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Indian Institute of Technology Bombay",
+                "distance": "4.4",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Powai Lake",
+                "distance": "4.4",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Sanjay Gandhi National Park",
+                "distance": "5.5",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "U.S. Consulate General",
+                "distance": "5.5",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "University of Mumbai",
+                "distance": "5.9",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Nita Mukesh Ambani Cultural Centre",
+                "distance": "5.9",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Jio World Convention Centre",
+                "distance": "6",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Bharat Diamond Bourse",
+                "distance": "6",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Mahakali Caves",
+                "distance": "6.1",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "MMRDA Grounds",
+                "distance": "7",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Chhatrapati Shivaji International Airport (BOM)",
+                "distance": "3.5",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Navi Mumbai Intl. Airport (NMI)",
+                "distance": "31.3",
+                "unit": "km",
+                "description": null,
+                "type": null
+            }
+        ],
+        "images": [
+            {
+                "caption": "Lobby",
+                "category": "10001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/6d243d05_edited_45b3_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/4b1b4f9b_edited_a4ad_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/91841f85_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/eb8012f6_edited_ea4a_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/d156232a_edited_437a_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "325226910"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/c3facf7a_edited_e236_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "325226910"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/da9fcf96_edited_2793_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "325226910"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/b68ef68a_edited_f4e4_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/49190388_edited_5762_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "325226910"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/3b37eda7_edited_d173_b.jpg"
+            },
+            {
+                "caption": "Living area",
+                "category": "22005",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/a29d35b6_edited_05f1_b.jpg"
+            },
+            {
+                "caption": "Living area",
+                "category": "22005",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/47614d43_edited_2f3f_b.jpg"
+            },
+            {
+                "caption": "Living area",
+                "category": "22005",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/23a92c7f_b.jpg"
+            },
+            {
+                "caption": "Living area",
+                "category": "22005",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/9435686e_b.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/18825555_b.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/bd917ae3_b.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/e2609c86_b.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/2b86c33a_b.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/cf0a1c58_b.jpg"
+            },
+            {
+                "caption": "Property entrance",
+                "category": "91002",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/190fe752_edited_b66b_b.jpg"
+            }
+        ],
+        "policies": [],
+        "fees": [
+            {
+                "type": null,
+                "text": null
+            },
+            {
+                "type": null,
+                "text": null
+            }
+        ],
+        "reviews": [
+            {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": null,
+                "reviews": null
+            }
+        ],
+        "checkinInfo": {
+            "beginTime": "12:00 PM",
+            "endTime": "anytime",
+            "instructions": [
+                "<ul>  <li>Extra-person charges may apply and vary depending on property policy</li><li>Government-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental charges</li><li>Special requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed</li><li>This property only accepts cash</li><li>Safety features at this property include a fire extinguisher</li><li>This property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room</li>  </ul>"
+            ],
+            "specialInstructions": [
+                "To make arrangements for check-in please contact the property at least 24 hours before arrival using the information on the booking confirmation. Guests must contact the property in advance for check-in instructions. Front desk staff will greet guests on arrival at the property. Information provided by the property may be translated using automated translation tools.",
+                "We never guarantee on Extra Bed for Extra Adult, It will be subject to availability and may be Chargeable also.",
+                "During Christmas & New year ,Hotel May Request You to pay for Gala Dinner Charges at the time of Check-inn.",
+                "These additional charge are not included in the booking amount and will be collected directly at the hotel.",
+                "Tourism Taxes, City Taxes, Resort Fee, Etc Hotel May request You to pay at the time of Check-inn(Local Currency).",
+                "As per the hotel policy, there might be peak season and long weekend surcharges, which would be payable by guest directly at the hotel.",
+                "In case of peak dates or technical issues causing the hotel to be sold out, an alternative hotel of equal booking value or a full refund will be provided."
+            ],
+            "minAge": 0
+        },
+        "checkoutInfo": {
+            "time": "11:00 AM"
+        },
+        "heroImage": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/6d243d05_edited_45b3_z.jpg",
+        "distance": 0.0,
+        "locationName": null,
+        "mappings": null,
+        "destinationCode": null,
+        "line1": null,
+        "city": null
+    },
+    "curatedHotels": {
+        "id": "41629285",
+        "name": "Asra Dormitory",
+        "ratings": "3",
+        "addressLine1": "Ghatkopar Link Rd, near Apex Hospital"
+    },
+    "status": "success"
+}
+

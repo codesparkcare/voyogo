@@ -1,0 +1,264 @@
+Endpoint: {HotelItineraryURL}/Hotel/CreateItinerary
+
+
+CreateItinerary Request:
+
+{
+    "TUI": "f01a4acc-1b36-4ef3-ad69-e3516f955232",
+    "ServiceEnquiry": "",
+    "ContactInfo": {
+        "Title": "Mr",
+        "FName": "TEST",
+        "LName": "KB",
+        "Mobile": "8527812345",
+        "Email": "test@benzyinfotech.com",
+        "Address": "MRRA 4  EDAPPALLY  Edappally , EDAPPALLY , Edappally",
+        "State": "Kerala",
+        "City": "Cochin",
+        "PIN": "6865245",
+        "GSTCompanyName": "",
+        "GSTTIN": "",
+        "GSTMobile": "",
+        "GSTEmail": "",
+        "UpdateProfile": true,
+        "IsGuest": false,
+        "CountryCode": "IN",
+        "MobileCountryCode": "+91",
+        "NetAmount": "",
+        "DestMobCountryCode": "",
+        "DestMob": ""
+    },
+    "Auxiliaries": [
+        {
+            "Code": "PROMO",
+            "Parameters": [
+                {
+                    "Type": "Code",
+                    "Value": ""
+                },
+                {
+                    "Type": "ID",
+                    "Value": ""
+                },
+                {
+                    "Type": "Amount",
+                    "Value": ""
+                }
+            ]
+        },
+        {
+            "Code": "CUSTOMER DETAILS",
+            "parameters": [
+                {
+                    "Type": "Nationality",
+                    "Value": "IN"
+                },
+                {
+                    "Type": "Country of Residence",
+                    "Value": "IN"
+                }
+            ]
+        }
+    ],
+    "Rooms": [
+        {
+            "RoomId": "59e699d0-ecf5-4c16-be0c-36e277aba60e",
+            "GuestCode": "|1|2:A:25:25|2:C:3:7|",
+            "SupplierName": "hotelbeds",
+            "RoomGroupId": "7f8fc44a-cee9-435c-9000-30d83c8910f1",
+            "Guests": [
+                {
+                    "GuestID": "0",
+                    "Operation": "",
+                    "Title": "Mr",
+                    "FirstName": "AKHIL",
+                    "MiddleName": "",
+                    "LastName": "KB",
+                    "MobileNo": "",
+                    "PaxType": "A",
+                    "Age": "",
+                    "Email": "",
+                    "Pan": "ABCDE6847L",
+                    "ProfileType": "T",
+                    "EmployeeId": "",
+                    "corporateCompanyID": ""
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "",
+                    "Title": "Mrs",
+                    "FirstName": "TEST",
+                    "MiddleName": "",
+                    "LastName": "T",
+                    "MobileNo": "",
+                    "PaxType": "A",
+                    "Age": "",
+                    "Email": "",
+                    "Pan": "",
+                    "CorporateVerifcation": "",
+                    "Passport": "",
+                    "PassportFrontImage": "",
+                    "PassportBackImage": "",
+                    "ProfileType": "T",
+                    "EmployeeId": "",
+                    "corporateCompanyID": "",
+                    "serialNumber": "2"
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "",
+                    "Title": "Ms",
+                    "FirstName": "TEST",
+                    "MiddleName": "",
+                    "LastName": "T",
+                    "MobileNo": "",
+                    "PaxType": "C",
+                    "Age": 3,
+                    "Email": "",
+                    "Pan": "",
+                    "CorporateVerifcation": "",
+                    "Passport": "",
+                    "PassportFrontImage": "",
+                    "PassportBackImage": "",
+                    "ProfileType": "T",
+                    "EmployeeId": "",
+                    "corporateCompanyID": "",
+                    "serialNumber": "1"
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "",
+                    "Title": "Ms",
+                    "FirstName": "TESST",
+                    "MiddleName": "",
+                    "LastName": "T",
+                    "MobileNo": "",
+                    "PaxType": "C",
+                    "Age": 7,
+                    "Email": "",
+                    "Pan": "",
+                    "CorporateVerifcation": "",
+                    "Passport": "",
+                    "PassportFrontImage": "",
+                    "PassportBackImage": "",
+                    "ProfileType": "T",
+                    "EmployeeId": "",
+                    "corporateCompanyID": "",
+                    "serialNumber": "2"
+                }
+            ]
+        },
+        {
+            "RoomId": "59e699d0-ecf5-4c16-be0c-36e277aba60e",
+            "GuestCode": "|2|2:A:25:25|2:C:4:6|",
+            "SupplierName": "hotelbeds",
+            "RoomGroupId": "c04856ab-09a7-4c46-a18f-91b4ef433c84",
+            "Guests": [
+                {
+                    "GuestID": "0",
+                    "Operation": "",
+                    "Title": "Mr",
+                    "FirstName": "TEST",
+                    "MiddleName": "",
+                    "LastName": "T",
+                    "MobileNo": "",
+                    "PaxType": "A",
+                    "Age": "",
+                    "Email": "",
+                    "Pan": "ABCDE6847L",
+                    "ProfileType": "T",
+                    "EmployeeId": "",
+                    "corporateCompanyID": ""
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "",
+                    "Title": "Mr",
+                    "FirstName": "TEST",
+                    "MiddleName": "",
+                    "LastName": "T",
+                    "MobileNo": "",
+                    "PaxType": "A",
+                    "Age": "",
+                    "Email": "",
+                    "Pan": "",
+                    "CorporateVerifcation": "",
+                    "Passport": "",
+                    "PassportFrontImage": "",
+                    "PassportBackImage": "",
+                    "ProfileType": "T",
+                    "EmployeeId": "",
+                    "corporateCompanyID": "",
+                    "serialNumber": "2"
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "",
+                    "Title": "Mstr",
+                    "FirstName": "TEST",
+                    "MiddleName": "",
+                    "LastName": "T",
+                    "MobileNo": "",
+                    "PaxType": "C",
+                    "Age": 4,
+                    "Email": "",
+                    "Pan": "",
+                    "CorporateVerifcation": "",
+                    "Passport": "",
+                    "PassportFrontImage": "",
+                    "PassportBackImage": "",
+                    "ProfileType": "T",
+                    "EmployeeId": "",
+                    "corporateCompanyID": "",
+                    "serialNumber": "1"
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "",
+                    "Title": "Ms",
+                    "FirstName": "TEST",
+                    "MiddleName": "",
+                    "LastName": "T",
+                    "MobileNo": "",
+                    "PaxType": "C",
+                    "Age": 6,
+                    "Email": "",
+                    "Pan": "",
+                    "CorporateVerifcation": "",
+                    "Passport": "",
+                    "PassportFrontImage": "",
+                    "PassportBackImage": "",
+                    "ProfileType": "T",
+                    "EmployeeId": "",
+                    "corporateCompanyID": "",
+                    "serialNumber": "2"
+                }
+            ]
+        }
+    ],
+    "NetAmount": "1717",
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "DeviceID": "",
+    "AppVersion": "",
+    "SearchId": "cf3b8d4c-6355-4483-913f-929e90c871ba.DSlVHdCViVRfi821XHvuYw",
+    "RecommendationId": "906a3d9a-09ec-4e22-9696-c26509c94bdf",
+    "LocationName": null,
+    "HotelCode": "41629285",
+    "CheckInDate": "2027-01-22",
+    "CheckOutDate": "2027-01-23",
+    "TravelingFor": "NTF"
+}
+
+
+Response:
+
+{
+  "TUI": "f01a4acc-1b36-4ef3-ad69-e3516f955232|0d55c995-f66d-4c7b-8e4c-6d4d3f915442|20260902130356",
+  "TransactionID": 260144019,
+  "NetAmount": 1717.16,
+  "priceInfo": null,
+  "Code": "200",
+  "Msg": [
+    "Success"
+  ]
+}

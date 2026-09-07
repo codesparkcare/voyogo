@@ -1,0 +1,509 @@
+EndPoint: {HotelBookingURL}/Utils/RetrieveBooking
+
+
+RetrieveBooking Request:
+
+ClientID: "FVI6V120g22Ei5ztGK0FIQ=="
+ReferenceNumber: "260144019"
+ReferenceType: "T"
+TUI: "f01a4acc-1b36-4ef3-ad69-e3516f955232|0d55c995-f66d-4c7b-8e4c-6d4d3f915442|20260902130356"
+
+
+Response: 
+
+{
+    "EncryptionKey": "TC9wUVpjRGhYTUpMYlFFbHkvR1B2UT09",
+    "TUI": "f01a4acc-1b36-4ef3-ad69-e3516f955232|7afd7a72-fd22-4501-9adb-aef4d87218cf|20260902130402",
+    "TransactionId": 260144019,
+    "ServiceType": "HTL",
+    "BookingConfirmationId": "",
+    "BookNowPayLaterDate": "2026-09-02",
+    "BookingStatus": "I8",
+    "HoldBooking": false,
+    "CurrentStatus": "I8",
+    "CheckInDate": "2027-01-22",
+    "CheckOutDate": "2027-01-23",
+    "CheckInTime": "",
+    "CheckOutTime": "",
+    "FinYearID": "19",
+    "HotelConfirmationNumber": "",
+    "BookingConfirmedByUser": "",
+    "HoldEnabled": false,
+    "DRefNo": "",
+    "OfflineAgentCode": "",
+    "ItineraryType": "Normal",
+    "GrossFare": 1888.88,
+    "NetFare": 1717.16,
+    "PaymentType": "",
+    "PaymentStatus": "I8",
+    "PaymentMode": "",
+    "Nationality": "IN",
+    "CountryOfResidence": "IN",
+    "IssuedDate": "2026-09-02 01:4:02 PM",
+    "IsBadlyMapped": "True",
+    "SuspectCategory": "",
+    "TravelingFor": "",
+    "GateWayCode": "",
+    "GateWayCharge": 0.00,
+    "IsBilled": false,
+    "CancellationID": 0,
+    "PaxCount": 8,
+    "InvoiceDate": "02-09-2026",
+    "ExchangeRate": 0.0,
+    "CorporateDefaultCurrency": "",
+    "HotelInfo": {
+        "Code": "41629285",
+        "Name": "Asra Dormitory",
+        "heroimage": "https://photos.hotelbeds.com/giata/xl/10/1065579/1065579a_hb_a_001.jpg?20241224104025?20250424111611?20250713040432",
+        "Latitude": "19.099571",
+        "Longitude": "72.891716",
+        "LocationName": "",
+        "Distance": 0.00,
+        "AllowedCreditCards": "",
+        "AllowedCountries": "",
+        "SpecialRequestSupported": "False",
+        "LeadPaxInfoRequired": "False",
+        "IsCardRequired": "False",
+        "GuaranteeRequired": "False",
+        "Phone": "+919702297976",
+        "StarRating": "0",
+        "HotelAddress": {
+            "City": "Mumbai",
+            "State": "IN",
+            "Country": "IN",
+            "ZIP": "",
+            "AddressLine1": "Ghatkopar Link Rd Near Apex Hospital",
+            "AddressLine2": ""
+        }
+    },
+    "Rooms": [
+        {
+            "HotelConfirmationNumber": "",
+            "ID": "19495",
+            "RoomId": "59e699d0-ecf5-4c16-be0c-36e277aba60e",
+            "GuestCode": "|1|2:A:25:25|2:C:3:7|",
+            "RoomGroupId": "7f8fc44a-cee9-435c-9000-30d83c8910f1",
+            "Name": "Bed in dormitory BASIC",
+            "Description": "",
+            "Capacity": "4",
+            "NumberOfAdults": "2",
+            "NumberOfChildren": "2",
+            "NumberOfExtraBeds": "0",
+            "SupplierConfirmationNumber": "",
+            "SupplierId": "395",
+            "RecommendationId": "906a3d9a-09ec-4e22-9696-c26509c94bdf",
+            "Refundable": "True",
+            "Guests": [
+                {
+                    "Title": "Mr",
+                    "FirstName": "TEST",
+                    "LastName": "KB",
+                    "Email": "test@benzyinfotech.com",
+                    "MobileNumber": "8527831234",
+                    "PaxType": "A",
+                    "Age": "0",
+                    "AadharNo": "",
+                    "Pan": "ABCDE6847L",
+                    "Passport": "",
+                    "PanVerified": "True"
+                },
+                {
+                    "Title": "Mrs",
+                    "FirstName": "TEST",
+                    "LastName": "T",
+                    "Email": "rn@benzyinfotech.com",
+                    "MobileNumber": "8527831234",
+                    "PaxType": "A",
+                    "Age": "0",
+                    "AadharNo": "",
+                    "Pan": "",
+                    "Passport": "",
+                    "PanVerified": "False"
+                },
+                {
+                    "Title": "Ms",
+                    "FirstName": "TEST",
+                    "LastName": "T",
+                    "Email": "rn@benzyinfotech.com",
+                    "MobileNumber": "8527831234",
+                    "PaxType": "C",
+                    "Age": "3",
+                    "AadharNo": "",
+                    "Pan": "",
+                    "Passport": "",
+                    "PanVerified": "False"
+                },
+                {
+                    "Title": "Ms",
+                    "FirstName": "TESST",
+                    "LastName": "T",
+                    "Email": "rn@benzyinfotech.com",
+                    "MobileNumber": "8527831234",
+                    "PaxType": "C",
+                    "Age": "7",
+                    "AadharNo": "",
+                    "Pan": "",
+                    "Passport": "",
+                    "PanVerified": "False"
+                }
+            ],
+            "RoomRates": [
+                {
+                    "TotalRate": 858.58,
+                    "BaseRate": 858.58,
+                    "Discount": 0.00,
+                    "ServiceCharge": 0.00,
+                    "Commission": 0.00,
+                    "TDSOnCommission": 0.00,
+                    "PromoAmount": 0.0,
+                    "AddonMarkup": 0.00,
+                    "AddonDiscount": 0.00,
+                    "AgentMarkup": 85.86,
+                    "VATOnMarkup": 0.0,
+                    "VATOnBFTax": 0.0,
+                    "VATTotal": 0.0,
+                    "TCSTotal": 0.00,
+                    "Tax": {
+                        "Description": "tax_and_service_fee",
+                        "Amount": 0.0
+                    },
+                    "AdditionalCharges": {
+                        "Amount": 0.0,
+                        "Description": "",
+                        "Currency": "",
+                        "Type": "",
+                        "Unit": "",
+                        "Frequency": "",
+                        "Text": ""
+                    }
+                }
+            ],
+            "CancellationPolicy": [
+                {
+                    "text": "Cancellation charge from 2026-09-02 12:0:00 AM to 2027-01-19 12:29:00 PM is INR: 0",
+                    "policy": "",
+                    "fromDate": "2026-09-02 12:0:00 AM",
+                    "toDate": "2027-01-19 12:29:00 PM",
+                    "amount": "0"
+                },
+                {
+                    "text": "Cancellation charge from 2027-01-19 12:30:00 PM to 2027-01-22 12:0:00 AM is INR: 858.58",
+                    "policy": "",
+                    "fromDate": "2027-01-19 12:30:00 PM",
+                    "toDate": "2027-01-22 12:0:00 AM",
+                    "amount": "859"
+                },
+                {
+                    "text": "",
+                    "policy": "All times are in the local timezone of the hotel",
+                    "fromDate": "",
+                    "toDate": "",
+                    "amount": ""
+                }
+            ],
+            "RoomFacilities": [],
+            "RoomInclusions": [],
+            "RoomBoardBasis": [
+                {
+                    "name": "ROOM ONLY"
+                }
+            ],
+            "RoomPolicies": [
+                {
+                    "name": ".  Check-in hour 12:00-.Car park YES (Without additional debit notes).Check-out hour -11:00. Included: Free valet parking. Included: Free WiFi. Included: Free self parking."
+                }
+            ]
+        },
+        {
+            "HotelConfirmationNumber": "",
+            "ID": "19496",
+            "RoomId": "59e699d0-ecf5-4c16-be0c-36e277aba60e",
+            "GuestCode": "|2|2:A:25:25|2:C:4:6|",
+            "RoomGroupId": "c04856ab-09a7-4c46-a18f-91b4ef433c84",
+            "Name": "Bed in dormitory BASIC",
+            "Description": "",
+            "Capacity": "4",
+            "NumberOfAdults": "2",
+            "NumberOfChildren": "2",
+            "NumberOfExtraBeds": "0",
+            "SupplierConfirmationNumber": "",
+            "SupplierId": "395",
+            "RecommendationId": "906a3d9a-09ec-4e22-9696-c26509c94bdf",
+            "Refundable": "True",
+            "Guests": [
+                {
+                    "Title": "Mr",
+                    "FirstName": "TEST",
+                    "LastName": "T",
+                    "Email": "rn@benzyinfotech.com",
+                    "MobileNumber": "8527831234",
+                    "PaxType": "A",
+                    "Age": "0",
+                    "AadharNo": "",
+                    "Pan": "ABCDE6847L",
+                    "Passport": "",
+                    "PanVerified": "False"
+                },
+                {
+                    "Title": "Mr",
+                    "FirstName": "TEST",
+                    "LastName": "T",
+                    "Email": "rn@benzyinfotech.com",
+                    "MobileNumber": "8527831234",
+                    "PaxType": "A",
+                    "Age": "0",
+                    "AadharNo": "",
+                    "Pan": "",
+                    "Passport": "",
+                    "PanVerified": "False"
+                },
+                {
+                    "Title": "Mstr",
+                    "FirstName": "TEST",
+                    "LastName": "T",
+                    "Email": "rn@benzyinfotech.com",
+                    "MobileNumber": "8527812345",
+                    "PaxType": "C",
+                    "Age": "4",
+                    "AadharNo": "",
+                    "Pan": "",
+                    "Passport": "",
+                    "PanVerified": "False"
+                },
+                {
+                    "Title": "Ms",
+                    "FirstName": "TEST",
+                    "LastName": "T",
+                    "Email": "rn@benzyinfotech.com",
+                    "MobileNumber": "8527831234",
+                    "PaxType": "C",
+                    "Age": "6",
+                    "AadharNo": "",
+                    "Pan": "",
+                    "Passport": "",
+                    "PanVerified": "False"
+                }
+            ],
+            "RoomRates": [
+                {
+                    "TotalRate": 858.58,
+                    "BaseRate": 858.58,
+                    "Discount": 0.00,
+                    "ServiceCharge": 0.00,
+                    "Commission": 0.00,
+                    "TDSOnCommission": 0.00,
+                    "PromoAmount": 0.0,
+                    "AddonMarkup": 0.00,
+                    "AddonDiscount": 0.00,
+                    "AgentMarkup": 85.86,
+                    "VATOnMarkup": 0.0,
+                    "VATOnBFTax": 0.0,
+                    "VATTotal": 0.0,
+                    "TCSTotal": 0.00,
+                    "Tax": {
+                        "Description": "tax_and_service_fee",
+                        "Amount": 0.0
+                    },
+                    "AdditionalCharges": {
+                        "Amount": 0.0,
+                        "Description": "",
+                        "Currency": "",
+                        "Type": "",
+                        "Unit": "",
+                        "Frequency": "",
+                        "Text": ""
+                    }
+                }
+            ],
+            "CancellationPolicy": [
+                {
+                    "text": "Cancellation charge from 2026-09-02 12:0:00 AM to 2027-01-19 12:29:00 PM is INR: 0",
+                    "policy": "",
+                    "fromDate": "2026-09-02 12:0:00 AM",
+                    "toDate": "2027-01-19 12:29:00 PM",
+                    "amount": "0"
+                },
+                {
+                    "text": "Cancellation charge from 2027-01-19 12:30:00 PM to 2027-01-22 12:0:00 AM is INR: 858.58",
+                    "policy": "",
+                    "fromDate": "2027-01-19 12:30:00 PM",
+                    "toDate": "2027-01-22 12:0:00 AM",
+                    "amount": "859"
+                },
+                {
+                    "text": "",
+                    "policy": "All times are in the local timezone of the hotel",
+                    "fromDate": "",
+                    "toDate": "",
+                    "amount": ""
+                }
+            ],
+            "RoomFacilities": [],
+            "RoomInclusions": [],
+            "RoomBoardBasis": [
+                {
+                    "name": "ROOM ONLY"
+                }
+            ],
+            "RoomPolicies": [
+                {
+                    "name": ".  Check-in hour 12:00-.Car park YES (Without additional debit notes).Check-out hour -11:00. Included: Free valet parking. Included: Free WiFi. Included: Free self parking."
+                }
+            ]
+        }
+    ],
+    "HotelFacilities": [
+        {
+            "name": "hotel"
+        },
+        {
+            "name": "Car park"
+        },
+        {
+            "name": "24-hour reception"
+        },
+        {
+            "name": "Wi-fi"
+        },
+        {
+            "name": "Laundry service"
+        },
+        {
+            "name": "Garden"
+        },
+        {
+            "name": ""
+        }
+    ],
+    "ContactInfo": {
+        "Title": "MR",
+        "FName": "Benzy Infotech",
+        "LName": "",
+        "Mobile": "85xxxxxx12",
+        "Phone": "",
+        "Email": "rxx@xxxxxxxxxtech.com",
+        "Address": "MRRA 4  EDAPPALLY  Edappally , EDAPPALLY , Edappally",
+        "CountryCode": "IN",
+        "State": "Kerala",
+        "City": "Cochin",
+        "PIN": "6865245",
+        "GSTCompanyName": "",
+        "GSTTIN": "",
+        "GSTMobile": "",
+        "GSTEmail": "",
+        "GSTAddress": "",
+        "GSTState": "",
+        "UpdateProfile": false,
+        "IsGuest": false,
+        "MobileCountryCode": ""
+    },
+    "MoreInfo": [
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "We never guarantee on Extra Bed for Extra Adult, It will be subject to availability and may be Chargeable also.",
+            "Name": "CheckinSpecialInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "During Christmas & New year ,Hotel May Request You to pay for Gala Dinner Charges at the time of Check-inn.",
+            "Name": "CheckinSpecialInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "These additional charge are not included in the booking amount and will be collected directly at the hotel.",
+            "Name": "CheckinSpecialInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "Tourism Taxes, City Taxes, Resort Fee, Etc Hotel May request You to pay at the time of Check-inn(Local Currency).",
+            "Name": "CheckinSpecialInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "As per the hotel policy, there might be peak season and long weekend surcharges, which would be payable by guest directly at the hotel.",
+            "Name": "CheckinSpecialInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "In case of peak dates or technical issues causing the hotel to be sold out, an alternative hotel of equal booking value or a full refund will be provided.",
+            "Name": "CheckinSpecialInstructions"
+        }
+    ],
+    "ItineryStatus": {
+        "Remarks": "",
+        "BookingStatus": "I8",
+        "CurrentStatus": "I8",
+        "ServiceType": "HTL",
+        "StatusDetails": [
+            {
+                "Status": "I8",
+                "PaxSectorID": ""
+            },
+            {
+                "Status": "I8",
+                "PaxSectorID": ""
+            }
+        ]
+    },
+    "Rules": null,
+    "Promo": [
+        {
+            "Code": "",
+            "Amount": 0.0,
+            "EmployeeID": null,
+            "ConvenienceFee": 0.0
+        }
+    ],
+    "Auxiliaries": [
+        {
+            "Code": "",
+            "EmployeeID": null,
+            "Amount": 0.0
+        }
+    ],
+    "PaymentSummary": [],
+    "Remarks": [
+        {
+            "RecievedDate": "02 Sep'26/ 01:04 PM",
+            "Remarks": "BookingStatus is I8 and CurrentStatus I8 saved",
+            "Status": "",
+            "RecievedFrom": ""
+        }
+    ],
+    "ApprovalStatus": null,
+    "RejectedApprover": "",
+    "RejectedReason": "",
+    "ApprovalEmployeeList": null,
+    "TravellerDocumentList": [],
+    "Attachment": null,
+    "ExchangeCurrencyList": null,
+    "IsVIP": false,
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ]
+}

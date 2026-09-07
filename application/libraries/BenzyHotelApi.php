@@ -668,30 +668,33 @@ class BenzyHotelApi {
         $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'FVI6V120g22Ei5ztGK0FIQ==');
         $browserKey = $tokenDetails['BrowserKey'] ?? ($this->credentials['BrowserKey'] ?? 'caecd3cd30225512c1811070dce615c1');
 
-        // Confirmed Test URL: https://b2bapiflights.benzyinfotech.com/Payment/StartPay
+        // Confirmed Endpoint from Benzy official SamplePayloads: {HotelBookingURL}/Payment/StartPay
         $url = $this->bookingUrl . '/Payment/StartPay';
 
-        // Exact WRC B2B Hotel StartPay Schema (docs/hotels/api/Start_Pay.html)
+        // Exact schema from Benzy SamplePayloads_Multipax/StartPay.txt
         $payload = array(
-            'SID'                 => null,
-            'TUI'                 => $tui ?? ('TUI-' . uniqid()),
-            'ClientID'            => $clientId,
-            'Email'               => null,
-            'Promo'               => null,
-            'TransactionID'       => (int)$transactionId,
-            'PaymentType'         => '',
-            'BankCode'            => '',
-            'GateWayCode'         => '',
-            'MerchantID'          => 0,
-            'PaymentAmount'       => (float)$amount,
-            'PaymentCharge'       => 0,
-            'Card'                => array(
+            'TransactionID'   => (int)$transactionId,
+            'PaymentAmount'   => 0,
+            'NetAmount'       => (float)$amount,
+            'BrowserKey'      => $browserKey,
+            'ClientID'        => $clientId,
+            'TUI'             => $tui ?? ('TUI-' . uniqid()),
+            'Hold'            => false,
+            'Promo'           => null,
+            'PaymentType'     => '',
+            'BankCode'        => '',
+            'GateWayCode'     => '',
+            'MerchantID'      => '',
+            'PaymentCharge'   => 0,
+            'CardType'        => 'default',
+            'ReleaseDate'     => '',
+            'OnlinePayment'   => false,
+            'DepositPayment'  => true,
+            'Card'            => array(
                 'Number'        => '',
                 'Expiry'        => '',
                 'CVV'           => '',
                 'CHName'        => '',
-                'FName'         => null,
-                'LName'         => null,
                 'Address'       => '',
                 'City'          => '',
                 'State'         => '',
@@ -699,28 +702,17 @@ class BenzyHotelApi {
                 'PIN'           => '',
                 'International' => false,
                 'SaveCard'      => false,
-                'EMIMonths'     => '0',
-                'Token'         => null,
-                'NumberAlias'   => null
+                'FName'         => '',
+                'LName'         => '',
+                'EMIMonths'     => '0'
             ),
-            'VPA'                 => '',
-            'CardAlias'           => '',
-            'QuickPay'            => null,
-            'RMSSignature'        => '',
-            'TargetCurrency'      => '',
-            'TargetAmount'        => 0,
-            'ThirdPartyInfo'      => null,
-            'Hold'                => false,
-            'TripType'            => null,
-            'Authorization'       => 'Bearer ' . $token,
-            'QTransactionID'      => 0,
-            'NetAmount'           => (float)$amount,
-            'OnlinePayment'       => false,
-            'DepositPayment'      => true,
-            'ReleaseDate'         => '/Date(-62135596800000)/',
-            'BrowserKey'          => $browserKey,
-            'BrowserKeyFromToken' => $browserKey,
-            'AgentInfo'           => $this->credentials['AgentCode'] ?? ''
+            'VPA'             => '',
+            'CardAlias'       => '',
+            'QuickPay'        => null,
+            'RMSSignature'    => '',
+            'TargetCurrency'  => '',
+            'TargetAmount'    => 0,
+            'ServiceType'     => 'ITI'
         );
 
         $customHeaders = array('search-tracing-key' => $tui);
@@ -739,7 +731,7 @@ class BenzyHotelApi {
             'Code'          => '200',
             'Msg'           => array('Success'),
             'TransactionID' => (int)$transactionId,
-            'CRSPNR'        => 'AKB' . rand(10000, 99999),
+            'CRSPNR'        => 'TestBooking',
             'BookStatus'    => 'B0',
             'RedirectMode'  => 'R',
             'status'        => 'success'
@@ -747,21 +739,21 @@ class BenzyHotelApi {
     }
 
     // =========================================================================
-    // 9. RETRIEVE BOOKING ({HotelBookingURL}/Booking/RetrieveBooking)
+    // 9. RETRIEVE BOOKING ({HotelBookingURL}/Utils/RetrieveBooking)
     // =========================================================================
     public function retrieveBooking($transactionId, $tui = null) {
         $token = $this->generateToken();
-        $url = $this->bookingUrl . '/Booking/RetrieveBooking';
+        $tokenDetails = $this->getTokenDetails();
+        $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'FVI6V120g22Ei5ztGK0FIQ==');
+
+        // Confirmed Endpoint from Benzy official SamplePayloads: {HotelBookingURL}/Utils/RetrieveBooking
+        $url = $this->bookingUrl . '/Utils/RetrieveBooking';
 
         $payload = array(
-            'TUI'             => $tui,
-            'ReferenceType'   => 'T',
+            'ClientID'        => $clientId,
             'ReferenceNumber' => (string)$transactionId,
-            'ServiceType'     => 'HTL',
-            'ClientID'        => $this->credentials['ClientID'] ?? 'VoyogoClient',
-            'RequestMode'     => 'RB',
-            'Contact'         => null,
-            'Name'            => null
+            'ReferenceType'   => 'T',
+            'TUI'             => $tui
         );
 
         $res = $this->makeRequest('RetrieveBooking', $url, $payload, 'POST', $token);

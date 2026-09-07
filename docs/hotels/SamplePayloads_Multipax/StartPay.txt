@@ -1,0 +1,67 @@
+EndPoint: {HotelBookingURL}/Payment/StartPay
+
+StartPay Request: 
+
+{
+    "TransactionID": 260144019,
+    "PaymentAmount": 0,
+    "NetAmount": 1717.16,
+    "BrowserKey": "c09b191bd6740b45c7c81285cf1c16c7",
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "TUI": "f01a4acc-1b36-4ef3-ad69-e3516f955232|7afd7a72-fd22-4501-9adb-aef4d87218cf|20260902130402",
+    "Hold": false,
+    "Promo": null,
+    "PaymentType": "",
+    "BankCode": "",
+    "GateWayCode": "",
+    "MerchantID": "",
+    "PaymentCharge": 0,
+    "CardType": "default",
+    "ReleaseDate": "",
+    "OnlinePayment": false,
+    "DepositPayment": true,
+    "Card": {
+        "Number": "",
+        "Expiry": "",
+        "CVV": "",
+        "CHName": "",
+        "Address": "",
+        "City": "",
+        "State": "",
+        "Country": "",
+        "PIN": "",
+        "International": false,
+        "SaveCard": false,
+        "FName": "",
+        "LName": "",
+        "EMIMonths": "0"
+    },
+    "VPA": "",
+    "CardAlias": "",
+    "QuickPay": null,
+    "RMSSignature": "",
+    "TargetCurrency": "",
+    "TargetAmount": 0,
+    "ServiceType": "ITI"
+}
+
+Response:
+
+{
+    "TUI": "f01a4acc-1b36-4ef3-ad69-e3516f955232|169eeb6a-dfdc-4b7a-a202-c90c804cc327|20260902131113",
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "PaymentID": null,
+    "TransactionID": 260144019,
+    "RedirectMode": "R",
+    "PostData": null,
+    "CRSPNR": "TestBooking",
+    "BookStatus": "B0",
+    "TUTransactionID": 0,
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "GatewayCode": "",
+    "RedirectUrl": "https://b2bapiportal.benzyinfotech.com/hotel/hotelconfirmation/f01a4acc-1b36-4ef3-ad69-e3516f955232|169eeb6a-dfdc-4b7a-a202-c90c804cc327|20260902131113/260144019",
+    "CFOrderId": null
+}

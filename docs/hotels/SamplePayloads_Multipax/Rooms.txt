@@ -1,0 +1,1806 @@
+Endpoint: {HotelSearchURL}/api/hotels/search/result/cf3b8d4c-6355-4483-913f-929e90c871ba.DSlVHdCViVRfi821XHvuYw/41629285/rooms
+
+
+Rooms:
+{
+    "recommendations": [
+        {
+            "id": "906a3d9a-09ec-4e22-9696-c26509c94bdf",
+            "roomGroup": [
+                {
+                    "id": "7f8fc44a-cee9-435c-9000-30d83c8910f1",
+                    "code": null,
+                    "availability": 20,
+                    "description": null,
+                    "needsPriceCheck": true,
+                    "isPackageRate": true,
+                    "providerId": "395",
+                    "providerName": "hotelbeds",
+                    "isPreffered": null,
+                    "room": {
+                        "id": "59e699d0-ecf5-4c16-be0c-36e277aba60e",
+                        "standardRoomId": "2",
+                        "standardRoomName": "Bed In Dormitory Basic",
+                        "name": "Bed in dormitory BASIC",
+                        "description": "Bed in dormitory BASIC",
+                        "beds": [],
+                        "smokingAllowed": false,
+                        "facilities": [],
+                        "images": [],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": null,
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 1,
+                            "numOfAdults": 2,
+                            "numOfChildren": 2,
+                            "childAges": [
+                                3,
+                                7
+                            ]
+                        }
+                    ],
+                    "type": "negotiated",
+                    "baseRate": 858.58,
+                    "totalRate": 858.58,
+                    "tcsOnTotal": 0.0,
+                    "minSellingRate": 0.0,
+                    "publishedRate": 1047.90,
+                    "taxes": null,
+                    "fees": null,
+                    "discounts": null,
+                    "otherRateComponents": [
+                        {
+                            "amount": 85.86,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0.0,
+                    "commission": null,
+                    "dailyRates": null,
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": false,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": null,
+                    "boardBasis": {
+                        "description": "ROOM ONLY",
+                        "type": "RoomOnly"
+                    },
+                    "offers": [
+                        {
+                            "title": "ExclusiveDeal",
+                            "description": "3",
+                            "type": null,
+                            "discountOffer": 0.0,
+                            "percentageDiscountOffer": 0,
+                            "stayOffer": null
+                        }
+                    ],
+                    "cancellationPolicies": [
+                        {
+                            "text": "All times are in the local timezone of the hotel",
+                            "rules": [
+                                {
+                                    "value": 0.0,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 0.0,
+                                    "start": "2026-09-02T00:00:00Z",
+                                    "end": "2027-01-19T12:29:00Z"
+                                },
+                                {
+                                    "value": 858.58,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 858.58,
+                                    "start": "2027-01-19T12:30:00Z",
+                                    "end": "2027-01-22T00:00:00Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "includes": null,
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": false,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 0.0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": [
+                        {
+                            "type": "RoomIdentifierKey",
+                            "text": "BED.Z1"
+                        },
+                        {
+                            "type": "SupplierRateIdentifierKey",
+                            "text": "1065579|BED.Z1|NOR|1-2-2|RO|True|"
+                        }
+                    ],
+                    "ratePerNight": 858.58
+                },
+                {
+                    "id": "c04856ab-09a7-4c46-a18f-91b4ef433c84",
+                    "code": null,
+                    "availability": 20,
+                    "description": null,
+                    "needsPriceCheck": true,
+                    "isPackageRate": true,
+                    "providerId": "395",
+                    "providerName": "hotelbeds",
+                    "isPreffered": null,
+                    "room": {
+                        "id": "59e699d0-ecf5-4c16-be0c-36e277aba60e",
+                        "standardRoomId": "2",
+                        "standardRoomName": "Bed In Dormitory Basic",
+                        "name": "Bed in dormitory BASIC",
+                        "description": "Bed in dormitory BASIC",
+                        "beds": [],
+                        "smokingAllowed": false,
+                        "facilities": [],
+                        "images": [],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": null,
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 2,
+                            "numOfAdults": 2,
+                            "numOfChildren": 2,
+                            "childAges": [
+                                4,
+                                6
+                            ]
+                        }
+                    ],
+                    "type": "negotiated",
+                    "baseRate": 858.58,
+                    "totalRate": 858.58,
+                    "tcsOnTotal": 0.0,
+                    "minSellingRate": 0.0,
+                    "publishedRate": 1047.90,
+                    "taxes": null,
+                    "fees": null,
+                    "discounts": null,
+                    "otherRateComponents": [
+                        {
+                            "amount": 85.86,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0.0,
+                    "commission": null,
+                    "dailyRates": null,
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": false,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": null,
+                    "boardBasis": {
+                        "description": "ROOM ONLY",
+                        "type": "RoomOnly"
+                    },
+                    "offers": [
+                        {
+                            "title": "ExclusiveDeal",
+                            "description": "3",
+                            "type": null,
+                            "discountOffer": 0.0,
+                            "percentageDiscountOffer": 0,
+                            "stayOffer": null
+                        }
+                    ],
+                    "cancellationPolicies": [
+                        {
+                            "text": "All times are in the local timezone of the hotel",
+                            "rules": [
+                                {
+                                    "value": 0.0,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 0.0,
+                                    "start": "2026-09-02T00:00:00Z",
+                                    "end": "2027-01-19T12:29:00Z"
+                                },
+                                {
+                                    "value": 858.58,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 858.58,
+                                    "start": "2027-01-19T12:30:00Z",
+                                    "end": "2027-01-22T00:00:00Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "includes": null,
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": false,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 0.0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": [
+                        {
+                            "type": "RoomIdentifierKey",
+                            "text": "BED.Z1"
+                        },
+                        {
+                            "type": "SupplierRateIdentifierKey",
+                            "text": "1065579|BED.Z1|NOR|1-2-2|RO|True|"
+                        }
+                    ],
+                    "ratePerNight": 858.58
+                }
+            ],
+            "total": 1717.16,
+            "publishedRate": 2095.80,
+            "groupId": 2,
+            "isHold": true,
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false
+        },
+        {
+            "id": "2c209a01-42bf-4ea3-9af6-a34184c7aa34",
+            "roomGroup": [
+                {
+                    "id": "0141e1c6-627c-4480-b3d0-a095efe5910d",
+                    "code": null,
+                    "availability": 20,
+                    "description": null,
+                    "needsPriceCheck": true,
+                    "isPackageRate": true,
+                    "providerId": "20339Demo",
+                    "providerName": "EAN",
+                    "isPreffered": null,
+                    "room": {
+                        "id": "8dc50120-365a-4abb-8cda-927a1364c3e7",
+                        "standardRoomId": "1",
+                        "standardRoomName": "Basic Shared Dormitory",
+                        "name": "Basic Shared Dormitory",
+                        "description": "<p><strong>20 Twin Bunk Beds</strong></p><p>150-sq-foot soundproofed room with a balcony/patio </p><br/><p><b>Layout</b> - Bedroom </p><p><b>Internet</b> - Free WiFi 250+ Mbps (good for 3–5 people or up to 10 devices) </p><p><b>Bathroom</b> - 4 bathrooms, shower/tub combination, slippers, and towels</p><p><b>Practical</b> - Phone and wardrobe or closet</p><p><b>Comfort</b> - Fresh bed sheets (on request), fresh towels (on request), and air conditioning</p><p>Non-Smoking</p>",
+                        "beds": [
+                            {
+                                "type": "BunkBed",
+                                "description": null,
+                                "count": 20
+                            }
+                        ],
+                        "smokingAllowed": false,
+                        "facilities": [
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "WiFi speed - 250+ Mbps (good for 3–5 people or up to 10 devices)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Towels provided"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Non-Smoking"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Television"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Soap"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Wireless internet access"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shampoo"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Soundproofed rooms"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Change of bed sheets (on request)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Slippers"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shower/tub combination"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Wardrobe or closet"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Daily housekeeping"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Air conditioning"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Free WiFi"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Change of towels (on request)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Phone"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shared bathroom"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Balcony or patio"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "WiFi speed - 250+ Mbps (good for 3–5 people or up to 10 devices)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Towels provided"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Non-Smoking"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Television"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Soap"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Wireless internet access"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shampoo"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Soundproofed rooms"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Change of bed sheets (on request)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Slippers"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shower/tub combination"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Wardrobe or closet"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Daily housekeeping"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Air conditioning"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Free WiFi"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Change of towels (on request)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Phone"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shared bathroom"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Balcony or patio"
+                            }
+                        ],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/c3facf7a_edited_e236_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/da9fcf96_edited_2793_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/b68ef68a_edited_f4e4_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/3b37eda7_edited_d173_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/c3facf7a_edited_e236_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/da9fcf96_edited_2793_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/b68ef68a_edited_f4e4_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/3b37eda7_edited_d173_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": [
+                        {
+                            "amount": "147.38",
+                            "description": "Gross Profit",
+                            "isIncludedInBaseRate": false
+                        }
+                    ],
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 2,
+                            "numOfAdults": 2,
+                            "numOfChildren": 2,
+                            "childAges": [
+                                4,
+                                6
+                            ]
+                        }
+                    ],
+                    "type": "published",
+                    "baseRate": 892.81,
+                    "totalRate": 881.20,
+                    "tcsOnTotal": 0.0,
+                    "minSellingRate": 0.0,
+                    "publishedRate": 1047.90,
+                    "taxes": [
+                        {
+                            "amount": 44.91,
+                            "description": "tax_and_service_fee",
+                            "type": null
+                        }
+                    ],
+                    "fees": null,
+                    "discounts": null,
+                    "otherRateComponents": [
+                        {
+                            "amount": 59.49,
+                            "description": "PassOnCommission",
+                            "type": "PassOnCommission"
+                        },
+                        {
+                            "amount": 2.97,
+                            "description": "TdsOnCommission",
+                            "type": "TdsOnCommission"
+                        },
+                        {
+                            "amount": 89.28,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0.0,
+                    "commission": {
+                        "amount": 65.44,
+                        "description": "Agency Commission",
+                        "type": null
+                    },
+                    "dailyRates": [
+                        {
+                            "amount": 892.81,
+                            "date": "2027-01-22T00:00:00Z",
+                            "taxIncluded": false,
+                            "discount": 0.0
+                        }
+                    ],
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": true,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": [
+                        {
+                            "type": "Check-in",
+                            "text": "Check-in between 12:00 PM - anytime"
+                        },
+                        {
+                            "type": "Check-out",
+                            "text": "Check-out before 11:00 AM"
+                        },
+                        {
+                            "type": "Check-in Instruction",
+                            "text": "  Extra-person charges may apply and vary depending on property policyGovernment-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental chargesSpecial requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteedThis property only accepts cashSafety features at this property include a fire extinguisherThis property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room  "
+                        },
+                        {
+                            "type": "Special Check-in Instruction",
+                            "text": "To make arrangements for check-in please contact the property at least 24 hours before arrival using the information on the booking confirmation. Guests must contact the property in advance for check-in instructions. Front desk staff will greet guests on arrival at the property. Information provided by the property may be translated using automated translation tools."
+                        },
+                        {
+                            "type": "Optional Fee",
+                            "text": " Early check-in fee: INR 150 (subject to availability)Late check-out fee: INR 150 (subject to availability) The above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. "
+                        }
+                    ],
+                    "boardBasis": {
+                        "description": "Room Only",
+                        "type": "RoomOnly"
+                    },
+                    "offers": [],
+                    "cancellationPolicies": [
+                        {
+                            "text": null,
+                            "rules": [
+                                {
+                                    "value": 0.0,
+                                    "valueType": "Nights",
+                                    "estimatedValue": 0.0,
+                                    "start": "2026-09-02T00:00:00Z",
+                                    "end": "2027-01-19T12:29:00Z"
+                                },
+                                {
+                                    "value": 1.0,
+                                    "valueType": "Nights",
+                                    "estimatedValue": 937.72,
+                                    "start": "2027-01-19T12:30:00Z",
+                                    "end": "2027-01-22T12:30:00Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "includes": [
+                        "Free valet parking",
+                        "Free WiFi",
+                        "Free self parking"
+                    ],
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": false,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 10.0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": [
+                        {
+                            "type": "Member_Deal_Available",
+                            "text": "false"
+                        }
+                    ],
+                    "ratePerNight": 881.20
+                },
+                {
+                    "id": "a38b0b82-9e3d-4b4a-92fb-58a570673657",
+                    "code": null,
+                    "availability": 20,
+                    "description": null,
+                    "needsPriceCheck": true,
+                    "isPackageRate": true,
+                    "providerId": "20339Demo",
+                    "providerName": "EAN",
+                    "isPreffered": null,
+                    "room": {
+                        "id": "8dc50120-365a-4abb-8cda-927a1364c3e7",
+                        "standardRoomId": "1",
+                        "standardRoomName": "Basic Shared Dormitory",
+                        "name": "Basic Shared Dormitory",
+                        "description": "<p><strong>20 Twin Bunk Beds</strong></p><p>150-sq-foot soundproofed room with a balcony/patio </p><br/><p><b>Layout</b> - Bedroom </p><p><b>Internet</b> - Free WiFi 250+ Mbps (good for 3–5 people or up to 10 devices) </p><p><b>Bathroom</b> - 4 bathrooms, shower/tub combination, slippers, and towels</p><p><b>Practical</b> - Phone and wardrobe or closet</p><p><b>Comfort</b> - Fresh bed sheets (on request), fresh towels (on request), and air conditioning</p><p>Non-Smoking</p>",
+                        "beds": [
+                            {
+                                "type": "BunkBed",
+                                "description": null,
+                                "count": 20
+                            }
+                        ],
+                        "smokingAllowed": false,
+                        "facilities": [
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "WiFi speed - 250+ Mbps (good for 3–5 people or up to 10 devices)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Towels provided"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Non-Smoking"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Television"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Soap"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Wireless internet access"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shampoo"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Soundproofed rooms"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Change of bed sheets (on request)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Slippers"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shower/tub combination"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Wardrobe or closet"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Daily housekeeping"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Air conditioning"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Free WiFi"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Change of towels (on request)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Phone"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shared bathroom"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Balcony or patio"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "WiFi speed - 250+ Mbps (good for 3–5 people or up to 10 devices)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Towels provided"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Non-Smoking"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Television"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Soap"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Wireless internet access"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shampoo"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Soundproofed rooms"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Change of bed sheets (on request)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Slippers"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shower/tub combination"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Wardrobe or closet"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Daily housekeeping"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Air conditioning"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Free WiFi"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Change of towels (on request)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Phone"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shared bathroom"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Balcony or patio"
+                            }
+                        ],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/c3facf7a_edited_e236_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/da9fcf96_edited_2793_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/b68ef68a_edited_f4e4_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/3b37eda7_edited_d173_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/c3facf7a_edited_e236_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/da9fcf96_edited_2793_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/b68ef68a_edited_f4e4_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/3b37eda7_edited_d173_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": [
+                        {
+                            "amount": "147.38",
+                            "description": "Gross Profit",
+                            "isIncludedInBaseRate": false
+                        }
+                    ],
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 1,
+                            "numOfAdults": 2,
+                            "numOfChildren": 2,
+                            "childAges": [
+                                3,
+                                7
+                            ]
+                        }
+                    ],
+                    "type": "published",
+                    "baseRate": 892.81,
+                    "totalRate": 881.20,
+                    "tcsOnTotal": 0.0,
+                    "minSellingRate": 0.0,
+                    "publishedRate": 1047.90,
+                    "taxes": [
+                        {
+                            "amount": 44.91,
+                            "description": "tax_and_service_fee",
+                            "type": null
+                        }
+                    ],
+                    "fees": null,
+                    "discounts": null,
+                    "otherRateComponents": [
+                        {
+                            "amount": 59.49,
+                            "description": "PassOnCommission",
+                            "type": "PassOnCommission"
+                        },
+                        {
+                            "amount": 2.97,
+                            "description": "TdsOnCommission",
+                            "type": "TdsOnCommission"
+                        },
+                        {
+                            "amount": 89.28,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0.0,
+                    "commission": {
+                        "amount": 65.44,
+                        "description": "Agency Commission",
+                        "type": null
+                    },
+                    "dailyRates": [
+                        {
+                            "amount": 892.81,
+                            "date": "2027-01-22T00:00:00Z",
+                            "taxIncluded": false,
+                            "discount": 0.0
+                        }
+                    ],
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": true,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": [
+                        {
+                            "type": "Check-in",
+                            "text": "Check-in between 12:00 PM - anytime"
+                        },
+                        {
+                            "type": "Check-out",
+                            "text": "Check-out before 11:00 AM"
+                        },
+                        {
+                            "type": "Check-in Instruction",
+                            "text": "  Extra-person charges may apply and vary depending on property policyGovernment-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental chargesSpecial requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteedThis property only accepts cashSafety features at this property include a fire extinguisherThis property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room  "
+                        },
+                        {
+                            "type": "Special Check-in Instruction",
+                            "text": "To make arrangements for check-in please contact the property at least 24 hours before arrival using the information on the booking confirmation. Guests must contact the property in advance for check-in instructions. Front desk staff will greet guests on arrival at the property. Information provided by the property may be translated using automated translation tools."
+                        },
+                        {
+                            "type": "Optional Fee",
+                            "text": " Early check-in fee: INR 150 (subject to availability)Late check-out fee: INR 150 (subject to availability) The above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. "
+                        }
+                    ],
+                    "boardBasis": {
+                        "description": "Room Only",
+                        "type": "RoomOnly"
+                    },
+                    "offers": [],
+                    "cancellationPolicies": [
+                        {
+                            "text": null,
+                            "rules": [
+                                {
+                                    "value": 0.0,
+                                    "valueType": "Nights",
+                                    "estimatedValue": 0.0,
+                                    "start": "2026-09-02T00:00:00Z",
+                                    "end": "2027-01-19T12:29:00Z"
+                                },
+                                {
+                                    "value": 1.0,
+                                    "valueType": "Nights",
+                                    "estimatedValue": 937.72,
+                                    "start": "2027-01-19T12:30:00Z",
+                                    "end": "2027-01-22T12:30:00Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "includes": [
+                        "Free valet parking",
+                        "Free WiFi",
+                        "Free self parking"
+                    ],
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": false,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 10.0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": [
+                        {
+                            "type": "Member_Deal_Available",
+                            "text": "false"
+                        }
+                    ],
+                    "ratePerNight": 881.20
+                }
+            ],
+            "total": 1762.40,
+            "publishedRate": 2095.80,
+            "groupId": 1,
+            "isHold": true,
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false
+        },
+        {
+            "id": "515504b1-de41-4e55-8a42-941b5a307541",
+            "roomGroup": [
+                {
+                    "id": "01c37c2d-9cbf-4aa1-a745-ff6676e00643",
+                    "code": null,
+                    "availability": 20,
+                    "description": null,
+                    "needsPriceCheck": true,
+                    "isPackageRate": false,
+                    "providerId": "20340",
+                    "providerName": "EAN",
+                    "isPreffered": null,
+                    "room": {
+                        "id": "10ff0d64-94d1-45b8-9b63-bbe264ef4a8a",
+                        "standardRoomId": "1",
+                        "standardRoomName": "Basic Shared Dormitory",
+                        "name": "Basic Shared Dormitory",
+                        "description": "<p><strong>20 Twin Bunk Beds</strong></p><p>150-sq-foot soundproofed room with a balcony/patio </p><br/><p><b>Layout</b> - Bedroom </p><p><b>Internet</b> - Free WiFi 250+ Mbps (good for 3–5 people or up to 10 devices) </p><p><b>Bathroom</b> - 4 bathrooms, shower/tub combination, slippers, and towels</p><p><b>Practical</b> - Phone and wardrobe or closet</p><p><b>Comfort</b> - Fresh bed sheets (on request), fresh towels (on request), and air conditioning</p><p>Non-Smoking</p>",
+                        "beds": [
+                            {
+                                "type": "BunkBed",
+                                "description": null,
+                                "count": 20
+                            }
+                        ],
+                        "smokingAllowed": false,
+                        "facilities": [
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "WiFi speed - 250+ Mbps (good for 3–5 people or up to 10 devices)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Towels provided"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Non-Smoking"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Television"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Soap"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Wireless internet access"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shampoo"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Soundproofed rooms"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Change of bed sheets (on request)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Slippers"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shower/tub combination"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Wardrobe or closet"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Daily housekeeping"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Air conditioning"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Free WiFi"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Change of towels (on request)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Phone"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shared bathroom"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Balcony or patio"
+                            }
+                        ],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/c3facf7a_edited_e236_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/da9fcf96_edited_2793_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/b68ef68a_edited_f4e4_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/3b37eda7_edited_d173_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/c3facf7a_edited_e236_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/da9fcf96_edited_2793_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/b68ef68a_edited_f4e4_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/3b37eda7_edited_d173_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": [
+                        {
+                            "amount": "152.72",
+                            "description": "Gross Profit",
+                            "isIncludedInBaseRate": false
+                        }
+                    ],
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 1,
+                            "numOfAdults": 2,
+                            "numOfChildren": 2,
+                            "childAges": [
+                                3,
+                                7
+                            ]
+                        }
+                    ],
+                    "type": "published",
+                    "baseRate": 898.20,
+                    "totalRate": 884.55,
+                    "tcsOnTotal": 0.0,
+                    "minSellingRate": 0.0,
+                    "publishedRate": 1047.90,
+                    "taxes": [
+                        {
+                            "amount": 44.91,
+                            "description": "tax_and_service_fee",
+                            "type": null
+                        }
+                    ],
+                    "fees": null,
+                    "discounts": null,
+                    "otherRateComponents": [
+                        {
+                            "amount": 61.65,
+                            "description": "PassOnCommission",
+                            "type": "PassOnCommission"
+                        },
+                        {
+                            "amount": 3.08,
+                            "description": "TdsOnCommission",
+                            "type": "TdsOnCommission"
+                        },
+                        {
+                            "amount": 89.82,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0.0,
+                    "commission": {
+                        "amount": 67.81,
+                        "description": "Agency Commission",
+                        "type": null
+                    },
+                    "dailyRates": [
+                        {
+                            "amount": 898.20,
+                            "date": "2027-01-22T00:00:00Z",
+                            "taxIncluded": false,
+                            "discount": 0.0
+                        }
+                    ],
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": true,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": [
+                        {
+                            "type": "Check-in",
+                            "text": "Check-in between 12:00 PM - anytime"
+                        },
+                        {
+                            "type": "Check-out",
+                            "text": "Check-out before 11:00 AM"
+                        },
+                        {
+                            "type": "Check-in Instruction",
+                            "text": "  Extra-person charges may apply and vary depending on property policyGovernment-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental chargesSpecial requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteedThis property only accepts cashSafety features at this property include a fire extinguisherThis property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room  "
+                        },
+                        {
+                            "type": "Special Check-in Instruction",
+                            "text": "To make arrangements for check-in please contact the property at least 24 hours before arrival using the information on the booking confirmation. Guests must contact the property in advance for check-in instructions. Front desk staff will greet guests on arrival at the property. Information provided by the property may be translated using automated translation tools."
+                        },
+                        {
+                            "type": "Optional Fee",
+                            "text": " Early check-in fee: INR 150 (subject to availability)Late check-out fee: INR 150 (subject to availability) The above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. "
+                        }
+                    ],
+                    "boardBasis": {
+                        "description": "Room Only",
+                        "type": "RoomOnly"
+                    },
+                    "offers": [
+                        {
+                            "title": "Promotion",
+                            "description": "Member’s price: 10% ",
+                            "type": null,
+                            "discountOffer": 0.0,
+                            "percentageDiscountOffer": 0,
+                            "stayOffer": null
+                        }
+                    ],
+                    "cancellationPolicies": [
+                        {
+                            "text": null,
+                            "rules": [
+                                {
+                                    "value": 0.0,
+                                    "valueType": "Nights",
+                                    "estimatedValue": 0.0,
+                                    "start": "2026-09-02T00:00:00Z",
+                                    "end": "2027-01-19T12:29:00Z"
+                                },
+                                {
+                                    "value": 1.0,
+                                    "valueType": "Nights",
+                                    "estimatedValue": 943.11,
+                                    "start": "2027-01-19T12:30:00Z",
+                                    "end": "2027-01-22T12:30:00Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "includes": [
+                        "Free valet parking",
+                        "Free WiFi",
+                        "Free self parking"
+                    ],
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": false,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 10.0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": [
+                        {
+                            "type": "RoomIdentifierKey",
+                            "text": "325226910"
+                        },
+                        {
+                            "type": "SupplierRateIdentifierKey",
+                            "text": "397070725"
+                        },
+                        {
+                            "type": "Member_Deal_Available",
+                            "text": "false"
+                        }
+                    ],
+                    "ratePerNight": 884.55
+                },
+                {
+                    "id": "2ed8096a-446c-4718-8e41-8d6fcd932bb7",
+                    "code": null,
+                    "availability": 20,
+                    "description": null,
+                    "needsPriceCheck": true,
+                    "isPackageRate": false,
+                    "providerId": "20340",
+                    "providerName": "EAN",
+                    "isPreffered": null,
+                    "room": {
+                        "id": "10ff0d64-94d1-45b8-9b63-bbe264ef4a8a",
+                        "standardRoomId": "1",
+                        "standardRoomName": "Basic Shared Dormitory",
+                        "name": "Basic Shared Dormitory",
+                        "description": "<p><strong>20 Twin Bunk Beds</strong></p><p>150-sq-foot soundproofed room with a balcony/patio </p><br/><p><b>Layout</b> - Bedroom </p><p><b>Internet</b> - Free WiFi 250+ Mbps (good for 3–5 people or up to 10 devices) </p><p><b>Bathroom</b> - 4 bathrooms, shower/tub combination, slippers, and towels</p><p><b>Practical</b> - Phone and wardrobe or closet</p><p><b>Comfort</b> - Fresh bed sheets (on request), fresh towels (on request), and air conditioning</p><p>Non-Smoking</p>",
+                        "beds": [
+                            {
+                                "type": "BunkBed",
+                                "description": null,
+                                "count": 20
+                            }
+                        ],
+                        "smokingAllowed": false,
+                        "facilities": [
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "WiFi speed - 250+ Mbps (good for 3–5 people or up to 10 devices)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Towels provided"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Non-Smoking"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Television"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Soap"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Wireless internet access"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shampoo"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Soundproofed rooms"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Change of bed sheets (on request)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Slippers"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shower/tub combination"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Wardrobe or closet"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Daily housekeeping"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Air conditioning"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Free WiFi"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Change of towels (on request)"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Phone"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Shared bathroom"
+                            },
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Balcony or patio"
+                            }
+                        ],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/c3facf7a_edited_e236_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/da9fcf96_edited_2793_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/b68ef68a_edited_f4e4_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/3b37eda7_edited_d173_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/c3facf7a_edited_e236_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/da9fcf96_edited_2793_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/b68ef68a_edited_f4e4_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/108000000/107620000/107612800/107612742/3b37eda7_edited_d173_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": [
+                        {
+                            "amount": "152.72",
+                            "description": "Gross Profit",
+                            "isIncludedInBaseRate": false
+                        }
+                    ],
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 2,
+                            "numOfAdults": 2,
+                            "numOfChildren": 2,
+                            "childAges": [
+                                4,
+                                6
+                            ]
+                        }
+                    ],
+                    "type": "published",
+                    "baseRate": 898.20,
+                    "totalRate": 884.55,
+                    "tcsOnTotal": 0.0,
+                    "minSellingRate": 0.0,
+                    "publishedRate": 1047.90,
+                    "taxes": [
+                        {
+                            "amount": 44.91,
+                            "description": "tax_and_service_fee",
+                            "type": null
+                        }
+                    ],
+                    "fees": null,
+                    "discounts": null,
+                    "otherRateComponents": [
+                        {
+                            "amount": 61.65,
+                            "description": "PassOnCommission",
+                            "type": "PassOnCommission"
+                        },
+                        {
+                            "amount": 3.08,
+                            "description": "TdsOnCommission",
+                            "type": "TdsOnCommission"
+                        },
+                        {
+                            "amount": 89.82,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0.0,
+                    "commission": {
+                        "amount": 67.81,
+                        "description": "Agency Commission",
+                        "type": null
+                    },
+                    "dailyRates": [
+                        {
+                            "amount": 898.20,
+                            "date": "2027-01-22T00:00:00Z",
+                            "taxIncluded": false,
+                            "discount": 0.0
+                        }
+                    ],
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": true,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": [
+                        {
+                            "type": "Check-in",
+                            "text": "Check-in between 12:00 PM - anytime"
+                        },
+                        {
+                            "type": "Check-out",
+                            "text": "Check-out before 11:00 AM"
+                        },
+                        {
+                            "type": "Check-in Instruction",
+                            "text": "  Extra-person charges may apply and vary depending on property policyGovernment-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental chargesSpecial requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteedThis property only accepts cashSafety features at this property include a fire extinguisherThis property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room  "
+                        },
+                        {
+                            "type": "Special Check-in Instruction",
+                            "text": "To make arrangements for check-in please contact the property at least 24 hours before arrival using the information on the booking confirmation. Guests must contact the property in advance for check-in instructions. Front desk staff will greet guests on arrival at the property. Information provided by the property may be translated using automated translation tools."
+                        },
+                        {
+                            "type": "Optional Fee",
+                            "text": " Early check-in fee: INR 150 (subject to availability)Late check-out fee: INR 150 (subject to availability) The above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. "
+                        }
+                    ],
+                    "boardBasis": {
+                        "description": "Room Only",
+                        "type": "RoomOnly"
+                    },
+                    "offers": [
+                        {
+                            "title": "Promotion",
+                            "description": "Member’s price: 10% ",
+                            "type": null,
+                            "discountOffer": 0.0,
+                            "percentageDiscountOffer": 0,
+                            "stayOffer": null
+                        }
+                    ],
+                    "cancellationPolicies": [
+                        {
+                            "text": null,
+                            "rules": [
+                                {
+                                    "value": 0.0,
+                                    "valueType": "Nights",
+                                    "estimatedValue": 0.0,
+                                    "start": "2026-09-02T00:00:00Z",
+                                    "end": "2027-01-19T12:29:00Z"
+                                },
+                                {
+                                    "value": 1.0,
+                                    "valueType": "Nights",
+                                    "estimatedValue": 943.11,
+                                    "start": "2027-01-19T12:30:00Z",
+                                    "end": "2027-01-22T12:30:00Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "includes": [
+                        "Free valet parking",
+                        "Free WiFi",
+                        "Free self parking"
+                    ],
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": false,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 10.0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": [
+                        {
+                            "type": "RoomIdentifierKey",
+                            "text": "325226910"
+                        },
+                        {
+                            "type": "SupplierRateIdentifierKey",
+                            "text": "397070725"
+                        },
+                        {
+                            "type": "Member_Deal_Available",
+                            "text": "false"
+                        }
+                    ],
+                    "ratePerNight": 884.55
+                }
+            ],
+            "total": 1769.10,
+            "publishedRate": 2095.80,
+            "groupId": 1,
+            "isHold": true,
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false
+        }
+    ],
+    "stayPeriod": {
+        "start": "01/22/2027",
+        "end": "01/23/2027"
+    },
+    "searchId": "cf3b8d4c-6355-4483-913f-929e90c871ba.DSlVHdCViVRfi821XHvuYw",
+    "searchTracingKey": null,
+    "status": "success"
+}
