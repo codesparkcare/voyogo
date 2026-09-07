@@ -70,7 +70,7 @@ class Hotel_model extends CI_Model {
                 'sandbox_utils_url'     => 'https://b2bapiutils.benzyinfotech.com',
                 'sandbox_hotel_url'     => 'https://travelportalapi.benzyinfotech.com',
                 'sandbox_itinerary_url' => 'https://b2bapihotels.benzyinfotech.com',
-                'sandbox_booking_url'   => 'https://b2bapihotels.benzyinfotech.com',
+                'sandbox_booking_url'   => 'https://b2bapiflights.benzyinfotech.com',
                 'channel_id'            => 'b2bIndiaDeals',
                 'is_enabled'            => 1,
                 'updated_at'            => date('Y-m-d H:i:s')
@@ -83,16 +83,15 @@ class Hotel_model extends CI_Model {
                 'live_itinerary_url'    => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
                 'live_booking_url'      => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
                 'sandbox_itinerary_url' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapihotels.benzyinfotech.com'),
-                'sandbox_booking_url'   => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapihotels.benzyinfotech.com')
+                'sandbox_booking_url'   => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapiflights.benzyinfotech.com')
             );
             foreach ($new_settings_cols as $col => $col_def) {
                 if (!in_array($col, $existing_settings_cols)) {
                     $this->dbforge->add_column('hotel_api_settings', array($col => $col_def));
                 }
             }
-            // If sandbox_booking_url was pointing to flights host, heal it to hotels host
-            $this->db->where('sandbox_booking_url', 'https://b2bapiflights.benzyinfotech.com');
-            $this->db->update('hotel_api_settings', array('sandbox_booking_url' => 'https://b2bapihotels.benzyinfotech.com'));
+            // Auto-heal sandbox_booking_url to confirmed test URL: https://b2bapiflights.benzyinfotech.com
+            $this->db->update('hotel_api_settings', array('sandbox_booking_url' => 'https://b2bapiflights.benzyinfotech.com'));
         }
 
         // 2. hotel_bookings table (Self-Healing Table & Missing Column Migration)
