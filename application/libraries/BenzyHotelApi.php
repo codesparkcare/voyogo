@@ -747,25 +747,27 @@ class BenzyHotelApi {
     }
 
     // =========================================================================
-    // 9. RETRIEVE BOOKING ({HotelBookingURL}/Booking/RetrieveBooking)
+    // 9. RETRIEVE BOOKING ({HotelBookingURL}/Utils/RetrieveBooking - PDF Page 44)
     // =========================================================================
     public function retrieveBooking($transactionId, $tui = null) {
         $token = $this->generateToken();
-        $url = $this->bookingUrl . '/Booking/RetrieveBooking';
+        $tokenDetails = $this->getTokenDetails();
+        $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'FVI6V120g22Ei5ztGK0FIQ==');
+        $url = $this->bookingUrl . '/Utils/RetrieveBooking';
 
         $payload = array(
             'TUI'             => $tui,
             'ReferenceType'   => 'T',
             'ReferenceNumber' => (string)$transactionId,
             'ServiceType'     => 'HTL',
-            'ClientID'        => $this->credentials['ClientID'] ?? 'VoyogoClient',
+            'ClientID'        => $clientId,
             'RequestMode'     => 'RB',
             'Contact'         => null,
             'Name'            => null
         );
 
         $res = $this->makeRequest('RetrieveBooking', $url, $payload, 'POST', $token);
-        if ($res['http_code'] !== 200) {
+        if ($res['http_code'] !== 200 || empty($res['json']['BookingStatus'])) {
             $altUrl = $this->utilsUrl . '/Utils/RetrieveBooking';
             $res = $this->makeRequest('RetrieveBooking_Alt', $altUrl, $payload, 'POST', $token);
         }
@@ -773,11 +775,11 @@ class BenzyHotelApi {
     }
 
     // =========================================================================
-    // 10. CANCEL BOOKING ({HotelBookingURL}/Booking/Cancel)
+    // 10. CANCEL BOOKING ({HotelItineraryURL}/Hotel/CancelHotelBooking - PDF Page 51)
     // =========================================================================
     public function cancelBooking($transactionId, $tui = null, $yearType = '19', $remarks = 'Customer Request') {
         $token = $this->generateToken();
-        $url = $this->bookingUrl . '/Booking/Cancel';
+        $url = $this->itineraryUrl . '/Hotel/CancelHotelBooking';
 
         $payload = array(
             'Remarks'       => $remarks,
@@ -788,10 +790,9 @@ class BenzyHotelApi {
 
         $res = $this->makeRequest('CancelHotelBooking', $url, $payload, 'POST', $token);
         if ($res['http_code'] !== 200) {
-            $altUrl = $this->itineraryUrl . '/Hotel/Cancel';
-            $res = $this->makeRequest('Cancel_Alt', $altUrl, $payload, 'POST', $token);
+            $altUrl = $this->bookingUrl . '/Hotel/CancelHotelBooking';
+            $res = $this->makeRequest('CancelHotelBooking_Alt', $altUrl, $payload, 'POST', $token);
         }
-
         return $res;
     }
 
