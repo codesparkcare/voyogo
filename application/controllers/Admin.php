@@ -606,25 +606,29 @@ class Admin extends CI_Controller {
 
         if ($this->input->post('action') === 'save') {
             $saveData = array(
-                'environment'         => $this->input->post('environment') ?: 'live',
-                'live_client_id'      => trim($this->input->post('live_client_id')),
-                'live_password'       => trim($this->input->post('live_password')),
-                'live_merchant_id'    => trim($this->input->post('live_merchant_id')),
-                'live_api_key'        => trim($this->input->post('live_api_key')),
-                'live_browser_key'    => trim($this->input->post('live_browser_key')),
-                'live_agent_code'     => trim($this->input->post('live_agent_code')),
-                'live_utils_url'      => trim($this->input->post('live_utils_url')),
-                'live_hotel_url'      => trim($this->input->post('live_hotel_url')),
-                'sandbox_client_id'   => trim($this->input->post('sandbox_client_id')),
-                'sandbox_password'    => trim($this->input->post('sandbox_password')),
-                'sandbox_merchant_id' => trim($this->input->post('sandbox_merchant_id')),
-                'sandbox_api_key'     => trim($this->input->post('sandbox_api_key')),
-                'sandbox_browser_key' => trim($this->input->post('sandbox_browser_key')),
-                'sandbox_agent_code'  => trim($this->input->post('sandbox_agent_code')),
-                'sandbox_utils_url'   => trim($this->input->post('sandbox_utils_url')),
-                'sandbox_hotel_url'   => trim($this->input->post('sandbox_hotel_url')),
-                'channel_id'          => trim($this->input->post('channel_id')) ?: 'b2bIndiaDeals',
-                'is_enabled'          => $this->input->post('is_enabled') ? 1 : 0
+                'environment'           => $this->input->post('environment') ?: 'live',
+                'live_client_id'        => trim($this->input->post('live_client_id')),
+                'live_password'         => trim($this->input->post('live_password')),
+                'live_merchant_id'      => trim($this->input->post('live_merchant_id')),
+                'live_api_key'          => trim($this->input->post('live_api_key')),
+                'live_browser_key'      => trim($this->input->post('live_browser_key')),
+                'live_agent_code'       => trim($this->input->post('live_agent_code')),
+                'live_utils_url'        => trim($this->input->post('live_utils_url')),
+                'live_hotel_url'        => trim($this->input->post('live_hotel_url')),
+                'live_itinerary_url'    => trim($this->input->post('live_itinerary_url')),
+                'live_booking_url'      => trim($this->input->post('live_booking_url')),
+                'sandbox_client_id'     => trim($this->input->post('sandbox_client_id')),
+                'sandbox_password'      => trim($this->input->post('sandbox_password')),
+                'sandbox_merchant_id'   => trim($this->input->post('sandbox_merchant_id')),
+                'sandbox_api_key'       => trim($this->input->post('sandbox_api_key')),
+                'sandbox_browser_key'   => trim($this->input->post('sandbox_browser_key')),
+                'sandbox_agent_code'    => trim($this->input->post('sandbox_agent_code')),
+                'sandbox_utils_url'     => trim($this->input->post('sandbox_utils_url')),
+                'sandbox_hotel_url'     => trim($this->input->post('sandbox_hotel_url')),
+                'sandbox_itinerary_url' => trim($this->input->post('sandbox_itinerary_url')),
+                'sandbox_booking_url'   => trim($this->input->post('sandbox_booking_url')),
+                'channel_id'            => trim($this->input->post('channel_id')) ?: 'b2bIndiaDeals',
+                'is_enabled'            => $this->input->post('is_enabled') ? 1 : 0
             );
 
             $this->Hotel_model->save_hotel_api_settings($saveData);

@@ -11,8 +11,12 @@ class BenzyHotelApi {
     protected $environment = 'live'; // 'live' or 'sandbox'
     protected $credentials = array();
     protected $utilsUrl = '';
-    protected $hotelUrl = '';
+    protected $searchUrl = '';
+    protected $itineraryUrl = '';
+    protected $bookingUrl = '';
+    protected $hotelUrl = ''; // backward compatibility alias
     protected $channelId = 'b2bIndiaDeals';
+    protected $tokenDetails = array();
 
     public function __construct() {
         $this->CI =& get_instance();
@@ -38,8 +42,11 @@ class BenzyHotelApi {
                 'AgentCode'  => $settings['live_agent_code'] ?? ' ',
                 'BrowserKey' => $settings['live_browser_key'] ?? '069ab7973ac12116ccc1802546ad52bf'
             );
-            $this->utilsUrl = rtrim($settings['live_utils_url'] ?? 'https://apiutilsagents.akbartravelsonline.com', '/');
-            $this->hotelUrl = rtrim($settings['live_hotel_url'] ?? 'https://apiagents.akbartravelsonline.com', '/');
+            $this->utilsUrl     = rtrim($settings['live_utils_url'] ?? 'https://apiutilsagents.akbartravelsonline.com', '/');
+            $this->searchUrl    = rtrim($settings['live_hotel_url'] ?? 'https://apiagents.akbartravelsonline.com', '/');
+            $this->itineraryUrl = rtrim($settings['live_itinerary_url'] ?? 'https://apiagents.akbartravelsonline.com', '/');
+            $this->bookingUrl   = rtrim($settings['live_booking_url'] ?? 'https://apiagents.akbartravelsonline.com', '/');
+            $this->hotelUrl     = $this->searchUrl;
         } else {
             $this->credentials = array(
                 'MerchantID' => $settings['sandbox_merchant_id'] ?? '300',
@@ -49,8 +56,16 @@ class BenzyHotelApi {
                 'AgentCode'  => $settings['sandbox_agent_code'] ?? ' ',
                 'BrowserKey' => $settings['sandbox_browser_key'] ?? 'caecd3cd30225512c1811070dce615c1'
             );
-            $this->utilsUrl = rtrim($settings['sandbox_utils_url'] ?? 'https://b2bapiutils.benzyinfotech.com', '/');
-            $this->hotelUrl = rtrim($settings['sandbox_hotel_url'] ?? 'https://travelportalapi.benzyinfotech.com', '/');
+            // Official Test URLs confirmed by Benzy Infotech:
+            // {HotelUtilsURL}: https://b2bapiutils.benzyinfotech.com/
+            // {HotelSearchURL}: https://travelportalapi.benzyinfotech.com/
+            // {HotelItineraryURL}: https://b2bapihotels.benzyinfotech.com/
+            // {HotelBookingURL}: https://b2bapiflights.benzyinfotech.com/
+            $this->utilsUrl     = rtrim($settings['sandbox_utils_url'] ?? 'https://b2bapiutils.benzyinfotech.com', '/');
+            $this->searchUrl    = rtrim($settings['sandbox_hotel_url'] ?? 'https://travelportalapi.benzyinfotech.com', '/');
+            $this->itineraryUrl = rtrim($settings['sandbox_itinerary_url'] ?? 'https://b2bapihotels.benzyinfotech.com', '/');
+            $this->bookingUrl   = rtrim($settings['sandbox_booking_url'] ?? 'https://b2bapiflights.benzyinfotech.com', '/');
+            $this->hotelUrl     = $this->searchUrl;
         }
     }
 
@@ -514,14 +529,15 @@ class BenzyHotelApi {
     }
 
     // =========================================================================
-    // 7. CREATE ITINERARY (/Hotel/CreateItinerary)
+    // 7. CREATE ITINERARY ({HotelItineraryURL}/Hotel/CreateItinerary)
     // =========================================================================
     public function createItinerary($bookingData) {
         $token = $this->generateToken();
         $tokenDetails = $this->getTokenDetails();
         $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'VoyogoClient');
 
-        $url = $this->hotelUrl . '/Hotel/CreateItinerary';
+        // Confirmed Test URL: https://b2bapihotels.benzyinfotech.com/Hotel/CreateItinerary
+        $url = $this->itineraryUrl . '/Hotel/CreateItinerary';
 
         // Format compliant B2B WRC payload (PDF Page 39-40)
         $tui = $bookingData['TUI'] ?? ($bookingData['searchTracingKey'] ?? ('TUI-' . uniqid()));
@@ -622,7 +638,7 @@ class BenzyHotelApi {
         $res = $this->makeRequest('CreateItinerary', $url, $payload, 'POST', $token, $customHeaders);
 
         if ($res['http_code'] !== 200 || empty($res['json']['TransactionID'])) {
-            $altUrl = $this->utilsUrl . '/Hotel/CreateItinerary';
+            $altUrl = $this->itineraryUrl . '/api/hotels/createitinerary';
             $res = $this->makeRequest('CreateItinerary_Alt', $altUrl, $payload, 'POST', $token, $customHeaders);
         }
 
@@ -644,14 +660,15 @@ class BenzyHotelApi {
     }
 
     // =========================================================================
-    // 8. START PAY & BOOKING (/Payment/StartPay or /Hotel/StartPay)
+    // 8. START PAY & BOOKING ({HotelBookingURL}/Payment/StartPay)
     // =========================================================================
     public function startPay($transactionId, $amount, $tui = null) {
         $token = $this->generateToken();
         $tokenDetails = $this->getTokenDetails();
         $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'VoyogoClient');
 
-        $url = $this->hotelUrl . '/Payment/StartPay';
+        // Confirmed Test URL: https://b2bapiflights.benzyinfotech.com/Payment/StartPay
+        $url = $this->bookingUrl . '/Payment/StartPay';
 
         $payload = array(
             'SID'                 => null,
@@ -683,7 +700,7 @@ class BenzyHotelApi {
         $res = $this->makeRequest('StartPay', $url, $payload, 'POST', $token, $customHeaders);
 
         if ($res['http_code'] !== 200 || empty($res['json']['BookStatus'])) {
-            $altUrl = $this->utilsUrl . '/Payment/StartPay';
+            $altUrl = $this->itineraryUrl . '/Payment/StartPay';
             $res = $this->makeRequest('StartPay_Alt', $altUrl, $payload, 'POST', $token, $customHeaders);
         }
 
@@ -703,11 +720,11 @@ class BenzyHotelApi {
     }
 
     // =========================================================================
-    // 9. RETRIEVE BOOKING (/Utils/RetrieveBooking)
+    // 9. RETRIEVE BOOKING ({HotelBookingURL}/Booking/RetrieveBooking)
     // =========================================================================
     public function retrieveBooking($transactionId, $tui = null) {
         $token = $this->generateToken();
-        $url = $this->hotelUrl . '/Utils/RetrieveBooking';
+        $url = $this->bookingUrl . '/Booking/RetrieveBooking';
 
         $payload = array(
             'TUI'             => $tui,
@@ -720,15 +737,20 @@ class BenzyHotelApi {
             'Name'            => null
         );
 
-        return $this->makeRequest('RetrieveBooking', $url, $payload, 'POST', $token);
+        $res = $this->makeRequest('RetrieveBooking', $url, $payload, 'POST', $token);
+        if ($res['http_code'] !== 200) {
+            $altUrl = $this->utilsUrl . '/Utils/RetrieveBooking';
+            $res = $this->makeRequest('RetrieveBooking_Alt', $altUrl, $payload, 'POST', $token);
+        }
+        return $res;
     }
 
     // =========================================================================
-    // 10. CANCEL BOOKING (/Hotel/CancelHotelBooking)
+    // 10. CANCEL BOOKING ({HotelBookingURL}/Booking/Cancel)
     // =========================================================================
     public function cancelBooking($transactionId, $tui = null, $yearType = '19', $remarks = 'Customer Request') {
         $token = $this->generateToken();
-        $url = $this->hotelUrl . '/Hotel/CancelHotelBooking';
+        $url = $this->bookingUrl . '/Booking/Cancel';
 
         $payload = array(
             'Remarks'       => $remarks,
@@ -739,7 +761,7 @@ class BenzyHotelApi {
 
         $res = $this->makeRequest('CancelHotelBooking', $url, $payload, 'POST', $token);
         if ($res['http_code'] !== 200) {
-            $altUrl = $this->hotelUrl . '/Hotel/Cancel';
+            $altUrl = $this->itineraryUrl . '/Hotel/Cancel';
             $res = $this->makeRequest('Cancel_Alt', $altUrl, $payload, 'POST', $token);
         }
 
@@ -751,7 +773,7 @@ class BenzyHotelApi {
     // =========================================================================
     public function getFilterData($searchId) {
         $token = $this->generateToken();
-        $url = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/filterdata';
+        $url = $this->searchUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/filterdata';
         $res = $this->makeRequest('FilterData', $url, array(), 'GET', $token);
         if ($res['http_code'] === 200 && !empty($res['json'])) {
             return $res['json'];
@@ -764,8 +786,21 @@ class BenzyHotelApi {
     // =========================================================================
     public function getPricingContent($searchId, $hotelId, $priceProvider) {
         $token = $this->generateToken();
-        $url = $this->hotelUrl . '/api/hotels/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/content?priceProvider=' . urlencode($priceProvider);
+        $url = $this->searchUrl . '/api/hotels/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/content?priceProvider=' . urlencode($priceProvider);
         $res = $this->makeRequest('PricingContent', $url, array(), 'GET', $token);
+        if ($res['http_code'] === 200 && !empty($res['json'])) {
+            return $res['json'];
+        }
+        return false;
+    }
+
+    // =========================================================================
+    // 13. MORE ROOMS CONTENT (/api/hotels/content/{hotelId}/rooms)
+    // =========================================================================
+    public function getMoreRoomsContent($hotelId) {
+        $token = $this->generateToken();
+        $url = $this->searchUrl . '/api/hotels/content/' . urlencode($hotelId) . '/rooms';
+        $res = $this->makeRequest('MoreRoomsContent', $url, array(), 'GET', $token);
         if ($res['http_code'] === 200 && !empty($res['json'])) {
             return $res['json'];
         }

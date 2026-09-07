@@ -101,11 +101,19 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small fw-bold text-secondary">Live Utils URL (Auth / Signature)</label>
-                                    <input type="text" name="live_utils_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_utils_url']); ?>" placeholder="https://apiutilsagents.akbartravelsonline.com">
+                                    <input type="text" name="live_utils_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_utils_url'] ?? 'https://apiutilsagents.akbartravelsonline.com'); ?>" placeholder="https://apiutilsagents.akbartravelsonline.com">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-bold text-secondary">Live Hotel API Base URL</label>
-                                    <input type="text" name="live_hotel_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_hotel_url']); ?>" placeholder="https://apiagents.akbartravelsonline.com">
+                                    <label class="form-label small fw-bold text-secondary">Live Hotel Search URL</label>
+                                    <input type="text" name="live_hotel_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_hotel_url'] ?? 'https://apiagents.akbartravelsonline.com'); ?>" placeholder="https://apiagents.akbartravelsonline.com">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-secondary">Live Hotel Itinerary URL</label>
+                                    <input type="text" name="live_itinerary_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_itinerary_url'] ?? 'https://apiagents.akbartravelsonline.com'); ?>" placeholder="https://apiagents.akbartravelsonline.com">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-secondary">Live Hotel Booking & Payment URL</label>
+                                    <input type="text" name="live_booking_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_booking_url'] ?? 'https://apiagents.akbartravelsonline.com'); ?>" placeholder="https://apiagents.akbartravelsonline.com">
                                 </div>
                             </div>
                         </div>
@@ -141,12 +149,20 @@
                                     <input type="text" name="sandbox_browser_key" class="form-control font-monospace small" value="<?php echo htmlspecialchars($settings['sandbox_browser_key']); ?>" placeholder="caecd3cd30225512c1811070dce615c1">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-bold text-secondary">Sandbox Utils URL</label>
-                                    <input type="text" name="sandbox_utils_url" class="form-control" value="<?php echo htmlspecialchars($settings['sandbox_utils_url']); ?>" placeholder="https://b2bapiutils.benzyinfotech.com">
+                                    <label class="form-label small fw-bold text-secondary">Sandbox Utils URL ({HotelUtilsURL})</label>
+                                    <input type="text" name="sandbox_utils_url" class="form-control" value="<?php echo htmlspecialchars($settings['sandbox_utils_url'] ?? 'https://b2bapiutils.benzyinfotech.com'); ?>" placeholder="https://b2bapiutils.benzyinfotech.com">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-bold text-secondary">Sandbox Hotel API Base URL</label>
-                                    <input type="text" name="sandbox_hotel_url" class="form-control" value="<?php echo htmlspecialchars($settings['sandbox_hotel_url']); ?>" placeholder="https://travelportalapi.benzyinfotech.com">
+                                    <label class="form-label small fw-bold text-secondary">Sandbox Hotel Search URL ({HotelSearchURL})</label>
+                                    <input type="text" name="sandbox_hotel_url" class="form-control" value="<?php echo htmlspecialchars($settings['sandbox_hotel_url'] ?? 'https://travelportalapi.benzyinfotech.com'); ?>" placeholder="https://travelportalapi.benzyinfotech.com">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-secondary">Sandbox Itinerary URL ({HotelItineraryURL})</label>
+                                    <input type="text" name="sandbox_itinerary_url" class="form-control" value="<?php echo htmlspecialchars($settings['sandbox_itinerary_url'] ?? 'https://b2bapihotels.benzyinfotech.com'); ?>" placeholder="https://b2bapihotels.benzyinfotech.com">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-secondary">Sandbox Booking & Payment URL ({HotelBookingURL})</label>
+                                    <input type="text" name="sandbox_booking_url" class="form-control" value="<?php echo htmlspecialchars($settings['sandbox_booking_url'] ?? 'https://b2bapiflights.benzyinfotech.com'); ?>" placeholder="https://b2bapiflights.benzyinfotech.com">
                                 </div>
                             </div>
                         </div>

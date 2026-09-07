@@ -26,48 +26,70 @@ class Hotel_model extends CI_Model {
                 'live_api_key'        => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => '069ab7973ac12116ccc1802546ad52bf'),
                 'live_browser_key'    => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => '069ab7973ac12116ccc1802546ad52bf'),
                 'live_agent_code'     => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ' '),
-                'live_utils_url'      => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiutilsagents.akbartravelsonline.com'),
-                'live_hotel_url'      => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
-                'sandbox_client_id'   => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'bitest'),
-                'sandbox_password'    => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'staging@1'),
-                'sandbox_merchant_id' => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => '300'),
-                'sandbox_api_key'     => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'kXAY9yHARK'),
-                'sandbox_browser_key' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'caecd3cd30225512c1811070dce615c1'),
-                'sandbox_agent_code'  => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ' '),
-                'sandbox_utils_url'   => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapiutils.benzyinfotech.com'),
-                'sandbox_hotel_url'   => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://travelportalapi.benzyinfotech.com'),
-                'channel_id'          => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'b2bIndiaDeals'),
-                'is_enabled'          => array('type' => 'TINYINT', 'constraint' => 1, 'default' => 1),
-                'updated_at'          => array('type' => 'DATETIME', 'null' => TRUE)
+                'live_utils_url'        => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiutilsagents.akbartravelsonline.com'),
+                'live_hotel_url'        => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
+                'live_itinerary_url'    => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
+                'live_booking_url'      => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
+                'sandbox_client_id'     => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'bitest'),
+                'sandbox_password'      => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'staging@1'),
+                'sandbox_merchant_id'   => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => '300'),
+                'sandbox_api_key'       => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'kXAY9yHARK'),
+                'sandbox_browser_key'   => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'caecd3cd30225512c1811070dce615c1'),
+                'sandbox_agent_code'    => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ' '),
+                'sandbox_utils_url'     => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapiutils.benzyinfotech.com'),
+                'sandbox_hotel_url'     => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://travelportalapi.benzyinfotech.com'),
+                'sandbox_itinerary_url' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapihotels.benzyinfotech.com'),
+                'sandbox_booking_url'   => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapiflights.benzyinfotech.com'),
+                'channel_id'            => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'b2bIndiaDeals'),
+                'is_enabled'            => array('type' => 'TINYINT', 'constraint' => 1, 'default' => 1),
+                'updated_at'            => array('type' => 'DATETIME', 'null' => TRUE)
             );
             $this->dbforge->add_field($fields);
             $this->dbforge->add_key('id', TRUE);
             $this->dbforge->create_table('hotel_api_settings', TRUE);
 
             $default = array(
-                'id'                  => 1,
-                'environment'         => 'live',
-                'live_client_id'      => 'APISKYPLANETN',
-                'live_password'       => 'SUB@908#54961',
-                'live_merchant_id'    => '200',
-                'live_api_key'        => '069ab7973ac12116ccc1802546ad52bf',
-                'live_browser_key'    => '069ab7973ac12116ccc1802546ad52bf',
-                'live_agent_code'     => ' ',
-                'live_utils_url'      => 'https://apiutilsagents.akbartravelsonline.com',
-                'live_hotel_url'      => 'https://apiagents.akbartravelsonline.com',
-                'sandbox_client_id'   => 'bitest',
-                'sandbox_password'    => 'staging@1',
-                'sandbox_merchant_id' => '300',
-                'sandbox_api_key'     => 'kXAY9yHARK',
-                'sandbox_browser_key' => 'caecd3cd30225512c1811070dce615c1',
-                'sandbox_agent_code'  => ' ',
-                'sandbox_utils_url'   => 'https://b2bapiutils.benzyinfotech.com',
-                'sandbox_hotel_url'   => 'https://travelportalapi.benzyinfotech.com',
-                'channel_id'          => 'b2bIndiaDeals',
-                'is_enabled'          => 1,
-                'updated_at'          => date('Y-m-d H:i:s')
+                'id'                    => 1,
+                'environment'           => 'live',
+                'live_client_id'        => 'APISKYPLANETN',
+                'live_password'         => 'SUB@908#54961',
+                'live_merchant_id'      => '200',
+                'live_api_key'          => '069ab7973ac12116ccc1802546ad52bf',
+                'live_browser_key'      => '069ab7973ac12116ccc1802546ad52bf',
+                'live_agent_code'       => ' ',
+                'live_utils_url'        => 'https://apiutilsagents.akbartravelsonline.com',
+                'live_hotel_url'        => 'https://apiagents.akbartravelsonline.com',
+                'live_itinerary_url'    => 'https://apiagents.akbartravelsonline.com',
+                'live_booking_url'      => 'https://apiagents.akbartravelsonline.com',
+                'sandbox_client_id'     => 'bitest',
+                'sandbox_password'      => 'staging@1',
+                'sandbox_merchant_id'   => '300',
+                'sandbox_api_key'       => 'kXAY9yHARK',
+                'sandbox_browser_key'   => 'caecd3cd30225512c1811070dce615c1',
+                'sandbox_agent_code'    => ' ',
+                'sandbox_utils_url'     => 'https://b2bapiutils.benzyinfotech.com',
+                'sandbox_hotel_url'     => 'https://travelportalapi.benzyinfotech.com',
+                'sandbox_itinerary_url' => 'https://b2bapihotels.benzyinfotech.com',
+                'sandbox_booking_url'   => 'https://b2bapiflights.benzyinfotech.com',
+                'channel_id'            => 'b2bIndiaDeals',
+                'is_enabled'            => 1,
+                'updated_at'            => date('Y-m-d H:i:s')
             );
             $this->db->insert('hotel_api_settings', $default);
+        } else {
+            // Auto-migrate new URL columns if missing in existing hotel_api_settings table
+            $existing_settings_cols = $this->db->list_fields('hotel_api_settings');
+            $new_settings_cols = array(
+                'live_itinerary_url'    => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
+                'live_booking_url'      => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
+                'sandbox_itinerary_url' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapihotels.benzyinfotech.com'),
+                'sandbox_booking_url'   => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapiflights.benzyinfotech.com')
+            );
+            foreach ($new_settings_cols as $col => $col_def) {
+                if (!in_array($col, $existing_settings_cols)) {
+                    $this->dbforge->add_column('hotel_api_settings', array($col => $col_def));
+                }
+            }
         }
 
         // 2. hotel_bookings table (Self-Healing Table & Missing Column Migration)
