@@ -64,7 +64,7 @@ class BenzyHotelApi {
             $this->utilsUrl     = rtrim($settings['sandbox_utils_url'] ?? 'https://b2bapiutils.benzyinfotech.com', '/');
             $this->searchUrl    = rtrim($settings['sandbox_hotel_url'] ?? 'https://travelportalapi.benzyinfotech.com', '/');
             $this->itineraryUrl = rtrim($settings['sandbox_itinerary_url'] ?? 'https://b2bapihotels.benzyinfotech.com', '/');
-            $this->bookingUrl   = rtrim($settings['sandbox_booking_url'] ?? 'https://b2bapiflights.benzyinfotech.com', '/');
+            $this->bookingUrl   = rtrim($settings['sandbox_booking_url'] ?? 'https://b2bapihotels.benzyinfotech.com', '/');
             $this->hotelUrl     = $this->searchUrl;
         }
     }
@@ -668,8 +668,8 @@ class BenzyHotelApi {
         $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'FVI6V120g22Ei5ztGK0FIQ==');
         $browserKey = $tokenDetails['BrowserKey'] ?? ($this->credentials['BrowserKey'] ?? 'caecd3cd30225512c1811070dce615c1');
 
-        // Confirmed Endpoint from Benzy official SamplePayloads: {HotelBookingURL}/Payment/StartPay
-        $url = $this->bookingUrl . '/Payment/StartPay';
+        // Confirmed Hotel StartPay Endpoint from WRC Spec: {HotelItineraryURL}/Hotel/StartPay or /Payment/StartPay
+        $url = $this->itineraryUrl . '/Hotel/StartPay';
 
         // Exact schema from Benzy SamplePayloads_Multipax/StartPay.txt
         $payload = array(
@@ -718,12 +718,19 @@ class BenzyHotelApi {
         $customHeaders = array('search-tracing-key' => $tui);
         $res = $this->makeRequest('StartPay', $url, $payload, 'POST', $token, $customHeaders);
 
-        if ($res['http_code'] !== 200 || empty($res['json']['BookStatus'])) {
+        if ($res['http_code'] !== 200 || empty($res['json']) || (!empty($res['json']['Code']) && $res['json']['Code'] != 200 && $res['json']['Code'] != 6033)) {
             $altUrl = $this->itineraryUrl . '/Payment/StartPay';
             $res = $this->makeRequest('StartPay_Alt', $altUrl, $payload, 'POST', $token, $customHeaders);
         }
 
-        if ($res['http_code'] === 200 && !empty($res['json'])) {
+        if ($res['http_code'] !== 200 || empty($res['json']) || (!empty($res['json']['Code']) && $res['json']['Code'] != 200 && $res['json']['Code'] != 6033)) {
+            $altUrl2 = $this->bookingUrl . '/Payment/StartPay';
+            if ($altUrl2 !== $altUrl && $altUrl2 !== $url) {
+                $res = $this->makeRequest('StartPay_FlightHost', $altUrl2, $payload, 'POST', $token, $customHeaders);
+            }
+        }
+
+        if ($res['http_code'] === 200 && !empty($res['json']) && (!empty($res['json']['CRSPNR']) || !empty($res['json']['BookStatus']) || (!empty($res['json']['Code']) && $res['json']['Code'] == 200))) {
             return $res['json'];
         }
 
