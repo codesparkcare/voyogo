@@ -1,0 +1,169 @@
+EndPoint: {HotelSearchURL}/api/content/autosuggest?term=Kochi
+
+Autosuggest Response:
+
+{
+    "locations": [
+        {
+            "id": "329184",
+            "name": "Kochi",
+            "fullName": "Kochi, Kerala, India",
+            "code": null,
+            "type": "city",
+            "city": null,
+            "state": "Kerala",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 9.931233,
+                "long": 76.267304
+            }
+        },
+        {
+            "id": "333607",
+            "name": "Fort Kochi",
+            "fullName": "Fort Kochi, Kochi, Kerala, India",
+            "code": null,
+            "type": "neighborhood",
+            "city": "Kochi",
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 9.965778,
+                "long": 76.242111
+            }
+        },
+        {
+            "id": "329186",
+            "name": "Willingdon Island",
+            "fullName": "Willingdon Island, Kerala, India",
+            "code": null,
+            "type": "region",
+            "city": "Kochi",
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 9.948409,
+                "long": 76.27398
+            }
+        },
+        {
+            "id": "9915760970",
+            "name": "Kochira",
+            "fullName": "Kochira, Hua Hin, Prachuap Khiri Khan, TH",
+            "code": null,
+            "type": "hotel",
+            "city": "Hua Hin",
+            "state": "Prachuap Khiri Khan",
+            "country": "TH",
+            "score": 0,
+            "referenceId": "15760970",
+            "coordinates": {
+                "lat": 12.516627,
+                "long": 99.97618
+            }
+        },
+        {
+            "id": "9931230320",
+            "name": "OYO Home 60337 Elegant Famy Homes 2 1br",
+            "fullName": "OYO Home 60337 Elegant Famy Homes 2 1br, Kochi, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Kochi",
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": "31230320",
+            "coordinates": {
+                "lat": 10.00626,
+                "long": 76.33378
+            }
+        },
+        {
+            "id": "9916180233",
+            "name": "OYO Home 49697 Aj Apartments",
+            "fullName": "OYO Home 49697 Aj Apartments, Kochi, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Kochi",
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": "16180233",
+            "coordinates": {
+                "lat": 10.016993,
+                "long": 76.34053
+            }
+        },
+        {
+            "id": "9970520555",
+            "name": "Alankar Tourist Bunglow",
+            "fullName": "Alankar Tourist Bunglow, Kochi, Kerala, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Kochi",
+            "state": "Kerala",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "70520555",
+            "coordinates": {
+                "lat": 9.955931,
+                "long": 76.256935
+            }
+        },
+        {
+            "id": "9954102366",
+            "name": "Hotel O Chottanikkara Tourist Home",
+            "fullName": "Hotel O Chottanikkara Tourist Home, Kochi, Kerala, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Kochi",
+            "state": "Kerala",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "54102366",
+            "coordinates": {
+                "lat": 9.933091,
+                "long": 76.391136
+            }
+        },
+        {
+            "id": "9938949584",
+            "name": "OYO 35598 Elegant Stay Near Lulu Mall",
+            "fullName": "OYO 35598 Elegant Stay Near Lulu Mall, Kochi, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Kochi",
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": "38949584",
+            "coordinates": {
+                "lat": 10.027133,
+                "long": 76.30105
+            }
+        },
+        {
+            "id": "9931225546",
+            "name": "OYO  24946 Exotic",
+            "fullName": "OYO  24946 Exotic, Kochi, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Kochi",
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": "31225546",
+            "coordinates": {
+                "lat": 9.992564,
+                "long": 76.30215
+            }
+        }
+    ],
+    "status": "success"
+}

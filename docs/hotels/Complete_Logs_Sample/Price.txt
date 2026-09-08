@@ -1,0 +1,305 @@
+Endpoint: {HotelSearchURL}/api/hotels/search/836c2391-7bd7-4607-87a2-c8881094b8ab.-Cxtj0naqLlDyFCrl7WJLbfH1uruGzUHL5PCawyhjg4/15391201/price/EAN/345c206e-a806-4803-9069-2fbb54749201?roomFare=1877
+
+
+RoomFare Response:
+
+{
+    "hotelId": "15391201",
+    "roomGroup": [
+        {
+            "id": "21535fef-7f0f-4515-add2-2225376512c2",
+            "code": null,
+            "availability": 1,
+            "description": null,
+            "needsPriceCheck": true,
+            "isPackageRate": false,
+            "providerId": "20340",
+            "providerName": "EAN",
+            "isPreffered": null,
+            "room": {
+                "id": "755faa33-25fa-4284-96a4-2f5b34a29489",
+                "standardRoomId": "",
+                "standardRoomName": "AC Deluxe Double Room",
+                "name": "AC Deluxe Double Room",
+                "description": "<p><strong>2 Twin Beds</strong></p><p>Features a private patio</p><br/><p><b>Internet</b> - Free WiFi </p><p><b>Food & Drink</b> - Refrigerator, electric kettle,  free bottled water, and free tea bags/instant coffee</p><p><b>Sleep</b> - Premium bedding, blackout drapes/curtains, and bed sheets </p><p><b>Bathroom</b> - Private bathroom, shower, free toiletries, and a hair dryer</p><p><b>Practical</b> - Local maps, guidebooks, and electrical adapters/chargers</p><p><b>Comfort</b> - Air conditioning</p><p><b>Need to Know</b> - Housekeeping on request, no rollaway/extra beds available</p><p>Non-Smoking</p>",
+                "beds": [
+                    {
+                        "type": "TwinBed",
+                        "description": null,
+                        "count": 2
+                    }
+                ],
+                "smokingAllowed": false,
+                "facilities": [
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Towels provided"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Hair dryer (on request)"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Bedsheets provided"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Non-Smoking"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Local maps"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Shower only"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Premium bedding"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Electric kettle"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Guidebooks or recommendations"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Soundproofed rooms"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Patio"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Electrical adapters/chargers"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Blackout drapes/curtains"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Private bathroom"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Refrigerator"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Free toiletries"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Ceiling fan"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Hair dryer"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Air conditioning"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Free WiFi"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Free tea bags/instant coffee"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Housekeeping on request"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Bidet"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "Free bottled water"
+                    },
+                    {
+                        "id": 0,
+                        "groupId": 0,
+                        "name": "No rollaway/extra beds"
+                    }
+                ],
+                "images": null,
+                "maxGuestAllowed": null,
+                "maxAdultAllowed": null,
+                "maxChildrenAllowed": null,
+                "area": null,
+                "views": null,
+                "type": null
+            },
+            "otherProviderRates": [
+                {
+                    "amount": "266.05",
+                    "description": "Gross Profit",
+                    "isIncludedInBaseRate": false
+                }
+            ],
+            "roomCount": 1,
+            "occupancies": [
+                {
+                    "occupancyId": 1,
+                    "numOfAdults": 1,
+                    "numOfChildren": 0,
+                    "childAges": null
+                }
+            ],
+            "type": "published",
+            "baseRate": 1900.00,
+            "totalRate": 1876.87,
+            "tcsOnTotal": 0.0,
+            "minSellingRate": 0.0,
+            "publishedRate": 0.0,
+            "taxes": [
+                {
+                    "amount": 95.00,
+                    "description": "tax_and_service_fee",
+                    "type": null
+                }
+            ],
+            "fees": null,
+            "discounts": null,
+            "otherRateComponents": [
+                {
+                    "amount": 118.13,
+                    "description": "PassOnCommission",
+                    "type": "PassOnCommission"
+                }
+            ],
+            "hotelServiceCharge": 0.0,
+            "commission": {
+                "amount": 118.13,
+                "description": "Agency Commission",
+                "type": null
+            },
+            "dailyRates": [
+                {
+                    "amount": 1900.00,
+                    "date": "2027-06-18T00:00:00Z",
+                    "taxIncluded": false,
+                    "discount": 0.0
+                }
+            ],
+            "pointEquivalent": 0,
+            "refundability": "NonRefundable",
+            "refundable": false,
+            "allGuestsInfoRequired": true,
+            "onlineCancellable": false,
+            "specialRequestSupported": true,
+            "payAtHotel": false,
+            "cardRequired": false,
+            "policies": [
+                {
+                    "type": "Check-in",
+                    "text": "Check-in between 12:00 PM - anytime"
+                },
+                {
+                    "type": "Check-out",
+                    "text": "Check-out before 11:00 AM"
+                },
+                {
+                    "type": "Check-in Instruction",
+                    "text": "  Extra-person charges may apply and vary depending on property policyGovernment-issued photo identification and a cash deposit may be required at check-in for incidental chargesSpecial requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteedThis property accepts cashSafety features at this property include a fire extinguisherThis property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room  "
+                },
+                {
+                    "type": "Special Check-in Instruction",
+                    "text": "This property offers transfers from the airport and train station (surcharges may apply). To arrange pick-up, guests must contact the property 72 hours prior to arrival, using the contact information on the booking confirmation. The front desk is open daily from 6:30 AM - 10:30 PM. The front desk is staffed during limited hours. Information provided by the property may be translated using automated translation tools."
+                },
+                {
+                    "type": "Know Before You Go",
+                    "text": "   One child 4 years old or younger stays free when occupying the parent or guardian's room, using existing bedding. No pets and no service animals are allowed at this property.  "
+                },
+                {
+                    "type": "Optional Fee",
+                    "text": " Fee for buffet breakfast: approximately INR 350 for adults and INR 350 for childrenAirport shuttle fee: INR 1500 per vehicle (one way)A kitchen/kitchenette is available for an additional fee The above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. "
+                }
+            ],
+            "boardBasis": {
+                "description": "Room Only",
+                "type": "RoomOnly"
+            },
+            "offers": [],
+            "cancellationPolicies": null,
+            "includes": [
+                "Free WiFi",
+                "Free self parking"
+            ],
+            "additionalCharges": null,
+            "depositRequired": false,
+            "gstAllowed": false,
+            "depositAmount": null,
+            "guaranteeRequired": false,
+            "gstOnCommission": 0.0,
+            "bookNowPayLaterDate": null,
+            "conversionRate": null,
+            "travelType": "D",
+            "additionalInformation": [
+                {
+                    "type": "RoomIdentifierKey",
+                    "text": "315981659"
+                },
+                {
+                    "type": "SupplierRateIdentifierKey",
+                    "text": "389991079"
+                },
+                {
+                    "type": "Member_Deal_Available",
+                    "text": "false"
+                }
+            ],
+            "ratePerNight": 0.0
+        }
+    ],
+    "priceId": "39f728d9-fde0-421c-b37e-f1326de8cd0c",
+    "isPotentialSuspect": false,
+    "suspectCategory": null,
+    "stayPeriod": {
+        "start": "06/18/2027 12:00:00 AM",
+        "end": "06/19/2027 12:00:00 AM"
+    },
+    "priceInfo": null,
+    "agentCode": null,
+    "ishold": false,
+    "holdreleasedate": null,
+    "mappings": [],
+    "isGSTInvoiceAvailable": false,
+    "isPANRequired": false,
+    "status": "success"
+}

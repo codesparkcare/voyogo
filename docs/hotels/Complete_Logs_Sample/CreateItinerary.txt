@@ -1,0 +1,113 @@
+EndPoint:{HotelItineraryURL}/Hotel/CreateItinerary
+
+CreateItinerary Request:
+
+{
+    "TUI": "c09d186d-bac5-499d-be00-18547775b7d5",
+    "ServiceEnquiry": "",
+    "ContactInfo": {
+        "Title": "Mr",
+        "FName": "TEST",
+        "LName": "T",
+        "Mobile": "8123456780",
+        "Email": "test@gmail.com",
+        "Address": "test",
+        "State": "Kerala",
+        "City": "Kochi",
+        "PIN": "",
+        "GSTCompanyName": "",
+        "GSTTIN": "",
+        "GSTMobile": "",
+        "GSTEmail": "",
+        "UpdateProfile": true,
+        "IsGuest": false,
+        "CountryCode": "IN",
+        "MobileCountryCode": "+91",
+        "NetAmount": "",
+        "DestMobCountryCode": "",
+        "DestMob": ""
+    },
+    "Auxiliaries": [
+        {
+            "Code": "PROMO",
+            "Parameters": [
+                {
+                    "Type": "Code",
+                    "Value": ""
+                },
+                {
+                    "Type": "ID",
+                    "Value": ""
+                },
+                {
+                    "Type": "Amount",
+                    "Value": ""
+                }
+            ]
+        },
+        {
+            "Code": "CUSTOMER DETAILS",
+            "parameters": [
+                {
+                    "Type": "Nationality",
+                    "Value": "IN"
+                },
+                {
+                    "Type": "Country of Residence",
+                    "Value": "IN"
+                }
+            ]
+        }
+    ],
+    "Rooms": [
+        {
+            "RoomId": "755faa33-25fa-4284-96a4-2f5b34a29489",
+            "GuestCode": "|1|1:A:25|",
+            "SupplierName": "EAN",
+            "RoomGroupId": "21535fef-7f0f-4515-add2-2225376512c2",
+            "Guests": [
+                {
+                    "GuestID": "0",
+                    "Operation": "",
+                    "Title": "Mr",
+                    "FirstName": "TEST",
+                    "MiddleName": "",
+                    "LastName": "T",
+                    "MobileNo": "",
+                    "PaxType": "A",
+                    "Age": "",
+                    "Email": "",
+                    "Pan": "",
+                    "CorporateVerifcation": "",
+                    "ProfileType": "T",
+                    "EmployeeId": "",
+                    "corporateCompanyID": ""
+                }
+            ]
+        }
+    ],
+    "NetAmount": "1877",
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "DeviceID": "",
+    "AppVersion": "",
+    "SearchId": "836c2391-7bd7-4607-87a2-c8881094b8ab.-Cxtj0naqLlDyFCrl7WJLbfH1uruGzUHL5PCawyhjg4",
+    "RecommendationId": "345c206e-a806-4803-9069-2fbb54749201",
+    "LocationName": null,
+    "HotelCode": "15391201",
+    "CheckInDate": "2027-06-18",
+    "CheckOutDate": "2027-06-19",
+    "TravelingFor": "NTF"
+}
+
+CreateItinerary Response:
+
+{
+    "TUI": "c09d186d-bac5-499d-be00-18547775b7d5|1fa0d3e4-0903-4fbe-adc5-4baa7b14615d|20260729144923",
+    "TransactionID": 260139183,
+    "NetAmount": 1876.87,
+    "priceInfo": null,
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ]
+}

@@ -1,0 +1,31 @@
+Endpoint: {HotelUtilsURL}/Utils/Signature
+
+Signature Request:
+{
+    "MerchantID": "300",
+    "ApiKey": "kXAY9yHARK",
+    "ClientID": "bitest",
+    "Password": "BOVcFQ5H7GK87b471MkRu+zpN2GcI05SCsLwIPTMJbE=",
+    "AgentCode": "",
+    "BrowserKey": "9be2f50c64201722c68683e179f5b870",
+    "Key": "eecf-3ab7-43e8-bca4-941c60a10949",
+    "IsMasked": true
+}
+
+
+Response:
+
+{
+    "TUI": "55505962-7569-48b3-a380-c2083a707cb0|ddaa4f62-fc84-4a69-b7e4-6275c801f5f7|20260729141729",
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZkl4ZlZFVmk2MStPUT09IiwicHdkIjoiTDJFdDRHL1hxNGxMWEFHeENzNkRIdz09IiwiYWdlbnRDb2RlIjoiL0tmZFl3ZXNxUHc9IiwiY2xpZW50SWQiOiIyZnpYRWtNeFZEVT0iLCJSb2xlSWQiOiIwIiwiQXNzb2NpYXRlZENvbXBhbnkiOiIxIiwiSUJvc3NEQnByZWZpeCI6IktGVlArZXJyNXRBPSIsIkVtYWlsIjoiR3NjTGk1NjFuVlBZaHZBMy9LRFluUFVJdlN6aTVGRVgiLCJBc3NWaXJ0dWFsR3JwSUQiOiIwIiwiQ2xpZW50QWNjVHlwZSI6IkdFTiIsIkNvbXBhbnlUeXBlIjoiUyIsIkVtcExvZ2luSUQiOiIyZnpYRWtNeFZEVT0iLCJWZXJzaW9uIjoibC9SczdlVHBSTnc9IiwiQnJvd3NlcktleSI6InlnVTE1Y0o2ZzNVRjNHY3dOYjRMMXREUnN2dVE2OUI5V1JSaW1JMXdjazlkRG93TEd5VXNPZz09IiwibmJmIjoxNzg1MzE0ODQ5LCJleHAiOjE3OTM5NTQ4NDksImlhdCI6MTc4NTMxNDg0OSwiaXNzIjoid2ViY29ubmVjdCIsImF1ZCI6ImNsaWVudCJ9.0mkcVoyZfdCdJqcvwhOpZ0lz1yJN5schCEudD0TncpM",
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "LastLoginDate": "7/29/2026 2:16:53 PM",
+    "Password": "L2Et4G/Xq4lLXAGxCs6DHw==",
+    "loginAttempts": 0,
+    "UserType": "",
+    "LoginCount": 0,
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ]
+}

@@ -1,0 +1,590 @@
+Endpoint: {HotelBookingURL}/Utils/RetrieveBooking
+
+RetrevieBooking Request:
+
+{
+    "ReferenceType": "T",
+    "TUI": "c09d186d-bac5-499d-be00-18547775b7d5|1fa0d3e4-0903-4fbe-adc5-4baa7b14615d|20260729144923",
+    "ReferenceNumber": "260139183",
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
+}
+
+
+
+RetreiveBooking Response:
+
+{
+    "EncryptionKey": "K2RGNklNVnZySkZXbTF3Y245NHB4UT09",
+    "TUI": "c09d186d-bac5-499d-be00-18547775b7d5|01ba07b8-b239-4ff2-ac28-838563b02f8d|20260729150632",
+    "TransactionId": 260139183,
+    "ServiceType": "HTL",
+    "BookingConfirmationId": "",
+    "BookNowPayLaterDate": "2026-07-29",
+    "BookingStatus": "I8",
+    "HoldBooking": false,
+    "CurrentStatus": "I8",
+    "CheckInDate": "2027-06-18",
+    "CheckOutDate": "2027-06-19",
+    "CheckInTime": "12:00 PM",
+    "CheckOutTime": "11:00 AM",
+    "FinYearID": "19",
+    "HotelConfirmationNumber": "",
+    "BookingConfirmedByUser": "",
+    "HoldEnabled": false,
+    "DRefNo": "",
+    "OfflineAgentCode": "",
+    "ItineraryType": "Normal",
+    "GrossFare": 1995.00,
+    "NetFare": 1876.87,
+    "PaymentType": "",
+    "PaymentStatus": "I8",
+    "PaymentMode": "",
+    "Nationality": "IN",
+    "CountryOfResidence": "IN",
+    "IssuedDate": "2026-07-29 02:49:27 PM",
+    "IsBadlyMapped": "False",
+    "SuspectCategory": "",
+    "TravelingFor": "",
+    "GateWayCode": "",
+    "GateWayCharge": 0.00,
+    "IsBilled": false,
+    "CancellationID": 0,
+    "PaxCount": 1,
+    "InvoiceDate": "29-07-2026",
+    "ExchangeRate": 0.0,
+    "CorporateDefaultCurrency": "",
+    "HotelInfo": {
+        "Code": "15391201",
+        "Name": "Reds Residency - Homestay",
+        "heroimage": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h559x0y96-4334f74c_z.jpg",
+        "Latitude": "9.954002",
+        "Longitude": "76.2411",
+        "LocationName": "",
+        "Distance": 0.00,
+        "AllowedCreditCards": "",
+        "AllowedCountries": "",
+        "SpecialRequestSupported": "False",
+        "LeadPaxInfoRequired": "False",
+        "IsCardRequired": "False",
+        "GuaranteeRequired": "False",
+        "Phone": "91-484-3204060",
+        "StarRating": "3",
+        "HotelAddress": {
+            "City": "Kochi",
+            "State": "Kerala",
+            "Country": "IN",
+            "ZIP": "682001",
+            "AddressLine1": "11/372 A, K. J. Herschel Road",
+            "AddressLine2": "Near Dronacharya Main Gate"
+        }
+    },
+    "Rooms": [
+        {
+            "HotelConfirmationNumber": "",
+            "ID": "18074",
+            "RoomId": "755faa33-25fa-4284-96a4-2f5b34a29489",
+            "GuestCode": "|1|1:A:25|",
+            "RoomGroupId": "21535fef-7f0f-4515-add2-2225376512c2",
+            "Name": "AC Deluxe Double Room",
+            "Description": "",
+            "Capacity": "1",
+            "NumberOfAdults": "1",
+            "NumberOfChildren": "0",
+            "NumberOfExtraBeds": "0",
+            "SupplierConfirmationNumber": "",
+            "SupplierId": "20340",
+            "RecommendationId": "345c206e-a806-4803-9069-2fbb54749201",
+            "Refundable": "False",
+            "Guests": [
+                {
+                    "Title": "Mr",
+                    "FirstName": "RIYA",
+                    "LastName": "TB",
+                    "Email": "test@gmail.com",
+                    "MobileNumber": "8123456789",
+                    "PaxType": "A",
+                    "Age": "0",
+                    "AadharNo": "",
+                    "Pan": "",
+                    "Passport": "",
+                    "PanVerified": "False"
+                }
+            ],
+            "RoomRates": [
+                {
+                    "TotalRate": 1876.87,
+                    "BaseRate": 1900.00,
+                    "Discount": 0.00,
+                    "ServiceCharge": 0.00,
+                    "Commission": 118.13,
+                    "TDSOnCommission": 0.00,
+                    "PromoAmount": 0.0,
+                    "AddonMarkup": 0.00,
+                    "AddonDiscount": 0.00,
+                    "AgentMarkup": 0.00,
+                    "VATOnMarkup": 0.0,
+                    "VATOnBFTax": 0.0,
+                    "VATTotal": 0.0,
+                    "TCSTotal": 0.00,
+                    "Tax": {
+                        "Description": "tax_and_service_fee",
+                        "Amount": 95.0
+                    },
+                    "AdditionalCharges": {
+                        "Amount": 0.0,
+                        "Description": "",
+                        "Currency": "",
+                        "Type": "",
+                        "Unit": "",
+                        "Frequency": "",
+                        "Text": ""
+                    }
+                }
+            ],
+            "CancellationPolicy": null,
+            "RoomFacilities": [
+                {
+                    "name": "Towels provided"
+                },
+                {
+                    "name": "Hair dryer (on request)"
+                },
+                {
+                    "name": "Bedsheets provided"
+                },
+                {
+                    "name": "Non-Smoking"
+                },
+                {
+                    "name": "Local maps"
+                },
+                {
+                    "name": "Shower only"
+                },
+                {
+                    "name": "Premium bedding"
+                },
+                {
+                    "name": "Electric kettle"
+                },
+                {
+                    "name": "Guidebooks or recommendations"
+                },
+                {
+                    "name": "Soundproofed rooms"
+                },
+                {
+                    "name": "Patio"
+                },
+                {
+                    "name": "Electrical adapters/chargers"
+                },
+                {
+                    "name": "Blackout drapes/curtains"
+                },
+                {
+                    "name": "Private bathroom"
+                },
+                {
+                    "name": "Refrigerator"
+                },
+                {
+                    "name": "Free toiletries"
+                },
+                {
+                    "name": "Ceiling fan"
+                },
+                {
+                    "name": "Hair dryer"
+                },
+                {
+                    "name": "Air conditioning"
+                },
+                {
+                    "name": "Free WiFi"
+                },
+                {
+                    "name": "Free tea bags/instant coffee"
+                },
+                {
+                    "name": "Housekeeping on request"
+                },
+                {
+                    "name": "Bidet"
+                },
+                {
+                    "name": "Free bottled water"
+                },
+                {
+                    "name": "No rollaway/extra beds"
+                }
+            ],
+            "RoomInclusions": [
+                {
+                    "name": "Free WiFi"
+                },
+                {
+                    "name": "Free self parking"
+                }
+            ],
+            "RoomBoardBasis": [
+                {
+                    "name": "Room Only"
+                }
+            ],
+            "RoomPolicies": [
+                {
+                    "name": "Check-in between 12:00 PM - anytime"
+                },
+                {
+                    "name": "Check-out before 11:00 AM"
+                },
+                {
+                    "name": "  Extra-person charges may apply and vary depending on property policyGovernment-issued photo identification and a cash deposit may be required at check-in for incidental chargesSpecial requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteedThis property accepts cashSafety features at this property include a fire extinguisherThis property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room  "
+                },
+                {
+                    "name": "This property offers transfers from the airport and train station (surcharges may apply). To arrange pick-up, guests must contact the property 72 hours prior to arrival, using the contact information on the booking confirmation. The front desk is open daily from 6:30 AM - 10:30 PM. The front desk is staffed during limited hours. Information provided by the property may be translated using automated translation tools."
+                },
+                {
+                    "name": "   One child 4 years old or younger stays free when occupying the parent or guardian's room, using existing bedding. No pets and no service animals are allowed at this property.  "
+                },
+                {
+                    "name": " Fee for buffet breakfast: approximately INR 350 for adults and INR 350 for childrenAirport shuttle fee: INR 1500 per vehicle (one way)A kitchen/kitchenette is available for an additional fee The above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. "
+                }
+            ]
+        }
+    ],
+    "HotelFacilities": [
+        {
+            "name": "Dry cleaning/laundry service"
+        },
+        {
+            "name": "Train station pickup (surcharge)"
+        },
+        {
+            "name": "Conference space size (meters) - 19"
+        },
+        {
+            "name": "Limo or town car service available"
+        },
+        {
+            "name": "Shared refrigerator"
+        },
+        {
+            "name": "Free WiFi"
+        },
+        {
+            "name": "Bicycle parking available"
+        },
+        {
+            "name": "Designated smoking areas"
+        },
+        {
+            "name": "Bicycle tour information"
+        },
+        {
+            "name": "Bicycle rentals nearby"
+        },
+        {
+            "name": "Tours/ticket assistance"
+        },
+        {
+            "name": "Airport transportation (surcharge)"
+        },
+        {
+            "name": "Multilingual staff"
+        },
+        {
+            "name": "Secured bicycle storage"
+        },
+        {
+            "name": "Mosquito nets"
+        },
+        {
+            "name": "Breakfast available (surcharge)"
+        },
+        {
+            "name": "Barbecue grill(s)"
+        },
+        {
+            "name": "Ecotours nearby"
+        },
+        {
+            "name": "Number of coffee shops/cafes - 1"
+        },
+        {
+            "name": "Coffee/tea in common areas"
+        },
+        {
+            "name": "Laundry facilities"
+        },
+        {
+            "name": "Children's club (free)"
+        },
+        {
+            "name": "Fitness facilities"
+        },
+        {
+            "name": "Fishing nearby"
+        },
+        {
+            "name": "Windsurfing nearby"
+        },
+        {
+            "name": "Train station drop-off (surcharge)"
+        },
+        {
+            "name": "Arcade/game room"
+        },
+        {
+            "name": "Well-lit path to entrance"
+        },
+        {
+            "name": "Hiking/biking trails on site"
+        },
+        {
+            "name": "Upper floors accessible by stairs only"
+        },
+        {
+            "name": "Picnic area"
+        },
+        {
+            "name": "Garden"
+        },
+        {
+            "name": "Stair-free path to entrance"
+        },
+        {
+            "name": "Free use of nearby fitness center"
+        },
+        {
+            "name": "Boat tours nearby"
+        },
+        {
+            "name": "Yoga classes/instruction on site"
+        },
+        {
+            "name": "Miniature golf on site"
+        },
+        {
+            "name": "Wheelchair accessible – no"
+        },
+        {
+            "name": "Luggage storage"
+        },
+        {
+            "name": "Grocery/convenience store"
+        },
+        {
+            "name": "Business center"
+        },
+        {
+            "name": "Front desk (limited hours)"
+        },
+        {
+            "name": "Scooter/moped rentals nearby"
+        },
+        {
+            "name": "Number of restaurants - 1"
+        },
+        {
+            "name": "Library"
+        },
+        {
+            "name": "Housekeeping on request"
+        },
+        {
+            "name": "Safe-deposit box at front desk"
+        },
+        {
+            "name": "Free self parking"
+        },
+        {
+            "name": "Conference space"
+        },
+        {
+            "name": "Terrace"
+        },
+        {
+            "name": "Access to nearby outdoor pool"
+        },
+        {
+            "name": "Conference space size (feet) - 200"
+        },
+        {
+            "name": ""
+        }
+    ],
+    "ContactInfo": {
+        "Title": "Mr",
+        "FName": "RIYA",
+        "LName": "",
+        "Mobile": "81xxxxxx89",
+        "Phone": "",
+        "Email": "tesx@xmail.com",
+        "Address": "test",
+        "CountryCode": "IN",
+        "State": "Kerala",
+        "City": "Kochi",
+        "PIN": "",
+        "GSTCompanyName": "",
+        "GSTTIN": "",
+        "GSTMobile": "",
+        "GSTEmail": "",
+        "GSTAddress": "",
+        "GSTState": "",
+        "UpdateProfile": false,
+        "IsGuest": false,
+        "MobileCountryCode": ""
+    },
+    "MoreInfo": [
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinInstructions",
+            "Description": "  Extra-person charges may apply and vary depending on property policyGovernment-issued photo identification and a cash deposit may be required at check-in for incidental chargesSpecial requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteedThis property accepts cashSafety features at this property include a fire extinguisherThis property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room  ",
+            "Name": "CheckinInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "This property offers transfers from the airport and train station (surcharges may apply). To arrange pick-up, guests must contact the property 72 hours prior to arrival, using the contact information on the booking confirmation. The front desk is open daily from 6:30 AM - 10:30 PM. The front desk is staffed during limited hours. Information provided by the property may be translated using automated translation tools.",
+            "Name": "CheckinSpecialInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "We never guarantee on Extra Bed for Extra Adult, It will be subject to availability and may be Chargeable also.",
+            "Name": "CheckinSpecialInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "During Christmas & New year ,Hotel May Request You to pay for Gala Dinner Charges at the time of Check-inn.",
+            "Name": "CheckinSpecialInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "These additional charge are not included in the booking amount and will be collected directly at the hotel.",
+            "Name": "CheckinSpecialInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "Tourism Taxes, City Taxes, Resort Fee, Etc Hotel May request You to pay at the time of Check-inn(Local Currency).",
+            "Name": "CheckinSpecialInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "As per the hotel policy, there might be peak season and long weekend surcharges, which would be payable by guest directly at the hotel.",
+            "Name": "CheckinSpecialInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinSpecialInstructions",
+            "Description": "In case of peak dates or technical issues causing the hotel to be sold out, an alternative hotel of equal booking value or a full refund will be provided.",
+            "Name": "CheckinSpecialInstructions"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckinTime",
+            "Description": "Check-In Time is 12:00 PM",
+            "Name": "CheckinTime"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "CheckoutTime",
+            "Description": "Check-Out Time is 11:00 AM",
+            "Name": "CheckoutTime"
+        },
+        {
+            "Field1": "",
+            "Field2": "",
+            "Field3": "",
+            "Field4": "",
+            "Code": "Policy",
+            "Description": "   One child 4 years old or younger stays free when occupying the parent or guardian's room, using existing bedding. No pets and no service animals are allowed at this property.  ",
+            "Name": "know before you go"
+        }
+    ],
+    "ItineryStatus": {
+        "Remarks": "",
+        "BookingStatus": "I8",
+        "CurrentStatus": "I8",
+        "ServiceType": "HTL",
+        "StatusDetails": [
+            {
+                "Status": "I8",
+                "PaxSectorID": ""
+            }
+        ]
+    },
+    "Rules": null,
+    "Promo": [
+        {
+            "Code": "",
+            "Amount": 0.0,
+            "EmployeeID": null,
+            "ConvenienceFee": 0.0
+        }
+    ],
+    "Auxiliaries": [
+        {
+            "Code": "",
+            "EmployeeID": null,
+            "Amount": 0.0
+        }
+    ],
+    "PaymentSummary": [],
+    "Remarks": [
+        {
+            "RecievedDate": "29 Jul'26/ 02:49 PM",
+            "Remarks": "BookingStatus is I8 and CurrentStatus I8 saved",
+            "Status": "",
+            "RecievedFrom": ""
+        }
+    ],
+    "ApprovalStatus": null,
+    "RejectedApprover": "",
+    "RejectedReason": "",
+    "ApprovalEmployeeList": null,
+    "TravellerDocumentList": [],
+    "Attachment": null,
+    "ExchangeCurrencyList": null,
+    "IsVIP": false,
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ]
+}

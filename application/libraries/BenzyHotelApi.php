@@ -314,11 +314,20 @@ class BenzyHotelApi {
         $searchTracingKey = $initData['searchTracingKey'];
         $token = $this->generateToken();
 
-        // 1. Hotel Rate Endpoint
+        // 1. Hotel Rate Endpoint (Poll until completed per Benzy specification, up to 3 attempts with 1.2s delay)
         $rateUrl = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/rate';
-        $rateRes = $this->makeRequest('HotelRate', $rateUrl, array(), 'GET', $token);
+        $rateRes = null;
+        for ($attempt = 1; $attempt <= 3; $attempt++) {
+            if ($attempt > 1) {
+                usleep(1200000); // 1.2 seconds
+            }
+            $rateRes = $this->makeRequest('HotelRate', $rateUrl, array(), 'GET', $token);
+            if ($rateRes['http_code'] === 200 && !empty($rateRes['json']['searchStatus']) && strtolower($rateRes['json']['searchStatus']) === 'completed') {
+                break;
+            }
+        }
 
-        if ($rateRes['http_code'] !== 200 || empty($rateRes['json']['hotels'])) {
+        if (!$rateRes || $rateRes['http_code'] !== 200 || empty($rateRes['json']['hotels'])) {
             // Alternate POST HotelRate endpoint
             $altRateUrl = $this->hotelUrl . '/Hotel/HotelRate';
             $rateRes = $this->makeRequest('HotelRate_POST', $altRateUrl, array('searchId' => $searchId), 'POST', $token);
@@ -675,10 +684,10 @@ class BenzyHotelApi {
         // Confirmed Hotel StartPay Endpoint from WRC Spec: {HotelBookingURL}/Payment/StartPay
         $url = $this->bookingUrl . '/Payment/StartPay';
 
-        // Exact schema from Benzy SamplePayloads_Multipax/StartPay.txt
+        // Exact schema from Benzy Complete_Logs_Sample/StartPay.txt
         $payload = array(
             'TransactionID'   => (int)$transactionId,
-            'PaymentAmount'   => (float)$amount,
+            'PaymentAmount'   => 0,
             'NetAmount'       => (float)$amount,
             'BrowserKey'      => $browserKey,
             'ClientID'        => $clientId,

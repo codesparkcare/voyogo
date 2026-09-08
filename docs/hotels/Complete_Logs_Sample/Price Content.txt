@@ -1,0 +1,1220 @@
+Endpoint: {HotelSearchURL}/api/hotels/836c2391-7bd7-4607-87a2-c8881094b8ab.-Cxtj0naqLlDyFCrl7WJLbfH1uruGzUHL5PCawyhjg4/15391201/content?priceProvider=EAN
+
+
+Price Content:
+
+{
+    "hotel": {
+        "id": "15391201",
+        "name": "Reds Residency - Homestay",
+        "relevanceScore": 0.0,
+        "providerFamily": "EAN",
+        "providerHotelId": "11233766",
+        "language": "en-US",
+        "providerName": "EAN",
+        "geoCode": {
+            "lat": 9.954002,
+            "long": 76.2411
+        },
+        "neighbourhoods": [],
+        "contact": {
+            "address": {
+                "line1": "11/372 A, K. J. Herschel Road",
+                "line2": "Near Dronacharya Main Gate",
+                "destinationCode": null,
+                "city": "Kochi",
+                "state": "Kerala",
+                "country": "IN",
+                "postalCode": "682001"
+            },
+            "phones": [
+                "91-484-3204060"
+            ],
+            "faxes": null,
+            "emails": null,
+            "website": null
+        },
+        "chainCode": "0",
+        "chainName": "Independent",
+        "type": "Hotel",
+        "website": null,
+        "descriptions": [
+            {
+                "type": "amenities",
+                "text": "Pamper yourself with onsite massages or enjoy recreation amenities such as a fitness center. Additional features at this Art Deco hotel include complimentary wireless internet access, an arcade/game room, and tour/ticket assistance."
+            },
+            {
+                "type": "dining",
+                "text": "Enjoy a meal at the restaurant or snacks in the hotel's coffee shop/cafe. Buffet breakfasts are served on weekends from 8:30 AM to 10:00 AM for a fee."
+            },
+            {
+                "type": "business_amenities",
+                "text": "Featured amenities include a business center, limo/town car service, and dry cleaning/laundry services. Planning an event in Kochi? This hotel has facilities measuring 200 square feet (19 square meters), including conference space. For a surcharge, guests may use a roundtrip airport shuttle (available 24 hours) and a train station pick-up service."
+            },
+            {
+                "type": "rooms",
+                "text": "Make yourself at home in one of the 6 air-conditioned rooms featuring refrigerators. Complimentary wireless internet access is available to keep you connected. Bathrooms feature showers, complimentary toiletries, and bidets. Conveniences include electric kettles and free tea bags/instant coffee, and housekeeping is provided on request."
+            },
+            {
+                "type": "attractions",
+                "text": "Distances are displayed to the nearest 0.1 mile and kilometer. <br /> <p>SNC Maritime Museum - 0.5 km / 0.3 mi <br /> Pierce Leslie Bungalow - 0.6 km / 0.4 mi <br /> Indo-Portuguese Museum - 1.4 km / 0.8 mi <br /> St. Francis Church - 1.4 km / 0.9 mi <br /> Santa Cruz Basilica - 1.4 km / 0.9 mi <br /> Santa Cruz Cathedral - 1.4 km / 0.9 mi <br /> Fort Kochi Beach - 1.5 km / 0.9 mi <br /> Chitram Art Gallery - 1.7 km / 1 mi <br /> Vypeen Island - 1.7 km / 1 mi <br /> The Delta Study - 1.7 km / 1 mi <br /> Chinese Fishing Nets - 1.8 km / 1.1 mi <br /> Wonderla Amusement Park - 2.1 km / 1.3 mi <br /> Mattancherry Palace - 2.4 km / 1.5 mi <br /> Jain Temple - 2.4 km / 1.5 mi <br /> Draavidia Art & Performance Gallery - 2.6 km / 1.6 mi <br /> </p><p>The preferred airport for Reds Residency - Homestay is Cochin International Airport (COK) - 42.6 km / 26.4 mi </p>"
+            },
+            {
+                "type": "location",
+                "text": "Located in Kochi (Thamaraparambu), Reds Residency - Homestay is within a 5-minute drive of St. Francis Church and The Delta Study.  This family-friendly hotel is 1.1 mi (1.8 km) from Chinese Fishing Nets."
+            },
+            {
+                "type": "headline",
+                "text": "Near SNC Maritime Museum"
+            },
+            {
+                "type": "spoken_languages",
+                "text": "Hindi, English, French"
+            },
+            {
+                "type": "onsite_payments",
+                "text": "Cash"
+            }
+        ],
+        "category": "Hotel",
+        "starRating": 3.0,
+        "facilityGroups": [
+            {
+                "id": 67,
+                "groupId": 67,
+                "name": "Garden"
+            },
+            {
+                "id": 1,
+                "groupId": 1,
+                "name": "Parking"
+            },
+            {
+                "id": 71,
+                "groupId": 71,
+                "name": "Arcade/Game Room"
+            },
+            {
+                "id": 5,
+                "groupId": 5,
+                "name": "Breakfast"
+            },
+            {
+                "id": 6,
+                "groupId": 6,
+                "name": "Business Center"
+            },
+            {
+                "id": 74,
+                "groupId": 74,
+                "name": "Transportation"
+            },
+            {
+                "id": 76,
+                "groupId": 76,
+                "name": "Things To Do"
+            },
+            {
+                "id": 78,
+                "groupId": 78,
+                "name": "Food And Drink"
+            },
+            {
+                "id": 79,
+                "groupId": 79,
+                "name": "Family Friendly"
+            },
+            {
+                "id": 12,
+                "groupId": 12,
+                "name": "Laundry Services"
+            },
+            {
+                "id": 13,
+                "groupId": 13,
+                "name": "Swimming Pool"
+            },
+            {
+                "id": 80,
+                "groupId": 80,
+                "name": "Conveniences"
+            },
+            {
+                "id": 14,
+                "groupId": 14,
+                "name": "Restaurant"
+            },
+            {
+                "id": 16,
+                "groupId": 16,
+                "name": "Internet"
+            },
+            {
+                "id": 17,
+                "groupId": 17,
+                "name": "Fitness Facility"
+            },
+            {
+                "id": 18,
+                "groupId": 18,
+                "name": "Airport Shuttle"
+            },
+            {
+                "id": 19,
+                "groupId": 19,
+                "name": "Refrigerator"
+            },
+            {
+                "id": 21,
+                "groupId": 21,
+                "name": "Golf"
+            },
+            {
+                "id": 28,
+                "groupId": 28,
+                "name": "Barbeque"
+            },
+            {
+                "id": 32,
+                "groupId": 32,
+                "name": "Safe Deposit Box"
+            },
+            {
+                "id": 35,
+                "groupId": 35,
+                "name": "Multilingual"
+            },
+            {
+                "id": 38,
+                "groupId": 38,
+                "name": "Library"
+            },
+            {
+                "id": 61,
+                "groupId": 61,
+                "name": "Surfing"
+            }
+        ],
+        "facilities": [
+            {
+                "id": 2070,
+                "groupId": 12,
+                "name": "Dry cleaning/laundry service"
+            },
+            {
+                "id": 4010,
+                "groupId": 74,
+                "name": "Train station pickup (surcharge)"
+            },
+            {
+                "id": 2592,
+                "groupId": 6,
+                "name": "Conference space size (meters) - 19"
+            },
+            {
+                "id": 2072,
+                "groupId": 0,
+                "name": "Limo or town car service available"
+            },
+            {
+                "id": 1073743405,
+                "groupId": 19,
+                "name": "Shared refrigerator"
+            },
+            {
+                "id": 2390,
+                "groupId": 16,
+                "name": "Free WiFi"
+            },
+            {
+                "id": 1073744805,
+                "groupId": 1,
+                "name": "Bicycle parking available"
+            },
+            {
+                "id": 2349,
+                "groupId": 0,
+                "name": "Designated smoking areas"
+            },
+            {
+                "id": 1073744807,
+                "groupId": 0,
+                "name": "Bicycle tour information"
+            },
+            {
+                "id": 115,
+                "groupId": 0,
+                "name": "Bicycle rentals nearby"
+            },
+            {
+                "id": 2387,
+                "groupId": 0,
+                "name": "Tours/ticket assistance"
+            },
+            {
+                "id": 56,
+                "groupId": 18,
+                "name": "Airport transportation (surcharge)"
+            },
+            {
+                "id": 2043,
+                "groupId": 35,
+                "name": "Multilingual staff"
+            },
+            {
+                "id": 1073744803,
+                "groupId": 0,
+                "name": "Secured bicycle storage"
+            },
+            {
+                "id": 1073743956,
+                "groupId": 0,
+                "name": "Mosquito nets"
+            },
+            {
+                "id": 361,
+                "groupId": 5,
+                "name": "Breakfast available (surcharge)"
+            },
+            {
+                "id": 321,
+                "groupId": 28,
+                "name": "Barbecue grill(s)"
+            },
+            {
+                "id": 2357,
+                "groupId": 0,
+                "name": "Ecotours nearby"
+            },
+            {
+                "id": 3929,
+                "groupId": 78,
+                "name": "Number of coffee shops/cafes - 1"
+            },
+            {
+                "id": 324,
+                "groupId": 78,
+                "name": "Coffee/tea in common areas"
+            },
+            {
+                "id": 369,
+                "groupId": 12,
+                "name": "Laundry facilities"
+            },
+            {
+                "id": 4697,
+                "groupId": 79,
+                "name": "Children's club (free)"
+            },
+            {
+                "id": 9,
+                "groupId": 17,
+                "name": "Fitness facilities"
+            },
+            {
+                "id": 1073744396,
+                "groupId": 76,
+                "name": "Fishing nearby"
+            },
+            {
+                "id": 2094,
+                "groupId": 61,
+                "name": "Windsurfing nearby"
+            },
+            {
+                "id": 1073743306,
+                "groupId": 0,
+                "name": "Train station drop-off (surcharge)"
+            },
+            {
+                "id": 375,
+                "groupId": 71,
+                "name": "Arcade/game room"
+            },
+            {
+                "id": 1073744906,
+                "groupId": 0,
+                "name": "Well-lit path to entrance"
+            },
+            {
+                "id": 3816,
+                "groupId": 76,
+                "name": "Hiking/biking trails on site"
+            },
+            {
+                "id": 1073744905,
+                "groupId": 0,
+                "name": "Upper floors accessible by stairs only"
+            },
+            {
+                "id": 2049,
+                "groupId": 0,
+                "name": "Picnic area"
+            },
+            {
+                "id": 378,
+                "groupId": 67,
+                "name": "Garden"
+            },
+            {
+                "id": 1073744907,
+                "groupId": 0,
+                "name": "Stair-free path to entrance"
+            },
+            {
+                "id": 2048,
+                "groupId": 17,
+                "name": "Free use of nearby fitness center"
+            },
+            {
+                "id": 4502,
+                "groupId": 76,
+                "name": "Boat tours nearby"
+            },
+            {
+                "id": 3855,
+                "groupId": 17,
+                "name": "Yoga classes/instruction on site"
+            },
+            {
+                "id": 3812,
+                "groupId": 21,
+                "name": "Miniature golf on site"
+            },
+            {
+                "id": 1073744740,
+                "groupId": 0,
+                "name": "Wheelchair accessible – no"
+            },
+            {
+                "id": 4003,
+                "groupId": 80,
+                "name": "Luggage storage"
+            },
+            {
+                "id": 2386,
+                "groupId": 0,
+                "name": "Grocery/convenience store"
+            },
+            {
+                "id": 2065,
+                "groupId": 6,
+                "name": "Business center"
+            },
+            {
+                "id": 2064,
+                "groupId": 0,
+                "name": "Front desk (limited hours)"
+            },
+            {
+                "id": 383,
+                "groupId": 0,
+                "name": "Scooter/moped rentals nearby"
+            },
+            {
+                "id": 2537,
+                "groupId": 14,
+                "name": "Number of restaurants - 1"
+            },
+            {
+                "id": 385,
+                "groupId": 38,
+                "name": "Library"
+            },
+            {
+                "id": 1073743926,
+                "groupId": 0,
+                "name": "Housekeeping on request"
+            },
+            {
+                "id": 2016,
+                "groupId": 32,
+                "name": "Safe-deposit box at front desk"
+            },
+            {
+                "id": 3861,
+                "groupId": 1,
+                "name": "Free self parking"
+            },
+            {
+                "id": 81,
+                "groupId": 6,
+                "name": "Conference space"
+            },
+            {
+                "id": 4514,
+                "groupId": 0,
+                "name": "Terrace"
+            },
+            {
+                "id": 3789,
+                "groupId": 13,
+                "name": "Access to nearby outdoor pool"
+            },
+            {
+                "id": 2539,
+                "groupId": 6,
+                "name": "Conference space size (feet) - 200"
+            }
+        ],
+        "nearByAttractions": [
+            {
+                "name": "SNC Maritime Museum",
+                "distance": "0.5",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Pierce Leslie Bungalow",
+                "distance": "0.6",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Indo-Portuguese Museum",
+                "distance": "1.4",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "St. Francis Church",
+                "distance": "1.4",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Santa Cruz Basilica",
+                "distance": "1.4",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Santa Cruz Cathedral",
+                "distance": "1.4",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Fort Kochi Beach",
+                "distance": "1.5",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Chitram Art Gallery",
+                "distance": "1.7",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Vypeen Island",
+                "distance": "1.7",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "The Delta Study",
+                "distance": "1.7",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Chinese Fishing Nets",
+                "distance": "1.8",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Wonderla Amusement Park",
+                "distance": "2.1",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Mattancherry Palace",
+                "distance": "2.4",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Jain Temple",
+                "distance": "2.4",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Draavidia Art & Performance Gallery",
+                "distance": "2.6",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "The preferred airport for Reds Residency - Homestay is Cochin International Airport (COK)",
+                "distance": "42.6",
+                "unit": "km",
+                "description": null,
+                "type": null
+            }
+        ],
+        "images": [
+            {
+                "caption": "Reception",
+                "category": "10002",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h559x0y96-4334f74c_b.jpg"
+            },
+            {
+                "caption": "Reception",
+                "category": "10002",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h556x0y97-b9d77451_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "201116297"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/bf866256_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "201116297"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h541x0y113-7d311d56_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "201116297"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/5353ce75_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "201116297"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h539x0y114-1797d7d1_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "201116297"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h549x0y104-b21ebead_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "201112990"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h511x0y125-477af069_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "201112990"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/6e6dfee1_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "201112990"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/fc836e13_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "201112990"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/e9f8f59a_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "201112990"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h514x0y127-58e9f193_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "201112990"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/2f7aab74_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981783"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/012f5407_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981783"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/9e75950d_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981783"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/ec3f133d_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981783"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h568x0y100-5d4dc929_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981783"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/6c8eca52_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981783"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/0ec83378_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981783"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/3d412f45_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981783"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/42f79a5d_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981783"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/89226aa1_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981796"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w649h622x60y73-a0a37228_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981659"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w707h528x30y120-9b03e4e4_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981659"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h608x0y80-c03b71d1_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981659"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w664h768x52y0-a38f275b_b.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "315981659"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w569h742x106y13-931d3adb_b.jpg"
+            },
+            {
+                "caption": "Private kitchen",
+                "category": "22002",
+                "type": null,
+                "roomCodes": [
+                    "315981796"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w629h653x27y57-e4d209e7_b.jpg"
+            },
+            {
+                "caption": "Living area",
+                "category": "22005",
+                "type": null,
+                "roomCodes": [
+                    "315981796"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w609h612x80y78-003c0bc6_b.jpg"
+            },
+            {
+                "caption": "Terrace/patio",
+                "category": "22007",
+                "type": null,
+                "roomCodes": [
+                    "201116297"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/4a12db69_b.jpg"
+            },
+            {
+                "caption": "Terrace/patio",
+                "category": "22007",
+                "type": null,
+                "roomCodes": [
+                    "201116297"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/c9c98c9b_b.jpg"
+            },
+            {
+                "caption": "Terrace/patio",
+                "category": "22007",
+                "type": null,
+                "roomCodes": [
+                    "315981796"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w585h727x92y20-56cede77_b.jpg"
+            },
+            {
+                "caption": "Terrace/patio",
+                "category": "22007",
+                "type": null,
+                "roomCodes": [
+                    "315981796"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w580h768x95y0-cf8b0c61_b.jpg"
+            },
+            {
+                "caption": "Terrace/patio",
+                "category": "22007",
+                "type": null,
+                "roomCodes": [
+                    "315981783"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/33db45e8_b.jpg"
+            },
+            {
+                "caption": "Terrace/patio",
+                "category": "22007",
+                "type": null,
+                "roomCodes": [
+                    "315981796"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/68caafcd_b.jpg"
+            },
+            {
+                "caption": "Balcony",
+                "category": "22008",
+                "type": null,
+                "roomCodes": [
+                    "315981796"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w573h713x96y28-6b4abdde_b.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "201112990"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w573h768x97y0-abc1e20d_b.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "315981783"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w513h768x0y0-018dddf4_b.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "315981796"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w679h679x44y44-e45f7ae4_b.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "315981659"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w667h724x51y22-f27d34b9_b.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "201116297"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/a3c1e146_b.jpg"
+            },
+            {
+                "caption": "Breakfast area",
+                "category": "81001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w610h626x79y63-6ad44c99_b.jpg"
+            },
+            {
+                "caption": "Breakfast area",
+                "category": "81001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h584x0y91-e9b42247_b.jpg"
+            },
+            {
+                "caption": "Breakfast area",
+                "category": "81001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/6d33f750_b.jpg"
+            },
+            {
+                "caption": "Breakfast area",
+                "category": "81001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h478x0y144-e7a7f8ca_b.jpg"
+            },
+            {
+                "caption": "Breakfast area",
+                "category": "81001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h510x0y129-c87e09c2_b.jpg"
+            },
+            {
+                "caption": "Breakfast area",
+                "category": "81001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/604eb23b_b.jpg"
+            },
+            {
+                "caption": "Breakfast area",
+                "category": "81001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/5d27722b_b.jpg"
+            },
+            {
+                "caption": "Breakfast area",
+                "category": "81001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/60421634_b.jpg"
+            },
+            {
+                "caption": "Restaurant",
+                "category": "81003",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/5ab08e85_b.jpg"
+            },
+            {
+                "caption": "Front of property",
+                "category": "91001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/decca1d6_b.jpg"
+            },
+            {
+                "caption": "Front of property",
+                "category": "91001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/dbae3f63_b.jpg"
+            },
+            {
+                "caption": "Front of property",
+                "category": "91001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/9c6b6445_b.jpg"
+            },
+            {
+                "caption": "Front of property",
+                "category": "91001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/4d6fc3e4_b.jpg"
+            },
+            {
+                "caption": "Front of property",
+                "category": "91001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/c5bd76f8_b.jpg"
+            },
+            {
+                "caption": "Front of property",
+                "category": "91001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/a64949b0_b.jpg"
+            },
+            {
+                "caption": "Front of property",
+                "category": "91001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/408ea14d_b.jpg"
+            },
+            {
+                "caption": "Front of property",
+                "category": "91001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/acd8e5da_b.jpg"
+            },
+            {
+                "caption": "Balcony view",
+                "category": "92005",
+                "type": null,
+                "roomCodes": [
+                    "315981796"
+                ],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w602h751x83y8-97884163_b.jpg"
+            },
+            {
+                "caption": "Point of interest",
+                "category": "100000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/369375b8_b.jpg"
+            },
+            {
+                "caption": "Point of interest",
+                "category": "100000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/9545f173_b.jpg"
+            },
+            {
+                "caption": "Point of interest",
+                "category": "100000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/ac7c82fe_b.jpg"
+            },
+            {
+                "caption": "Point of interest",
+                "category": "100000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Standard",
+                "url": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/2cdb36d4_b.jpg"
+            }
+        ],
+        "policies": [
+            {
+                "type": "know_before_you_go",
+                "text": "   One child 4 years old or younger stays free when occupying the parent or guardian's room, using existing bedding. No pets and no service animals are allowed at this property.  "
+            }
+        ],
+        "fees": [
+            {
+                "type": null,
+                "text": null
+            },
+            {
+                "type": null,
+                "text": null
+            }
+        ],
+        "reviews": [
+            {
+                "provider": "EAN",
+                "count": 17,
+                "rating": 4.4,
+                "url": null,
+                "reviews": null
+            }
+        ],
+        "checkinInfo": {
+            "beginTime": "12:00 PM",
+            "endTime": "anytime",
+            "instructions": [
+                "<ul>  <li>Extra-person charges may apply and vary depending on property policy</li><li>Government-issued photo identification and a cash deposit may be required at check-in for incidental charges</li><li>Special requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed</li><li>This property accepts cash</li><li>Safety features at this property include a fire extinguisher</li><li>This property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room</li>  </ul>"
+            ],
+            "specialInstructions": [
+                "This property offers transfers from the airport and train station (surcharges may apply). To arrange pick-up, guests must contact the property 72 hours prior to arrival, using the contact information on the booking confirmation. The front desk is open daily from 6:30 AM - 10:30 PM. The front desk is staffed during limited hours. Information provided by the property may be translated using automated translation tools.",
+                "We never guarantee on Extra Bed for Extra Adult, It will be subject to availability and may be Chargeable also.",
+                "During Christmas & New year ,Hotel May Request You to pay for Gala Dinner Charges at the time of Check-inn.",
+                "These additional charge are not included in the booking amount and will be collected directly at the hotel.",
+                "Tourism Taxes, City Taxes, Resort Fee, Etc Hotel May request You to pay at the time of Check-inn(Local Currency).",
+                "As per the hotel policy, there might be peak season and long weekend surcharges, which would be payable by guest directly at the hotel.",
+                "In case of peak dates or technical issues causing the hotel to be sold out, an alternative hotel of equal booking value or a full refund will be provided."
+            ],
+            "minAge": 18
+        },
+        "checkoutInfo": {
+            "time": "11:00 AM"
+        },
+        "heroImage": "https://i.travelapi.com/lodging/12000000/11240000/11233800/11233766/w768h559x0y96-4334f74c_z.jpg",
+        "distance": 0.0,
+        "locationName": null,
+        "mappings": null,
+        "destinationCode": null,
+        "line1": null,
+        "city": null
+    },
+    "curatedHotels": {
+        "id": "15391201",
+        "name": "Reds Residency - Homestay",
+        "ratings": "3",
+        "addressLine1": "11/372 A, K. J. Herschel Road"
+    },
+    "status": "success"
+}
