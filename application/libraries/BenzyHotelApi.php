@@ -673,7 +673,7 @@ class BenzyHotelApi {
     }
 
     // =========================================================================
-    // 8. START PAY & BOOKING ({HotelBookingURL}/Payment/StartPay)
+    // 8. START PAY & BOOKING (PDF Page 42-44: {HotelItineraryURL}/Payment/StartPay)
     // =========================================================================
     public function startPay($transactionId, $amount, $tui = null) {
         $token = $this->generateToken();
@@ -681,33 +681,30 @@ class BenzyHotelApi {
         $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'FVI6V120g22Ei5ztGK0FIQ==');
         $browserKey = $tokenDetails['BrowserKey'] ?? ($this->credentials['BrowserKey'] ?? 'caecd3cd30225512c1811070dce615c1');
 
-        // Confirmed Hotel StartPay Endpoint from WRC Spec: {HotelBookingURL}/Payment/StartPay
-        $url = $this->bookingUrl . '/Payment/StartPay';
+        // Target the Hotel Itinerary host where CreateItinerary created the transaction
+        $url = $this->itineraryUrl . '/Payment/StartPay';
 
-        // Exact schema from Benzy Complete_Logs_Sample/StartPay.txt
+        // Exact schema matching official Benzy Hotel WRC PDF (Page 42-43)
         $payload = array(
-            'TransactionID'   => (int)$transactionId,
-            'PaymentAmount'   => 0,
-            'NetAmount'       => (float)$amount,
-            'BrowserKey'      => $browserKey,
-            'ClientID'        => $clientId,
-            'TUI'             => $tui ?? ('TUI-' . uniqid()),
-            'Hold'            => false,
-            'Promo'           => null,
-            'PaymentType'     => '',
-            'BankCode'        => '',
-            'GateWayCode'     => '',
-            'MerchantID'      => '',
-            'PaymentCharge'   => 0,
-            'CardType'        => 'default',
-            'ReleaseDate'     => '',
-            'OnlinePayment'   => false,
-            'DepositPayment'  => true,
-            'Card'            => array(
+            'SID'                 => null,
+            'TUI'                 => $tui ?? ('TUI-' . uniqid()),
+            'ClientID'            => $clientId,
+            'Email'               => null,
+            'Promo'               => null,
+            'TransactionID'       => (int)$transactionId,
+            'PaymentType'         => '',
+            'BankCode'            => '',
+            'GateWayCode'         => '',
+            'MerchantID'          => 0,
+            'PaymentAmount'       => (float)$amount,
+            'PaymentCharge'       => 0,
+            'Card'                => array(
                 'Number'        => '',
                 'Expiry'        => '',
                 'CVV'           => '',
                 'CHName'        => '',
+                'FName'         => null,
+                'LName'         => null,
                 'Address'       => '',
                 'City'          => '',
                 'State'         => '',
@@ -715,24 +712,35 @@ class BenzyHotelApi {
                 'PIN'           => '',
                 'International' => false,
                 'SaveCard'      => false,
-                'FName'         => '',
-                'LName'         => '',
-                'EMIMonths'     => '0'
+                'EMIMonths'     => '0',
+                'Token'         => null,
+                'NumberAlias'   => null
             ),
-            'VPA'             => '',
-            'CardAlias'       => '',
-            'QuickPay'        => null,
-            'RMSSignature'    => '',
-            'TargetCurrency'  => '',
-            'TargetAmount'    => 0,
-            'ServiceType'     => 'ITI'
+            'VPA'                 => '',
+            'CardAlias'           => '',
+            'QuickPay'            => null,
+            'RMSSignature'        => '',
+            'TargetCurrency'      => '',
+            'TargetAmount'        => 0,
+            'ThirdPartyInfo'      => null,
+            'Hold'                => false,
+            'TripType'            => null,
+            'Authorization'       => 'Bearer ' . $token,
+            'QTransactionID'      => 0,
+            'NetAmount'           => (float)$amount,
+            'OnlinePayment'       => false,
+            'DepositPayment'      => true,
+            'ReleaseDate'         => '/Date(-62135596800000)/',
+            'BrowserKey'          => $browserKey,
+            'BrowserKeyFromToken' => $browserKey,
+            'AgentInfo'           => $this->credentials['AgentCode'] ?? ''
         );
 
         $customHeaders = array('search-tracing-key' => $tui);
         $res = $this->makeRequest('StartPay', $url, $payload, 'POST', $token, $customHeaders);
 
         if ($res['http_code'] !== 200 || empty($res['json']) || (!empty($res['json']['Code']) && $res['json']['Code'] != 200 && $res['json']['Code'] != 6033)) {
-            $altUrl = $this->itineraryUrl . '/Payment/StartPay';
+            $altUrl = $this->bookingUrl . '/Payment/StartPay';
             if ($altUrl !== $url) {
                 $res = $this->makeRequest('StartPay_Alt', $altUrl, $payload, 'POST', $token, $customHeaders);
             }
