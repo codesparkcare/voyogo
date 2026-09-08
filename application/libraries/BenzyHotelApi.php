@@ -684,10 +684,10 @@ class BenzyHotelApi {
         // Confirmed Endpoint by Riya T B: {HotelBookingURL}/Payment/StartPay
         $url = $this->bookingUrl . '/Payment/StartPay';
 
-        // Exact schema from Benzy Complete_Logs_Sample/StartPay.txt
+        // Exact schema matching official Benzy Hotel WRC PDF (Page 42-43) & Benzy Support direction
         $payload = array(
             'TransactionID'   => (int)$transactionId,
-            'PaymentAmount'   => 0,
+            'PaymentAmount'   => (float)$amount,
             'NetAmount'       => (float)$amount,
             'BrowserKey'      => $browserKey,
             'ClientID'        => $clientId,
