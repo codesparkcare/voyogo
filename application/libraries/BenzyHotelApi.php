@@ -314,12 +314,12 @@ class BenzyHotelApi {
         $searchTracingKey = $initData['searchTracingKey'];
         $token = $this->generateToken();
 
-        // 1. Hotel Rate Endpoint (Poll until completed per Benzy specification, up to 3 attempts with 1.2s delay)
+        // 1. Hotel Rate Endpoint (Poll until completed per Benzy specification, up to 8 attempts with 1.0s delay)
         $rateUrl = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/rate';
         $rateRes = null;
-        for ($attempt = 1; $attempt <= 3; $attempt++) {
+        for ($attempt = 1; $attempt <= 8; $attempt++) {
             if ($attempt > 1) {
-                usleep(1200000); // 1.2 seconds
+                usleep(1000000); // 1.0 second
             }
             $rateRes = $this->makeRequest('HotelRate', $rateUrl, array(), 'GET', $token);
             if ($rateRes['http_code'] === 200 && !empty($rateRes['json']['searchStatus']) && strtolower($rateRes['json']['searchStatus']) === 'completed') {
