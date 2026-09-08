@@ -719,14 +719,9 @@ class BenzyHotelApi {
         $res = $this->makeRequest('StartPay', $url, $payload, 'POST', $token, $customHeaders);
 
         if ($res['http_code'] !== 200 || empty($res['json']) || (!empty($res['json']['Code']) && $res['json']['Code'] != 200 && $res['json']['Code'] != 6033)) {
-            $altUrl = $this->bookingUrl . '/Hotel/StartPay';
-            $res = $this->makeRequest('StartPay_Alt', $altUrl, $payload, 'POST', $token, $customHeaders);
-        }
-
-        if ($res['http_code'] !== 200 || empty($res['json']) || (!empty($res['json']['Code']) && $res['json']['Code'] != 200 && $res['json']['Code'] != 6033)) {
-            $altUrl2 = $this->itineraryUrl . '/Payment/StartPay';
-            if ($altUrl2 !== $altUrl && $altUrl2 !== $url) {
-                $res = $this->makeRequest('StartPay_ItineraryHost', $altUrl2, $payload, 'POST', $token, $customHeaders);
+            $altUrl = $this->itineraryUrl . '/Payment/StartPay';
+            if ($altUrl !== $url) {
+                $res = $this->makeRequest('StartPay_Alt', $altUrl, $payload, 'POST', $token, $customHeaders);
             }
         }
 
