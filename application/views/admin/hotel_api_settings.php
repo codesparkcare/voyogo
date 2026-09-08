@@ -162,7 +162,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small fw-bold text-secondary">Sandbox Booking & Payment URL ({HotelBookingURL})</label>
-                                    <input type="text" name="sandbox_booking_url" class="form-control" value="<?php echo htmlspecialchars($settings['sandbox_booking_url'] ?? 'https://b2bapihotels.benzyinfotech.com'); ?>" placeholder="https://b2bapihotels.benzyinfotech.com">
+                                    <input type="text" name="sandbox_booking_url" class="form-control" value="<?php echo htmlspecialchars($settings['sandbox_booking_url'] ?? 'https://b2bapiflights.benzyinfotech.com'); ?>" placeholder="https://b2bapiflights.benzyinfotech.com">
                                 </div>
                             </div>
                         </div>
