@@ -743,15 +743,38 @@ class BenzyHotelApi {
         $customHeaders = array('search-tracing-key' => $tui);
         $res = $this->makeRequest('StartPay', $url, $payload, 'POST', $token, $customHeaders);
 
-        if ($res['http_code'] !== 200 || empty($res['json']) || (!empty($res['json']['Code']) && $res['json']['Code'] != 200 && $res['json']['Code'] != 6033)) {
-            $altUrl = $this->bookingUrl . '/Payment/StartPay';
-            if ($altUrl !== $url) {
-                $res = $this->makeRequest('StartPay_Alt', $altUrl, $payload, 'POST', $token, $customHeaders);
+        // If StartPay returns 200 OK with voucher/status details, return immediately
+        if ($res['http_code'] === 200 && !empty($res['json']) && (!empty($res['json']['CRSPNR']) || !empty($res['json']['BookStatus']) || (!empty($res['json']['Code']) && $res['json']['Code'] == 200))) {
+            return $res['json'];
+        }
+
+        // If StartPay returns 200 OK with empty response body (asynchronous deposit debit), fetch confirmed voucher via RetrieveBooking
+        if ($res['http_code'] === 200) {
+            $retrieve = $this->retrieveBooking($transactionId, $tui);
+            if ($retrieve['http_code'] === 200 && !empty($retrieve['json'])) {
+                $rJson = $retrieve['json'];
+                return array(
+                    'Code'          => '200',
+                    'Msg'           => array('Success'),
+                    'TransactionID' => (int)$transactionId,
+                    'CRSPNR'        => $rJson['BookingConfirmationId'] ?? ($rJson['HotelConfirmationNumber'] ?? 'TestBooking'),
+                    'BookStatus'    => $rJson['BookingStatus'] ?? ($rJson['CurrentStatus'] ?? 'B0'),
+                    'RedirectMode'  => 'R',
+                    'status'        => 'success',
+                    'details'       => $rJson
+                );
             }
         }
 
-        if ($res['http_code'] === 200 && !empty($res['json']) && (!empty($res['json']['CRSPNR']) || !empty($res['json']['BookStatus']) || (!empty($res['json']['Code']) && $res['json']['Code'] == 200))) {
-            return $res['json'];
+        // Fallback to alternate host only if HTTP code was not 200
+        if ($res['http_code'] !== 200) {
+            $altUrl = $this->bookingUrl . '/Payment/StartPay';
+            if ($altUrl !== $url) {
+                $altRes = $this->makeRequest('StartPay_Alt', $altUrl, $payload, 'POST', $token, $customHeaders);
+                if ($altRes['http_code'] === 200 && !empty($altRes['json'])) {
+                    return $altRes['json'];
+                }
+            }
         }
 
         return array(
