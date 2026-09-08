@@ -387,13 +387,13 @@ class BenzyHotelApi {
         }
 
         if ($apiContentData || $apiRoomsData) {
-            return $this->formatHotelDetailResponse($hotelId, $apiContentData, $apiRoomsData, $fallbackDetail, $city);
+            return $this->formatHotelDetailResponse($hotelId, $apiContentData, $apiRoomsData, $fallbackDetail, $city, $checkin, $checkout);
         }
 
         return $fallbackDetail;
     }
 
-    protected function formatHotelDetailResponse($hotelId, $apiContent, $apiRooms, $fallbackDetail, $city) {
+    protected function formatHotelDetailResponse($hotelId, $apiContent, $apiRooms, $fallbackDetail, $city, $checkin = null, $checkout = null) {
         $hotel = $fallbackDetail;
         $hotel['id'] = $hotelId;
 
@@ -434,7 +434,7 @@ class BenzyHotelApi {
 
         // Room categories
         $roomTypes = array();
-        $nightsCount = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
+        $nightsCount = (!empty($checkin) && !empty($checkout)) ? max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400)) : 1;
         if (!empty($apiRooms['recommendations']) && is_array($apiRooms['recommendations'])) {
             foreach ($apiRooms['recommendations'] as $rec) {
                 $recId = $rec['id'] ?? ('REC_' . uniqid());
