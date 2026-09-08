@@ -150,9 +150,10 @@ class Hotels extends CI_Controller {
         $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, $provider, $search_id, $recommendation_id);
 
         $nights = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
-        $baseTotal = $price * $rooms * $nights;
-        $taxes = round($baseTotal * 0.12);
-        $grandTotal = $baseTotal + $taxes;
+        // $price from Benzy API is already the finalized total stay price for all nights
+        $grandTotal = round($price * $rooms, 2);
+        $baseTotal = round($grandTotal / 1.12, 2);
+        $taxes = round($grandTotal - $baseTotal, 2);
 
         $bookingArray = array(
             'hotel_id'          => $hotel_id,

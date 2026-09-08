@@ -63,9 +63,11 @@ $hPrice     = $hotel['price_per_night'] ?? 3500;
                 );
 
                 $hId = $hotel['id'] ?? ($hotel_id ?? 'HTL_101');
+                $qNightsCount = max(1, round((strtotime($qCheckout) - strtotime($qCheckin)) / 86400));
 
                 foreach ($rooms as $r):
                     $rPrice = (float)($r['price'] ?? $hPrice);
+                    $perNight = !empty($r['price_per_night']) ? (float)$r['price_per_night'] : round($rPrice / $qNightsCount, 2);
                     $rName = $r['name'] ?? 'Deluxe Room';
                     $rBoard = $r['board'] ?? 'Breakfast Included';
                     $rId = $r['type_id'] ?? ($r['room_id'] ?? 'RM_01');
@@ -84,7 +86,8 @@ $hPrice     = $hotel['price_per_night'] ?? 3500;
                     </div>
 
                     <div style="text-align: right;">
-                        <div style="font-size: 22px; font-weight: 800; color: #ef4444;">₹ <?php echo number_format($rPrice); ?> <small style="font-size: 12px; color: #64748b; font-weight: 400;">/night</small></div>
+                        <div style="font-size: 22px; font-weight: 800; color: #ef4444;">₹ <?php echo number_format($rPrice); ?></div>
+                        <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Total for <?php echo $qNightsCount; ?> <?php echo ($qNightsCount > 1) ? 'nights' : 'night'; ?> (₹ <?php echo number_format($perNight); ?>/night)</div>
                         <form action="<?php echo site_url('hotels/review'); ?>" method="POST" style="margin-top: 8px;">
                             <input type="hidden" name="hotel_id" value="<?php echo htmlspecialchars($hId); ?>">
                             <input type="hidden" name="hotel_name" value="<?php echo htmlspecialchars($hName); ?>">
@@ -97,6 +100,8 @@ $hPrice     = $hotel['price_per_night'] ?? 3500;
                             <input type="hidden" name="provider" value="<?php echo htmlspecialchars($r['provider'] ?? 'CleartripAPI'); ?>">
                             <input type="hidden" name="board_type" value="<?php echo htmlspecialchars($rBoard); ?>">
                             <input type="hidden" name="price" value="<?php echo htmlspecialchars($rPrice); ?>">
+                            <input type="hidden" name="price_per_night" value="<?php echo htmlspecialchars($perNight); ?>">
+                            <input type="hidden" name="nights" value="<?php echo htmlspecialchars($qNightsCount); ?>">
                             <input type="hidden" name="checkin_date" value="<?php echo htmlspecialchars($qCheckin); ?>">
                             <input type="hidden" name="checkout_date" value="<?php echo htmlspecialchars($qCheckout); ?>">
                             <input type="hidden" name="city" value="<?php echo htmlspecialchars($qCity); ?>">

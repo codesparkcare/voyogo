@@ -434,6 +434,7 @@ class BenzyHotelApi {
 
         // Room categories
         $roomTypes = array();
+        $nightsCount = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
         if (!empty($apiRooms['recommendations']) && is_array($apiRooms['recommendations'])) {
             foreach ($apiRooms['recommendations'] as $rec) {
                 $recId = $rec['id'] ?? ('REC_' . uniqid());
@@ -447,6 +448,7 @@ class BenzyHotelApi {
                         $roomId = $roomObj['id'] ?? ('RM_' . uniqid());
                         $roomName = $roomObj['name'] ?? ($roomObj['standardRoomName'] ?? 'Superior Room');
                         $rate = (float)($rg['totalRate'] ?? ($rg['baseRate'] ?? $totalRate));
+                        $perNightRate = (float)($rg['ratePerNight'] ?? round($rate / $nightsCount, 2));
 
                         $boardName = 'Breakfast Included';
                         if (!empty($rg['boardBasis']['description'])) {
@@ -468,6 +470,8 @@ class BenzyHotelApi {
                             'provider'         => $providerName,
                             'name'             => $roomName,
                             'price'            => $rate > 0 ? $rate : 2500,
+                            'total_price'      => $rate > 0 ? $rate : 2500,
+                            'price_per_night'  => $perNightRate > 0 ? $perNightRate : round(($rate > 0 ? $rate : 2500) / $nightsCount, 2),
                             'board'            => $boardName,
                             'refundable'       => !empty($rg['refundable']),
                             'cancellation'     => $cancelText,
