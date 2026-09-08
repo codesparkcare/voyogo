@@ -92,8 +92,8 @@ class BenzyHotelApi {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 6);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 45);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         if (strtoupper($method) === 'POST') {
@@ -674,7 +674,7 @@ class BenzyHotelApi {
         // Exact schema from Benzy SamplePayloads_Multipax/StartPay.txt
         $payload = array(
             'TransactionID'   => (int)$transactionId,
-            'PaymentAmount'   => 0,
+            'PaymentAmount'   => (float)$amount,
             'NetAmount'       => (float)$amount,
             'BrowserKey'      => $browserKey,
             'ClientID'        => $clientId,
