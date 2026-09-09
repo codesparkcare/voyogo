@@ -919,7 +919,7 @@ $defaultNights   = 4;
                     <input type="hidden" name="rooms" id="akbarHiddenRooms" value="2">
                     <input type="hidden" name="adults" id="akbarHiddenAdults" value="4">
                     <input type="hidden" name="children" id="akbarHiddenChildren" value="0">
-
+                    <input type="hidden" name="roomData" id="akbarHiddenRoomData" value="">
                     <!-- Akbar Multi-Room & Guests Configuration Popover -->
                     <div class="akbar-dropdown-panel akbar-guests-panel" id="akbarGuestsDropdown" onclick="event.stopPropagation();">
                         
@@ -1668,10 +1668,12 @@ document.addEventListener('DOMContentLoaded', function() {
         var hiddenRooms = document.getElementById('akbarHiddenRooms');
         var hiddenAdults = document.getElementById('akbarHiddenAdults');
         var hiddenChildren = document.getElementById('akbarHiddenChildren');
+        var hiddenRoomData = document.getElementById('akbarHiddenRoomData');
 
         if (hiddenRooms) hiddenRooms.value = totalRooms;
         if (hiddenAdults) hiddenAdults.value = totalAdults;
         if (hiddenChildren) hiddenChildren.value = totalChildren;
+        if (hiddenRoomData) hiddenRoomData.value = JSON.stringify(akbarRoomsData);
     };
 
     window.addAkbarRoom = function() {

@@ -39,6 +39,9 @@ class Hotels extends CI_Controller {
         $rooms    = (int)($this->input->post('rooms') ?: ($this->input->get('rooms') ?: 2));
         $adults   = (int)($this->input->post('adults') ?: ($this->input->get('adults') ?: 4));
         $children = (int)($this->input->post('children') ?: ($this->input->get('children') ?: 0));
+        
+        $roomDataRaw = $this->input->post('roomData') ?: $this->input->get('roomData');
+        $roomData = json_decode($roomDataRaw, true) ?: array();
 
         $lat = $this->input->post('lat') ?: $this->input->get('lat');
         $lng = $this->input->post('lng') ?: $this->input->get('lng');
@@ -46,7 +49,7 @@ class Hotels extends CI_Controller {
 
         $geoCode = (!empty($lat) && !empty($lng)) ? array('lat' => $lat, 'long' => $lng) : null;
 
-        $hotelResults = $this->benzyhotelapi->searchHotels($city, $checkin, $checkout, $rooms, $adults, $children, $locationId, $geoCode);
+        $hotelResults = $this->benzyhotelapi->searchHotels($city, $checkin, $checkout, $rooms, $adults, $children, $locationId, $geoCode, $roomData);
         $nights = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
         $searchId = $hotelResults['searchId'] ?? '';
         $searchTracingKey = $hotelResults['searchTracingKey'] ?? '';
@@ -60,6 +63,7 @@ class Hotels extends CI_Controller {
         $data['rooms']         = $rooms;
         $data['adults']        = $adults;
         $data['children']      = $children;
+        $data['roomDataJson']  = $roomDataRaw;
         $data['search_id']     = $searchId;
         $data['search_tracing_key'] = $searchTracingKey;
         $data['search_query']  = array(
@@ -70,6 +74,7 @@ class Hotels extends CI_Controller {
             'rooms'              => $rooms,
             'adults'             => $adults,
             'children'           => $children,
+            'roomData'           => $roomDataRaw,
             'search_id'          => $searchId,
             'search_tracing_key' => $searchTracingKey
         );
@@ -90,6 +95,7 @@ class Hotels extends CI_Controller {
         $rooms    = (int)($this->input->get('rooms') ?: 1);
         $adults   = (int)($this->input->get('adults') ?: 2);
         $children = (int)($this->input->get('children') ?: 0);
+        $roomDataRaw = $this->input->get('roomData') ?: '';
         $search_id = $this->input->get('search_id') ?: null;
         $search_tracing_key = $this->input->get('search_tracing_key') ?: null;
 
@@ -102,6 +108,7 @@ class Hotels extends CI_Controller {
         $data['rooms']              = $rooms;
         $data['adults']             = $adults;
         $data['children']           = $children;
+        $data['roomDataJson']       = $roomDataRaw;
         $data['search_id']          = $search_id;
         $data['search_tracing_key'] = $search_tracing_key;
         $data['search_query'] = array(
@@ -111,6 +118,7 @@ class Hotels extends CI_Controller {
             'rooms'              => $rooms,
             'adults'             => $adults,
             'children'           => $children,
+            'roomData'           => $roomDataRaw,
             'search_id'          => $search_id,
             'search_tracing_key' => $search_tracing_key
         );
@@ -143,6 +151,7 @@ class Hotels extends CI_Controller {
         $rooms             = (int)($this->input->post('rooms') ?: 1);
         $adults            = (int)($this->input->post('adults') ?: 2);
         $children          = (int)($this->input->post('children') ?: 0);
+        $roomDataRaw       = $this->input->post('roomData') ?: '';
         $price             = (float)($this->input->post('price') ?: 14500);
         $provider          = $this->input->post('provider') ?: 'CleartripAPI';
 
@@ -176,6 +185,7 @@ class Hotels extends CI_Controller {
             'rooms'             => $rooms,
             'adults'            => $adults,
             'children'          => $children,
+            'roomData'          => $roomDataRaw,
             'price'             => $price,
             'base_total'        => $baseTotal,
             'taxes'             => $taxes,
@@ -211,6 +221,7 @@ class Hotels extends CI_Controller {
         $rooms          = (int)$this->input->post('rooms') ?: 1;
         $adults         = (int)$this->input->post('adults') ?: 2;
         $children       = (int)$this->input->post('children') ?: 0;
+        $roomDataRaw    = $this->input->post('roomData') ?: '';
         $nights         = (int)$this->input->post('nights') ?: max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
         $total_amount   = (float)$this->input->post('grand_total') ?: ((float)$this->input->post('total_amount') ?: (float)$this->input->post('price'));
         $tax_amount     = (float)$this->input->post('taxes');
@@ -238,6 +249,7 @@ class Hotels extends CI_Controller {
             'HotelCode'             => $hotel_id,
             'RoomId'                => $room_id,
             'RoomGroupId'           => $this->input->post('room_group_id') ?: ('RGRP_' . uniqid()),
+            'RoomData'              => $roomDataRaw,
             'CheckInDate'           => $checkin,
             'CheckOutDate'          => $checkout,
             'NetAmount'             => $total_amount,

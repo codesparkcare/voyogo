@@ -239,17 +239,27 @@ class BenzyHotelApi {
         return array('lat' => '8.713913', 'long' => '77.756653');
     }
 
-    public function initSearch($city, $checkin, $checkout, $rooms = 1, $adults = 2, $children = 0, $locationId = null, $geoCode = null) {
+    public function initSearch($city, $checkin, $checkout, $rooms = 1, $adults = 2, $children = 0, $locationId = null, $geoCode = null, $roomData = array()) {
         $token = $this->generateToken();
         $url = $this->hotelUrl . '/api/hotels/search/init';
 
         $roomArr = array();
-        for ($i = 0; $i < (int)$rooms; $i++) {
-            $roomArr[] = array(
-                'adults'    => (string)max(1, round($adults / max(1, $rooms))),
-                'children'  => (string)$children,
-                'childAges' => array()
-            );
+        if (!empty($roomData) && is_array($roomData)) {
+            foreach ($roomData as $rm) {
+                $roomArr[] = array(
+                    'adults'    => (string)($rm['adults'] ?? '1'),
+                    'children'  => (string)($rm['children'] ?? '0'),
+                    'childAges' => $rm['childAges'] ?? array()
+                );
+            }
+        } else {
+            for ($i = 0; $i < (int)$rooms; $i++) {
+                $roomArr[] = array(
+                    'adults'    => (string)max(1, round($adults / max(1, $rooms))),
+                    'children'  => (string)$children,
+                    'childAges' => array()
+                );
+            }
         }
 
         $resolvedGeo = $this->resolveGeoCode($city, $geoCode);
@@ -308,8 +318,8 @@ class BenzyHotelApi {
     // =========================================================================
     // 4. HOTEL SEARCH (Coordinates Content + Rate APIs)
     // =========================================================================
-    public function searchHotels($city, $checkin, $checkout, $rooms = 1, $adults = 2, $children = 0, $locationId = null, $geoCode = null) {
-        $initData = $this->initSearch($city, $checkin, $checkout, $rooms, $adults, $children, $locationId, $geoCode);
+    public function searchHotels($city, $checkin, $checkout, $rooms = 1, $adults = 2, $children = 0, $locationId = null, $geoCode = null, $roomData = array()) {
+        $initData = $this->initSearch($city, $checkin, $checkout, $rooms, $adults, $children, $locationId, $geoCode, $roomData);
         $searchId = $initData['searchId'];
         $searchTracingKey = $initData['searchTracingKey'];
         $token = $this->generateToken();
@@ -570,6 +580,67 @@ class BenzyHotelApi {
         $mobile = $lead['Mobile'] ?? ($lead['phone'] ?? '9876543210');
         $email = $lead['Email'] ?? ($lead['email'] ?? 'guest@voyogo.com');
 
+        $guestsArr = array();
+        $guestIdx = 1;
+        $roomDataRaw = $bookingData['RoomData'] ?? '';
+        $roomData = !empty($roomDataRaw) ? json_decode($roomDataRaw, true) : array();
+        
+        if (empty($roomData)) {
+            $guestsArr[] = array(
+                'GuestID'    => 'G1',
+                'Operation'  => 'U',
+                'Title'      => $title,
+                'FirstName'  => $fname,
+                'MiddleName' => '',
+                'LastName'   => $lname,
+                'MobileNo'   => $mobile,
+                'PaxType'    => 'A',
+                'Age'        => '28',
+                'Email'      => $email,
+                'Pan'        => ''
+            );
+        } else {
+            foreach ($roomData as $rm) {
+                // Adults
+                $adultCount = (int)($rm['adults'] ?? 1);
+                for ($a = 0; $a < $adultCount; $a++) {
+                    $guestsArr[] = array(
+                        'GuestID'    => 'G' . $guestIdx,
+                        'Operation'  => 'U',
+                        'Title'      => $title,
+                        'FirstName'  => $fname,
+                        'MiddleName' => '',
+                        'LastName'   => $lname,
+                        'MobileNo'   => $mobile,
+                        'PaxType'    => 'A',
+                        'Age'        => '28',
+                        'Email'      => $email,
+                        'Pan'        => ''
+                    );
+                    $guestIdx++;
+                }
+                // Children
+                if (!empty($rm['children']) && !empty($rm['childAges'])) {
+                    foreach ($rm['childAges'] as $age) {
+                        $guestsArr[] = array(
+                            'GuestID'    => 'G' . $guestIdx,
+                            'Operation'  => 'U',
+                            'Title'      => 'Mstr',
+                            'FirstName'  => 'Child',
+                            'MiddleName' => '',
+                            'LastName'   => $lname,
+                            'MobileNo'   => $mobile,
+                            'PaxType'    => 'C',
+                            'Age'        => (string)$age,
+                            'Email'      => $email,
+                            'Pan'        => ''
+                        );
+                        $guestIdx++;
+                    }
+                }
+            }
+        }
+
         $payload = array(
             'TUI'                   => $tui,
             'ServiceEnquiry'        => '',
@@ -617,21 +688,7 @@ class BenzyHotelApi {
                     'GuestCode'    => '|1|1:A:25|',
                     'SupplierName' => $bookingData['SupplierName'] ?? 'CleartripAPI',
                     'RoomGroupId'  => $roomGroupId,
-                    'Guests'       => array(
-                        array(
-                            'GuestID'    => 'G1',
-                            'Operation'  => 'U',
-                            'Title'      => $title,
-                            'FirstName'  => $fname,
-                            'MiddleName' => '',
-                            'LastName'   => $lname,
-                            'MobileNo'   => $mobile,
-                            'PaxType'    => 'A',
-                            'Age'        => '28',
-                            'Email'      => $email,
-                            'Pan'        => ''
-                        )
-                    )
+                    'Guests'       => $guestsArr
                 )
             ),
             'NetAmount'        => (string)$netAmount,
