@@ -228,12 +228,19 @@ class Hotels extends CI_Controller {
         $total_amount   = (float)$this->input->post('grand_total') ?: ((float)$this->input->post('total_amount') ?: (float)$this->input->post('price'));
         $tax_amount     = (float)$this->input->post('taxes');
 
-        $lead_title     = $this->input->post('guest_title') ?: 'Mr';
-        $lead_fname     = $this->input->post('guest_first_name');
-        $lead_lname     = $this->input->post('guest_last_name');
-        if (empty($lead_fname)) {
-            $fullName = trim($this->input->post('primary_guest_name') ?: 'Guest User');
+        $paxData = $this->input->post('pax') ?: array();
+
+        $lead_title = 'Mr';
+        $lead_fname = 'Guest';
+        $lead_lname = 'User';
+        if (!empty($paxData[0]['adults'][0]['fname'])) {
+            $lead_title = $paxData[0]['adults'][0]['title'] ?? 'Mr';
+            $lead_fname = trim($paxData[0]['adults'][0]['fname']);
+            $lead_lname = trim($paxData[0]['adults'][0]['lname'] ?? 'User');
+        } elseif (!empty($this->input->post('primary_guest_name'))) {
+            $fullName = trim($this->input->post('primary_guest_name'));
             $parts = explode(' ', $fullName, 2);
+            $lead_title = $this->input->post('guest_title') ?: 'Mr';
             $lead_fname = $parts[0] ?? 'Guest';
             $lead_lname = $parts[1] ?? 'User';
         }
@@ -252,6 +259,7 @@ class Hotels extends CI_Controller {
             'RoomId'                => $room_id,
             'RoomGroupId'           => $this->input->post('room_group_id') ?: ('RGRP_' . uniqid()),
             'RoomData'              => $roomDataRaw,
+            'paxData'               => $paxData,
             'SupplierName'          => $provider,
             'CheckInDate'           => $checkin,
             'CheckOutDate'          => $checkout,

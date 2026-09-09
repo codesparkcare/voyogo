@@ -600,6 +600,7 @@ class BenzyHotelApi {
         $guestIdx = 1;
         $roomDataRaw = $bookingData['RoomData'] ?? '';
         $roomData = !empty($roomDataRaw) ? json_decode($roomDataRaw, true) : array();
+        $paxData = $bookingData['paxData'] ?? array();
         
         if (empty($roomData)) {
             $guestsArr[] = array(
@@ -627,13 +628,18 @@ class BenzyHotelApi {
                 // Adults
                 for ($a = 0; $a < $adultCount; $a++) {
                     $isPrimary = ($guestIdx === 1);
+                    $paxAdult = $paxData[$rIdx]['adults'][$a] ?? array();
+                    $pTitle = !empty($paxAdult['title']) ? $paxAdult['title'] : ($isPrimary ? $title : 'Mr');
+                    $pFname = !empty($paxAdult['fname']) ? trim($paxAdult['fname']) : ($isPrimary ? $fname : ('Adult' . ($a + 1)));
+                    $pLname = !empty($paxAdult['lname']) ? trim($paxAdult['lname']) : $lname;
+
                     $guestsArr[] = array(
                         'GuestID'    => '0',
                         'Operation'  => '',
-                        'Title'      => $isPrimary ? $title : 'Mr',
-                        'FirstName'  => $isPrimary ? $fname : 'Guest',
+                        'Title'      => $pTitle,
+                        'FirstName'  => $pFname,
                         'MiddleName' => '',
-                        'LastName'   => $lname,
+                        'LastName'   => $pLname,
                         'MobileNo'   => $mobile,
                         'PaxType'    => 'A',
                         'Age'        => '',
@@ -649,7 +655,12 @@ class BenzyHotelApi {
                     $rawAges = $rm['childAges'] ?? array();
                     $childAgesClean = array();
                     for ($ci = 0; $ci < $childCount; $ci++) {
-                        $cAge = isset($rawAges[$ci]) ? (int)$rawAges[$ci] : 0;
+                        $paxChild = $paxData[$rIdx]['children'][$ci] ?? array();
+                        $cTitle = !empty($paxChild['title']) ? $paxChild['title'] : 'Mstr';
+                        $cFname = !empty($paxChild['fname']) ? trim($paxChild['fname']) : ('Child' . ($ci + 1));
+                        $cLname = !empty($paxChild['lname']) ? trim($paxChild['lname']) : $lname;
+
+                        $cAge = isset($paxChild['age']) && (int)$paxChild['age'] > 0 ? (int)$paxChild['age'] : (isset($rawAges[$ci]) ? (int)$rawAges[$ci] : 0);
                         if ($cAge <= 0) {
                             $cAge = ($ci === 0) ? 7 : 3;
                         }
@@ -657,10 +668,10 @@ class BenzyHotelApi {
                         $guestsArr[] = array(
                             'GuestID'    => '0',
                             'Operation'  => '',
-                            'Title'      => 'Mstr',
-                            'FirstName'  => 'Child' . ($ci + 1),
+                            'Title'      => $cTitle,
+                            'FirstName'  => $cFname,
                             'MiddleName' => '',
-                            'LastName'   => $lname,
+                            'LastName'   => $cLname,
                             'MobileNo'   => $mobile,
                             'PaxType'    => 'C',
                             'Age'        => $cAge,

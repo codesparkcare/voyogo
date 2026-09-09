@@ -73,35 +73,144 @@ $total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
                     <input type="hidden" name="total_amount" value="<?php echo htmlspecialchars($total_amount); ?>">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
 
-                    <!-- Primary Guest Card -->
-                    <div style="background: #ffffff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
-                        <h3 style="font-family: var(--font-heading); font-size: 18px; color: #0d3470; margin-top: 0; margin-bottom: 20px;">
-                            <i class="fa-solid fa-user" style="margin-right: 8px; color: #ef4444;"></i> Primary Guest Details
+                    <?php
+                    // Parse rooms data
+                    $roomDataRaw = $booking_data['roomData'] ?? '';
+                    $roomDataList = !empty($roomDataRaw) ? json_decode($roomDataRaw, true) : array();
+                    if (empty($roomDataList) || !is_array($roomDataList)) {
+                        $roomCount = max(1, (int)($booking_data['rooms'] ?? 1));
+                        $adultCount = max(1, (int)($booking_data['adults'] ?? 2));
+                        $childCount = (int)($booking_data['children'] ?? 0);
+                        $roomDataList = array();
+                        for ($i = 0; $i < $roomCount; $i++) {
+                            $roomDataList[] = array(
+                                'adults'    => max(1, round($adultCount / $roomCount)),
+                                'children'  => ($i === 0) ? $childCount : 0,
+                                'childAges' => ($i === 0 && $childCount > 0) ? array_fill(0, $childCount, 7) : array()
+                            );
+                        }
+                    }
+                    ?>
+
+                    <!-- 1. Traveller Details Card (Akbar Travels Style) -->
+                    <div style="background: #ffffff; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
+                        <h3 style="font-family: var(--font-heading); font-size: 18px; color: #0d3470; margin-top: 0; margin-bottom: 12px; font-weight: 700;">
+                            Traveller Details
                         </h3>
 
-                        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 16px;">
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px;">Title</label>
-                                <select name="guest_title" class="field-input" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
-                                    <option value="Mr">Mr</option>
-                                    <option value="Ms">Ms</option>
-                                    <option value="Mrs">Mrs</option>
-                                </select>
+                        <!-- Info Alert Banner -->
+                        <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; padding: 10px 14px; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: #b45309;">
+                            <i class="fa-solid fa-circle-exclamation" style="font-size: 14px; color: #d97706;"></i>
+                            <span>Please make sure you enter the Name as per your Government photo id.</span>
+                        </div>
+
+                        <!-- Rooms Accordion List -->
+                        <?php foreach ($roomDataList as $rIdx => $rm): 
+                            $rNum = $rIdx + 1;
+                            $rAdults = max(1, (int)($rm['adults'] ?? 1));
+                            $rChildren = (int)($rm['children'] ?? 0);
+                            $rChildAges = $rm['childAges'] ?? array();
+                        ?>
+                        <div style="border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 16px; overflow: hidden; background: #ffffff;">
+                            <!-- Room Header -->
+                            <div style="background: #f8fafc; padding: 12px 18px; border-bottom: 1px solid #e2e8f0; font-size: 14px; font-weight: 700; color: #0d3470; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-angle-down" style="color: #64748b; font-size: 13px;"></i>
+                                Room <?php echo $rNum; ?>
+                                <span style="font-size: 12px; font-weight: 500; color: #64748b; margin-left: 8px;">
+                                    (<?php echo $rAdults; ?> Adult<?php echo $rAdults > 1 ? 's' : ''; ?><?php echo $rChildren > 0 ? ', ' . $rChildren . ' Child' . ($rChildren > 1 ? 'ren' : '') : ''; ?>)
+                                </span>
                             </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px;">Primary Guest Full Name</label>
-                                <input type="text" name="primary_guest_name" class="field-input" required placeholder="Enter Full Name" value="Rahul Sharma" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+
+                            <!-- Room Guests Body -->
+                            <div style="padding: 16px 18px;">
+                                <!-- Adults -->
+                                <?php for ($a = 0; $a < $rAdults; $a++): 
+                                    $paxNum = $a + 1;
+                                    $isLead = ($rIdx === 0 && $a === 0);
+                                ?>
+                                <div class="traveller-row" style="display: grid; grid-template-columns: 80px 100px 1fr 1fr; gap: 12px; align-items: center; margin-bottom: 12px;">
+                                    <div style="font-size: 13px; font-weight: 600; color: #475569;">
+                                        Adult <?php echo $paxNum; ?>
+                                    </div>
+                                    <div>
+                                        <select name="pax[<?php echo $rIdx; ?>][adults][<?php echo $a; ?>][title]" style="width: 100%; padding: 9px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff; color: #1e293b;">
+                                            <option value="Mr" <?php echo $isLead ? 'selected' : ''; ?>>Mr</option>
+                                            <option value="Ms">Ms</option>
+                                            <option value="Mrs">Mrs</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <input type="text" name="pax[<?php echo $rIdx; ?>][adults][<?php echo $a; ?>][fname]" required placeholder="First Name / Given Name" value="<?php echo $isLead ? 'Rahul' : ''; ?>" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                    </div>
+                                    <div>
+                                        <input type="text" name="pax[<?php echo $rIdx; ?>][adults][<?php echo $a; ?>][lname]" required placeholder="Last Name / Surname" value="<?php echo $isLead ? 'Sharma' : ''; ?>" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                    </div>
+                                </div>
+                                <?php endfor; ?>
+
+                                <!-- Children -->
+                                <?php if ($rChildren > 0): ?>
+                                    <?php for ($c = 0; $c < $rChildren; $c++): 
+                                        $cNum = $rAdults + $c + 1;
+                                        $cAge = isset($rChildAges[$c]) && (int)$rChildAges[$c] > 0 ? (int)$rChildAges[$c] : (($c === 0) ? 7 : 3);
+                                    ?>
+                                    <div class="traveller-row" style="display: grid; grid-template-columns: 80px 100px 1fr 1fr; gap: 12px; align-items: center; margin-bottom: 12px;">
+                                        <div style="font-size: 13px; font-weight: 600; color: #475569;">
+                                            Child <?php echo $cNum; ?>
+                                            <div style="font-size: 11px; color: #94a3b8; font-weight: 400;">Age: <?php echo $cAge; ?></div>
+                                        </div>
+                                        <div>
+                                            <select name="pax[<?php echo $rIdx; ?>][children][<?php echo $c; ?>][title]" style="width: 100%; padding: 9px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff; color: #1e293b;">
+                                                <option value="Mstr" selected>Mstr</option>
+                                                <option value="Ms">Ms</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <input type="text" name="pax[<?php echo $rIdx; ?>][children][<?php echo $c; ?>][fname]" required placeholder="First Name / Given Name" value="" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                        </div>
+                                        <div>
+                                            <input type="text" name="pax[<?php echo $rIdx; ?>][children][<?php echo $c; ?>][lname]" required placeholder="Last Name / Surname" value="Sharma" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                            <input type="hidden" name="pax[<?php echo $rIdx; ?>][children][<?php echo $c; ?>][age]" value="<?php echo $cAge; ?>">
+                                        </div>
+                                    </div>
+                                    <?php endfor; ?>
+                                <?php endif; ?>
                             </div>
+                        </div>
+                        <?php endforeach; ?>
+
+                        <!-- Save Entire Traveller details checkbox -->
+                        <div style="margin-top: 14px; display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="saveTravellerDetails" checked style="accent-color: #0d3470; width: 16px; height: 16px; cursor: pointer;">
+                            <label for="saveTravellerDetails" style="font-size: 13px; color: #334155; cursor: pointer; font-weight: 500;">Save Entire Traveller details</label>
+                        </div>
+                    </div>
+
+                    <!-- 2. Contact Information Card (Akbar Travels Style) -->
+                    <div style="background: #ffffff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
+                        <h3 style="font-family: var(--font-heading); font-size: 18px; color: #0d3470; margin-top: 0; margin-bottom: 6px; font-weight: 700;">
+                            Contact information
+                        </h3>
+                        <div style="font-size: 13px; color: #64748b; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-envelope-open-text" style="color: #ef4444; font-size: 14px;"></i>
+                            Your ticket and hotels information will be sent here..
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <!-- Phone with +91 Country Code -->
                             <div>
-                                <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px;">Email Address (For Voucher Confirmation)</label>
-                                <input type="email" name="guest_email" class="field-input" required value="rahul.sharma@example.com" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                                <div style="display: flex;">
+                                    <div style="display: flex; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; border-right: none; border-radius: 6px 0 0 6px; padding: 0 10px; font-size: 13px; font-weight: 600; color: #334155; gap: 4px; white-space: nowrap;">
+                                        <img src="https://flagcdn.com/w20/in.png" alt="IN" style="width: 16px; height: 11px; object-fit: cover; border-radius: 2px;">
+                                        +91 <i class="fa-solid fa-angle-down" style="font-size: 10px; color: #94a3b8; margin-left: 2px;"></i>
+                                    </div>
+                                    <input type="tel" name="guest_phone" class="field-input" required placeholder="81234 56789" value="9876543210" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 0 6px 6px 0; font-size: 13px;">
+                                </div>
                             </div>
+
+                            <!-- Email Input -->
                             <div>
-                                <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px;">Mobile Number</label>
-                                <input type="tel" name="guest_phone" class="field-input" required value="9876543210" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                                <input type="email" name="guest_email" class="field-input" required placeholder="Email Address" value="rahul.sharma@example.com" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
                             </div>
                         </div>
                     </div>
