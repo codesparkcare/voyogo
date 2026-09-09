@@ -683,8 +683,8 @@ class BenzyHotelApi {
 
         $agentInfo = $tokenDetails['AgentInfo'] ?? ($this->credentials['AgentCode'] ?? '');
 
-        // Hotel Itinerary host where CreateItinerary created the transaction (b2bapihotels)
-        $url = $this->itineraryUrl . '/Payment/StartPay';
+        // Confirmed Endpoint by Benzy Support (Riya T B): {HotelBookingURL}/Payment/StartPay
+        $url = $this->bookingUrl . '/Payment/StartPay';
 
         // Exact schema matching official Benzy Hotel WRC PDF (Page 42-43) & Benzy Support direction
         $payload = array(
@@ -768,7 +768,7 @@ class BenzyHotelApi {
 
         // Fallback to alternate host only if HTTP code was not 200
         if ($res['http_code'] !== 200) {
-            $altUrl = $this->bookingUrl . '/Payment/StartPay';
+            $altUrl = $this->itineraryUrl . '/Payment/StartPay';
             if ($altUrl !== $url) {
                 $altRes = $this->makeRequest('StartPay_Alt', $altUrl, $payload, 'POST', $token, $customHeaders);
                 if ($altRes['http_code'] === 200 && !empty($altRes['json'])) {
