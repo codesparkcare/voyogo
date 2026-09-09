@@ -6,6 +6,7 @@ $qNights   = isset($search_query['nights']) ? $search_query['nights'] : (isset($
 $qRooms    = $search_query['rooms'] ?? ($rooms ?? 1);
 $qAdults   = $search_query['adults'] ?? ($adults ?? 2);
 $qChildren = $search_query['children'] ?? ($children ?? 0);
+$qRoomData = $search_query['roomData'] ?? ($roomDataJson ?? '');
 $hotels    = isset($hotelResults['Hotels']) ? $hotelResults['Hotels'] : (is_array($hotelResults) ? $hotelResults : array());
 ?>
 <div style="background-color: #f5f7fa; padding-bottom: 60px;">
@@ -147,7 +148,7 @@ $hotels    = isset($hotelResults['Hotels']) ? $hotelResults['Hotels'] : (is_arra
                                 $sId = $h['searchId'] ?? ($hotelResults['searchId'] ?? '');
                                 $sTrace = $h['searchTracingKey'] ?? ($hotelResults['searchTracingKey'] ?? '');
                                 ?>
-                                <a href="<?php echo site_url('hotels/detail/' . $h['id'] . '?city=' . urlencode($qCity) . '&checkin=' . $qCheckin . '&checkout=' . $qCheckout . '&rooms=' . $qRooms . '&adults=' . $qAdults . '&children=' . $qChildren . (!empty($sId) ? '&search_id=' . urlencode($sId) : '') . (!empty($sTrace) ? '&search_tracing_key=' . urlencode($sTrace) : '')); ?>" class="btn-search" style="padding: 8px 20px; font-size: 13px; text-decoration: none; display: inline-flex; margin-top: 6px; background: linear-gradient(135deg, #0d3470, #fa3a3a); border-radius: 6px; font-weight: 700; color: #fff;">
+                                <a href="<?php echo site_url('hotels/detail/' . $h['id'] . '?city=' . urlencode($qCity) . '&checkin=' . $qCheckin . '&checkout=' . $qCheckout . '&rooms=' . $qRooms . '&adults=' . $qAdults . '&children=' . $qChildren . (!empty($qRoomData) ? '&roomData=' . urlencode($qRoomData) : '') . (!empty($sId) ? '&search_id=' . urlencode($sId) : '') . (!empty($sTrace) ? '&search_tracing_key=' . urlencode($sTrace) : '')); ?>" class="btn-search" style="padding: 8px 20px; font-size: 13px; text-decoration: none; display: inline-flex; margin-top: 6px; background: linear-gradient(135deg, #0d3470, #fa3a3a); border-radius: 6px; font-weight: 700; color: #fff;">
                                     VIEW ROOMS <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
                                 </a>
                             </div>

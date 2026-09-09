@@ -108,6 +108,7 @@ $hPrice     = $hotel['price_per_night'] ?? 3500;
                             <input type="hidden" name="rooms" value="<?php echo htmlspecialchars($qRooms); ?>">
                             <input type="hidden" name="adults" value="<?php echo htmlspecialchars($qAdults); ?>">
                             <input type="hidden" name="children" value="<?php echo htmlspecialchars($qChildren); ?>">
+                            <input type="hidden" name="roomData" value="<?php echo htmlspecialchars($roomDataJson ?? ($search_query['roomData'] ?? '')); ?>">
                             <input type="hidden" name="search_id" value="<?php echo htmlspecialchars($search_id ?? ($search_query['search_id'] ?? '')); ?>">
                             <input type="hidden" name="tui" value="<?php echo htmlspecialchars($search_tracing_key ?? ($search_query['search_tracing_key'] ?? '')); ?>">
                             <button type="submit" class="btn-search" style="padding: 10px 24px; font-size: 14px; background: linear-gradient(135deg, #09204b, #2563eb); border: none; border-radius: 6px; color: #fff; font-weight: 700; cursor: pointer;">
