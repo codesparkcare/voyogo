@@ -246,18 +246,34 @@ class BenzyHotelApi {
         $roomArr = array();
         if (!empty($roomData) && is_array($roomData)) {
             foreach ($roomData as $rm) {
+                $cages = array();
+                $childCnt = (int)($rm['children'] ?? 0);
+                if ($childCnt > 0) {
+                    $rawAges = $rm['childAges'] ?? array();
+                    for ($ci = 0; $ci < $childCnt; $ci++) {
+                        $ageVal = isset($rawAges[$ci]) ? (int)$rawAges[$ci] : 0;
+                        $cages[] = ($ageVal > 0) ? $ageVal : (($ci === 0) ? 7 : 3);
+                    }
+                }
                 $roomArr[] = array(
                     'adults'    => (string)($rm['adults'] ?? '1'),
-                    'children'  => (string)($rm['children'] ?? '0'),
-                    'childAges' => $rm['childAges'] ?? array()
+                    'children'  => (string)$childCnt,
+                    'childAges' => $cages
                 );
             }
         } else {
             for ($i = 0; $i < (int)$rooms; $i++) {
+                $cages = array();
+                $childCnt = (int)$children;
+                if ($childCnt > 0) {
+                    for ($ci = 0; $ci < $childCnt; $ci++) {
+                        $cages[] = ($ci === 0) ? 7 : 3;
+                    }
+                }
                 $roomArr[] = array(
                     'adults'    => (string)max(1, round($adults / max(1, $rooms))),
-                    'children'  => (string)$children,
-                    'childAges' => array()
+                    'children'  => (string)$childCnt,
+                    'childAges' => $cages
                 );
             }
         }
@@ -595,50 +611,70 @@ class BenzyHotelApi {
                 'LastName'   => $lname,
                 'MobileNo'   => $mobile,
                 'PaxType'    => 'A',
-                'Age'        => '28',
+                'Age'        => '',
                 'Email'      => $email,
                 'Pan'        => ''
             );
+            $guestCode = '|1|1:A:25|';
         } else {
-            foreach ($roomData as $rm) {
+            $guestCodeParts = array();
+            foreach ($roomData as $rIdx => $rm) {
+                $roomNum = $rIdx + 1;
+                $adultCount = max(1, (int)($rm['adults'] ?? 1));
+                $adultAges = array_fill(0, $adultCount, 25);
+                $codePart = '|' . $roomNum . '|' . $adultCount . ':A:' . implode(':', $adultAges);
+
                 // Adults
-                $adultCount = (int)($rm['adults'] ?? 1);
                 for ($a = 0; $a < $adultCount; $a++) {
+                    $isPrimary = ($guestIdx === 1);
                     $guestsArr[] = array(
                         'GuestID'    => 'G' . $guestIdx,
                         'Operation'  => 'U',
-                        'Title'      => $title,
-                        'FirstName'  => $fname,
+                        'Title'      => $isPrimary ? $title : 'Mr',
+                        'FirstName'  => $isPrimary ? $fname : 'Guest',
                         'MiddleName' => '',
                         'LastName'   => $lname,
                         'MobileNo'   => $mobile,
                         'PaxType'    => 'A',
-                        'Age'        => '28',
+                        'Age'        => '',
                         'Email'      => $email,
                         'Pan'        => ''
                     );
                     $guestIdx++;
                 }
+
                 // Children
-                if (!empty($rm['children']) && !empty($rm['childAges'])) {
-                    foreach ($rm['childAges'] as $age) {
+                $childCount = (int)($rm['children'] ?? 0);
+                if ($childCount > 0) {
+                    $rawAges = $rm['childAges'] ?? array();
+                    $childAgesClean = array();
+                    for ($ci = 0; $ci < $childCount; $ci++) {
+                        $cAge = isset($rawAges[$ci]) ? (int)$rawAges[$ci] : 0;
+                        if ($cAge <= 0) {
+                            $cAge = ($ci === 0) ? 7 : 3;
+                        }
+                        $childAgesClean[] = $cAge;
                         $guestsArr[] = array(
                             'GuestID'    => 'G' . $guestIdx,
                             'Operation'  => 'U',
                             'Title'      => 'Master',
-                            'FirstName'  => 'Child',
+                            'FirstName'  => 'Child' . ($ci + 1),
                             'MiddleName' => '',
                             'LastName'   => $lname,
                             'MobileNo'   => $mobile,
                             'PaxType'    => 'C',
-                            'Age'        => (string)$age,
+                            'Age'        => $cAge,
                             'Email'      => $email,
                             'Pan'        => ''
                         );
                         $guestIdx++;
                     }
+                    $codePart .= '|' . $childCount . ':C:' . implode(':', $childAgesClean);
                 }
+                $codePart .= '|';
+                $guestCodeParts[] = $codePart;
             }
+            $guestCode = !empty($guestCodeParts) ? $guestCodeParts[0] : '|1|1:A:25|';
         }
 
         $payload = array(
@@ -685,7 +721,7 @@ class BenzyHotelApi {
             'Rooms'                 => array(
                 array(
                     'RoomId'       => $roomId,
-                    'GuestCode'    => '',
+                    'GuestCode'    => $guestCode,
                     'SupplierName' => $bookingData['SupplierName'] ?? 'CleartripAPI',
                     'RoomGroupId'  => $roomGroupId,
                     'Guests'       => $guestsArr

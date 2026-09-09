@@ -1711,7 +1711,8 @@ document.addEventListener('DOMContentLoaded', function() {
             var newCount = Math.max(0, Math.min(4, akbarRoomsData[idx].children + delta));
             akbarRoomsData[idx].children = newCount;
             while (akbarRoomsData[idx].childAges.length < newCount) {
-                akbarRoomsData[idx].childAges.push(0);
+                var defaultAge = akbarRoomsData[idx].childAges.length === 0 ? 7 : 3;
+                akbarRoomsData[idx].childAges.push(defaultAge);
             }
             if (akbarRoomsData[idx].childAges.length > newCount) {
                 akbarRoomsData[idx].childAges.length = newCount;
@@ -1723,6 +1724,8 @@ document.addEventListener('DOMContentLoaded', function() {
     window.updateChildAge = function(roomIdx, childIdx, age) {
         if (akbarRoomsData[roomIdx] && akbarRoomsData[roomIdx].childAges) {
             akbarRoomsData[roomIdx].childAges[childIdx] = parseInt(age) || 0;
+            var hiddenRoomData = document.getElementById('akbarHiddenRoomData');
+            if (hiddenRoomData) hiddenRoomData.value = JSON.stringify(akbarRoomsData);
         }
     };
 
