@@ -625,7 +625,7 @@ class BenzyHotelApi {
                         $guestsArr[] = array(
                             'GuestID'    => 'G' . $guestIdx,
                             'Operation'  => 'U',
-                            'Title'      => 'Mstr',
+                            'Title'      => 'Master',
                             'FirstName'  => 'Child',
                             'MiddleName' => '',
                             'LastName'   => $lname,
@@ -685,7 +685,7 @@ class BenzyHotelApi {
             'Rooms'                 => array(
                 array(
                     'RoomId'       => $roomId,
-                    'GuestCode'    => '|1|1:A:25|',
+                    'GuestCode'    => '',
                     'SupplierName' => $bookingData['SupplierName'] ?? 'CleartripAPI',
                     'RoomGroupId'  => $roomGroupId,
                     'Guests'       => $guestsArr
