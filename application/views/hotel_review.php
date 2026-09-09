@@ -72,6 +72,7 @@ $total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
                     <input type="hidden" name="taxes" value="<?php echo htmlspecialchars($booking_data['taxes'] ?? 0); ?>">
                     <input type="hidden" name="total_amount" value="<?php echo htmlspecialchars($total_amount); ?>">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
+                    <input type="hidden" name="primary_guest_name" id="hidden_primary_guest_name" value="Rahul Sharma">
 
                     <?php
                     // Parse rooms data
@@ -262,13 +263,30 @@ $total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
 document.getElementById('payHotelRazorpayBtn').addEventListener('click', function(e) {
     e.preventDefault();
 
-    var amountInPaise = <?php echo (int)($total_amount * 100); ?>;
-    var guestName = document.querySelector('input[name="primary_guest_name"]').value;
-    var guestEmail = document.querySelector('input[name="guest_email"]').value;
-    var guestPhone = document.querySelector('input[name="guest_phone"]').value;
+    var form = document.getElementById('hotelBookingForm');
+    if (form && !form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
 
-    if (!guestName || !guestEmail || !guestPhone) {
-        alert('Please fill in all guest details.');
+    var amountInPaise = <?php echo (int)($total_amount * 100); ?>;
+    var leadFname = document.querySelector('input[name="pax[0][adults][0][fname]"]') ? document.querySelector('input[name="pax[0][adults][0][fname]"]').value.trim() : '';
+    var leadLname = document.querySelector('input[name="pax[0][adults][0][lname]"]') ? document.querySelector('input[name="pax[0][adults][0][lname]"]').value.trim() : '';
+    var guestName = (leadFname + ' ' + leadLname).trim();
+    if (!guestName) {
+        var primInput = document.querySelector('input[name="primary_guest_name"]');
+        if (primInput) guestName = primInput.value.trim();
+    }
+    if (!guestName) guestName = 'Guest User';
+
+    var hiddenPrim = document.getElementById('hidden_primary_guest_name');
+    if (hiddenPrim) hiddenPrim.value = guestName;
+
+    var guestEmail = document.querySelector('input[name="guest_email"]') ? document.querySelector('input[name="guest_email"]').value.trim() : '';
+    var guestPhone = document.querySelector('input[name="guest_phone"]') ? document.querySelector('input[name="guest_phone"]').value.trim() : '';
+
+    if (!guestEmail || !guestPhone) {
+        alert('Please fill in your Contact email and mobile number.');
         return;
     }
 
