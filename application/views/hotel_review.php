@@ -66,6 +66,7 @@ $total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
                     <input type="hidden" name="adults" value="<?php echo htmlspecialchars($booking_data['adults'] ?? 2); ?>">
                     <input type="hidden" name="children" value="<?php echo htmlspecialchars($booking_data['children'] ?? 0); ?>">
                     <input type="hidden" name="roomData" value="<?php echo htmlspecialchars($booking_data['roomData'] ?? ''); ?>">
+                    <input type="hidden" name="provider" value="<?php echo htmlspecialchars($booking_data['provider'] ?? 'CleartripAPI'); ?>">
                     <input type="hidden" name="nights" value="<?php echo htmlspecialchars($booking_data['nights'] ?? 1); ?>">
                     <input type="hidden" name="grand_total" value="<?php echo htmlspecialchars($total_amount); ?>">
                     <input type="hidden" name="taxes" value="<?php echo htmlspecialchars($booking_data['taxes'] ?? 0); ?>">

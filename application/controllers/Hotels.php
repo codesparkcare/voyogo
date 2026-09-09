@@ -186,6 +186,7 @@ class Hotels extends CI_Controller {
             'adults'            => $adults,
             'children'          => $children,
             'roomData'          => $roomDataRaw,
+            'provider'          => $provider,
             'price'             => $price,
             'base_total'        => $baseTotal,
             'taxes'             => $taxes,
@@ -222,6 +223,7 @@ class Hotels extends CI_Controller {
         $adults         = (int)$this->input->post('adults') ?: 2;
         $children       = (int)$this->input->post('children') ?: 0;
         $roomDataRaw    = $this->input->post('roomData') ?: '';
+        $provider       = $this->input->post('provider') ?: 'CleartripAPI';
         $nights         = (int)$this->input->post('nights') ?: max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
         $total_amount   = (float)$this->input->post('grand_total') ?: ((float)$this->input->post('total_amount') ?: (float)$this->input->post('price'));
         $tax_amount     = (float)$this->input->post('taxes');
@@ -250,6 +252,7 @@ class Hotels extends CI_Controller {
             'RoomId'                => $room_id,
             'RoomGroupId'           => $this->input->post('room_group_id') ?: ('RGRP_' . uniqid()),
             'RoomData'              => $roomDataRaw,
+            'SupplierName'          => $provider,
             'CheckInDate'           => $checkin,
             'CheckOutDate'          => $checkout,
             'NetAmount'             => $total_amount,
