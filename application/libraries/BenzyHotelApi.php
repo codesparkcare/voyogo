@@ -603,8 +603,8 @@ class BenzyHotelApi {
         
         if (empty($roomData)) {
             $guestsArr[] = array(
-                'GuestID'    => 'G1',
-                'Operation'  => 'U',
+                'GuestID'    => '0',
+                'Operation'  => '',
                 'Title'      => $title,
                 'FirstName'  => $fname,
                 'MiddleName' => '',
@@ -628,8 +628,8 @@ class BenzyHotelApi {
                 for ($a = 0; $a < $adultCount; $a++) {
                     $isPrimary = ($guestIdx === 1);
                     $guestsArr[] = array(
-                        'GuestID'    => 'G' . $guestIdx,
-                        'Operation'  => 'U',
+                        'GuestID'    => '0',
+                        'Operation'  => '',
                         'Title'      => $isPrimary ? $title : 'Mr',
                         'FirstName'  => $isPrimary ? $fname : 'Guest',
                         'MiddleName' => '',
@@ -655,9 +655,9 @@ class BenzyHotelApi {
                         }
                         $childAgesClean[] = $cAge;
                         $guestsArr[] = array(
-                            'GuestID'    => 'G' . $guestIdx,
-                            'Operation'  => 'U',
-                            'Title'      => 'Master',
+                            'GuestID'    => '0',
+                            'Operation'  => '',
+                            'Title'      => 'Mstr',
                             'FirstName'  => 'Child' . ($ci + 1),
                             'MiddleName' => '',
                             'LastName'   => $lname,
@@ -699,7 +699,7 @@ class BenzyHotelApi {
                 'IsGuest'           => false,
                 'CountryCode'       => 'IN',
                 'MobileCountryCode' => '+91',
-                'NetAmount'         => (string)$netAmount
+                'NetAmount'         => ''
             ),
             'Auxiliaries'           => array(
                 array(
@@ -730,7 +730,7 @@ class BenzyHotelApi {
             'NetAmount'        => (string)$netAmount,
             'ClientID'         => $clientId,
             'DeviceID'         => '',
-            'AppVersion'       => '1.0',
+            'AppVersion'       => '',
             'SearchId'         => $searchId,
             'RecommendationId' => $recId,
             'LocationName'     => $bookingData['LocationName'] ?? null,
@@ -742,11 +742,6 @@ class BenzyHotelApi {
 
         $customHeaders = array('search-tracing-key' => $tui);
         $res = $this->makeRequest('CreateItinerary', $url, $payload, 'POST', $token, $customHeaders);
-
-        if ($res['http_code'] !== 200 || empty($res['json']['TransactionID'])) {
-            $altUrl = $this->itineraryUrl . '/api/hotels/createitinerary';
-            $res = $this->makeRequest('CreateItinerary_Alt', $altUrl, $payload, 'POST', $token, $customHeaders);
-        }
 
         if ($res['http_code'] === 200 && !empty($res['json']['TransactionID'])) {
             return array(
