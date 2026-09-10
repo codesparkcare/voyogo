@@ -895,14 +895,18 @@ class BenzyHotelApi {
         $tokenDetails = $this->getTokenDetails();
         $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'FVI6V120g22Ei5ztGK0FIQ==');
 
-        // Confirmed Endpoint from Benzy official SamplePayloads: {HotelBookingURL}/Utils/RetrieveBooking
+        // Confirmed Endpoint from Benzy official SamplePayloads: {HotelBookingURL}/Utils/RetrieveBooking (PDF Page 75)
         $url = $this->bookingUrl . '/Utils/RetrieveBooking';
 
         $payload = array(
-            'ClientID'        => $clientId,
-            'ReferenceNumber' => (string)$transactionId,
+            'TUI'             => $tui,
             'ReferenceType'   => 'T',
-            'TUI'             => $tui
+            'ReferenceNumber' => (string)$transactionId,
+            'ServiceType'     => null,
+            'ClientID'        => $clientId,
+            'RequestMode'     => 'RB',
+            'Contact'         => null,
+            'Name'            => null
         );
 
         $res = $this->makeRequest('RetrieveBooking', $url, $payload, 'POST', $token);
@@ -914,11 +918,12 @@ class BenzyHotelApi {
     }
 
     // =========================================================================
-    // 10. CANCEL BOOKING ({HotelBookingURL}/Booking/Cancel)
+    // 10. CANCEL BOOKING ({HotelItineraryURL}/Hotel/CancelHotelBooking)
     // =========================================================================
     public function cancelBooking($transactionId, $tui = null, $yearType = '19', $remarks = 'Customer Request') {
         $token = $this->generateToken();
-        $url = $this->bookingUrl . '/Booking/Cancel';
+        // Official Endpoint per PDF Page 87: {HotelItineraryURL}/Hotel/CancelHotelBooking
+        $url = $this->itineraryUrl . '/Hotel/CancelHotelBooking';
 
         $payload = array(
             'Remarks'       => $remarks,
@@ -928,11 +933,6 @@ class BenzyHotelApi {
         );
 
         $res = $this->makeRequest('CancelHotelBooking', $url, $payload, 'POST', $token);
-        if ($res['http_code'] !== 200) {
-            $altUrl = $this->itineraryUrl . '/Hotel/Cancel';
-            $res = $this->makeRequest('Cancel_Alt', $altUrl, $payload, 'POST', $token);
-        }
-
         return $res;
     }
 
