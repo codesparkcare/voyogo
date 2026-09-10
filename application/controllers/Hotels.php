@@ -264,6 +264,23 @@ class Hotels extends CI_Controller {
         $pricingOccupancyChildAges = array();  // per-room child ages from Pricing occupancies
         if (!empty($searchId) && !empty($recId) && !empty($room_id)) {
             $liveReprice = $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, $provider, $searchId, $recId);
+
+            // If Pricing API returned a failure, abort booking - do NOT proceed to CreateItinerary.
+            // Calling CreateItinerary after a failed Pricing results in Benzy error 5102 (Pricing response failure).
+            if (isset($liveReprice['status']) && $liveReprice['status'] === 'failure') {
+                $pricingErrMsg = $liveReprice['message'] ?? 'Room pricing failed. Please try again or choose a different room.';
+                $this->output
+                    ->set_status_header(200)
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode(array(
+                        'success' => false,
+                        'error'   => 'pricing_failed',
+                        'code'    => $liveReprice['code'] ?? 'unknown',
+                        'message' => 'Room pricing is currently unavailable for this selection. Please try again or select a different room. (' . $pricingErrMsg . ')'
+                    )));
+                return;
+            }
+
             if (!empty($liveReprice['roomGroup'][0]['totalRate'])) {
                 $total_amount = (float)$liveReprice['roomGroup'][0]['totalRate'];
             }

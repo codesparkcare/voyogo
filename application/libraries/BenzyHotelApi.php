@@ -549,9 +549,22 @@ class BenzyHotelApi {
 
         if ($searchId && $recommendationId) {
             $url = $this->hotelUrl . '/api/hotels/search/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/price/' . urlencode($provider) . '/' . urlencode($recommendationId);
+
+            // Attempt 1
             $res = $this->makeRequest('Pricing', $url, array(), 'GET', $token);
-            if ($res['http_code'] === 200 && !empty($res['json'])) {
-                return $res['json'];
+            $pricingResult = ($res['http_code'] === 200 && !empty($res['json'])) ? $res['json'] : null;
+
+            // If first attempt returned failure status (e.g. Benzy code 1215), retry once
+            if (!$pricingResult || ($pricingResult['status'] ?? '') === 'failure') {
+                sleep(2); // brief pause before retry
+                $res2 = $this->makeRequest('Pricing', $url, array(), 'GET', $token);
+                if ($res2['http_code'] === 200 && !empty($res2['json'])) {
+                    $pricingResult = $res2['json'];
+                }
+            }
+
+            if ($pricingResult) {
+                return $pricingResult;
             }
         }
 
