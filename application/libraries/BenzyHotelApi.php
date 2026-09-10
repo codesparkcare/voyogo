@@ -596,44 +596,55 @@ class BenzyHotelApi {
         $mobile = $lead['Mobile'] ?? ($lead['phone'] ?? '9876543210');
         $email = $lead['Email'] ?? ($lead['email'] ?? 'guest@voyogo.com');
 
-        $guestsArr = array();
         $guestIdx = 1;
         $roomDataRaw = $bookingData['RoomData'] ?? '';
         $roomData = !empty($roomDataRaw) ? json_decode($roomDataRaw, true) : array();
         $paxData = $bookingData['paxData'] ?? array();
-        
-        if (empty($roomData)) {
-            $guestsArr[] = array(
-                'GuestID'    => 'G1',
-                'Operation'  => 'U',
-                'Title'      => $title,
-                'FirstName'  => $fname,
-                'MiddleName' => '',
-                'LastName'   => $lname,
-                'MobileNo'   => $mobile,
-                'PaxType'    => 'A',
-                'Age'        => '',
-                'Email'      => $email,
-                'Pan'        => ''
-            );
-            $guestCode = '|1|1:A:25|';
-        } else {
-            $guestCodeParts = array();
-            foreach ($roomData as $rIdx => $rm) {
-                $roomNum = $rIdx + 1;
-                $adultCount = max(1, (int)($rm['adults'] ?? 1));
-                $adultAges = array_fill(0, $adultCount, 25);
-                $codePart = '|' . $roomNum . '|' . $adultCount . ':A:' . implode(':', $adultAges);
 
-                // Adults
+        // --- Build per-room data: guests + guestCode ---
+        // Each room searched = one occupancy = one Rooms entry in CreateItinerary (per API spec)
+        $roomsPayload = array();
+
+        if (empty($roomData)) {
+            // Single room, no roomData: use lead guest only
+            $roomsPayload[] = array(
+                '_guestCode' => '|1|1:A:25|',
+                '_guests'    => array(
+                    array(
+                        'GuestID'    => 'G1',
+                        'Operation'  => 'U',
+                        'Title'      => $title,
+                        'FirstName'  => $fname,
+                        'MiddleName' => '',
+                        'LastName'   => $lname,
+                        'MobileNo'   => $mobile,
+                        'PaxType'    => 'A',
+                        'Age'        => '',
+                        'Email'      => $email,
+                        'Pan'        => ''
+                    )
+                )
+            );
+        } else {
+            // One occupancy per room as required by the Benzy API spec:
+            // GuestCode OccupancyID = the occupancyId returned per room in Pricing response
+            foreach ($roomData as $rIdx => $rm) {
+                $occupancyId = $rIdx + 1; // occupancyId from Pricing = 1-based room index
+                $adultCount  = max(1, (int)($rm['adults'] ?? 1));
+                $adultAges   = array_fill(0, $adultCount, 25);
+                $codePart    = '|' . $occupancyId . '|' . $adultCount . ':A:' . implode(':', $adultAges);
+
+                $roomGuests = array();
+
+                // Adults for this room
                 for ($a = 0; $a < $adultCount; $a++) {
                     $isPrimary = ($guestIdx === 1);
-                    $paxAdult = $paxData[$rIdx]['adults'][$a] ?? array();
-                    $pTitle = !empty($paxAdult['title']) ? $paxAdult['title'] : ($isPrimary ? $title : 'Mr');
-                    $pFname = !empty($paxAdult['fname']) ? trim($paxAdult['fname']) : ($isPrimary ? $fname : ('Adult' . ($a + 1)));
-                    $pLname = !empty($paxAdult['lname']) ? trim($paxAdult['lname']) : $lname;
+                    $paxAdult  = $paxData[$rIdx]['adults'][$a] ?? array();
+                    $pTitle    = !empty($paxAdult['title']) ? $paxAdult['title'] : ($isPrimary ? $title : 'Mr');
+                    $pFname    = !empty($paxAdult['fname']) ? trim($paxAdult['fname']) : ($isPrimary ? $fname : ('Adult' . ($a + 1)));
+                    $pLname    = !empty($paxAdult['lname']) ? trim($paxAdult['lname']) : $lname;
 
-                    $guestsArr[] = array(
+                    $roomGuests[] = array(
                         'GuestID'    => 'G' . $guestIdx,
                         'Operation'  => 'U',
                         'Title'      => $pTitle,
@@ -649,10 +660,10 @@ class BenzyHotelApi {
                     $guestIdx++;
                 }
 
-                // Children
+                // Children for this room
                 $childCount = (int)($rm['children'] ?? 0);
                 if ($childCount > 0) {
-                    $rawAges = !empty($bookingData['pricingChildAges']) ? $bookingData['pricingChildAges'] : ($rm['childAges'] ?? array());
+                    $rawAges        = !empty($bookingData['pricingChildAges']) ? $bookingData['pricingChildAges'] : ($rm['childAges'] ?? array());
                     $childAgesClean = array();
                     for ($ci = 0; $ci < $childCount; $ci++) {
                         $cAge = isset($rawAges[$ci]) ? (int)$rawAges[$ci] : 0;
@@ -661,17 +672,17 @@ class BenzyHotelApi {
                         }
                         $childAgesClean[] = $cAge;
                     }
-                    // Sort child ages to strictly match Pricing response order per PDF Page 67 specification
+                    // Sort child ages to match Pricing response order per PDF Page 67
                     sort($childAgesClean, SORT_NUMERIC);
 
                     for ($ci = 0; $ci < $childCount; $ci++) {
                         $paxChild = $paxData[$rIdx]['children'][$ci] ?? array();
-                        $cTitle = !empty($paxChild['title']) ? $paxChild['title'] : 'Mstr';
-                        $cFname = !empty($paxChild['fname']) ? trim($paxChild['fname']) : ('Child' . ($ci + 1));
-                        $cLname = !empty($paxChild['lname']) ? trim($paxChild['lname']) : $lname;
-                        $cAge = $childAgesClean[$ci];
+                        $cTitle   = !empty($paxChild['title']) ? $paxChild['title'] : 'Mstr';
+                        $cFname   = !empty($paxChild['fname']) ? trim($paxChild['fname']) : ('Child' . ($ci + 1));
+                        $cLname   = !empty($paxChild['lname']) ? trim($paxChild['lname']) : $lname;
+                        $cAge     = $childAgesClean[$ci];
 
-                        $guestsArr[] = array(
+                        $roomGuests[] = array(
                             'GuestID'    => 'G' . $guestIdx,
                             'Operation'  => 'U',
                             'Title'      => $cTitle,
@@ -689,9 +700,12 @@ class BenzyHotelApi {
                     $codePart .= '|' . $childCount . ':C:' . implode(':', $childAgesClean);
                 }
                 $codePart .= '|';
-                $guestCodeParts[] = $codePart;
+
+                $roomsPayload[] = array(
+                    '_guestCode' => $codePart,
+                    '_guests'    => $roomGuests
+                );
             }
-            $guestCode = !empty($guestCodeParts) ? $guestCodeParts[0] : '|1|1:A:25|';
         }
 
         $payload = array(
@@ -735,15 +749,20 @@ class BenzyHotelApi {
                     )
                 )
             ),
-            'Rooms'                 => array(
-                array(
-                    'RoomId'       => $roomId,
-                    'GuestCode'    => $guestCode,
-                    'SupplierName' => $bookingData['SupplierName'] ?? 'CleartripAPI',
-                    'RoomGroupId'  => $roomGroupId,
-                    'Guests'       => $guestsArr
-                )
-            ),
+            'Rooms'                 => (function() use ($roomsPayload, $roomId, $roomGroupId, $bookingData) {
+                // Build one Rooms entry per occupancy (per Benzy API spec)
+                $roomsArr = array();
+                foreach ($roomsPayload as $rp) {
+                    $roomsArr[] = array(
+                        'RoomId'       => $roomId,
+                        'GuestCode'    => $rp['_guestCode'],
+                        'SupplierName' => $bookingData['SupplierName'] ?? 'CleartripAPI',
+                        'RoomGroupId'  => $roomGroupId,
+                        'Guests'       => $rp['_guests']
+                    );
+                }
+                return $roomsArr;
+            })(),
             'NetAmount'        => (string)$netAmount,
             'ClientID'         => $clientId,
             'DeviceID'         => '',
