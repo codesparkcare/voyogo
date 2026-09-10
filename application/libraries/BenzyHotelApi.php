@@ -604,8 +604,8 @@ class BenzyHotelApi {
         
         if (empty($roomData)) {
             $guestsArr[] = array(
-                'GuestID'    => '0',
-                'Operation'  => '',
+                'GuestID'    => 'G1',
+                'Operation'  => 'U',
                 'Title'      => $title,
                 'FirstName'  => $fname,
                 'MiddleName' => '',
@@ -634,8 +634,8 @@ class BenzyHotelApi {
                     $pLname = !empty($paxAdult['lname']) ? trim($paxAdult['lname']) : $lname;
 
                     $guestsArr[] = array(
-                        'GuestID'    => '0',
-                        'Operation'  => '',
+                        'GuestID'    => 'G' . $guestIdx,
+                        'Operation'  => 'U',
                         'Title'      => $pTitle,
                         'FirstName'  => $pFname,
                         'MiddleName' => '',
@@ -652,22 +652,28 @@ class BenzyHotelApi {
                 // Children
                 $childCount = (int)($rm['children'] ?? 0);
                 if ($childCount > 0) {
-                    $rawAges = $rm['childAges'] ?? array();
+                    $rawAges = !empty($bookingData['pricingChildAges']) ? $bookingData['pricingChildAges'] : ($rm['childAges'] ?? array());
                     $childAgesClean = array();
+                    for ($ci = 0; $ci < $childCount; $ci++) {
+                        $cAge = isset($rawAges[$ci]) ? (int)$rawAges[$ci] : 0;
+                        if ($cAge <= 0) {
+                            $cAge = ($ci === 0) ? 7 : 3;
+                        }
+                        $childAgesClean[] = $cAge;
+                    }
+                    // Sort child ages to strictly match Pricing response order per PDF Page 67 specification
+                    sort($childAgesClean, SORT_NUMERIC);
+
                     for ($ci = 0; $ci < $childCount; $ci++) {
                         $paxChild = $paxData[$rIdx]['children'][$ci] ?? array();
                         $cTitle = !empty($paxChild['title']) ? $paxChild['title'] : 'Mstr';
                         $cFname = !empty($paxChild['fname']) ? trim($paxChild['fname']) : ('Child' . ($ci + 1));
                         $cLname = !empty($paxChild['lname']) ? trim($paxChild['lname']) : $lname;
+                        $cAge = $childAgesClean[$ci];
 
-                        $cAge = isset($paxChild['age']) && (int)$paxChild['age'] > 0 ? (int)$paxChild['age'] : (isset($rawAges[$ci]) ? (int)$rawAges[$ci] : 0);
-                        if ($cAge <= 0) {
-                            $cAge = ($ci === 0) ? 7 : 3;
-                        }
-                        $childAgesClean[] = $cAge;
                         $guestsArr[] = array(
-                            'GuestID'    => '0',
-                            'Operation'  => '',
+                            'GuestID'    => 'G' . $guestIdx,
+                            'Operation'  => 'U',
                             'Title'      => $cTitle,
                             'FirstName'  => $cFname,
                             'MiddleName' => '',

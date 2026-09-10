@@ -156,7 +156,10 @@ class Hotels extends CI_Controller {
         $provider          = $this->input->post('provider') ?: 'CleartripAPI';
 
         // Validate Live Pricing with API
-        $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, $provider, $search_id, $recommendation_id);
+        $reprice = $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, $provider, $search_id, $recommendation_id);
+        if (!empty($reprice['roomGroup'][0]['totalRate'])) {
+            $price = (float)$reprice['roomGroup'][0]['totalRate'];
+        }
 
         $nights = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
         // $price from Benzy API is already the finalized total stay price for all nights
@@ -251,15 +254,32 @@ class Hotels extends CI_Controller {
         $razorpay_id    = $this->input->post('razorpay_payment_id') ?: ('pay_mock_' . rand(100000, 999999));
 
         // 1. Benzy Create Itinerary API Call (Exact WRC B2B Schema)
+        $tui = $this->input->post('tui') ?: ('TUI-' . uniqid());
+        $searchId = $this->input->post('search_id') ?: ('SRCH-' . uniqid());
+        $recId = $this->input->post('recommendation_id') ?: ('REC-' . uniqid());
+
+        // Re-check live pricing if SearchId & RecommendationId are present to ensure NetAmount matches Benzy exactly to the cent/paisa
+        $pricingChildAges = array();
+        if (!empty($searchId) && !empty($recId) && !empty($room_id)) {
+            $liveReprice = $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, $provider, $searchId, $recId);
+            if (!empty($liveReprice['roomGroup'][0]['totalRate'])) {
+                $total_amount = (float)$liveReprice['roomGroup'][0]['totalRate'];
+            }
+            if (!empty($liveReprice['roomGroup'][0]['occupancies'][0]['childAges'])) {
+                $pricingChildAges = $liveReprice['roomGroup'][0]['occupancies'][0]['childAges'];
+            }
+        }
+
         $itineraryPayload = array(
-            'TUI'                   => $this->input->post('tui') ?: ('TUI-' . uniqid()),
-            'SearchId'              => $this->input->post('search_id') ?: ('SRCH-' . uniqid()),
-            'RecommendationId'      => $this->input->post('recommendation_id') ?: ('REC-' . uniqid()),
+            'TUI'                   => $tui,
+            'SearchId'              => $searchId,
+            'RecommendationId'      => $recId,
             'HotelCode'             => $hotel_id,
             'RoomId'                => $room_id,
             'RoomGroupId'           => $this->input->post('room_group_id') ?: ('RGRP_' . uniqid()),
             'RoomData'              => $roomDataRaw,
             'paxData'               => $paxData,
+            'pricingChildAges'      => $pricingChildAges,
             'SupplierName'          => $provider,
             'CheckInDate'           => $checkin,
             'CheckOutDate'          => $checkout,
