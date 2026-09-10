@@ -51,73 +51,97 @@ $hPrice     = $hotel['price_per_night'] ?? 3500;
     <!-- Room Selection Table Section -->
     <div class="container" style="margin-top: 30px;">
         <div style="background: #ffffff; border-radius: 12px; padding: 28px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+            <?php if ($this->session->flashdata('error')): ?>
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; color: #991b1b;">
+                <i class="fa-solid fa-circle-exclamation" style="font-size: 22px; color: #dc2626; flex-shrink: 0;"></i>
+                <div style="font-size: 14px; font-weight: 600; line-height: 1.4;">
+                    <?php echo htmlspecialchars($this->session->flashdata('error')); ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <h2 style="font-family: var(--font-heading); font-size: 22px; color: #0d3470; margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
                 Select Your Room Category
             </h2>
 
             <div style="display: flex; flex-direction: column; gap: 20px;">
                 <?php 
-                $rooms = isset($hotel['room_types']) ? $hotel['room_types'] : array(
-                    array('type_id' => 'RM_101A', 'name' => 'Deluxe Garden View Room', 'price' => $hPrice, 'board' => 'Breakfast Included'),
-                    array('type_id' => 'RM_101B', 'name' => 'Premium Sea View Suite', 'price' => $hPrice + 3500, 'board' => 'Breakfast & Dinner Included')
-                );
-
+                $rooms = isset($hotel['room_types']) ? $hotel['room_types'] : array();
                 $hId = $hotel['id'] ?? ($hotel_id ?? 'HTL_101');
                 $qNightsCount = max(1, round((strtotime($qCheckout) - strtotime($qCheckin)) / 86400));
 
-                foreach ($rooms as $r):
-                    $rPrice = (float)($r['price'] ?? $hPrice);
-                    $perNight = !empty($r['price_per_night']) ? (float)$r['price_per_night'] : round($rPrice / $qNightsCount, 2);
-                    $rName = $r['name'] ?? 'Deluxe Room';
-                    $rBoard = $r['board'] ?? 'Breakfast Included';
-                    $rId = $r['type_id'] ?? ($r['room_id'] ?? 'RM_01');
-                    $rGroupId = $r['room_group_id'] ?? ($r['roomGroupId'] ?? 'RGRP_01');
-                    $rRecId = $r['recommendation_id'] ?? ($r['recommendationId'] ?? '');
+                if (empty($rooms) || !empty($hotel['no_rooms_available'])):
                 ?>
-                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
-                    <div>
-                        <h3 style="font-size: 18px; color: #09204b; margin: 0 0 6px 0;"><?php echo htmlspecialchars($rName); ?></h3>
-                        <div style="font-size: 13px; color: #16a34a; font-weight: 700; margin-bottom: 6px;">
-                            <i class="fa-solid fa-utensils"></i> <?php echo htmlspecialchars($rBoard); ?>
-                        </div>
-                        <div style="font-size: 12px; color: #64748b;">
-                            <i class="fa-solid fa-user-group"></i> Max <?php echo $qAdults; ?> Adults, <?php echo $qChildren; ?> Child | <i class="fa-solid fa-bed"></i> 1 King Bed or 2 Twin Beds | <i class="fa-solid fa-shield-halved"></i> <?php echo htmlspecialchars($r['cancellation'] ?? 'Free Cancellation up to 24h before Check-In'); ?>
-                        </div>
+                <div style="border: 1px solid #fed7aa; background: #fff7ed; border-radius: 10px; padding: 32px 20px; text-align: center;">
+                    <div style="width: 56px; height: 56px; line-height: 56px; border-radius: 50%; background: #ffedd5; color: #ea580c; font-size: 24px; margin: 0 auto 16px auto;">
+                        <i class="fa-solid fa-hotel"></i>
                     </div>
-
-                    <div style="text-align: right;">
-                        <div style="font-size: 22px; font-weight: 800; color: #ef4444;">₹ <?php echo number_format($rPrice); ?></div>
-                        <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Total for <?php echo $qNightsCount; ?> <?php echo ($qNightsCount > 1) ? 'nights' : 'night'; ?> (₹ <?php echo number_format($perNight); ?>/night)</div>
-                        <form action="<?php echo site_url('hotels/review'); ?>" method="POST" style="margin-top: 8px;">
-                            <input type="hidden" name="hotel_id" value="<?php echo htmlspecialchars($hId); ?>">
-                            <input type="hidden" name="hotel_name" value="<?php echo htmlspecialchars($hName); ?>">
-                            <input type="hidden" name="hotel_address" value="<?php echo htmlspecialchars($hLocation); ?>">
-                            <input type="hidden" name="hotel_image" value="<?php echo htmlspecialchars($hImage); ?>">
-                            <input type="hidden" name="room_type" value="<?php echo htmlspecialchars($rName); ?>">
-                            <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($rId); ?>">
-                            <input type="hidden" name="room_group_id" value="<?php echo htmlspecialchars($rGroupId); ?>">
-                            <input type="hidden" name="recommendation_id" value="<?php echo htmlspecialchars($rRecId); ?>">
-                            <input type="hidden" name="provider" value="<?php echo htmlspecialchars($r['provider'] ?? 'CleartripAPI'); ?>">
-                            <input type="hidden" name="board_type" value="<?php echo htmlspecialchars($rBoard); ?>">
-                            <input type="hidden" name="price" value="<?php echo htmlspecialchars($rPrice); ?>">
-                            <input type="hidden" name="price_per_night" value="<?php echo htmlspecialchars($perNight); ?>">
-                            <input type="hidden" name="nights" value="<?php echo htmlspecialchars($qNightsCount); ?>">
-                            <input type="hidden" name="checkin_date" value="<?php echo htmlspecialchars($qCheckin); ?>">
-                            <input type="hidden" name="checkout_date" value="<?php echo htmlspecialchars($qCheckout); ?>">
-                            <input type="hidden" name="city" value="<?php echo htmlspecialchars($qCity); ?>">
-                            <input type="hidden" name="rooms" value="<?php echo htmlspecialchars($qRooms); ?>">
-                            <input type="hidden" name="adults" value="<?php echo htmlspecialchars($qAdults); ?>">
-                            <input type="hidden" name="children" value="<?php echo htmlspecialchars($qChildren); ?>">
-                            <input type="hidden" name="roomData" value="<?php echo htmlspecialchars($roomDataJson ?? ($search_query['roomData'] ?? '')); ?>">
-                            <input type="hidden" name="search_id" value="<?php echo htmlspecialchars($search_id ?? ($search_query['search_id'] ?? '')); ?>">
-                            <input type="hidden" name="tui" value="<?php echo htmlspecialchars($search_tracing_key ?? ($search_query['search_tracing_key'] ?? '')); ?>">
-                            <button type="submit" class="btn-search" style="padding: 10px 24px; font-size: 14px; background: linear-gradient(135deg, #09204b, #2563eb); border: none; border-radius: 6px; color: #fff; font-weight: 700; cursor: pointer;">
-                                SELECT ROOM <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
-                            </button>
-                        </form>
-                    </div>
+                    <h3 style="font-size: 19px; color: #9a3412; margin: 0 0 8px 0; font-weight: 700;">No Rooms Available for this Selection</h3>
+                    <p style="font-size: 14px; color: #7c2d12; margin: 0 0 20px 0; max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+                        This property has no available rooms for <strong><?php echo $qRooms; ?> Room<?php echo $qRooms > 1 ? 's' : ''; ?>, <?php echo $qAdults; ?> Adult<?php echo $qAdults > 1 ? 's' : ''; ?><?php if ($qChildren > 0): ?>, <?php echo $qChildren; ?> Child<?php echo $qChildren > 1 ? 'ren' : ''; ?><?php endif; ?></strong> on your selected dates.
+                    </p>
+                    <a href="<?php echo site_url('hotels/listing?' . http_build_query($search_query ?? array())); ?>" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; background: linear-gradient(135deg, #09204b, #2563eb); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">
+                        <i class="fa-solid fa-magnifying-glass"></i> View Available Hotels in <?php echo htmlspecialchars($qCity); ?>
+                    </a>
                 </div>
-                <?php endforeach; ?>
+                <?php 
+                else:
+                    foreach ($rooms as $r):
+                        $rPrice = (float)($r['price'] ?? $hPrice);
+                        $perNight = !empty($r['price_per_night']) ? (float)$r['price_per_night'] : round($rPrice / $qNightsCount, 2);
+                        $rName = $r['name'] ?? 'Deluxe Room';
+                        $rBoard = $r['board'] ?? 'Breakfast Included';
+                        $rId = $r['type_id'] ?? ($r['room_id'] ?? 'RM_01');
+                        $rGroupId = $r['room_group_id'] ?? ($r['roomGroupId'] ?? 'RGRP_01');
+                        $rRecId = $r['recommendation_id'] ?? ($r['recommendationId'] ?? '');
+                    ?>
+                    <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                        <div>
+                            <h3 style="font-size: 18px; color: #09204b; margin: 0 0 6px 0;"><?php echo htmlspecialchars($rName); ?></h3>
+                            <div style="font-size: 13px; color: #16a34a; font-weight: 700; margin-bottom: 6px;">
+                                <i class="fa-solid fa-utensils"></i> <?php echo htmlspecialchars($rBoard); ?>
+                            </div>
+                            <div style="font-size: 12px; color: #64748b;">
+                                <i class="fa-solid fa-user-group"></i> Max <?php echo $qAdults; ?> Adults, <?php echo $qChildren; ?> Child | <i class="fa-solid fa-bed"></i> 1 King Bed or 2 Twin Beds | <i class="fa-solid fa-shield-halved"></i> <?php echo htmlspecialchars($r['cancellation'] ?? 'Free Cancellation up to 24h before Check-In'); ?>
+                            </div>
+                        </div>
+
+                        <div style="text-align: right;">
+                            <div style="font-size: 22px; font-weight: 800; color: #ef4444;">₹ <?php echo number_format($rPrice); ?></div>
+                            <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Total for <?php echo $qNightsCount; ?> <?php echo ($qNightsCount > 1) ? 'nights' : 'night'; ?> (₹ <?php echo number_format($perNight); ?>/night)</div>
+                            <form action="<?php echo site_url('hotels/review'); ?>" method="POST" style="margin-top: 8px;">
+                                <input type="hidden" name="hotel_id" value="<?php echo htmlspecialchars($hId); ?>">
+                                <input type="hidden" name="hotel_name" value="<?php echo htmlspecialchars($hName); ?>">
+                                <input type="hidden" name="hotel_address" value="<?php echo htmlspecialchars($hLocation); ?>">
+                                <input type="hidden" name="hotel_image" value="<?php echo htmlspecialchars($hImage); ?>">
+                                <input type="hidden" name="room_type" value="<?php echo htmlspecialchars($rName); ?>">
+                                <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($rId); ?>">
+                                <input type="hidden" name="room_group_id" value="<?php echo htmlspecialchars($rGroupId); ?>">
+                                <input type="hidden" name="recommendation_id" value="<?php echo htmlspecialchars($rRecId); ?>">
+                                <input type="hidden" name="provider" value="<?php echo htmlspecialchars($r['provider'] ?? 'CleartripAPI'); ?>">
+                                <input type="hidden" name="board_type" value="<?php echo htmlspecialchars($rBoard); ?>">
+                                <input type="hidden" name="price" value="<?php echo htmlspecialchars($rPrice); ?>">
+                                <input type="hidden" name="price_per_night" value="<?php echo htmlspecialchars($perNight); ?>">
+                                <input type="hidden" name="nights" value="<?php echo htmlspecialchars($qNightsCount); ?>">
+                                <input type="hidden" name="checkin_date" value="<?php echo htmlspecialchars($qCheckin); ?>">
+                                <input type="hidden" name="checkout_date" value="<?php echo htmlspecialchars($qCheckout); ?>">
+                                <input type="hidden" name="city" value="<?php echo htmlspecialchars($qCity); ?>">
+                                <input type="hidden" name="rooms" value="<?php echo htmlspecialchars($qRooms); ?>">
+                                <input type="hidden" name="adults" value="<?php echo htmlspecialchars($qAdults); ?>">
+                                <input type="hidden" name="children" value="<?php echo htmlspecialchars($qChildren); ?>">
+                                <input type="hidden" name="roomData" value="<?php echo htmlspecialchars($roomDataJson ?? ($search_query['roomData'] ?? '')); ?>">
+                                <input type="hidden" name="search_id" value="<?php echo htmlspecialchars($search_id ?? ($search_query['search_id'] ?? '')); ?>">
+                                <input type="hidden" name="tui" value="<?php echo htmlspecialchars($search_tracing_key ?? ($search_query['search_tracing_key'] ?? '')); ?>">
+                                <button type="submit" class="btn-search" style="padding: 10px 24px; font-size: 14px; background: linear-gradient(135deg, #09204b, #2563eb); border: none; border-radius: 6px; color: #fff; font-weight: 700; cursor: pointer;">
+                                    SELECT ROOM <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <?php 
+                    endforeach; 
+                endif;
+                ?>
             </div>
         </div>
     </div>

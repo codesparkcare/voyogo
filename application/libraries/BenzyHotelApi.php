@@ -422,13 +422,13 @@ class BenzyHotelApi {
         }
 
         if ($apiContentData || $apiRoomsData) {
-            return $this->formatHotelDetailResponse($hotelId, $apiContentData, $apiRoomsData, $fallbackDetail, $city, $checkin, $checkout);
+            return $this->formatHotelDetailResponse($hotelId, $apiContentData, $apiRoomsData, $fallbackDetail, $city, $checkin, $checkout, $searchId);
         }
 
         return $fallbackDetail;
     }
 
-    protected function formatHotelDetailResponse($hotelId, $apiContent, $apiRooms, $fallbackDetail, $city, $checkin = null, $checkout = null) {
+    protected function formatHotelDetailResponse($hotelId, $apiContent, $apiRooms, $fallbackDetail, $city, $checkin = null, $checkout = null, $searchId = null) {
         $hotel = $fallbackDetail;
         $hotel['id'] = $hotelId;
 
@@ -536,6 +536,12 @@ class BenzyHotelApi {
         if (!empty($roomTypes)) {
             $hotel['room_types'] = $roomTypes;
             $hotel['price_per_night'] = $roomTypes[0]['price'];
+            $hotel['no_rooms_available'] = false;
+        } elseif (!empty($searchId)) {
+            // Live Benzy search performed, but Benzy returned 0 rooms for this hotel/occupancy
+            $hotel['room_types'] = array();
+            $hotel['price_per_night'] = 0;
+            $hotel['no_rooms_available'] = true;
         }
 
         return $hotel;

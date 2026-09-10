@@ -156,9 +156,16 @@ class Hotels extends CI_Controller {
         $provider          = $this->input->post('provider') ?: 'CleartripAPI';
 
         // Validate Live Pricing with API
-        $reprice = $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, $provider, $search_id, $recommendation_id);
-        if (!empty($reprice['roomGroup'][0]['totalRate'])) {
-            $price = (float)$reprice['roomGroup'][0]['totalRate'];
+        if (!empty($search_id) && !empty($recommendation_id)) {
+            $reprice = $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, $provider, $search_id, $recommendation_id);
+            if (!empty($reprice['status']) && $reprice['status'] === 'failure') {
+                $this->session->set_flashdata('error', 'Room pricing is currently unavailable with the hotel supplier (' . ($reprice['message'] ?? 'Pricing error') . '). Please choose an alternative room or hotel.');
+                redirect('hotels/detail/' . urlencode($hotel_id) . '?city=' . urlencode($city) . '&checkin=' . urlencode($checkin) . '&checkout=' . urlencode($checkout) . '&rooms=' . urlencode($rooms) . '&adults=' . urlencode($adults) . '&children=' . urlencode($children) . '&search_id=' . urlencode($search_id) . '&search_tracing_key=' . urlencode($tui) . '&roomData=' . urlencode($roomDataRaw));
+                return;
+            }
+            if (!empty($reprice['roomGroup'][0]['totalRate'])) {
+                $price = (float)$reprice['roomGroup'][0]['totalRate'];
+            }
         }
 
         $nights = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
