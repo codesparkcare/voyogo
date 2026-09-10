@@ -663,7 +663,15 @@ class BenzyHotelApi {
                 // Children for this room
                 $childCount = (int)($rm['children'] ?? 0);
                 if ($childCount > 0) {
-                    $rawAges        = !empty($bookingData['pricingChildAges']) ? $bookingData['pricingChildAges'] : ($rm['childAges'] ?? array());
+                    // Priority: per-room Pricing occupancy ages → flat pricingChildAges → user-entered ages
+                    $perRoomPricingAges = $bookingData['pricingOccupancyChildAges'][$rIdx] ?? null;
+                    if ($perRoomPricingAges !== null && !empty($perRoomPricingAges)) {
+                        $rawAges = $perRoomPricingAges;
+                    } elseif (!empty($bookingData['pricingChildAges'])) {
+                        $rawAges = $bookingData['pricingChildAges'];
+                    } else {
+                        $rawAges = $rm['childAges'] ?? array();
+                    }
                     $childAgesClean = array();
                     for ($ci = 0; $ci < $childCount; $ci++) {
                         $cAge = isset($rawAges[$ci]) ? (int)$rawAges[$ci] : 0;

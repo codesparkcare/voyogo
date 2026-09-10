@@ -259,14 +259,22 @@ class Hotels extends CI_Controller {
         $recId = $this->input->post('recommendation_id') ?: ('REC-' . uniqid());
 
         // Re-check live pricing if SearchId & RecommendationId are present to ensure NetAmount matches Benzy exactly to the cent/paisa
-        $pricingChildAges = array();
+        // pricingOccupancyChildAges: keyed by 0-based room index, each entry = childAges array for that room
+        $pricingChildAges = array();           // kept for backward-compat (single-room / first room)
+        $pricingOccupancyChildAges = array();  // per-room child ages from Pricing occupancies
         if (!empty($searchId) && !empty($recId) && !empty($room_id)) {
             $liveReprice = $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, $provider, $searchId, $recId);
             if (!empty($liveReprice['roomGroup'][0]['totalRate'])) {
                 $total_amount = (float)$liveReprice['roomGroup'][0]['totalRate'];
             }
-            if (!empty($liveReprice['roomGroup'][0]['occupancies'][0]['childAges'])) {
-                $pricingChildAges = $liveReprice['roomGroup'][0]['occupancies'][0]['childAges'];
+            // Build per-occupancy child ages from Pricing response (one entry per room searched)
+            if (!empty($liveReprice['roomGroup'][0]['occupancies'])) {
+                foreach ($liveReprice['roomGroup'][0]['occupancies'] as $occ) {
+                    $occIdx = ($occ['occupancyId'] ?? 1) - 1; // convert 1-based occupancyId to 0-based index
+                    $pricingOccupancyChildAges[$occIdx] = $occ['childAges'] ?? array();
+                }
+                // Also set the flat legacy key from occupancy[0] for single-room compatibility
+                $pricingChildAges = $pricingOccupancyChildAges[0] ?? array();
             }
         }
 
@@ -280,6 +288,7 @@ class Hotels extends CI_Controller {
             'RoomData'              => $roomDataRaw,
             'paxData'               => $paxData,
             'pricingChildAges'      => $pricingChildAges,
+            'pricingOccupancyChildAges' => $pricingOccupancyChildAges,
             'SupplierName'          => $provider,
             'CheckInDate'           => $checkin,
             'CheckOutDate'          => $checkout,
