@@ -20,7 +20,7 @@
     
     <?php if (isset($active_page) && in_array($active_page, array('holidays', 'visa', 'forex', 'cruises', 'cabs', 'buses'))): ?>
     <!-- Pages Stylesheet -->
-    <link rel="stylesheet" href="<?php echo function_exists('base_url') ? base_url('assets/css/pages_style.css') : '/assets/css/pages_style.css'; ?>">
+    <link rel="stylesheet" href="<?php echo function_exists('base_url') ? base_url('assets/css/pages_style.css?v=' . time()) : '/assets/css/pages_style.css?v=' . time(); ?>">
     <?php endif; ?>
 </head>
 <body>

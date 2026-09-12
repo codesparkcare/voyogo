@@ -1,246 +1,350 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-  <!-- HERO BANNER SECTION WITH IMAGE SLIDER & FOREX BUY/SELL FORM -->
-  <section class="hero-section forex-hero">
+  <!-- 1. HERO BANNER SECTION (MATCHING IMAGE 1) -->
+  <section class="ref-hero-section">
     <!-- Hero Background Slider Track -->
-    <div class="hero-slider">
-      <div class="slide active" style="background-image: url('<?php echo base_url('assets/images/holidayslide1.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide2.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide4.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide3.png'); ?>');"></div>
+    <div class="ref-hero-slider">
+      <div class="slider-track">
+        <div class="slide active" style="background-image: url('<?php echo base_url('assets/images/slider-images/forex/forex 1.png'); ?>');"></div>
+        <div class="slide" style="background-image: url('<?php echo base_url('assets/images/slider-images/forex/forex 2.png'); ?>');"></div>
+        <div class="slide" style="background-image: url('<?php echo base_url('assets/images/slider-images/forex/forex 3.png'); ?>');"></div>
+        <div class="slide" style="background-image: url('<?php echo base_url('assets/images/slider-images/forex/foex 4.png'); ?>');"></div>
+      </div>
     </div>
 
-    <!-- Navigation Controls -->
-    <button class="slider-arrow prev" aria-label="Previous Slide">‹</button>
-    <button class="slider-arrow next" aria-label="Next Slide">›</button>
+    <!-- Slider Arrows -->
+    <button class="ref-slider-arrow prev" aria-label="Previous Slide">‹</button>
+    <button class="ref-slider-arrow next" aria-label="Next Slide">›</button>
 
-    <!-- Pagination Dots -->
-    <div class="slider-dots">
+    <!-- Slider Pagination Dots -->
+    <div class="ref-slider-dots">
       <span class="dot active"></span>
       <span class="dot"></span>
       <span class="dot"></span>
       <span class="dot"></span>
     </div>
 
-    <div class="container">
-      <div class="hero-content-wrapper">
+    <!-- Hero Content Overlay -->
+    <div class="container ref-hero-container">
+      <div class="ref-hero-header-row">
+        <!-- Destination Info Left -->
+        <div class="ref-hero-text-block">
+          <h1 class="ref-dest-title">Zero Markup<br>Forex Card</h1>
+          <p class="ref-dest-subtitle">Smart Multi-Currency Travel Cards with Best Live Rates</p>
 
-        <!-- Hero Right Form Container (EXACT SCREENSHOT FOREX BUY/SELL FORM) -->
-        <div class="hero-form-wrapper">
-          <div class="forex-form-card forex-glass-card">
-
-            <!-- Buy / Sell Forex Tabs -->
-            <div class="forex-tab-header">
-              <button type="button" class="forex-tab-btn active" id="buyForexTabBtn"
-                onclick="switchForexForm('buy')">Buy Forex</button>
-              <button type="button" class="forex-tab-btn" id="sellForexTabBtn" onclick="switchForexForm('sell')">Sell
-                Forex</button>
+          <div class="ref-feature-pills">
+            <div class="ref-feature-pill">
+              <div class="ref-feature-pill-icon"><i class="fa-solid fa-credit-card"></i></div>
+              <span class="ref-feature-pill-text">Multi-Currency Card</span>
             </div>
-
-            <p class="forex-form-sub">Fill in your information to access competitive rates and fast processing.</p>
-
-            <!-- BUY FOREX FORM -->
-            <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" id="buyForexForm"
-              class="forex-active-form">
-              <input type="hidden" name="message" value="Buy Forex Request">
-              <input type="hidden" name="forex_type" value="Buy Forex">
-
-              <!-- Row 1: Full Name & Contact No. -->
-              <div class="form-row-2col">
-                <div class="forex-field-group">
-                  <label class="forex-label">Traveller's Full Name <span class="req-star">*</span></label>
-                  <input type="text" name="name" class="forex-input" placeholder="Name" required>
-                </div>
-                <div class="forex-field-group">
-                  <label class="forex-label">Contact No. <span class="req-star">*</span></label>
-                  <div class="input-with-icon">
-                    <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      stroke-width="2">
-                      <path
-                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                    </svg>
-                    <input type="tel" name="phone" class="forex-input input-padded" placeholder="1234567890" required>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Row 2: Email ID & Location -->
-              <div class="form-row-2col">
-                <div class="forex-field-group">
-                  <label class="forex-label">Email ID <span class="req-star">*</span></label>
-                  <div class="input-with-icon">
-                    <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      stroke-width="2">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                      <polyline points="22,6 12,13 2,6" />
-                    </svg>
-                    <input type="email" name="email" class="forex-input input-padded" placeholder="Email" required>
-                  </div>
-                </div>
-                <div class="forex-field-group">
-                  <label class="forex-label">Location <span class="req-star">*</span></label>
-                  <div class="input-with-icon">
-                    <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      stroke-width="2">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                      <circle cx="12" cy="10" r="3" />
-                    </svg>
-                    <input type="text" name="location" class="forex-input input-padded" required>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Row 3: Purpose of Visit & Choose Currency -->
-              <div class="form-row-2col">
-                <div class="forex-field-group">
-                  <label class="forex-label">Purpose of Visit <span class="req-star">*</span></label>
-                  <select name="purpose_of_visit" class="forex-select" required>
-                    <option value="" disabled selected>Select Purpose</option>
-                    <option value="Tourism">Tourism</option>
-                    <option value="Education">Education</option>
-                    <option value="Business">Business</option>
-                    <option value="Medical">Medical</option>
-                    <option value="Employment">Employment</option>
-                    <option value="Personal Visit">Personal Visit</option>
-                  </select>
-                </div>
-                <div class="forex-field-group">
-                  <label class="forex-label">Choose Currency <span class="req-star">*</span></label>
-                  <select name="currency" class="forex-select" required>
-                    <option value="" disabled selected>Select Currency</option>
-                    <option value="USD">USD - US Dollar</option>
-                    <option value="EUR">EUR - Euro</option>
-                    <option value="GBP">GBP - British Pound</option>
-                    <option value="AED">AED - UAE Dirham</option>
-                    <option value="SGD">SGD - Singapore Dollar</option>
-                    <option value="THB">THB - Thai Baht</option>
-                    <option value="CAD">CAD - Canadian Dollar</option>
-                    <option value="AUD">AUD - Australian Dollar</option>
-                    <option value="JPY">JPY - Japanese Yen</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Row 4: Choose Product & Quantity -->
-              <div class="form-row-2col">
-                <div class="forex-field-group">
-                  <label class="forex-label">Choose Product <span class="req-star">*</span></label>
-                  <select name="product" class="forex-select" required>
-                    <option value="" disabled selected>Select Product</option>
-                    <option value="Currency Notes">Currency Notes</option>
-                    <option value="Multi-Currency Forex Card">Multi-Currency Forex Card</option>
-                    <option value="Reload Forex Card">Reload Forex Card</option>
-                    <option value="International Wire Transfer">International Wire Transfer</option>
-                  </select>
-                </div>
-                <div class="forex-field-group">
-                  <label class="forex-label">Forex Quantity <span class="req-star">*</span></label>
-                  <input type="number" name="quantity" class="forex-input" placeholder="Quantity" min="1" required>
-                </div>
-              </div>
-
-              <!-- Row 5: Submit Button -->
-              <div class="form-bottom-row" style="margin-top: 10px;">
-                <button type="submit" class="btn-send-enquiry" style="width: 100%;">BUY FOREX</button>
-              </div>
-            </form>
-
-            <!-- SELL FOREX FORM -->
-            <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" id="sellForexForm"
-              class="forex-hidden-form">
-              <input type="hidden" name="message" value="Sell Forex Request">
-              <input type="hidden" name="forex_type" value="Sell Forex">
-
-              <!-- Row 1: Full Name & Contact No. -->
-              <div class="form-row-2col">
-                <div class="forex-field-group">
-                  <label class="forex-label">Traveller's Full Name <span class="req-star">*</span></label>
-                  <input type="text" name="name" class="forex-input" placeholder="Name" required>
-                </div>
-                <div class="forex-field-group">
-                  <label class="forex-label">Contact No. <span class="req-star">*</span></label>
-                  <div class="input-with-icon">
-                    <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      stroke-width="2">
-                      <path
-                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                    </svg>
-                    <input type="tel" name="phone" class="forex-input input-padded" placeholder="1234567890" required>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Row 2: Email ID & Location -->
-              <div class="form-row-2col">
-                <div class="forex-field-group">
-                  <label class="forex-label">Email ID <span class="req-star">*</span></label>
-                  <div class="input-with-icon">
-                    <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      stroke-width="2">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                      <polyline points="22,6 12,13 2,6" />
-                    </svg>
-                    <input type="email" name="email" class="forex-input input-padded" placeholder="Email" required>
-                  </div>
-                </div>
-                <div class="forex-field-group">
-                  <label class="forex-label">Location <span class="req-star">*</span></label>
-                  <div class="input-with-icon">
-                    <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      stroke-width="2">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                      <circle cx="12" cy="10" r="3" />
-                    </svg>
-                    <input type="text" name="location" class="forex-input input-padded" required>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Row 3: Choose Currency & Choose Product -->
-              <div class="form-row-2col">
-                <div class="forex-field-group">
-                  <label class="forex-label">Choose Currency <span class="req-star">*</span></label>
-                  <select name="currency" class="forex-select" required>
-                    <option value="" disabled selected>Select Currency</option>
-                    <option value="USD">USD - US Dollar</option>
-                    <option value="EUR">EUR - Euro</option>
-                    <option value="GBP">GBP - British Pound</option>
-                    <option value="AED">AED - UAE Dirham</option>
-                    <option value="SGD">SGD - Singapore Dollar</option>
-                    <option value="THB">THB - Thai Baht</option>
-                    <option value="CAD">CAD - Canadian Dollar</option>
-                    <option value="AUD">AUD - Australian Dollar</option>
-                    <option value="JPY">JPY - Japanese Yen</option>
-                  </select>
-                </div>
-
-                <div class="forex-field-group">
-                  <label class="forex-label">Choose Product <span class="req-star">*</span></label>
-                  <select name="product" class="forex-select" required>
-                    <option value="" disabled selected>Select Product</option>
-                    <option value="Currency Notes">Currency Notes</option>
-                    <option value="Forex Card Unload">Forex Card Unload</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Row 4: Forex Quantity -->
-              <div class="form-row-2col">
-                <div class="forex-field-group">
-                  <label class="forex-label">Forex Quantity <span class="req-star">*</span></label>
-                  <input type="number" name="quantity" class="forex-input" placeholder="Quantity" min="1" required>
-                </div>
-              </div>
-
-              <!-- Row 5: Submit Button -->
-              <div class="form-bottom-row" style="margin-top: 10px;">
-                <button type="submit" class="btn-send-enquiry" style="width: 100%;">SELL FOREX</button>
-              </div>
-            </form>
-
+            <div class="ref-feature-pill">
+              <div class="ref-feature-pill-icon"><i class="fa-solid fa-percent"></i></div>
+              <span class="ref-feature-pill-text">Zero Foreign Markup</span>
+            </div>
+            <div class="ref-feature-pill">
+              <div class="ref-feature-pill-icon"><i class="fa-solid fa-shield-halved"></i></div>
+              <span class="ref-feature-pill-text">Chip & PIN Secure</span>
+            </div>
+            <div class="ref-feature-pill">
+              <div class="ref-feature-pill-icon"><i class="fa-solid fa-bolt"></i></div>
+              <span class="ref-feature-pill-text">Instant App Reloads</span>
+            </div>
           </div>
         </div>
 
+        <!-- Cursive Script Right -->
+        <div class="ref-cursive-tag">
+          Smart<br>Forex
+          <i class="fa-solid fa-credit-card"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. FLOATING HORIZONTAL ENQUIRY FORM & TRUST BADGES (MATCHING IMAGE 1) -->
+  <section class="ref-form-section">
+    <div class="container">
+      <div class="ref-form-card">
+        <div class="ref-form-inner">
+          <div class="forex-split-layout">
+            
+            <!-- Left Info Panel -->
+            <div class="forex-left-panel">
+              <div>
+                <h3 class="forex-left-title">Forex Services</h3>
+                <p class="forex-left-desc">Get the best exchange rates for your international travel</p>
+                
+                <div class="forex-perks-list">
+                  <div class="forex-perk-item">
+                    <div class="forex-perk-icon"><i class="fa-solid fa-certificate"></i></div>
+                    <span>Competitive Exchange Rates</span>
+                  </div>
+                  <div class="forex-perk-item">
+                    <div class="forex-perk-icon"><i class="fa-solid fa-coins"></i></div>
+                    <span>Wide Range of Currencies</span>
+                  </div>
+                  <div class="forex-perk-item">
+                    <div class="forex-perk-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <span>Fast & Secure Processing</span>
+                  </div>
+                  <div class="forex-perk-item">
+                    <div class="forex-perk-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                    <span>Doorstep Delivery (Select Cities)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Form Panel -->
+            <div class="forex-right-panel">
+              <div class="forex-header-strip">
+                <div class="forex-tab-pills">
+                  <button type="button" class="forex-tab-pill active" id="refBuyForexBtn" onclick="switchForexTab('buy')">Buy Forex</button>
+                  <button type="button" class="forex-tab-pill" id="refSellForexBtn" onclick="switchForexTab('sell')">Sell Forex</button>
+                </div>
+                <div class="forex-script-tag">
+                  Travel the World Without Currency Worries!
+                </div>
+              </div>
+
+              <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" id="refForexForm">
+                <input type="hidden" name="message" value="Forex Currency Enquiry">
+                <input type="hidden" name="forex_type" id="refForexTypeInput" value="Buy Forex">
+
+                <div class="forex-grid-2col">
+                  <!-- Name -->
+                  <div class="ref-form-group">
+                    <label class="ref-label">Traveller's Full Name <span class="ref-req">*</span></label>
+                    <div class="ref-input-box">
+                      <i class="fa-solid fa-user ref-input-icon"></i>
+                      <input type="text" name="name" class="ref-input" placeholder="Name" required>
+                    </div>
+                  </div>
+
+                  <!-- Contact No -->
+                  <div class="ref-form-group">
+                    <label class="ref-label">Contact No. <span class="ref-req">*</span></label>
+                    <div class="ref-input-box">
+                      <i class="fa-solid fa-phone ref-input-icon"></i>
+                      <input type="tel" name="phone" class="ref-input" placeholder="1234567890" required>
+                    </div>
+                  </div>
+
+                  <!-- Email ID -->
+                  <div class="ref-form-group">
+                    <label class="ref-label">Email ID <span class="ref-req">*</span></label>
+                    <div class="ref-input-box">
+                      <i class="fa-solid fa-envelope ref-input-icon"></i>
+                      <input type="email" name="email" class="ref-input" placeholder="Email" required>
+                    </div>
+                  </div>
+
+                  <!-- Location -->
+                  <div class="ref-form-group">
+                    <label class="ref-label">Location <span class="ref-req">*</span></label>
+                    <div class="ref-input-box">
+                      <i class="fa-solid fa-location-dot ref-input-icon"></i>
+                      <select name="location" class="ref-select" required>
+                        <option value="" disabled selected>Select City</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Delhi NCR">Delhi NCR</option>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Ahmedabad">Ahmedabad</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Purpose of Visit -->
+                  <div class="ref-form-group">
+                    <label class="ref-label">Purpose of Visit <span class="ref-req">*</span></label>
+                    <div class="ref-input-box">
+                      <select name="purpose_of_visit" class="ref-select no-icon" required>
+                        <option value="" disabled selected>Select Purpose</option>
+                        <option value="Tourism / Holiday">Tourism / Holiday</option>
+                        <option value="Higher Education">Higher Education</option>
+                        <option value="Business Travel">Business Travel</option>
+                        <option value="Medical Treatment">Medical Treatment</option>
+                        <option value="Employment">Employment</option>
+                        <option value="Personal Visit">Personal Visit</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Choose Currency -->
+                  <div class="ref-form-group">
+                    <label class="ref-label">Choose Currency <span class="ref-req">*</span></label>
+                    <div class="ref-input-box">
+                      <i class="fa-solid fa-coins ref-input-icon"></i>
+                      <select name="currency" class="ref-select" required>
+                        <option value="" disabled selected>Select Currency</option>
+                        <option value="USD">USD - US Dollar ($)</option>
+                        <option value="EUR">EUR - Euro (€)</option>
+                        <option value="GBP">GBP - British Pound (£)</option>
+                        <option value="AED">AED - Dubai Dirham (د.إ)</option>
+                        <option value="SGD">SGD - Singapore Dollar (S$)</option>
+                        <option value="THB">THB - Thai Baht (฿)</option>
+                        <option value="CAD">CAD - Canadian Dollar (C$)</option>
+                        <option value="AUD">AUD - Australian Dollar (A$)</option>
+                        <option value="JPY">JPY - Japanese Yen (¥)</option>
+                        <option value="IDR">IDR - Indonesian Rupiah</option>
+                        <option value="VND">VND - Vietnamese Dong</option>
+                        <option value="LKR">LKR - Sri Lankan Rupee</option>
+                        <option value="MYR">MYR - Malaysian Ringgit</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Choose Product -->
+                  <div class="ref-form-group">
+                    <label class="ref-label">Choose Product <span class="ref-req">*</span></label>
+                    <div class="ref-input-box">
+                      <select name="product" class="ref-select no-icon" required>
+                        <option value="" disabled selected>Select Product</option>
+                        <option value="Foreign Currency Notes">Foreign Currency Notes</option>
+                        <option value="Multi-Currency Forex Card">Multi-Currency Forex Card</option>
+                        <option value="Reload Forex Card">Reload Forex Card</option>
+                        <option value="International Wire Transfer">International Wire Transfer</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Amount in INR -->
+                  <div class="ref-form-group">
+                    <label class="ref-label">Amount in INR <span class="ref-req">*</span></label>
+                    <div class="ref-input-box">
+                      <i class="fa-solid fa-calculator ref-input-icon"></i>
+                      <input type="number" name="quantity" class="ref-input" placeholder="Amount in INR" min="1" required>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div style="margin-top: 18px;">
+                  <button type="submit" class="ref-btn-submit btn-wide" id="refForexSubmitBtn">
+                    BUY FOREX <i class="fa-solid fa-arrow-right"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust Badges Bar (Matching Image 1) -->
+      <div class="ref-trust-bar">
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-certificate"></i></div>
+          <div class="ref-trust-text">Best Exchange<br>Rates</div>
+        </div>
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-headset"></i></div>
+          <div class="ref-trust-text">24/7<br>Customer Support</div>
+        </div>
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="ref-trust-text">Safe & Secure<br>Transactions</div>
+        </div>
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-truck-fast"></i></div>
+          <div class="ref-trust-text">Doorstep Delivery<br>(Select Cities)</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. POPULAR CURRENCIES SECTION (MATCHING IMAGE 1) -->
+  <section class="ref-popular-section" style="padding-top: 20px;">
+    <div class="container">
+      <div class="ref-section-header">
+        <h2 class="ref-section-title">Popular Currencies</h2>
+        <div class="ref-header-right">
+          <a href="#" onclick="switchForexTab('buy')" class="ref-view-all-link">
+            View All Rates <i class="fa-solid fa-circle-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="ref-cards-grid grid-5col">
+        <!-- USD -->
+        <div class="ref-currency-card" onclick="document.querySelector('select[name=currency]').value='USD'">
+          <div class="ref-currency-left">
+            <div class="ref-flag-circle">🇺🇸</div>
+            <div>
+              <div class="ref-currency-code">USD</div>
+              <div class="ref-currency-name">US Dollar</div>
+            </div>
+          </div>
+          <div class="ref-currency-right">
+            <span class="ref-currency-rate">₹ 83.12</span>
+            <i class="fa-solid fa-arrow-right" style="font-size: 11px; color: #64748B;"></i>
+          </div>
+        </div>
+
+        <!-- EUR -->
+        <div class="ref-currency-card" onclick="document.querySelector('select[name=currency]').value='EUR'">
+          <div class="ref-currency-left">
+            <div class="ref-flag-circle">🇪🇺</div>
+            <div>
+              <div class="ref-currency-code">EUR</div>
+              <div class="ref-currency-name">Euro</div>
+            </div>
+          </div>
+          <div class="ref-currency-right">
+            <span class="ref-currency-rate">₹ 91.45</span>
+            <i class="fa-solid fa-arrow-right" style="font-size: 11px; color: #64748B;"></i>
+          </div>
+        </div>
+
+        <!-- GBP -->
+        <div class="ref-currency-card" onclick="document.querySelector('select[name=currency]').value='GBP'">
+          <div class="ref-currency-left">
+            <div class="ref-flag-circle">🇬🇧</div>
+            <div>
+              <div class="ref-currency-code">GBP</div>
+              <div class="ref-currency-name">British Pound</div>
+            </div>
+          </div>
+          <div class="ref-currency-right">
+            <span class="ref-currency-rate">₹ 106.30</span>
+            <i class="fa-solid fa-arrow-right" style="font-size: 11px; color: #64748B;"></i>
+          </div>
+        </div>
+
+        <!-- AED -->
+        <div class="ref-currency-card" onclick="document.querySelector('select[name=currency]').value='AED'">
+          <div class="ref-currency-left">
+            <div class="ref-flag-circle">🇦🇪</div>
+            <div>
+              <div class="ref-currency-code">AED</div>
+              <div class="ref-currency-name">UAE Dirham</div>
+            </div>
+          </div>
+          <div class="ref-currency-right">
+            <span class="ref-currency-rate">₹ 22.62</span>
+            <i class="fa-solid fa-arrow-right" style="font-size: 11px; color: #64748B;"></i>
+          </div>
+        </div>
+
+        <!-- SGD -->
+        <div class="ref-currency-card" onclick="document.querySelector('select[name=currency]').value='SGD'">
+          <div class="ref-currency-left">
+            <div class="ref-flag-circle">🇸🇬</div>
+            <div>
+              <div class="ref-currency-code">SGD</div>
+              <div class="ref-currency-name">Singapore Dollar</div>
+            </div>
+          </div>
+          <div class="ref-currency-right">
+            <span class="ref-currency-rate">₹ 61.35</span>
+            <i class="fa-solid fa-arrow-right" style="font-size: 11px; color: #64748B;"></i>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -568,13 +672,21 @@
             <option value="USD">USD - US Dollar</option>
             <option value="EUR">EUR - Euro</option>
             <option value="GBP">GBP - British Pound</option>
-            <option value="AED">AED - UAE Dirham</option>
+            <option value="AED">AED - Dubai Dirham</option>
             <option value="SGD">SGD - Singapore Dollar</option>
+            <option value="THB">THB - Thai Baht</option>
+            <option value="CAD">CAD - Canadian Dollar</option>
+            <option value="AUD">AUD - Australian Dollar</option>
+            <option value="JPY">JPY - Japanese Yen</option>
+            <option value="IDR">IDR - Indonesian Rupiah</option>
+            <option value="VND">VND - Vietnamese Dong</option>
+            <option value="LKR">LKR - Sri Lankan Rupee</option>
+            <option value="MYR">MYR - Malaysian Ringgit</option>
           </select>
         </div>
 
         <div class="pill-form-group">
-          <input type="number" name="quantity" class="pill-input" placeholder="Enter Forex Quantity *" min="1" required>
+          <input type="number" name="quantity" class="pill-input" placeholder="Amount in INR *" min="1" required>
         </div>
 
         <button type="submit" class="btn-send-enquiry">SUBMIT ENQUIRY</button>
@@ -607,4 +719,4 @@
     }
   </script>
   <!-- Forex Pages Script -->
-  <script src="<?php echo base_url('assets/js/pages_main.js'); ?>"></script>
+  <script src="<?php echo base_url('assets/js/pages_main.js?v=' . time()); ?>"></script>

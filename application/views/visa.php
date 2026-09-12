@@ -1,365 +1,348 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-  <!-- HERO BANNER SECTION WITH IMAGE SLIDER & VISA ENQUIRY FORM -->
-  <section class="hero-section visa-hero">
+  <!-- 1. HERO BANNER SECTION (MATCHING IMAGE 5) -->
+  <section class="ref-hero-section">
     <!-- Hero Background Slider Track -->
-    <div class="hero-slider">
-      <div class="slide active" style="background-image: url('<?php echo base_url('assets/images/holidayslide1.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide2.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide4.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/holidayslide3.png'); ?>');"></div>
+    <div class="ref-hero-slider">
+      <div class="slider-track">
+        <div class="slide active" style="background-image: url('<?php echo base_url('assets/images/slider-images/visa/visa 1.png'); ?>');"></div>
+        <div class="slide" style="background-image: url('<?php echo base_url('assets/images/slider-images/visa/visa 2.png'); ?>');"></div>
+        <div class="slide" style="background-image: url('<?php echo base_url('assets/images/slider-images/visa/visa 3.png'); ?>');"></div>
+        <div class="slide" style="background-image: url('<?php echo base_url('assets/images/slider-images/visa/visa 4.png'); ?>');"></div>
+      </div>
     </div>
 
-    <!-- Navigation Controls -->
-    <button class="slider-arrow prev" aria-label="Previous Slide">‹</button>
-    <button class="slider-arrow next" aria-label="Next Slide">›</button>
+    <!-- Slider Arrows -->
+    <button class="ref-slider-arrow prev" aria-label="Previous Slide">‹</button>
+    <button class="ref-slider-arrow next" aria-label="Next Slide">›</button>
 
-    <!-- Pagination Dots -->
-    <div class="slider-dots">
+    <!-- Slider Pagination Dots -->
+    <div class="ref-slider-dots">
       <span class="dot active"></span>
       <span class="dot"></span>
       <span class="dot"></span>
       <span class="dot"></span>
     </div>
 
+    <!-- Hero Content Overlay -->
+    <div class="container ref-hero-container">
+      <div class="ref-hero-header-row">
+        <!-- Destination Info Left -->
+        <div class="ref-hero-text-block">
+          <h1 class="ref-dest-title">Schengen &<br>Europe Visa</h1>
+          <p class="ref-dest-subtitle">Travel Across 27 European Countries with One Visa</p>
+
+          <div class="ref-feature-pills">
+            <div class="ref-feature-pill">
+              <div class="ref-feature-pill-icon"><i class="fa-solid fa-passport"></i></div>
+              <span class="ref-feature-pill-text">Schengen Express</span>
+            </div>
+            <div class="ref-feature-pill">
+              <div class="ref-feature-pill-icon"><i class="fa-solid fa-file-circle-check"></i></div>
+              <span class="ref-feature-pill-text">Full Document Audit</span>
+            </div>
+            <div class="ref-feature-pill">
+              <div class="ref-feature-pill-icon"><i class="fa-solid fa-calendar-check"></i></div>
+              <span class="ref-feature-pill-text">Priority Appointments</span>
+            </div>
+            <div class="ref-feature-pill">
+              <div class="ref-feature-pill-icon"><i class="fa-solid fa-shield-halved"></i></div>
+              <span class="ref-feature-pill-text">99.4% Approval Rate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cursive Script Right -->
+        <div class="ref-cursive-tag">
+          Europe<br>Express
+          <i class="fa-solid fa-plane"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. FLOATING HORIZONTAL ENQUIRY FORM & TRUST BADGES (MATCHING IMAGE 5) -->
+  <section class="ref-form-section">
     <div class="container">
-      <div class="hero-content-wrapper">
-        
-        <!-- Hero Right Form Container -->
-        <div class="hero-form-wrapper visa-hero-wrapper">
-          <div class="voyogo-form-card wide-form-card visa-glass-card">
-            <h3 class="voyogo-form-title">Visa Enquiry Form</h3>
+      <div class="ref-form-card">
+        <div class="ref-form-inner">
+          <div class="visa-form-layout">
             
-            <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" class="voyogo-pill-form visa-enquiry-full-form">
-              <input type="hidden" name="message" value="Visa Hero Enquiry Form">
-              
-              <!-- Row 1: Full Name & Mobile Number -->
-              <div class="form-row-2col">
-                <div class="pill-form-group">
-                  <input type="text" name="name" class="pill-input" placeholder="Full Name *" required>
-                </div>
-                <div class="pill-form-group phone-group">
-                  <div class="country-code-pill">
-                    <span class="flag-icon">🇮🇳</span>
-                    <span class="code-text">+91</span>
+            <!-- Header -->
+            <div class="visa-form-header">
+              <h3>Visa Enquiry Form</h3>
+              <p>Get expert assistance for your visa application</p>
+            </div>
+
+            <!-- Form -->
+            <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" id="visaHorizontalEnquiryForm">
+              <input type="hidden" name="message" value="Visa Application Enquiry">
+
+              <div class="visa-grid-2col">
+                <!-- Full Name -->
+                <div class="ref-form-group">
+                  <div class="ref-input-box">
+                    <i class="fa-solid fa-user ref-input-icon"></i>
+                    <input type="text" name="name" class="ref-input" placeholder="Full Name *" required>
                   </div>
-                  <input type="tel" name="phone" class="pill-input phone-input" placeholder="Mobile Number *" required>
+                </div>
+
+                <!-- Mobile Number -->
+                <div class="ref-form-group">
+                  <div class="ref-phone-group">
+                    <div class="ref-country-code">
+                      <span class="ref-cc-display">IN +91</span>
+                      <i class="fa-solid fa-chevron-down ref-cc-arrow"></i>
+                      <select name="country_code" class="ref-cc-select" aria-label="Country Code">
+                        <option value="+91" data-display="IN +91" selected>India (+91)</option>
+                        <option value="+1" data-display="US +1">United States (+1)</option>
+                        <option value="+44" data-display="UK +44">United Kingdom (+44)</option>
+                        <option value="+971" data-display="AE +971">United Arab Emirates (+971)</option>
+                        <option value="+65" data-display="SG +65">Singapore (+65)</option>
+                        <option value="+60" data-display="MY +60">Malaysia (+60)</option>
+                        <option value="+66" data-display="TH +66">Thailand (+66)</option>
+                        <option value="+62" data-display="ID +62">Indonesia (+62)</option>
+                        <option value="+61" data-display="AU +61">Australia (+61)</option>
+                        <option value="+1" data-display="CA +1">Canada (+1)</option>
+                        <option value="+49" data-display="DE +49">Germany (+49)</option>
+                        <option value="+33" data-display="FR +33">France (+33)</option>
+                        <option value="+966" data-display="SA +966">Saudi Arabia (+966)</option>
+                        <option value="+974" data-display="QA +974">Qatar (+974)</option>
+                        <option value="+965" data-display="KW +965">Kuwait (+965)</option>
+                        <option value="+968" data-display="OM +968">Oman (+968)</option>
+                        <option value="+973" data-display="BH +973">Bahrain (+973)</option>
+                        <option value="+81" data-display="JP +81">Japan (+81)</option>
+                        <option value="+86" data-display="CN +86">China (+86)</option>
+                        <option value="+94" data-display="LK +94">Sri Lanka (+94)</option>
+                        <option value="+977" data-display="NP +977">Nepal (+977)</option>
+                        <option value="+880" data-display="BD +880">Bangladesh (+880)</option>
+                        <option value="+63" data-display="PH +63">Philippines (+63)</option>
+                        <option value="+64" data-display="NZ +64">New Zealand (+64)</option>
+                        <option value="+41" data-display="CH +41">Switzerland (+41)</option>
+                        <option value="+39" data-display="IT +39">Italy (+39)</option>
+                        <option value="+34" data-display="ES +34">Spain (+34)</option>
+                        <option value="+31" data-display="NL +31">Netherlands (+31)</option>
+                        <option value="+7" data-display="RU +7">Russia (+7)</option>
+                        <option value="+27" data-display="ZA +27">South Africa (+27)</option>
+                      </select>
+                    </div>
+                    <div class="ref-input-box" style="flex: 1;">
+                      <i class="fa-solid fa-phone ref-input-icon"></i>
+                      <input type="tel" name="phone" class="ref-input" placeholder="Mobile Number *" required>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="ref-form-group">
+                  <div class="ref-input-box">
+                    <i class="fa-solid fa-envelope ref-input-icon"></i>
+                    <input type="email" name="email" class="ref-input" placeholder="Email Address *" required>
+                  </div>
+                </div>
+
+                <!-- Destination Country -->
+                <div class="ref-form-group">
+                  <div class="ref-input-box">
+                    <i class="fa-solid fa-location-dot ref-input-icon"></i>
+                    <select name="destination" class="ref-select" required>
+                      <option value="" disabled selected>Destination Country *</option>
+                      <option value="Schengen Visa (France, Germany, Italy, etc.)">Schengen Visa (Europe)</option>
+                      <option value="United Kingdom (UK)">United Kingdom (UK)</option>
+                      <option value="United States of America (USA)">United States of America (USA)</option>
+                      <option value="Canada">Canada</option>
+                      <option value="Australia">Australia</option>
+                      <option value="New Zealand">New Zealand</option>
+                      <option value="Dubai / United Arab Emirates">Dubai / United Arab Emirates</option>
+                      <option value="Singapore">Singapore</option>
+                      <option value="Thailand">Thailand</option>
+                      <option value="Japan">Japan</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Planned Travel Date -->
+                <div class="ref-form-group">
+                  <div class="ref-input-box">
+                    <i class="fa-regular fa-calendar ref-input-icon"></i>
+                    <input type="text" name="travel_date" class="ref-input" placeholder="Planned Travel Date *" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" required>
+                  </div>
+                </div>
+
+                <!-- Number of Travelers -->
+                <div class="ref-form-group">
+                  <div class="ref-input-box">
+                    <i class="fa-solid fa-users ref-input-icon"></i>
+                    <select name="passengers" class="ref-select" required>
+                      <option value="" disabled selected>Number of Travelers *</option>
+                      <option value="1 Traveler">1 Traveler</option>
+                      <option value="2 Travelers">2 Travelers</option>
+                      <option value="3 Travelers">3 Travelers</option>
+                      <option value="4 Travelers">4 Travelers</option>
+                      <option value="5+ Travelers">5+ Travelers</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <!-- Row 2: Email & Destination Country -->
-              <div class="form-row-2col">
-                <div class="pill-form-group">
-                  <input type="email" name="email" class="pill-input" placeholder="Email Address *" required>
-                </div>
-                <div class="pill-form-group">
-                  <input type="text" name="destination" class="pill-input" placeholder="Destination Country *" required>
-                </div>
-              </div>
-
-              <!-- Row 3: Planned Travel Date & Number of Travelers -->
-              <div class="form-row-2col">
-                <div class="pill-form-group">
-                  <input type="text" name="travel_date" class="pill-input" placeholder="Planned Travel Date *" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" required>
-                </div>
-                <div class="pill-form-group">
-                  <input type="number" name="passengers" class="pill-input" placeholder="Number of Travelers *" min="1" required>
-                </div>
-              </div>
-
-              <!-- Row 4: Purpose of Travel & Passport Status -->
-              <div class="form-row-2col align-top-row">
-                <div class="form-section-group">
-                  <label class="form-group-label">Purpose of Travel *</label>
-                  <div class="radio-options-grid compact-grid">
-                    <label class="radio-chip">
-                      <input type="radio" name="purpose_of_travel" value="Tourist" required>
-                      <span class="radio-label">Tourist</span>
+              <!-- Options Row: Purpose of Travel & Passport Status -->
+              <div class="visa-options-row">
+                <div>
+                  <label class="ref-label">Purpose of Travel <span class="ref-req">*</span></label>
+                  <div class="visa-radio-pills">
+                    <label class="visa-radio-pill">
+                      <input type="radio" name="purpose_of_travel" value="Tourist" checked required>
+                      <span>Tourist</span>
                     </label>
-                    <label class="radio-chip">
+                    <label class="visa-radio-pill">
                       <input type="radio" name="purpose_of_travel" value="Business">
-                      <span class="radio-label">Business</span>
+                      <span>Business</span>
                     </label>
-                    <label class="radio-chip">
+                    <label class="visa-radio-pill">
                       <input type="radio" name="purpose_of_travel" value="Student">
-                      <span class="radio-label">Student</span>
+                      <span>Student</span>
                     </label>
-                    <label class="radio-chip">
+                    <label class="visa-radio-pill">
                       <input type="radio" name="purpose_of_travel" value="Work">
-                      <span class="radio-label">Work</span>
+                      <span>Work</span>
                     </label>
-                    <label class="radio-chip">
+                    <label class="visa-radio-pill">
                       <input type="radio" name="purpose_of_travel" value="Family Visit">
-                      <span class="radio-label">Family Visit</span>
+                      <span>Family Visit</span>
                     </label>
-                    <label class="radio-chip">
+                    <label class="visa-radio-pill">
                       <input type="radio" name="purpose_of_travel" value="Other">
-                      <span class="radio-label">Other</span>
+                      <span>Other</span>
                     </label>
                   </div>
                 </div>
 
-                <div class="form-section-group">
-                  <label class="form-group-label">Do you have a Passport? *</label>
-                  <div class="radio-options-row compact-row">
-                    <label class="radio-chip">
-                      <input type="radio" name="has_passport" value="Yes" required>
-                      <span class="radio-label">Yes</span>
+                <div class="visa-passport-box">
+                  <label class="ref-label">Do you have a Passport? <span class="ref-req">*</span></label>
+                  <div class="visa-passport-radios">
+                    <label class="visa-radio-pill">
+                      <input type="radio" name="has_passport" value="Yes" checked onchange="togglePassportField('Yes')">
+                      <span>Yes</span>
                     </label>
-                    <label class="radio-chip">
-                      <input type="radio" name="has_passport" value="No">
-                      <span class="radio-label">No</span>
+                    <label class="visa-radio-pill">
+                      <input type="radio" name="has_passport" value="No" onchange="togglePassportField('No')">
+                      <span>No</span>
                     </label>
                   </div>
-                  <div class="pill-form-group passport-number-group" id="passportNumberGroup" style="margin-top: 6px;">
-                    <input type="text" name="passport_number" id="passportNumberInput" class="pill-input" placeholder="Passport Number">
+                  <div class="ref-input-box" id="passportNumberGroup" style="margin-top: 4px; display: flex;">
+                    <i class="fa-solid fa-passport ref-input-icon"></i>
+                    <input type="text" name="passport_number" id="passportNumberInput" class="ref-input" placeholder="Passport Number">
                   </div>
                 </div>
               </div>
 
-              <!-- Row 5: Consent Checkbox & Submit Button -->
-              <div class="form-bottom-row">
-                <div class="form-section-group consent-group">
-                  <label class="checkbox-label-container">
-                    <input type="checkbox" name="consent" value="1" required checked>
-                    <span class="checkbox-text">I agree to be contacted regarding my visa enquiry.</span>
-                  </label>
-                </div>
-                <button type="submit" class="btn-send-enquiry">SUBMIT ENQUIRY</button>
+              <!-- Bottom Bar -->
+              <div class="cabs-bottom-bar">
+                <label class="ref-checkbox-label">
+                  <input type="checkbox" name="consent" value="1" required>
+                  <span>I agree to be contacted regarding my visa enquiry.</span>
+                </label>
+
+                <button type="submit" class="ref-btn-submit">
+                  SUBMIT ENQUIRY <i class="fa-solid fa-chevron-right"></i>
+                </button>
               </div>
+
             </form>
+
           </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- POPULAR VISA DESTINATIONS SECTION (REFER HOLIDAYS.PHP) -->
-  <section class="popular-visa-section" style="padding: 40px 0;">
-    <div class="container">
-      
-      <!-- Section Header Row with Category Tabs & Nav Arrows -->
-      <div class="section-header-wrapper">
-        <div class="header-title-tabs">
-          <h2 class="section-title">Popular Visa Destinations</h2>
-          
-          <div class="deals-tabs visa-category-tabs">
-            <span class="deal-tab visa-tab active">ALL</span>
-            <span class="deal-tab visa-tab">E-VISA</span>
-            <span class="deal-tab visa-tab">STICKER VISA</span>
-            <span class="deal-tab visa-tab">EXPRESS VISA</span>
-          </div>
-        </div>
-
-        <div class="header-actions-right">
-          <button class="carousel-btn" id="prevVisaBtn" aria-label="Previous Destination">‹</button>
-          <button class="carousel-btn active" id="nextVisaBtn" aria-label="Next Destination">›</button>
-          <a href="#" onclick="openEnquiryModal('View All Visa Destinations')" class="view-all-link">VIEW ALL</a>
         </div>
       </div>
 
-      <!-- Popular Visa Cards Container / Carousel Grid -->
-      <div class="visa-grid-container">
-        <div class="visa-grid" id="visaGrid">
-          
-          <!-- Card 1: Dubai UAE -->
-          <div class="visa-card-item" onclick="openEnquiryModal('Dubai (UAE) Tourist Visa')">
-            <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo dubai.png'); ?>');">
-              <span class="visa-badge e-visa">E-VISA • 24-48 HRS</span>
-            </div>
-            <div class="visa-card-body">
-              <h3 class="visa-card-title">Dubai (UAE) Visa</h3>
-              <div class="visa-card-info">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span>Passport Front & Back + Photo Only</span>
-              </div>
-              <div class="visa-card-validity">
-                <span>Validity: 30 Days Single Entry</span>
-              </div>
-            </div>
-            <div class="visa-card-footer">
-              <div class="visa-price-box">
-                <span class="visa-label-small">Starting @</span>
-                <span class="visa-price-val">₹6,499/-</span>
-              </div>
-              <button class="btn-apply-visa">Apply Visa</button>
-            </div>
-          </div>
-
-          <!-- Card 2: Bali Indonesia -->
-          <div class="visa-card-item" onclick="openEnquiryModal('Bali (Indonesia) E-Visa')">
-            <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo bali .png'); ?>');">
-              <span class="visa-badge e-visa">E-VOA • INSTANT</span>
-            </div>
-            <div class="visa-card-body">
-              <h3 class="visa-card-title">Bali (Indonesia) Visa</h3>
-              <div class="visa-card-info">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span>Quick E-VOA Online Verification</span>
-              </div>
-              <div class="visa-card-validity">
-                <span>Validity: 30 Days (Extendable)</span>
-              </div>
-            </div>
-            <div class="visa-card-footer">
-              <div class="visa-price-box">
-                <span class="visa-label-small">Starting @</span>
-                <span class="visa-price-val">₹3,299/-</span>
-              </div>
-              <button class="btn-apply-visa">Apply Visa</button>
-            </div>
-          </div>
-
-          <!-- Card 3: Thailand -->
-          <div class="visa-card-item" onclick="openEnquiryModal('Thailand E-Visa')">
-            <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo thailand.png'); ?>');">
-              <span class="visa-badge express">EXPRESS • 24 HRS</span>
-            </div>
-            <div class="visa-card-body">
-              <h3 class="visa-card-title">Thailand E-Visa</h3>
-              <div class="visa-card-info">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span>Minimal Paperwork & Instant Approval</span>
-              </div>
-              <div class="visa-card-validity">
-                <span>Validity: 15-30 Days Tourist</span>
-              </div>
-            </div>
-            <div class="visa-card-footer">
-              <div class="visa-price-box">
-                <span class="visa-label-small">Starting @</span>
-                <span class="visa-price-val">₹2,899/-</span>
-              </div>
-              <button class="btn-apply-visa">Apply Visa</button>
-            </div>
-          </div>
-
-          <!-- Card 4: Singapore -->
-          <div class="visa-card-item" onclick="openEnquiryModal('Singapore E-Visa')">
-            <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo singapore.png'); ?>');">
-              <span class="visa-badge e-visa">E-VISA • 3-4 DAYS</span>
-            </div>
-            <div class="visa-card-body">
-              <h3 class="visa-card-title">Singapore Visa</h3>
-              <div class="visa-card-info">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span>Authorized Agent Submission</span>
-              </div>
-              <div class="visa-card-validity">
-                <span>Validity: 2 Years Multiple Entry</span>
-              </div>
-            </div>
-            <div class="visa-card-footer">
-              <div class="visa-price-box">
-                <span class="visa-label-small">Starting @</span>
-                <span class="visa-price-val">₹2,499/-</span>
-              </div>
-              <button class="btn-apply-visa">Apply Visa</button>
-            </div>
-          </div>
-
-          <!-- Card 5: Schengen Europe -->
-          <div class="visa-card-item" onclick="openEnquiryModal('Schengen Europe Sticker Visa')">
-            <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo europe.png'); ?>');">
-              <span class="visa-badge sticker">STICKER • 15 DAYS</span>
-            </div>
-            <div class="visa-card-body">
-              <h3 class="visa-card-title">Schengen Europe Visa</h3>
-              <div class="visa-card-info">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span>Full VFS Slot + Cover Letter + Itinerary</span>
-              </div>
-              <div class="visa-card-validity">
-                <span>Validity: Up to 90 Days (27 Countries)</span>
-              </div>
-            </div>
-            <div class="visa-card-footer">
-              <div class="visa-price-box">
-                <span class="visa-label-small">Starting @</span>
-                <span class="visa-price-val">₹7,999/-</span>
-              </div>
-              <button class="btn-apply-visa">Apply Visa</button>
-            </div>
-          </div>
-
-          <!-- Card 6: Japan -->
-          <div class="visa-card-item" onclick="openEnquiryModal('Japan Tourist E-Visa')">
-            <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo japan.png'); ?>');">
-              <span class="visa-badge e-visa">E-VISA • 5 DAYS</span>
-            </div>
-            <div class="visa-card-body">
-              <h3 class="visa-card-title">Japan E-Visa</h3>
-              <div class="visa-card-info">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span>Single Entry Tourist E-Visa</span>
-              </div>
-              <div class="visa-card-validity">
-                <span>Validity: 90 Days (Stay 15 Days)</span>
-              </div>
-            </div>
-            <div class="visa-card-footer">
-              <div class="visa-price-box">
-                <span class="visa-label-small">Starting @</span>
-                <span class="visa-price-val">₹2,199/-</span>
-              </div>
-              <button class="btn-apply-visa">Apply Visa</button>
-            </div>
-          </div>
-
-          <!-- Card 7: Vietnam -->
-          <div class="visa-card-item" onclick="openEnquiryModal('Vietnam E-Visa')">
-            <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo vietnom.png'); ?>');">
-              <span class="visa-badge e-visa">E-VISA • 3 DAYS</span>
-            </div>
-            <div class="visa-card-body">
-              <h3 class="visa-card-title">Vietnam Visa</h3>
-              <div class="visa-card-info">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span>Instant Official E-Visa Approval</span>
-              </div>
-              <div class="visa-card-validity">
-                <span>Validity: 30-90 Days Single/Multiple</span>
-              </div>
-            </div>
-            <div class="visa-card-footer">
-              <div class="visa-price-box">
-                <span class="visa-label-small">Starting @</span>
-                <span class="visa-price-val">₹1,999/-</span>
-              </div>
-              <button class="btn-apply-visa">Apply Visa</button>
-            </div>
-          </div>
-
-          <!-- Card 8: USA B1/B2 Visa -->
-          <div class="visa-card-item" onclick="openEnquiryModal('USA B1/B2 Tourist Visa')">
-            <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo usa.png'); ?>');">
-              <span class="visa-badge sticker">STICKER • INTERVIEW</span>
-            </div>
-            <div class="visa-card-body">
-              <h3 class="visa-card-title">USA B1/B2 Visa</h3>
-              <div class="visa-card-info">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span>DS-160 Form + Appointment Booking + Mock Interview</span>
-              </div>
-              <div class="visa-card-validity">
-                <span>Validity: 10 Years Multiple Entry</span>
-              </div>
-            </div>
-            <div class="visa-card-footer">
-              <div class="visa-price-box">
-                <span class="visa-label-small">Starting @</span>
-                <span class="visa-price-val">₹9,999/-</span>
-              </div>
-              <button class="btn-apply-visa">Apply Visa</button>
-            </div>
-          </div>
-
+      <!-- Trust Badges Bar (Matching Image 5) -->
+      <div class="ref-trust-bar">
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="ref-trust-text">Best Price<br>Guarantee</div>
+        </div>
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-headset"></i></div>
+          <div class="ref-trust-text">24/7<br>Travel Support</div>
+        </div>
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-users-gear"></i></div>
+          <div class="ref-trust-text">Customized<br>Itineraries</div>
+        </div>
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="ref-trust-text">Secure<br>Booking</div>
+        </div>
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-globe"></i></div>
+          <div class="ref-trust-text">Wide Range<br>of Destinations</div>
         </div>
       </div>
 
     </div>
-  </section>
+  </section><?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+<section class="popular-visa-section" style="padding: 40px 0;">
+  <div class="container">
+    <!-- Section header: title+tabs left, nav right -->
+    <div class="visa-section-header">
+      <div class="visa-section-left">
+        <h2 class="section-title" style="margin:0 0 10px 0;">Popular Visa Destinations</h2>
+        <div class="deals-tabs visa-category-tabs" style="margin:0;">
+          <span class="deal-tab visa-tab active" data-tab="ac">AC</span>
+          <span class="deal-tab visa-tab" data-tab="evisa">E-VISA</span>
+          <span class="deal-tab visa-tab" data-tab="sticker">STICKER VISA</span>
+        </div>
+      </div>
+      <div class="visa-section-right">
+        <button class="carousel-btn" id="prevVisaBtn" aria-label="Previous Destination">‹</button>
+        <button class="carousel-btn active" id="nextVisaBtn" aria-label="Next Destination">›</button>
+        <a href="#" onclick="openEnquiryModal('View All Visa Destinations')" class="view-all-link">VIEW ALL</a>
+      </div>
+    </div>
+
+    <!-- Visa Cards Grid -->
+    <div class="visa-grid-container">
+      <div class="visa-grid" id="visaGrid">
+        <!-- AC Cards -->
+        <div class="visa-card-item" onclick="openEnquiryModal('Malaysia AC Visa')">
+          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/jpeg/voyogo malaysia.png'); ?>');">
+            <span class="visa-badge ac">AC</span>
+          </div>
+          <div class="visa-card-body">
+            <h3 class="visa-card-title">Malaysia AC</h3>
+            <div class="visa-card-info"><span>Rs.500</span></div>
+          </div>
+        </div>
+        <div class="visa-card-item" onclick="openEnquiryModal('Sri Lanka AC Visa')">
+          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo srilanka.png'); ?>');">
+            <span class="visa-badge ac">AC</span>
+          </div>
+          <div class="visa-card-body"><h3 class="visa-card-title">Sri Lanka AC</h3><div class="visa-card-info"><span>Rs.500</span></div></div>
+        </div>
+        <div class="visa-card-item" onclick="openEnquiryModal('Thailand AC Visa')">
+          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo thailand.png'); ?>');">
+            <span class="visa-badge ac">AC</span>
+          </div>
+          <div class="visa-card-body"><h3 class="visa-card-title">Thailand AC</h3><div class="visa-card-info"><span>Rs.500</span></div></div>
+        </div>
+        <div class="visa-card-item" onclick="openEnquiryModal('Hong Kong AC Visa')">
+          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/jpeg/voyogo hong kong.png'); ?>');">
+            <span class="visa-badge ac">AC</span>
+          </div>
+          <div class="visa-card-body"><h3 class="visa-card-title">Hong Kong AC</h3><div class="visa-card-info"><span>Rs.500</span></div></div>
+        </div>
+        <div class="visa-card-item" onclick="openEnquiryModal('Philippines Health Arrival Card')">
+          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/jpeg/voyogo philipines.png'); ?>');">
+            <span class="visa-badge ac">AC</span>
+          </div>
+          <div class="visa-card-body"><h3 class="visa-card-title">Philippines Health Arrival Card</h3><div class="visa-card-info"><span>Rs.500</span></div></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
 
   <!-- OUR VISA PROCESS SECTION (ROUND ICONS 1-4 WITH DOTTED CONNECTOR & MOVING FLIGHT) -->
   <section class="visa-process-section">
@@ -640,17 +623,16 @@
               <span class="radio-label">No</span>
             </label>
           </div>
-        </div>
-
-        <!-- 8.5 Passport Number for Modal (Shown when Yes is clicked) -->
-        <div class="pill-form-group passport-number-group" id="modalPassportNumberGroup">
-          <input type="text" name="passport_number" id="modalPassportNumberInput" class="pill-input" placeholder="Passport Number *" required>
+          <!-- Passport number field shown when Yes is selected -->
+          <div id="modalPassportNumberGroup" style="margin-top: 12px; display: block;">
+            <input type="text" name="passport_number" id="modalPassportNumberInput" class="pill-input" placeholder="Passport Number *" required style="width:100%; padding-left:18px; padding-right:18px;">
+          </div>
         </div>
 
         <!-- 9. Consent Checkbox -->
         <div class="form-section-group consent-group">
           <label class="checkbox-label-container">
-            <input type="checkbox" name="consent" value="1" required checked>
+            <input type="checkbox" name="consent" value="1" required>
             <span class="checkbox-text">I agree to be contacted regarding my visa enquiry.</span>
           </label>
         </div>
@@ -662,4 +644,7 @@
   </div>
 
   <!-- Visa Pages Script -->
-  <script src="<?php echo base_url('assets/js/pages_main.js'); ?>"></script>
+  <script>
+    window.voyogoBaseUrl = "<?php echo base_url(); ?>";
+  </script>
+  <script src="<?php echo base_url('assets/js/pages_main.js?v=' . time()); ?>"></script>

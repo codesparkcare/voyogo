@@ -4,12 +4,12 @@
 :root {
   --primary-dark: #061a3a;
   --primary-navy: #09204b;
-  --primary-blue: #0d3470;
-  --accent-red: #fa3a3a;
-  --accent-red-hover: #e02828;
-  --accent-orange: #ff6b00;
-  --accent-gold: #ffb400;
-  --bg-light: #f4f6fa;
+  --primary-blue: #78B722;
+  --accent-red: #78B722;
+  --accent-red-hover: #5d9118;
+  --accent-orange: #8fd12a;
+  --accent-gold: #a0d454;
+  --bg-light: #f6faea;
   --bg-card: #ffffff;
   --text-dark: #1e293b;
   --text-muted: #64748b;
@@ -59,11 +59,11 @@ ul {
    Top Header & Navigation
    ========================================================================== */
 .top-strip {
-  background-color: var(--primary-dark);
-  color: #cbd5e1;
+  background-color: #78B722;
+  color: #ffffff;
   font-size: 13px;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .top-strip .container {
@@ -85,7 +85,7 @@ ul {
 }
 
 .top-strip-item i {
-  color: var(--accent-gold);
+  color: #ffffff;
 }
 
 .top-strip-right {
@@ -106,13 +106,13 @@ ul {
 }
 
 .top-select option {
-  background-color: var(--primary-dark);
+  background-color: #78B722;
   color: #ffffff;
 }
 
 /* Main Navigation Header */
 .main-header {
-  background-color: var(--primary-navy);
+  background-color: #09204b;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -226,7 +226,7 @@ ul {
 }
 
 .btn-login {
-  background: linear-gradient(135deg, var(--accent-red), var(--accent-red-hover));
+  background: linear-gradient(135deg, #78B722, #4a7a12);
   color: #ffffff;
   font-weight: 600;
   font-size: 14px;
@@ -234,7 +234,7 @@ ul {
   border-radius: var(--radius-md);
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(250, 58, 58, 0.35);
+  box-shadow: 0 4px 14px rgba(120, 183, 34, 0.35);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -242,7 +242,7 @@ ul {
 
 .btn-login:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(250, 58, 58, 0.45);
+  box-shadow: 0 6px 18px rgba(120, 183, 34, 0.5);
 }
 
 .support-pill {
@@ -277,7 +277,7 @@ ul {
    ========================================================================== */
 .hero-section {
   position: relative;
-  background: linear-gradient(180deg, var(--primary-navy) 0%, #0e2d5c 40%, var(--bg-light) 100%);
+  background: linear-gradient(180deg, #3d5f10 0%, #4a7a12 40%, var(--bg-light) 100%);
   padding: 40px 0 60px;
   overflow: visible;
 }
@@ -382,7 +382,7 @@ ul {
 }
 
 .fare-tag.active, .fare-tag:hover {
-  background: #fef2f2;
+  background: #e8f8f0;
   border-color: var(--accent-red);
   color: var(--accent-red);
 }
@@ -500,7 +500,7 @@ ul {
 }
 
 .btn-search {
-  background: linear-gradient(135deg, var(--accent-red), var(--accent-orange));
+  background: linear-gradient(135deg, #78B722, #4a7a12);
   color: #ffffff;
   font-family: var(--font-heading);
   font-size: 18px;
@@ -509,7 +509,7 @@ ul {
   border-radius: 30px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(250, 58, 58, 0.4);
+  box-shadow: 0 6px 20px rgba(120, 183, 34, 0.4);
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
@@ -518,7 +518,7 @@ ul {
 
 .btn-search:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(250, 58, 58, 0.5);
+  box-shadow: 0 8px 25px rgba(120, 183, 34, 0.55);
 }
 
 /* Passenger & Room Dropdown Popups */
@@ -1125,10 +1125,10 @@ ul {
    Footer Component
    ========================================================================== */
 .main-footer {
-  background-color: var(--primary-navy);
+  background-color: #09204b;
   color: #94a3b8;
   padding-top: 50px;
-  border-top: 4px solid var(--accent-red);
+  border-top: 4px solid #09204b;
 }
 
 .footer-top {
@@ -1200,7 +1200,7 @@ ul {
 }
 
 .newsletter-btn {
-  background: var(--accent-red);
+  background: #09204b;
   color: #ffffff;
   border: none;
   padding: 10px 16px;
@@ -1210,7 +1210,7 @@ ul {
 }
 
 .newsletter-btn:hover {
-  background: var(--accent-red-hover);
+  background: #061a3a;
 }
 
 .footer-bottom {
@@ -1746,4 +1746,5 @@ ul {
   transition: transform 0.25s ease-in-out;
   width: 90%;
 }
+
 

@@ -1,128 +1,348 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-  <!-- HERO BANNER SECTION WITH IMAGE SLIDER & CRUISE ENQUIRY FORM -->
-  <section class="hero-section cruises-hero">
-    <!-- Hero Background Slider Track using uploaded cruise images -->
-    <div class="hero-slider">
-      <div class="slide active" style="background-image: url('<?php echo base_url('assets/images/cruise_slider1.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/cruise_slider2.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/voyogo cruise 1.png'); ?>');"></div>
-      <div class="slide" style="background-image: url('<?php echo base_url('assets/images/voyogo cruise 2.png'); ?>');"></div>
+  <!-- 1. HERO BANNER SECTION (MATCHING IMAGE 3) -->
+  <section class="ref-hero-section">
+    <!-- Hero Background Slider Track -->
+    <div class="ref-hero-slider">
+      <div class="slider-track">
+        <div class="slide active" style="background-image: url('<?php echo base_url('assets/images/slider-images/crusie/cruise 1.png'); ?>');"></div>
+        <div class="slide" style="background-image: url('<?php echo base_url('assets/images/slider-images/crusie/cruise 2.png'); ?>');"></div>
+        <div class="slide" style="background-image: url('<?php echo base_url('assets/images/slider-images/crusie/cruise 3.png'); ?>');"></div>
+        <div class="slide" style="background-image: url('<?php echo base_url('assets/images/slider-images/crusie/cruise 4.png'); ?>');"></div>
+      </div>
     </div>
 
-    <!-- Navigation Controls -->
-    <button class="slider-arrow prev" aria-label="Previous Slide">‹</button>
-    <button class="slider-arrow next" aria-label="Next Slide">›</button>
+    <!-- Slider Arrows -->
+    <button class="ref-slider-arrow prev" aria-label="Previous Slide">‹</button>
+    <button class="ref-slider-arrow next" aria-label="Next Slide">›</button>
 
-    <!-- Pagination Dots -->
-    <div class="slider-dots">
+    <!-- Slider Pagination Dots -->
+    <div class="ref-slider-dots">
       <span class="dot active"></span>
       <span class="dot"></span>
       <span class="dot"></span>
       <span class="dot"></span>
     </div>
 
+    <!-- Hero Content Overlay -->
+    <div class="container ref-hero-container">
+      <div class="ref-hero-header-row">
+        <!-- Destination Info Left -->
+        <div class="ref-hero-text-block">
+          <h1 class="ref-dest-title">Cruise<br>Beyond Boundaries</h1>
+          <p class="ref-dest-subtitle">Explore breathtaking destinations, world-class comfort and unforgettable experiences on the open seas.</p>
+
+          <div class="ref-feature-pills">
+            <div class="ref-feature-pill">
+              <div class="ref-feature-pill-icon"><i class="fa-solid fa-compass"></i></div>
+              <span class="ref-feature-pill-text">Stunning Destinations</span>
+            </div>
+            <div class="ref-feature-pill">
+              <div class="ref-feature-pill-icon"><i class="fa-solid fa-utensils"></i></div>
+              <span class="ref-feature-pill-text">World-Class Dining</span>
+            </div>
+            <div class="ref-feature-pill">
+              <div class="ref-feature-pill-icon"><i class="fa-solid fa-bed"></i></div>
+              <span class="ref-feature-pill-text">Luxurious Stay</span>
+            </div>
+            <div class="ref-feature-pill">
+              <div class="ref-feature-pill-icon"><i class="fa-regular fa-face-smile"></i></div>
+              <span class="ref-feature-pill-text">Fun for Everyone</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cursive Script Right -->
+        <div class="ref-cursive-tag">
+          Sail<br>Explore<br>Repeat
+          <i class="fa-solid fa-ship"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. FLOATING HORIZONTAL ENQUIRY FORM & TRUST BADGES (MATCHING IMAGE 3) -->
+  <section class="ref-form-section">
     <div class="container">
-      <div class="hero-content-wrapper">
-        
-        <!-- Hero Right Form Container (CRUISE ENQUIRY FORM) -->
-        <div class="cruise-hero-form-wrapper">
-          <div class="cruise-form-card cruise-glass-card">
-            
-            <h3 class="cruise-form-title">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 21h20M4 17l2-10 6-3 6 3 2 10M12 4v13"/>
-              </svg>
-              Cruise Enquiry Form
-            </h3>
+      <div class="ref-form-card">
+        <div class="ref-form-inner">
+          
+          <!-- Form Header Row -->
+          <div class="cruises-form-header">
+            <div class="cruises-title-box">
+              <div class="cruises-title-icon"><i class="fa-solid fa-ship"></i></div>
+              <div class="cruises-title-text">
+                <h3>Cruise Enquiry Form</h3>
+                <p>Tell us your travel plans and we'll get back with the best cruise options!</p>
+              </div>
+            </div>
+            <div class="cruises-script-tag">
+              Your Next Voyage Awaits!
+            </div>
+          </div>
 
-            <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" id="cruiseEnquiryHeroForm">
-              <input type="hidden" name="message" value="Cruise Booking Enquiry">
+          <!-- Form Fields -->
+          <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" id="refCruiseForm">
+            <input type="hidden" name="message" value="Cruise Booking Enquiry">
+            <input type="hidden" name="cabin_type" id="selectedCabinTypeInput" value="Interior Cabin">
 
-              <!-- Row 1: Full Name & Mobile Number -->
-              <div class="form-row-2col">
-                <div class="cruise-form-group">
-                  <label class="cruise-form-label">Full Name <span class="req-star">*</span></label>
-                  <input type="text" name="name" class="cruise-input" placeholder="Full Name" required>
-                </div>
-                <div class="cruise-form-group">
-                  <label class="cruise-form-label">Mobile Number <span class="req-star">*</span></label>
-                  <input type="tel" name="phone" class="cruise-input" placeholder="Mobile Number" required>
+            <!-- Row 1: Name, Mobile, Email (3-col) -->
+            <div class="cruises-grid-3col">
+              <div class="ref-form-group">
+                <label class="ref-label">Full Name <span class="ref-req">*</span></label>
+                <div class="ref-input-box">
+                  <i class="fa-solid fa-user ref-input-icon"></i>
+                  <input type="text" name="name" class="ref-input" placeholder="Enter your full name" required>
                 </div>
               </div>
 
-              <!-- Row 2: Email Address & Cruise Destination -->
-              <div class="form-row-2col">
-                <div class="cruise-form-group">
-                  <label class="cruise-form-label">Email Address <span class="req-star">*</span></label>
-                  <input type="email" name="email" class="cruise-input" placeholder="Email Address" required>
+              <div class="ref-form-group">
+                <label class="ref-label">Mobile Number <span class="ref-req">*</span></label>
+                <div class="ref-phone-group">
+                  <div class="ref-country-code">
+                    <span class="ref-cc-display">IN +91</span>
+                    <i class="fa-solid fa-chevron-down ref-cc-arrow"></i>
+                    <select name="country_code" class="ref-cc-select" aria-label="Country Code">
+                      <option value="+91" data-display="IN +91" selected>India (+91)</option>
+                      <option value="+1" data-display="US +1">United States (+1)</option>
+                      <option value="+44" data-display="UK +44">United Kingdom (+44)</option>
+                      <option value="+971" data-display="AE +971">United Arab Emirates (+971)</option>
+                      <option value="+65" data-display="SG +65">Singapore (+65)</option>
+                      <option value="+60" data-display="MY +60">Malaysia (+60)</option>
+                      <option value="+66" data-display="TH +66">Thailand (+66)</option>
+                      <option value="+62" data-display="ID +62">Indonesia (+62)</option>
+                      <option value="+61" data-display="AU +61">Australia (+61)</option>
+                      <option value="+1" data-display="CA +1">Canada (+1)</option>
+                      <option value="+49" data-display="DE +49">Germany (+49)</option>
+                      <option value="+33" data-display="FR +33">France (+33)</option>
+                      <option value="+966" data-display="SA +966">Saudi Arabia (+966)</option>
+                      <option value="+974" data-display="QA +974">Qatar (+974)</option>
+                      <option value="+965" data-display="KW +965">Kuwait (+965)</option>
+                      <option value="+968" data-display="OM +968">Oman (+968)</option>
+                      <option value="+973" data-display="BH +973">Bahrain (+973)</option>
+                      <option value="+81" data-display="JP +81">Japan (+81)</option>
+                      <option value="+86" data-display="CN +86">China (+86)</option>
+                      <option value="+94" data-display="LK +94">Sri Lanka (+94)</option>
+                      <option value="+977" data-display="NP +977">Nepal (+977)</option>
+                      <option value="+880" data-display="BD +880">Bangladesh (+880)</option>
+                      <option value="+63" data-display="PH +63">Philippines (+63)</option>
+                      <option value="+64" data-display="NZ +64">New Zealand (+64)</option>
+                      <option value="+41" data-display="CH +41">Switzerland (+41)</option>
+                      <option value="+39" data-display="IT +39">Italy (+39)</option>
+                      <option value="+34" data-display="ES +34">Spain (+34)</option>
+                      <option value="+31" data-display="NL +31">Netherlands (+31)</option>
+                      <option value="+7" data-display="RU +7">Russia (+7)</option>
+                      <option value="+27" data-display="ZA +27">South Africa (+27)</option>
+                    </select>
+                  </div>
+                  <div class="ref-input-box" style="flex: 1;">
+                    <i class="fa-solid fa-phone ref-input-icon"></i>
+                    <input type="tel" name="phone" class="ref-input" placeholder="Enter mobile number" required>
+                  </div>
                 </div>
-                <div class="cruise-form-group">
-                  <label class="cruise-form-label">Cruise Destination <span class="req-star">*</span></label>
-                  <select name="destination" class="cruise-select" required>
+              </div>
+
+              <div class="ref-form-group">
+                <label class="ref-label">Email Address <span class="ref-req">*</span></label>
+                <div class="ref-input-box">
+                  <i class="fa-solid fa-envelope ref-input-icon"></i>
+                  <input type="email" name="email" class="ref-input" placeholder="Enter your email address" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 2: Destination, Travel Date, Travelers, Budget (4-col) -->
+            <div class="cruises-grid-4col">
+              <div class="ref-form-group">
+                <label class="ref-label">Cruise Destination <span class="ref-req">*</span></label>
+                <div class="ref-input-box">
+                  <i class="fa-solid fa-location-dot ref-input-icon"></i>
+                  <select name="destination" class="ref-select" required>
                     <option value="" disabled selected>Select Destination</option>
-                    <option value="Singapore & Malaysia Cruise">Singapore & Malaysia Cruise</option>
-                    <option value="Bahamas & Caribbean Cruise">Bahamas & Caribbean Cruise</option>
-                    <option value="Mediterranean & Greek Isles">Mediterranean & Greek Isles</option>
-                    <option value="Alaska Glaciers Voyage">Alaska Glaciers Voyage</option>
-                    <option value="Antarctica Expedition Voyage">Antarctica Expedition Voyage</option>
-                    <option value="Dubai & Arabian Gulf Cruise">Dubai & Arabian Gulf Cruise</option>
-                    <option value="Europe River Cruise">Europe River Cruise</option>
+                    <option value="Singapore Cruise">Singapore Cruise</option>
+                    <option value="Dubai & Arabian Gulf Cruise">Dubai Cruise</option>
+                    <option value="Mediterranean Cruise">Mediterranean Cruise</option>
+                    <option value="Alaska Cruise Glaciers">Alaska Cruise</option>
+                    <option value="Bahamas & Caribbean Cruise">Bahamas & Caribbean</option>
+                    <option value="Goa to Mumbai Coastal Cruise">Goa to Mumbai Cruise</option>
                   </select>
                 </div>
               </div>
 
-              <!-- Row 3: Travel Date, No. of Travelers & Budget -->
-              <div class="form-row-2col">
-                <div class="cruise-form-group">
-                  <label class="cruise-form-label">Travel Date <span class="req-star">*</span></label>
-                  <input type="text" name="travel_date" class="cruise-input" placeholder="Travel Date *" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" required>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                  <div class="cruise-form-group">
-                    <label class="cruise-form-label">Travelers <span class="req-star">*</span></label>
-                    <input type="number" name="travelers" class="cruise-input" placeholder="Travelers *" min="1" required>
-                  </div>
-                  <div class="cruise-form-group">
-                    <label class="cruise-form-label">Budget</label>
-                    <select name="budget" class="cruise-select">
-                      <option value="" disabled selected>Budget</option>
-                      <option value="Under ₹50,000">Under ₹50k</option>
-                      <option value="₹50k - ₹1 Lakh">₹50k - ₹1L</option>
-                      <option value="₹1 Lakh - ₹2.5 Lakh">₹1L - ₹2.5L</option>
-                      <option value="₹2.5 Lakh+ Luxury">₹2.5L+ Luxury</option>
-                    </select>
-                  </div>
+              <div class="ref-form-group">
+                <label class="ref-label">Travel Date <span class="ref-req">*</span></label>
+                <div class="ref-input-box">
+                  <i class="fa-regular fa-calendar ref-input-icon"></i>
+                  <input type="text" name="travel_date" class="ref-input" placeholder="Select travel date" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" required>
                 </div>
               </div>
 
-              <!-- Row 4: Cabin Type -->
-              <div class="cruise-form-group">
-                <label class="cruise-form-label">Cabin Type <span class="req-star">*</span></label>
-                <div class="cabin-type-grid compact-cabin-grid">
-                  <label class="cabin-radio-pill"><input type="radio" name="cabin_type" value="Interior Cabin" required> Interior</label>
-                  <label class="cabin-radio-pill"><input type="radio" name="cabin_type" value="Ocean View Cabin"> Ocean View</label>
-                  <label class="cabin-radio-pill"><input type="radio" name="cabin_type" value="Balcony Cabin"> Balcony</label>
-                  <label class="cabin-radio-pill"><input type="radio" name="cabin_type" value="Suite Cabin"> Suite</label>
-                  <label class="cabin-radio-pill"><input type="radio" name="cabin_type" value="Luxury Suite"> Luxury Suite</label>
-                  <label class="cabin-radio-pill"><input type="radio" name="cabin_type" value="No Preference"> Any</label>
+              <div class="ref-form-group">
+                <label class="ref-label">No. of Travelers <span class="ref-req">*</span></label>
+                <div class="ref-input-box">
+                  <i class="fa-solid fa-users ref-input-icon"></i>
+                  <select name="travelers" class="ref-select" required>
+                    <option value="" disabled selected>Travelers</option>
+                    <option value="1 Traveler">1 Traveler</option>
+                    <option value="2 Travelers (Couple)">2 Travelers</option>
+                    <option value="3-4 Travelers (Family)">3-4 Travelers</option>
+                    <option value="5+ Travelers (Group)">5+ Travelers</option>
+                  </select>
                 </div>
               </div>
 
-              <!-- Row 5: Consent & Submit -->
-              <div class="form-bottom-row">
-                <div class="consent-checkbox-group" style="margin: 0;">
-                  <input type="checkbox" name="consent" id="consent_check_cruise" checked required>
-                  <label for="consent_check_cruise" class="consent-label">I agree to be contacted regarding my enquiry.</label>
+              <div class="ref-form-group">
+                <label class="ref-label">Budget (Per Person) <span class="ref-req">*</span></label>
+                <div class="ref-input-box">
+                  <i class="fa-solid fa-indian-rupee-sign ref-input-icon"></i>
+                  <select name="budget" class="ref-select" required>
+                    <option value="" disabled selected>Select Budget</option>
+                    <option value="Under ₹50,000">Under ₹50,000</option>
+                    <option value="₹50,000 - ₹1,00,000">₹50,000 - ₹1,00,000</option>
+                    <option value="₹1,00,000 - ₹2,00,000">₹1,00,000 - ₹2,00,000</option>
+                    <option value="₹2,00,000+ Luxury">₹2,00,000+ Luxury</option>
+                  </select>
                 </div>
-                <button type="submit" class="btn-send-enquiry btn-send-wide">SUBMIT ENQUIRY</button>
               </div>
+            </div>
 
-            </form>
+            <!-- Row 3: Cabin Type Selector (6-box) -->
+            <div class="cruises-cabin-selection">
+              <label class="cruises-cabin-label">Cabin Type <span class="ref-req">*</span></label>
+              <div class="cruises-cabin-boxes">
+                <div class="cruises-cabin-box active" onclick="selectCabinBox(this, 'Interior')">
+                  <input type="radio" name="cabin_radio" value="Interior" checked>
+                  <i class="fa-solid fa-bed"></i>
+                  <span>Interior</span>
+                </div>
+                <div class="cruises-cabin-box" onclick="selectCabinBox(this, 'Ocean View')">
+                  <input type="radio" name="cabin_radio" value="Ocean View">
+                  <i class="fa-regular fa-window-maximize"></i>
+                  <span>Ocean View</span>
+                </div>
+                <div class="cruises-cabin-box" onclick="selectCabinBox(this, 'Balcony')">
+                  <input type="radio" name="cabin_radio" value="Balcony">
+                  <i class="fa-solid fa-hotel"></i>
+                  <span>Balcony</span>
+                </div>
+                <div class="cruises-cabin-box" onclick="selectCabinBox(this, 'Suite')">
+                  <input type="radio" name="cabin_radio" value="Suite">
+                  <i class="fa-solid fa-crown"></i>
+                  <span>Suite</span>
+                </div>
+                <div class="cruises-cabin-box" onclick="selectCabinBox(this, 'Luxury Suite')">
+                  <input type="radio" name="cabin_radio" value="Luxury Suite">
+                  <i class="fa-solid fa-gem"></i>
+                  <span>Luxury Suite</span>
+                </div>
+                <div class="cruises-cabin-box" onclick="selectCabinBox(this, 'Any')">
+                  <input type="radio" name="cabin_radio" value="Any">
+                  <i class="fa-solid fa-table-cells-large"></i>
+                  <span>Any</span>
+                </div>
+              </div>
+            </div>
 
+            <!-- Bottom Row: Consent & Submit -->
+            <div class="cabs-bottom-bar">
+              <label class="ref-checkbox-label">
+                <input type="checkbox" name="consent" value="1" required>
+                <span>I agree to be contacted regarding my cruise enquiry.</span>
+              </label>
+
+              <button type="submit" class="ref-btn-submit">
+                <i class="fa-solid fa-paper-plane"></i> SUBMIT ENQUIRY
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+      <!-- Trust Badges Bar (Matching Image 3) -->
+      <div class="ref-trust-bar">
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="ref-trust-text">Best Cruise<br>Deals</div>
+        </div>
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-headset"></i></div>
+          <div class="ref-trust-text">24/7<br>Support</div>
+        </div>
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-compass"></i></div>
+          <div class="ref-trust-text">Tailored<br>Itineraries</div>
+        </div>
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="ref-trust-text">Safe & Secure<br>Booking</div>
+        </div>
+        <div class="ref-trust-item">
+          <div class="ref-trust-icon"><i class="fa-solid fa-star"></i></div>
+          <div class="ref-trust-text">Trusted Travel<br>Partner</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. POPULAR CRUISE DESTINATIONS SECTION (MATCHING IMAGE 3) -->
+  <section class="ref-popular-section" style="padding-top: 20px;">
+    <div class="container">
+      <div class="ref-section-header">
+        <h2 class="ref-section-title">Popular Cruise Destinations</h2>
+        <div class="ref-header-right">
+          <a href="#" onclick="openEnquiryModal('View All Cruises')" class="ref-view-all-link">
+            View All Cruises <i class="fa-solid fa-circle-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="ref-cards-grid">
+        <!-- Singapore Cruise -->
+        <div class="ref-dest-card" style="background-image: url('<?php echo base_url('assets/images/voyogo cruise 1.png'); ?>');" onclick="openEnquiryModal('Singapore Cruise')">
+          <div class="ref-dest-overlay">
+            <div class="ref-dest-info">
+              <h4>Singapore Cruise</h4>
+              <p>3N / 4D | From ₹ 45,000</p>
+            </div>
+            <div class="ref-dest-arrow"><i class="fa-solid fa-arrow-right"></i></div>
           </div>
         </div>
 
+        <!-- Dubai Cruise -->
+        <div class="ref-dest-card" style="background-image: url('<?php echo base_url('assets/images/voyogo cruise 2.png'); ?>');" onclick="openEnquiryModal('Dubai Cruise')">
+          <div class="ref-dest-overlay">
+            <div class="ref-dest-info">
+              <h4>Dubai Cruise</h4>
+              <p>4N / 5D | From ₹ 62,000</p>
+            </div>
+            <div class="ref-dest-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </div>
+
+        <!-- Mediterranean Cruise -->
+        <div class="ref-dest-card" style="background-image: url('<?php echo base_url('assets/images/voyogo cruise 3.png'); ?>');" onclick="openEnquiryModal('Mediterranean Cruise')">
+          <div class="ref-dest-overlay">
+            <div class="ref-dest-info">
+              <h4>Mediterranean Cruise</h4>
+              <p>7N / 8D | From ₹ 1,25,000</p>
+            </div>
+            <div class="ref-dest-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </div>
+
+        <!-- Alaska Cruise -->
+        <div class="ref-dest-card" style="background-image: url('<?php echo base_url('assets/images/voyogo cruise 4.png'); ?>');" onclick="openEnquiryModal('Alaska Cruise')">
+          <div class="ref-dest-overlay">
+            <div class="ref-dest-info">
+              <h4>Alaska Cruise</h4>
+              <p>7N / 8D | From ₹ 1,80,000</p>
+            </div>
+            <div class="ref-dest-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -196,7 +416,7 @@
 
         <!-- Deal Card 6: Royal Caribbean -->
         <div class="cruise-deal-card">
-          <img src="<?php echo base_url('assets/images/cruise_slider1.png'); ?>" alt="Royal Caribbean" class="cruise-deal-full-img">
+          <img src="<?php echo base_url('assets/images/slider-images/crusie/cruise 1.png'); ?>" alt="Royal Caribbean" class="cruise-deal-full-img">
           <div class="cruise-deal-card-body">
             <h3 class="cruise-deal-name">Royal Caribbean</h3>
             <p class="cruise-deal-sub">Bahamas & Island Hopping Caribbean Packages</p>
@@ -261,7 +481,7 @@
           </div>
 
           <div class="intl-cruise-card">
-            <img src="<?php echo base_url('assets/images/voyogo cruise 5.png'); ?>" alt="Alaska Inside Passage" class="intl-cruise-img">
+            <img src="<?php echo base_url('assets/images/slider-images/crusie/cruise 4.png'); ?>" alt="Alaska Inside Passage" class="intl-cruise-img">
             <div class="intl-cruise-body">
               <h3 class="intl-cruise-title">Alaska Inside Passage & Glaciers</h3>
               <p class="intl-cruise-duration">7 Nights / 8 Days</p>
@@ -301,7 +521,7 @@
           </div>
 
           <div class="intl-cruise-card">
-            <img src="<?php echo base_url('assets/images/cruise_slider1.png'); ?>" alt="Mediterranean Riviera" class="intl-cruise-img">
+            <img src="<?php echo base_url('assets/images/slider-images/crusie/cruise 2.png'); ?>" alt="Mediterranean Riviera" class="intl-cruise-img">
             <div class="intl-cruise-body">
               <h3 class="intl-cruise-title">Mediterranean Riviera All-Inclusive</h3>
               <p class="intl-cruise-duration">10 Nights / 11 Days</p>
@@ -312,7 +532,7 @@
           </div>
 
           <div class="intl-cruise-card">
-            <img src="<?php echo base_url('assets/images/cruise_slider2.png'); ?>" alt="South Pacific & Bora Bora" class="intl-cruise-img">
+            <img src="<?php echo base_url('assets/images/slider-images/crusie/cruise 3.png'); ?>" alt="South Pacific & Bora Bora" class="intl-cruise-img">
             <div class="intl-cruise-body">
               <h3 class="intl-cruise-title">South Pacific & Bora Bora Expedition</h3>
               <p class="intl-cruise-duration">11 Nights / 12 Days</p>
@@ -632,7 +852,7 @@
 
         <!-- Consent ☐ I agree to be contacted regarding my enquiry. -->
         <div class="consent-checkbox-group">
-          <input type="checkbox" name="consent" id="consent_check_modal_cruise" checked required>
+          <input type="checkbox" name="consent" id="consent_check_modal_cruise" required>
           <label for="consent_check_modal_cruise" class="consent-label">
             I agree to be contacted regarding my enquiry.
           </label>
@@ -644,7 +864,7 @@
   </div>
 
   <!-- Cruise Pages Script -->
-  <script src="<?php echo base_url('assets/js/pages_main.js'); ?>"></script>
+  <script src="<?php echo base_url('assets/js/pages_main.js?v=' . time()); ?>"></script>
 
   <script>
     function scrollToElement(id) {

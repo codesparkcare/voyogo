@@ -5,74 +5,509 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ==========================================
-     1. HERO SLIDER LOGIC
+     1. HERO SLIDER LOGIC (AUTOMATIC HORIZONTAL SCROLL, ZERO OPACITY)
      ========================================== */
-  const heroSlider = document.querySelector('.hero-slider');
-  if (heroSlider) {
-    const slides = heroSlider.querySelectorAll('.slide');
-    const heroSection = heroSlider.closest('.hero-section') || document.querySelector('.hero-section');
-    const dots = heroSection ? heroSection.querySelectorAll('.slider-dots .dot') : document.querySelectorAll('.slider-dots .dot');
-    const prevBtn = heroSection ? heroSection.querySelector('.slider-arrow.prev') : document.querySelector('.slider-arrow.prev');
-    const nextBtn = heroSection ? heroSection.querySelector('.slider-arrow.next') : document.querySelector('.slider-arrow.next');
-    let currentSlide = 0;
-    let slideInterval = null;
+  const heroSliders = document.querySelectorAll('.hero-slider, .ref-hero-slider');
+  heroSliders.forEach(heroSlider => {
+    // Ensure track exists
+    let track = heroSlider.querySelector('.slider-track');
+    if (!track) {
+      track = document.createElement('div');
+      track.className = 'slider-track';
+      const existingSlides = Array.from(heroSlider.querySelectorAll(':scope > .slide'));
+      existingSlides.forEach(s => track.appendChild(s));
+      heroSlider.appendChild(track);
+    }
 
-    function showSlide(index) {
-      if (!slides.length) return;
-      slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === index);
-      });
+    const origSlides = Array.from(track.querySelectorAll('.slide:not(.clone)'));
+    const totalSlides = origSlides.length;
+    if (totalSlides === 0) return;
+
+    // Clone first slide to the end for seamless continuous forward scroll
+    if (totalSlides > 1 && !track.querySelector('.slide.clone')) {
+      const cloneFirst = origSlides[0].cloneNode(true);
+      cloneFirst.classList.add('clone');
+      cloneFirst.classList.remove('active');
+      track.appendChild(cloneFirst);
+    }
+
+    const heroSection = heroSlider.closest('.hero-section, .ref-hero-section') || document.body;
+    const dots = heroSection.querySelectorAll('.slider-dots .dot, .ref-slider-dots .dot');
+    const prevBtn = heroSection.querySelector('.slider-arrow.prev, .ref-slider-arrow.prev');
+    const nextBtn = heroSection.querySelector('.slider-arrow.next, .ref-slider-arrow.next');
+
+    // Detect page context from first slide image URL or DOM
+    let pageContext = 'holidays';
+    const firstSlideStyle = origSlides[0] ? (origSlides[0].getAttribute('style') || '') : '';
+    if (firstSlideStyle.includes('/cab/')) {
+      pageContext = 'cabs';
+    } else if (firstSlideStyle.includes('/crusie/')) {
+      pageContext = 'cruises';
+    } else if (firstSlideStyle.includes('/forex/')) {
+      pageContext = 'forex';
+    } else if (firstSlideStyle.includes('/visa/')) {
+      pageContext = 'visa';
+    } else if (firstSlideStyle.includes('/holidays/')) {
+      pageContext = 'holidays';
+    }
+
+    // Dynamic Slide Content Data per page - Each slide has unique content & 4 unique pills
+    const sliderContentMap = {
+      holidays: [
+        {
+          title: 'Bali',
+          subtitle: 'Island of Endless Wonders & Tropical Bliss',
+          pills: [
+            { icon: 'fa-umbrella-beach', text: 'Breathtaking Beaches' },
+            { icon: 'fa-landmark-dome', text: 'Rich Culture' },
+            { icon: 'fa-mountain-sun', text: 'Unforgettable Experiences' },
+            { icon: 'fa-heart', text: 'Perfect for Every Traveller' }
+          ],
+          cursive: 'Bali<br>Calling<br><i class="fa-solid fa-plane"></i>'
+        },
+        {
+          title: 'China',
+          subtitle: 'Ancient Dynasties, Historic Wall & Modern Wonders',
+          pills: [
+            { icon: 'fa-archway', text: 'Great Wall of China' },
+            { icon: 'fa-monument', text: 'Forbidden City' },
+            { icon: 'fa-train-subway', text: 'Bullet Train Tours' },
+            { icon: 'fa-utensils', text: 'Authentic Cuisine' }
+          ],
+          cursive: 'Discover<br>China<br><i class="fa-solid fa-dragon"></i>'
+        },
+        {
+          title: 'Japan',
+          subtitle: 'Cherry Blossoms, Timeless Shrines & Mt. Fuji',
+          pills: [
+            { icon: 'fa-mountain', text: 'Mount Fuji Views' },
+            { icon: 'fa-torii-gate', text: 'Historic Kyoto Shrines' },
+            { icon: 'fa-city', text: 'Futuristic Tokyo' },
+            { icon: 'fa-bowl-food', text: 'World-Class Gastronomy' }
+          ],
+          cursive: 'Experience<br>Japan<br><i class="fa-solid fa-fan"></i>'
+        },
+        {
+          title: 'Scandinavia',
+          subtitle: 'Majestic Deep Fjords & Celestial Northern Lights',
+          pills: [
+            { icon: 'fa-snowflake', text: 'Aurora Borealis' },
+            { icon: 'fa-water', text: 'Scenic Fjord Cruises' },
+            { icon: 'fa-tree', text: 'Pristine Wilderness' },
+            { icon: 'fa-cable-car', text: 'Arctic Cableways' }
+          ],
+          cursive: 'Nordic<br>Magic<br><i class="fa-solid fa-icicles"></i>'
+        },
+        {
+          title: 'Singapore & Malaysia',
+          subtitle: 'Futuristic Skylines & Exotic Tropical Rainforests',
+          pills: [
+            { icon: 'fa-building', text: 'Marina Bay Sands' },
+            { icon: 'fa-tree-city', text: 'Gardens by the Bay' },
+            { icon: 'fa-tower-observation', text: 'Petronas Twin Towers' },
+            { icon: 'fa-bag-shopping', text: 'Duty-Free Shopping' }
+          ],
+          cursive: 'Twin City<br>Vibes<br><i class="fa-solid fa-gem"></i>'
+        },
+        {
+          title: 'Vietnam & Cambodia',
+          subtitle: 'Emerald Halong Bay & Sacred Angkor Wat Temples',
+          pills: [
+            { icon: 'fa-ship', text: 'Halong Bay Cruises' },
+            { icon: 'fa-gopuram', text: 'Angkor Wat Sunrise' },
+            { icon: 'fa-bowl-rice', text: 'Street Food Culture' },
+            { icon: 'fa-camera', text: 'Mekong Delta Tours' }
+          ],
+          cursive: 'Ancient<br>Kingdoms<br><i class="fa-solid fa-compass"></i>'
+        }
+      ],
+      cabs: [
+        {
+          title: 'Travel<br>Your Way',
+          subtitle: 'Safe Rides. Happy Journeys.',
+          pills: [
+            { icon: 'fa-shield-halved', text: 'Reliable & Safe' },
+            { icon: 'fa-indian-rupee-sign', text: 'Affordable Rates' },
+            { icon: 'fa-user-tie', text: 'Professional Drivers' },
+            { icon: 'fa-clock', text: 'On-Time Service' }
+          ],
+          cursive: 'Local<br>Outstation<br>Airport<br>Anytime<br><i class="fa-solid fa-taxi"></i>'
+        },
+        {
+          title: 'Outstation Highway Trips',
+          subtitle: 'Comfortable Intercity Travel in Premium Sedans & SUVs',
+          pills: [
+            { icon: 'fa-route', text: 'Intercity Routes' },
+            { icon: 'fa-car-side', text: 'Premium Sedans & SUVs' },
+            { icon: 'fa-gas-pump', text: 'All Tolls & Fuel Included' },
+            { icon: 'fa-headset', text: 'Dedicated Trip Support' }
+          ],
+          cursive: 'Outstation<br>Road Trips<br><i class="fa-solid fa-road"></i>'
+        },
+        {
+          title: 'Hourly Chauffeur Rentals',
+          subtitle: 'Flexible Multi-Stop Bookings with Unlimited Kilometers',
+          pills: [
+            { icon: 'fa-hourglass-half', text: 'Flexible 4h, 8h & 12h' },
+            { icon: 'fa-briefcase', text: 'Corporate Business' },
+            { icon: 'fa-gem', text: 'Sanitized Luxury Cars' },
+            { icon: 'fa-star', text: '5-Star Rated Chauffeurs' }
+          ],
+          cursive: 'Hourly<br>Rentals<br><i class="fa-solid fa-car"></i>'
+        }
+      ],
+      cruises: [
+        {
+          title: 'Luxury Ocean Cruising',
+          subtitle: 'Sail Across Crystal Waters in 5-Star Grandeur',
+          pills: [
+            { icon: 'fa-compass', text: 'Global Itineraries' },
+            { icon: 'fa-utensils', text: 'Gourmet Dining' },
+            { icon: 'fa-bed', text: 'Ocean-View Balconies' },
+            { icon: 'fa-champagne-glasses', text: 'All-Inclusive Luxury' }
+          ],
+          cursive: 'Sail<br>Explore<br>Repeat<br><i class="fa-solid fa-ship"></i>'
+        },
+        {
+          title: 'Private Island Getaways',
+          subtitle: 'Pristine Turquoise Lagoons & Exclusive Beach Resorts',
+          pills: [
+            { icon: 'fa-umbrella-beach', text: 'Private Island Stops' },
+            { icon: 'fa-person-swimming', text: 'Snorkeling & Reefs' },
+            { icon: 'fa-music', text: 'Broadway Shows' },
+            { icon: 'fa-spa', text: 'Onboard Day Spa' }
+          ],
+          cursive: 'Island<br>Paradise<br><i class="fa-solid fa-water"></i>'
+        },
+        {
+          title: 'Scenic European Rivers',
+          subtitle: 'Danube & Rhine Boutique River Cruising',
+          pills: [
+            { icon: 'fa-landmark', text: 'Historic Castles' },
+            { icon: 'fa-wine-glass', text: 'Regional Wine Tastings' },
+            { icon: 'fa-bicycle', text: 'Guided Shore Tours' },
+            { icon: 'fa-sun', text: 'Intimate Boutique Ships' }
+          ],
+          cursive: 'River<br>Wonders<br><i class="fa-solid fa-sailboat"></i>'
+        },
+        {
+          title: 'Mega Liner Adventures',
+          subtitle: 'Waterparks, Theatres & World-Class Entertainment',
+          pills: [
+            { icon: 'fa-water-ladder', text: 'Aqua Parks & Slides' },
+            { icon: 'fa-children', text: 'Kids & Family Clubs' },
+            { icon: 'fa-masks-theater', text: 'Live Theatrical Shows' },
+            { icon: 'fa-star', text: '24/7 Butler Service' }
+          ],
+          cursive: 'Ocean<br>Adventures<br><i class="fa-solid fa-anchor"></i>'
+        }
+      ],
+      forex: [
+        {
+          title: 'Zero Markup Forex Card',
+          subtitle: 'Smart Multi-Currency Travel Cards with Best Live Rates',
+          pills: [
+            { icon: 'fa-credit-card', text: 'Multi-Currency Card' },
+            { icon: 'fa-percent', text: 'Zero Foreign Markup' },
+            { icon: 'fa-shield-halved', text: 'Chip & PIN Secure' },
+            { icon: 'fa-bolt', text: 'Instant App Reloads' }
+          ],
+          cursive: 'Smart<br>Forex<br><i class="fa-solid fa-credit-card"></i>'
+        },
+        {
+          title: 'Doorstep Currency Delivery',
+          subtitle: 'Fresh Cash Currency Delivered Directly to Your Door',
+          pills: [
+            { icon: 'fa-money-bill-wave', text: '40+ Global Currencies' },
+            { icon: 'fa-truck-fast', text: 'Same-Day Doorstep' },
+            { icon: 'fa-certificate', text: '100% Genuine Notes' },
+            { icon: 'fa-receipt', text: 'Best Rate Guarantee' }
+          ],
+          cursive: 'Fast<br>Cash<br><i class="fa-solid fa-money-bill"></i>'
+        },
+        {
+          title: 'Fast Overseas Wire Transfer',
+          subtitle: 'Send Money Abroad for University Fees & Living Expenses',
+          pills: [
+            { icon: 'fa-graduation-cap', text: 'University Fee Wire' },
+            { icon: 'fa-clock', text: 'Swift & Safe Transfers' },
+            { icon: 'fa-building-columns', text: 'RBI Authorized' },
+            { icon: 'fa-file-invoice-dollar', text: 'Lowest Transfer Cost' }
+          ],
+          cursive: 'Global<br>Remit<br><i class="fa-solid fa-paper-plane"></i>'
+        },
+        {
+          title: 'Live Currency Exchange',
+          subtitle: 'Lock In Transparent Real-Time Forex Rates Instantly',
+          pills: [
+            { icon: 'fa-chart-line', text: 'Live Market Rates' },
+            { icon: 'fa-lock', text: 'Rate Freeze Option' },
+            { icon: 'fa-hand-holding-dollar', text: 'Easy Buyback on Return' },
+            { icon: 'fa-headset', text: '24/7 Dedicated Support' }
+          ],
+          cursive: 'Live<br>Rates<br><i class="fa-solid fa-arrow-trend-up"></i>'
+        }
+      ],
+      visa: [
+        {
+          title: 'Schengen & Europe Visa',
+          subtitle: 'Travel Across 27 European Countries with One Visa',
+          pills: [
+            { icon: 'fa-passport', text: 'Schengen Express' },
+            { icon: 'fa-file-circle-check', text: 'Full Document Audit' },
+            { icon: 'fa-calendar-check', text: 'Priority Appointments' },
+            { icon: 'fa-shield-halved', text: '99.4% Approval Rate' }
+          ],
+          cursive: 'Europe<br>Express<br><i class="fa-solid fa-plane"></i>'
+        },
+        {
+          title: 'Dubai & UAE Tourist Visa',
+          subtitle: 'Instant Express E-Visa in Just 24 to 48 Hours',
+          pills: [
+            { icon: 'fa-bolt', text: '24h Express Processing' },
+            { icon: 'fa-envelope-open-text', text: '100% Online Paperless' },
+            { icon: 'fa-hotel', text: 'Free OK to Board' },
+            { icon: 'fa-headset', text: 'Dedicated Visa Officer' }
+          ],
+          cursive: 'Dubai<br>Calling<br><i class="fa-solid fa-building"></i>'
+        },
+        {
+          title: 'USA, UK & Canada Visa',
+          subtitle: 'Expert Guidance for Long-Term Tourist & Business Visas',
+          pills: [
+            { icon: 'fa-briefcase', text: 'B1/B2 & Visitor Visas' },
+            { icon: 'fa-comments', text: 'Mock Interview Prep' },
+            { icon: 'fa-folder-open', text: 'Dossier Filing Help' },
+            { icon: 'fa-clock-rotate-left', text: 'Early Slot Tracking' }
+          ],
+          cursive: 'Global<br>Access<br><i class="fa-solid fa-globe"></i>'
+        },
+        {
+          title: 'Asia & Far East E-Visas',
+          subtitle: 'Thailand, Singapore, Malaysia, Vietnam & Japan',
+          pills: [
+            { icon: 'fa-plane', text: 'Seamless E-Visa' },
+            { icon: 'fa-qrcode', text: 'Digital QR Passes' },
+            { icon: 'fa-tag', text: 'Lowest Service Fee' },
+            { icon: 'fa-circle-check', text: 'Real-Time Tracking' }
+          ],
+          cursive: 'Asia<br>Entry<br><i class="fa-solid fa-passport"></i>'
+        }
+      ]
+    };
+
+    const destTitle = heroSection.querySelector('.ref-dest-title');
+    const destSub = heroSection.querySelector('.ref-dest-subtitle');
+    const pillsContainer = heroSection.querySelector('.ref-feature-pills');
+    const cursiveTag = heroSection.querySelector('.ref-cursive-tag');
+
+    function updateSlideContent(realIndex, immediate = false) {
+      const pageData = sliderContentMap[pageContext];
+      if (!pageData || !pageData[realIndex]) return;
+
+      const currentData = pageData[realIndex];
+
+      const applyContent = () => {
+        if (destTitle) {
+          destTitle.innerHTML = currentData.title;
+          destTitle.style.opacity = '1';
+        }
+        if (destSub) {
+          destSub.textContent = currentData.subtitle;
+          destSub.style.opacity = '1';
+        }
+        if (pillsContainer && currentData.pills) {
+          const pillElements = pillsContainer.querySelectorAll('.ref-feature-pill');
+          currentData.pills.forEach((pillData, idx) => {
+            if (pillElements[idx]) {
+              const iconEl = pillElements[idx].querySelector('.ref-feature-pill-icon i');
+              const textEl = pillElements[idx].querySelector('.ref-feature-pill-text');
+              if (iconEl) {
+                iconEl.className = `fa-solid ${pillData.icon}`;
+              }
+              if (textEl) {
+                textEl.textContent = pillData.text;
+              }
+            }
+          });
+          pillsContainer.style.opacity = '1';
+        }
+        if (cursiveTag && currentData.cursive) {
+          cursiveTag.innerHTML = currentData.cursive;
+          cursiveTag.style.opacity = '1';
+        }
+      };
+
+      if (immediate) {
+        applyContent();
+      } else {
+        if (destTitle) destTitle.style.opacity = '0';
+        if (destSub) destSub.style.opacity = '0';
+        if (pillsContainer) pillsContainer.style.opacity = '0';
+        if (cursiveTag && currentData.cursive) cursiveTag.style.opacity = '0';
+        setTimeout(applyContent, 220);
+      }
+    }
+
+    const updateDestinationText = updateSlideContent;
+
+    let currentIndex = 0;
+    let isTransitioning = false;
+    let scrollTimer = null;
+    const scrollDuration = 800; // ms
+    const autoScrollDelay = 3500; // ms between automatic scrolls
+
+    function updateIndicators(index, immediate = false) {
+      const realIndex = index % totalSlides;
       dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === index);
+        dot.classList.toggle('active', i === realIndex);
       });
-      currentSlide = index;
+      origSlides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === realIndex);
+      });
+      updateSlideContent(realIndex, immediate);
+    }
+
+    function scrollToSlide(index, animated = true) {
+      if (animated) {
+        track.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+      } else {
+        track.style.transition = 'none';
+      }
+      track.style.transform = `translateX(-${index * 100}%)`;
+      updateIndicators(index, !animated);
+      currentIndex = index;
     }
 
     function nextSlide() {
-      if (!slides.length) return;
-      let next = (currentSlide + 1) % slides.length;
-      showSlide(next);
+      if (isTransitioning) return;
+      isTransitioning = true;
+      currentIndex++;
+      scrollToSlide(currentIndex, true);
+
+      if (currentIndex === totalSlides) {
+        // Scrolled to clone at end, smoothly loop back to slide 0
+        setTimeout(() => {
+          scrollToSlide(0, false);
+          void track.offsetWidth; // Force reflow
+          isTransitioning = false;
+        }, scrollDuration);
+      } else {
+        setTimeout(() => {
+          isTransitioning = false;
+        }, scrollDuration);
+      }
     }
 
     function prevSlide() {
-      if (!slides.length) return;
-      let prev = (currentSlide - 1 + slides.length) % slides.length;
-      showSlide(prev);
-    }
-
-    function startAutoSlide() {
-      stopAutoSlide();
-      slideInterval = setInterval(nextSlide, 4000);
-    }
-
-    function stopAutoSlide() {
-      if (slideInterval) {
-        clearInterval(slideInterval);
-        slideInterval = null;
+      if (isTransitioning) return;
+      isTransitioning = true;
+      if (currentIndex === 0) {
+        scrollToSlide(totalSlides, false);
+        void track.offsetWidth;
+        currentIndex = totalSlides - 1;
+        setTimeout(() => {
+          scrollToSlide(currentIndex, true);
+          setTimeout(() => {
+            isTransitioning = false;
+          }, scrollDuration);
+        }, 20);
+      } else {
+        currentIndex--;
+        scrollToSlide(currentIndex, true);
+        setTimeout(() => {
+          isTransitioning = false;
+        }, scrollDuration);
       }
     }
 
-    if (slides.length > 0) {
-      if (nextBtn) nextBtn.addEventListener('click', (e) => { e.preventDefault(); nextSlide(); startAutoSlide(); });
-      if (prevBtn) prevBtn.addEventListener('click', (e) => { e.preventDefault(); prevSlide(); startAutoSlide(); });
+    function startAutoScroll() {
+      stopAutoScroll();
+      scrollTimer = setInterval(nextSlide, autoScrollDelay);
+    }
 
-      dots.forEach((dot, i) => {
-        dot.addEventListener('click', () => {
-          showSlide(i);
-          startAutoSlide();
-        });
+    function stopAutoScroll() {
+      if (scrollTimer) {
+        clearInterval(scrollTimer);
+        scrollTimer = null;
+      }
+    }
+
+    // Attach click and hover events to controls
+    if (nextBtn) {
+      nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        nextSlide();
+        startAutoScroll();
       });
-
-      if (heroSection) {
-        heroSection.addEventListener('mouseenter', stopAutoSlide);
-        heroSection.addEventListener('mouseleave', startAutoSlide);
-      }
-
-      // Initial active state
-      showSlide(0);
-      startAutoSlide();
+      nextBtn.addEventListener('mouseenter', stopAutoScroll);
+      nextBtn.addEventListener('mouseleave', startAutoScroll);
     }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        prevSlide();
+        startAutoScroll();
+      });
+      prevBtn.addEventListener('mouseenter', stopAutoScroll);
+      prevBtn.addEventListener('mouseleave', startAutoScroll);
+    }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        if (isTransitioning) return;
+        currentIndex = i;
+        scrollToSlide(currentIndex, true);
+        startAutoScroll();
+      });
+      dot.addEventListener('mouseenter', stopAutoScroll);
+      dot.addEventListener('mouseleave', startAutoScroll);
+    });
+
+    // Mobile touch swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    heroSlider.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      stopAutoScroll();
+    }, { passive: true });
+
+    heroSlider.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) {
+        nextSlide();
+      } else if (touchEndX - touchStartX > 50) {
+        prevSlide();
+      }
+      startAutoScroll();
+    }, { passive: true });
+
+    // Initial state & start auto scrolling
+    scrollToSlide(0, false);
+    startAutoScroll();
+  });
+
+  /* ==========================================
+     COUNTRY CODE DROPDOWN SELECTOR
+     ========================================== */
+  function initCountryCodeSelectors() {
+    document.querySelectorAll('.ref-cc-select').forEach(selectEl => {
+      const updateDisplay = () => {
+        const parent = selectEl.closest('.ref-country-code');
+        if (!parent) return;
+        const display = parent.querySelector('.ref-cc-display');
+        const selectedOption = selectEl.options[selectEl.selectedIndex];
+        if (display && selectedOption) {
+          display.textContent = selectedOption.getAttribute('data-display') || selectedOption.value;
+        }
+      };
+
+      selectEl.addEventListener('change', updateDisplay);
+      selectEl.addEventListener('input', updateDisplay);
+    });
   }
+  initCountryCodeSelectors();
 
   /* ==========================================
      2. EXCLUSIVE DEALS TAB FILTERING
@@ -609,7 +1044,7 @@ document.addEventListener('DOMContentLoaded', () => {
       { title: 'Grand Europe Highlights', badge: '10D & 9N', route: 'Paris (3) → Swiss Alps (3) → Rome (3)', oldPrice: 'Starting @', price: '₹2,79,000/-', theme: 'pkg-card-teal', bgImage: 'assets/images/voyogo europe.png' },
       { title: 'Russia Imperial Odyssey', badge: '8D & 7N', route: 'Moscow (4) → St. Petersburg (3)', oldPrice: 'Starting @', price: '₹1,45,000/-', theme: 'pkg-card-slate', bgImage: 'assets/images/voyogo russia.png' }
     ],
-    'Americas': [
+    'America': [
       { title: 'USA Coast to Coast Wonders', badge: '21D & 20N', route: 'New York (7) → Orlando (6) → Los Angeles (7)', oldPrice: 'Starting @', price: '₹7,59,000/-', theme: 'pkg-card-dark', bgImage: 'assets/images/voyogo usa.png' },
       { title: 'Canada with Alaska Glacier Cruise', badge: '15D & 14N', route: 'Vancouver (5) → Alaska Cruise (9)', oldPrice: 'Starting @', price: '₹7,79,000/-', theme: 'pkg-card-dark', bgImage: 'assets/images/voyogo canada with alaska.png' }
     ]
@@ -789,36 +1224,119 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const visaTabs = document.querySelectorAll('.visa-tab');
+  // AC tab data — all provided visa service entries
+  const acData = [
+    { country: 'Malaysia AC', badge: 'AC', badgeClass: 'ac', price: 'Rs.500', bgImage: 'assets/images/jpeg/voyogo malaysia.png' },
+    { country: 'Sri Lanka AC', badge: 'AC', badgeClass: 'ac', price: 'Rs.500', bgImage: 'assets/images/voyogo srilanka.png' },
+    { country: 'Thailand AC', badge: 'AC', badgeClass: 'ac', price: 'Rs.500', bgImage: 'assets/images/voyogo thailand.png' },
+    { country: 'Hong Kong AC', badge: 'AC', badgeClass: 'ac', price: 'Rs.500', bgImage: 'assets/images/jpeg/voyogo hong kong.png' },
+    { country: 'Philippines Health Arrival Card', badge: 'AC', badgeClass: 'ac', price: 'Rs.500', bgImage: 'assets/images/jpeg/voyogo philipines.png' },
+    { country: 'Bali E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,500', bgImage: 'assets/images/voyogo bali .png' },
+    { country: 'Bali Levy', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/jpeg/voyogo bali levi.png' },
+    { country: 'Bali Arrival Card', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.300', bgImage: 'assets/images/jpeg/voyogo bali levi.png' },
+    { country: 'Vietnam E-VISA + Arrival Card', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,000', bgImage: 'assets/images/jpeg/voyogo vietnam.png' },
+    { country: 'Egypt E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/jpeg/voyogo egypt.png' },
+    { country: 'Dubai E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo dubai.png' },
+    { country: 'Kazakhstan', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/voyogo almaty.png' },
+    { country: 'Dubai Adult E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,500', bgImage: 'assets/images/voyogo dubai.png' },
+    { country: 'Dubai Child E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/voyogo dubai.png' },
+    { country: 'UK E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.23,000', bgImage: 'assets/images/jpeg/voyogo uk.png' },
+    { country: 'Kenya E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,000', bgImage: 'assets/images/voyogo kenya.png' },
+    { country: 'Tanzania E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/jpeg/voyogo tanzania.png' },
+    { country: 'Azerbaijan E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,500', bgImage: 'assets/images/jpeg/voyogo azerbaijan.png' },
+    { country: 'Zimbabwe E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/jpeg/voyogo zimbabwe.png' },
+    { country: 'Georgia E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2,000', bgImage: 'assets/images/jpeg/voyogo azerbaijan.png' },
+    { country: 'Rwanda E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,500', bgImage: 'assets/images/voyogo south africe.png' },
+    { country: 'Uganda E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,500', bgImage: 'assets/images/voyogo south africe.png' },
+    { country: 'Madagascar E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo south africe.png' },
+    { country: 'Myanmar E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,500', bgImage: 'assets/images/voyogo thailand.png' },
+    { country: 'Austria E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.24,500', bgImage: 'assets/images/voyogo europe.png' },
+    { country: 'New Zealand E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.24,500', bgImage: 'assets/images/voyogo europe.png' },
+    { country: 'Zimbabwe ETA', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/jpeg/voyogo zimbabwe.png' },
+    { country: 'Albania', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2-3', bgImage: 'assets/images/voyogo europe.png' },
+    { country: 'BHUTAN Permit', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo bhutan.png' },
+    { country: 'Myanmar E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,000', bgImage: 'assets/images/voyogo thailand.png' },
+    { country: 'South Korea E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo south korea.png' },
+    { country: 'Laos E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,500', bgImage: 'assets/images/jpeg/voyogo vietnam.png' },
+    { country: 'Turkey E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/jpeg/voyogo turkey.png' },
+    { country: 'China Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.10,000', bgImage: 'assets/images/jpeg/voyogo china.png' },
+    { country: 'China Express Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.14,000', bgImage: 'assets/images/jpeg/voyogo china express.png' },
+    { country: 'Japan Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.3,000', bgImage: 'assets/images/voyogo japan.png' },
+    { country: 'Turkey Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.24,000', bgImage: 'assets/images/jpeg/voyogo turkey.png' },
+    { country: 'Canada Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.20,000', bgImage: 'assets/images/jpeg/voyogo canada.png' },
+    { country: 'Schengen Visa Specialist Only', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.14,000', bgImage: 'assets/images/voyogo europe.png' },
+    { country: 'USA Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.35,000', bgImage: 'assets/images/voyogo usa.png' }
+  ];
+
+  // E-VISA and STICKER VISA tab data with correct entries
   const visaData = {
-    'ALL': [
-      { country: 'Dubai (UAE) Visa', badge: 'E-VISA • 24-48 HRS', badgeClass: 'e-visa', info: 'Passport Front & Back + Photo Only', validity: 'Validity: 30 Days Single Entry', price: '₹6,499/-', bgImage: 'assets/images/voyogo dubai.png' },
-      { country: 'Bali (Indonesia) Visa', badge: 'E-VOA • INSTANT', badgeClass: 'e-visa', info: 'Quick E-VOA Online Verification', validity: 'Validity: 30 Days (Extendable)', price: '₹3,299/-', bgImage: 'assets/images/voyogo bali .png' },
-      { country: 'Thailand E-Visa', badge: 'EXPRESS • 24 HRS', badgeClass: 'express', info: 'Minimal Paperwork & Instant Approval', validity: 'Validity: 15-30 Days Tourist', price: '₹2,899/-', bgImage: 'assets/images/voyogo thailand.png' },
-      { country: 'Singapore Visa', badge: 'E-VISA • 3-4 DAYS', badgeClass: 'e-visa', info: 'Authorized Agent Submission', validity: 'Validity: 2 Years Multiple Entry', price: '₹2,499/-', bgImage: 'assets/images/voyogo singapore.png' },
-      { country: 'Schengen Europe Visa', badge: 'STICKER • 15 DAYS', badgeClass: 'sticker', info: 'Full VFS Slot + Cover Letter + Itinerary', validity: 'Validity: Up to 90 Days (27 Countries)', price: '₹7,999/-', bgImage: 'assets/images/voyogo europe.png' },
-      { country: 'Japan E-Visa', badge: 'E-VISA • 5 DAYS', badgeClass: 'e-visa', info: 'Single Entry Tourist E-Visa', validity: 'Validity: 90 Days (Stay 15 Days)', price: '₹2,199/-', bgImage: 'assets/images/voyogo japan.png' },
-      { country: 'Vietnam Visa', badge: 'E-VISA • 3 DAYS', badgeClass: 'e-visa', info: 'Instant Official E-Visa Approval', validity: 'Validity: 30-90 Days Single/Multiple', price: '₹1,999/-', bgImage: 'assets/images/voyogo vietnom.png' },
-      { country: 'USA B1/B2 Visa', badge: 'STICKER • INTERVIEW', badgeClass: 'sticker', info: 'DS-160 Form + Appointment Booking', validity: 'Validity: 10 Years Multiple Entry', price: '₹9,999/-', bgImage: 'assets/images/voyogo usa.png' }
-    ],
     'E-VISA': [
-      { country: 'Dubai (UAE) Visa', badge: 'E-VISA • 24-48 HRS', badgeClass: 'e-visa', info: 'Passport Front & Back + Photo Only', validity: 'Validity: 30 Days Single Entry', price: '₹6,499/-', bgImage: 'assets/images/voyogo dubai.png' },
-      { country: 'Bali (Indonesia) Visa', badge: 'E-VOA • INSTANT', badgeClass: 'e-visa', info: 'Quick E-VOA Online Verification', validity: 'Validity: 30 Days (Extendable)', price: '₹3,299/-', bgImage: 'assets/images/voyogo bali .png' },
-      { country: 'Thailand E-Visa', badge: 'EXPRESS • 24 HRS', badgeClass: 'express', info: 'Minimal Paperwork & Instant Approval', validity: 'Validity: 15-30 Days Tourist', price: '₹2,899/-', bgImage: 'assets/images/voyogo thailand.png' },
-      { country: 'Singapore Visa', badge: 'E-VISA • 3-4 DAYS', badgeClass: 'e-visa', info: 'Authorized Agent Submission', validity: 'Validity: 2 Years Multiple Entry', price: '₹2,499/-', bgImage: 'assets/images/voyogo singapore.png' },
-      { country: 'Japan E-Visa', badge: 'E-VISA • 5 DAYS', badgeClass: 'e-visa', info: 'Single Entry Tourist E-Visa', validity: 'Validity: 90 Days (Stay 15 Days)', price: '₹2,199/-', bgImage: 'assets/images/voyogo japan.png' },
-      { country: 'Vietnam Visa', badge: 'E-VISA • 3 DAYS', badgeClass: 'e-visa', info: 'Instant Official E-Visa Approval', validity: 'Validity: 30-90 Days Single/Multiple', price: '₹1,999/-', bgImage: 'assets/images/voyogo vietnom.png' }
+      { country: 'Bali E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,500', bgImage: 'assets/images/voyogo bali .png' },
+      { country: 'Bali-Levy', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/jpeg/voyogo bali levi.png' },
+      { country: 'Bali Arrival Card', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.300', bgImage: 'assets/images/jpeg/voyogo bali levi.png' },
+      { country: 'Vietnam E-Visa + Arrival Card', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,000', bgImage: 'assets/images/jpeg/voyogo vietnam.png' },
+      { country: 'Egypt E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/jpeg/voyogo egypt.png' },
+      { country: 'Dubai E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo dubai.png' },
+      { country: 'Kazakhstan', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/voyogo almaty.png' },
+      { country: 'Dubai Adult E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,500', bgImage: 'assets/images/voyogo dubai.png' },
+      { country: 'Dubai Child E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/voyogo dubai.png' },
+      { country: 'UK E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.23,000', bgImage: 'assets/images/jpeg/voyogo uk.png' },
+      { country: 'Kenya E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,000', bgImage: 'assets/images/voyogo kenya.png' },
+      { country: 'Tanzania E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/jpeg/voyogo tanzania.png' },
+      { country: 'Azerbaijan E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,500', bgImage: 'assets/images/jpeg/voyogo azerbaijan.png' },
+      { country: 'Zimbabwe E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/jpeg/voyogo zimbabwe.png' },
+      { country: 'Georgia E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2,000', bgImage: 'assets/images/jpeg/voyogo azerbaijan.png' },
+      { country: 'Rwanda E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,500', bgImage: 'assets/images/voyogo south africe.png' },
+      { country: 'Uganda E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,500', bgImage: 'assets/images/voyogo south africe.png' },
+      { country: 'Madagascar E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo south africe.png' },
+      { country: 'Myanmar E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,500', bgImage: 'assets/images/voyogo thailand.png' },
+      { country: 'Austria E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.24,500', bgImage: 'assets/images/voyogo europe.png' },
+      { country: 'New Zealand E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.24,500', bgImage: 'assets/images/voyogo europe.png' },
+      { country: 'Zimbabwe ETA', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/jpeg/voyogo zimbabwe.png' },
+      { country: 'Albania', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2-3', bgImage: 'assets/images/voyogo europe.png' },
+      { country: 'BHUTAN Permit', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo bhutan.png' },
+      { country: 'Myanmar E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,000', bgImage: 'assets/images/voyogo thailand.png' },
+      { country: 'South Korea E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo south korea.png' },
+      { country: 'Laos E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,500', bgImage: 'assets/images/jpeg/voyogo vietnam.png' },
+      { country: 'Turkey E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/jpeg/voyogo turkey.png' }
     ],
     'STICKER VISA': [
-      { country: 'Schengen Europe Visa', badge: 'STICKER • 15 DAYS', badgeClass: 'sticker', info: 'Full VFS Slot + Cover Letter + Itinerary', validity: 'Validity: Up to 90 Days (27 Countries)', price: '₹7,999/-', bgImage: 'assets/images/voyogo europe.png' },
-      { country: 'USA B1/B2 Visa', badge: 'STICKER • INTERVIEW', badgeClass: 'sticker', info: 'DS-160 Form + Appointment Booking', validity: 'Validity: 10 Years Multiple Entry', price: '₹9,999/-', bgImage: 'assets/images/voyogo usa.png' },
-      { country: 'UK Tourist Visa', badge: 'STICKER • 15 DAYS', badgeClass: 'sticker', info: 'VFS Biometrics + Document Scan', validity: 'Validity: 6 Months Multiple Entry', price: '₹12,499/-', bgImage: 'assets/images/voyogo swiss paris.png' }
-    ],
-    'EXPRESS VISA': [
-      { country: 'Dubai (UAE) Express', badge: 'EXPRESS • 24 HRS', badgeClass: 'express', info: 'Urgent 24h Express Processing', validity: 'Validity: 30 Days Single Entry', price: '₹7,999/-', bgImage: 'assets/images/voyogo dubai.png' },
-      { country: 'Thailand E-Visa', badge: 'EXPRESS • 24 HRS', badgeClass: 'express', info: 'Minimal Paperwork & Instant Approval', validity: 'Validity: 15-30 Days Tourist', price: '₹2,899/-', bgImage: 'assets/images/voyogo thailand.png' },
-      { country: 'Vietnam Express Visa', badge: 'EXPRESS • 4 HRS', badgeClass: 'express', info: 'Same Day Emergency E-Visa Approval', validity: 'Validity: 30 Days Single Entry', price: '₹3,499/-', bgImage: 'assets/images/voyogo vietnom.png' }
+      { country: 'China', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.10,000', bgImage: 'assets/images/jpeg/voyogo china.png' },
+      { country: 'China Express', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.14,000', bgImage: 'assets/images/jpeg/voyogo china express.png' },
+      { country: 'Japan', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.3,000', bgImage: 'assets/images/voyogo japan.png' },
+      { country: 'Turkey', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.24,000', bgImage: 'assets/images/jpeg/voyogo turkey.png' },
+      { country: 'Canada Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.20,000', bgImage: 'assets/images/jpeg/voyogo canada.png' },
+      { country: 'Schengen Visa Specialist Only', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.14,000', bgImage: 'assets/images/voyogo europe.png' },
+      { country: 'USA', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.35,000', bgImage: 'assets/images/voyogo usa.png' }
     ]
   };
+
+  // Helper: render AC-style simple cards (title + price only)
+  function renderAcCards(items) {
+    const base = window.voyogoBaseUrl || (window.location.pathname.startsWith('/voyogo-main') ? '/voyogo-main/' : '/');
+    return items.map(item => {
+      let img = item.bgImage;
+      if (!img.startsWith('http://') && !img.startsWith('https://')) {
+        img = base.replace(/\/$/, '') + '/' + img.replace(/^\//, '');
+      }
+      return `
+      <div class="visa-card-item" onclick="openEnquiryModal('${item.country}')">
+        <div class="visa-card-img" style="background-image: url('${img}');">
+          ${item.badge ? `<span class="visa-badge ${item.badgeClass || ''}">${item.badge}</span>` : ''}
+        </div>
+        <div class="visa-card-body">
+          <h3 class="visa-card-title">${item.country}</h3>
+          <div class="visa-card-info"><span>${item.price}</span></div>
+        </div>
+      </div>
+    `;
+    }).join('');
+  }
+
+  // Helper: render simple cards for all tabs (title + price)
+  function renderDetailedCards(items) {
+    return renderAcCards(items);
+  }
 
   visaTabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -827,33 +1345,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const cat = tab.textContent.trim();
       if (!visaGrid) return;
-      const items = visaData[cat] || visaData['ALL'];
       visaGrid.style.opacity = '0';
       setTimeout(() => {
-        visaGrid.innerHTML = items.map(item => `
-          <div class="visa-card-item" onclick="openEnquiryModal('${item.country}')">
-            <div class="visa-card-img" style="background-image: url('${item.bgImage}');">
-              <span class="visa-badge ${item.badgeClass}">${item.badge}</span>
-            </div>
-            <div class="visa-card-body">
-              <h3 class="visa-card-title">${item.country}</h3>
-              <div class="visa-card-info">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span>${item.info}</span>
-              </div>
-              <div class="visa-card-validity">
-                <span>${item.validity}</span>
-              </div>
-            </div>
-            <div class="visa-card-footer">
-              <div class="visa-price-box">
-                <span class="visa-label-small">Starting @</span>
-                <span class="visa-price-val">${item.price}</span>
-              </div>
-              <button class="btn-apply-visa">Apply Visa</button>
-            </div>
-          </div>
-        `).join('');
+        if (cat === 'AC') {
+          visaGrid.innerHTML = renderAcCards(acData);
+        } else {
+          const items = visaData[cat] || visaData['E-VISA'];
+          visaGrid.innerHTML = renderDetailedCards(items);
+        }
         visaGrid.style.opacity = '1';
       }, 200);
     });
@@ -885,7 +1384,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('passportNumberInput');
     if (group && input && selected) {
       if (selected.value === 'Yes') {
-        group.style.display = 'block';
+        group.style.display = 'flex';
         input.setAttribute('required', 'required');
       } else {
         group.style.display = 'none';
@@ -930,6 +1429,97 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
+
+/* Global Interactivity Helpers for Reference Forms */
+window.selectTripType = function (button, type) {
+  const container = button.closest('.cabs-trip-pills') || button.parentElement;
+  if (container) {
+    container.querySelectorAll('.cabs-trip-pill').forEach(b => b.classList.remove('active'));
+  }
+  button.classList.add('active');
+  const hiddenInput = document.getElementById('cabs_trip_type_input') || document.querySelector('input[name="trip_type"]');
+  if (hiddenInput) {
+    hiddenInput.value = type;
+  }
+
+  // Toggle cab trip sections if present
+  const sectionIds = ['oneWayFields', 'roundTripFields', 'airportTransferFields', 'localRentalFields'];
+  sectionIds.forEach(id => {
+    const sec = document.getElementById(id);
+    if (sec) {
+      sec.style.display = 'none';
+      sec.querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
+    }
+  });
+
+  const targetMap = {
+    'One Way': 'oneWayFields',
+    'Round Trip': 'roundTripFields',
+    'Airport Transfer': 'airportTransferFields',
+    'Local Rental': 'localRentalFields'
+  };
+  const targetId = targetMap[type];
+  if (targetId) {
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) {
+      targetEl.style.display = 'block';
+      targetEl.querySelectorAll('input, select, textarea').forEach(el => el.disabled = false);
+    }
+  }
+};
+
+window.switchForexTab = function (mode) {
+  const buyBtn = document.getElementById('refBuyForexBtn');
+  const sellBtn = document.getElementById('refSellForexBtn');
+  const typeInput = document.getElementById('refForexTypeInput');
+  const submitBtn = document.getElementById('refForexSubmitBtn');
+
+  if (mode === 'buy') {
+    if (buyBtn) buyBtn.classList.add('active');
+    if (sellBtn) sellBtn.classList.remove('active');
+    if (typeInput) typeInput.value = 'Buy Forex';
+    if (submitBtn) submitBtn.innerHTML = 'BUY FOREX <i class="fa-solid fa-arrow-right"></i>';
+  } else {
+    if (sellBtn) sellBtn.classList.add('active');
+    if (buyBtn) buyBtn.classList.remove('active');
+    if (typeInput) typeInput.value = 'Sell Forex';
+    if (submitBtn) submitBtn.innerHTML = 'SELL FOREX <i class="fa-solid fa-arrow-right"></i>';
+  }
+};
+
+window.selectCabinBox = function (element, cabinName) {
+  const parent = element.closest('.cruises-cabin-boxes');
+  if (parent) {
+    parent.querySelectorAll('.cruises-cabin-box').forEach(b => b.classList.remove('active'));
+  }
+  element.classList.add('active');
+  const radio = element.querySelector('input[type="radio"]');
+  if (radio) {
+    radio.checked = true;
+  }
+  const hiddenInput = document.getElementById('selectedCabinTypeInput');
+  if (hiddenInput) {
+    hiddenInput.value = cabinName;
+  }
+};
+
+window.togglePassportField = function (hasPassport) {
+  const passportGroup = document.getElementById('passportNumberGroup');
+  const passportInput = document.getElementById('passportNumberInput');
+  if (passportGroup) {
+    if (hasPassport === 'Yes') {
+      passportGroup.style.display = 'flex';
+      if (passportInput) passportInput.setAttribute('required', 'required');
+    } else {
+      passportGroup.style.display = 'none';
+      if (passportInput) {
+        passportInput.removeAttribute('required');
+        passportInput.value = '';
+      }
+    }
+  }
+};
+
 
 
 

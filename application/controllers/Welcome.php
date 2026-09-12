@@ -851,11 +851,36 @@ class Welcome extends CI_Controller {
      */
     public function save_enquiry()
     {
+        $trip_type = $this->input->post('trip_type');
+        $name      = $this->input->post('name') ?: $this->input->post('rt_name') ?: $this->input->post('at_name') ?: $this->input->post('lr_name');
+        $email     = $this->input->post('email');
+        $country_code = $this->input->post('country_code');
+        $phone     = $this->input->post('phone') ?: $this->input->post('rt_phone') ?: $this->input->post('at_phone') ?: $this->input->post('lr_phone');
+        if ($country_code && $phone && strpos(trim($phone), '+') !== 0) {
+            $phone = trim($country_code) . ' ' . trim($phone);
+        }
+        $message   = $this->input->post('message') ?: 'Enquiry';
+
+        // Format detailed message for Round Trip / Cab enquiries
+        if ($trip_type === 'Round Trip' || $this->input->post('rt_pickup_location')) {
+            $details = array('Cab Booking Enquiry (' . ($trip_type ?: 'Cab') . ')');
+            if ($this->input->post('rt_pickup_location'))     $details[] = 'Pickup: ' . $this->input->post('rt_pickup_location');
+            if ($this->input->post('rt_drop_location'))       $details[] = 'Drop: ' . $this->input->post('rt_drop_location');
+            if ($this->input->post('rt_departure_date'))      $details[] = 'Departure Date: ' . $this->input->post('rt_departure_date');
+            if ($this->input->post('rt_pickup_time'))         $details[] = 'Pickup Time: ' . $this->input->post('rt_pickup_time');
+            if ($this->input->post('rt_return_date'))         $details[] = 'Return Date: ' . $this->input->post('rt_return_date');
+            if ($this->input->post('rt_return_time'))         $details[] = 'Return Pickup Time: ' . $this->input->post('rt_return_time');
+            if ($this->input->post('rt_passengers'))          $details[] = 'Passengers: ' . $this->input->post('rt_passengers');
+            if ($this->input->post('rt_cab_type'))            $details[] = 'Vehicle Type: ' . $this->input->post('rt_cab_type');
+            if ($this->input->post('rt_special_requirements')) $details[] = 'Special Requirements: ' . $this->input->post('rt_special_requirements');
+            $message = implode(' | ', $details);
+        }
+
         $data = array(
-            'name'    => $this->input->post('name'),
-            'email'   => $this->input->post('email'),
-            'phone'   => $this->input->post('phone'),
-            'message' => $this->input->post('message'),
+            'name'       => $name,
+            'email'      => $email,
+            'phone'      => $phone,
+            'message'    => $message,
             'created_at' => date('Y-m-d H:i:s')
         );
 
@@ -864,6 +889,7 @@ class Welcome extends CI_Controller {
         }
 
         $this->session->set_flashdata('success_msg', 'Your enquiry has been received! Our travel expert will call you back shortly.');
-        redirect('welcome');
+        $referer = $this->input->server('HTTP_REFERER');
+        redirect($referer ?: 'welcome');
     }
 }
