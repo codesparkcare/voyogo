@@ -52,4 +52,39 @@ $route['flight_cert'] = 'flight_cert/index';
 $route['cert'] = 'flight_cert/index';
 $route['admin/flight_cert'] = 'flight_cert/index';
 
+/* ==========================================================================
+   Franchise Admin & Store Owner (B2B) Routes
+   ========================================================================== */
+// Franchise Admin
+$route['franchise-admin']                         = 'Franchise_admin/index';
+$route['franchise-admin/login']                   = 'Franchise_admin/login';
+$route['franchise-admin/logout']                  = 'Franchise_admin/logout';
+$route['franchise-admin/stores']                  = 'Franchise_admin/stores';
+$route['franchise-admin/store_create']            = 'Franchise_admin/store_create';
+$route['franchise-admin/store-create']            = 'Franchise_admin/store_create';
+$route['franchise-admin/store_edit/(:num)']       = 'Franchise_admin/store_edit/$1';
+$route['franchise-admin/store-edit/(:num)']       = 'Franchise_admin/store_edit/$1';
+$route['franchise-admin/store_toggle/(:num)']     = 'Franchise_admin/store_toggle/$1';
+$route['franchise-admin/store-toggle/(:num)']     = 'Franchise_admin/store_toggle/$1';
+$route['franchise-admin/wallets']                 = 'Franchise_admin/wallets';
+$route['franchise-admin/wallet_update']           = 'Franchise_admin/wallet_update';
+$route['franchise-admin/wallet-update']           = 'Franchise_admin/wallet_update';
+$route['franchise-admin/bookings']                = 'Franchise_admin/bookings';
 
+// Franchise Store Owner (B2B Portal)
+$route['franchise']                               = 'Franchise/index';
+$route['franchise/login']                         = 'Franchise/login';
+$route['franchise/logout']                        = 'Franchise/logout';
+$route['franchise/flight']                        = 'Franchise/flight';
+$route['franchise/flight_search']                 = 'Franchise/flight_search';
+$route['franchise/flight_review']                 = 'Franchise/flight_review';
+$route['franchise/flight_book']                   = 'Franchise/flight_book';
+$route['franchise/flight_ticket/(:any)']          = 'Franchise/flight_ticket/$1';
+$route['franchise/hotel']                         = 'Franchise/hotel';
+$route['franchise/hotel_search']                  = 'Franchise/hotel_search';
+$route['franchise/hotel_detail/(:any)']           = 'Franchise/hotel_detail/$1';
+$route['franchise/hotel_review']                  = 'Franchise/hotel_review';
+$route['franchise/hotel_book']                    = 'Franchise/hotel_book';
+$route['franchise/hotel_voucher/(:any)']          = 'Franchise/hotel_voucher/$1';
+$route['franchise/bookings']                      = 'Franchise/bookings';
+$route['franchise/wallet_ledger']                 = 'Franchise/wallet_ledger';
