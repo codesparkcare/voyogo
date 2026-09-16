@@ -30,7 +30,11 @@ class Franchise_model extends CI_Model {
     // 2. FRANCHISE STORE AUTHENTICATION & MANAGEMENT
     // =========================================================================
     public function store_login($username, $password) {
-        $this->db->where('username', trim($username));
+        $clean_user = trim($username);
+        $this->db->group_start();
+        $this->db->where('username', $clean_user);
+        $this->db->or_where('agent_code', $clean_user);
+        $this->db->group_end();
         $store = $this->db->get('franchise_stores')->row_array();
 
         if (!$store) {
