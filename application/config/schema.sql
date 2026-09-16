@@ -211,4 +211,106 @@ INSERT INTO `razorpay_settings` (`id`, `razorpay_key_id`, `razorpay_key_secret`,
 SELECT 1, 'rzp_test_TTVGSNKy0V1o7B', 'na1MTEQwpH6CFfHOVghZn2GO', 'Voyogo Travels', '#0d3470', 'INR', 'test', 1
 FROM DUAL WHERE NOT EXISTS (SELECT * FROM `razorpay_settings` WHERE `id` = 1);
 
+-- =====================================================
+-- Franchise Module Schema (B2B Admin, Stores & Float)
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS `franchise_admins` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `franchise_stores` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `agent_code` varchar(50) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `store_name` varchar(150) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `address` text DEFAULT NULL,
+  `gst_number` varchar(30) DEFAULT NULL,
+  `wallet_balance` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `agent_code` (`agent_code`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `franchise_wallet_transactions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `store_id` int(11) NOT NULL,
+  `transaction_type` enum('credit','debit') NOT NULL,
+  `amount` decimal(12,2) NOT NULL,
+  `previous_balance` decimal(12,2) NOT NULL,
+  `new_balance` decimal(12,2) NOT NULL,
+  `reference_type` varchar(50) NOT NULL,
+  `reference_id` varchar(100) DEFAULT NULL,
+  `remarks` text DEFAULT NULL,
+  `created_by` varchar(100) DEFAULT 'system',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_store_id` (`store_id`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `franchise_flight_bookings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `store_id` int(11) NOT NULL,
+  `booking_ref` varchar(50) NOT NULL,
+  `pnr` varchar(50) DEFAULT NULL,
+  `airline_name` varchar(100) DEFAULT NULL,
+  `flight_number` varchar(50) DEFAULT NULL,
+  `origin` varchar(10) NOT NULL,
+  `destination` varchar(10) NOT NULL,
+  `departure_datetime` datetime DEFAULT NULL,
+  `passenger_details` longtext DEFAULT NULL,
+  `base_fare` decimal(10,2) DEFAULT 0.00,
+  `taxes` decimal(10,2) DEFAULT 0.00,
+  `total_amount` decimal(10,2) NOT NULL,
+  `wallet_deducted` decimal(10,2) NOT NULL,
+  `status` varchar(30) DEFAULT 'confirmed',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `booking_ref` (`booking_ref`),
+  KEY `idx_fb_store_id` (`store_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `franchise_hotel_bookings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `store_id` int(11) NOT NULL,
+  `booking_ref` varchar(50) NOT NULL,
+  `hotel_id` varchar(50) DEFAULT NULL,
+  `hotel_name` varchar(150) NOT NULL,
+  `room_type` varchar(150) DEFAULT NULL,
+  `checkin_date` date DEFAULT NULL,
+  `checkout_date` date DEFAULT NULL,
+  `primary_guest_name` varchar(100) NOT NULL,
+  `guest_phone` varchar(20) DEFAULT NULL,
+  `guest_email` varchar(100) DEFAULT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `wallet_deducted` decimal(10,2) NOT NULL,
+  `status` varchar(30) DEFAULT 'confirmed',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `booking_ref` (`booking_ref`),
+  KEY `idx_hb_store_id` (`store_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Default Franchise Admin: franchiseadmin / Admin@123*
+INSERT INTO `franchise_admins` (`id`, `username`, `password`, `name`, `email`, `phone`, `status`, `created_at`, `updated_at`)
+SELECT 1, 'franchiseadmin', '$2y$10$oe/Ylru3/s9Hvb8qGXDHQe8dMHlDAGrpEOKgK01BT8OWFAfBRjWV2', 'Franchise Master Admin', 'franchise@voyogo.com', '9876543210', 'active', NOW(), NOW()
+FROM DUAL WHERE NOT EXISTS (SELECT * FROM `franchise_admins` WHERE `username` = 'franchiseadmin');
+
 

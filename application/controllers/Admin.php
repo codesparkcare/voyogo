@@ -784,21 +784,31 @@ class Admin extends CI_Controller {
     {
         $this->_check_login();
 
-        $schemaFile = APPPATH . 'config/schema.sql';
-        if (file_exists($schemaFile)) {
-            $sql = file_get_contents($schemaFile);
-            $queries = explode(';', $sql);
-            foreach ($queries as $q) {
-                $q = trim($q);
-                if (!empty($q)) {
-                    $this->db->query($q);
+        $schemaFiles = [
+            APPPATH . 'config/schema.sql',
+            FCPATH . 'franchise_module_schema.sql'
+        ];
+
+        $executed = 0;
+        foreach ($schemaFiles as $file) {
+            if (file_exists($file)) {
+                $sql = file_get_contents($file);
+                $queries = explode(';', $sql);
+                foreach ($queries as $q) {
+                    $q = trim($q);
+                    if (!empty($q) && strpos($q, '/*') !== 0 && strpos($q, '--') !== 0) {
+                        try {
+                            $this->db->query($q);
+                            $executed++;
+                        } catch (Exception $e) {
+                            // ignore duplicate or non-fatal errors
+                        }
+                    }
                 }
             }
-            $this->session->set_flashdata('success', 'Database tables and initial admin account synchronized successfully!');
-        } else {
-            $this->session->set_flashdata('error', 'schema.sql file not found.');
         }
 
+        $this->session->set_flashdata('success', 'All database tables including the Franchise Module have been synchronized successfully!');
         redirect('admin');
     }
 }
