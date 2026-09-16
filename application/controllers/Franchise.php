@@ -105,15 +105,28 @@ class Franchise extends CI_Controller {
     public function flight_search() {
         $store = $this->_check_auth();
 
-        $trip_type = $this->input->get('trip_type') ?: 'oneway';
-        $origin    = strtoupper(trim($this->input->get('origin') ?: 'BOM'));
-        $dest      = strtoupper(trim($this->input->get('destination') ?: 'DEL'));
-        $depart    = $this->input->get('depart_date') ?: date('Y-m-d', strtotime('+7 days'));
+        $trip_type = $this->input->get('trip_type') ?: ($this->input->get('tripType') ?: 'oneway');
+        $origin_raw = trim($this->input->get('origin') ?: ($this->input->get('from_city') ?: 'DEL'));
+        $dest_raw   = trim($this->input->get('destination') ?: ($this->input->get('to_city') ?: 'BOM'));
+
+        // Extract 3-letter IATA code if inside parentheses, e.g. "Delhi (DEL)" -> "DEL"
+        if (preg_match('/\(([A-Z]{3})\)/i', $origin_raw, $m)) {
+            $origin = strtoupper($m[1]);
+        } else {
+            $origin = strtoupper(substr($origin_raw, 0, 3));
+        }
+        if (preg_match('/\(([A-Z]{3})\)/i', $dest_raw, $m)) {
+            $dest = strtoupper($m[1]);
+        } else {
+            $dest = strtoupper(substr($dest_raw, 0, 3));
+        }
+
+        $depart    = $this->input->get('depart_date') ?: ($this->input->get('departure_date') ?: date('Y-m-d', strtotime('+7 days')));
         $return    = $this->input->get('return_date') ?: date('Y-m-d', strtotime('+10 days'));
         $adults    = max(1, (int)($this->input->get('adults') ?: 1));
         $children  = max(0, (int)($this->input->get('children') ?: 0));
         $infants   = max(0, (int)($this->input->get('infants') ?: 0));
-        $cabin     = $this->input->get('cabin') ?: 'ECONOMY';
+        $cabin     = strtoupper($this->input->get('cabin') ?: ($this->input->get('cabin_class') ?: 'ECONOMY'));
 
         // Perform search using BenzyFlightApi
         $is_roundtrip = ($trip_type === 'roundtrip');
@@ -344,9 +357,9 @@ class Franchise extends CI_Controller {
     public function hotel_search() {
         $store = $this->_check_auth();
 
-        $city     = $this->input->get('city') ?: 'Goa';
-        $checkin  = $this->input->get('checkin') ?: date('Y-m-d', strtotime('+3 days'));
-        $checkout = $this->input->get('checkout') ?: date('Y-m-d', strtotime('+5 days'));
+        $city     = $this->input->get('city') ?: 'Tirunelveli';
+        $checkin  = $this->input->get('checkin') ?: ($this->input->get('checkin_date') ?: date('Y-m-d', strtotime('+3 days')));
+        $checkout = $this->input->get('checkout') ?: ($this->input->get('checkout_date') ?: date('Y-m-d', strtotime('+7 days')));
         $rooms    = max(1, (int)($this->input->get('rooms') ?: 1));
         $adults   = max(1, (int)($this->input->get('adults') ?: 2));
         $children = max(0, (int)($this->input->get('children') ?: 0));
