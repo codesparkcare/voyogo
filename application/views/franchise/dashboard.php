@@ -101,20 +101,68 @@
                         </div>
                     </div>
 
-                    <!-- DEPARTURE Date Box -->
-                    <div class="f-input-box" onclick="document.getElementById('fDepartDateInput').showPicker ? document.getElementById('fDepartDateInput').showPicker() : document.getElementById('fDepartDateInput').focus()">
+                    <!-- DEPARTURE Date Box matching Screenshot 1 & 3 -->
+                    <div class="f-input-box" id="fDepartBox" onclick="openFlightCalendar(event, 'depart')">
                         <div class="f-input-lbl"><i class="fa-regular fa-calendar-days"></i> DEPARTURE</div>
                         <div class="f-input-main" id="fDepartMainDate"><?php echo date('d/m/Y', strtotime('+3 days')); ?></div>
                         <div class="f-input-sub" id="fDepartSubDate"><?php echo date('D, d M Y', strtotime('+3 days')); ?></div>
-                        <input type="date" name="depart_date" id="fDepartDateInput" value="<?php echo date('Y-m-d', strtotime('+3 days')); ?>" min="<?php echo date('Y-m-d'); ?>" onchange="updateDepartDisplay(this.value)" style="position: absolute; opacity: 0; width: 0; height: 0;">
+                        <input type="hidden" name="depart_date" id="fDepartDateInput" value="<?php echo date('Y-m-d', strtotime('+3 days')); ?>">
                     </div>
 
-                    <!-- RETURN Date Box -->
-                    <div class="f-input-box disabled" id="fReturnBox" onclick="triggerReturnPicker()">
+                    <!-- RETURN Date Box matching Screenshot 1 & 3 -->
+                    <div class="f-input-box disabled" id="fReturnBox" onclick="openFlightCalendar(event, 'return')">
                         <div class="f-input-lbl"><i class="fa-regular fa-calendar-days"></i> RETURN</div>
                         <div class="f-input-main" id="fReturnMainDate"><?php echo date('d/m/Y', strtotime('+7 days')); ?></div>
                         <div class="f-input-sub" id="fReturnSubDate">Save up to 20% on round trips</div>
-                        <input type="date" name="return_date" id="fReturnDateInput" value="<?php echo date('Y-m-d', strtotime('+7 days')); ?>" min="<?php echo date('Y-m-d'); ?>" onchange="updateReturnDisplay(this.value)" disabled style="position: absolute; opacity: 0; width: 0; height: 0;">
+                        <input type="hidden" name="return_date" id="fReturnDateInput" value="<?php echo date('Y-m-d', strtotime('+7 days')); ?>" disabled>
+                    </div>
+
+                    <!-- Akbar Dual-Month Interactive Calendar Dropdown matching Screenshot 3 -->
+                    <div class="akbar-dropdown-panel akbar-calendar-panel" id="flightCalendarDropdown" onclick="event.stopPropagation();">
+                        <!-- Top Switcher Tabs -->
+                        <div class="akbar-cal-header-tabs">
+                            <div class="akbar-cal-tab active" id="fFlightTabDepart" onclick="switchFlightCalTab('depart')">
+                                <span class="akbar-cal-tab-label">DEPARTURE</span>
+                                <span class="akbar-cal-tab-val" id="fFlightTabDepartVal"><?php echo date('M d, Y', strtotime('+3 days')); ?></span>
+                            </div>
+                            <div class="akbar-cal-tab" id="fFlightTabReturn" onclick="switchFlightCalTab('return')">
+                                <span class="akbar-cal-tab-label">RETURN</span>
+                                <span class="akbar-cal-tab-val" id="fFlightTabReturnVal"><?php echo date('M d, Y', strtotime('+7 days')); ?></span>
+                            </div>
+                        </div>
+
+                        <!-- Dual Month Calendars Body -->
+                        <div class="akbar-cal-body">
+                            <!-- Left Month -->
+                            <div class="akbar-cal-month-wrap">
+                                <div class="akbar-cal-month-head">
+                                    <button type="button" class="akbar-cal-nav-btn" id="fFlightCalPrevBtn" onclick="navigateFlightCal(-1)">&larr;</button>
+                                    <span class="akbar-cal-month-title" id="fFlightCalMonth1Title">SEPTEMBER 2026</span>
+                                    <span style="width: 30px;"></span>
+                                </div>
+                                <div class="akbar-cal-weekdays">
+                                    <span class="sun">Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                                </div>
+                                <div class="akbar-cal-days-grid" id="fFlightCalDays1">
+                                    <!-- Days injected via JS -->
+                                </div>
+                            </div>
+
+                            <!-- Right Month -->
+                            <div class="akbar-cal-month-wrap">
+                                <div class="akbar-cal-month-head">
+                                    <span style="width: 30px;"></span>
+                                    <span class="akbar-cal-month-title" id="fFlightCalMonth2Title">OCTOBER 2026</span>
+                                    <button type="button" class="akbar-cal-nav-btn" id="fFlightCalNextBtn" onclick="navigateFlightCal(1)">&rarr;</button>
+                                </div>
+                                <div class="akbar-cal-weekdays">
+                                    <span class="sun">Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                                </div>
+                                <div class="akbar-cal-days-grid" id="fFlightCalDays2">
+                                    <!-- Days injected via JS -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- TRAVELERS & CLASS Box -->
@@ -545,60 +593,341 @@
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(85, 139, 47, 0.45);
 }
+
+/* Akbar Dual-Month Calendar Dropdown for Flights */
+.akbar-calendar-panel {
+    width: 630px;
+    max-width: 95vw;
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 28%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    z-index: 999999;
+    display: none;
+    text-align: left;
+    cursor: default;
+}
+.akbar-calendar-panel.open, .akbar-calendar-panel.show {
+    display: block;
+}
+@media (max-width: 991px) {
+    .akbar-calendar-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-height: 90vh;
+        overflow-y: auto;
+        width: 95%;
+        left: 50%;
+    }
+}
+.akbar-cal-header-tabs {
+    display: flex;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+.akbar-cal-tab {
+    flex: 1;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+}
+.akbar-cal-tab.active {
+    background: #ffffff;
+    border-bottom-color: #558B2F;
+}
+.akbar-cal-tab-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+}
+.akbar-cal-tab.active .akbar-cal-tab-label {
+    color: #558B2F;
+}
+.akbar-cal-tab-val {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-top: 3px;
+    display: block;
+}
+.akbar-cal-body {
+    display: flex;
+    gap: 20px;
+    padding: 18px 20px 22px;
+}
+@media (max-width: 640px) {
+    .akbar-cal-body {
+        flex-direction: column;
+    }
+}
+.akbar-cal-month-wrap {
+    flex: 1;
+}
+.akbar-cal-month-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    height: 32px;
+}
+.akbar-cal-month-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #09204b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex: 1;
+    text-align: center;
+}
+.akbar-cal-nav-btn {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 700;
+    color: #0f172a;
+    transition: all 0.15s;
+    font-size: 14px;
+}
+.akbar-cal-nav-btn:hover:not(:disabled) {
+    background: #558B2F;
+    color: #ffffff;
+    border-color: #558B2F;
+}
+.akbar-cal-nav-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+.akbar-cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+.akbar-cal-weekdays span.sun {
+    color: #ef4444;
+}
+.akbar-cal-days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 4px;
+    text-align: center;
+}
+.akbar-cal-day {
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.1s ease;
+    border-radius: 4px;
+}
+.akbar-cal-day:hover:not(.disabled):not(.selected-in):not(.selected-out) {
+    background: #e2e8f0;
+    color: #558B2F;
+}
+.akbar-cal-day.sun:not(.disabled):not(.selected-in):not(.selected-out) {
+    color: #ef4444;
+}
+.akbar-cal-day.disabled {
+    color: #cbd5e1;
+    cursor: not-allowed;
+    background: transparent;
+}
+.akbar-cal-day.selected-in, .akbar-cal-day.selected-out {
+    background: #558B2F !important;
+    color: #ffffff !important;
+    font-weight: 800;
+    border-radius: 4px;
+}
+.akbar-cal-day.in-range {
+    background: #dcfce7;
+    color: #166534;
+    border-radius: 0;
+    font-weight: 700;
+}
 </style>
 
 <script>
-// Comprehensive Airports Data matching 1st Screenshot
+// Comprehensive Domestic & International Airports Data matching Screenshot 1 & voyogo/flight
 const fAirports = [
-    { city: "Delhi", code: "DEL", airport: "Indira Gandhi Intl Airport", popular: true },
-    { city: "Mumbai", code: "BOM", airport: "Chhatrapati Shivaji Maharaj Intl", popular: true },
-    { city: "Bengaluru", code: "BLR", airport: "Kempegowda International Airport", popular: true },
-    { city: "Hyderabad", code: "HYD", airport: "Rajiv Gandhi International Airport", popular: true },
-    { city: "Chennai", code: "MAA", airport: "Chennai International Airport", popular: true },
-    { city: "Kolkata", code: "CCU", airport: "Netaji Subhash Chandra Bose Intl", popular: true },
-    { city: "Goa (Dabolim)", code: "GOI", airport: "Dabolim Airport", popular: true },
-    { city: "Goa (Mopa)", code: "GOX", airport: "Manohar International Airport", popular: true },
-    { city: "Ahmedabad", code: "AMD", airport: "Sardar Vallabhbhai Patel Intl", popular: true },
-    { city: "Kochi", code: "COK", airport: "Cochin International Airport", popular: true },
-    { city: "Pune", code: "PNQ", airport: "Pune Airport", popular: true },
-    { city: "Dubai", code: "DXB", airport: "Dubai International Airport", popular: true },
-    { city: "Abu Dhabi", code: "AUH", airport: "Zayed International Airport", popular: true },
-    { city: "Sharjah", code: "SHJ", airport: "Sharjah International Airport", popular: true },
-    { city: "Doha", code: "DOH", airport: "Hamad International Airport", popular: true },
-    { city: "Riyadh", code: "RUH", airport: "King Khalid International Airport", popular: true },
-    { city: "Jeddah", code: "JED", airport: "King Abdulaziz International Airport", popular: true },
-    { city: "Muscat", code: "MCT", airport: "Muscat International Airport", popular: true },
-    { city: "Kuwait", code: "KWI", airport: "Kuwait International Airport", popular: true },
-    { city: "Bahrain", code: "BAH", airport: "Bahrain International Airport", popular: true },
-    { city: "Singapore", code: "SIN", airport: "Changi Airport", popular: true },
-    { city: "Bangkok", code: "BKK", airport: "Suvarnabhumi Airport", popular: true },
-    { city: "Phuket", code: "HKT", airport: "Phuket International Airport", popular: true },
-    { city: "Kuala Lumpur", code: "KUL", airport: "Kuala Lumpur International Airport", popular: true },
-    { city: "Bali (Denpasar)", code: "DPS", airport: "Ngurah Rai International Airport", popular: true },
-    { city: "Colombo", code: "CMB", airport: "Bandaranaike International Airport", popular: true },
-    { city: "Male (Maldives)", code: "MLE", airport: "Velana International Airport", popular: true },
-    { city: "Kathmandu", code: "KTM", airport: "Tribhuvan International Airport", popular: true },
-    { city: "Hong Kong", code: "HKG", airport: "Hong Kong International Airport", popular: true },
-    { city: "Tokyo (Narita)", code: "NRT", airport: "Narita International Airport", popular: true },
-    { city: "Seoul (ICN)", code: "ICN", airport: "Incheon International Airport", popular: true },
-    { city: "London (Heathrow)", code: "LHR", airport: "Heathrow Airport", popular: true },
-    { city: "Paris (CDG)", code: "CDG", airport: "Charles de Gaulle Airport", popular: true },
-    { city: "Frankfurt", code: "FRA", airport: "Frankfurt Airport", popular: true },
-    { city: "Amsterdam", code: "AMS", airport: "Schiphol Airport", popular: true },
-    { city: "New York (JFK)", code: "JFK", airport: "John F. Kennedy Intl Airport", popular: true }
+    // Popular Domestic (India)
+    { city: "Delhi", code: "DEL", airport: "Indira Gandhi Intl Airport", country: "India", popular: true },
+    { city: "Mumbai", code: "BOM", airport: "Chhatrapati Shivaji Maharaj Intl", country: "India", popular: true },
+    { city: "Bengaluru", code: "BLR", airport: "Kempegowda Intl Airport", country: "India", popular: true },
+    { city: "Hyderabad", code: "HYD", airport: "Rajiv Gandhi Intl Airport", country: "India", popular: true },
+    { city: "Chennai", code: "MAA", airport: "Chennai International Airport", country: "India", popular: true },
+    { city: "Kolkata", code: "CCU", airport: "Netaji Subhash Chandra Bose Intl", country: "India", popular: true },
+    { city: "Goa (Dabolim)", code: "GOI", airport: "Dabolim Airport", country: "India", popular: true },
+    { city: "Goa (Mopa)", code: "GOX", airport: "Manohar International Airport", country: "India", popular: true },
+    { city: "Ahmedabad", code: "AMD", airport: "Sardar Vallabhbhai Patel Intl", country: "India", popular: true },
+    { city: "Kochi", code: "COK", airport: "Cochin International Airport", country: "India", popular: true },
+    { city: "Pune", code: "PNQ", airport: "Pune Airport", country: "India", popular: true },
+
+    // Popular Middle East International
+    { city: "Dubai", code: "DXB", airport: "Dubai International Airport", country: "UAE", popular: true },
+    { city: "Abu Dhabi", code: "AUH", airport: "Zayed International Airport", country: "UAE", popular: true },
+    { city: "Sharjah", code: "SHJ", airport: "Sharjah International Airport", country: "UAE", popular: true },
+    { city: "Doha", code: "DOH", airport: "Hamad International Airport", country: "Qatar", popular: true },
+    { city: "Riyadh", code: "RUH", airport: "King Khalid International Airport", country: "Saudi Arabia", popular: true },
+    { city: "Jeddah", code: "JED", airport: "King Abdulaziz Intl Airport", country: "Saudi Arabia", popular: true },
+    { city: "Dammam", code: "DMM", airport: "King Fahd International Airport", country: "Saudi Arabia", popular: false },
+    { city: "Muscat", code: "MCT", airport: "Muscat International Airport", country: "Oman", popular: true },
+    { city: "Kuwait", code: "KWI", airport: "Kuwait International Airport", country: "Kuwait", popular: true },
+    { city: "Bahrain", code: "BAH", airport: "Bahrain International Airport", country: "Bahrain", popular: true },
+
+    // Popular Southeast Asia & Far East
+    { city: "Singapore", code: "SIN", airport: "Singapore Changi Airport", country: "Singapore", popular: true },
+    { city: "Bangkok", code: "BKK", airport: "Suvarnabhumi International Airport", country: "Thailand", popular: true },
+    { city: "Bangkok (Don Mueang)", code: "DMK", airport: "Don Mueang International Airport", country: "Thailand", popular: false },
+    { city: "Phuket", code: "HKT", airport: "Phuket International Airport", country: "Thailand", popular: true },
+    { city: "Kuala Lumpur", code: "KUL", airport: "Kuala Lumpur Intl Airport", country: "Malaysia", popular: true },
+    { city: "Bali (Denpasar)", code: "DPS", airport: "Ngurah Rai International Airport", country: "Indonesia", popular: true },
+    { city: "Jakarta", code: "CGK", airport: "Soekarno-Hatta International Airport", country: "Indonesia", popular: false },
+    { city: "Colombo", code: "CMB", airport: "Bandaranaike International Airport", country: "Sri Lanka", popular: true },
+    { city: "Male (Maldives)", code: "MLE", airport: "Velana International Airport", country: "Maldives", popular: true },
+    { city: "Kathmandu", code: "KTM", airport: "Tribhuvan International Airport", country: "Nepal", popular: true },
+    { city: "Dhaka", code: "DAC", airport: "Hazrat Shahjalal Intl Airport", country: "Bangladesh", popular: false },
+    { city: "Hong Kong", code: "HKG", airport: "Hong Kong International Airport", country: "Hong Kong", popular: true },
+    { city: "Tokyo (Narita)", code: "NRT", airport: "Narita International Airport", country: "Japan", popular: true },
+    { city: "Tokyo (Haneda)", code: "HND", airport: "Tokyo Haneda Airport", country: "Japan", popular: false },
+    { city: "Osaka", code: "KIX", airport: "Kansai International Airport", country: "Japan", popular: false },
+    { city: "Seoul", code: "ICN", airport: "Incheon International Airport", country: "South Korea", popular: true },
+    { city: "Manila", code: "MNL", airport: "Ninoy Aquino International Airport", country: "Philippines", popular: false },
+    { city: "Ho Chi Minh City", code: "SGN", airport: "Tan Son Nhat International Airport", country: "Vietnam", popular: true },
+    { city: "Hanoi", code: "HAN", airport: "Noi Bai International Airport", country: "Vietnam", popular: false },
+
+    // Popular Europe
+    { city: "London (Heathrow)", code: "LHR", airport: "Heathrow Airport", country: "UK", popular: true },
+    { city: "London (Gatwick)", code: "LGW", airport: "Gatwick Airport", country: "UK", popular: false },
+    { city: "Manchester", code: "MAN", airport: "Manchester Airport", country: "UK", popular: false },
+    { city: "Birmingham", code: "BHX", airport: "Birmingham Airport", country: "UK", popular: false },
+    { city: "Paris (Charles de Gaulle)", code: "CDG", airport: "Charles de Gaulle Airport", country: "France", popular: true },
+    { city: "Frankfurt", code: "FRA", airport: "Frankfurt am Main Airport", country: "Germany", popular: true },
+    { city: "Munich", code: "MUC", airport: "Munich International Airport", country: "Germany", popular: false },
+    { city: "Amsterdam", code: "AMS", airport: "Amsterdam Schiphol Airport", country: "Netherlands", popular: true },
+    { city: "Zurich", code: "ZRH", airport: "Zurich Airport", country: "Switzerland", popular: true },
+    { city: "Geneva", code: "GVA", airport: "Geneva Airport", country: "Switzerland", popular: false },
+    { city: "Rome", code: "FCO", airport: "Leonardo da Vinci–Fiumicino", country: "Italy", popular: true },
+    { city: "Milan", code: "MXP", airport: "Milan Malpensa Airport", country: "Italy", popular: false },
+    { city: "Madrid", code: "MAD", airport: "Adolfo Suárez Madrid–Barajas", country: "Spain", popular: false },
+    { city: "Barcelona", code: "BCN", airport: "Josep Tarradellas Barcelona-El Prat", country: "Spain", popular: false },
+    { city: "Vienna", code: "VIE", airport: "Vienna International Airport", country: "Austria", popular: false },
+    { city: "Brussels", code: "BRU", airport: "Brussels Airport", country: "Belgium", popular: false },
+    { city: "Istanbul", code: "IST", airport: "Istanbul Airport", country: "Turkey", popular: true },
+    { city: "Dublin", code: "DUB", airport: "Dublin Airport", country: "Ireland", popular: false },
+    { city: "Copenhagen", code: "CPH", airport: "Copenhagen Airport", country: "Denmark", popular: false },
+    { city: "Stockholm", code: "ARN", airport: "Stockholm Arlanda Airport", country: "Sweden", popular: false },
+    { city: "Helsinki", code: "HEL", airport: "Helsinki-Vantaa Airport", country: "Finland", popular: false },
+    { city: "Lisbon", code: "LIS", airport: "Humberto Delgado Airport", country: "Portugal", popular: false },
+    { city: "Athens", code: "ATH", airport: "Athens International Airport", country: "Greece", popular: false },
+
+    // Popular North America
+    { city: "New York (JFK)", code: "JFK", airport: "John F. Kennedy Intl Airport", country: "USA", popular: true },
+    { city: "New York (Newark)", code: "EWR", airport: "Newark Liberty Intl Airport", country: "USA", popular: false },
+    { city: "San Francisco", code: "SFO", airport: "San Francisco Intl Airport", country: "USA", popular: true },
+    { city: "Los Angeles", code: "LAX", airport: "Los Angeles Intl Airport", country: "USA", popular: true },
+    { city: "Chicago", code: "ORD", airport: "O'Hare International Airport", country: "USA", popular: true },
+    { city: "Washington", code: "IAD", airport: "Washington Dulles Intl Airport", country: "USA", popular: false },
+    { city: "Dallas", code: "DFW", airport: "Dallas/Fort Worth Intl Airport", country: "USA", popular: false },
+    { city: "Houston", code: "IAH", airport: "George Bush Intercontinental", country: "USA", popular: false },
+    { city: "Boston", code: "BOS", airport: "Boston Logan Intl Airport", country: "USA", popular: false },
+    { city: "Seattle", code: "SEA", airport: "Seattle-Tacoma Intl Airport", country: "USA", popular: false },
+    { city: "Atlanta", code: "ATL", airport: "Hartsfield-Jackson Atlanta Intl", country: "USA", popular: false },
+    { city: "Toronto", code: "YYZ", airport: "Toronto Pearson Intl Airport", country: "Canada", popular: true },
+    { city: "Vancouver", code: "YVR", airport: "Vancouver International Airport", country: "Canada", popular: true },
+    { city: "Montreal", code: "YUL", airport: "Montréal–Trudeau Intl Airport", country: "Canada", popular: false },
+
+    // Australia, New Zealand & Africa
+    { city: "Sydney", code: "SYD", airport: "Sydney Kingsford Smith Airport", country: "Australia", popular: true },
+    { city: "Melbourne", code: "MEL", airport: "Melbourne Airport", country: "Australia", popular: true },
+    { city: "Brisbane", code: "BNE", airport: "Brisbane Airport", country: "Australia", popular: false },
+    { city: "Perth", code: "PER", airport: "Perth Airport", country: "Australia", popular: false },
+    { city: "Auckland", code: "AKL", airport: "Auckland Airport", country: "New Zealand", popular: false },
+    { city: "Johannesburg", code: "JNB", airport: "O. R. Tambo Intl Airport", country: "South Africa", popular: false },
+    { city: "Cape Town", code: "CPT", airport: "Cape Town International Airport", country: "South Africa", popular: false },
+    { city: "Nairobi", code: "NBO", airport: "Jomo Kenyatta Intl Airport", country: "Kenya", popular: false },
+    { city: "Cairo", code: "CAI", airport: "Cairo International Airport", country: "Egypt", popular: false },
+    { city: "Mauritius", code: "MRU", airport: "Sir Seewoosagur Ramgoolam Intl", country: "Mauritius", popular: true },
+
+    // More Indian Cities
+    { city: "Jaipur", code: "JAI", airport: "Jaipur International Airport", country: "India", popular: false },
+    { city: "Lucknow", code: "LKO", airport: "Chaudhary Charan Singh Intl", country: "India", popular: false },
+    { city: "Chandigarh", code: "IXC", airport: "Shaheed Bhagat Singh Intl", country: "India", popular: false },
+    { city: "Srinagar", code: "SXR", airport: "Sheikh ul-Alam Intl Airport", country: "India", popular: false },
+    { city: "Amritsar", code: "ATQ", airport: "Sri Guru Ram Dass Jee Intl", country: "India", popular: false },
+    { city: "Varanasi", code: "VNS", airport: "Lal Bahadur Shastri Intl", country: "India", popular: false },
+    { city: "Patna", code: "PAT", airport: "Jay Prakash Narayan Airport", country: "India", popular: false },
+    { city: "Guwahati", code: "GAU", airport: "Lokpriya Gopinath Bordoloi Intl", country: "India", popular: false },
+    { city: "Thiruvananthapuram", code: "TRV", airport: "Trivandrum International Airport", country: "India", popular: false },
+    { city: "Kozhikode", code: "CCJ", airport: "Calicut International Airport", country: "India", popular: false }
 ];
 
+// Dual-Month Calendar States & Variables
+var fMonthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+var fDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+var fMonthShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+var rawDepartVal = document.getElementById('fDepartDateInput').value;
+var rawReturnVal = document.getElementById('fReturnDateInput').value;
+
+var fSelDepart = rawDepartVal ? new Date(rawDepartVal + 'T00:00:00') : new Date();
+fSelDepart.setHours(0,0,0,0);
+var fSelReturn = rawReturnVal ? new Date(rawReturnVal + 'T00:00:00') : new Date(fSelDepart.getTime() + 4 * 86400000);
+fSelReturn.setHours(0,0,0,0);
+
+var fCalActiveTab = 'depart';
+var fCalViewYear = fSelDepart.getFullYear();
+var fCalViewMonth = fSelDepart.getMonth();
+
 function closeAllFranchiseDropdowns() {
-    document.getElementById('fFromDropdown').classList.remove('open');
-    document.getElementById('fToDropdown').classList.remove('open');
-    document.getElementById('fPaxDropdown').classList.remove('open');
+    var fromDrop = document.getElementById('fFromDropdown');
+    var toDrop   = document.getElementById('fToDropdown');
+    var paxDrop  = document.getElementById('fPaxDropdown');
+    var calDrop  = document.getElementById('flightCalendarDropdown');
+    if (fromDrop) fromDrop.classList.remove('open');
+    if (toDrop)   toDrop.classList.remove('open');
+    if (paxDrop)  paxDrop.classList.remove('open');
+    if (calDrop)  calDrop.classList.remove('open', 'show');
 }
 
 document.addEventListener('click', function(e) {
     const fromBox = document.getElementById('fFromBox');
     const toBox = document.getElementById('fToBox');
     const paxBox = document.getElementById('fPaxBox');
-    if ((fromBox && fromBox.contains(e.target)) || (toBox && toBox.contains(e.target)) || (paxBox && paxBox.contains(e.target))) {
+    const departBox = document.getElementById('fDepartBox');
+    const returnBox = document.getElementById('fReturnBox');
+    const calDrop = document.getElementById('flightCalendarDropdown');
+
+    if ((fromBox && fromBox.contains(e.target)) ||
+        (toBox && toBox.contains(e.target)) ||
+        (paxBox && paxBox.contains(e.target)) ||
+        (departBox && departBox.contains(e.target)) ||
+        (returnBox && returnBox.contains(e.target)) ||
+        (calDrop && calDrop.contains(e.target))) {
         return;
     }
     closeAllFranchiseDropdowns();
@@ -637,7 +966,10 @@ function renderAirportList(type, query) {
     container.innerHTML = '';
     const q = query.trim().toLowerCase();
     const filtered = fAirports.filter(a => {
-        return a.city.toLowerCase().includes(q) || a.code.toLowerCase().includes(q) || a.airport.toLowerCase().includes(q);
+        return a.city.toLowerCase().includes(q) || 
+               a.code.toLowerCase().includes(q) || 
+               a.airport.toLowerCase().includes(q) ||
+               (a.country && a.country.toLowerCase().includes(q));
     });
 
     if (filtered.length === 0) {
@@ -649,7 +981,7 @@ function renderAirportList(type, query) {
         const div = document.createElement('div');
         div.className = 'f-airport-item';
         div.innerHTML = `<div>
-            <div style="font-weight: 700; font-size: 13px; color: #0f172a;">${item.city}</div>
+            <div style="font-weight: 700; font-size: 13px; color: #0f172a;">${item.city} <span style="font-weight: 500; font-size: 11px; color: #64748b;">${item.country ? '· ' + item.country : ''}</span></div>
             <div style="font-size: 11px; color: #64748b;">${item.airport}</div>
         </div>
         <span class="f-airport-code">${item.code}</span>`;
@@ -698,29 +1030,208 @@ function swapFromTo(e) {
     document.getElementById('fToAirportText').innerText = fromSub;
 }
 
-// Date helpers
-function updateDepartDisplay(val) {
-    if (!val) return;
-    const d = new Date(val);
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const dd = String(d.getDate()).padStart(2, '0');
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const yyyy = d.getFullYear();
-    document.getElementById('fDepartMainDate').innerText = `${dd}/${mm}/${yyyy}`;
-    document.getElementById('fDepartSubDate').innerText = `${dayNames[d.getDay()]}, ${d.getDate()} ${monthNames[d.getMonth()]} ${yyyy}`;
+// Akbar Dual-Month Calendar Logic for Flight Search
+function openFlightCalendar(e, tab) {
+    e.stopPropagation();
+    closeAllFranchiseDropdowns();
+
+    // If clicking return while oneway is active, automatically activate roundtrip
+    var returnInput = document.getElementById('fReturnDateInput');
+    if (tab === 'return' && returnInput.disabled) {
+        document.getElementById('lblRoundTrip').click();
+    }
+
+    switchFlightCalTab(tab);
+    var cal = document.getElementById('flightCalendarDropdown');
+    if (cal) cal.classList.add('open', 'show');
 }
 
-function updateReturnDisplay(val) {
-    if (!val) return;
-    const d = new Date(val);
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const dd = String(d.getDate()).padStart(2, '0');
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const yyyy = d.getFullYear();
-    document.getElementById('fReturnMainDate').innerText = `${dd}/${mm}/${yyyy}`;
-    document.getElementById('fReturnSubDate').innerText = `${dayNames[d.getDay()]}, ${d.getDate()} ${monthNames[d.getMonth()]} ${yyyy}`;
+function formatISO(d) {
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+}
+
+function formatTabDateStr(d) {
+    var monNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return monNames[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+}
+
+function updateFlightDateDisplays() {
+    var depISO = formatISO(fSelDepart);
+    var retISO = formatISO(fSelReturn);
+
+    document.getElementById('fDepartDateInput').value = depISO;
+    document.getElementById('fReturnDateInput').value = retISO;
+
+    // Depart card display
+    var ddIn = String(fSelDepart.getDate()).padStart(2, '0');
+    var mmIn = String(fSelDepart.getMonth() + 1).padStart(2, '0');
+    var yyyyIn = fSelDepart.getFullYear();
+    document.getElementById('fDepartMainDate').innerText = `${ddIn}/${mmIn}/${yyyyIn}`;
+    document.getElementById('fDepartSubDate').innerText = `${fDayNames[fSelDepart.getDay()]}, ${fSelDepart.getDate()} ${fMonthShort[fSelDepart.getMonth()]} ${yyyyIn}`;
+
+    // Return card display
+    var ddOut = String(fSelReturn.getDate()).padStart(2, '0');
+    var mmOut = String(fSelReturn.getMonth() + 1).padStart(2, '0');
+    var yyyyOut = fSelReturn.getFullYear();
+    document.getElementById('fReturnMainDate').innerText = `${ddOut}/${mmOut}/${yyyyOut}`;
+
+    var isRoundTrip = !document.getElementById('fReturnDateInput').disabled;
+    if (isRoundTrip) {
+        document.getElementById('fReturnSubDate').innerText = `${fDayNames[fSelReturn.getDay()]}, ${fSelReturn.getDate()} ${fMonthShort[fSelReturn.getMonth()]} ${yyyyOut}`;
+    }
+
+    // Tabs display
+    document.getElementById('fFlightTabDepartVal').textContent = formatTabDateStr(fSelDepart);
+    document.getElementById('fFlightTabReturnVal').textContent = formatTabDateStr(fSelReturn);
+}
+
+function switchFlightCalTab(tab) {
+    fCalActiveTab = tab;
+    var tabDep = document.getElementById('fFlightTabDepart');
+    var tabRet = document.getElementById('fFlightTabReturn');
+    if (tab === 'depart') {
+        if (tabDep) tabDep.classList.add('active');
+        if (tabRet) tabRet.classList.remove('active');
+        fCalViewYear = fSelDepart.getFullYear();
+        fCalViewMonth = fSelDepart.getMonth();
+    } else {
+        if (tabRet) tabRet.classList.add('active');
+        if (tabDep) tabDep.classList.remove('active');
+        fCalViewYear = fSelReturn.getFullYear();
+        fCalViewMonth = fSelReturn.getMonth();
+    }
+    renderFlightCalendarMonths();
+}
+
+function navigateFlightCal(dir) {
+    fCalViewMonth += dir;
+    if (fCalViewMonth < 0) {
+        fCalViewMonth = 11;
+        fCalViewYear--;
+    } else if (fCalViewMonth > 11) {
+        fCalViewMonth = 0;
+        fCalViewYear++;
+    }
+    renderFlightCalendarMonths();
+}
+
+function renderFlightMonthGrid(year, month, container) {
+    container.innerHTML = '';
+    var today = new Date();
+    today.setHours(0,0,0,0);
+
+    var firstDayIndex = new Date(year, month, 1).getDay();
+    var daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // 1. Padding days
+    for (var i = 0; i < firstDayIndex; i++) {
+        var emptyCell = document.createElement('div');
+        emptyCell.className = 'akbar-cal-day disabled';
+        container.appendChild(emptyCell);
+    }
+
+    // 2. Real days
+    var isRoundTrip = !document.getElementById('fReturnDateInput').disabled;
+    for (var d = 1; d <= daysInMonth; d++) {
+        var dateObj = new Date(year, month, d);
+        dateObj.setHours(0,0,0,0);
+
+        var cell = document.createElement('div');
+        cell.className = 'akbar-cal-day';
+        cell.textContent = d;
+
+        if (dateObj.getDay() === 0) cell.classList.add('sun');
+
+        if (dateObj.getTime() < today.getTime()) {
+            cell.classList.add('disabled');
+        } else {
+            var dTime = dateObj.getTime();
+            var depTime = fSelDepart.getTime();
+            var retTime = fSelReturn.getTime();
+
+            if (dTime === depTime) {
+                cell.classList.add('selected-in');
+            } else if (isRoundTrip && dTime === retTime) {
+                cell.classList.add('selected-out');
+            } else if (isRoundTrip && dTime > depTime && dTime < retTime) {
+                cell.classList.add('in-range');
+            }
+
+            (function(selectedDate) {
+                cell.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    handleFlightDateSelection(selectedDate);
+                });
+            })(dateObj);
+        }
+
+        container.appendChild(cell);
+    }
+}
+
+function handleFlightDateSelection(chosenDate) {
+    var isRoundTrip = !document.getElementById('fReturnDateInput').disabled;
+
+    if (fCalActiveTab === 'depart') {
+        fSelDepart = new Date(chosenDate);
+        if (isRoundTrip) {
+            if (fSelReturn.getTime() <= fSelDepart.getTime()) {
+                fSelReturn = new Date(fSelDepart.getTime() + 4 * 86400000);
+            }
+            updateFlightDateDisplays();
+            switchFlightCalTab('return');
+        } else {
+            updateFlightDateDisplays();
+            renderFlightCalendarMonths();
+            setTimeout(function() {
+                closeAllFranchiseDropdowns();
+            }, 250);
+        }
+    } else {
+        // Return tab selection
+        if (chosenDate.getTime() < fSelDepart.getTime()) {
+            fSelDepart = new Date(chosenDate);
+            fSelReturn = new Date(fSelDepart.getTime() + 4 * 86400000);
+            updateFlightDateDisplays();
+            switchFlightCalTab('return');
+        } else {
+            fSelReturn = new Date(chosenDate);
+            updateFlightDateDisplays();
+            renderFlightCalendarMonths();
+            setTimeout(function() {
+                closeAllFranchiseDropdowns();
+            }, 250);
+        }
+    }
+}
+
+function renderFlightCalendarMonths() {
+    var m1Year = fCalViewYear;
+    var m1Month = fCalViewMonth;
+
+    var m2Year = m1Month === 11 ? m1Year + 1 : m1Year;
+    var m2Month = m1Month === 11 ? 0 : m1Month + 1;
+
+    var t1 = document.getElementById('fFlightCalMonth1Title');
+    var t2 = document.getElementById('fFlightCalMonth2Title');
+    if (t1) t1.textContent = fMonthNames[m1Month] + ' ' + m1Year;
+    if (t2) t2.textContent = fMonthNames[m2Month] + ' ' + m2Year;
+
+    var realToday = new Date();
+    var curYear = realToday.getFullYear();
+    var curMonth = realToday.getMonth();
+    var prevBtn = document.getElementById('fFlightCalPrevBtn');
+    if (prevBtn) {
+        prevBtn.disabled = (m1Year < curYear || (m1Year === curYear && m1Month <= curMonth));
+    }
+
+    var grid1 = document.getElementById('fFlightCalDays1');
+    var grid2 = document.getElementById('fFlightCalDays2');
+    if (grid1) renderFlightMonthGrid(m1Year, m1Month, grid1);
+    if (grid2) renderFlightMonthGrid(m2Year, m2Month, grid2);
 }
 
 function handleTripTypeChange(type) {
@@ -734,20 +1245,13 @@ function handleTripTypeChange(type) {
         document.getElementById('lblRoundTrip').classList.add('active');
         document.getElementById('fReturnBox').classList.remove('disabled');
         document.getElementById('fReturnDateInput').disabled = false;
-        updateReturnDisplay(document.getElementById('fReturnDateInput').value);
+        updateFlightDateDisplays();
     } else {
         document.getElementById('lblMultiCity').classList.add('active');
         alert('Multi-City search is available for corporate bookings. Defaulting to Round Trip.');
         document.getElementById('lblRoundTrip').click();
     }
-}
-
-function triggerReturnPicker() {
-    const input = document.getElementById('fReturnDateInput');
-    if (input.disabled) {
-        document.getElementById('lblRoundTrip').click();
-    }
-    input.showPicker ? input.showPicker() : input.focus();
+    renderFlightCalendarMonths();
 }
 
 function selectFareTag(elem) {
@@ -793,4 +1297,8 @@ function updatePaxSummary() {
     const txt = `${total} Traveler${total > 1 ? 's' : ''}, ${currentCabinName}`;
     document.getElementById('fPaxMainText').innerText = txt;
 }
+
+// Initial flight calendar setup
+updateFlightDateDisplays();
+renderFlightCalendarMonths();
 </script>

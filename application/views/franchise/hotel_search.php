@@ -43,9 +43,9 @@ $defaultNights   = 4;
                                     <div id="hotelDestCity" class="ak-dest-main">Tirunelveli</div>
                                     <div id="hotelDestSub" class="ak-dest-sub">Tirunelveli</div>
                                 </div>
-                                <div class="ak-crosshair-icon" title="Select Destination">
-                                    <i class="fa-solid fa-crosshairs"></i>
-                                </div>
+                                <button type="button" class="ak-crosshair-icon" id="hotelLocationBtn" title="Detect Current Location" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; outline: none;">
+                                    <i class="fa-solid fa-crosshairs" style="color: #64748b; font-size: 16px; transition: color 0.2s;"></i>
+                                </button>
                             </div>
                             <input type="hidden" name="city" id="hotelCityInput" value="Tirunelveli">
 
@@ -72,8 +72,8 @@ $defaultNights   = 4;
                             </div>
                         </div>
 
-                        <!-- 2. Check In Date Column -->
-                        <div class="ak-search-col" id="colCheckin" onclick="openHotelDatePicker('in')" style="flex: 1.25;">
+                        <!-- 2. Check In Date Column matching Screenshot 3 -->
+                        <div class="ak-search-col" id="colCheckin" onclick="openHotelCalendar(event, 'checkin')" style="flex: 1.25;">
                             <div class="ak-col-label">
                                 <span>CHECK IN</span> <i class="fa-solid fa-chevron-down ak-chevron"></i>
                             </div>
@@ -82,7 +82,7 @@ $defaultNights   = 4;
                                 <span class="ak-date-mon" id="hotelCheckinMon"><?php echo date("M'y", strtotime($defaultCheckin)); ?></span>
                             </div>
                             <div class="ak-date-day" id="hotelCheckinDay"><?php echo date('l', strtotime($defaultCheckin)); ?></div>
-                            <input type="date" name="checkin" id="hotelCheckinInput" value="<?php echo $defaultCheckin; ?>" min="<?php echo date('Y-m-d'); ?>" onchange="updateHotelCheckin(this.value)" style="position: absolute; opacity: 0; width: 0; height: 0;">
+                            <input type="hidden" name="checkin" id="hotelCheckinInput" value="<?php echo $defaultCheckin; ?>">
                         </div>
 
                         <!-- Floating Nights Badge Divider matching Screenshot 3 -->
@@ -92,8 +92,8 @@ $defaultNights   = 4;
                             </div>
                         </div>
 
-                        <!-- 3. Check Out Date Column -->
-                        <div class="ak-search-col" id="colCheckout" onclick="openHotelDatePicker('out')" style="flex: 1.25; padding-left: 36px;">
+                        <!-- 3. Check Out Date Column matching Screenshot 3 -->
+                        <div class="ak-search-col" id="colCheckout" onclick="openHotelCalendar(event, 'checkout')" style="flex: 1.25; padding-left: 36px;">
                             <div class="ak-col-label">
                                 <span>CHECK OUT</span> <i class="fa-solid fa-chevron-down ak-chevron"></i>
                             </div>
@@ -102,7 +102,55 @@ $defaultNights   = 4;
                                 <span class="ak-date-mon" id="hotelCheckoutMon"><?php echo date("M'y", strtotime($defaultCheckout)); ?></span>
                             </div>
                             <div class="ak-date-day" id="hotelCheckoutDay"><?php echo date('l', strtotime($defaultCheckout)); ?></div>
-                            <input type="date" name="checkout" id="hotelCheckoutInput" value="<?php echo $defaultCheckout; ?>" min="<?php echo date('Y-m-d'); ?>" onchange="updateHotelCheckout(this.value)" style="position: absolute; opacity: 0; width: 0; height: 0;">
+                            <input type="hidden" name="checkout" id="hotelCheckoutInput" value="<?php echo $defaultCheckout; ?>">
+                        </div>
+
+                        <!-- Akbar Dual-Month Interactive Calendar Dropdown matching Screenshot 3 -->
+                        <div class="akbar-dropdown-panel akbar-calendar-panel" id="hotelCalendarDropdown" onclick="event.stopPropagation();">
+                            <!-- Top Switcher Tabs -->
+                            <div class="akbar-cal-header-tabs">
+                                <div class="akbar-cal-tab active" id="hotelTabCheckin" onclick="switchHotelCalTab('checkin')">
+                                    <span class="akbar-cal-tab-label">CHECK-IN</span>
+                                    <span class="akbar-cal-tab-val" id="hotelCalTabCheckinVal"><?php echo date('M d, Y', strtotime($defaultCheckin)); ?></span>
+                                </div>
+                                <div class="akbar-cal-tab" id="hotelTabCheckout" onclick="switchHotelCalTab('checkout')">
+                                    <span class="akbar-cal-tab-label">CHECK-OUT</span>
+                                    <span class="akbar-cal-tab-val" id="hotelCalTabCheckoutVal"><?php echo date('M d, Y', strtotime($defaultCheckout)); ?></span>
+                                </div>
+                            </div>
+
+                            <!-- Dual Month Calendars Body -->
+                            <div class="akbar-cal-body">
+                                <!-- Left Month -->
+                                <div class="akbar-cal-month-wrap">
+                                    <div class="akbar-cal-month-head">
+                                        <button type="button" class="akbar-cal-nav-btn" id="hotelCalPrevBtn" onclick="navigateHotelCal(-1)">&larr;</button>
+                                        <span class="akbar-cal-month-title" id="hotelCalMonth1Title">SEPTEMBER 2026</span>
+                                        <span style="width: 30px;"></span>
+                                    </div>
+                                    <div class="akbar-cal-weekdays">
+                                        <span class="sun">Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                                    </div>
+                                    <div class="akbar-cal-days-grid" id="hotelCalDays1">
+                                        <!-- Days injected via JS -->
+                                    </div>
+                                </div>
+
+                                <!-- Right Month -->
+                                <div class="akbar-cal-month-wrap">
+                                    <div class="akbar-cal-month-head">
+                                        <span style="width: 30px;"></span>
+                                        <span class="akbar-cal-month-title" id="hotelCalMonth2Title">OCTOBER 2026</span>
+                                        <button type="button" class="akbar-cal-nav-btn" id="hotelCalNextBtn" onclick="navigateHotelCal(1)">&rarr;</button>
+                                    </div>
+                                    <div class="akbar-cal-weekdays">
+                                        <span class="sun">Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                                    </div>
+                                    <div class="akbar-cal-days-grid" id="hotelCalDays2">
+                                        <!-- Days injected via JS -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- 4. Rooms & Guests Column matching Screenshot 3 -->
@@ -524,6 +572,181 @@ $defaultNights   = 4;
     min-width: 28px;
     text-align: center;
 }
+
+/* Akbar Dual-Month Calendar Dropdown matching Screenshot 3 */
+.akbar-calendar-panel {
+    width: 630px;
+    max-width: 95vw;
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 20%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    z-index: 999999;
+    display: none;
+    text-align: left;
+    cursor: default;
+}
+.akbar-calendar-panel.open, .akbar-calendar-panel.show {
+    display: block;
+}
+@media (max-width: 991px) {
+    .akbar-calendar-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-height: 90vh;
+        overflow-y: auto;
+        width: 95%;
+    }
+}
+.akbar-cal-header-tabs {
+    display: flex;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+.akbar-cal-tab {
+    flex: 1;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+}
+.akbar-cal-tab.active {
+    background: #ffffff;
+    border-bottom-color: #09204b;
+}
+.akbar-cal-tab-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+}
+.akbar-cal-tab.active .akbar-cal-tab-label {
+    color: #09204b;
+}
+.akbar-cal-tab-val {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-top: 3px;
+    display: block;
+}
+.akbar-cal-body {
+    display: flex;
+    gap: 20px;
+    padding: 18px 20px 22px;
+}
+@media (max-width: 640px) {
+    .akbar-cal-body {
+        flex-direction: column;
+    }
+}
+.akbar-cal-month-wrap {
+    flex: 1;
+}
+.akbar-cal-month-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    height: 32px;
+}
+.akbar-cal-month-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #09204b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex: 1;
+    text-align: center;
+}
+.akbar-cal-nav-btn {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 700;
+    color: #0f172a;
+    transition: all 0.15s;
+    font-size: 14px;
+}
+.akbar-cal-nav-btn:hover:not(:disabled) {
+    background: #09204b;
+    color: #ffffff;
+    border-color: #09204b;
+}
+.akbar-cal-nav-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+.akbar-cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+.akbar-cal-weekdays span.sun {
+    color: #ef4444;
+}
+.akbar-cal-days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 4px;
+    text-align: center;
+}
+.akbar-cal-day {
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.1s ease;
+    border-radius: 4px;
+}
+.akbar-cal-day:hover:not(.disabled):not(.selected-in):not(.selected-out) {
+    background: #e2e8f0;
+    color: #09204b;
+}
+.akbar-cal-day.sun:not(.disabled):not(.selected-in):not(.selected-out) {
+    color: #ef4444;
+}
+.akbar-cal-day.disabled {
+    color: #cbd5e1;
+    cursor: not-allowed;
+    background: transparent;
+}
+.akbar-cal-day.selected-in, .akbar-cal-day.selected-out {
+    background: #09204b !important;
+    color: #ffffff !important;
+    font-weight: 800;
+    border-radius: 4px;
+}
+.akbar-cal-day.in-range {
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 0;
+    font-weight: 700;
+}
 </style>
 
 <script>
@@ -545,18 +768,116 @@ const hotelCities = [
     { name: "Phuket", sub: "Thailand" }
 ];
 
+// Dual-Month Calendar States & Variables
+var monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+var shortMonNames = ["Jan'y", "Feb'y", "Mar'y", "Apr'y", "May'y", "Jun'y", "Jul'y", "Aug'y", "Sep'y", "Oct'y", "Nov'y", "Dec'y"];
+var dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+var rawCheckinVal = document.getElementById('hotelCheckinInput').value;
+var rawCheckoutVal = document.getElementById('hotelCheckoutInput').value;
+
+var selCheckin = rawCheckinVal ? new Date(rawCheckinVal + 'T00:00:00') : new Date();
+selCheckin.setHours(0,0,0,0);
+var selCheckout = rawCheckoutVal ? new Date(rawCheckoutVal + 'T00:00:00') : new Date(selCheckin.getTime() + 4 * 86400000);
+selCheckout.setHours(0,0,0,0);
+
+var calActiveTab = 'checkin';
+var calViewYear = selCheckin.getFullYear();
+var calViewMonth = selCheckin.getMonth();
+
 function closeAllHotelDropdowns() {
-    document.getElementById('hotelDestDropdown').classList.remove('open');
-    document.getElementById('hotelGuestsPopup').classList.remove('open');
+    var destDropdown = document.getElementById('hotelDestDropdown');
+    var guestsPopup = document.getElementById('hotelGuestsPopup');
+    var calDropdown = document.getElementById('hotelCalendarDropdown');
+    if (destDropdown) destDropdown.classList.remove('open');
+    if (guestsPopup) guestsPopup.classList.remove('open');
+    if (calDropdown) calDropdown.classList.remove('open', 'show');
 }
 
 document.addEventListener('click', function(e) {
     const colDest = document.getElementById('colDest');
     const colGuests = document.getElementById('colGuests');
-    if ((colDest && colDest.contains(e.target)) || (colGuests && colGuests.contains(e.target))) {
+    const colCheckin = document.getElementById('colCheckin');
+    const colCheckout = document.getElementById('colCheckout');
+    const calDropdown = document.getElementById('hotelCalendarDropdown');
+
+    if ((colDest && colDest.contains(e.target)) ||
+        (colGuests && colGuests.contains(e.target)) ||
+        (colCheckin && colCheckin.contains(e.target)) ||
+        (colCheckout && colCheckout.contains(e.target)) ||
+        (calDropdown && calDropdown.contains(e.target))) {
         return;
     }
     closeAllHotelDropdowns();
+});
+
+// Location Crosshairs Geolocation Button Handler (Reverse Geocoding via OSM Nominatim)
+document.addEventListener('DOMContentLoaded', function() {
+    var locBtn = document.getElementById('hotelLocationBtn');
+    if (locBtn) {
+        locBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var icon = locBtn.querySelector('i');
+            if (icon) {
+                icon.className = 'fa-solid fa-spinner fa-spin';
+                icon.style.color = '#0284c7';
+            }
+
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser.');
+                if (icon) { icon.className = 'fa-solid fa-crosshairs'; icon.style.color = '#64748b'; }
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                var lat = pos.coords.latitude;
+                var lng = pos.coords.longitude;
+
+                // Reverse geocoding via OpenStreetMap Nominatim
+                fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&zoom=10')
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        var city = '';
+                        var state = '';
+                        var country = '';
+                        if (data && data.address) {
+                            city = data.address.city || data.address.town || data.address.village || data.address.county || data.address.state_district || 'My Location';
+                            state = data.address.state || '';
+                            country = data.address.country || 'India';
+                        } else {
+                            city = 'Current Location';
+                        }
+                        var sub = (state ? state + ', ' : '') + country;
+                        selectHotelCity(city, sub);
+
+                        if (icon) {
+                            icon.className = 'fa-solid fa-crosshairs';
+                            icon.style.color = '#10b981';
+                            setTimeout(function() { icon.style.color = '#64748b'; }, 2500);
+                        }
+                    })
+                    .catch(function() {
+                        selectHotelCity('Current Location', 'GPS (' + lat.toFixed(2) + ', ' + lng.toFixed(2) + ')');
+                        if (icon) {
+                            icon.className = 'fa-solid fa-crosshairs';
+                            icon.style.color = '#10b981';
+                            setTimeout(function() { icon.style.color = '#64748b'; }, 2500);
+                        }
+                    });
+            }, function(err) {
+                if (icon) { icon.className = 'fa-solid fa-crosshairs'; icon.style.color = '#64748b'; }
+                if (err.code === 1) {
+                    alert('Location access was denied. Please allow location permissions in your browser.');
+                } else {
+                    alert('Unable to retrieve your location. Please select your destination city from the list.');
+                }
+            }, {
+                enableHighAccuracy: true,
+                timeout: 8000,
+                maximumAge: 60000
+            });
+        });
+    }
 });
 
 function openHotelDestDropdown(e) {
@@ -599,47 +920,188 @@ function selectHotelCity(name, sub) {
     closeAllHotelDropdowns();
 }
 
-function openHotelDatePicker(type) {
-    const input = document.getElementById(type === 'in' ? 'hotelCheckinInput' : 'hotelCheckoutInput');
-    input.showPicker ? input.showPicker() : input.focus();
+// Akbar Dual-Month Calendar Logic
+function openHotelCalendar(e, tab) {
+    e.stopPropagation();
+    closeAllHotelDropdowns();
+    switchHotelCalTab(tab);
+    var cal = document.getElementById('hotelCalendarDropdown');
+    if (cal) cal.classList.add('open', 'show');
 }
 
-function updateHotelCheckin(val) {
-    if (!val) return;
-    const d = new Date(val);
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const monthNames = ["Jan'y", "Feb'y", "Mar'y", "Apr'y", "May'y", "Jun'y", "Jul'y", "Aug'y", "Sep'y", "Oct'y", "Nov'y", "Dec'y"];
-    const yy = String(d.getFullYear()).slice(-2);
-    const monStr = monthNames[d.getMonth()].replace("'y", "'" + yy);
-
-    document.getElementById('hotelCheckinNum').innerText = String(d.getDate()).padStart(2, '0');
-    document.getElementById('hotelCheckinMon').innerText = monStr;
-    document.getElementById('hotelCheckinDay').innerText = dayNames[d.getDay()];
-
-    calcNights();
+function formatDateISO(d) {
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
 }
 
-function updateHotelCheckout(val) {
-    if (!val) return;
-    const d = new Date(val);
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const monthNames = ["Jan'y", "Feb'y", "Mar'y", "Apr'y", "May'y", "Jun'y", "Jul'y", "Aug'y", "Sep'y", "Oct'y", "Nov'y", "Dec'y"];
-    const yy = String(d.getFullYear()).slice(-2);
-    const monStr = monthNames[d.getMonth()].replace("'y", "'" + yy);
-
-    document.getElementById('hotelCheckoutNum').innerText = String(d.getDate()).padStart(2, '0');
-    document.getElementById('hotelCheckoutMon').innerText = monStr;
-    document.getElementById('hotelCheckoutDay').innerText = dayNames[d.getDay()];
-
-    calcNights();
+function formatTabDate(d) {
+    var monNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return monNames[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
 }
 
-function calcNights() {
-    const cin = new Date(document.getElementById('hotelCheckinInput').value);
-    const cout = new Date(document.getElementById('hotelCheckoutInput').value);
-    const diffTime = Math.abs(cout - cin);
-    const diffDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
-    document.getElementById('hotelNightsCount').innerText = diffDays;
+function updateHotelDateDisplays() {
+    var inISO = formatDateISO(selCheckin);
+    var outISO = formatDateISO(selCheckout);
+
+    document.getElementById('hotelCheckinInput').value = inISO;
+    document.getElementById('hotelCheckoutInput').value = outISO;
+
+    // Checkin card text
+    var yyIn = String(selCheckin.getFullYear()).slice(-2);
+    document.getElementById('hotelCheckinNum').innerText = String(selCheckin.getDate()).padStart(2, '0');
+    document.getElementById('hotelCheckinMon').innerText = shortMonNames[selCheckin.getMonth()].replace("'y", "'" + yyIn);
+    document.getElementById('hotelCheckinDay').innerText = dayNames[selCheckin.getDay()];
+
+    // Checkout card text
+    var yyOut = String(selCheckout.getFullYear()).slice(-2);
+    document.getElementById('hotelCheckoutNum').innerText = String(selCheckout.getDate()).padStart(2, '0');
+    document.getElementById('hotelCheckoutMon').innerText = shortMonNames[selCheckout.getMonth()].replace("'y", "'" + yyOut);
+    document.getElementById('hotelCheckoutDay').innerText = dayNames[selCheckout.getDay()];
+
+    // Tab values
+    document.getElementById('hotelCalTabCheckinVal').textContent = formatTabDate(selCheckin);
+    document.getElementById('hotelCalTabCheckoutVal').textContent = formatTabDate(selCheckout);
+
+    // Nights count
+    var diffMs = selCheckout.getTime() - selCheckin.getTime();
+    var nights = Math.max(1, Math.round(diffMs / 86400000));
+    document.getElementById('hotelNightsCount').innerText = nights;
+}
+
+function switchHotelCalTab(tab) {
+    calActiveTab = tab;
+    var tabIn = document.getElementById('hotelTabCheckin');
+    var tabOut = document.getElementById('hotelTabCheckout');
+    if (tab === 'checkin') {
+        if (tabIn) tabIn.classList.add('active');
+        if (tabOut) tabOut.classList.remove('active');
+        calViewYear = selCheckin.getFullYear();
+        calViewMonth = selCheckin.getMonth();
+    } else {
+        if (tabOut) tabOut.classList.add('active');
+        if (tabIn) tabIn.classList.remove('active');
+        calViewYear = selCheckout.getFullYear();
+        calViewMonth = selCheckout.getMonth();
+    }
+    renderHotelCalendarMonths();
+}
+
+function navigateHotelCal(dir) {
+    calViewMonth += dir;
+    if (calViewMonth < 0) {
+        calViewMonth = 11;
+        calViewYear--;
+    } else if (calViewMonth > 11) {
+        calViewMonth = 0;
+        calViewYear++;
+    }
+    renderHotelCalendarMonths();
+}
+
+function renderHotelMonthGrid(year, month, container) {
+    container.innerHTML = '';
+    var today = new Date();
+    today.setHours(0,0,0,0);
+
+    var firstDayIndex = new Date(year, month, 1).getDay();
+    var daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // 1. Empty padding days
+    for (var i = 0; i < firstDayIndex; i++) {
+        var emptyCell = document.createElement('div');
+        emptyCell.className = 'akbar-cal-day disabled';
+        container.appendChild(emptyCell);
+    }
+
+    // 2. Real days
+    for (var d = 1; d <= daysInMonth; d++) {
+        var dateObj = new Date(year, month, d);
+        dateObj.setHours(0,0,0,0);
+
+        var cell = document.createElement('div');
+        cell.className = 'akbar-cal-day';
+        cell.textContent = d;
+
+        if (dateObj.getDay() === 0) cell.classList.add('sun');
+
+        if (dateObj.getTime() < today.getTime()) {
+            cell.classList.add('disabled');
+        } else {
+            var dTime = dateObj.getTime();
+            var inTime = selCheckin.getTime();
+            var outTime = selCheckout.getTime();
+
+            if (dTime === inTime) {
+                cell.classList.add('selected-in');
+            } else if (dTime === outTime) {
+                cell.classList.add('selected-out');
+            } else if (dTime > inTime && dTime < outTime) {
+                cell.classList.add('in-range');
+            }
+
+            (function(selectedDate) {
+                cell.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    handleHotelDateSelection(selectedDate);
+                });
+            })(dateObj);
+        }
+
+        container.appendChild(cell);
+    }
+}
+
+function handleHotelDateSelection(chosenDate) {
+    if (calActiveTab === 'checkin') {
+        selCheckin = new Date(chosenDate);
+        if (selCheckout.getTime() <= selCheckin.getTime()) {
+            selCheckout = new Date(selCheckin.getTime() + 86400000);
+        }
+        updateHotelDateDisplays();
+        switchHotelCalTab('checkout');
+    } else {
+        if (chosenDate.getTime() <= selCheckin.getTime()) {
+            selCheckin = new Date(chosenDate);
+            selCheckout = new Date(selCheckin.getTime() + 86400000);
+            updateHotelDateDisplays();
+            switchHotelCalTab('checkout');
+        } else {
+            selCheckout = new Date(chosenDate);
+            updateHotelDateDisplays();
+            renderHotelCalendarMonths();
+            setTimeout(function() {
+                closeAllHotelDropdowns();
+            }, 250);
+        }
+    }
+}
+
+function renderHotelCalendarMonths() {
+    var m1Year = calViewYear;
+    var m1Month = calViewMonth;
+
+    var m2Year = m1Month === 11 ? m1Year + 1 : m1Year;
+    var m2Month = m1Month === 11 ? 0 : m1Month + 1;
+
+    var t1 = document.getElementById('hotelCalMonth1Title');
+    var t2 = document.getElementById('hotelCalMonth2Title');
+    if (t1) t1.textContent = monthNames[m1Month] + ' ' + m1Year;
+    if (t2) t2.textContent = monthNames[m2Month] + ' ' + m2Year;
+
+    var realToday = new Date();
+    var curYear = realToday.getFullYear();
+    var curMonth = realToday.getMonth();
+    var prevBtn = document.getElementById('hotelCalPrevBtn');
+    if (prevBtn) {
+        prevBtn.disabled = (m1Year < curYear || (m1Year === curYear && m1Month <= curMonth));
+    }
+
+    var grid1 = document.getElementById('hotelCalDays1');
+    var grid2 = document.getElementById('hotelCalDays2');
+    if (grid1) renderHotelMonthGrid(m1Year, m1Month, grid1);
+    if (grid2) renderHotelMonthGrid(m2Year, m2Month, grid2);
 }
 
 // Rooms & Guests Handlers
@@ -685,4 +1147,8 @@ function updateHotelGuestSummary() {
     document.getElementById('hotelHiddenAdults').value = hotelAdults;
     document.getElementById('hotelHiddenChildren').value = hotelChildren;
 }
+
+// Initial calendar setup
+updateHotelDateDisplays();
+renderHotelCalendarMonths();
 </script>
