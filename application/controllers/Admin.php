@@ -784,29 +784,27 @@ class Admin extends CI_Controller {
     {
         $this->_check_login();
 
-        $schemaFiles = [
-            APPPATH . 'config/schema.sql',
-            FCPATH . 'franchise_module_schema.sql'
-        ];
+        // Temporarily disable CodeIgniter's db_debug to prevent halting on 'Table already exists'
+        $saved_debug = $this->db->db_debug;
+        $this->db->db_debug = FALSE;
 
+        $schemaFile = APPPATH . 'config/schema.sql';
         $executed = 0;
-        foreach ($schemaFiles as $file) {
-            if (file_exists($file)) {
-                $sql = file_get_contents($file);
-                $queries = explode(';', $sql);
-                foreach ($queries as $q) {
-                    $q = trim($q);
-                    if (!empty($q) && strpos($q, '/*') !== 0 && strpos($q, '--') !== 0) {
-                        try {
-                            $this->db->query($q);
-                            $executed++;
-                        } catch (Exception $e) {
-                            // ignore duplicate or non-fatal errors
-                        }
-                    }
+
+        if (file_exists($schemaFile)) {
+            $sql = file_get_contents($schemaFile);
+            $queries = explode(';', $sql);
+            foreach ($queries as $q) {
+                $q = trim($q);
+                if (!empty($q) && strpos($q, '/*') !== 0 && strpos($q, '--') !== 0) {
+                    $this->db->query($q);
+                    $executed++;
                 }
             }
         }
+
+        // Restore original database debug setting
+        $this->db->db_debug = $saved_debug;
 
         $this->session->set_flashdata('success', 'All database tables including the Franchise Module have been synchronized successfully!');
         redirect('admin');

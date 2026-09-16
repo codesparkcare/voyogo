@@ -22,7 +22,7 @@
 DROP TABLE IF EXISTS `franchise_admins`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `franchise_admins` (
+CREATE TABLE IF NOT EXISTS `franchise_admins` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE `franchise_admins` (
 DROP TABLE IF EXISTS `franchise_stores`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `franchise_stores` (
+CREATE TABLE IF NOT EXISTS `franchise_stores` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `agent_code` varchar(50) NOT NULL,
   `username` varchar(50) NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE `franchise_stores` (
 DROP TABLE IF EXISTS `franchise_wallet_transactions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `franchise_wallet_transactions` (
+CREATE TABLE IF NOT EXISTS `franchise_wallet_transactions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL,
   `transaction_type` enum('credit','debit') NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE `franchise_wallet_transactions` (
 DROP TABLE IF EXISTS `franchise_flight_bookings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `franchise_flight_bookings` (
+CREATE TABLE IF NOT EXISTS `franchise_flight_bookings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL,
   `booking_ref` varchar(50) NOT NULL,
@@ -126,7 +126,7 @@ CREATE TABLE `franchise_flight_bookings` (
 DROP TABLE IF EXISTS `franchise_hotel_bookings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `franchise_hotel_bookings` (
+CREATE TABLE IF NOT EXISTS `franchise_hotel_bookings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL,
   `booking_ref` varchar(50) NOT NULL,
