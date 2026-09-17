@@ -88,3 +88,11 @@ $route['franchise/hotel_book']                    = 'Franchise/hotel_book';
 $route['franchise/hotel_voucher/(:any)']          = 'Franchise/hotel_voucher/$1';
 $route['franchise/bookings']                      = 'Franchise/bookings';
 $route['franchise/wallet_ledger']                 = 'Franchise/wallet_ledger';
+
+/* ==========================================================================
+   Customer Portal (User Profile & Phone OTP Auth)
+   ========================================================================== */
+$route['user/profile']                = 'User/profile';
+$route['user/update_profile']         = 'User/update_profile';
+$route['user/verify_firebase_login']  = 'User/verify_firebase_login';
+$route['user/logout']                 = 'User/logout';

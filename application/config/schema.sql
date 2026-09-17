@@ -313,4 +313,22 @@ INSERT INTO `franchise_admins` (`id`, `username`, `password`, `name`, `email`, `
 SELECT 1, 'franchiseadmin', '$2y$10$oe/Ylru3/s9Hvb8qGXDHQe8dMHlDAGrpEOKgK01BT8OWFAfBRjWV2', 'Franchise Master Admin', 'franchise@voyogo.com', '9876543210', 'active', NOW(), NOW()
 FROM DUAL WHERE NOT EXISTS (SELECT * FROM `franchise_admins` WHERE `username` = 'franchiseadmin');
 
+-- =====================================================
+-- Customer Users Schema (Firebase Phone OTP Authentication)
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `phone` VARCHAR(20) NOT NULL UNIQUE,
+  `first_name` VARCHAR(100) DEFAULT NULL,
+  `last_name` VARCHAR(100) DEFAULT NULL,
+  `email` VARCHAR(150) DEFAULT NULL,
+  `firebase_uid` VARCHAR(128) DEFAULT NULL,
+  `status` ENUM('active','inactive') DEFAULT 'active',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX `idx_users_phone` (`phone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 
