@@ -141,7 +141,7 @@
                                 <a href="<?php echo site_url('user/profile'); ?>" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #0f172a; text-decoration: none; font-size: 13.5px; font-weight: 600; transition: background 0.15s;">
                                     <i class="fa-solid fa-user-gear" style="color: #78B722; width: 16px;"></i> My Profile
                                 </a>
-                                <a href="<?php echo site_url('user/logout'); ?>" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #ef4444; text-decoration: none; font-size: 13.5px; font-weight: 600; border-top: 1px solid #f1f5f9; transition: background 0.15s;">
+                                <a href="<?php echo site_url('user/logout'); ?>" onclick="handleUserLogout(event);" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #ef4444; text-decoration: none; font-size: 13.5px; font-weight: 600; border-top: 1px solid #f1f5f9; transition: background 0.15s;">
                                     <i class="fa-solid fa-arrow-right-from-bracket" style="width: 16px;"></i> Logout
                                 </a>
                             </div>
@@ -536,42 +536,17 @@
         }, 150);
     };
 
-    // Auto-restore session from Firebase if user is already authenticated on this device
-    const isPhpLoggedIn = <?php echo (isset($this->session) && $this->session->userdata('user_logged_in')) ? 'true' : 'false'; ?>;
-    if (!isPhpLoggedIn && typeof firebase !== 'undefined' && firebase.auth) {
-        firebase.auth().onAuthStateChanged(function(fUser) {
-            if (fUser && fUser.phoneNumber) {
-                var endpoint = '<?php echo function_exists('site_url') ? site_url('user/verify_firebase_login') : '/index.php/user/verify_firebase_login'; ?>';
-                if (window.location.protocol === 'https:' && endpoint.indexOf('http:') === 0) {
-                    endpoint = endpoint.replace(/^http:/, 'https:');
-                }
-                fetch(endpoint, {
-                    method: 'POST',
-                    credentials: 'same-origin',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: 'phone=' + encodeURIComponent(fUser.phoneNumber) + '&firebase_uid=' + encodeURIComponent(fUser.uid)
-                })
-                .then(function(res) { return res.json(); })
-                .then(function(data) {
-                    if (data && data.status) {
-                        if (typeof window.onBookingReviewLoginSuccess === 'function') {
-                            const modal = document.getElementById('loginModal');
-                            if (modal) modal.classList.remove('open');
-                            window.onBookingReviewLoginSuccess(data.user);
-                        } else {
-                            window.location.reload();
-                        }
-                    }
-                })
-                .catch(function(e) {
-                    console.log('Silent auth sync notice:', e);
-                });
-            }
-        });
-    }
+    // Global User Logout handler: signs out from Firebase client SDK, then invokes backend logout
+    window.handleUserLogout = function(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            firebase.auth().signOut().finally(function() {
+                window.location.href = '<?php echo site_url('user/logout'); ?>';
+            });
+        } else {
+            window.location.href = '<?php echo site_url('user/logout'); ?>';
+        }
+    };
 
     // Modal Opening & Closing Events
     document.addEventListener('DOMContentLoaded', function() {

@@ -364,7 +364,7 @@
                             <i class="fa-solid fa-floppy-disk"></i>
                             <span>Save Profile Changes</span>
                         </button>
-                        <a href="<?php echo site_url('user/logout'); ?>" class="profile-btn-logout">
+                        <a href="<?php echo site_url('user/logout'); ?>" onclick="handleUserLogout(event);" class="profile-btn-logout">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i>
                             <span>Logout</span>
                         </a>
