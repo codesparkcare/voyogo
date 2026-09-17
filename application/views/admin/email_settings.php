@@ -41,6 +41,7 @@
                             <div class="col-md-4">
                                 <label class="form-label fw-bold small">SMTP Port</label>
                                 <input type="number" name="smtp_port" class="form-control" placeholder="587 or 465" value="<?php echo htmlspecialchars($settings['smtp_port']); ?>" required>
+                                <div class="form-text text-muted" style="font-size: 11px;">Use <strong>587</strong> (TLS) on cloud servers</div>
                             </div>
                         </div>
 
@@ -59,8 +60,8 @@
                             <div class="col-md-4">
                                 <label class="form-label fw-bold small">Encryption Protocol</label>
                                 <select name="smtp_crypto" class="form-select">
-                                    <option value="tls" <?php echo ($settings['smtp_crypto'] == 'tls') ? 'selected' : ''; ?>>TLS (Recommended)</option>
-                                    <option value="ssl" <?php echo ($settings['smtp_crypto'] == 'ssl') ? 'selected' : ''; ?>>SSL</option>
+                                    <option value="tls" <?php echo ($settings['smtp_crypto'] == 'tls') ? 'selected' : ''; ?>>TLS (Recommended for Port 587)</option>
+                                    <option value="ssl" <?php echo ($settings['smtp_crypto'] == 'ssl') ? 'selected' : ''; ?>>SSL (Port 465)</option>
                                     <option value="" <?php echo (empty($settings['smtp_crypto'])) ? 'selected' : ''; ?>>None</option>
                                 </select>
                             </div>
