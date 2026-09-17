@@ -809,4 +809,45 @@ class Admin extends CI_Controller {
         $this->session->set_flashdata('success', 'All database tables including the Franchise Module have been synchronized successfully!');
         redirect('admin');
     }
+
+    /**
+     * Manage Registered Customers
+     */
+    public function manage_customers()
+    {
+        $this->_check_login();
+
+        $search = trim($this->input->get('search') ?: '');
+        $data['customers'] = $this->Admin_model->get_customers(200, 0, $search);
+        $data['total_customers'] = $this->Admin_model->count_customers();
+        $data['search'] = $search;
+        $data['active_menu'] = 'customers';
+
+        $this->load->view('admin/layout/header', $data);
+        $this->load->view('admin/layout/sidebar', $data);
+        $this->load->view('admin/manage_customers', $data);
+        $this->load->view('admin/layout/footer', $data);
+    }
+
+    /**
+     * Toggle Customer Status
+     */
+    public function toggle_customer_status($id)
+    {
+        $this->_check_login();
+        $this->Admin_model->toggle_customer_status($id);
+        $this->session->set_flashdata('success', 'Customer status updated successfully!');
+        redirect('admin/customers');
+    }
+
+    /**
+     * Delete Customer
+     */
+    public function delete_customer($id)
+    {
+        $this->_check_login();
+        $this->Admin_model->delete_customer($id);
+        $this->session->set_flashdata('success', 'Customer removed successfully!');
+        redirect('admin/customers');
+    }
 }

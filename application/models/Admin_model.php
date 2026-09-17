@@ -199,6 +199,73 @@ class Admin_model extends CI_Model {
             return $this->db->insert('flight_api_settings', $data);
         }
     }
+
+    /**
+     * Get Customers with Optional Search
+     */
+    public function get_customers($limit = 100, $offset = 0, $search = null) {
+        if (!$this->db->table_exists('users')) {
+            return array();
+        }
+
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('phone', $search);
+            $this->db->or_like('first_name', $search);
+            $this->db->or_like('last_name', $search);
+            $this->db->or_like('email', $search);
+            $this->db->group_end();
+        }
+
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit($limit, $offset);
+        return $this->db->get('users')->result_array();
+    }
+
+    /**
+     * Count Customers
+     */
+    public function count_customers($search = null) {
+        if (!$this->db->table_exists('users')) {
+            return 0;
+        }
+
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('phone', $search);
+            $this->db->or_like('first_name', $search);
+            $this->db->or_like('last_name', $search);
+            $this->db->or_like('email', $search);
+            $this->db->group_end();
+        }
+
+        return $this->db->count_all_results('users');
+    }
+
+    /**
+     * Toggle Customer Status (Active / Inactive)
+     */
+    public function toggle_customer_status($id) {
+        if (!$this->db->table_exists('users')) {
+            return false;
+        }
+        $user = $this->db->get_where('users', array('id' => $id))->row_array();
+        if (!$user) return false;
+        $newStatus = ($user['status'] === 'active') ? 'inactive' : 'active';
+        $this->db->where('id', $id);
+        return $this->db->update('users', array('status' => $newStatus, 'updated_at' => date('Y-m-d H:i:s')));
+    }
+
+    /**
+     * Delete Customer
+     */
+    public function delete_customer($id) {
+        if (!$this->db->table_exists('users')) {
+            return false;
+        }
+        $this->db->where('id', $id);
+        return $this->db->delete('users');
+    }
 }
 
 

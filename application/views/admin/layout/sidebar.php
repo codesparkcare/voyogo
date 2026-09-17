@@ -50,6 +50,11 @@
 
         <li class="menu-title">Common & System</li>
         <li>
+            <a href="<?php echo site_url('admin/customers'); ?>" class="<?php echo ($active == 'customers') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-users" style="color: #06b6d4;"></i> Manage Customers
+            </a>
+        </li>
+        <li>
             <a href="<?php echo site_url('admin/enquiries'); ?>" class="<?php echo ($active == 'enquiries') ? 'active' : ''; ?>">
                 <i class="fa-solid fa-envelope-open-text"></i> Customer Enquiries
             </a>
