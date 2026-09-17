@@ -162,6 +162,35 @@
             </div>
         </div>
     </header>
+    
+    <?php if (isset($this->session) && ($this->session->flashdata('success') || $this->session->flashdata('error'))): ?>
+        <div id="globalFlashToast" style="position: fixed; top: 25px; right: 25px; z-index: 999999; max-width: 420px; box-shadow: 0 12px 35px rgba(0,0,0,0.2); border-radius: 12px; overflow: hidden; animation: fadeIn 0.3s ease;">
+            <?php if ($this->session->flashdata('success')): ?>
+                <div style="background: linear-gradient(135deg, #15803d 0%, #16a34a 100%); color: #ffffff; padding: 14px 20px; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 14px;">
+                    <i class="fa-solid fa-circle-check" style="font-size: 18px;"></i>
+                    <span><?php echo htmlspecialchars($this->session->flashdata('success')); ?></span>
+                    <button type="button" onclick="document.getElementById('globalFlashToast').remove();" style="background: none; border: none; color: #ffffff; margin-left: auto; cursor: pointer; font-size: 16px; opacity: 0.8;"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            <?php elseif ($this->session->flashdata('error')): ?>
+                <div style="background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%); color: #ffffff; padding: 14px 20px; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 14px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 18px;"></i>
+                    <span><?php echo htmlspecialchars($this->session->flashdata('error')); ?></span>
+                    <button type="button" onclick="document.getElementById('globalFlashToast').remove();" style="background: none; border: none; color: #ffffff; margin-left: auto; cursor: pointer; font-size: 16px; opacity: 0.8;"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            <?php endif; ?>
+        </div>
+        <script>
+            setTimeout(function() {
+                var t = document.getElementById('globalFlashToast');
+                if (t) {
+                    t.style.transition = 'all 0.5s ease';
+                    t.style.opacity = '0';
+                    t.style.transform = 'translateY(-10px)';
+                    setTimeout(function() { if (t) t.remove(); }, 500);
+                }
+            }, 4000);
+        </script>
+    <?php endif; ?>
 
     <!-- Firebase Phone OTP Authentication Modal -->
     <div class="modal-backdrop" id="loginModal">

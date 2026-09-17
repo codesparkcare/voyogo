@@ -146,8 +146,8 @@ class User extends CI_Controller {
             'user_email' => $email
         ]);
 
-        $this->session->set_flashdata('success', 'Profile details updated successfully!');
-        redirect('user/profile');
+        $this->session->set_flashdata('success', 'Profile updated successfully!');
+        redirect(base_url());
     }
 
     /**
