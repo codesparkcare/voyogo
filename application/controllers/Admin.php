@@ -972,6 +972,35 @@ class Admin extends CI_Controller {
         redirect('admin/customers');
     }
 
+    /**
+     * Helper to compute pagination parameters for service management pages
+     */
+    private function _get_pagination_params($total_records, $default_limit = 10)
+    {
+        $limit = (int) ($this->input->get('limit') ?: $default_limit);
+        if ($limit < 5) $limit = 5;
+        if ($limit > 100) $limit = 100;
+
+        $total_pages = max(1, (int) ceil($total_records / $limit));
+        $page = (int) ($this->input->get('page') ?: 1);
+        if ($page < 1) $page = 1;
+        if ($page > $total_pages && $total_records > 0) $page = $total_pages;
+
+        $offset = ($page - 1) * $limit;
+        $start_record = $total_records > 0 ? ($offset + 1) : 0;
+        $end_record = min($offset + $limit, $total_records);
+
+        return [
+            'limit'        => $limit,
+            'page'         => $page,
+            'offset'       => $offset,
+            'total_pages'  => $total_pages,
+            'total_records'=> $total_records,
+            'start_record' => $start_record,
+            'end_record'   => $end_record,
+        ];
+    }
+
     /* ==========================================================================
        1. MANAGE VISA ENQUIRIES
        ========================================================================== */
@@ -981,9 +1010,16 @@ class Admin extends CI_Controller {
         $search = trim($this->input->get('search') ?: '');
         $status = trim($this->input->get('status') ?: '');
 
-        $data['enquiries']       = $this->Admin_model->get_visa_enquiries(200, 0, $search, $status);
+        $total_filtered = $this->Admin_model->count_visa_enquiries($search, $status);
+        $paging = $this->_get_pagination_params($total_filtered, 10);
+
+        $data['enquiries']       = $this->Admin_model->get_visa_enquiries($paging['limit'], $paging['offset'], $search, $status);
         $data['total_count']     = $this->Admin_model->count_visa_enquiries();
         $data['new_count']       = $this->Admin_model->count_visa_enquiries('', 'New');
+        $data['in_prog_count']   = $this->Admin_model->count_visa_enquiries('', 'Contacted') + $this->Admin_model->count_visa_enquiries('', 'Documents Received');
+        $data['completed_count'] = $this->Admin_model->count_visa_enquiries('', 'Processed') + $this->Admin_model->count_visa_enquiries('', 'Closed');
+        
+        $data['paging']          = $paging;
         $data['search']          = $search;
         $data['status_filter']   = $status;
         $data['active_menu']     = 'visas';
@@ -1000,6 +1036,10 @@ class Admin extends CI_Controller {
         $new_status = $this->input->post('status') ?: $this->input->get('status');
         if ($new_status) {
             $this->Admin_model->update_visa_status($id, $new_status);
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(['success' => true, 'message' => 'Status updated to ' . $new_status]);
+                return;
+            }
             $this->session->set_flashdata('success', 'Visa enquiry status updated to ' . $new_status . '!');
         }
         redirect('admin/visas');
@@ -1022,9 +1062,16 @@ class Admin extends CI_Controller {
         $search = trim($this->input->get('search') ?: '');
         $status = trim($this->input->get('status') ?: '');
 
-        $data['enquiries']       = $this->Admin_model->get_cab_enquiries(200, 0, $search, $status);
+        $total_filtered = $this->Admin_model->count_cab_enquiries($search, $status);
+        $paging = $this->_get_pagination_params($total_filtered, 10);
+
+        $data['enquiries']       = $this->Admin_model->get_cab_enquiries($paging['limit'], $paging['offset'], $search, $status);
         $data['total_count']     = $this->Admin_model->count_cab_enquiries();
         $data['new_count']       = $this->Admin_model->count_cab_enquiries('', 'New');
+        $data['in_prog_count']   = $this->Admin_model->count_cab_enquiries('', 'Contacted') + $this->Admin_model->count_cab_enquiries('', 'Assigned');
+        $data['completed_count'] = $this->Admin_model->count_cab_enquiries('', 'Completed');
+
+        $data['paging']          = $paging;
         $data['search']          = $search;
         $data['status_filter']   = $status;
         $data['active_menu']     = 'cabs';
@@ -1041,6 +1088,10 @@ class Admin extends CI_Controller {
         $new_status = $this->input->post('status') ?: $this->input->get('status');
         if ($new_status) {
             $this->Admin_model->update_cab_status($id, $new_status);
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(['success' => true, 'message' => 'Status updated to ' . $new_status]);
+                return;
+            }
             $this->session->set_flashdata('success', 'Cab enquiry status updated to ' . $new_status . '!');
         }
         redirect('admin/cabs');
@@ -1063,9 +1114,16 @@ class Admin extends CI_Controller {
         $search = trim($this->input->get('search') ?: '');
         $status = trim($this->input->get('status') ?: '');
 
-        $data['enquiries']       = $this->Admin_model->get_holiday_enquiries(200, 0, $search, $status);
+        $total_filtered = $this->Admin_model->count_holiday_enquiries($search, $status);
+        $paging = $this->_get_pagination_params($total_filtered, 10);
+
+        $data['enquiries']       = $this->Admin_model->get_holiday_enquiries($paging['limit'], $paging['offset'], $search, $status);
         $data['total_count']     = $this->Admin_model->count_holiday_enquiries();
         $data['new_count']       = $this->Admin_model->count_holiday_enquiries('', 'New');
+        $data['in_prog_count']   = $this->Admin_model->count_holiday_enquiries('', 'Quote Sent') + $this->Admin_model->count_holiday_enquiries('', 'Follow-up');
+        $data['completed_count'] = $this->Admin_model->count_holiday_enquiries('', 'Booked');
+
+        $data['paging']          = $paging;
         $data['search']          = $search;
         $data['status_filter']   = $status;
         $data['active_menu']     = 'holidays';
@@ -1082,6 +1140,10 @@ class Admin extends CI_Controller {
         $new_status = $this->input->post('status') ?: $this->input->get('status');
         if ($new_status) {
             $this->Admin_model->update_holiday_status($id, $new_status);
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(['success' => true, 'message' => 'Status updated to ' . $new_status]);
+                return;
+            }
             $this->session->set_flashdata('success', 'Holiday enquiry status updated to ' . $new_status . '!');
         }
         redirect('admin/holidays');
@@ -1104,9 +1166,16 @@ class Admin extends CI_Controller {
         $search = trim($this->input->get('search') ?: '');
         $status = trim($this->input->get('status') ?: '');
 
-        $data['enquiries']       = $this->Admin_model->get_forex_enquiries(200, 0, $search, $status);
+        $total_filtered = $this->Admin_model->count_forex_enquiries($search, $status);
+        $paging = $this->_get_pagination_params($total_filtered, 10);
+
+        $data['enquiries']       = $this->Admin_model->get_forex_enquiries($paging['limit'], $paging['offset'], $search, $status);
         $data['total_count']     = $this->Admin_model->count_forex_enquiries();
         $data['new_count']       = $this->Admin_model->count_forex_enquiries('', 'New');
+        $data['in_prog_count']   = $this->Admin_model->count_forex_enquiries('', 'Rate Confirmed') + $this->Admin_model->count_forex_enquiries('', 'Payment Pending');
+        $data['completed_count'] = $this->Admin_model->count_forex_enquiries('', 'Delivered');
+
+        $data['paging']          = $paging;
         $data['search']          = $search;
         $data['status_filter']   = $status;
         $data['active_menu']     = 'forex';
@@ -1123,6 +1192,10 @@ class Admin extends CI_Controller {
         $new_status = $this->input->post('status') ?: $this->input->get('status');
         if ($new_status) {
             $this->Admin_model->update_forex_status($id, $new_status);
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(['success' => true, 'message' => 'Status updated to ' . $new_status]);
+                return;
+            }
             $this->session->set_flashdata('success', 'Forex enquiry status updated to ' . $new_status . '!');
         }
         redirect('admin/forex');
@@ -1145,9 +1218,16 @@ class Admin extends CI_Controller {
         $search = trim($this->input->get('search') ?: '');
         $status = trim($this->input->get('status') ?: '');
 
-        $data['enquiries']       = $this->Admin_model->get_cruise_enquiries(200, 0, $search, $status);
+        $total_filtered = $this->Admin_model->count_cruise_enquiries($search, $status);
+        $paging = $this->_get_pagination_params($total_filtered, 10);
+
+        $data['enquiries']       = $this->Admin_model->get_cruise_enquiries($paging['limit'], $paging['offset'], $search, $status);
         $data['total_count']     = $this->Admin_model->count_cruise_enquiries();
         $data['new_count']       = $this->Admin_model->count_cruise_enquiries('', 'New');
+        $data['in_prog_count']   = $this->Admin_model->count_cruise_enquiries('', 'Cabin Held');
+        $data['completed_count'] = $this->Admin_model->count_cruise_enquiries('', 'Booked') + $this->Admin_model->count_cruise_enquiries('', 'Closed');
+
+        $data['paging']          = $paging;
         $data['search']          = $search;
         $data['status_filter']   = $status;
         $data['active_menu']     = 'cruises';
@@ -1164,6 +1244,10 @@ class Admin extends CI_Controller {
         $new_status = $this->input->post('status') ?: $this->input->get('status');
         if ($new_status) {
             $this->Admin_model->update_cruise_status($id, $new_status);
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(['success' => true, 'message' => 'Status updated to ' . $new_status]);
+                return;
+            }
             $this->session->set_flashdata('success', 'Cruise enquiry status updated to ' . $new_status . '!');
         }
         redirect('admin/cruises');
