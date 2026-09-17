@@ -851,15 +851,29 @@ class Welcome extends CI_Controller {
      */
     public function save_enquiry()
     {
-        $trip_type = $this->input->post('trip_type');
-        $name      = $this->input->post('name') ?: $this->input->post('rt_name') ?: $this->input->post('at_name') ?: $this->input->post('lr_name');
-        $email     = $this->input->post('email');
-        $country_code = $this->input->post('country_code');
-        $phone     = $this->input->post('phone') ?: $this->input->post('rt_phone') ?: $this->input->post('at_phone') ?: $this->input->post('lr_phone');
-        if ($country_code && $phone && strpos(trim($phone), '+') !== 0) {
-            $phone = trim($country_code) . ' ' . trim($phone);
+        // Reject direct GET requests from web crawlers, bots, or accidental URL visits
+        if ($this->input->server('REQUEST_METHOD') !== 'POST') {
+            redirect(base_url());
+            return;
         }
-        $message   = $this->input->post('message') ?: 'Enquiry';
+
+        $trip_type = $this->input->post('trip_type');
+        $name      = trim((string)($this->input->post('name') ?: $this->input->post('rt_name') ?: $this->input->post('at_name') ?: $this->input->post('lr_name')));
+        $email     = trim((string)$this->input->post('email'));
+        $country_code = trim((string)$this->input->post('country_code'));
+        $phone     = trim((string)($this->input->post('phone') ?: $this->input->post('rt_phone') ?: $this->input->post('at_phone') ?: $this->input->post('lr_phone')));
+
+        // Reject if all contact identifiers (name, phone, email) are empty (crawler/spam prevention)
+        if (empty($name) && empty($phone) && empty($email)) {
+            $referer = $this->input->server('HTTP_REFERER');
+            redirect($referer ?: base_url());
+            return;
+        }
+
+        if ($country_code && $phone && strpos($phone, '+') !== 0) {
+            $phone = $country_code . ' ' . $phone;
+        }
+        $message   = trim((string)$this->input->post('message')) ?: 'General Enquiry';
 
         // Format detailed message for Round Trip / Cab enquiries
         if ($trip_type === 'Round Trip' || $this->input->post('rt_pickup_location')) {

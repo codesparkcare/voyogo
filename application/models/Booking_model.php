@@ -64,4 +64,22 @@ class Booking_model extends CI_Model {
         $this->db->order_by('created_at', 'DESC');
         return $this->db->get('enquiries', $limit)->result_array();
     }
+
+    public function delete_enquiry($id) {
+        $this->db->where('id', (int)$id);
+        return $this->db->delete('enquiries');
+    }
+
+    public function clear_empty_enquiries() {
+        // Delete records where phone and email are both empty
+        $this->db->group_start();
+        $this->db->where('phone IS NULL', null, false);
+        $this->db->or_where('phone', '');
+        $this->db->group_end();
+        $this->db->group_start();
+        $this->db->where('email IS NULL', null, false);
+        $this->db->or_where('email', '');
+        $this->db->group_end();
+        return $this->db->delete('enquiries');
+    }
 }

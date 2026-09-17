@@ -158,6 +158,30 @@ class Admin extends CI_Controller {
     }
 
     /**
+     * Delete Single Enquiry
+     */
+    public function delete_enquiry($id)
+    {
+        $this->_check_login();
+        $this->load->model('Booking_model');
+        $this->Booking_model->delete_enquiry($id);
+        $this->session->set_flashdata('success', 'Enquiry deleted successfully.');
+        redirect('admin/enquiries');
+    }
+
+    /**
+     * Clear All Empty / Bot Spam Enquiries
+     */
+    public function clear_empty_enquiries()
+    {
+        $this->_check_login();
+        $this->load->model('Booking_model');
+        $this->Booking_model->clear_empty_enquiries();
+        $this->session->set_flashdata('success', 'All blank/bot spam enquiries have been removed successfully.');
+        redirect('admin/enquiries');
+    }
+
+    /**
      * SMTP Email Settings Management
      */
     public function email_settings()
