@@ -82,7 +82,7 @@
           </div>
 
           <!-- Form Fields -->
-          <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" id="refCruiseForm">
+          <form action="<?php echo site_url('welcome/submit_cruise'); ?>" method="POST" id="refCruiseForm">
             <input type="hidden" name="message" value="Cruise Booking Enquiry">
             <input type="hidden" name="cabin_type" id="selectedCabinTypeInput" value="Interior Cabin">
 
@@ -762,7 +762,7 @@
         Cruise Enquiry Form
       </h3>
 
-      <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" id="modalCruiseForm">
+      <form action="<?php echo site_url('welcome/submit_cruise'); ?>" method="POST" id="modalCruiseForm">
         <input type="hidden" name="message" id="modalPackageName" value="Cruise Modal Enquiry">
 
         <!-- Full Name * -->

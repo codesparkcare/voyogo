@@ -906,4 +906,271 @@ class Welcome extends CI_Controller {
         $referer = $this->input->server('HTTP_REFERER');
         redirect($referer ?: 'welcome');
     }
+
+    /**
+     * Submit Visa Consultation Enquiry
+     */
+    public function submit_visa()
+    {
+        if ($this->input->server('REQUEST_METHOD') !== 'POST') {
+            redirect('visa');
+            return;
+        }
+
+        $name         = trim((string)$this->input->post('name'));
+        $country_code = trim((string)$this->input->post('country_code'));
+        $phone        = trim((string)$this->input->post('phone'));
+        $email        = trim((string)$this->input->post('email'));
+
+        if (empty($phone) && empty($email)) {
+            $this->session->set_flashdata('error_msg', 'Please provide a valid phone number or email address.');
+            redirect($this->input->server('HTTP_REFERER') ?: 'visa');
+            return;
+        }
+
+        if ($country_code && $phone && strpos($phone, '+') !== 0) {
+            $phone = $country_code . ' ' . $phone;
+        }
+
+        $destination  = trim((string)$this->input->post('destination')) ?: 'General Visa';
+        $purpose      = trim((string)($this->input->post('purpose_of_travel') ?: $this->input->post('modal_purpose_of_travel'))) ?: 'Tourist';
+        $travel_date  = trim((string)$this->input->post('travel_date'));
+        $passengers   = trim((string)$this->input->post('passengers')) ?: '1 Traveler';
+        $has_passport = trim((string)($this->input->post('has_passport') ?: $this->input->post('modal_has_passport'))) ?: 'Yes';
+        $passport_no  = trim((string)$this->input->post('passport_number'));
+        $source_form  = trim((string)$this->input->post('source_form')) ?: trim((string)$this->input->post('message')) ?: 'Visa Page';
+
+        $data = array(
+            'name'                => $name,
+            'phone'               => $phone,
+            'email'               => $email,
+            'destination_country' => $destination,
+            'purpose_of_travel'   => $purpose,
+            'travel_date'         => $travel_date,
+            'passengers'          => $passengers,
+            'has_passport'        => $has_passport,
+            'passport_number'     => $passport_no,
+            'source_form'         => $source_form,
+            'status'              => 'New',
+            'created_at'          => date('Y-m-d H:i:s')
+        );
+
+        $this->db->insert('visa_enquiries', $data);
+        $this->session->set_flashdata('success_msg', 'Your Visa Application enquiry has been received! Our visa specialist will contact you shortly.');
+        redirect($this->input->server('HTTP_REFERER') ?: 'visa');
+    }
+
+    /**
+     * Submit Cab Booking Enquiry
+     */
+    public function submit_cab()
+    {
+        if ($this->input->server('REQUEST_METHOD') !== 'POST') {
+            redirect('cabs');
+            return;
+        }
+
+        $trip_type    = trim((string)$this->input->post('trip_type')) ?: 'One Way';
+        $name         = trim((string)($this->input->post('name') ?: $this->input->post('rt_name') ?: $this->input->post('at_name') ?: $this->input->post('lr_name')));
+        $country_code = trim((string)$this->input->post('country_code'));
+        $phone        = trim((string)($this->input->post('phone') ?: $this->input->post('rt_phone') ?: $this->input->post('at_phone') ?: $this->input->post('lr_phone')));
+        $email        = trim((string)$this->input->post('email'));
+
+        if (empty($phone) && empty($email)) {
+            $this->session->set_flashdata('error_msg', 'Please provide a valid phone number or email address.');
+            redirect($this->input->server('HTTP_REFERER') ?: 'cabs');
+            return;
+        }
+
+        if ($country_code && $phone && strpos($phone, '+') !== 0) {
+            $phone = $country_code . ' ' . $phone;
+        }
+
+        $pickup_location = trim((string)($this->input->post('pickup_location') ?: $this->input->post('rt_pickup_location') ?: $this->input->post('at_pickup_location') ?: $this->input->post('lr_pickup_location')));
+        $drop_location   = trim((string)($this->input->post('drop_location') ?: $this->input->post('rt_drop_location') ?: $this->input->post('at_drop_location')));
+        $travel_date     = trim((string)($this->input->post('travel_date') ?: $this->input->post('rt_departure_date') ?: $this->input->post('at_travel_date') ?: $this->input->post('lr_travel_date')));
+        $pickup_time     = trim((string)($this->input->post('pickup_time') ?: $this->input->post('rt_pickup_time') ?: $this->input->post('at_pickup_time') ?: $this->input->post('lr_pickup_time')));
+        $return_date     = trim((string)$this->input->post('rt_return_date'));
+        $return_time     = trim((string)$this->input->post('rt_return_time'));
+        $passengers      = trim((string)($this->input->post('passengers') ?: $this->input->post('rt_passengers'))) ?: '1';
+        $vehicle_type    = trim((string)($this->input->post('cab_type') ?: $this->input->post('rt_cab_type'))) ?: 'Sedan';
+        $special_req     = trim((string)($this->input->post('special_requirements') ?: $this->input->post('rt_special_requirements')));
+
+        $data = array(
+            'trip_type'            => $trip_type,
+            'name'                 => $name,
+            'phone'                => $phone,
+            'email'                => $email,
+            'pickup_location'      => $pickup_location ?: 'To be specified',
+            'drop_location'        => $drop_location,
+            'travel_date'          => $travel_date,
+            'pickup_time'          => $pickup_time,
+            'return_date'          => $return_date,
+            'return_time'          => $return_time,
+            'passengers'           => $passengers,
+            'vehicle_type'         => $vehicle_type,
+            'special_requirements' => $special_req,
+            'status'               => 'New',
+            'created_at'           => date('Y-m-d H:i:s')
+        );
+
+        $this->db->insert('cab_enquiries', $data);
+        $this->session->set_flashdata('success_msg', 'Your Cab Booking enquiry has been received! Our transport team will confirm vehicle availability shortly.');
+        redirect($this->input->server('HTTP_REFERER') ?: 'cabs');
+    }
+
+    /**
+     * Submit Holiday Package Enquiry
+     */
+    public function submit_holiday()
+    {
+        if ($this->input->server('REQUEST_METHOD') !== 'POST') {
+            redirect('holidays');
+            return;
+        }
+
+        $name         = trim((string)$this->input->post('name'));
+        $country_code = trim((string)$this->input->post('country_code'));
+        $phone        = trim((string)$this->input->post('phone'));
+        $email        = trim((string)$this->input->post('email'));
+
+        if (empty($phone) && empty($email)) {
+            $this->session->set_flashdata('error_msg', 'Please provide a valid phone number or email address.');
+            redirect($this->input->server('HTTP_REFERER') ?: 'holidays');
+            return;
+        }
+
+        if ($country_code && $phone && strpos($phone, '+') !== 0) {
+            $phone = $country_code . ' ' . $phone;
+        }
+
+        $destination  = trim((string)$this->input->post('destination')) ?: 'Custom Holiday';
+        $travel_date  = trim((string)$this->input->post('travel_date'));
+        $people_count = trim((string)$this->input->post('passengers')) ?: '2 People (Couple)';
+        $package_name = trim((string)$this->input->post('package_name')) ?: trim((string)$this->input->post('message'));
+        $budget_range = trim((string)$this->input->post('budget_range'));
+        $special_req  = trim((string)$this->input->post('special_requests'));
+
+        $data = array(
+            'name'             => $name,
+            'phone'            => $phone,
+            'email'            => $email,
+            'destination'      => $destination,
+            'travel_date'      => $travel_date,
+            'people_count'     => $people_count,
+            'package_name'     => $package_name,
+            'budget_range'     => $budget_range,
+            'special_requests' => $special_req,
+            'status'           => 'New',
+            'created_at'       => date('Y-m-d H:i:s')
+        );
+
+        $this->db->insert('holiday_enquiries', $data);
+        $this->session->set_flashdata('success_msg', 'Your Holiday Package enquiry has been received! Our tour expert will provide a custom itinerary shortly.');
+        redirect($this->input->server('HTTP_REFERER') ?: 'holidays');
+    }
+
+    /**
+     * Submit Forex Order / Currency Enquiry
+     */
+    public function submit_forex()
+    {
+        if ($this->input->server('REQUEST_METHOD') !== 'POST') {
+            redirect('forex');
+            return;
+        }
+
+        $order_type   = trim((string)$this->input->post('forex_type')) ?: 'Buy Forex';
+        $name         = trim((string)$this->input->post('name'));
+        $country_code = trim((string)$this->input->post('country_code'));
+        $phone        = trim((string)$this->input->post('phone'));
+        $email        = trim((string)$this->input->post('email'));
+
+        if (empty($phone) && empty($email)) {
+            $this->session->set_flashdata('error_msg', 'Please provide a valid phone number or email address.');
+            redirect($this->input->server('HTTP_REFERER') ?: 'forex');
+            return;
+        }
+
+        if ($country_code && $phone && strpos($phone, '+') !== 0) {
+            $phone = $country_code . ' ' . $phone;
+        }
+
+        $city         = trim((string)$this->input->post('location'));
+        $purpose      = trim((string)$this->input->post('purpose_of_visit')) ?: 'Tourism / Holiday';
+        $currency     = trim((string)$this->input->post('currency')) ?: 'USD';
+        $product      = trim((string)$this->input->post('product')) ?: 'Foreign Currency Notes';
+        $amount_inr   = (float)$this->input->post('quantity');
+
+        $data = array(
+            'order_type'       => $order_type,
+            'name'             => $name,
+            'phone'            => $phone,
+            'email'            => $email,
+            'location_city'    => $city,
+            'purpose_of_visit' => $purpose,
+            'currency'         => $currency,
+            'product'          => $product,
+            'amount_inr'       => $amount_inr > 0 ? $amount_inr : NULL,
+            'status'           => 'New',
+            'created_at'       => date('Y-m-d H:i:s')
+        );
+
+        $this->db->insert('forex_enquiries', $data);
+        $this->session->set_flashdata('success_msg', 'Your Forex Order enquiry has been received! Our forex desk will call you with live locked rates.');
+        redirect($this->input->server('HTTP_REFERER') ?: 'forex');
+    }
+
+    /**
+     * Submit Cruise Booking Enquiry
+     */
+    public function submit_cruise()
+    {
+        if ($this->input->server('REQUEST_METHOD') !== 'POST') {
+            redirect('cruises');
+            return;
+        }
+
+        $name         = trim((string)$this->input->post('name'));
+        $country_code = trim((string)$this->input->post('country_code'));
+        $phone        = trim((string)$this->input->post('phone'));
+        $email        = trim((string)$this->input->post('email'));
+
+        if (empty($phone) && empty($email)) {
+            $this->session->set_flashdata('error_msg', 'Please provide a valid phone number or email address.');
+            redirect($this->input->server('HTTP_REFERER') ?: 'cruises');
+            return;
+        }
+
+        if ($country_code && $phone && strpos($phone, '+') !== 0) {
+            $phone = $country_code . ' ' . $phone;
+        }
+
+        $destination  = trim((string)$this->input->post('destination')) ?: 'Luxury Cruise';
+        $travel_date  = trim((string)$this->input->post('travel_date'));
+        $travelers    = trim((string)($this->input->post('travelers') ?: $this->input->post('passengers'))) ?: '2 Travelers';
+        $budget       = trim((string)($this->input->post('budget') ?: $this->input->post('budget_per_person')));
+        $cabin_type   = trim((string)$this->input->post('cabin_type')) ?: 'Interior Cabin';
+        $cruise_line  = trim((string)$this->input->post('cruise_line'));
+        $special_notes= trim((string)($this->input->post('special_notes') ?: $this->input->post('message')));
+
+        $data = array(
+            'name'              => $name,
+            'phone'             => $phone,
+            'email'             => $email,
+            'destination'       => $destination,
+            'travel_date'       => $travel_date,
+            'travelers'         => $travelers,
+            'budget_per_person' => $budget,
+            'cabin_type'        => $cabin_type,
+            'cruise_line'       => $cruise_line,
+            'special_notes'     => $special_notes,
+            'status'            => 'New',
+            'created_at'        => date('Y-m-d H:i:s')
+        );
+
+        $this->db->insert('cruise_enquiries', $data);
+        $this->session->set_flashdata('success_msg', 'Your Cruise Vacation enquiry has been received! Our cruise specialist will send available stateroom options shortly.');
+        redirect($this->input->server('HTTP_REFERER') ?: 'cruises');
+    }
 }

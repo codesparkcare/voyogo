@@ -53,6 +53,35 @@ $route['admin/setup_db'] = 'admin/setup_db';
 $route['admin/customers'] = 'admin/manage_customers';
 $route['admin/customers/toggle/(:num)'] = 'admin/toggle_customer_status/$1';
 $route['admin/customers/delete/(:num)'] = 'admin/delete_customer/$1';
+
+// Service Leads & Enquiries Routes
+$route['admin/visas'] = 'admin/manage_visas';
+$route['admin/visas/status/(:num)'] = 'admin/update_visa_status/$1';
+$route['admin/visas/delete/(:num)'] = 'admin/delete_visa/$1';
+
+$route['admin/cabs'] = 'admin/manage_cabs';
+$route['admin/cabs/status/(:num)'] = 'admin/update_cab_status/$1';
+$route['admin/cabs/delete/(:num)'] = 'admin/delete_cab/$1';
+
+$route['admin/holidays'] = 'admin/manage_holidays';
+$route['admin/holidays/status/(:num)'] = 'admin/update_holiday_status/$1';
+$route['admin/holidays/delete/(:num)'] = 'admin/delete_holiday/$1';
+
+$route['admin/forex'] = 'admin/manage_forex';
+$route['admin/forex/status/(:num)'] = 'admin/update_forex_status/$1';
+$route['admin/forex/delete/(:num)'] = 'admin/delete_forex/$1';
+
+$route['admin/cruises'] = 'admin/manage_cruises';
+$route['admin/cruises/status/(:num)'] = 'admin/update_cruise_status/$1';
+$route['admin/cruises/delete/(:num)'] = 'admin/delete_cruise/$1';
+
+// Frontend Service Enquiry Form Endpoints
+$route['welcome/submit_visa'] = 'welcome/submit_visa';
+$route['welcome/submit_cab'] = 'welcome/submit_cab';
+$route['welcome/submit_holiday'] = 'welcome/submit_holiday';
+$route['welcome/submit_forex'] = 'welcome/submit_forex';
+$route['welcome/submit_cruise'] = 'welcome/submit_cruise';
+
 $route['flight_cert'] = 'flight_cert/index';
 $route['cert'] = 'flight_cert/index';
 $route['admin/flight_cert'] = 'flight_cert/index';

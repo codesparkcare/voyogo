@@ -95,7 +95,7 @@
         </div>
 
         <!-- Form Fields -->
-        <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" id="refCabForm">
+        <form action="<?php echo site_url('welcome/submit_cab'); ?>" method="POST" id="refCabForm">
           <input type="hidden" name="message" value="Cab Booking Enquiry">
           <input type="hidden" name="trip_type" id="cabs_trip_type_input" value="One Way">
 
@@ -881,7 +881,7 @@
       Cab Enquiry Form
     </h3>
 
-    <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" id="modalCabForm">
+    <form action="<?php echo site_url('welcome/submit_cab'); ?>" method="POST" id="modalCabForm">
       <input type="hidden" name="message" id="modalPackageName" value="Cab Modal Enquiry">
       <input type="hidden" name="trip_type" id="modal_trip_type_input" value="One Way">
 

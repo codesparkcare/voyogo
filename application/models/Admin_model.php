@@ -266,6 +266,224 @@ class Admin_model extends CI_Model {
         $this->db->where('id', $id);
         return $this->db->delete('users');
     }
+
+    /* ==========================================================================
+       1. VISA ENQUIRIES
+       ========================================================================== */
+    public function get_visa_enquiries($limit = 100, $offset = 0, $search = '', $status = '') {
+        if (!$this->db->table_exists('visa_enquiries')) return array();
+        if (!empty($status)) $this->db->where('status', $status);
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('name', $search);
+            $this->db->or_like('phone', $search);
+            $this->db->or_like('email', $search);
+            $this->db->or_like('destination_country', $search);
+            $this->db->group_end();
+        }
+        $this->db->order_by('created_at', 'DESC');
+        return $this->db->get('visa_enquiries', $limit, $offset)->result_array();
+    }
+
+    public function count_visa_enquiries($search = '', $status = '') {
+        if (!$this->db->table_exists('visa_enquiries')) return 0;
+        if (!empty($status)) $this->db->where('status', $status);
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('name', $search);
+            $this->db->or_like('phone', $search);
+            $this->db->or_like('email', $search);
+            $this->db->or_like('destination_country', $search);
+            $this->db->group_end();
+        }
+        return $this->db->count_all_results('visa_enquiries');
+    }
+
+    public function update_visa_status($id, $status) {
+        $this->db->where('id', (int)$id);
+        return $this->db->update('visa_enquiries', array('status' => $status));
+    }
+
+    public function delete_visa_enquiry($id) {
+        $this->db->where('id', (int)$id);
+        return $this->db->delete('visa_enquiries');
+    }
+
+    /* ==========================================================================
+       2. CAB ENQUIRIES
+       ========================================================================== */
+    public function get_cab_enquiries($limit = 100, $offset = 0, $search = '', $status = '') {
+        if (!$this->db->table_exists('cab_enquiries')) return array();
+        if (!empty($status)) $this->db->where('status', $status);
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('name', $search);
+            $this->db->or_like('phone', $search);
+            $this->db->or_like('email', $search);
+            $this->db->or_like('pickup_location', $search);
+            $this->db->or_like('drop_location', $search);
+            $this->db->group_end();
+        }
+        $this->db->order_by('created_at', 'DESC');
+        return $this->db->get('cab_enquiries', $limit, $offset)->result_array();
+    }
+
+    public function count_cab_enquiries($search = '', $status = '') {
+        if (!$this->db->table_exists('cab_enquiries')) return 0;
+        if (!empty($status)) $this->db->where('status', $status);
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('name', $search);
+            $this->db->or_like('phone', $search);
+            $this->db->or_like('email', $search);
+            $this->db->or_like('pickup_location', $search);
+            $this->db->or_like('drop_location', $search);
+            $this->db->group_end();
+        }
+        return $this->db->count_all_results('cab_enquiries');
+    }
+
+    public function update_cab_status($id, $status) {
+        $this->db->where('id', (int)$id);
+        return $this->db->update('cab_enquiries', array('status' => $status));
+    }
+
+    public function delete_cab_enquiry($id) {
+        $this->db->where('id', (int)$id);
+        return $this->db->delete('cab_enquiries');
+    }
+
+    /* ==========================================================================
+       3. HOLIDAY ENQUIRIES
+       ========================================================================== */
+    public function get_holiday_enquiries($limit = 100, $offset = 0, $search = '', $status = '') {
+        if (!$this->db->table_exists('holiday_enquiries')) return array();
+        if (!empty($status)) $this->db->where('status', $status);
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('name', $search);
+            $this->db->or_like('phone', $search);
+            $this->db->or_like('email', $search);
+            $this->db->or_like('destination', $search);
+            $this->db->or_like('package_name', $search);
+            $this->db->group_end();
+        }
+        $this->db->order_by('created_at', 'DESC');
+        return $this->db->get('holiday_enquiries', $limit, $offset)->result_array();
+    }
+
+    public function count_holiday_enquiries($search = '', $status = '') {
+        if (!$this->db->table_exists('holiday_enquiries')) return 0;
+        if (!empty($status)) $this->db->where('status', $status);
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('name', $search);
+            $this->db->or_like('phone', $search);
+            $this->db->or_like('email', $search);
+            $this->db->or_like('destination', $search);
+            $this->db->or_like('package_name', $search);
+            $this->db->group_end();
+        }
+        return $this->db->count_all_results('holiday_enquiries');
+    }
+
+    public function update_holiday_status($id, $status) {
+        $this->db->where('id', (int)$id);
+        return $this->db->update('holiday_enquiries', array('status' => $status));
+    }
+
+    public function delete_holiday_enquiry($id) {
+        $this->db->where('id', (int)$id);
+        return $this->db->delete('holiday_enquiries');
+    }
+
+    /* ==========================================================================
+       4. FOREX ENQUIRIES
+       ========================================================================== */
+    public function get_forex_enquiries($limit = 100, $offset = 0, $search = '', $status = '') {
+        if (!$this->db->table_exists('forex_enquiries')) return array();
+        if (!empty($status)) $this->db->where('status', $status);
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('name', $search);
+            $this->db->or_like('phone', $search);
+            $this->db->or_like('email', $search);
+            $this->db->or_like('currency', $search);
+            $this->db->or_like('location_city', $search);
+            $this->db->group_end();
+        }
+        $this->db->order_by('created_at', 'DESC');
+        return $this->db->get('forex_enquiries', $limit, $offset)->result_array();
+    }
+
+    public function count_forex_enquiries($search = '', $status = '') {
+        if (!$this->db->table_exists('forex_enquiries')) return 0;
+        if (!empty($status)) $this->db->where('status', $status);
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('name', $search);
+            $this->db->or_like('phone', $search);
+            $this->db->or_like('email', $search);
+            $this->db->or_like('currency', $search);
+            $this->db->or_like('location_city', $search);
+            $this->db->group_end();
+        }
+        return $this->db->count_all_results('forex_enquiries');
+    }
+
+    public function update_forex_status($id, $status) {
+        $this->db->where('id', (int)$id);
+        return $this->db->update('forex_enquiries', array('status' => $status));
+    }
+
+    public function delete_forex_enquiry($id) {
+        $this->db->where('id', (int)$id);
+        return $this->db->delete('forex_enquiries');
+    }
+
+    /* ==========================================================================
+       5. CRUISE ENQUIRIES
+       ========================================================================== */
+    public function get_cruise_enquiries($limit = 100, $offset = 0, $search = '', $status = '') {
+        if (!$this->db->table_exists('cruise_enquiries')) return array();
+        if (!empty($status)) $this->db->where('status', $status);
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('name', $search);
+            $this->db->or_like('phone', $search);
+            $this->db->or_like('email', $search);
+            $this->db->or_like('destination', $search);
+            $this->db->or_like('cruise_line', $search);
+            $this->db->group_end();
+        }
+        $this->db->order_by('created_at', 'DESC');
+        return $this->db->get('cruise_enquiries', $limit, $offset)->result_array();
+    }
+
+    public function count_cruise_enquiries($search = '', $status = '') {
+        if (!$this->db->table_exists('cruise_enquiries')) return 0;
+        if (!empty($status)) $this->db->where('status', $status);
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('name', $search);
+            $this->db->or_like('phone', $search);
+            $this->db->or_like('email', $search);
+            $this->db->or_like('destination', $search);
+            $this->db->or_like('cruise_line', $search);
+            $this->db->group_end();
+        }
+        return $this->db->count_all_results('cruise_enquiries');
+    }
+
+    public function update_cruise_status($id, $status) {
+        $this->db->where('id', (int)$id);
+        return $this->db->update('cruise_enquiries', array('status' => $status));
+    }
+
+    public function delete_cruise_enquiry($id) {
+        $this->db->where('id', (int)$id);
+        return $this->db->delete('cruise_enquiries');
+    }
 }
 
 

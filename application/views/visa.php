@@ -75,8 +75,8 @@
             </div>
 
             <!-- Form -->
-            <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" id="visaHorizontalEnquiryForm">
-              <input type="hidden" name="message" value="Visa Application Enquiry">
+            <form action="<?php echo site_url('welcome/submit_visa'); ?>" method="POST" id="visaHorizontalEnquiryForm">
+              <input type="hidden" name="source_form" value="Visa Horizontal Form">
 
               <div class="visa-grid-2col">
                 <!-- Full Name -->
@@ -542,8 +542,8 @@
       <span class="modal-close" onclick="closeEnquiryModal()">&times;</span>
       <h3 class="voyogo-form-title">Visa Enquiry Form</h3>
 
-      <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" class="voyogo-pill-form visa-enquiry-full-form">
-        <input type="hidden" name="message" id="modalPackageName" value="Visa Enquiry Form">
+      <form action="<?php echo site_url('welcome/submit_visa'); ?>" method="POST" class="voyogo-pill-form visa-enquiry-full-form">
+        <input type="hidden" name="source_form" id="modalPackageName" value="Visa Enquiry Form">
         
         <!-- 1. Full Name * -->
         <div class="pill-form-group">

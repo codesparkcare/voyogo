@@ -107,7 +107,7 @@
                 </div>
               </div>
 
-              <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" id="refForexForm">
+              <form action="<?php echo site_url('welcome/submit_forex'); ?>" method="POST" id="refForexForm">
                 <input type="hidden" name="message" value="Forex Currency Enquiry">
                 <input type="hidden" name="forex_type" id="refForexTypeInput" value="Buy Forex">
 
@@ -647,7 +647,7 @@
       <span class="modal-close" onclick="closeEnquiryModal()">&times;</span>
       <h3 class="voyogo-form-title">Forex Currency Exchange Request</h3>
 
-      <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" class="voyogo-pill-form">
+      <form action="<?php echo site_url('welcome/submit_forex'); ?>" method="POST" class="voyogo-pill-form">
         <input type="hidden" name="message" id="modalPackageName" value="Forex Enquiry">
 
         <div class="pill-form-group">

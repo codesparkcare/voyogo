@@ -330,5 +330,101 @@ CREATE TABLE IF NOT EXISTS `users` (
   INDEX `idx_users_phone` (`phone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- =====================================================
+-- Dedicated Leads & Service Enquiry Tables
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS `visa_enquiries` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(150) NOT NULL,
+  `phone` VARCHAR(50) NOT NULL,
+  `email` VARCHAR(150) DEFAULT NULL,
+  `destination_country` VARCHAR(150) NOT NULL,
+  `purpose_of_travel` VARCHAR(100) DEFAULT 'Tourist',
+  `travel_date` VARCHAR(50) DEFAULT NULL,
+  `passengers` VARCHAR(50) DEFAULT '1 Traveler',
+  `has_passport` VARCHAR(10) DEFAULT 'Yes',
+  `passport_number` VARCHAR(50) DEFAULT NULL,
+  `source_form` VARCHAR(100) DEFAULT 'Website Form',
+  `status` ENUM('New', 'Contacted', 'Documents Received', 'Processed', 'Closed') DEFAULT 'New',
+  `notes` TEXT DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_visa_phone` (`phone`),
+  INDEX `idx_visa_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `cab_enquiries` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `trip_type` VARCHAR(50) DEFAULT 'One Way',
+  `name` VARCHAR(150) NOT NULL,
+  `phone` VARCHAR(50) NOT NULL,
+  `email` VARCHAR(150) DEFAULT NULL,
+  `pickup_location` VARCHAR(255) NOT NULL,
+  `drop_location` VARCHAR(255) DEFAULT NULL,
+  `travel_date` VARCHAR(50) DEFAULT NULL,
+  `pickup_time` VARCHAR(50) DEFAULT NULL,
+  `return_date` VARCHAR(50) DEFAULT NULL,
+  `return_time` VARCHAR(50) DEFAULT NULL,
+  `passengers` VARCHAR(50) DEFAULT '1',
+  `vehicle_type` VARCHAR(100) DEFAULT 'Sedan',
+  `special_requirements` TEXT DEFAULT NULL,
+  `status` ENUM('New', 'Contacted', 'Assigned', 'Completed', 'Cancelled') DEFAULT 'New',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_cab_phone` (`phone`),
+  INDEX `idx_cab_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `holiday_enquiries` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(150) NOT NULL,
+  `phone` VARCHAR(50) NOT NULL,
+  `email` VARCHAR(150) DEFAULT NULL,
+  `destination` VARCHAR(150) NOT NULL,
+  `travel_date` VARCHAR(50) DEFAULT NULL,
+  `people_count` VARCHAR(50) DEFAULT '2 People (Couple)',
+  `package_name` VARCHAR(255) DEFAULT NULL,
+  `budget_range` VARCHAR(100) DEFAULT NULL,
+  `special_requests` TEXT DEFAULT NULL,
+  `status` ENUM('New', 'Quote Sent', 'Follow-up', 'Booked', 'Lost') DEFAULT 'New',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_holiday_phone` (`phone`),
+  INDEX `idx_holiday_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `forex_enquiries` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `order_type` VARCHAR(50) DEFAULT 'Buy Forex',
+  `name` VARCHAR(150) NOT NULL,
+  `phone` VARCHAR(50) NOT NULL,
+  `email` VARCHAR(150) DEFAULT NULL,
+  `location_city` VARCHAR(100) DEFAULT NULL,
+  `purpose_of_visit` VARCHAR(100) DEFAULT 'Tourism / Holiday',
+  `currency` VARCHAR(20) DEFAULT 'USD',
+  `product` VARCHAR(100) DEFAULT 'Foreign Currency Notes',
+  `amount_inr` DECIMAL(12,2) DEFAULT NULL,
+  `status` ENUM('New', 'Rate Confirmed', 'Payment Pending', 'Delivered', 'Cancelled') DEFAULT 'New',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_forex_phone` (`phone`),
+  INDEX `idx_forex_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `cruise_enquiries` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(150) NOT NULL,
+  `phone` VARCHAR(50) NOT NULL,
+  `email` VARCHAR(150) DEFAULT NULL,
+  `destination` VARCHAR(150) NOT NULL,
+  `travel_date` VARCHAR(50) DEFAULT NULL,
+  `travelers` VARCHAR(50) DEFAULT '2 Travelers',
+  `budget_per_person` VARCHAR(100) DEFAULT NULL,
+  `cabin_type` VARCHAR(100) DEFAULT 'Interior Cabin',
+  `cruise_line` VARCHAR(150) DEFAULT NULL,
+  `special_notes` TEXT DEFAULT NULL,
+  `status` ENUM('New', 'Cabin Held', 'Booked', 'Closed') DEFAULT 'New',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_cruise_phone` (`phone`),
+  INDEX `idx_cruise_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 

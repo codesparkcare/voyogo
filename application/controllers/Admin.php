@@ -817,10 +817,22 @@ class Admin extends CI_Controller {
 
         if (file_exists($schemaFile)) {
             $sql = file_get_contents($schemaFile);
-            $queries = explode(';', $sql);
+            // Strip multi-line comments
+            $sql = preg_replace('!/\*.*?\*/!s', '', $sql);
+            // Strip single-line comments
+            $lines = explode("\n", $sql);
+            $clean_lines = array();
+            foreach ($lines as $line) {
+                $trim = trim($line);
+                if (strpos($trim, '--') !== 0 && strpos($trim, '#') !== 0) {
+                    $clean_lines[] = $line;
+                }
+            }
+            $clean_sql = implode("\n", $clean_lines);
+            $queries = explode(';', $clean_sql);
             foreach ($queries as $q) {
                 $q = trim($q);
-                if (!empty($q) && strpos($q, '/*') !== 0 && strpos($q, '--') !== 0) {
+                if (!empty($q)) {
                     $this->db->query($q);
                     $executed++;
                 }
@@ -873,5 +885,210 @@ class Admin extends CI_Controller {
         $this->Admin_model->delete_customer($id);
         $this->session->set_flashdata('success', 'Customer removed successfully!');
         redirect('admin/customers');
+    }
+
+    /* ==========================================================================
+       1. MANAGE VISA ENQUIRIES
+       ========================================================================== */
+    public function manage_visas()
+    {
+        $this->_check_login();
+        $search = trim($this->input->get('search') ?: '');
+        $status = trim($this->input->get('status') ?: '');
+
+        $data['enquiries']       = $this->Admin_model->get_visa_enquiries(200, 0, $search, $status);
+        $data['total_count']     = $this->Admin_model->count_visa_enquiries();
+        $data['new_count']       = $this->Admin_model->count_visa_enquiries('', 'New');
+        $data['search']          = $search;
+        $data['status_filter']   = $status;
+        $data['active_menu']     = 'visas';
+
+        $this->load->view('admin/layout/header', $data);
+        $this->load->view('admin/layout/sidebar', $data);
+        $this->load->view('admin/manage_visas', $data);
+        $this->load->view('admin/layout/footer', $data);
+    }
+
+    public function update_visa_status($id)
+    {
+        $this->_check_login();
+        $new_status = $this->input->post('status') ?: $this->input->get('status');
+        if ($new_status) {
+            $this->Admin_model->update_visa_status($id, $new_status);
+            $this->session->set_flashdata('success', 'Visa enquiry status updated to ' . $new_status . '!');
+        }
+        redirect('admin/visas');
+    }
+
+    public function delete_visa($id)
+    {
+        $this->_check_login();
+        $this->Admin_model->delete_visa_enquiry($id);
+        $this->session->set_flashdata('success', 'Visa enquiry deleted successfully!');
+        redirect('admin/visas');
+    }
+
+    /* ==========================================================================
+       2. MANAGE CAB ENQUIRIES
+       ========================================================================== */
+    public function manage_cabs()
+    {
+        $this->_check_login();
+        $search = trim($this->input->get('search') ?: '');
+        $status = trim($this->input->get('status') ?: '');
+
+        $data['enquiries']       = $this->Admin_model->get_cab_enquiries(200, 0, $search, $status);
+        $data['total_count']     = $this->Admin_model->count_cab_enquiries();
+        $data['new_count']       = $this->Admin_model->count_cab_enquiries('', 'New');
+        $data['search']          = $search;
+        $data['status_filter']   = $status;
+        $data['active_menu']     = 'cabs';
+
+        $this->load->view('admin/layout/header', $data);
+        $this->load->view('admin/layout/sidebar', $data);
+        $this->load->view('admin/manage_cabs', $data);
+        $this->load->view('admin/layout/footer', $data);
+    }
+
+    public function update_cab_status($id)
+    {
+        $this->_check_login();
+        $new_status = $this->input->post('status') ?: $this->input->get('status');
+        if ($new_status) {
+            $this->Admin_model->update_cab_status($id, $new_status);
+            $this->session->set_flashdata('success', 'Cab enquiry status updated to ' . $new_status . '!');
+        }
+        redirect('admin/cabs');
+    }
+
+    public function delete_cab($id)
+    {
+        $this->_check_login();
+        $this->Admin_model->delete_cab_enquiry($id);
+        $this->session->set_flashdata('success', 'Cab enquiry deleted successfully!');
+        redirect('admin/cabs');
+    }
+
+    /* ==========================================================================
+       3. MANAGE HOLIDAY ENQUIRIES
+       ========================================================================== */
+    public function manage_holidays()
+    {
+        $this->_check_login();
+        $search = trim($this->input->get('search') ?: '');
+        $status = trim($this->input->get('status') ?: '');
+
+        $data['enquiries']       = $this->Admin_model->get_holiday_enquiries(200, 0, $search, $status);
+        $data['total_count']     = $this->Admin_model->count_holiday_enquiries();
+        $data['new_count']       = $this->Admin_model->count_holiday_enquiries('', 'New');
+        $data['search']          = $search;
+        $data['status_filter']   = $status;
+        $data['active_menu']     = 'holidays';
+
+        $this->load->view('admin/layout/header', $data);
+        $this->load->view('admin/layout/sidebar', $data);
+        $this->load->view('admin/manage_holidays', $data);
+        $this->load->view('admin/layout/footer', $data);
+    }
+
+    public function update_holiday_status($id)
+    {
+        $this->_check_login();
+        $new_status = $this->input->post('status') ?: $this->input->get('status');
+        if ($new_status) {
+            $this->Admin_model->update_holiday_status($id, $new_status);
+            $this->session->set_flashdata('success', 'Holiday enquiry status updated to ' . $new_status . '!');
+        }
+        redirect('admin/holidays');
+    }
+
+    public function delete_holiday($id)
+    {
+        $this->_check_login();
+        $this->Admin_model->delete_holiday_enquiry($id);
+        $this->session->set_flashdata('success', 'Holiday enquiry deleted successfully!');
+        redirect('admin/holidays');
+    }
+
+    /* ==========================================================================
+       4. MANAGE FOREX ENQUIRIES
+       ========================================================================== */
+    public function manage_forex()
+    {
+        $this->_check_login();
+        $search = trim($this->input->get('search') ?: '');
+        $status = trim($this->input->get('status') ?: '');
+
+        $data['enquiries']       = $this->Admin_model->get_forex_enquiries(200, 0, $search, $status);
+        $data['total_count']     = $this->Admin_model->count_forex_enquiries();
+        $data['new_count']       = $this->Admin_model->count_forex_enquiries('', 'New');
+        $data['search']          = $search;
+        $data['status_filter']   = $status;
+        $data['active_menu']     = 'forex';
+
+        $this->load->view('admin/layout/header', $data);
+        $this->load->view('admin/layout/sidebar', $data);
+        $this->load->view('admin/manage_forex', $data);
+        $this->load->view('admin/layout/footer', $data);
+    }
+
+    public function update_forex_status($id)
+    {
+        $this->_check_login();
+        $new_status = $this->input->post('status') ?: $this->input->get('status');
+        if ($new_status) {
+            $this->Admin_model->update_forex_status($id, $new_status);
+            $this->session->set_flashdata('success', 'Forex enquiry status updated to ' . $new_status . '!');
+        }
+        redirect('admin/forex');
+    }
+
+    public function delete_forex($id)
+    {
+        $this->_check_login();
+        $this->Admin_model->delete_forex_enquiry($id);
+        $this->session->set_flashdata('success', 'Forex enquiry deleted successfully!');
+        redirect('admin/forex');
+    }
+
+    /* ==========================================================================
+       5. MANAGE CRUISE ENQUIRIES
+       ========================================================================== */
+    public function manage_cruises()
+    {
+        $this->_check_login();
+        $search = trim($this->input->get('search') ?: '');
+        $status = trim($this->input->get('status') ?: '');
+
+        $data['enquiries']       = $this->Admin_model->get_cruise_enquiries(200, 0, $search, $status);
+        $data['total_count']     = $this->Admin_model->count_cruise_enquiries();
+        $data['new_count']       = $this->Admin_model->count_cruise_enquiries('', 'New');
+        $data['search']          = $search;
+        $data['status_filter']   = $status;
+        $data['active_menu']     = 'cruises';
+
+        $this->load->view('admin/layout/header', $data);
+        $this->load->view('admin/layout/sidebar', $data);
+        $this->load->view('admin/manage_cruises', $data);
+        $this->load->view('admin/layout/footer', $data);
+    }
+
+    public function update_cruise_status($id)
+    {
+        $this->_check_login();
+        $new_status = $this->input->post('status') ?: $this->input->get('status');
+        if ($new_status) {
+            $this->Admin_model->update_cruise_status($id, $new_status);
+            $this->session->set_flashdata('success', 'Cruise enquiry status updated to ' . $new_status . '!');
+        }
+        redirect('admin/cruises');
+    }
+
+    public function delete_cruise($id)
+    {
+        $this->_check_login();
+        $this->Admin_model->delete_cruise_enquiry($id);
+        $this->session->set_flashdata('success', 'Cruise enquiry deleted successfully!');
+        redirect('admin/cruises');
     }
 }

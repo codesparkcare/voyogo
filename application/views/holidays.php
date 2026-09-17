@@ -85,7 +85,7 @@
           </div>
 
           <!-- Right Form Fields -->
-          <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" class="holidays-right-form">
+          <form action="<?php echo site_url('welcome/submit_holiday'); ?>" method="POST" class="holidays-right-form">
             <input type="hidden" name="message" value="Holiday Planning Enquiry">
 
             <div class="holidays-grid-2col">
@@ -1678,8 +1678,8 @@
     <span class="modal-close" onclick="closeEnquiryModal()">&times;</span>
     <h3 class="voyogo-form-title">Plan your trip with world-class tour experts!</h3>
 
-    <form action="<?php echo site_url('welcome/save_enquiry'); ?>" method="POST" class="voyogo-pill-form">
-      <input type="hidden" name="message" id="modalPackageName" value="General Enquiry">
+    <form action="<?php echo site_url('welcome/submit_holiday'); ?>" method="POST" class="voyogo-pill-form">
+      <input type="hidden" name="package_name" id="modalPackageName" value="General Holiday Package">
 
       <div class="pill-form-group">
         <input type="text" name="name" class="pill-input" placeholder="Name" required>

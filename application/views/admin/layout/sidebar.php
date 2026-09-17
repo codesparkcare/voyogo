@@ -48,15 +48,37 @@
             </a>
         </li>
 
+        <li class="menu-title"><i class="fa-solid fa-layer-group me-1"></i> Leads & Services</li>
+        <li>
+            <a href="<?php echo site_url('admin/visas'); ?>" class="<?php echo ($active == 'visas') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-passport" style="color: #3b82f6;"></i> Visa Enquiries
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo site_url('admin/cabs'); ?>" class="<?php echo ($active == 'cabs') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-taxi" style="color: #eab308;"></i> Cab Bookings
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo site_url('admin/holidays'); ?>" class="<?php echo ($active == 'holidays') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-umbrella-beach" style="color: #10b981;"></i> Holiday Packages
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo site_url('admin/forex'); ?>" class="<?php echo ($active == 'forex') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-coins" style="color: #f97316;"></i> Forex Orders
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo site_url('admin/cruises'); ?>" class="<?php echo ($active == 'cruises') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-ship" style="color: #06b6d4;"></i> Cruise Enquiries
+            </a>
+        </li>
+
         <li class="menu-title">Common & System</li>
         <li>
             <a href="<?php echo site_url('admin/customers'); ?>" class="<?php echo ($active == 'customers') ? 'active' : ''; ?>">
                 <i class="fa-solid fa-users" style="color: #06b6d4;"></i> Manage Customers
-            </a>
-        </li>
-        <li>
-            <a href="<?php echo site_url('admin/enquiries'); ?>" class="<?php echo ($active == 'enquiries') ? 'active' : ''; ?>">
-                <i class="fa-solid fa-envelope-open-text"></i> Customer Enquiries
             </a>
         </li>
         <li>
