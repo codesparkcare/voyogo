@@ -1,12 +1,18 @@
 <!-- Sidebar -->
+<?php 
+    $userRole = (isset($this->session) && $this->session->userdata('admin_role')) ? $this->session->userdata('admin_role') : 'superadmin'; 
+    $adminUsername = (isset($this->session) && $this->session->userdata('admin_username')) ? $this->session->userdata('admin_username') : 'Admin';
+    $isLeadsManager = ($userRole === 'leads_manager');
+    $active = isset($active_menu) ? $active_menu : 'visas';
+?>
 <nav id="sidebar">
     <div class="sidebar-header">
         <div class="logo-icon"><i class="fa-solid fa-plane-departure" style="color:#ef4444;"></i></div>
-        <h5 class="mb-0 fw-bold" style="color:#0d3470;">Voyogo Admin</h5>
+        <h5 class="mb-0 fw-bold" style="color:#0d3470;"><?php echo $isLeadsManager ? 'Voyogo Leads' : 'Voyogo Admin'; ?></h5>
     </div>
 
-    <?php $active = isset($active_menu) ? $active_menu : 'dashboard'; ?>
     <ul class="sidebar-menu">
+        <?php if (!$isLeadsManager): ?>
         <li class="menu-title">Main Navigation</li>
         <li>
             <a href="<?php echo site_url('admin'); ?>" class="<?php echo ($active == 'dashboard') ? 'active' : ''; ?>">
@@ -47,6 +53,7 @@
                 <i class="fa-solid fa-clock-rotate-left" style="color: #8b5cf6;"></i> Hotel API Logs Checker
             </a>
         </li>
+        <?php endif; ?>
 
         <li class="menu-title"><i class="fa-solid fa-layer-group me-1"></i> Leads & Services</li>
         <li>
@@ -75,6 +82,7 @@
             </a>
         </li>
 
+        <?php if (!$isLeadsManager): ?>
         <li class="menu-title">Common & System</li>
         <li>
             <a href="<?php echo site_url('admin/customers'); ?>" class="<?php echo ($active == 'customers') ? 'active' : ''; ?>">
@@ -101,6 +109,9 @@
                 <i class="fa-solid fa-database"></i> Database Sync Tool
             </a>
         </li>
+        <?php endif; ?>
+        
+        <li class="menu-title">Account</li>
         <li>
             <a href="<?php echo site_url('admin/logout'); ?>" class="text-danger">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
@@ -118,7 +129,7 @@
             <button type="button" id="sidebarCollapse" class="navbar-btn">
                 <i class="fa-solid fa-bars"></i>
             </button>
-            <span class="ms-3 fw-medium" style="color: #64748b;">Welcome back, <strong>Super Admin</strong></span>
+            <span class="ms-3 fw-medium" style="color: #64748b;">Welcome back, <strong><?php echo $isLeadsManager ? 'Leads Manager' : 'Super Admin'; ?></strong></span>
         </div>
 
         <div class="d-flex align-items-center gap-3">
@@ -129,17 +140,21 @@
             <div class="user-profile dropdown">
                 <div class="d-flex align-items-center gap-2" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
                     <div class="info text-end d-none d-md-flex">
-                        <span class="name">Voyogo Admin</span>
-                        <span class="role" style="font-size: 11px; color: #16a34a; font-weight: 700;">Super Administrator</span>
+                        <span class="name"><?php echo htmlspecialchars($adminUsername); ?></span>
+                        <span class="role" style="font-size: 11px; color: <?php echo $isLeadsManager ? '#2563eb' : '#16a34a'; ?>; font-weight: 700;">
+                            <?php echo $isLeadsManager ? 'Leads & Services Staff' : 'Super Administrator'; ?>
+                        </span>
                     </div>
-                    <img src="https://ui-avatars.com/api/?name=Voyogo+Admin&background=0d3470&color=fff" alt="Admin" style="border-radius: 50%; width: 38px; height: 38px;">
+                    <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($adminUsername); ?>&background=<?php echo $isLeadsManager ? '2563eb' : '0d3470'; ?>&color=fff" alt="Admin" style="border-radius: 50%; width: 38px; height: 38px;">
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                    <?php if (!$isLeadsManager): ?>
                     <li><a class="dropdown-item py-2" href="<?php echo site_url('admin/flight_api_settings'); ?>"><i class="fa-solid fa-plane-departure text-info me-2"></i> Flight API Settings</a></li>
                     <li><a class="dropdown-item py-2" href="<?php echo site_url('admin/api_logs'); ?>"><i class="fa-solid fa-clock-rotate-left text-success me-2"></i> API Activity Logs</a></li>
                     <li><a class="dropdown-item py-2" href="<?php echo site_url('admin/razorpay_settings'); ?>"><i class="fa-solid fa-credit-card text-primary me-2"></i> Razorpay Settings</a></li>
                     <li><a class="dropdown-item py-2" href="<?php echo site_url('admin/email_settings'); ?>"><i class="fa-solid fa-gear me-2"></i> SMTP Settings</a></li>
                     <li><hr class="dropdown-divider"></li>
+                    <?php endif; ?>
                     <li><a class="dropdown-item py-2 text-danger" href="<?php echo site_url('admin/logout'); ?>"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout</a></li>
                 </ul>
             </div>

@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS `admin_users` (
   `username` VARCHAR(50) NOT NULL UNIQUE,
   `password` VARCHAR(255) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
+  `role` VARCHAR(50) NOT NULL DEFAULT 'superadmin',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -197,9 +198,14 @@ CREATE TABLE IF NOT EXISTS `api_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Default Admin User (Password: admin123)
-INSERT INTO `admin_users` (`username`, `password`, `email`)
-SELECT 'admin', '$2y$10$cyNdwHuPyQQEtWob3FftDuNfhwqmMkmh5Li4i.bn2CfkgU0nLHEuO', 'admin@voyogo.com'
+INSERT INTO `admin_users` (`username`, `password`, `email`, `role`)
+SELECT 'admin', '$2y$10$cyNdwHuPyQQEtWob3FftDuNfhwqmMkmh5Li4i.bn2CfkgU0nLHEuO', 'admin@voyogo.com', 'superadmin'
 FROM DUAL WHERE NOT EXISTS (SELECT * FROM `admin_users` WHERE `username` = 'admin');
+
+-- Default Leads Manager User (Password: Leads@123*)
+INSERT INTO `admin_users` (`username`, `password`, `email`, `role`)
+SELECT 'leads', '$2y$10$w09dsm2Uj1yV3o7eZ.l1GuvlR1Qv79qj0U48uB1U66nE5t8l0309O', 'leads@voyogo.com', 'leads_manager'
+FROM DUAL WHERE NOT EXISTS (SELECT * FROM `admin_users` WHERE `username` = 'leads');
 
 -- Default Email Settings row
 INSERT INTO `email_settings` (`id`, `smtp_host`, `smtp_port`, `smtp_user`, `smtp_pass`, `smtp_crypto`, `from_email`, `from_name`)

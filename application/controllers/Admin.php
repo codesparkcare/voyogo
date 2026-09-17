@@ -14,9 +14,15 @@ class Admin extends CI_Controller {
     /**
      * Check Session Helper
      */
-    private function _check_login() {
+    private function _check_login($superadmin_only = false) {
         if (!$this->session->userdata('admin_logged_in')) {
             redirect('admin/login');
+            return;
+        }
+        if ($superadmin_only && $this->session->userdata('admin_role') === 'leads_manager') {
+            $this->session->set_flashdata('error', 'Access restricted: You only have permission to access Leads & Services.');
+            redirect('admin/visas');
+            return;
         }
     }
 
@@ -25,7 +31,7 @@ class Admin extends CI_Controller {
      */
     public function index()
     {
-        $this->_check_login();
+        $this->_check_login(true);
 
         $data['stats'] = $this->Admin_model->get_dashboard_stats();
         $data['recent_flights'] = $this->Booking_model->get_all_flight_bookings(5);
@@ -44,23 +50,35 @@ class Admin extends CI_Controller {
     public function login()
     {
         if ($this->session->userdata('admin_logged_in')) {
-            redirect('admin');
+            if ($this->session->userdata('admin_role') === 'leads_manager') {
+                redirect('admin/visas');
+            } else {
+                redirect('admin');
+            }
+            return;
         }
 
         if ($this->input->post()) {
-            $username = $this->input->post('username');
-            $password = $this->input->post('password');
+            $username = trim((string)$this->input->post('username'));
+            $password = trim((string)$this->input->post('password'));
 
             $user = $this->Admin_model->verify_login($username, $password);
 
             if ($user) {
+                $role = !empty($user['role']) ? $user['role'] : 'superadmin';
                 $this->session->set_userdata(array(
-                    'admin_id' => $user['id'],
-                    'admin_username' => $user['username'],
-                    'admin_email' => $user['email'],
+                    'admin_id'        => $user['id'],
+                    'admin_username'  => $user['username'],
+                    'admin_email'     => $user['email'],
+                    'admin_role'      => $role,
                     'admin_logged_in' => TRUE
                 ));
-                redirect('admin');
+                if ($role === 'leads_manager') {
+                    redirect('admin/visas');
+                } else {
+                    redirect('admin');
+                }
+                return;
             } else {
                 $data['error'] = 'Invalid Username or Password!';
             }
@@ -70,13 +88,61 @@ class Admin extends CI_Controller {
     }
 
     /**
+     * Dedicated Leads Portal Login
+     */
+    public function leads_login()
+    {
+        if ($this->session->userdata('admin_logged_in')) {
+            if ($this->session->userdata('admin_role') === 'leads_manager') {
+                redirect('admin/visas');
+            } else {
+                redirect('admin');
+            }
+            return;
+        }
+
+        if ($this->input->post()) {
+            $username = trim((string)$this->input->post('username'));
+            $password = trim((string)$this->input->post('password'));
+
+            $user = $this->Admin_model->verify_login($username, $password);
+
+            if ($user) {
+                $role = !empty($user['role']) ? $user['role'] : 'superadmin';
+                $this->session->set_userdata(array(
+                    'admin_id'        => $user['id'],
+                    'admin_username'  => $user['username'],
+                    'admin_email'     => $user['email'],
+                    'admin_role'      => $role,
+                    'admin_logged_in' => TRUE
+                ));
+                if ($role === 'leads_manager') {
+                    redirect('admin/visas');
+                } else {
+                    redirect('admin');
+                }
+                return;
+            } else {
+                $data['error'] = 'Invalid Username or Password!';
+            }
+        }
+
+        $this->load->view('admin/leads_login', isset($data) ? $data : NULL);
+    }
+
+    /**
      * Admin Logout
      */
     public function logout()
     {
-        $this->session->unset_userdata(array('admin_id', 'admin_username', 'admin_email', 'admin_logged_in'));
+        $role = $this->session->userdata('admin_role');
+        $this->session->unset_userdata(array('admin_id', 'admin_username', 'admin_email', 'admin_role', 'admin_logged_in'));
         $this->session->sess_destroy();
-        redirect('admin/login');
+        if ($role === 'leads_manager') {
+            redirect('leads/login');
+        } else {
+            redirect('admin/login');
+        }
     }
 
     /**
@@ -839,10 +905,29 @@ class Admin extends CI_Controller {
             }
         }
 
+        // Ensure admin_users has role column and default leads manager user
+        if ($this->db->table_exists('admin_users')) {
+            $fields = $this->db->list_fields('admin_users');
+            if (!in_array('role', $fields)) {
+                $this->db->query("ALTER TABLE admin_users ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'superadmin'");
+            }
+            $leadsExists = $this->db->get_where('admin_users', array('username' => 'leads'))->num_rows();
+            if ($leadsExists == 0) {
+                $passHash = password_hash('Leads@123*', PASSWORD_BCRYPT);
+                $this->db->insert('admin_users', array(
+                    'username'   => 'leads',
+                    'password'   => $passHash,
+                    'email'      => 'leads@voyogo.com',
+                    'role'       => 'leads_manager',
+                    'created_at' => date('Y-m-d H:i:s')
+                ));
+            }
+        }
+
         // Restore original database debug setting
         $this->db->db_debug = $saved_debug;
 
-        $this->session->set_flashdata('success', 'All database tables including the Franchise Module have been synchronized successfully!');
+        $this->session->set_flashdata('success', 'All database tables including Service Leads and Franchise Module have been synchronized successfully!');
         redirect('admin');
     }
 
