@@ -412,16 +412,31 @@
                 const phone = user.phoneNumber || ('+91' + document.getElementById('userPhoneInput').value.trim());
                 const uid = user.uid;
 
+                // Helper to resolve login endpoint matching the page protocol
+                function getVerifyUrl() {
+                    var endpoint = '<?php echo function_exists('site_url') ? site_url('user/verify_firebase_login') : '/index.php/user/verify_firebase_login'; ?>';
+                    if (window.location.protocol === 'https:' && endpoint.indexOf('http:') === 0) {
+                        endpoint = endpoint.replace(/^http:/, 'https:');
+                    }
+                    return endpoint;
+                }
+
                 // Sync with CodeIgniter Backend Session
-                fetch('<?php echo function_exists('site_url') ? site_url('user/verify_firebase_login') : '/index.php/user/verify_firebase_login'; ?>', {
+                fetch(getVerifyUrl(), {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     body: 'phone=' + encodeURIComponent(phone) + '&firebase_uid=' + encodeURIComponent(uid)
                 })
-                .then(function(res) { return res.json(); })
+                .then(function(res) {
+                    if (!res.ok) {
+                        throw new Error('Server returned error ' + res.status);
+                    }
+                    return res.json();
+                })
                 .then(function(data) {
                     if (data.status) {
                         // Check if booking review page has an in-page login handler
@@ -453,7 +468,7 @@
                         verifyBtn.innerHTML = '<i class="fa-solid fa-shield-check"></i> <span>Verify & Continue</span>';
                     }
                     console.error('Server sync error:', err);
-                    window.location.reload();
+                    showOtpAlert('Authentication error: ' + (err.message || 'Server session failed. Please retry.'));
                 });
             })
             .catch(function(error) {
@@ -520,6 +535,43 @@
             if (phoneInput) phoneInput.focus();
         }, 150);
     };
+
+    // Auto-restore session from Firebase if user is already authenticated on this device
+    const isPhpLoggedIn = <?php echo (isset($this->session) && $this->session->userdata('user_logged_in')) ? 'true' : 'false'; ?>;
+    if (!isPhpLoggedIn && typeof firebase !== 'undefined' && firebase.auth) {
+        firebase.auth().onAuthStateChanged(function(fUser) {
+            if (fUser && fUser.phoneNumber) {
+                var endpoint = '<?php echo function_exists('site_url') ? site_url('user/verify_firebase_login') : '/index.php/user/verify_firebase_login'; ?>';
+                if (window.location.protocol === 'https:' && endpoint.indexOf('http:') === 0) {
+                    endpoint = endpoint.replace(/^http:/, 'https:');
+                }
+                fetch(endpoint, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: 'phone=' + encodeURIComponent(fUser.phoneNumber) + '&firebase_uid=' + encodeURIComponent(fUser.uid)
+                })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data && data.status) {
+                        if (typeof window.onBookingReviewLoginSuccess === 'function') {
+                            const modal = document.getElementById('loginModal');
+                            if (modal) modal.classList.remove('open');
+                            window.onBookingReviewLoginSuccess(data.user);
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+                })
+                .catch(function(e) {
+                    console.log('Silent auth sync notice:', e);
+                });
+            }
+        });
+    }
 
     // Modal Opening & Closing Events
     document.addEventListener('DOMContentLoaded', function() {

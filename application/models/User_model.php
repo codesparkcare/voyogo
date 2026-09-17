@@ -7,6 +7,30 @@ class User_model extends CI_Model {
     {
         parent::__construct();
         $this->load->database();
+        $this->ensure_table_exists();
+    }
+
+    /**
+     * Auto-create users table if not exists
+     */
+    private function ensure_table_exists()
+    {
+        if (!$this->db->table_exists('users')) {
+            $this->db->query("CREATE TABLE IF NOT EXISTS `users` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `firebase_uid` varchar(128) DEFAULT NULL,
+              `phone` varchar(20) NOT NULL,
+              `first_name` varchar(100) DEFAULT NULL,
+              `last_name` varchar(100) DEFAULT NULL,
+              `email` varchar(150) DEFAULT NULL,
+              `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+              `created_at` datetime DEFAULT NULL,
+              `updated_at` datetime DEFAULT NULL,
+              PRIMARY KEY (`id`),
+              UNIQUE KEY `phone` (`phone`),
+              KEY `firebase_uid` (`firebase_uid`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+        }
     }
 
     /**

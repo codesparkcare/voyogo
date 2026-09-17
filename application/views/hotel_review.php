@@ -350,10 +350,10 @@ window.onBookingReviewLoginSuccess = function(user) {
 document.addEventListener('DOMContentLoaded', function() {
     if (!isUserLoggedIn) {
         setTimeout(function() {
-            if (typeof window.triggerBookingLogin === 'function') {
+            if (!isUserLoggedIn && typeof window.triggerBookingLogin === 'function') {
                 window.triggerBookingLogin('Please log in with mobile OTP to continue your hotel booking.');
             }
-        }, 500);
+        }, 1200);
     }
 });
 
