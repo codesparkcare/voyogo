@@ -72,9 +72,12 @@ class User extends CI_Controller {
             'message'      => 'Logged in successfully!',
             'redirect_url' => site_url('user/profile'),
             'user'         => [
-                'id'    => $user['id'],
-                'phone' => $user['phone'],
-                'name'  => $fullName ?: $user['phone']
+                'id'         => $user['id'],
+                'phone'      => $user['phone'],
+                'first_name' => $user['first_name'] ?? '',
+                'last_name'  => $user['last_name'] ?? '',
+                'email'      => $user['email'] ?? '',
+                'name'       => $fullName ?: $user['phone']
             ]
         ]);
     }

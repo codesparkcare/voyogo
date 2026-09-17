@@ -1,8 +1,15 @@
+<?php
+    $isUserLoggedIn   = isset($this->session) && $this->session->userdata('user_logged_in');
+    $sessionUserName  = $isUserLoggedIn ? ($this->session->userdata('user_name') ?: '') : '';
+    $sessionUserEmail = $isUserLoggedIn ? ($this->session->userdata('user_email') ?: '') : '';
+    $sessionUserPhone = $isUserLoggedIn ? ($this->session->userdata('user_phone') ?: '') : '';
+    $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
+?>
 <div style="background-color: #f4f7fe; padding: 25px 0 60px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;">
     <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
         
         <!-- Header Step Progress Bar -->
-        <div style="background: #ffffff; padding: 18px 24px; border-radius: 14px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.05); display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px;">
+        <div style="background: #ffffff; padding: 18px 24px; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,32,90,0.05); display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px;">
             <div>
                 <h1 style="font-size: 22px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 10px;">
                     <i class="fa-solid fa-plane-departure" style="color: #2563eb;"></i> Review Your Flight Itinerary
@@ -17,6 +24,40 @@
                 <span style="color: #94a3b8; display: flex; align-items: center; gap: 6px;"><i class="fa-regular fa-circle"></i> 3. Payment & E-Ticket</span>
             </div>
         </div>
+
+        <!-- Professional User Login Gate / Verified Status Banner -->
+        <?php if ($isUserLoggedIn): ?>
+            <div id="flightLoginBanner" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #16a34a; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 14.5px; font-weight: 800; color: #166534;">Logged in as <?php echo htmlspecialchars($sessionUserName ?: $sessionUserPhone); ?></div>
+                        <div style="font-size: 12.5px; color: #15803d;">Your verified contact details have been pre-filled below for ticket issuance.</div>
+                    </div>
+                </div>
+                <span style="font-size: 11.5px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 5px 12px; border-radius: 20px; border: 1px solid #86efac; display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-shield-halved"></i> Phone Verified
+                </span>
+            </div>
+        <?php else: ?>
+            <div id="flightLoginBanner" style="background: linear-gradient(135deg, #09204b 0%, #1e3a8a 100%); color: #ffffff; border-radius: 14px; padding: 18px 24px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; box-shadow: 0 10px 25px rgba(9,32,75,0.12); flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="width: 46px; height: 46px; border-radius: 50%; background: rgba(120, 183, 34, 0.2); color: #78B722; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+                        <i class="fa-solid fa-user-lock"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 800; color: #ffffff;">Please Sign In with Mobile OTP to Complete Booking</h4>
+                        <p style="margin: 0; font-size: 13px; color: #cbd5e1;">Sign in to lock your fare, auto-fill passenger contact details, and receive e-tickets instantly.</p>
+                    </div>
+                </div>
+                <button type="button" onclick="triggerBookingLogin('Please enter your mobile number to sign in and confirm this flight booking.')" style="background: #78B722; color: #ffffff; border: none; padding: 11px 24px; border-radius: 8px; font-size: 13.5px; font-weight: 800; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(120,183,34,0.4); transition: transform 0.15s ease;">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                    <span>Sign In with OTP</span>
+                </button>
+            </div>
+        <?php endif; ?>
 
         <div style="display: grid; grid-template-columns: 2.3fr 1fr; gap: 24px;">
             
@@ -545,15 +586,15 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Contact Person *</label>
-                                <input type="text" name="contact_name" class="field-input" required value="Rahul Sharma" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="text" name="contact_name" class="field-input" required value="<?php echo htmlspecialchars($sessionUserName ?: ''); ?>" placeholder="Full Name" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Email Address *</label>
-                                <input type="email" name="contact_email" class="field-input" required value="rahul.sharma@example.com" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="email" name="contact_email" class="field-input" required value="<?php echo htmlspecialchars($sessionUserEmail ?: ''); ?>" placeholder="name@example.com" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Mobile Number *</label>
-                                <input type="tel" name="contact_phone" class="field-input" required value="9876543210" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="tel" name="contact_phone" class="field-input" required value="<?php echo htmlspecialchars($cleanPhone ?: $sessionUserPhone); ?>" placeholder="10-digit mobile" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                         </div>
 
@@ -745,8 +786,61 @@ function toggleGstFields() {
     document.getElementById('gstFieldsSection').style.display = isChecked ? 'grid' : 'none';
 }
 
+var isUserLoggedIn = <?php echo $isUserLoggedIn ? 'true' : 'false'; ?>;
+
+// In-page Login Success Handler (Called by Firebase OTP in header without page reload)
+window.onBookingReviewLoginSuccess = function(user) {
+    isUserLoggedIn = true;
+    if (user.name) {
+        var nameInput = document.querySelector('input[name="contact_name"]');
+        if (nameInput) nameInput.value = user.name;
+    }
+    if (user.email) {
+        var emailInput = document.querySelector('input[name="contact_email"]');
+        if (emailInput) emailInput.value = user.email;
+    }
+    if (user.phone) {
+        var phoneInput = document.querySelector('input[name="contact_phone"]');
+        var clean = user.phone.replace(/^\+91/, '');
+        if (phoneInput) phoneInput.value = clean;
+    }
+
+    var banner = document.getElementById('flightLoginBanner');
+    if (banner) {
+        banner.style.background = '#f0fdf4';
+        banner.style.border = '1px solid #bbf7d0';
+        banner.style.boxShadow = 'none';
+        banner.innerHTML = '<div style="display: flex; align-items: center; gap: 14px;">' +
+            '<div style="width: 40px; height: 40px; border-radius: 50%; background: #16a34a; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;"><i class="fa-solid fa-circle-check"></i></div>' +
+            '<div><div style="font-size: 14.5px; font-weight: 800; color: #166534;">Logged in as ' + (user.name || user.phone) + '</div>' +
+            '<div style="font-size: 12.5px; color: #15803d;">Your verified contact details have been applied. You can now proceed to payment!</div></div>' +
+            '</div>' +
+            '<span style="font-size: 11.5px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 5px 12px; border-radius: 20px; border: 1px solid #86efac; display: inline-flex; align-items: center; gap: 6px;"><i class="fa-solid fa-shield-halved"></i> Phone Verified</span>';
+    }
+};
+
+// Prompt login on page load if guest
+document.addEventListener('DOMContentLoaded', function() {
+    if (!isUserLoggedIn) {
+        setTimeout(function() {
+            if (typeof window.triggerBookingLogin === 'function') {
+                window.triggerBookingLogin('Please log in with mobile OTP to continue your flight booking.');
+            }
+        }, 500);
+    }
+});
+
 document.getElementById('payRazorpayBtn').addEventListener('click', function(e) {
     e.preventDefault();
+
+    if (!isUserLoggedIn) {
+        if (typeof window.triggerBookingLogin === 'function') {
+            window.triggerBookingLogin('Please sign in with mobile OTP to complete payment and issue your flight ticket.');
+        } else {
+            alert('Please sign in to complete payment.');
+        }
+        return;
+    }
 
     var finalAmount = parseFloat(document.getElementById('form_total_amount').value);
     var amountInPaise = Math.round(finalAmount * 100);

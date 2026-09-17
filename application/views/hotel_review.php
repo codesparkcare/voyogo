@@ -9,12 +9,22 @@ $checkin_date = $bSummary['checkin_date'] ?? ($bSummary['checkin'] ?? date('Y-m-
 $checkout_date = $bSummary['checkout_date'] ?? ($bSummary['checkout'] ?? date('Y-m-d', strtotime('+5 days')));
 $nights = $bSummary['nights'] ?? max(1, round((strtotime($checkout_date) - strtotime($checkin_date)) / 86400));
 $total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
+
+$isUserLoggedIn   = isset($this->session) && $this->session->userdata('user_logged_in');
+$sessionUserName  = $isUserLoggedIn ? ($this->session->userdata('user_name') ?: '') : '';
+$sessionUserEmail = $isUserLoggedIn ? ($this->session->userdata('user_email') ?: '') : '';
+$sessionUserPhone = $isUserLoggedIn ? ($this->session->userdata('user_phone') ?: '') : '';
+$cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
+
+$names = explode(' ', trim($sessionUserName));
+$defaultFname = $names[0] ?? '';
+$defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
 ?>
 <div style="background-color: #f5f7fa; padding: 30px 0 60px 0;">
     <div class="container">
         
         <!-- Header Step Progress -->
-        <div style="background: #ffffff; padding: 18px 24px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center;">
+        <div style="background: #ffffff; padding: 18px 24px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
             <div>
                 <h2 style="font-family: var(--font-heading); font-size: 20px; color: #09204b; margin: 0;">Review Your Hotel Reservation</h2>
                 <p style="font-size: 13px; color: #64748b; margin: 4px 0 0 0;">Fill primary guest info to confirm your hotel booking</p>
@@ -25,6 +35,40 @@ $total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
                 <span style="color: #94a3b8;"><i class="fa-regular fa-circle"></i> 3. Voucher Confirmation</span>
             </div>
         </div>
+
+        <!-- Professional User Login Gate / Verified Status Banner -->
+        <?php if ($isUserLoggedIn): ?>
+            <div id="hotelLoginBanner" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #16a34a; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 14.5px; font-weight: 800; color: #166534;">Logged in as <?php echo htmlspecialchars($sessionUserName ?: $sessionUserPhone); ?></div>
+                        <div style="font-size: 12.5px; color: #15803d;">Your verified guest contact details have been pre-filled below for instant confirmation.</div>
+                    </div>
+                </div>
+                <span style="font-size: 11.5px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 5px 12px; border-radius: 20px; border: 1px solid #86efac; display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-shield-halved"></i> Phone Verified
+                </span>
+            </div>
+        <?php else: ?>
+            <div id="hotelLoginBanner" style="background: linear-gradient(135deg, #09204b 0%, #1e3a8a 100%); color: #ffffff; border-radius: 14px; padding: 18px 24px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; box-shadow: 0 10px 25px rgba(9,32,75,0.12); flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="width: 46px; height: 46px; border-radius: 50%; background: rgba(250, 58, 58, 0.2); color: #fa3a3a; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+                        <i class="fa-solid fa-user-lock"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 800; color: #ffffff;">Please Sign In with Mobile OTP to Confirm Reservation</h4>
+                        <p style="margin: 0; font-size: 13px; color: #cbd5e1;">Sign in to guarantee your hotel booking rates, auto-fill guest information, and receive instant voucher.</p>
+                    </div>
+                </div>
+                <button type="button" onclick="triggerBookingLogin('Please enter your mobile number to sign in and confirm this hotel reservation.')" style="background: #fa3a3a; color: #ffffff; border: none; padding: 11px 24px; border-radius: 8px; font-size: 13.5px; font-weight: 800; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(250,58,58,0.4); transition: transform 0.15s ease;">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                    <span>Sign In with OTP</span>
+                </button>
+            </div>
+        <?php endif; ?>
 
         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
             
@@ -72,7 +116,7 @@ $total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
                     <input type="hidden" name="taxes" value="<?php echo htmlspecialchars($booking_data['taxes'] ?? 0); ?>">
                     <input type="hidden" name="total_amount" value="<?php echo htmlspecialchars($total_amount); ?>">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
-                    <input type="hidden" name="primary_guest_name" id="hidden_primary_guest_name" value="Rahul Sharma">
+                    <input type="hidden" name="primary_guest_name" id="hidden_primary_guest_name" value="<?php echo htmlspecialchars($sessionUserName ?: ''); ?>">
 
                     <?php
                     // Parse rooms data
@@ -141,10 +185,10 @@ $total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
                                         </select>
                                     </div>
                                     <div>
-                                        <input type="text" name="pax[<?php echo $rIdx; ?>][adults][<?php echo $a; ?>][fname]" required placeholder="First Name / Given Name" value="<?php echo $isLead ? 'Rahul' : ''; ?>" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                        <input type="text" name="pax[<?php echo $rIdx; ?>][adults][<?php echo $a; ?>][fname]" required placeholder="First Name / Given Name" value="<?php echo $isLead ? htmlspecialchars($defaultFname) : ''; ?>" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
                                     </div>
                                     <div>
-                                        <input type="text" name="pax[<?php echo $rIdx; ?>][adults][<?php echo $a; ?>][lname]" required placeholder="Last Name / Surname" value="<?php echo $isLead ? 'Sharma' : ''; ?>" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                        <input type="text" name="pax[<?php echo $rIdx; ?>][adults][<?php echo $a; ?>][lname]" required placeholder="Last Name / Surname" value="<?php echo $isLead ? htmlspecialchars($defaultLname) : ''; ?>" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
                                     </div>
                                 </div>
                                 <?php endfor; ?>
@@ -205,13 +249,13 @@ $total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
                                         <img src="https://flagcdn.com/w20/in.png" alt="IN" style="width: 16px; height: 11px; object-fit: cover; border-radius: 2px;">
                                         +91 <i class="fa-solid fa-angle-down" style="font-size: 10px; color: #94a3b8; margin-left: 2px;"></i>
                                     </div>
-                                    <input type="tel" name="guest_phone" class="field-input" required placeholder="81234 56789" value="9876543210" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 0 6px 6px 0; font-size: 13px;">
+                                    <input type="tel" name="guest_phone" class="field-input" required placeholder="10-digit mobile" value="<?php echo htmlspecialchars($cleanPhone ?: $sessionUserPhone); ?>" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 0 6px 6px 0; font-size: 13px;">
                                 </div>
                             </div>
 
                             <!-- Email Input -->
                             <div>
-                                <input type="email" name="guest_email" class="field-input" required placeholder="Email Address" value="rahul.sharma@example.com" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                <input type="email" name="guest_email" class="field-input" required placeholder="Email Address" value="<?php echo htmlspecialchars($sessionUserEmail ?: ''); ?>" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
                             </div>
                         </div>
                     </div>
@@ -260,8 +304,70 @@ $total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
 <!-- Razorpay Script -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+var isUserLoggedIn = <?php echo $isUserLoggedIn ? 'true' : 'false'; ?>;
+
+// In-page Login Success Handler (Called by Firebase OTP in header without page reload)
+window.onBookingReviewLoginSuccess = function(user) {
+    isUserLoggedIn = true;
+    
+    if (user.first_name) {
+        var fn = document.querySelector('input[name="pax[0][adults][0][fname]"]');
+        if (fn) fn.value = user.first_name;
+    }
+    if (user.last_name) {
+        var ln = document.querySelector('input[name="pax[0][adults][0][lname]"]');
+        if (ln) ln.value = user.last_name;
+    }
+    if (user.name) {
+        var prim = document.getElementById('hidden_primary_guest_name');
+        if (prim) prim.value = user.name;
+    }
+    if (user.email) {
+        var em = document.querySelector('input[name="guest_email"]');
+        if (em) em.value = user.email;
+    }
+    if (user.phone) {
+        var ph = document.querySelector('input[name="guest_phone"]');
+        var clean = user.phone.replace(/^\+91/, '');
+        if (ph) ph.value = clean;
+    }
+
+    var banner = document.getElementById('hotelLoginBanner');
+    if (banner) {
+        banner.style.background = '#f0fdf4';
+        banner.style.border = '1px solid #bbf7d0';
+        banner.style.boxShadow = 'none';
+        banner.innerHTML = '<div style="display: flex; align-items: center; gap: 14px;">' +
+            '<div style="width: 40px; height: 40px; border-radius: 50%; background: #16a34a; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;"><i class="fa-solid fa-circle-check"></i></div>' +
+            '<div><div style="font-size: 14.5px; font-weight: 800; color: #166534;">Logged in as ' + (user.name || user.phone) + '</div>' +
+            '<div style="font-size: 12.5px; color: #15803d;">Your verified contact details have been applied. You can now proceed to payment!</div></div>' +
+            '</div>' +
+            '<span style="font-size: 11.5px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 5px 12px; border-radius: 20px; border: 1px solid #86efac; display: inline-flex; align-items: center; gap: 6px;"><i class="fa-solid fa-shield-halved"></i> Phone Verified</span>';
+    }
+};
+
+// Prompt login on page load if guest
+document.addEventListener('DOMContentLoaded', function() {
+    if (!isUserLoggedIn) {
+        setTimeout(function() {
+            if (typeof window.triggerBookingLogin === 'function') {
+                window.triggerBookingLogin('Please log in with mobile OTP to continue your hotel booking.');
+            }
+        }, 500);
+    }
+});
+
 document.getElementById('payHotelRazorpayBtn').addEventListener('click', function(e) {
     e.preventDefault();
+
+    if (!isUserLoggedIn) {
+        if (typeof window.triggerBookingLogin === 'function') {
+            window.triggerBookingLogin('Please sign in with mobile OTP to complete payment and confirm your hotel reservation.');
+        } else {
+            alert('Please sign in to complete payment.');
+        }
+        return;
+    }
 
     var form = document.getElementById('hotelBookingForm');
     if (form && !form.checkValidity()) {

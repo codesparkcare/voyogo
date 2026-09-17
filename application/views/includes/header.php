@@ -424,6 +424,17 @@
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     if (data.status) {
+                        // Check if booking review page has an in-page login handler
+                        if (typeof window.onBookingReviewLoginSuccess === 'function') {
+                            showOtpAlert('Logged in successfully! Applying your booking details...', false);
+                            setTimeout(function() {
+                                const modal = document.getElementById('loginModal');
+                                if (modal) modal.classList.remove('open');
+                                window.onBookingReviewLoginSuccess(data.user);
+                            }, 400);
+                            return;
+                        }
+
                         showOtpAlert('Logged in successfully! Opening profile...', false);
                         setTimeout(function() {
                             window.location.href = data.redirect_url || '<?php echo function_exists('site_url') ? site_url('user/profile') : '/user/profile'; ?>';
@@ -488,6 +499,27 @@
             }
         }, 1000);
     }
+
+    // Global trigger for login from review/booking pages
+    window.triggerBookingLogin = function(customMsg) {
+        const modal = document.getElementById('loginModal');
+        if (!modal) return;
+        if (customMsg) {
+            showOtpAlert(customMsg, false);
+            const box = document.getElementById('otpAlertBox');
+            if (box) {
+                box.style.background = '#eff6ff';
+                box.style.color = '#1e40af';
+                box.style.border = '1px solid #bfdbfe';
+            }
+        }
+        modal.classList.add('open');
+        switchBackToPhoneStep();
+        setTimeout(function() {
+            const phoneInput = document.getElementById('userPhoneInput');
+            if (phoneInput) phoneInput.focus();
+        }, 150);
+    };
 
     // Modal Opening & Closing Events
     document.addEventListener('DOMContentLoaded', function() {
