@@ -63,10 +63,15 @@ class User extends CI_Controller {
             'user_logged_in' => TRUE
         ]);
 
+        if (empty($user['first_name']) || empty($user['email'])) {
+            $this->session->set_flashdata('welcome_notice', 'Welcome to Voyogo! Please complete your Name and Email ID to finalize your account profile.');
+        }
+
         echo json_encode([
-            'status'   => true,
-            'message'  => 'Logged in successfully!',
-            'user'     => [
+            'status'       => true,
+            'message'      => 'Logged in successfully!',
+            'redirect_url' => site_url('user/profile'),
+            'user'         => [
                 'id'    => $user['id'],
                 'phone' => $user['phone'],
                 'name'  => $fullName ?: $user['phone']

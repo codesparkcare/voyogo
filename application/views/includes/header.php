@@ -395,10 +395,10 @@
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     if (data.status) {
-                        showOtpAlert('Logged in successfully! Redirecting...', false);
+                        showOtpAlert('Logged in successfully! Opening profile...', false);
                         setTimeout(function() {
-                            window.location.reload();
-                        }, 800);
+                            window.location.href = data.redirect_url || '<?php echo function_exists('site_url') ? site_url('user/profile') : '/user/profile'; ?>';
+                        }, 500);
                     } else {
                         if (verifyBtn) {
                             verifyBtn.disabled = false;
