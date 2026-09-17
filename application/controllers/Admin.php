@@ -255,12 +255,21 @@ class Admin extends CI_Controller {
         $this->_check_login();
 
         if ($this->input->post('action') === 'save_settings') {
+            $smtp_pass = trim($this->input->post('smtp_pass') ?: '');
+            if ($smtp_pass === '') {
+                $curr = $this->Admin_model->get_email_settings();
+                $smtp_pass = $curr['smtp_pass'] ?? '';
+            }
+
+            $raw_host = trim($this->input->post('smtp_host'));
+            $clean_host = preg_replace('#^(ssl|tls|tcp)://#i', '', $raw_host);
+
             $save_data = array(
-                'smtp_host'   => trim($this->input->post('smtp_host')),
+                'smtp_host'   => $clean_host,
                 'smtp_port'   => (int)$this->input->post('smtp_port'),
                 'smtp_user'   => trim($this->input->post('smtp_user')),
-                'smtp_pass'   => trim($this->input->post('smtp_pass')),
-                'smtp_crypto' => trim($this->input->post('smtp_crypto')),
+                'smtp_pass'   => $smtp_pass,
+                'smtp_crypto' => strtolower(trim($this->input->post('smtp_crypto'))),
                 'from_email'  => trim($this->input->post('from_email')),
                 'from_name'   => trim($this->input->post('from_name'))
             );
@@ -274,18 +283,18 @@ class Admin extends CI_Controller {
             $this->load->library('email');
             
             $settings = $this->Admin_model->get_email_settings();
-            $smtp_host = $settings['smtp_host'];
-            if (!empty($settings['smtp_crypto']) && strtolower($settings['smtp_crypto']) === 'ssl' && strpos($smtp_host, 'ssl://') === false) {
-                $smtp_host = 'ssl://' . $smtp_host;
-            }
+            // CodeIgniter Email automatically prepends ssl:// if smtp_crypto == 'ssl'.
+            // Never prepend ssl:// manually or it results in ssl://ssl://host
+            $clean_host = preg_replace('#^(ssl|tls|tcp)://#i', '', trim($settings['smtp_host']));
 
             $config = array(
-                'protocol'    => !empty($settings['smtp_host']) ? 'smtp' : 'mail',
-                'smtp_host'   => $smtp_host,
+                'protocol'    => !empty($clean_host) ? 'smtp' : 'mail',
+                'smtp_host'   => $clean_host,
                 'smtp_port'   => (int)$settings['smtp_port'],
-                'smtp_user'   => $settings['smtp_user'],
+                'smtp_user'   => trim($settings['smtp_user']),
                 'smtp_pass'   => $settings['smtp_pass'],
-                'smtp_crypto' => $settings['smtp_crypto'],
+                'smtp_crypto' => !empty($settings['smtp_crypto']) ? strtolower($settings['smtp_crypto']) : '',
+                'smtp_timeout'=> 10,
                 'mailtype'    => 'html',
                 'charset'     => 'utf-8',
                 'wordwrap'    => TRUE,
@@ -298,10 +307,11 @@ class Admin extends CI_Controller {
             $this->email->subject('Voyogo Test Email Configuration');
             $this->email->message('<h3>Voyogo SMTP Setup Success</h3><p>Your SMTP email configuration is working correctly!</p>');
 
-            if (@$this->email->send()) {
+            if ($this->email->send(false)) {
                 $this->session->set_flashdata('success', "Test email sent successfully to $test_to!");
             } else {
-                $this->session->set_flashdata('error', "Failed to send test email. Check your SMTP host/credentials or firewall settings.");
+                $err_detail = strip_tags($this->email->print_debugger(array('headers', 'subject', 'body')));
+                $this->session->set_flashdata('error', "Failed to send test email: " . substr(trim($err_detail), 0, 300));
             }
             redirect('admin/email_settings');
         }

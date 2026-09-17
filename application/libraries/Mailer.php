@@ -17,19 +17,18 @@ class Mailer {
     private function initialize_config() {
         $settings = $this->CI->Admin_model->get_email_settings();
 
-        $smtp_host = $settings['smtp_host'];
-        if (!empty($settings['smtp_crypto']) && strtolower($settings['smtp_crypto']) === 'ssl' && strpos($smtp_host, 'ssl://') === false) {
-            $smtp_host = 'ssl://' . $smtp_host;
-        }
+        // CodeIgniter Email automatically prepends ssl:// if smtp_crypto == 'ssl'.
+        // Never prepend ssl:// manually or it results in ssl://ssl://host
+        $clean_host = preg_replace('#^(ssl|tls|tcp)://#i', '', trim($settings['smtp_host']));
 
         $config = array(
-            'protocol'    => !empty($settings['smtp_host']) ? 'smtp' : 'mail',
-            'smtp_host'   => $smtp_host,
+            'protocol'    => !empty($clean_host) ? 'smtp' : 'mail',
+            'smtp_host'   => $clean_host,
             'smtp_port'   => (int)$settings['smtp_port'],
-            'smtp_user'   => $settings['smtp_user'],
+            'smtp_user'   => trim($settings['smtp_user']),
             'smtp_pass'   => $settings['smtp_pass'],
-            'smtp_crypto' => $settings['smtp_crypto'],
-            'smtp_timeout'=> 3,
+            'smtp_crypto' => !empty($settings['smtp_crypto']) ? strtolower($settings['smtp_crypto']) : '',
+            'smtp_timeout'=> 10,
             'mailtype'    => 'html',
             'charset'     => 'utf-8',
             'wordwrap'    => TRUE,
