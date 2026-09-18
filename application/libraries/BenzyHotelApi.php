@@ -199,58 +199,76 @@ class BenzyHotelApi {
     // 3. INIT SEARCH (/api/hotels/search/init or /Hotel/Init)
     // =========================================================================
     public function resolveGeoCode($city, $geoCode = null) {
-        if (!empty($geoCode) && is_array($geoCode) && !empty($geoCode['lat']) && !empty($geoCode['long'])) {
-            return array(
-                'lat'  => (string)$geoCode['lat'],
-                'long' => (string)$geoCode['long']
-            );
-        }
+        $dest = $this->resolveDestination($city, null, $geoCode, null);
+        return $dest['geoCode'];
+    }
 
-        $knownCities = array(
-            'tirunelveli' => array('lat' => '8.713913', 'long' => '77.756653'),
-            'goa'         => array('lat' => '15.299326', 'long' => '74.123996'),
-            'mumbai'      => array('lat' => '19.076090', 'long' => '72.877426'),
-            'delhi'       => array('lat' => '28.613939', 'long' => '77.209021'),
-            'new delhi'   => array('lat' => '28.613939', 'long' => '77.209021'),
-            'bengaluru'   => array('lat' => '12.971599', 'long' => '77.594563'),
-            'bangalore'   => array('lat' => '12.971599', 'long' => '77.594563'),
-            'chennai'     => array('lat' => '13.082680', 'long' => '80.270718'),
-            'madurai'     => array('lat' => '9.925201', 'long' => '78.119775'),
-            'hyderabad'   => array('lat' => '17.385044', 'long' => '78.486671'),
-            'kochi'       => array('lat' => '9.931233', 'long' => '76.267304'),
-            'cochin'      => array('lat' => '9.931233', 'long' => '76.267304'),
-            'jaipur'      => array('lat' => '26.912434', 'long' => '75.787271'),
-            'dubai'       => array('lat' => '25.204849', 'long' => '55.270783'),
-            'singapore'   => array('lat' => '1.352083', 'long' => '103.819836'),
-            'bangkok'     => array('lat' => '13.756331', 'long' => '100.501765'),
-            'london'      => array('lat' => '51.507351', 'long' => '-0.127758'),
-            'paris'       => array('lat' => '48.856614', 'long' => '2.352222'),
-            'maldives'    => array('lat' => '4.175496', 'long' => '73.509347'),
-            'male'        => array('lat' => '4.175496', 'long' => '73.509347'),
-            'bali'        => array('lat' => '-8.409518', 'long' => '115.188916'),
-            'pune'        => array('lat' => '18.520430', 'long' => '73.856744'),
-            'kolkata'     => array('lat' => '22.572646', 'long' => '88.363895'),
-            'ahmedabad'   => array('lat' => '23.022505', 'long' => '72.571362')
+    public function resolveDestination($city, $locationId = null, $geoCode = null, $countryCode = null) {
+        $knownDestinations = array(
+            'tirunelveli' => array('locationId' => '357389', 'country' => 'IN', 'lat' => '8.713913', 'long' => '77.756653'),
+            'mumbai'      => array('locationId' => '247112', 'country' => 'IN', 'lat' => '19.076090', 'long' => '72.877426'),
+            'bombay'      => array('locationId' => '247112', 'country' => 'IN', 'lat' => '19.076090', 'long' => '72.877426'),
+            'goa'         => array('locationId' => '329184', 'country' => 'IN', 'lat' => '15.299326', 'long' => '74.123996'),
+            'delhi'       => array('locationId' => '247076', 'country' => 'IN', 'lat' => '28.613939', 'long' => '77.209021'),
+            'new delhi'   => array('locationId' => '247076', 'country' => 'IN', 'lat' => '28.613939', 'long' => '77.209021'),
+            'bengaluru'   => array('locationId' => '247124', 'country' => 'IN', 'lat' => '12.971599', 'long' => '77.594563'),
+            'bangalore'   => array('locationId' => '247124', 'country' => 'IN', 'lat' => '12.971599', 'long' => '77.594563'),
+            'chennai'     => array('locationId' => '247123', 'country' => 'IN', 'lat' => '13.082680', 'long' => '80.270718'),
+            'madras'      => array('locationId' => '247123', 'country' => 'IN', 'lat' => '13.082680', 'long' => '80.270718'),
+            'madurai'     => array('locationId' => '357389', 'country' => 'IN', 'lat' => '9.925201', 'long' => '78.119775'),
+            'hyderabad'   => array('locationId' => '247146', 'country' => 'IN', 'lat' => '17.385044', 'long' => '78.486671'),
+            'kochi'       => array('locationId' => '329184', 'country' => 'IN', 'lat' => '9.931233', 'long' => '76.267304'),
+            'cochin'      => array('locationId' => '329184', 'country' => 'IN', 'lat' => '9.931233', 'long' => '76.267304'),
+            'jaipur'      => array('locationId' => '247138', 'country' => 'IN', 'lat' => '26.912434', 'long' => '75.787271'),
+            'dubai'       => array('locationId' => '247155', 'country' => 'AE', 'lat' => '25.204849', 'long' => '55.270783'),
+            'singapore'   => array('locationId' => '247160', 'country' => 'SG', 'lat' => '1.352083', 'long' => '103.819836'),
+            'bangkok'     => array('locationId' => '247165', 'country' => 'TH', 'lat' => '13.756331', 'long' => '100.501765'),
+            'london'      => array('locationId' => '247170', 'country' => 'GB', 'lat' => '51.507351', 'long' => '-0.127758'),
+            'paris'       => array('locationId' => '247175', 'country' => 'FR', 'lat' => '48.856614', 'long' => '2.352222'),
+            'maldives'    => array('locationId' => '247180', 'country' => 'MV', 'lat' => '4.175496', 'long' => '73.509347'),
+            'male'        => array('locationId' => '247180', 'country' => 'MV', 'lat' => '4.175496', 'long' => '73.509347'),
+            'bali'        => array('locationId' => '247185', 'country' => 'ID', 'lat' => '-8.409518', 'long' => '115.188916'),
+            'pune'        => array('locationId' => '247190', 'country' => 'IN', 'lat' => '18.520430', 'long' => '73.856744'),
+            'kolkata'     => array('locationId' => '247195', 'country' => 'IN', 'lat' => '22.572646', 'long' => '88.363895'),
+            'ahmedabad'   => array('locationId' => '247200', 'country' => 'IN', 'lat' => '23.022505', 'long' => '72.571362')
         );
 
         $clean = strtolower(trim(explode(',', $city)[0]));
-        if (isset($knownCities[$clean])) {
-            return $knownCities[$clean];
-        }
-
-        foreach ($knownCities as $k => $coords) {
-            if (stripos($clean, $k) !== false || stripos($k, $clean) !== false) {
-                return $coords;
+        $match = null;
+        if (isset($knownDestinations[$clean])) {
+            $match = $knownDestinations[$clean];
+        } else {
+            foreach ($knownDestinations as $k => $dest) {
+                if (stripos($clean, $k) !== false || stripos($k, $clean) !== false) {
+                    $match = $dest;
+                    break;
+                }
             }
         }
 
-        // Default to Tirunelveli / Southern Hub if unknown
-        return array('lat' => '8.713913', 'long' => '77.756653');
+        $resLocationId  = $locationId ?: ($match['locationId'] ?? '');
+        $resCountryCode = $countryCode ?: ($match['country'] ?? '');
+        $resLat         = (!empty($geoCode['lat'])) ? (string)$geoCode['lat'] : (string)($match['lat'] ?? '');
+        $resLong        = (!empty($geoCode['long'])) ? (string)$geoCode['long'] : (string)($match['long'] ?? '');
+
+        // Fallback to Tirunelveli / default hub if still missing
+        if (empty($resLocationId))  $resLocationId = '357389';
+        if (empty($resCountryCode)) $resCountryCode = 'IN';
+        if (empty($resLat))         $resLat = '8.713913';
+        if (empty($resLong))        $resLong = '77.756653';
+
+        return array(
+            'locationId'  => (string)$resLocationId,
+            'countryCode' => strtoupper(trim($resCountryCode)),
+            'geoCode'     => array('lat' => (string)$resLat, 'long' => (string)$resLong)
+        );
     }
 
-    public function initSearch($city, $checkin, $checkout, $rooms = 1, $adults = 2, $children = 0, $locationId = null, $geoCode = null, $roomData = array()) {
+    public function initSearch($city, $checkin, $checkout, $rooms = 1, $adults = 2, $children = 0, $locationId = null, $geoCode = null, $roomData = array(), $countryCode = null) {
         $token = $this->generateToken();
         $url = $this->hotelUrl . '/api/hotels/search/init';
+
+        $dest = $this->resolveDestination($city, $locationId, $geoCode, $countryCode);
 
         $roomArr = array();
         if (!empty($roomData) && is_array($roomData)) {
@@ -261,7 +279,7 @@ class BenzyHotelApi {
                     $rawAges = $rm['childAges'] ?? array();
                     for ($ci = 0; $ci < $childCnt; $ci++) {
                         $ageVal = isset($rawAges[$ci]) ? (int)$rawAges[$ci] : 0;
-                        $cages[] = ($ageVal > 0) ? $ageVal : (($ci === 0) ? 7 : 3);
+                        $cages[] = (string)(($ageVal > 0) ? $ageVal : (($ci === 0) ? 7 : 3));
                     }
                 }
                 $roomArr[] = array(
@@ -276,7 +294,7 @@ class BenzyHotelApi {
                 $childCnt = (int)$children;
                 if ($childCnt > 0) {
                     for ($ci = 0; $ci < $childCnt; $ci++) {
-                        $cages[] = ($ci === 0) ? 7 : 3;
+                        $cages[] = (string)(($ci === 0) ? 7 : 3);
                     }
                 }
                 $roomArr[] = array(
@@ -287,16 +305,21 @@ class BenzyHotelApi {
             }
         }
 
-        $resolvedGeo = $this->resolveGeoCode($city, $geoCode);
-
+        // Compliant with Roopesh/Benzy requirements:
+        // 1. locationId: Always passed in Init Request
+        // 2. destinationCountryCode: Passed from "country" leg of autosuggest response
+        // 3. segmentId: Passed as htdealCode from settings/profile
+        // 4. geoCode: Always included with coordinates
         $payload = array(
+            'locationId'             => $dest['locationId'],
+            'geoCode'                => $dest['geoCode'],
             'currency'               => 'INR',
             'culture'                => 'en-US',
             'checkIn'                => date('m/d/Y', strtotime($checkin)),
             'checkOut'               => date('m/d/Y', strtotime($checkout)),
             'rooms'                  => $roomArr,
             'agentCode'              => $this->credentials['AgentCode'] ?? '',
-            'destinationCountryCode' => 'IN',
+            'destinationCountryCode' => $dest['countryCode'],
             'nationality'            => 'IN',
             'countryOfResidence'     => 'IN',
             'channelId'              => $this->channelId,
@@ -306,16 +329,6 @@ class BenzyHotelApi {
             'gstPercentage'          => $this->gstPercentage,
             'tdsPercentage'          => $this->tdsPercentage
         );
-
-        if (!empty($locationId)) {
-            $payload['locationId'] = (string)$locationId;
-        } else {
-            // Benzy API requires either locationId or geoCode (lat/long)
-            $payload['geoCode'] = array(
-                'lat'  => (string)$resolvedGeo['lat'],
-                'long' => (string)$resolvedGeo['long']
-            );
-        }
 
         $res = $this->makeRequest('Init', $url, $payload, 'POST', $token);
         if ($res['http_code'] !== 200 || empty($res['json']['searchId'])) {
@@ -343,8 +356,8 @@ class BenzyHotelApi {
     // =========================================================================
     // 4. HOTEL SEARCH (Coordinates Content + Rate APIs)
     // =========================================================================
-    public function searchHotels($city, $checkin, $checkout, $rooms = 1, $adults = 2, $children = 0, $locationId = null, $geoCode = null, $roomData = array()) {
-        $initData = $this->initSearch($city, $checkin, $checkout, $rooms, $adults, $children, $locationId, $geoCode, $roomData);
+    public function searchHotels($city, $checkin, $checkout, $rooms = 1, $adults = 2, $children = 0, $locationId = null, $geoCode = null, $roomData = array(), $countryCode = null) {
+        $initData = $this->initSearch($city, $checkin, $checkout, $rooms, $adults, $children, $locationId, $geoCode, $roomData, $countryCode);
         $searchId = $initData['searchId'];
         $searchTracingKey = $initData['searchTracingKey'];
         $token = $this->generateToken();
@@ -1144,19 +1157,27 @@ class BenzyHotelApi {
 
     public function getFallbackDestinations($q = '') {
         $all = array(
-            array('id' => '101', 'name' => 'Goa, India', 'code' => 'GOI', 'country' => 'India'),
-            array('id' => '102', 'name' => 'Mumbai, India', 'code' => 'BOM', 'country' => 'India'),
-            array('id' => '103', 'name' => 'Delhi, India', 'code' => 'DEL', 'country' => 'India'),
-            array('id' => '104', 'name' => 'Dubai, United Arab Emirates', 'code' => 'DXB', 'country' => 'UAE'),
-            array('id' => '105', 'name' => 'Singapore', 'code' => 'SIN', 'country' => 'Singapore'),
-            array('id' => '106', 'name' => 'Bangkok, Thailand', 'code' => 'BKK', 'country' => 'Thailand'),
-            array('id' => '107', 'name' => 'London, United Kingdom', 'code' => 'LHR', 'country' => 'UK'),
-            array('id' => '108', 'name' => 'Paris, France', 'code' => 'CDG', 'country' => 'France'),
-            array('id' => '109', 'name' => 'Bali, Indonesia', 'code' => 'DPS', 'country' => 'Indonesia')
+            array('id' => '357389', 'locationId' => '357389', 'name' => 'Tirunelveli', 'fullName' => 'Tirunelveli, Tamil Nadu, India', 'code' => 'TIR', 'country' => 'IN', 'coordinates' => array('lat' => 8.713913, 'long' => 77.756653)),
+            array('id' => '329184', 'locationId' => '329184', 'name' => 'Goa', 'fullName' => 'Goa, India', 'code' => 'GOI', 'country' => 'IN', 'coordinates' => array('lat' => 15.299326, 'long' => 74.123996)),
+            array('id' => '247112', 'locationId' => '247112', 'name' => 'Mumbai', 'fullName' => 'Mumbai, Maharashtra, India', 'code' => 'BOM', 'country' => 'IN', 'coordinates' => array('lat' => 19.076090, 'long' => 72.877426)),
+            array('id' => '247076', 'locationId' => '247076', 'name' => 'Delhi', 'fullName' => 'New Delhi, Delhi, India', 'code' => 'DEL', 'country' => 'IN', 'coordinates' => array('lat' => 28.613939, 'long' => 77.209021)),
+            array('id' => '247124', 'locationId' => '247124', 'name' => 'Bengaluru', 'fullName' => 'Bengaluru, Karnataka, India', 'code' => 'BLR', 'country' => 'IN', 'coordinates' => array('lat' => 12.971599, 'long' => 77.594563)),
+            array('id' => '247123', 'locationId' => '247123', 'name' => 'Chennai', 'fullName' => 'Chennai, Tamil Nadu, India', 'code' => 'MAA', 'country' => 'IN', 'coordinates' => array('lat' => 13.082680, 'long' => 80.270718)),
+            array('id' => '357389', 'locationId' => '357389', 'name' => 'Madurai', 'fullName' => 'Madurai, Tamil Nadu, India', 'code' => 'IXM', 'country' => 'IN', 'coordinates' => array('lat' => 9.925201, 'long' => 78.119775)),
+            array('id' => '247146', 'locationId' => '247146', 'name' => 'Hyderabad', 'fullName' => 'Hyderabad, Telangana, India', 'code' => 'HYD', 'country' => 'IN', 'coordinates' => array('lat' => 17.385044, 'long' => 78.486671)),
+            array('id' => '329184', 'locationId' => '329184', 'name' => 'Kochi', 'fullName' => 'Kochi (Cochin), Kerala, India', 'code' => 'COK', 'country' => 'IN', 'coordinates' => array('lat' => 9.931233, 'long' => 76.267304)),
+            array('id' => '247138', 'locationId' => '247138', 'name' => 'Jaipur', 'fullName' => 'Jaipur, Rajasthan, India', 'code' => 'JAI', 'country' => 'IN', 'coordinates' => array('lat' => 26.912434, 'long' => 75.787271)),
+            array('id' => '247155', 'locationId' => '247155', 'name' => 'Dubai', 'fullName' => 'Dubai, United Arab Emirates', 'code' => 'DXB', 'country' => 'AE', 'coordinates' => array('lat' => 25.204849, 'long' => 55.270783)),
+            array('id' => '247160', 'locationId' => '247160', 'name' => 'Singapore', 'fullName' => 'Singapore', 'code' => 'SIN', 'country' => 'SG', 'coordinates' => array('lat' => 1.352083, 'long' => 103.819836)),
+            array('id' => '247165', 'locationId' => '247165', 'name' => 'Bangkok', 'fullName' => 'Bangkok, Thailand', 'code' => 'BKK', 'country' => 'TH', 'coordinates' => array('lat' => 13.756331, 'long' => 100.501765)),
+            array('id' => '247170', 'locationId' => '247170', 'name' => 'London', 'fullName' => 'London, United Kingdom', 'code' => 'LHR', 'country' => 'GB', 'coordinates' => array('lat' => 51.507351, 'long' => -0.127758)),
+            array('id' => '247175', 'locationId' => '247175', 'name' => 'Paris', 'fullName' => 'Paris, France', 'code' => 'CDG', 'country' => 'FR', 'coordinates' => array('lat' => 48.856614, 'long' => 2.352222)),
+            array('id' => '247180', 'locationId' => '247180', 'name' => 'Maldives', 'fullName' => 'Male, Maldives', 'code' => 'MLE', 'country' => 'MV', 'coordinates' => array('lat' => 4.175496, 'long' => 73.509347)),
+            array('id' => '247185', 'locationId' => '247185', 'name' => 'Bali', 'fullName' => 'Bali, Indonesia', 'code' => 'DPS', 'country' => 'ID', 'coordinates' => array('lat' => -8.409518, 'long' => 115.188916))
         );
         if (empty($q)) return $all;
         return array_values(array_filter($all, function($d) use ($q) {
-            return stripos($d['name'], $q) !== false || stripos($d['code'], $q) !== false;
+            return stripos($d['name'], $q) !== false || stripos($d['fullName'], $q) !== false || stripos($d['code'], $q) !== false;
         }));
     }
 

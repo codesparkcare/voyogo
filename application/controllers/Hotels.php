@@ -46,10 +46,11 @@ class Hotels extends CI_Controller {
         $lat = $this->input->post('lat') ?: $this->input->get('lat');
         $lng = $this->input->post('lng') ?: $this->input->get('lng');
         $locationId = $this->input->post('location_id') ?: $this->input->get('location_id');
+        $countryCode = $this->input->post('country_code') ?: ($this->input->get('country_code') ?: null);
 
         $geoCode = (!empty($lat) && !empty($lng)) ? array('lat' => $lat, 'long' => $lng) : null;
 
-        $hotelResults = $this->benzyhotelapi->searchHotels($city, $checkin, $checkout, $rooms, $adults, $children, $locationId, $geoCode, $roomData);
+        $hotelResults = $this->benzyhotelapi->searchHotels($city, $checkin, $checkout, $rooms, $adults, $children, $locationId, $geoCode, $roomData, $countryCode);
         $nights = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
         $searchId = $hotelResults['searchId'] ?? '';
         $searchTracingKey = $hotelResults['searchTracingKey'] ?? '';
@@ -74,6 +75,8 @@ class Hotels extends CI_Controller {
             'rooms'              => $rooms,
             'adults'             => $adults,
             'children'           => $children,
+            'location_id'        => $locationId,
+            'country_code'       => $countryCode,
             'roomData'           => $roomDataRaw,
             'search_id'          => $searchId,
             'search_tracing_key' => $searchTracingKey

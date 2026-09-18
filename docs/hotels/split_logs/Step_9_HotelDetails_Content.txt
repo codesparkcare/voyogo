@@ -1,0 +1,685 @@
+--------------------------------------------------------------------------------
+STEP #9 | LOG ID: #2955 | TIMESTAMP: 2026-09-09 12:46:15
+API NAME / ACTION: HotelDetails_Content
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/6d3dc8a5-c7d0-4731-93fc-75a6f61d13bc.sVU0kctR3yLyx4l4xTys5J0hwXkxZGIVavk_21mLOKM/15777057/content
+HTTP STATUS: 200 | LATENCY: 1792 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "hotel": {
+        "id": "15777057",
+        "name": "RR INN- Tirunelveli",
+        "relevanceScore": 0,
+        "providerFamily": "EAN",
+        "providerHotelId": "30518268",
+        "language": "en-US",
+        "providerName": "EAN",
+        "geoCode": {
+            "lat": 8.735341,
+            "long": 77.71138
+        },
+        "neighbourhoods": [],
+        "contact": {
+            "address": {
+                "line1": "Old Madurai Road, Tirunelveli Junction",
+                "line2": null,
+                "destinationCode": null,
+                "city": "Tirunelveli",
+                "state": "Tamil Nadu",
+                "country": "IN",
+                "postalCode": "627001"
+            },
+            "phones": [
+                "91-9489094009"
+            ],
+            "faxes": null,
+            "emails": null,
+            "website": null
+        },
+        "chainCode": "0",
+        "chainName": "Independent",
+        "type": "Hotel",
+        "website": null,
+        "descriptions": [
+            {
+                "type": "amenities",
+                "text": "Take advantage of recreation opportunities such as a 24-hour health club, or other amenities including complimentary wireless internet access and concierge services. This hotel also features a television in a common area and a banquet hall."
+            },
+            {
+                "type": "dining",
+                "text": "Enjoy a meal at the restaurant, or stay in and take advantage of the hotel's 24-hour room service."
+            },
+            {
+                "type": "business_amenities",
+                "text": "Featured amenities include complimentary newspapers in the lobby, a 24-hour front desk, and multilingual staff. Event facilities at this hotel consist of conference space and meeting rooms. A roundtrip airport shuttle is provided for a surcharge (available 24 hours), and free self parking is available onsite."
+            },
+            {
+                "type": "rooms",
+                "text": "Stay in one of 42 guestrooms featuring LED televisions. Complimentary wireless internet access keeps you connected, and cable programming is available for your entertainment. Bathrooms have showers and slippers. Conveniences include safes and complimentary newspapers, and housekeeping is provided daily."
+            },
+            {
+                "type": "attractions",
+                "text": "Distances are displayed to the nearest 0.1 mile and kilometer. <br /> <p>Getwell Hanuman Temple - 0.6 km / 0.4 mi <br /> Aravind Eye Hospital - 1.1 km / 0.7 mi <br /> ThittaiPillaiyar Koil - 2 km / 1.2 mi <br /> Kanthimathi-Nellaiyapper Temple - 3.2 km / 2 mi <br /> Manonmaniam Sundaranar University - 11.7 km / 7.3 mi <br /> Krishnapuram Temple - 12.7 km / 7.9 mi <br /> PSN College of Engineering and Technology - 18.5 km / 11.5 mi <br /> Arulmigu Sree Vanamamalai Perumal Temple - 32.3 km / 20.1 mi <br /> Western Ghats - 34.5 km / 21.4 mi <br /> Kalyana Theertham - 41.2 km / 25.6 mi <br /> Kattabomman Memorial Fort - 47.8 km / 29.7 mi <br /> Agasthiyar Falls - 49.1 km / 30.5 mi <br /> </p><p>The preferred airport for RR INN- Tirunelveli is Tuticorin (TCR) - 39.1 km / 24.3 mi </p>"
+            },
+            {
+                "type": "location",
+                "text": "With a stay at RR INN- Tirunelveli in Tirunelveli, you'll be within a 15-minute walk of Getwell Hanuman Temple and Aravind Eye Hospital.  This hotel is 2 mi (3.2 km) from Kanthimathi-Nellaiyapper Temple and 2.1 mi (3.4 km) from ThittaiPillaiyar Koil."
+            },
+            {
+                "type": "headline",
+                "text": "Near Getwell Hanuman Temple"
+            },
+            {
+                "type": "spoken_languages",
+                "text": "Hindi, English"
+            },
+            {
+                "type": "onsite_payments",
+                "text": "Visa, Mastercard"
+            }
+        ],
+        "category": "Hotel",
+        "starRating": 4,
+        "facilityGroups": [
+            {
+                "id": 62,
+                "groupId": 62,
+                "name": "Elevator"
+            },
+            {
+                "id": 1,
+                "groupId": 1,
+                "name": "Parking"
+            },
+            {
+                "id": 35,
+                "groupId": 35,
+                "name": "Multilingual"
+            },
+            {
+                "id": 6,
+                "groupId": 6,
+                "name": "Business Center"
+            },
+            {
+                "id": 10,
+                "groupId": 10,
+                "name": "Non Smoking"
+            },
+            {
+                "id": 11,
+                "groupId": 11,
+                "name": "Television"
+            },
+            {
+                "id": 12,
+                "groupId": 12,
+                "name": "Laundry Services"
+            },
+            {
+                "id": 14,
+                "groupId": 14,
+                "name": "Restaurant"
+            },
+            {
+                "id": 16,
+                "groupId": 16,
+                "name": "Internet"
+            },
+            {
+                "id": 17,
+                "groupId": 17,
+                "name": "Fitness Facility"
+            },
+            {
+                "id": 49,
+                "groupId": 49,
+                "name": "Concierge Services"
+            },
+            {
+                "id": 80,
+                "groupId": 80,
+                "name": "Conveniences"
+            },
+            {
+                "id": 18,
+                "groupId": 18,
+                "name": "Airport Shuttle"
+            },
+            {
+                "id": 29,
+                "groupId": 29,
+                "name": "Banquet"
+            }
+        ],
+        "facilities": [
+            {
+                "id": 56,
+                "groupId": 18,
+                "name": "Airport transportation (surcharge)"
+            },
+            {
+                "id": 5054,
+                "groupId": 17,
+                "name": "24-hour health club"
+            },
+            {
+                "id": 1073744111,
+                "groupId": 29,
+                "name": "Banquet hall"
+            },
+            {
+                "id": 2131,
+                "groupId": 6,
+                "name": "Meeting rooms"
+            },
+            {
+                "id": 2043,
+                "groupId": 35,
+                "name": "Multilingual staff"
+            },
+            {
+                "id": 2063,
+                "groupId": 80,
+                "name": "24-hour front desk"
+            },
+            {
+                "id": 372,
+                "groupId": 11,
+                "name": "Television in common areas"
+            },
+            {
+                "id": 2390,
+                "groupId": 16,
+                "name": "Free WiFi"
+            },
+            {
+                "id": 2537,
+                "groupId": 14,
+                "name": "Number of restaurants - 1"
+            },
+            {
+                "id": 2137,
+                "groupId": 10,
+                "name": "Smoke-free property"
+            },
+            {
+                "id": 2047,
+                "groupId": 0,
+                "name": "Free newspapers in lobby"
+            },
+            {
+                "id": 369,
+                "groupId": 12,
+                "name": "Laundry facilities"
+            },
+            {
+                "id": 2387,
+                "groupId": 0,
+                "name": "Tours/ticket assistance"
+            },
+            {
+                "id": 3861,
+                "groupId": 1,
+                "name": "Free self parking"
+            },
+            {
+                "id": 8,
+                "groupId": 62,
+                "name": "Elevator"
+            },
+            {
+                "id": 81,
+                "groupId": 6,
+                "name": "Conference space"
+            },
+            {
+                "id": 43,
+                "groupId": 49,
+                "name": "Concierge services"
+            }
+        ],
+        "nearByAttractions": [
+            {
+                "name": "Getwell Hanuman Temple",
+                "distance": "0.6",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Aravind Eye Hospital",
+                "distance": "1.1",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "ThittaiPillaiyar Koil",
+                "distance": "2",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Kanthimathi-Nellaiyapper Temple",
+                "distance": "3.2",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Manonmaniam Sundaranar University",
+                "distance": "11.7",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Krishnapuram Temple",
+                "distance": "12.7",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "PSN College of Engineering and Technology",
+                "distance": "18.5",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Arulmigu Sree Vanamamalai Perumal Temple",
+                "distance": "32.3",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Western Ghats",
+                "distance": "34.5",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Kalyana Theertham",
+                "distance": "41.2",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Kattabomman Memorial Fort",
+                "distance": "47.8",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Agasthiyar Falls",
+                "distance": "49.1",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "The preferred airport for RR INN- Tirunelveli is Tuticorin (TCR)",
+                "distance": "39.1",
+                "unit": "km",
+                "description": null,
+                "type": null
+            }
+        ],
+        "images": [
+            {
+                "caption": "Primary image",
+                "category": "3",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/3a267a4a_z.jpg"
+            },
+            {
+                "caption": "Reception",
+                "category": "10002",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/916c47b9_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430032"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d21f15f5_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430032"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/3ebdfc19_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430031"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/7019708f_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430032",
+                    "221430031"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/be4d5f17_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430033"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/1a164a1b_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430033"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/07c47e39_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430033"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/0612b606_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430033"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/8bf61bc1_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430031"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/394c26fb_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/1e6fc824_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/f544564d_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d1fff47a_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/51faf671_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/67a68511_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2c61ff48_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/230375d8_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d8c697b0_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2e67860b_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/9cd5a7a5_z.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "221430033"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/189f0735_z.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "221430031"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/0f155f26_z.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "221430031"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/f839a4f7_z.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "221430032"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/371449d4_z.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/6db79e9b_z.jpg"
+            },
+            {
+                "caption": "Restaurant",
+                "category": "81003",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/8bfe1f0d_z.jpg"
+            },
+            {
+                "caption": "Interior",
+                "category": "83000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/b319c8d3_z.jpg"
+            },
+            {
+                "caption": "Business center",
+                "category": "83010",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/91e5826a_z.jpg"
+            },
+            {
+                "caption": "Business center",
+                "category": "83010",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/40c7c89d_z.jpg"
+            },
+            {
+                "caption": "Business center",
+                "category": "83010",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/bfaca396_z.jpg"
+            },
+            {
+                "caption": "Exterior",
+                "category": "91024",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/e2dc382e_z.jpg"
+            }
+        ],
+        "policies": [
+            {
+                "type": "know_before_you_go",
+                "text": "  This property's policy is to refuse certain bookings for the purpose of group events or parties, including pre-wedding stag/bachelor and hen/bachelorette parties. Only registered guests are allowed in the guestrooms.  Alcohol is not permitted at this property.  "
+            }
+        ],
+        "fees": [
+            {
+                "type": null,
+                "text": null
+            },
+            {
+                "type": null,
+                "text": null
+            }
+        ],
+        "reviews": [
+            {
+                "provider": "EAN",
+                "count": 2,
+                "rating": 5,
+                "url": null,
+                "reviews": null
+            }
+        ],
+        "checkinInfo": {
+            "beginTime": null,
+            "endTime": "anytime",
+            "instructions": [
+                "<ul>  <li>Extra-person charges may apply and vary depending on property policy</li><li>Government-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental charges</li><li>Special requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed</li><li>This property accepts credit cards</li>  </ul>"
+            ],
+            "specialInstructions": [
+                "This property offers transfers from the airport (surcharges may apply). Guests must contact the property with arrival details before travel, using the contact information on the booking confirmation. Front desk staff will greet guests on arrival at the property. Information provided by the property may be translated using automated translation tools.",
+                "We never guarantee on Extra Bed for Extra Adult, It will be subject to availability and may be Chargeable also.",
+                "During Christmas & New year ,Hotel May Request You to pay for Gala Dinner Charges at the time of Check-inn.",
+                "These additional charge are not included in the booking amount and will be collected directly at the hotel.",
+                "Tourism Taxes, City Taxes, Resort Fee, Etc Hotel May request You to pay at the time of Check-inn(Local Currency).",
+                "As per the hotel policy, there might be peak season and long weekend surcharges, which would be payable by guest directly at the hotel.",
+                "In case of peak dates or technical issues causing the hotel to be sold out, an alternative hotel of equal booking value or a full refund will be provided."
+            ],
+            "minAge": 18
+        },
+        "checkoutInfo": {
+            "time": "12:00 PM"
+        },
+        "heroImage": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/3a267a4a_z.jpg",
+        "distance": 0,
+        "locationName": null,
+        "mappings": null,
+        "destinationCode": null,
+        "line1": null,
+        "city": null
+    },
+    "curatedHotels": {
+        "id": "15777057",
+        "name": "RR INN- Tirunelveli",
+        "ratings": "4",
+        "addressLine1": "Old Madurai Road, Tirunelveli Junction"
+    },
+    "status": "success"
+}
+================================================================================

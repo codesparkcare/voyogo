@@ -1,0 +1,1010 @@
+--------------------------------------------------------------------------------
+STEP #7 | LOG ID: #2953 | TIMESTAMP: 2026-09-09 12:46:09
+API NAME / ACTION: HotelRate
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/6d3dc8a5-c7d0-4731-93fc-75a6f61d13bc.sVU0kctR3yLyx4l4xTys5J0hwXkxZGIVavk_21mLOKM/rate
+HTTP STATUS: 200 | LATENCY: 4751 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "searchStatus": "completed",
+    "hotels": [
+        {
+            "id": "15719740",
+            "rate": {
+                "total": 9680.37,
+                "baseRate": 8783.54,
+                "commission": 0,
+                "discounts": 0,
+                "taxes": 896.82,
+                "fees": 0,
+                "providerId": "305",
+                "provider": "DidaTravel",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 878.35,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 4840.18
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru",
+                "Travex",
+                "EscalaBeds",
+                "DidaTravel",
+                "ITripJP",
+                "Rategain",
+                "SmyroomsDirect",
+                "PeakPoint",
+                "EAN",
+                "SunHotels"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": true,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "39668886",
+            "rate": {
+                "total": 9927.92,
+                "baseRate": 9927.92,
+                "commission": 0,
+                "discounts": 0,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "701inr",
+                "provider": "Veturis",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 992.79,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 4963.96
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru",
+                "DidaTravel",
+                "SmyroomsDirect",
+                "PeakPoint",
+                "MGHolidayTGX",
+                "Veturis",
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "41513587",
+            "rate": {
+                "total": 6968.67,
+                "baseRate": 6968.67,
+                "commission": 0,
+                "discounts": 0,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "701inr",
+                "provider": "Veturis",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 696.87,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 3484.34
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru",
+                "EscalaBeds",
+                "DidaTravel",
+                "PeakPoint",
+                "Veturis",
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "70483713",
+            "rate": {
+                "total": 8503.64,
+                "baseRate": 8503.64,
+                "commission": 0,
+                "discounts": 0,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "1022",
+                "provider": "EscalaBeds",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 850.36,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 4251.82
+            },
+            "isRecommended": false,
+            "moreRatesExpected": false,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "EscalaBeds",
+                "DidaTravel",
+                "PeakPoint",
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "16473201",
+            "rate": {
+                "total": 5574.43,
+                "baseRate": 5702.4,
+                "commission": 415.97,
+                "discounts": 0,
+                "taxes": 288,
+                "fees": 0,
+                "providerId": "20340",
+                "provider": "EAN",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 415.97,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 570.24,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": {
+                    "title": "Promotion",
+                    "description": "Save:11% ",
+                    "type": null,
+                    "discountOffer": 0,
+                    "percentageDiscountOffer": 0,
+                    "stayOffer": null
+                },
+                "gstOnCommission": 0,
+                "additionalInformation": [
+                    {
+                        "type": "RoomIdentifierKey",
+                        "text": "328296349"
+                    },
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "408421446"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    }
+                ],
+                "tcsOnTotal": 0,
+                "ratePerNight": 2787.22
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "39642365",
+            "rate": {
+                "total": 4787.92,
+                "baseRate": 4787.92,
+                "commission": 0,
+                "discounts": 0,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "777india",
+                "provider": "Atharva",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 478.79,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 2393.96
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "DidaTravel",
+                "Atharva",
+                "PeakPoint",
+                "TravelGuru",
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15635033",
+            "rate": {
+                "total": 3965.26,
+                "baseRate": 3965.26,
+                "commission": 0,
+                "discounts": 0,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "490",
+                "provider": "SmyroomsDirect",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 396.53,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 1982.63
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "DidaTravel",
+                "MGHolidayTGX",
+                "PeakPoint",
+                "Veturis",
+                "TravelGuru",
+                "EAN",
+                "SmyroomsDirect"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15643310",
+            "rate": {
+                "total": 3532.94,
+                "baseRate": 3532.94,
+                "commission": 0,
+                "discounts": 0,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "777india",
+                "provider": "Atharva",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 353.29,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 1766.47
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "DidaTravel",
+                "Rategain",
+                "MGHolidayTGX",
+                "Atharva",
+                "PeakPoint",
+                "Veturis",
+                "TravelGuru",
+                "EAN",
+                "SmyroomsDirect",
+                "SunHotels"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": true,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "71000725",
+            "rate": {
+                "total": 1132.17,
+                "baseRate": 1167.6,
+                "commission": 95.43,
+                "discounts": 0,
+                "taxes": 60,
+                "fees": 0,
+                "providerId": "20340",
+                "provider": "EAN",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 95.43,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 116.76,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": {
+                    "title": "Promotion",
+                    "description": "Save:42% ",
+                    "type": null,
+                    "discountOffer": 0,
+                    "percentageDiscountOffer": 0,
+                    "stayOffer": null
+                },
+                "gstOnCommission": 0,
+                "additionalInformation": [
+                    {
+                        "type": "RoomIdentifierKey",
+                        "text": "326792521"
+                    },
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "402821635"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    }
+                ],
+                "tcsOnTotal": 0,
+                "ratePerNight": 566.08
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": false,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "72375483",
+            "rate": {
+                "total": 3734.48,
+                "baseRate": 3851.32,
+                "commission": 314.76,
+                "discounts": 0,
+                "taxes": 197.92,
+                "fees": 0,
+                "providerId": "20340",
+                "provider": "EAN",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 314.76,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 385.13,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": {
+                    "title": "Promotion",
+                    "description": "Save:12% ",
+                    "type": null,
+                    "discountOffer": 0,
+                    "percentageDiscountOffer": 0,
+                    "stayOffer": null
+                },
+                "gstOnCommission": 0,
+                "additionalInformation": [
+                    {
+                        "type": "RoomIdentifierKey",
+                        "text": "326968526"
+                    },
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "403355947"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    }
+                ],
+                "tcsOnTotal": 0,
+                "ratePerNight": 1867.24
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": false,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "72380312",
+            "rate": {
+                "total": 6118.1,
+                "baseRate": 6142.5,
+                "commission": 480.68,
+                "discounts": 0,
+                "taxes": 456.28,
+                "fees": 0,
+                "providerId": "20339",
+                "provider": "EAN",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 480.68,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 614.25,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": {
+                    "title": "Promotion",
+                    "description": "Save:10% ",
+                    "type": null,
+                    "discountOffer": 0,
+                    "percentageDiscountOffer": 0,
+                    "stayOffer": null
+                },
+                "gstOnCommission": 0,
+                "additionalInformation": [
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "406694656"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    }
+                ],
+                "tcsOnTotal": 0,
+                "ratePerNight": 3059.05
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15322626",
+            "rate": {
+                "total": 3209.73,
+                "baseRate": 3163.5,
+                "commission": 124.77,
+                "discounts": 0,
+                "taxes": 171,
+                "fees": 0,
+                "providerId": "20340",
+                "provider": "EAN",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 124.77,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 316.35,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": {
+                    "title": "Promotion",
+                    "description": "Save:16% ",
+                    "type": null,
+                    "discountOffer": 0,
+                    "percentageDiscountOffer": 0,
+                    "stayOffer": null
+                },
+                "gstOnCommission": 0,
+                "additionalInformation": [
+                    {
+                        "type": "RoomIdentifierKey",
+                        "text": "329136212"
+                    },
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "411320653"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    }
+                ],
+                "tcsOnTotal": 0,
+                "ratePerNight": 1604.86
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "PeakPoint",
+                "TravelGuru",
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "72394871",
+            "rate": {
+                "total": 9041.69,
+                "baseRate": 9360,
+                "commission": 1001.59,
+                "discounts": 0,
+                "taxes": 683.28,
+                "fees": 0,
+                "providerId": "203392",
+                "provider": "EAN",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1001.59,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 936,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": {
+                    "title": "Promotion",
+                    "description": "Save:20% ",
+                    "type": null,
+                    "discountOffer": 0,
+                    "percentageDiscountOffer": 0,
+                    "stayOffer": null
+                },
+                "gstOnCommission": 0,
+                "additionalInformation": [
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "408619170"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    },
+                    {
+                        "type": "Mobile_Promotion",
+                        "text": "true"
+                    }
+                ],
+                "tcsOnTotal": 0,
+                "ratePerNight": 4520.84
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "72271409",
+            "rate": {
+                "total": 4676.07,
+                "baseRate": 4750.64,
+                "commission": 317.57,
+                "discounts": 0,
+                "taxes": 243,
+                "fees": 0,
+                "providerId": "20340",
+                "provider": "EAN",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 317.57,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 475.06,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": {
+                    "title": "Promotion",
+                    "description": "Save:12% ",
+                    "type": null,
+                    "discountOffer": 0,
+                    "percentageDiscountOffer": 0,
+                    "stayOffer": null
+                },
+                "gstOnCommission": 0,
+                "additionalInformation": [
+                    {
+                        "type": "RoomIdentifierKey",
+                        "text": "328296277"
+                    },
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "408421222"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    }
+                ],
+                "tcsOnTotal": 0,
+                "ratePerNight": 2338.04
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15644654",
+            "rate": {
+                "total": 8630,
+                "baseRate": 8630,
+                "commission": 0,
+                "discounts": 35,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "410",
+                "provider": "SunHotels",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 863,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 4315
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "SunHotels"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": true,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15645087",
+            "rate": {
+                "total": 8971.05,
+                "baseRate": 8971.05,
+                "commission": 0,
+                "discounts": 0,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "777india",
+                "provider": "Atharva",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 897.1,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 4485.52
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "MGHolidayTGX",
+                "Atharva",
+                "SmyroomsDirect"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15777057",
+            "rate": {
+                "total": 8285.97,
+                "baseRate": 8285.97,
+                "commission": 0,
+                "discounts": 0,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "777india",
+                "provider": "Atharva",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 828.6,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 4142.98
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "Atharva",
+                "Veturis"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "32815852",
+            "rate": {
+                "total": 2058,
+                "baseRate": 2400,
+                "commission": 456,
+                "discounts": 120,
+                "taxes": 114,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 456,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 240,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 1029
+            },
+            "isRecommended": false,
+            "moreRatesExpected": false,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15778732",
+            "rate": {
+                "total": 3316,
+                "baseRate": 3900,
+                "commission": 780,
+                "discounts": 0,
+                "taxes": 196,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 780,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 390,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 1658
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": false,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        }
+    ],
+    "currency": "INR",
+    "total": 19,
+    "locationId": null,
+    "locationName": null,
+    "status": "success"
+}
+================================================================================

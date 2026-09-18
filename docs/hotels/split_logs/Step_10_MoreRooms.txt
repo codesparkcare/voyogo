@@ -1,0 +1,1712 @@
+--------------------------------------------------------------------------------
+STEP #10 | LOG ID: #2956 | TIMESTAMP: 2026-09-09 12:46:47
+API NAME / ACTION: MoreRooms
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/6d3dc8a5-c7d0-4731-93fc-75a6f61d13bc.sVU0kctR3yLyx4l4xTys5J0hwXkxZGIVavk_21mLOKM/15777057/rooms
+HTTP STATUS: 200 | LATENCY: 32514 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "recommendations": [
+        {
+            "id": "e18be238-10ee-499e-a318-1d1666dd2438",
+            "roomGroup": [
+                {
+                    "id": "5c5f0243-eb76-4d77-afea-d67e6c0127bf",
+                    "code": null,
+                    "availability": 1,
+                    "description": null,
+                    "needsPriceCheck": false,
+                    "isPackageRate": false,
+                    "providerId": "392",
+                    "providerName": "CleartripAPI",
+                    "isPreffered": false,
+                    "room": {
+                        "id": "46879996-8d43-434c-b793-e97763efd4c3",
+                        "standardRoomId": "1",
+                        "standardRoomName": "Superior",
+                        "name": "Superior Room",
+                        "description": "Superior Room",
+                        "beds": [
+                            {
+                                "type": "Queen Bed",
+                                "description": null,
+                                "count": 0
+                            }
+                        ],
+                        "smokingAllowed": false,
+                        "facilities": [],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/1e6fc824_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/f544564d_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d1fff47a_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/51faf671_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/67a68511_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2c61ff48_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/230375d8_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d8c697b0_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2e67860b_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/9cd5a7a5_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": null,
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 1,
+                            "numOfAdults": 1,
+                            "numOfChildren": 0,
+                            "childAges": null
+                        }
+                    ],
+                    "type": "published",
+                    "baseRate": 6688.3,
+                    "totalRate": 7086.18,
+                    "tcsOnTotal": 0,
+                    "minSellingRate": 0,
+                    "publishedRate": 9922.63,
+                    "taxes": [
+                        {
+                            "amount": 397.88,
+                            "description": "TAX",
+                            "type": null
+                        }
+                    ],
+                    "fees": null,
+                    "discounts": [
+                        {
+                            "amount": 2836.64,
+                            "description": "DIS",
+                            "type": null
+                        }
+                    ],
+                    "otherRateComponents": [
+                        {
+                            "amount": 668.83,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0,
+                    "commission": {
+                        "amount": 0,
+                        "description": "Agency Commission",
+                        "type": null
+                    },
+                    "dailyRates": null,
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": false,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": null,
+                    "boardBasis": {
+                        "description": "breakfast",
+                        "type": "BedAndBreakfast"
+                    },
+                    "offers": [],
+                    "cancellationPolicies": [
+                        {
+                            "text": "Fully Refundable Till 28-09-2026 12:00 PM.  Non refundable Between 28-09-2026 12:00 PM and 29-09-2026 12:00 PM.  (All the given times are in India Time timezone)",
+                            "rules": null
+                        },
+                        {
+                            "text": "Supplier cancellation charges INR 300/- Applicable",
+                            "rules": null
+                        }
+                    ],
+                    "includes": [
+                        "Breakfast"
+                    ],
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": true,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": null,
+                    "ratePerNight": 3543.09
+                }
+            ],
+            "total": 7086.18,
+            "publishedRate": 9922.63,
+            "groupId": 1,
+            "isHold": false,
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false
+        },
+        {
+            "id": "2abca48e-4523-42f1-a8df-8b96b08153cf",
+            "roomGroup": [
+                {
+                    "id": "7a69b8d4-0533-482f-8829-101a7658d115",
+                    "code": null,
+                    "availability": 1,
+                    "description": null,
+                    "needsPriceCheck": false,
+                    "isPackageRate": false,
+                    "providerId": "392",
+                    "providerName": "CleartripAPI",
+                    "isPreffered": false,
+                    "room": {
+                        "id": "3cb7998b-45b8-4a6e-9833-5645b17c2228",
+                        "standardRoomId": "2",
+                        "standardRoomName": "Executive",
+                        "name": "Executive Room",
+                        "description": "Executive Room",
+                        "beds": [
+                            {
+                                "type": "Queen Bed",
+                                "description": null,
+                                "count": 0
+                            }
+                        ],
+                        "smokingAllowed": false,
+                        "facilities": [],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/1e6fc824_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/f544564d_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d1fff47a_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/51faf671_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/67a68511_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2c61ff48_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/230375d8_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d8c697b0_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2e67860b_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/9cd5a7a5_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": null,
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 1,
+                            "numOfAdults": 1,
+                            "numOfChildren": 0,
+                            "childAges": null
+                        }
+                    ],
+                    "type": "published",
+                    "baseRate": 7459.86,
+                    "totalRate": 7903.64,
+                    "tcsOnTotal": 0,
+                    "minSellingRate": 0,
+                    "publishedRate": 11067.87,
+                    "taxes": [
+                        {
+                            "amount": 443.78,
+                            "description": "TAX",
+                            "type": null
+                        }
+                    ],
+                    "fees": null,
+                    "discounts": [
+                        {
+                            "amount": 3163.88,
+                            "description": "DIS",
+                            "type": null
+                        }
+                    ],
+                    "otherRateComponents": [
+                        {
+                            "amount": 745.99,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0,
+                    "commission": {
+                        "amount": 0,
+                        "description": "Agency Commission",
+                        "type": null
+                    },
+                    "dailyRates": null,
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": false,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": null,
+                    "boardBasis": {
+                        "description": "breakfast",
+                        "type": "BedAndBreakfast"
+                    },
+                    "offers": [],
+                    "cancellationPolicies": [
+                        {
+                            "text": "Fully Refundable Till 28-09-2026 12:00 PM.  Non refundable Between 28-09-2026 12:00 PM and 29-09-2026 12:00 PM.  (All the given times are in India Time timezone)",
+                            "rules": null
+                        },
+                        {
+                            "text": "Supplier cancellation charges INR 300/- Applicable",
+                            "rules": null
+                        }
+                    ],
+                    "includes": [
+                        "Breakfast"
+                    ],
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": true,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": null,
+                    "ratePerNight": 3951.82
+                }
+            ],
+            "total": 7903.64,
+            "publishedRate": 11067.87,
+            "groupId": 2,
+            "isHold": false,
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false
+        },
+        {
+            "id": "0b805e7d-9311-42e4-adc2-ea5c1d9594dc",
+            "roomGroup": [
+                {
+                    "id": "26d17d79-d7b3-450c-82d8-96c5d55e10b8",
+                    "code": null,
+                    "availability": 1,
+                    "description": null,
+                    "needsPriceCheck": true,
+                    "isPackageRate": false,
+                    "providerId": "777india",
+                    "providerName": "Atharva",
+                    "isPreffered": false,
+                    "room": {
+                        "id": "4ff50b57-cabf-4d73-8f6f-5077150844c4",
+                        "standardRoomId": "1",
+                        "standardRoomName": "Superior",
+                        "name": "Superior Room",
+                        "description": null,
+                        "beds": [],
+                        "smokingAllowed": false,
+                        "facilities": [],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/1e6fc824_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/f544564d_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d1fff47a_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/51faf671_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/67a68511_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2c61ff48_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/230375d8_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d8c697b0_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2e67860b_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/9cd5a7a5_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": null,
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 1,
+                            "numOfAdults": 1,
+                            "numOfChildren": 0,
+                            "childAges": null
+                        }
+                    ],
+                    "type": "published",
+                    "baseRate": 8285.97,
+                    "totalRate": 8285.97,
+                    "tcsOnTotal": 0,
+                    "minSellingRate": 0,
+                    "publishedRate": 9922.63,
+                    "taxes": null,
+                    "fees": null,
+                    "discounts": null,
+                    "otherRateComponents": [
+                        {
+                            "amount": 828.6,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0,
+                    "commission": null,
+                    "dailyRates": null,
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": false,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": null,
+                    "boardBasis": {
+                        "description": "Breakfast",
+                        "type": "BedAndBreakfast"
+                    },
+                    "offers": [],
+                    "cancellationPolicies": [
+                        {
+                            "text": null,
+                            "rules": [
+                                {
+                                    "value": 0,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 0,
+                                    "start": "2026-09-09T00:00:00Z",
+                                    "end": "2026-09-25T23:59:00Z"
+                                },
+                                {
+                                    "value": 8285.97,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 8285.97,
+                                    "start": "2026-09-26T00:00:00Z",
+                                    "end": "2026-09-29T00:00:00Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "includes": null,
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": false,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": null,
+                    "ratePerNight": 4142.98
+                }
+            ],
+            "total": 8285.97,
+            "publishedRate": 9922.63,
+            "groupId": 1,
+            "isHold": true,
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false
+        },
+        {
+            "id": "3d319b38-0e6d-4ae6-8239-ac0d11310cf3",
+            "roomGroup": [
+                {
+                    "id": "55f1f9b5-4a66-4cad-8c66-1f5fbf9051f9",
+                    "code": null,
+                    "availability": 1,
+                    "description": null,
+                    "needsPriceCheck": true,
+                    "isPackageRate": null,
+                    "providerId": "701inr",
+                    "providerName": "Veturis",
+                    "isPreffered": false,
+                    "room": {
+                        "id": "0b5ffeea-a70c-48ec-ba58-6ba95b822c2e",
+                        "standardRoomId": "4",
+                        "standardRoomName": "Individual Superior",
+                        "name": "Individual room Superior",
+                        "description": "Individual room",
+                        "beds": [
+                            {
+                                "type": "1 or 2 Beds",
+                                "description": null,
+                                "count": 0
+                            }
+                        ],
+                        "smokingAllowed": false,
+                        "facilities": [
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Superior"
+                            }
+                        ],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d21f15f5_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/3ebdfc19_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/be4d5f17_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/371449d4_b.jpg",
+                                "caption": "Bathroom",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d21f15f5_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/3ebdfc19_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/be4d5f17_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/371449d4_b.jpg",
+                                "caption": "Bathroom",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": null,
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 1,
+                            "numOfAdults": 1,
+                            "numOfChildren": 0,
+                            "childAges": null
+                        }
+                    ],
+                    "type": "negotiated",
+                    "baseRate": 8330.57,
+                    "totalRate": 8330.57,
+                    "tcsOnTotal": 0,
+                    "minSellingRate": 0,
+                    "publishedRate": 9922.63,
+                    "taxes": null,
+                    "fees": null,
+                    "discounts": null,
+                    "otherRateComponents": [
+                        {
+                            "amount": 833.06,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0,
+                    "commission": null,
+                    "dailyRates": [
+                        {
+                            "amount": 4165.28,
+                            "date": "2026-09-29T00:00:00Z",
+                            "taxIncluded": true,
+                            "discount": 0
+                        },
+                        {
+                            "amount": 4165.28,
+                            "date": "2026-09-30T00:00:00Z",
+                            "taxIncluded": true,
+                            "discount": 0
+                        }
+                    ],
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": false,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": null,
+                    "boardBasis": {
+                        "description": "Bed and breakfast",
+                        "type": "BedAndBreakfast"
+                    },
+                    "offers": [],
+                    "cancellationPolicies": [
+                        {
+                            "text": null,
+                            "rules": [
+                                {
+                                    "value": 0,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 0,
+                                    "start": "2026-09-09T00:00:00Z",
+                                    "end": "2026-09-25T23:59:00Z"
+                                },
+                                {
+                                    "value": 8330.57,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 8330.57,
+                                    "start": "2026-09-26T00:00:00Z",
+                                    "end": "2026-09-29T00:00:00Z"
+                                },
+                                {
+                                    "value": 8330.57,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 8330.57,
+                                    "start": "2026-09-29T00:00:00Z",
+                                    "end": "2026-10-01T00:00:00Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "includes": null,
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": false,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": null,
+                    "ratePerNight": 4165.28
+                }
+            ],
+            "total": 8330.57,
+            "publishedRate": 9922.63,
+            "groupId": 4,
+            "isHold": true,
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false
+        },
+        {
+            "id": "ba4f0cc3-9c6f-454f-9267-4ab1c7f7525d",
+            "roomGroup": [
+                {
+                    "id": "85404199-146b-43b8-a368-ba6552d9eea8",
+                    "code": null,
+                    "availability": 1,
+                    "description": null,
+                    "needsPriceCheck": true,
+                    "isPackageRate": false,
+                    "providerId": "777india",
+                    "providerName": "Atharva",
+                    "isPreffered": false,
+                    "room": {
+                        "id": "77025a34-5d50-41bb-8076-e6fc3f398b49",
+                        "standardRoomId": "2",
+                        "standardRoomName": "Executive",
+                        "name": "Executive Room",
+                        "description": null,
+                        "beds": [],
+                        "smokingAllowed": false,
+                        "facilities": [],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/1e6fc824_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/f544564d_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d1fff47a_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/51faf671_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/67a68511_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2c61ff48_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/230375d8_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d8c697b0_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2e67860b_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/9cd5a7a5_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": null,
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 1,
+                            "numOfAdults": 1,
+                            "numOfChildren": 0,
+                            "childAges": null
+                        }
+                    ],
+                    "type": "published",
+                    "baseRate": 9330.46,
+                    "totalRate": 9330.46,
+                    "tcsOnTotal": 0,
+                    "minSellingRate": 0,
+                    "publishedRate": 9922.63,
+                    "taxes": null,
+                    "fees": null,
+                    "discounts": null,
+                    "otherRateComponents": [
+                        {
+                            "amount": 933.05,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0,
+                    "commission": null,
+                    "dailyRates": null,
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": false,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": null,
+                    "boardBasis": {
+                        "description": "Breakfast",
+                        "type": "BedAndBreakfast"
+                    },
+                    "offers": [],
+                    "cancellationPolicies": [
+                        {
+                            "text": null,
+                            "rules": [
+                                {
+                                    "value": 0,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 0,
+                                    "start": "2026-09-09T00:00:00Z",
+                                    "end": "2026-09-25T23:59:00Z"
+                                },
+                                {
+                                    "value": 9330.46,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 9330.46,
+                                    "start": "2026-09-26T00:00:00Z",
+                                    "end": "2026-09-29T00:00:00Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "includes": null,
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": false,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": null,
+                    "ratePerNight": 4665.23
+                }
+            ],
+            "total": 9330.46,
+            "publishedRate": 9922.63,
+            "groupId": 2,
+            "isHold": true,
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false
+        },
+        {
+            "id": "d399754d-2d59-4ade-9d50-ddcdcc15dedc",
+            "roomGroup": [
+                {
+                    "id": "761083b3-1963-4331-84ed-eabd2b51ec1e",
+                    "code": null,
+                    "availability": 1,
+                    "description": null,
+                    "needsPriceCheck": true,
+                    "isPackageRate": null,
+                    "providerId": "701inr",
+                    "providerName": "Veturis",
+                    "isPreffered": false,
+                    "room": {
+                        "id": "a6b8a805-499f-43ea-ac3e-cc541e4b9a9f",
+                        "standardRoomId": "5",
+                        "standardRoomName": "Individual Business",
+                        "name": "Individual room Business",
+                        "description": "Individual room",
+                        "beds": [
+                            {
+                                "type": "1 or 2 Beds",
+                                "description": null,
+                                "count": 0
+                            }
+                        ],
+                        "smokingAllowed": false,
+                        "facilities": [
+                            {
+                                "id": 0,
+                                "groupId": 0,
+                                "name": "Business"
+                            }
+                        ],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d21f15f5_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/3ebdfc19_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/be4d5f17_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/371449d4_b.jpg",
+                                "caption": "Bathroom",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d21f15f5_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/3ebdfc19_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/be4d5f17_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/371449d4_b.jpg",
+                                "caption": "Bathroom",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": null,
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 1,
+                            "numOfAdults": 1,
+                            "numOfChildren": 0,
+                            "childAges": null
+                        }
+                    ],
+                    "type": "negotiated",
+                    "baseRate": 9451.48,
+                    "totalRate": 9451.48,
+                    "tcsOnTotal": 0,
+                    "minSellingRate": 0,
+                    "publishedRate": 9922.63,
+                    "taxes": null,
+                    "fees": null,
+                    "discounts": null,
+                    "otherRateComponents": [
+                        {
+                            "amount": 945.15,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0,
+                    "commission": null,
+                    "dailyRates": [
+                        {
+                            "amount": 4725.74,
+                            "date": "2026-09-29T00:00:00Z",
+                            "taxIncluded": true,
+                            "discount": 0
+                        },
+                        {
+                            "amount": 4725.74,
+                            "date": "2026-09-30T00:00:00Z",
+                            "taxIncluded": true,
+                            "discount": 0
+                        }
+                    ],
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": false,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": null,
+                    "boardBasis": {
+                        "description": "Bed and breakfast",
+                        "type": "BedAndBreakfast"
+                    },
+                    "offers": [],
+                    "cancellationPolicies": [
+                        {
+                            "text": null,
+                            "rules": [
+                                {
+                                    "value": 0,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 0,
+                                    "start": "2026-09-09T00:00:00Z",
+                                    "end": "2026-09-27T23:59:00Z"
+                                },
+                                {
+                                    "value": 4727.95,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 4727.95,
+                                    "start": "2026-09-28T00:00:00Z",
+                                    "end": "2026-09-29T00:00:00Z"
+                                },
+                                {
+                                    "value": 9451.48,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 9451.48,
+                                    "start": "2026-09-29T00:00:00Z",
+                                    "end": "2026-10-01T00:00:00Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "includes": null,
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": false,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": null,
+                    "ratePerNight": 4725.74
+                }
+            ],
+            "total": 9451.48,
+            "publishedRate": 9922.63,
+            "groupId": 5,
+            "isHold": true,
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false
+        },
+        {
+            "id": "b44d1585-d89c-4b52-a283-0d94134e95fc",
+            "roomGroup": [
+                {
+                    "id": "9c784109-2e7c-4ac5-91a4-7496a198daec",
+                    "code": null,
+                    "availability": 1,
+                    "description": null,
+                    "needsPriceCheck": false,
+                    "isPackageRate": false,
+                    "providerId": "392",
+                    "providerName": "CleartripAPI",
+                    "isPreffered": false,
+                    "room": {
+                        "id": "d169353b-c1e3-4505-8605-fbfa93ceb50a",
+                        "standardRoomId": "3",
+                        "standardRoomName": "Suite",
+                        "name": "Suite Room",
+                        "description": "Suite Room",
+                        "beds": [
+                            {
+                                "type": "Double Bed",
+                                "description": null,
+                                "count": 0
+                            }
+                        ],
+                        "smokingAllowed": false,
+                        "facilities": [],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/1e6fc824_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/f544564d_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d1fff47a_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/51faf671_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/67a68511_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2c61ff48_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/230375d8_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d8c697b0_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2e67860b_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/9cd5a7a5_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": null,
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 1,
+                            "numOfAdults": 1,
+                            "numOfChildren": 0,
+                            "childAges": null
+                        }
+                    ],
+                    "type": "published",
+                    "baseRate": 11317.76,
+                    "totalRate": 11991.04,
+                    "tcsOnTotal": 0,
+                    "minSellingRate": 0,
+                    "publishedRate": 16791.07,
+                    "taxes": [
+                        {
+                            "amount": 673.28,
+                            "description": "TAX",
+                            "type": null
+                        }
+                    ],
+                    "fees": null,
+                    "discounts": [
+                        {
+                            "amount": 4800.08,
+                            "description": "DIS",
+                            "type": null
+                        }
+                    ],
+                    "otherRateComponents": [
+                        {
+                            "amount": 1131.78,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0,
+                    "commission": {
+                        "amount": 0,
+                        "description": "Agency Commission",
+                        "type": null
+                    },
+                    "dailyRates": null,
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": false,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": null,
+                    "boardBasis": {
+                        "description": "breakfast",
+                        "type": "BedAndBreakfast"
+                    },
+                    "offers": [],
+                    "cancellationPolicies": [
+                        {
+                            "text": "Fully Refundable Till 28-09-2026 12:00 PM.  Non refundable Between 28-09-2026 12:00 PM and 29-09-2026 12:00 PM.  (All the given times are in India Time timezone)",
+                            "rules": null
+                        },
+                        {
+                            "text": "Supplier cancellation charges INR 300/- Applicable",
+                            "rules": null
+                        }
+                    ],
+                    "includes": [
+                        "Breakfast"
+                    ],
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": true,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": null,
+                    "ratePerNight": 5995.52
+                }
+            ],
+            "total": 11991.04,
+            "publishedRate": 16791.07,
+            "groupId": 3,
+            "isHold": false,
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false
+        },
+        {
+            "id": "dc200bb2-e5fd-48fe-b2c3-692c8d18d182",
+            "roomGroup": [
+                {
+                    "id": "4b07d1ab-b3dc-4fe6-aa13-367c0717639a",
+                    "code": null,
+                    "availability": 1,
+                    "description": null,
+                    "needsPriceCheck": true,
+                    "isPackageRate": false,
+                    "providerId": "777india",
+                    "providerName": "Atharva",
+                    "isPreffered": false,
+                    "room": {
+                        "id": "91ddca69-a603-48b1-a1c6-89e4f9a12755",
+                        "standardRoomId": "3",
+                        "standardRoomName": "Suite",
+                        "name": "Suite Room",
+                        "description": null,
+                        "beds": [],
+                        "smokingAllowed": false,
+                        "facilities": [],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/1e6fc824_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/f544564d_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d1fff47a_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/51faf671_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/67a68511_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2c61ff48_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/230375d8_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d8c697b0_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2e67860b_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/9cd5a7a5_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": null,
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 1,
+                            "numOfAdults": 1,
+                            "numOfChildren": 0,
+                            "childAges": null
+                        }
+                    ],
+                    "type": "published",
+                    "baseRate": 13984.38,
+                    "totalRate": 13984.38,
+                    "tcsOnTotal": 0,
+                    "minSellingRate": 0,
+                    "publishedRate": 0,
+                    "taxes": null,
+                    "fees": null,
+                    "discounts": null,
+                    "otherRateComponents": [
+                        {
+                            "amount": 1398.44,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0,
+                    "commission": null,
+                    "dailyRates": null,
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": false,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": null,
+                    "boardBasis": {
+                        "description": "Breakfast",
+                        "type": "BedAndBreakfast"
+                    },
+                    "offers": [],
+                    "cancellationPolicies": [
+                        {
+                            "text": null,
+                            "rules": [
+                                {
+                                    "value": 0,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 0,
+                                    "start": "2026-09-09T00:00:00Z",
+                                    "end": "2026-09-25T23:59:00Z"
+                                },
+                                {
+                                    "value": 13984.38,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 13984.38,
+                                    "start": "2026-09-26T00:00:00Z",
+                                    "end": "2026-09-29T00:00:00Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "includes": null,
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": false,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": null,
+                    "ratePerNight": 6992.19
+                }
+            ],
+            "total": 13984.38,
+            "publishedRate": 0,
+            "groupId": 3,
+            "isHold": true,
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false
+        },
+        {
+            "id": "8ce4d72a-91dd-49c9-ac4d-21bd0fdd4121",
+            "roomGroup": [
+                {
+                    "id": "bd72124b-4908-4a0c-97fa-8dc6ba5df3fd",
+                    "code": null,
+                    "availability": 1,
+                    "description": null,
+                    "needsPriceCheck": true,
+                    "isPackageRate": null,
+                    "providerId": "701inr",
+                    "providerName": "Veturis",
+                    "isPreffered": false,
+                    "room": {
+                        "id": "1c057b83-a2e9-465e-896e-c0ad31d13ab2",
+                        "standardRoomId": "3",
+                        "standardRoomName": "Suite",
+                        "name": "Suite",
+                        "description": "Suite",
+                        "beds": [
+                            {
+                                "type": "1 or 2 Beds",
+                                "description": null,
+                                "count": 0
+                            }
+                        ],
+                        "smokingAllowed": false,
+                        "facilities": [],
+                        "images": [
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/1e6fc824_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/f544564d_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d1fff47a_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/51faf671_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/67a68511_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2c61ff48_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/230375d8_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d8c697b0_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2e67860b_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            },
+                            {
+                                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/9cd5a7a5_b.jpg",
+                                "caption": "Room",
+                                "category": null,
+                                "type": null
+                            }
+                        ],
+                        "maxGuestAllowed": null,
+                        "maxAdultAllowed": null,
+                        "maxChildrenAllowed": null,
+                        "area": null,
+                        "views": null,
+                        "type": null
+                    },
+                    "otherProviderRates": null,
+                    "roomCount": 1,
+                    "occupancies": [
+                        {
+                            "occupancyId": 1,
+                            "numOfAdults": 1,
+                            "numOfChildren": 0,
+                            "childAges": null
+                        }
+                    ],
+                    "type": "negotiated",
+                    "baseRate": 14060.05,
+                    "totalRate": 14060.05,
+                    "tcsOnTotal": 0,
+                    "minSellingRate": 0,
+                    "publishedRate": 0,
+                    "taxes": null,
+                    "fees": null,
+                    "discounts": null,
+                    "otherRateComponents": [
+                        {
+                            "amount": 1406,
+                            "description": "Agency Markup applied on BaseFare",
+                            "type": "AgencyMarkup"
+                        }
+                    ],
+                    "hotelServiceCharge": 0,
+                    "commission": null,
+                    "dailyRates": [
+                        {
+                            "amount": 7030.02,
+                            "date": "2026-09-29T00:00:00Z",
+                            "taxIncluded": true,
+                            "discount": 0
+                        },
+                        {
+                            "amount": 7030.02,
+                            "date": "2026-09-30T00:00:00Z",
+                            "taxIncluded": true,
+                            "discount": 0
+                        }
+                    ],
+                    "pointEquivalent": 0,
+                    "refundability": "Refundable",
+                    "refundable": true,
+                    "allGuestsInfoRequired": true,
+                    "onlineCancellable": false,
+                    "specialRequestSupported": false,
+                    "payAtHotel": false,
+                    "cardRequired": false,
+                    "policies": null,
+                    "boardBasis": {
+                        "description": "Bed and breakfast",
+                        "type": "BedAndBreakfast"
+                    },
+                    "offers": [],
+                    "cancellationPolicies": [
+                        {
+                            "text": null,
+                            "rules": [
+                                {
+                                    "value": 0,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 0,
+                                    "start": "2026-09-09T00:00:00Z",
+                                    "end": "2026-09-27T23:59:00Z"
+                                },
+                                {
+                                    "value": 7032.79,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 7032.79,
+                                    "start": "2026-09-28T00:00:00Z",
+                                    "end": "2026-09-29T00:00:00Z"
+                                },
+                                {
+                                    "value": 14060.05,
+                                    "valueType": "Amount",
+                                    "estimatedValue": 14060.05,
+                                    "start": "2026-09-29T00:00:00Z",
+                                    "end": "2026-10-01T00:00:00Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "includes": null,
+                    "additionalCharges": null,
+                    "depositRequired": false,
+                    "gstAllowed": false,
+                    "depositAmount": null,
+                    "guaranteeRequired": false,
+                    "gstOnCommission": 0,
+                    "bookNowPayLaterDate": null,
+                    "conversionRate": null,
+                    "travelType": "D",
+                    "additionalInformation": null,
+                    "ratePerNight": 7030.02
+                }
+            ],
+            "total": 14060.05,
+            "publishedRate": 0,
+            "groupId": 3,
+            "isHold": true,
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false
+        }
+    ],
+    "stayPeriod": {
+        "start": "09/29/2026",
+        "end": "10/01/2026"
+    },
+    "searchId": "6d3dc8a5-c7d0-4731-93fc-75a6f61d13bc.sVU0kctR3yLyx4l4xTys5J0hwXkxZGIVavk_21mLOKM",
+    "searchTracingKey": null,
+    "status": "success"
+}
+================================================================================

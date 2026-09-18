@@ -1,0 +1,165 @@
+--------------------------------------------------------------------------------
+STEP #11 | LOG ID: #2957 | TIMESTAMP: 2026-09-09 12:47:58
+API NAME / ACTION: Pricing
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/6d3dc8a5-c7d0-4731-93fc-75a6f61d13bc.sVU0kctR3yLyx4l4xTys5J0hwXkxZGIVavk_21mLOKM/15777057/price/CleartripAPI/e18be238-10ee-499e-a318-1d1666dd2438
+HTTP STATUS: 200 | LATENCY: 2507 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "hotelId": "15777057",
+    "roomGroup": [
+        {
+            "id": "5c5f0243-eb76-4d77-afea-d67e6c0127bf",
+            "code": null,
+            "availability": 1,
+            "description": null,
+            "needsPriceCheck": false,
+            "isPackageRate": false,
+            "providerId": "392",
+            "providerName": "CleartripAPI",
+            "isPreffered": null,
+            "room": {
+                "id": "46879996-8d43-434c-b793-e97763efd4c3",
+                "standardRoomId": "",
+                "standardRoomName": "Superior Room",
+                "name": "Superior Room",
+                "description": "Superior Room",
+                "beds": [
+                    {
+                        "type": "Queen Bed",
+                        "description": null,
+                        "count": 0
+                    }
+                ],
+                "smokingAllowed": false,
+                "facilities": [],
+                "images": null,
+                "maxGuestAllowed": null,
+                "maxAdultAllowed": null,
+                "maxChildrenAllowed": null,
+                "area": null,
+                "views": null,
+                "type": null
+            },
+            "otherProviderRates": null,
+            "roomCount": 1,
+            "occupancies": [
+                {
+                    "occupancyId": 1,
+                    "numOfAdults": 1,
+                    "numOfChildren": 0,
+                    "childAges": []
+                }
+            ],
+            "type": "published",
+            "baseRate": 6688.3,
+            "totalRate": 7086.18,
+            "tcsOnTotal": 0,
+            "minSellingRate": 0,
+            "publishedRate": 9922.63,
+            "taxes": [
+                {
+                    "amount": 397.88,
+                    "description": "TAX",
+                    "type": null
+                }
+            ],
+            "fees": null,
+            "discounts": [
+                {
+                    "amount": 2836.64,
+                    "description": "DIS",
+                    "type": null
+                }
+            ],
+            "otherRateComponents": [
+                {
+                    "amount": 668.83,
+                    "description": "Agency Markup applied on BaseFare",
+                    "type": "AgencyMarkup"
+                }
+            ],
+            "hotelServiceCharge": 0,
+            "commission": {
+                "amount": 0,
+                "description": "Agency Commission",
+                "type": null
+            },
+            "dailyRates": null,
+            "pointEquivalent": 0,
+            "refundability": "Refundable",
+            "refundable": true,
+            "allGuestsInfoRequired": true,
+            "onlineCancellable": false,
+            "specialRequestSupported": false,
+            "payAtHotel": false,
+            "cardRequired": false,
+            "policies": [],
+            "boardBasis": {
+                "description": "breakfast",
+                "type": "BedAndBreakfast"
+            },
+            "offers": [],
+            "cancellationPolicies": [
+                {
+                    "text": "Fully Refundable Till 28-09-2026 12:00 PM.  Non refundable Between 28-09-2026 12:00 PM and 29-09-2026 12:00 PM.  (All the given times are in India Time timezone)",
+                    "rules": null
+                },
+                {
+                    "text": "Supplier cancellation charges INR 300/- Applicable",
+                    "rules": null
+                }
+            ],
+            "includes": [
+                "Breakfast"
+            ],
+            "additionalCharges": null,
+            "depositRequired": false,
+            "gstAllowed": true,
+            "depositAmount": null,
+            "guaranteeRequired": false,
+            "gstOnCommission": 0,
+            "bookNowPayLaterDate": null,
+            "conversionRate": null,
+            "travelType": "D",
+            "additionalInformation": null,
+            "ratePerNight": 0
+        }
+    ],
+    "priceId": "27b615ad-b4f1-498c-9f90-2dba09b220f9",
+    "isPotentialSuspect": false,
+    "suspectCategory": null,
+    "stayPeriod": {
+        "start": "09/29/2026 12:00:00 AM",
+        "end": "10/01/2026 12:00:00 AM"
+    },
+    "priceInfo": null,
+    "agentCode": null,
+    "ishold": false,
+    "holdreleasedate": null,
+    "mappings": [
+        {
+            "fieldName": "HotelName",
+            "prevValue": "RR INN- Tirunelveli",
+            "currentValue": "RR INN Tirunelveli"
+        },
+        {
+            "fieldName": "HotelAddress",
+            "prevValue": "Old Madurai Road, Tirunelveli Junction",
+            "currentValue": "64 E, Old, Madurai Rd, Balabagya Nagar South, Tirunelveli Town, Tirunelveli, Tamil Nadu 627001"
+        },
+        {
+            "fieldName": "HotelStarRating",
+            "prevValue": "4",
+            "currentValue": "3"
+        }
+    ],
+    "isGSTInvoiceAvailable": false,
+    "isPANRequired": false,
+    "status": "success"
+}
+================================================================================

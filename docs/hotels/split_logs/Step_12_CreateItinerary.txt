@@ -1,0 +1,112 @@
+--------------------------------------------------------------------------------
+STEP #12 | LOG ID: #2958 | TIMESTAMP: 2026-09-09 12:48:27
+API NAME / ACTION: CreateItinerary
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapihotels.benzyinfotech.com/Hotel/CreateItinerary
+HTTP STATUS: 200 | LATENCY: 4497 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "TUI": "92239c2d-d834-45e3-9606-73b324bfea3d",
+    "ServiceEnquiry": "",
+    "SpecialServiceRequest": "Non-smoking room",
+    "ContactInfo": {
+        "Title": "Mr",
+        "FName": "hfhgh",
+        "LName": "User",
+        "Mobile": "9876543210",
+        "Email": "rahul.sharma@example.com",
+        "Address": "Voyogo Online Travel, Mumbai",
+        "State": "Maharashtra",
+        "City": "Palayamkottai",
+        "PIN": "400001",
+        "GSTCompanyName": "",
+        "GSTTIN": "",
+        "GSTMobile": "",
+        "GSTEmail": "",
+        "UpdateProfile": true,
+        "IsGuest": false,
+        "CountryCode": "IN",
+        "MobileCountryCode": "+91",
+        "NetAmount": "7086.18"
+    },
+    "Auxiliaries": [
+        {
+            "Code": "PROMO",
+            "Parameters": [
+                {
+                    "Type": "Code",
+                    "Value": ""
+                },
+                {
+                    "Type": "ID",
+                    "Value": ""
+                },
+                {
+                    "Type": "Amount",
+                    "Value": ""
+                }
+            ]
+        },
+        {
+            "Code": "CUSTOMER DETAILS",
+            "parameters": [
+                {
+                    "Type": "Nationality",
+                    "Value": "IN"
+                },
+                {
+                    "Type": "Country of Residence",
+                    "Value": "IN"
+                }
+            ]
+        }
+    ],
+    "Rooms": [
+        {
+            "RoomId": "46879996-8d43-434c-b793-e97763efd4c3",
+            "GuestCode": "|1|1:A:25|",
+            "SupplierName": "CleartripAPI",
+            "RoomGroupId": "5c5f0243-eb76-4d77-afea-d67e6c0127bf",
+            "Guests": [
+                {
+                    "GuestID": "G1",
+                    "Operation": "U",
+                    "Title": "Mr",
+                    "FirstName": "hfhgh",
+                    "MiddleName": "",
+                    "LastName": "User",
+                    "MobileNo": "9876543210",
+                    "PaxType": "A",
+                    "Age": "28",
+                    "Email": "rahul.sharma@example.com",
+                    "Pan": ""
+                }
+            ]
+        }
+    ],
+    "NetAmount": "7086.18",
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "DeviceID": "",
+    "AppVersion": "1.0",
+    "SearchId": "6d3dc8a5-c7d0-4731-93fc-75a6f61d13bc.sVU0kctR3yLyx4l4xTys5J0hwXkxZGIVavk_21mLOKM",
+    "RecommendationId": "e18be238-10ee-499e-a318-1d1666dd2438",
+    "LocationName": null,
+    "HotelCode": "15777057",
+    "CheckInDate": "2026-09-29",
+    "CheckOutDate": "2026-10-01",
+    "TravelingFor": "NTF"
+}
+
+RESPONSE BODY:
+{
+    "TUI": "92239c2d-d834-45e3-9606-73b324bfea3d|9da22c21-07e9-4034-9997-e5b9e2ad5e6d|20260909124858",
+    "TransactionID": 260144578,
+    "NetAmount": 7086.18,
+    "priceInfo": null,
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ]
+}
+================================================================================

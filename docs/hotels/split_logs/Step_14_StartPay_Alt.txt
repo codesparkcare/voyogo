@@ -1,0 +1,64 @@
+--------------------------------------------------------------------------------
+STEP #14 | LOG ID: #2960 | TIMESTAMP: 2026-09-09 12:49:12
+API NAME / ACTION: StartPay_Alt
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapihotels.benzyinfotech.com/Payment/StartPay
+HTTP STATUS: 200 | LATENCY: 533 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "SID": null,
+    "TUI": "92239c2d-d834-45e3-9606-73b324bfea3d|9da22c21-07e9-4034-9997-e5b9e2ad5e6d|20260909124858",
+    "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
+    "Email": null,
+    "Promo": null,
+    "TransactionID": 260144578,
+    "PaymentType": "",
+    "BankCode": "",
+    "GateWayCode": "",
+    "MerchantID": 0,
+    "PaymentAmount": 7086.18,
+    "PaymentCharge": 0,
+    "CardType": "default",
+    "Card": {
+        "Number": "",
+        "Expiry": "",
+        "CVV": "",
+        "CHName": "",
+        "FName": null,
+        "LName": null,
+        "Address": "",
+        "City": "",
+        "State": "",
+        "Country": "",
+        "PIN": "",
+        "International": false,
+        "SaveCard": false,
+        "EMIMonths": "0",
+        "Token": null,
+        "NumberAlias": null
+    },
+    "VPA": "",
+    "CardAlias": "",
+    "QuickPay": null,
+    "RMSSignature": "",
+    "TargetCurrency": "",
+    "TargetAmount": 0,
+    "ThirdPartyInfo": null,
+    "Hold": false,
+    "TripType": null,
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZkl4ZlZFVmk2MStPUT09IiwicHdkIjoiTDJFdDRHL1hxNGxMWEFHeENzNkRIdz09IiwiYWdlbnRDb2RlIjoiL0tmZFl3ZXNxUHc9IiwiY2xpZW50SWQiOiIyZnpYRWtNeFZEVT0iLCJSb2xlSWQiOiIwIiwiQXNzb2NpYXRlZENvbXBhbnkiOiIxIiwiSUJvc3NEQnByZWZpeCI6IktGVlArZXJyNXRBPSIsIkVtYWlsIjoiR3NjTGk1NjFuVlBZaHZBMy9LRFluUFVJdlN6aTVGRVgiLCJBc3NWaXJ0dWFsR3JwSUQiOiIwIiwiQ2xpZW50QWNjVHlwZSI6IkdFTiIsIkNvbXBhbnlUeXBlIjoiUyIsIkVtcExvZ2luSUQiOiIyZnpYRWtNeFZEVT0iLCJWZXJzaW9uIjoibC9SczdlVHBSTnc9IiwiQnJvd3NlcktleSI6Iis2WDlKVW9NK200T1V0VEExWjFqaVpOVWJEeEIxYjBjRUtHbW53YnJOZXBkRG93TEd5VXNPZz09IiwibmJmIjoxNzg4OTM3Mjg2LCJleHAiOjE3OTc1NzcyODYsImlhdCI6MTc4ODkzNzI4NiwiaXNzIjoid2ViY29ubmVjdCIsImF1ZCI6ImNsaWVudCJ9.sjtNqa7CxgC-KB4smq_2w3E4A74qZa2xUziGZYkIBCU",
+    "QTransactionID": 0,
+    "NetAmount": 7086.18,
+    "OnlinePayment": false,
+    "DepositPayment": true,
+    "ReleaseDate": "/Date(-62135596800000)/",
+    "BrowserKey": "caecd3cd30225512c1811070dce615c1",
+    "BrowserKeyFromToken": "caecd3cd30225512c1811070dce615c1",
+    "AgentInfo": "",
+    "ServiceType": "ITI"
+}
+
+RESPONSE BODY:
+null
+================================================================================

@@ -1,0 +1,5782 @@
+================================================================================
+VOYOGO API ACTIVITY & PAYLOAD LOG REPORT
+Generated At: 2026-09-10 18:19:50 IST
+Total Entries: 11
+Filter: Service=ALL, Status=ALL
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #1 | LOG ID: #3563 | TIMESTAMP: 2026-09-10 18:16:17
+API NAME / ACTION: Init
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/init
+HTTP STATUS: 200 | LATENCY: 1773 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "currency": "INR",
+    "culture": "en-US",
+    "checkIn": "09/29/2026",
+    "checkOut": "10/01/2026",
+    "rooms": [
+        {
+            "adults": "2",
+            "children": "2",
+            "childAges": [
+                2,
+                4
+            ]
+        },
+        {
+            "adults": "2",
+            "children": "2",
+            "childAges": [
+                4,
+                5
+            ]
+        }
+    ],
+    "agentCode": "",
+    "destinationCountryCode": "IN",
+    "nationality": "IN",
+    "countryOfResidence": "IN",
+    "channelId": "b2bIndiaDeals",
+    "affiliateRegion": "B2B_India",
+    "segmentId": "NewRevamp",
+    "companyId": "1",
+    "gstPercentage": 0,
+    "tdsPercentage": 0,
+    "geoCode": {
+        "lat": "8.70388140193928",
+        "long": "77.71335259501767"
+    }
+}
+
+RESPONSE BODY:
+{
+    "searchId": "a23e517a-326d-49c9-ac62-0ae6c1483977.iXlgtDkJ55iRxsbW61gQHQ",
+    "searchTracingKey": "6beafc5c-ec87-4670-9000-5c5f1722286e",
+    "status": "success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #2 | LOG ID: #3564 | TIMESTAMP: 2026-09-10 18:16:19
+API NAME / ACTION: HotelRate
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/a23e517a-326d-49c9-ac62-0ae6c1483977.iXlgtDkJ55iRxsbW61gQHQ/rate
+HTTP STATUS: 200 | LATENCY: 1676 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "searchStatus": "inProgress",
+    "hotels": [
+        {
+            "id": "41513587",
+            "rate": {
+                "total": 17340,
+                "baseRate": 20400,
+                "commission": 4080,
+                "discounts": 0,
+                "taxes": 1020,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 4080,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 2040,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 8670
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "EscalaBeds",
+                "TravelGuru",
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "16473201",
+            "rate": {
+                "total": 14981.28,
+                "baseRate": 15325.2,
+                "commission": 1117.92,
+                "discounts": 0,
+                "taxes": 774,
+                "fees": 0,
+                "providerId": "20340",
+                "provider": "EAN",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1117.92,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1532.52,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": {
+                    "title": "Promotion",
+                    "description": "Save:11% ",
+                    "type": null,
+                    "discountOffer": 0,
+                    "percentageDiscountOffer": 0,
+                    "stayOffer": null
+                },
+                "gstOnCommission": 0,
+                "additionalInformation": [
+                    {
+                        "type": "RoomIdentifierKey",
+                        "text": "328419811"
+                    },
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "408878431"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    },
+                    {
+                        "type": "RoomIdentifierKey",
+                        "text": "328419811"
+                    },
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "408878431"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    }
+                ],
+                "tcsOnTotal": 0,
+                "ratePerNight": 7490.64
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15644654",
+            "rate": {
+                "total": 21948,
+                "baseRate": 21948,
+                "commission": 0,
+                "discounts": 89,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "410",
+                "provider": "SunHotels",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 2194.8,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 10974
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "SunHotels"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": true,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15719740",
+            "rate": {
+                "total": 25972,
+                "baseRate": 25972,
+                "commission": 0,
+                "discounts": 105,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "410",
+                "provider": "SunHotels",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 2597.2,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 12986
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru",
+                "SunHotels"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": true,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "32815852",
+            "rate": {
+                "total": 4802,
+                "baseRate": 5600,
+                "commission": 1064,
+                "discounts": 280,
+                "taxes": 266,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1064,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 560,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 2401
+            },
+            "isRecommended": false,
+            "moreRatesExpected": false,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15778732",
+            "rate": {
+                "total": 8520,
+                "baseRate": 7800,
+                "commission": 1560,
+                "discounts": 0,
+                "taxes": 2280,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1560,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 780,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 4260
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": false,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15635033",
+            "rate": {
+                "total": 16688.8,
+                "baseRate": 14000,
+                "commission": 2041.2,
+                "discounts": 3420,
+                "taxes": 4730,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 2041.2,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1400,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 8344.4
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "39668886",
+            "rate": {
+                "total": 20393.6,
+                "baseRate": 23992,
+                "commission": 4798.4,
+                "discounts": 0,
+                "taxes": 1200,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 4798.4,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 2399.2,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 10196.8
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15322626",
+            "rate": {
+                "total": 9785.04,
+                "baseRate": 10796,
+                "commission": 1398.96,
+                "discounts": 3024,
+                "taxes": 388,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1398.96,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1079.6,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 4892.52
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15643310",
+            "rate": {
+                "total": 11419.36,
+                "baseRate": 12596,
+                "commission": 1712.64,
+                "discounts": 1892,
+                "taxes": 536,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1712.64,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1259.6,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 5709.68
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "SunHotels",
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": true,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "39642365",
+            "rate": {
+                "total": 12106.8,
+                "baseRate": 13996,
+                "commission": 2519.2,
+                "discounts": 1400,
+                "taxes": 630,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 2519.2,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1399.6,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 6053.4
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        }
+    ],
+    "currency": "INR",
+    "total": 11,
+    "locationId": null,
+    "locationName": null,
+    "status": "success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #3 | LOG ID: #3565 | TIMESTAMP: 2026-09-10 18:16:21
+API NAME / ACTION: HotelRate
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/a23e517a-326d-49c9-ac62-0ae6c1483977.iXlgtDkJ55iRxsbW61gQHQ/rate
+HTTP STATUS: 200 | LATENCY: 1631 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "searchStatus": "inProgress",
+    "hotels": [
+        {
+            "id": "41513587",
+            "rate": {
+                "total": 17340,
+                "baseRate": 20400,
+                "commission": 4080,
+                "discounts": 0,
+                "taxes": 1020,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 4080,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 2040,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 8670
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "EscalaBeds",
+                "TravelGuru",
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "16473201",
+            "rate": {
+                "total": 14981.28,
+                "baseRate": 15325.2,
+                "commission": 1117.92,
+                "discounts": 0,
+                "taxes": 774,
+                "fees": 0,
+                "providerId": "20340",
+                "provider": "EAN",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1117.92,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1532.52,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": {
+                    "title": "Promotion",
+                    "description": "Save:11% ",
+                    "type": null,
+                    "discountOffer": 0,
+                    "percentageDiscountOffer": 0,
+                    "stayOffer": null
+                },
+                "gstOnCommission": 0,
+                "additionalInformation": [
+                    {
+                        "type": "RoomIdentifierKey",
+                        "text": "328419811"
+                    },
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "408878431"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    },
+                    {
+                        "type": "RoomIdentifierKey",
+                        "text": "328419811"
+                    },
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "408878431"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    }
+                ],
+                "tcsOnTotal": 0,
+                "ratePerNight": 7490.64
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15644654",
+            "rate": {
+                "total": 21948,
+                "baseRate": 21948,
+                "commission": 0,
+                "discounts": 89,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "410",
+                "provider": "SunHotels",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 2194.8,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 10974
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "SunHotels"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": true,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15719740",
+            "rate": {
+                "total": 25972,
+                "baseRate": 25972,
+                "commission": 0,
+                "discounts": 105,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "410",
+                "provider": "SunHotels",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 2597.2,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 12986
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru",
+                "SunHotels"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": true,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "32815852",
+            "rate": {
+                "total": 4802,
+                "baseRate": 5600,
+                "commission": 1064,
+                "discounts": 280,
+                "taxes": 266,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1064,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 560,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 2401
+            },
+            "isRecommended": false,
+            "moreRatesExpected": false,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15778732",
+            "rate": {
+                "total": 8520,
+                "baseRate": 7800,
+                "commission": 1560,
+                "discounts": 0,
+                "taxes": 2280,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1560,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 780,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 4260
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": false,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15635033",
+            "rate": {
+                "total": 16688.8,
+                "baseRate": 14000,
+                "commission": 2041.2,
+                "discounts": 3420,
+                "taxes": 4730,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 2041.2,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1400,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 8344.4
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "39668886",
+            "rate": {
+                "total": 20393.6,
+                "baseRate": 23992,
+                "commission": 4798.4,
+                "discounts": 0,
+                "taxes": 1200,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 4798.4,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 2399.2,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 10196.8
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15322626",
+            "rate": {
+                "total": 9785.04,
+                "baseRate": 10796,
+                "commission": 1398.96,
+                "discounts": 3024,
+                "taxes": 388,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1398.96,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1079.6,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 4892.52
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15643310",
+            "rate": {
+                "total": 11419.36,
+                "baseRate": 12596,
+                "commission": 1712.64,
+                "discounts": 1892,
+                "taxes": 536,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1712.64,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1259.6,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 5709.68
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "SmyroomsDirect",
+                "SunHotels",
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": true,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "39642365",
+            "rate": {
+                "total": 12106.8,
+                "baseRate": 13996,
+                "commission": 2519.2,
+                "discounts": 1400,
+                "taxes": 630,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 2519.2,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1399.6,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 6053.4
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        }
+    ],
+    "currency": "INR",
+    "total": 11,
+    "locationId": null,
+    "locationName": null,
+    "status": "success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #4 | LOG ID: #3566 | TIMESTAMP: 2026-09-10 18:16:26
+API NAME / ACTION: HotelRate
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/a23e517a-326d-49c9-ac62-0ae6c1483977.iXlgtDkJ55iRxsbW61gQHQ/rate
+HTTP STATUS: 200 | LATENCY: 3468 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "searchStatus": "completed",
+    "hotels": [
+        {
+            "id": "41513587",
+            "rate": {
+                "total": 17340,
+                "baseRate": 20400,
+                "commission": 4080,
+                "discounts": 0,
+                "taxes": 1020,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 4080,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 2040,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 8670
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "PeakPoint",
+                "EscalaBeds",
+                "TravelGuru",
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "16473201",
+            "rate": {
+                "total": 14981.28,
+                "baseRate": 15325.2,
+                "commission": 1117.92,
+                "discounts": 0,
+                "taxes": 774,
+                "fees": 0,
+                "providerId": "20340",
+                "provider": "EAN",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1117.92,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1532.52,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": {
+                    "title": "Promotion",
+                    "description": "Save:11% ",
+                    "type": null,
+                    "discountOffer": 0,
+                    "percentageDiscountOffer": 0,
+                    "stayOffer": null
+                },
+                "gstOnCommission": 0,
+                "additionalInformation": [
+                    {
+                        "type": "RoomIdentifierKey",
+                        "text": "328419811"
+                    },
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "408878431"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    },
+                    {
+                        "type": "RoomIdentifierKey",
+                        "text": "328419811"
+                    },
+                    {
+                        "type": "SupplierRateIdentifierKey",
+                        "text": "408878431"
+                    },
+                    {
+                        "type": "Member_Deal_Available",
+                        "text": "false"
+                    }
+                ],
+                "tcsOnTotal": 0,
+                "ratePerNight": 7490.64
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "EAN"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15644654",
+            "rate": {
+                "total": 21948,
+                "baseRate": 21948,
+                "commission": 0,
+                "discounts": 89,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "410",
+                "provider": "SunHotels",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 2194.8,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 10974
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "SunHotels"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": true,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15719740",
+            "rate": {
+                "total": 25972,
+                "baseRate": 25972,
+                "commission": 0,
+                "discounts": 105,
+                "taxes": 0,
+                "fees": 0,
+                "providerId": "410",
+                "provider": "SunHotels",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 2597.2,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 12986
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru",
+                "SunHotels"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": true,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "32815852",
+            "rate": {
+                "total": 4802,
+                "baseRate": 5600,
+                "commission": 1064,
+                "discounts": 280,
+                "taxes": 266,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1064,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 560,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 2401
+            },
+            "isRecommended": false,
+            "moreRatesExpected": false,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15778732",
+            "rate": {
+                "total": 8520,
+                "baseRate": 7800,
+                "commission": 1560,
+                "discounts": 0,
+                "taxes": 2280,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1560,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 780,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 4260
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": false,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15635033",
+            "rate": {
+                "total": 16688.8,
+                "baseRate": 14000,
+                "commission": 2041.2,
+                "discounts": 3420,
+                "taxes": 4730,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 2041.2,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1400,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 8344.4
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "39668886",
+            "rate": {
+                "total": 20393.6,
+                "baseRate": 23992,
+                "commission": 4798.4,
+                "discounts": 0,
+                "taxes": 1200,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 4798.4,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 2399.2,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 10196.8
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "SmyroomsDirect",
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15322626",
+            "rate": {
+                "total": 9785.04,
+                "baseRate": 10796,
+                "commission": 1398.96,
+                "discounts": 3024,
+                "taxes": 388,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1398.96,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1079.6,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 4892.52
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "15643310",
+            "rate": {
+                "total": 11419.36,
+                "baseRate": 12596,
+                "commission": 1712.64,
+                "discounts": 1892,
+                "taxes": 536,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 1712.64,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1259.6,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 5709.68
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": false,
+            "payAtHotel": false,
+            "freeCancellation": true,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "SmyroomsDirect",
+                "SunHotels",
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": true,
+            "isPreffered": false,
+            "isSponsored": false
+        },
+        {
+            "id": "39642365",
+            "rate": {
+                "total": 12106.8,
+                "baseRate": 13996,
+                "commission": 2519.2,
+                "discounts": 1400,
+                "taxes": 630,
+                "fees": 0,
+                "providerId": "20016json",
+                "provider": "TravelGuru",
+                "pointEquivalent": 0,
+                "otherRateComponents": [
+                    {
+                        "amount": 2519.2,
+                        "description": "PassOnCommission",
+                        "type": "PassOnCommission"
+                    },
+                    {
+                        "amount": 1399.6,
+                        "description": "Agency Markup applied on BaseFare",
+                        "type": "AgencyMarkup"
+                    }
+                ],
+                "offer": null,
+                "gstOnCommission": 0,
+                "additionalInformation": null,
+                "tcsOnTotal": 0,
+                "ratePerNight": 6053.4
+            },
+            "isRecommended": false,
+            "moreRatesExpected": true,
+            "isRefundable": true,
+            "freeBreakfast": true,
+            "payAtHotel": false,
+            "freeCancellation": false,
+            "akbarChoice": false,
+            "availableSuppliers": [
+                "TravelGuru"
+            ],
+            "isGSTInvoiceAvailable": false,
+            "isPANRequired": false,
+            "isPreffered": false,
+            "isSponsored": false
+        }
+    ],
+    "currency": "INR",
+    "total": 11,
+    "locationId": null,
+    "locationName": null,
+    "status": "success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #5 | LOG ID: #3567 | TIMESTAMP: 2026-09-10 18:16:27
+API NAME / ACTION: HotelContent
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/a23e517a-326d-49c9-ac62-0ae6c1483977.iXlgtDkJ55iRxsbW61gQHQ/content?limit=50&offset=-1&filterdata=false
+HTTP STATUS: 200 | LATENCY: 1036 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "searchId": "a23e517a-326d-49c9-ac62-0ae6c1483977.iXlgtDkJ55iRxsbW61gQHQ",
+    "locationId": null,
+    "locationName": null,
+    "hotels": [
+        {
+            "id": "15777057",
+            "name": "RR INN- Tirunelveli",
+            "starRating": 4,
+            "address": "Old Madurai Road, Tirunelveli Junction, Tirunelveli, Tamil Nadu, IN 627001",
+            "distance": 3.5,
+            "heroImage": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/3a267a4a_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 35,
+                    "groupId": 35,
+                    "name": "Multilingual"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 11,
+                    "groupId": 11,
+                    "name": "Television"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 17,
+                    "groupId": 17,
+                    "name": "Fitness Facility"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                },
+                {
+                    "id": 29,
+                    "groupId": 29,
+                    "name": "Banquet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.735341,
+                "long": 77.71138
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 2,
+                "rating": 5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 96,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15650552",
+            "name": "Hotel Aryaas Ressidence",
+            "starRating": 3,
+            "address": "Hotel Aryaas Residence Bypass Junction, Vannarpet, 627003 Tirunelveli, India, Tirunelveli, IN",
+            "distance": 2.83,
+            "heroImage": "https://hg-static.hyperguest.com/99187/images/image_9232590_original.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.72792,
+                "long": 77.7217
+            },
+            "provider": "HyperGuest",
+            "userReview": {
+                "provider": "HyperGuest",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 95,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "41601000",
+            "name": "Anantya In The Village",
+            "starRating": 3,
+            "address": "Vakula, West Maada Street, Alwarthirunagari, 628612 Tuticorin, India, Tuticorin, IN",
+            "distance": 26.87,
+            "heroImage": "https://hg-static.hyperguest.com/69460/images/image_4923928_original.jpg",
+            "facilities": [
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 67,
+                    "groupId": 67,
+                    "name": "Garden"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 76,
+                    "groupId": 76,
+                    "name": "Things To Do"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.60682,
+                "long": 77.93723
+            },
+            "provider": "HyperGuest",
+            "userReview": {
+                "provider": "HyperGuest",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 95,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "37752712",
+            "name": "KA Hotels",
+            "starRating": 3,
+            "address": "18, S Bypass Rd, near New Bus Stand, Mela Kulavanigarpuram, Melapalayam, Tirunelveli, Tamil Nadu 627005, Tirunelveli, IN",
+            "distance": 0.89,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.70904,
+                "long": 77.71954
+            },
+            "provider": "HyperGuest",
+            "userReview": {
+                "provider": "HyperGuest",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 85,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16443315",
+            "name": "Sri Ram Residency",
+            "starRating": 0,
+            "address": "9 South By Pass Road,Vannarpettai,Tirunelveli 627003,Tamilnadu, Tirunelveli, IN",
+            "distance": 2.68,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.726534,
+                "long": 77.721634
+            },
+            "provider": "Atharva",
+            "userReview": {
+                "provider": "Atharva",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 75,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16093079",
+            "name": "Masa Residency",
+            "starRating": 2,
+            "address": "Tirunelveli, Tirunelveli, IN",
+            "distance": 2.74,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.72842,
+                "long": 77.7153
+            },
+            "provider": "Atharva",
+            "userReview": {
+                "provider": "Atharva",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 75,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72380312",
+            "name": "Hotel Meridian Inn",
+            "starRating": 3,
+            "address": "18 S Bypass Rd, 18/2, Palayankottai, TN, IN 627005",
+            "distance": 0.79,
+            "heroImage": "https://i.travelapi.com/lodging/125000000/124300000/124294600/124294591/6c831bd7_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 67,
+                    "groupId": 67,
+                    "name": "Garden"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 8,
+                    "groupId": 8,
+                    "name": "Bar"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 78,
+                    "groupId": 78,
+                    "name": "Food And Drink"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.707068,
+                "long": 77.71981
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 2,
+                "rating": 4.5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72410380",
+            "name": "Christmas Rajan Home Stay ",
+            "starRating": 2,
+            "address": "Plot.no 3 blessing nagar, Xavier's colony, Tirunelveli, Tamil Nadu, IN 627005",
+            "distance": 1.04,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/5415/5415562/images/6ca07dd846e470f6503c54f2342f0049_Z6iRm1.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 15,
+                    "groupId": 15,
+                    "name": "Pets Allowed"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.700531,
+                "long": 77.72219
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Homestay",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16094586",
+            "name": "Zion Residency",
+            "starRating": 0,
+            "address": "1 South Byepass Road Vasantha Nagar Near Tirunelveli New Bus Stand Tirunelveli 627005, Palayankottai, Palayankottai, IN",
+            "distance": 1.46,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.699239,
+                "long": 77.72576
+            },
+            "provider": "RateHawk",
+            "userReview": {
+                "provider": "RateHawk",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "No chain",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "41357001",
+            "name": "AAR Royal Park",
+            "starRating": 2,
+            "address": "No. 996, 1-B,, Near New Bus Station,Vasanth Nagar,, Palayankottai, Tamil Nadu, IN 627007",
+            "distance": 1.52,
+            "heroImage": "https://i.travelapi.com/lodging/134000000/133370000/133366000/133365967/bd332aed_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.700771,
+                "long": 77.72684
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72462112",
+            "name": "Comfort Inn",
+            "starRating": 2,
+            "address": "New Bus Stand, Palayankottai, TN, IN 627005",
+            "distance": 1.53,
+            "heroImage": "https://i.travelapi.com/lodging/126000000/125110000/125103500/125103433/b763d19c_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.700215,
+                "long": 77.72681
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72458465",
+            "name": "ComfortInn",
+            "starRating": 2,
+            "address": "No.5, Bye Pass Road, Vasanth Nagar,Near New Bus Stand, Tirunelveli- 627005, Palayankottai, TN, IN 627002",
+            "distance": 1.53,
+            "heroImage": "https://i.travelapi.com/lodging/129000000/128410000/128400300/128400261/a6236381_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.700218,
+                "long": 77.726814
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "44339000",
+            "name": "AAR Royal Residency - Palmyra",
+            "starRating": 3,
+            "address": "996, 1-B, Vasantha Nagar, AAR Royal Residency (PALMYRA), Palayankottai, Tamil Nadu, IN 627005",
+            "distance": 1.64,
+            "heroImage": "https://i.travelapi.com/lodging/96000000/95770000/95769700/95769631/f909e0d7_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 34,
+                    "groupId": 34,
+                    "name": "Disability Accessible"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 13,
+                    "groupId": 13,
+                    "name": "Swimming Pool"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.700396,
+                "long": 77.727875
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Bed & breakfast",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72438533",
+            "name": "AAR Royal Park, Tirunelveli",
+            "starRating": 3,
+            "address": "No. 996, 1-B, near New Bus Station, Vasanth Nagar, Tirunelveli, Tamil Nadu 627007, Tirunelveli, Tamil Nadu, IN 627005",
+            "distance": 1.65,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/7375/737526/images/e468ff44de541575b2b7b468ad1a0622.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 35,
+                    "groupId": 35,
+                    "name": "Multilingual"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 69,
+                    "groupId": 69,
+                    "name": "Beach"
+                },
+                {
+                    "id": 8,
+                    "groupId": 8,
+                    "name": "Bar"
+                },
+                {
+                    "id": 9,
+                    "groupId": 9,
+                    "name": "Spa"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 13,
+                    "groupId": 13,
+                    "name": "Swimming Pool"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 19,
+                    "groupId": 19,
+                    "name": "Refrigerator"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                },
+                {
+                    "id": 30,
+                    "groupId": 30,
+                    "name": "Medical"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.700396,
+                "long": 77.72795
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15644654",
+            "name": "Hotel Palmyra Grand Suite",
+            "starRating": 3,
+            "address": "996 1 B, Vasantha Nagar, Near New Bus Station, Tirunelveli 996 1 B, Vasantha Nagar, Near New Bus Station, Tir 627007 Tamil Nadu  India, 996 1 B, Vasantha Nagar, Near New Bus Station, Tirunelveli, Tamil Nadu, IN",
+            "distance": 1.67,
+            "heroImage": "https://hotelimages.sunhotels.net/HotelInfo/hotelImage.aspx?id=89315920",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 11,
+                    "groupId": 11,
+                    "name": "Television"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 13,
+                    "groupId": 13,
+                    "name": "Swimming Pool"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.7,
+                "long": 77.728
+            },
+            "provider": "SunHotels",
+            "userReview": {
+                "provider": "SunHotels",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "32815852",
+            "name": "Hotel Venkatateswara",
+            "starRating": 3,
+            "address": "Opp New Bus Stand, Tirunelveli, Tamil Nadu, IN 627005",
+            "distance": 1.72,
+            "heroImage": "https://imgcld.yatra.com/ytimages/image/upload/t_hotel_mobileactualimage/v7788738928/Hotel/Tirunelveli/00184696/t1_4xelXj.png",
+            "facilities": [
+                {
+                    "id": 11,
+                    "groupId": 11,
+                    "name": "Television"
+                },
+                {
+                    "id": 74,
+                    "groupId": 74,
+                    "name": "Transportation"
+                },
+                {
+                    "id": 15,
+                    "groupId": 15,
+                    "name": "Pets Allowed"
+                },
+                {
+                    "id": 48,
+                    "groupId": 48,
+                    "name": "ATM"
+                },
+                {
+                    "id": 79,
+                    "groupId": 79,
+                    "name": "Family Friendly"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.701471,
+                "long": 77.728836
+            },
+            "provider": "TravelGuru",
+            "userReview": {
+                "provider": "Google",
+                "count": 259,
+                "rating": 4,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72271409",
+            "name": "Sri Ram Residency",
+            "starRating": 2,
+            "address": "4 Trivandrum Rd, Palayankottai, TN, IN 627007",
+            "distance": 1.73,
+            "heroImage": "https://i.travelapi.com/lodging/128000000/127160000/127156900/127156862/e3ccc41a_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.701263,
+                "long": 77.72884
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72404137",
+            "name": "Perumalpuram Houses",
+            "starRating": 2,
+            "address": "B -19, Jawahar Nagar, NGO Colony, Tirunelveli, Tamil Nadu, IN 627007",
+            "distance": 1.93,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/5408/5408618/images/909aa308797f1830bef8dc2d198e21fb_EbJDJ8.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 11,
+                    "groupId": 11,
+                    "name": "Television"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.695766,
+                "long": 77.728836
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Villa",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72394871",
+            "name": "Thamira Residency",
+            "starRating": 2,
+            "address": "Near New Bus Stop, NGO A Colony, Vasantha Nagar, Tirunelveli, Tamil Nadu, Palayankottai, TN, IN 627007",
+            "distance": 1.99,
+            "heroImage": "https://i.travelapi.com/lodging/128000000/127520000/127515300/127515221/8a8565fc_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.701059,
+                "long": 77.731186
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "55027600",
+            "name": "Hotel Tamil Nadu Tirunelveli",
+            "starRating": 1,
+            "address": "Collectorate Campus, Kokkirakulam, Tirunelveli, Tamil Nadu, IN 627009",
+            "distance": 2.5,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/4279/4279708/images/080d1ec670975e1382de4c135010dfb5.jpeg",
+            "facilities": [
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.726314,
+                "long": 77.71514
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "71001264",
+            "name": "Lakshmi Grand",
+            "starRating": 3,
+            "address": "28/2, South Bye Pass Road, Vannarpettai, Tirunelveli, Tamil Nadu 627003, Tirunelveli, Tamil Nadu, IN 627009",
+            "distance": 2.5,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/4672/4672399/images/image_4672399_2df60c07-3b1b-4a8e-bb35-8341357fa5f9.jpeg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 35,
+                    "groupId": 35,
+                    "name": "Multilingual"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.72493,
+                "long": 77.721306
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15677146",
+            "name": "Hotel Imperial Regency",
+            "starRating": 2,
+            "address": "#13, South Bye-pass Road, Vannarpet, Kokkirakulam, Tirunelveli, Tamil Nadu, IN 627003",
+            "distance": 2.52,
+            "heroImage": "https://pix8.agoda.net/property/75299199/0/438f5c39eae4a4406d3f9f5c3f7d52b5.jpeg?ce=2&s=2000x",
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.72487,
+                "long": 77.721924
+            },
+            "provider": "ITripJP",
+            "userReview": {
+                "provider": "ITripJP",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16349787",
+            "name": "The Hotel Raja Palace",
+            "starRating": 3,
+            "address": "Palayamkottai, 75,Trivandram Road,, Tirunelveli, Tamil Nadu, 627002, India, Tirunelveli, Tamil Nadu, IN",
+            "distance": 2.61,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/3962/3962418/images/9b812baa05e227f10b544e7ff1ae1971_q799V3.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 48,
+                    "groupId": 48,
+                    "name": "ATM"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.71774,
+                "long": 77.73251
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "70520130",
+            "name": "Hotel Tamilnadu, Tirunelveli",
+            "starRating": 0,
+            "address": "Tourism Campus, near collectorate Campus, Kokkirakulam, Tirunelveli, Tamil Nadu, Tirunelveli, Tamil Nadu, IN 627009",
+            "distance": 2.61,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/4270/4270913/images/image_4270913_d18e69d7-5b2c-4f7d-8e9d-a9c991595845.jpeg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.727273,
+                "long": 77.71518
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16053806",
+            "name": "SPOT ON 43451 Hotel Sakunthala International",
+            "starRating": 2,
+            "address": "1, Trivandrum Road, Vannarpettai, Tirunelveli, Tirunelveli, IN 627003",
+            "distance": 2.73,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.727987,
+                "long": 77.71824
+            },
+            "provider": "RateHawk",
+            "userReview": {
+                "provider": "RateHawk",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "No chain",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15719740",
+            "name": "Regency Tirunelveli By GRT Hotels",
+            "starRating": 4,
+            "address": "10A/1B Trivandrum Road, Vannarpettai, Palayankottai, Tamil Nadu, IN 627003",
+            "distance": 2.79,
+            "heroImage": "https://i.travelapi.com/lodging/22000000/21330000/21324900/21324819/2035f246_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 42,
+                    "groupId": 42,
+                    "name": "RoofTop Terrace"
+                },
+                {
+                    "id": 74,
+                    "groupId": 74,
+                    "name": "Transportation"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 77,
+                    "groupId": 77,
+                    "name": "Guest Services"
+                },
+                {
+                    "id": 78,
+                    "groupId": 78,
+                    "name": "Food And Drink"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 17,
+                    "groupId": 17,
+                    "name": "Fitness Facility"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 29,
+                    "groupId": 29,
+                    "name": "Banquet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.727806,
+                "long": 77.72087
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 30,
+                "rating": 4.3,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16172554",
+            "name": "Capital O 49170 King's Royal Palace",
+            "starRating": 3,
+            "address": "V.V.Tower, Trivandrum Rd, Palayankottai, Palayankottai, IN 627002",
+            "distance": 3.05,
+            "heroImage": "https://cdn.worldota.net/t/1024x768/content/5d/21/5d2183a5fcddffaccd7b19ff6dbc6138540cef0c.jpeg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 11,
+                    "groupId": 11,
+                    "name": "Television"
+                },
+                {
+                    "id": 76,
+                    "groupId": 76,
+                    "name": "Things To Do"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                },
+                {
+                    "id": 30,
+                    "groupId": 30,
+                    "name": "Medical"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.724631,
+                "long": 77.7315
+            },
+            "provider": "RateHawk",
+            "userReview": {
+                "provider": "RateHawk",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "No chain",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "31390976",
+            "name": "Hotel Afna Park",
+            "starRating": 3,
+            "address": "5,North Bypass Road, Vannarpettai, , Tirunelveli, Tamil Nadu, Tirunelveli, Tamil Nadu, 627003, India, Tirunelveli, Tamil Nadu, IN",
+            "distance": 3.13,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/1340/1340450/images/image_1340450_0a4a0acd-793d-431c-ba15-0fc0b262fbe4.jpeg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 9,
+                    "groupId": 9,
+                    "name": "Spa"
+                },
+                {
+                    "id": 74,
+                    "groupId": 74,
+                    "name": "Transportation"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 48,
+                    "groupId": 48,
+                    "name": "ATM"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                },
+                {
+                    "id": 30,
+                    "groupId": 30,
+                    "name": "Medical"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.730719,
+                "long": 77.721886
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15643310",
+            "name": "Sree Bharani Hotels",
+            "starRating": 3,
+            "address": "29A Madurai Road, Tirunelveli Railway Station, Tirunelveli, Tamil Nadu, IN 627001",
+            "distance": 3.16,
+            "heroImage": "https://i.travelapi.com/lodging/20000000/19010000/19009400/19009327/9e45c344_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 8,
+                    "groupId": 8,
+                    "name": "Bar"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 48,
+                    "groupId": 48,
+                    "name": "ATM"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                },
+                {
+                    "id": 29,
+                    "groupId": 29,
+                    "name": "Banquet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.732184,
+                "long": 77.71118
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 18,
+                "rating": 3.5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15402745",
+            "name": "Sri Janakiram Hotels",
+            "starRating": 0,
+            "address": "#30, Madurai Road, Near To Old Bus Stand, 627001 Tirunelveli, India, Tirunelveli, Tirunelveli, IN",
+            "distance": 3.17,
+            "heroImage": "https://cdn.worldota.net/t/1024x768/content/6b/12/6b1285eb1a3e8784677706708efb3aab879ac2c8.jpeg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 7,
+                    "groupId": 7,
+                    "name": "Currency Exchange"
+                },
+                {
+                    "id": 11,
+                    "groupId": 11,
+                    "name": "Television"
+                },
+                {
+                    "id": 74,
+                    "groupId": 74,
+                    "name": "Transportation"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 13,
+                    "groupId": 13,
+                    "name": "Swimming Pool"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.732341,
+                "long": 77.71103
+            },
+            "provider": "RateHawk",
+            "userReview": {
+                "provider": "RateHawk",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "No chain",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "71000725",
+            "name": "Square and Dormitory Stays",
+            "starRating": 2,
+            "address": "Barani Nagar, Vannarpettai, Tirunelveli, Palayankottai, Tamil Nadu, IN 627003",
+            "distance": 3.18,
+            "heroImage": "https://i.travelapi.com/lodging/118000000/117310000/117305300/117305213/e8d0e078_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.730312,
+                "long": 77.72449
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Villa",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "39668886",
+            "name": "Hotel Applettree",
+            "starRating": 4,
+            "address": "North By-Pass Road, Vannarpettai, Palayankottai, Tamil Nadu, IN 627003",
+            "distance": 3.2,
+            "heroImage": "https://i.travelapi.com/lodging/23000000/22390000/22387700/22387625/147d2d7e_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 34,
+                    "groupId": 34,
+                    "name": "Disability Accessible"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 67,
+                    "groupId": 67,
+                    "name": "Garden"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 8,
+                    "groupId": 8,
+                    "name": "Bar"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 42,
+                    "groupId": 42,
+                    "name": "RoofTop Terrace"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 78,
+                    "groupId": 78,
+                    "name": "Food And Drink"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 48,
+                    "groupId": 48,
+                    "name": "ATM"
+                },
+                {
+                    "id": 17,
+                    "groupId": 17,
+                    "name": "Fitness Facility"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                },
+                {
+                    "id": 29,
+                    "groupId": 29,
+                    "name": "Banquet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.731274,
+                "long": 77.722305
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 17,
+                "rating": 4.8,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16343480",
+            "name": "Collection O 35975 Npk Residency",
+            "starRating": 0,
+            "address": "6/1, North street, Sindupoondurai, Tirunelveli, Tamil Nadu, IN 627001",
+            "distance": 3.38,
+            "heroImage": "https://cdn.worldota.net/t/1024x768/content/60/80/6080cdde2c93baf2207219a745e0c162bb82f666.jpeg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 9,
+                    "groupId": 9,
+                    "name": "Spa"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room service"
+                },
+                {
+                    "id": 30,
+                    "groupId": 30,
+                    "name": "Medical"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.73429,
+                "long": 77.71207
+            },
+            "provider": "ITripJP",
+            "userReview": {
+                "provider": "ITripJP",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15322626",
+            "name": "TVK Regency",
+            "starRating": 2,
+            "address": "N Bypass Rd,, Vannarpettai,, Palayankottai, Tamil Nadu, IN 627003",
+            "distance": 3.43,
+            "heroImage": "https://i.travelapi.com/lodging/134000000/133920000/133917600/133917517/85cf51c3_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.733352,
+                "long": 77.72244
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15645087",
+            "name": "Hotel Aryaas",
+            "starRating": 4,
+            "address": "67 Madurai Rd, Tirunelveli, TN, IN 627001",
+            "distance": 3.45,
+            "heroImage": "https://i.travelapi.com/lodging/38000000/37650000/37647700/37647671/9818cf02_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 34,
+                    "groupId": 34,
+                    "name": "Disability Accessible"
+                },
+                {
+                    "id": 67,
+                    "groupId": 67,
+                    "name": "Garden"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 78,
+                    "groupId": 78,
+                    "name": "Food And Drink"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.734865,
+                "long": 77.7116
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 2,
+                "rating": 3.5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15635033",
+            "name": "Hotel Palmyra Grand Inn",
+            "starRating": 4,
+            "address": "64D, Madurai Road, MNH Jewellers Campus, Tirunelveli Junction, Tirunelveli, Tamil Nadu, IN 627001",
+            "distance": 3.45,
+            "heroImage": "https://i.travelapi.com/lodging/21000000/20520000/20517000/20516971/e8158d85_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 34,
+                    "groupId": 34,
+                    "name": "Disability Accessible"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 67,
+                    "groupId": 67,
+                    "name": "Garden"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 9,
+                    "groupId": 9,
+                    "name": "Spa"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 76,
+                    "groupId": 76,
+                    "name": "Things To Do"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 78,
+                    "groupId": 78,
+                    "name": "Food And Drink"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.734823,
+                "long": 77.71148
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 7,
+                "rating": 3.5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15778732",
+            "name": "Hotel South Avenue",
+            "starRating": 2,
+            "address": "Madurai Rd, Tirunelveli, TN, IN 627001",
+            "distance": 3.51,
+            "heroImage": "https://i.travelapi.com/lodging/129000000/128150000/128144300/128144288/a59ff207_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.735265,
+                "long": 77.71028
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72391915",
+            "name": "Hotel Orange Orchid",
+            "starRating": 2,
+            "address": "17/2, Madurai Main Rd, Thilak Nagar, Tirunelveli Town, Tirunelveli, Tamil Nadu 627001, Tirunelveli, Tamil Nadu, IN",
+            "distance": 3.52,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/5217/5217633/images/image_5217633_9ab74d3f-f56d-44f8-a7d3-d99f0762cc43.jpeg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 35,
+                    "groupId": 35,
+                    "name": "Multilingual"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.735497,
+                "long": 77.71207
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15299653",
+            "name": "Aryaman Service Appartments",
+            "starRating": 0,
+            "address": "17/2, Thilak Nagar, Madurai Road, Tirunelveli Junction, Tirunelveli 627001, Tirunelveli Town, Tirunelveli, Tamil Nadu 627001, India, Sengulam, Tirunelveli, Tirunelveli, IN",
+            "distance": 3.52,
+            "heroImage": "https://cdn.worldota.net/t/1024x768/content/5c/5a/5c5a05d0edfbefd532de318d6dffb7931eae965f.jpeg",
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.735526,
+                "long": 77.71201
+            },
+            "provider": "RateHawk",
+            "userReview": {
+                "provider": "RateHawk",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "No chain",
+            "locationName": null,
+            "propertyType": "Apartment",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72390303",
+            "name": "SES Naga Cottage",
+            "starRating": 2,
+            "address": "90 Babuji Nagar, Tirunelveli, TN, IN 627001",
+            "distance": 3.53,
+            "heroImage": "https://i.travelapi.com/lodging/121000000/120710000/120704100/120704022/a6d52922_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.735438,
+                "long": 77.70979
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Lodge",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "39642365",
+            "name": "Hotel Sree Annamalaiyar Park",
+            "starRating": 3,
+            "address": "9/1, Madurai Road, Tirunelveli, Tamil Nadu, IN 627001",
+            "distance": 3.83,
+            "heroImage": "https://i.travelapi.com/lodging/20000000/19360000/19359100/19359068/46a7c2c7_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 3,
+                    "groupId": 3,
+                    "name": "Childcare Service"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 67,
+                    "groupId": 67,
+                    "name": "Garden"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 38,
+                    "groupId": 38,
+                    "name": "Library"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 76,
+                    "groupId": 76,
+                    "name": "Things To Do"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                },
+                {
+                    "id": 29,
+                    "groupId": 29,
+                    "name": "Banquet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.73835,
+                "long": 77.71287
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 18,
+                "rating": 3.3,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16473201",
+            "name": "Sri Ram Grand Inn",
+            "starRating": 2,
+            "address": "Opposite to new bus stand, Thirunelveli, Palayankottai, TN, IN 627007",
+            "distance": 3.97,
+            "heroImage": "https://i.travelapi.com/lodging/128000000/127160000/127157300/127157247/9ddb1e32_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.699266,
+                "long": 77.74914
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "71593600",
+            "name": "Ganesh Home Stay",
+            "starRating": 2,
+            "address": "109 Pothigai Nagar Rd, Palayankottai, TN, IN 627007",
+            "distance": 4.01,
+            "heroImage": "https://i.travelapi.com/lodging/117000000/116340000/116335500/116335479/7334004d_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.693205,
+                "long": 77.74824
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "41353528",
+            "name": "Hotel Semmeen AC Lodging",
+            "starRating": 0,
+            "address": "Hotel Guru Abhivari Complex, TIRUNELVELI, TN, IN 627001",
+            "distance": 4.03,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.74,
+                "long": 77.71
+            },
+            "provider": "TravelGuru",
+            "userReview": {
+                "provider": "TravelGuru",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16358371",
+            "name": "Ramanas Inn",
+            "starRating": 3,
+            "address": "66 C E 1 E 2 E 3 Madurai Road, TIRUNELVELI, TN, IN 627001",
+            "distance": 4.03,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.74,
+                "long": 77.71
+            },
+            "provider": "TravelGuru",
+            "userReview": {
+                "provider": "TravelGuru",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16552699",
+            "name": "Nellai Men's Hostel",
+            "starRating": 0,
+            "address": "D-104 13th Cross Street Maharajanagar Tirunelveli 627011, Palayankottai, Palayankottai, IN",
+            "distance": 4.28,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.704878,
+                "long": 77.75226
+            },
+            "provider": "RateHawk",
+            "userReview": {
+                "provider": "RateHawk",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "No chain",
+            "locationName": null,
+            "propertyType": "Hostel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "41513587",
+            "name": "HOTEL BLUEMOON",
+            "starRating": 2,
+            "address": "940 Tiruchendur Main Rd, Palayankottai, TN, IN 627011",
+            "distance": 5.22,
+            "heroImage": "https://i.travelapi.com/lodging/94000000/93090000/93086700/93086682/47160496_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 17,
+                    "groupId": 17,
+                    "name": "Fitness Facility"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.719319,
+                "long": 77.75819
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72375483",
+            "name": "Luna Castle",
+            "starRating": 2,
+            "address": "4/919   Kamaraj Nagar, 1, Palayankottai, TN, IN 627011",
+            "distance": 5.41,
+            "heroImage": "https://i.travelapi.com/lodging/119000000/118360000/118351300/118351222/b3a55f83_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.717962,
+                "long": 77.76043
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72498500",
+            "name": "Aala Homestay",
+            "starRating": 2,
+            "address": "168, Mallika Colony, Palayamkottai, Thiyagaraja Nagar, Tirunelveli, Palayankottai, TN, IN 627011",
+            "distance": 5.73,
+            "heroImage": "https://i.travelapi.com/lodging/133000000/132290000/132287000/132286984/afa3f89f_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 9,
+                    "groupId": 9,
+                    "name": "Spa"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.68593,
+                "long": 77.76225
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72391774",
+            "name": "THUYIL HOMESTAY ",
+            "starRating": 1,
+            "address": "48,3Rd East Cross Street, Tirunelveli, Tamil Nadu, IN 627011",
+            "distance": 5.88,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/4711/4711709/images/image_4711709_57e24625-ad47-4b48-9244-0269e938d096.jpeg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.715018,
+                "long": 77.765625
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Homestay",
+            "images": [],
+            "countryCode": "IN"
+        }
+    ],
+    "curatedHotels": [],
+    "filters": null,
+    "total": 61,
+    "status": "success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #6 | LOG ID: #3568 | TIMESTAMP: 2026-09-10 18:16:33
+API NAME / ACTION: HotelDetails_Content
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/a23e517a-326d-49c9-ac62-0ae6c1483977.iXlgtDkJ55iRxsbW61gQHQ/15777057/content
+HTTP STATUS: 200 | LATENCY: 1704 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "hotel": {
+        "id": "15777057",
+        "name": "RR INN- Tirunelveli",
+        "relevanceScore": 0,
+        "providerFamily": "EAN",
+        "providerHotelId": "30518268",
+        "language": "en-US",
+        "providerName": "EAN",
+        "geoCode": {
+            "lat": 8.735341,
+            "long": 77.71138
+        },
+        "neighbourhoods": [],
+        "contact": {
+            "address": {
+                "line1": "Old Madurai Road, Tirunelveli Junction",
+                "line2": null,
+                "destinationCode": null,
+                "city": "Tirunelveli",
+                "state": "Tamil Nadu",
+                "country": "IN",
+                "postalCode": "627001"
+            },
+            "phones": [
+                "91-9489094009"
+            ],
+            "faxes": null,
+            "emails": null,
+            "website": null
+        },
+        "chainCode": "0",
+        "chainName": "Independent",
+        "type": "Hotel",
+        "website": null,
+        "descriptions": [
+            {
+                "type": "amenities",
+                "text": "Take advantage of recreation opportunities such as a 24-hour health club, or other amenities including complimentary wireless internet access and concierge services. This hotel also features a television in a common area and a banquet hall."
+            },
+            {
+                "type": "dining",
+                "text": "Enjoy a meal at the restaurant, or stay in and take advantage of the hotel's 24-hour room service."
+            },
+            {
+                "type": "business_amenities",
+                "text": "Featured amenities include complimentary newspapers in the lobby, a 24-hour front desk, and multilingual staff. Event facilities at this hotel consist of conference space and meeting rooms. A roundtrip airport shuttle is provided for a surcharge (available 24 hours), and free self parking is available onsite."
+            },
+            {
+                "type": "rooms",
+                "text": "Stay in one of 42 guestrooms featuring LED televisions. Complimentary wireless internet access keeps you connected, and cable programming is available for your entertainment. Bathrooms have showers and slippers. Conveniences include safes and complimentary newspapers, and housekeeping is provided daily."
+            },
+            {
+                "type": "attractions",
+                "text": "Distances are displayed to the nearest 0.1 mile and kilometer. <br /> <p>Getwell Hanuman Temple - 0.6 km / 0.4 mi <br /> Aravind Eye Hospital - 1.1 km / 0.7 mi <br /> ThittaiPillaiyar Koil - 2 km / 1.2 mi <br /> Kanthimathi-Nellaiyapper Temple - 3.2 km / 2 mi <br /> Manonmaniam Sundaranar University - 11.7 km / 7.3 mi <br /> Krishnapuram Temple - 12.7 km / 7.9 mi <br /> PSN College of Engineering and Technology - 18.5 km / 11.5 mi <br /> Arulmigu Sree Vanamamalai Perumal Temple - 32.3 km / 20.1 mi <br /> Western Ghats - 34.5 km / 21.4 mi <br /> Kalyana Theertham - 41.2 km / 25.6 mi <br /> Kattabomman Memorial Fort - 47.8 km / 29.7 mi <br /> Agasthiyar Falls - 49.1 km / 30.5 mi <br /> </p><p>The preferred airport for RR INN- Tirunelveli is Tuticorin (TCR) - 39.1 km / 24.3 mi </p>"
+            },
+            {
+                "type": "location",
+                "text": "With a stay at RR INN- Tirunelveli in Tirunelveli, you'll be within a 15-minute walk of Getwell Hanuman Temple and Aravind Eye Hospital.  This hotel is 2 mi (3.2 km) from Kanthimathi-Nellaiyapper Temple and 2.1 mi (3.4 km) from ThittaiPillaiyar Koil."
+            },
+            {
+                "type": "headline",
+                "text": "Near Getwell Hanuman Temple"
+            },
+            {
+                "type": "spoken_languages",
+                "text": "Hindi, English"
+            },
+            {
+                "type": "onsite_payments",
+                "text": "Visa, Mastercard"
+            }
+        ],
+        "category": "Hotel",
+        "starRating": 4,
+        "facilityGroups": [
+            {
+                "id": 62,
+                "groupId": 62,
+                "name": "Elevator"
+            },
+            {
+                "id": 1,
+                "groupId": 1,
+                "name": "Parking"
+            },
+            {
+                "id": 35,
+                "groupId": 35,
+                "name": "Multilingual"
+            },
+            {
+                "id": 6,
+                "groupId": 6,
+                "name": "Business Center"
+            },
+            {
+                "id": 10,
+                "groupId": 10,
+                "name": "Non Smoking"
+            },
+            {
+                "id": 11,
+                "groupId": 11,
+                "name": "Television"
+            },
+            {
+                "id": 12,
+                "groupId": 12,
+                "name": "Laundry Services"
+            },
+            {
+                "id": 14,
+                "groupId": 14,
+                "name": "Restaurant"
+            },
+            {
+                "id": 16,
+                "groupId": 16,
+                "name": "Internet"
+            },
+            {
+                "id": 17,
+                "groupId": 17,
+                "name": "Fitness Facility"
+            },
+            {
+                "id": 49,
+                "groupId": 49,
+                "name": "Concierge Services"
+            },
+            {
+                "id": 80,
+                "groupId": 80,
+                "name": "Conveniences"
+            },
+            {
+                "id": 18,
+                "groupId": 18,
+                "name": "Airport Shuttle"
+            },
+            {
+                "id": 29,
+                "groupId": 29,
+                "name": "Banquet"
+            }
+        ],
+        "facilities": [
+            {
+                "id": 56,
+                "groupId": 18,
+                "name": "Airport transportation (surcharge)"
+            },
+            {
+                "id": 5054,
+                "groupId": 17,
+                "name": "24-hour health club"
+            },
+            {
+                "id": 1073744111,
+                "groupId": 29,
+                "name": "Banquet hall"
+            },
+            {
+                "id": 2131,
+                "groupId": 6,
+                "name": "Meeting rooms"
+            },
+            {
+                "id": 2043,
+                "groupId": 35,
+                "name": "Multilingual staff"
+            },
+            {
+                "id": 2063,
+                "groupId": 80,
+                "name": "24-hour front desk"
+            },
+            {
+                "id": 372,
+                "groupId": 11,
+                "name": "Television in common areas"
+            },
+            {
+                "id": 2390,
+                "groupId": 16,
+                "name": "Free WiFi"
+            },
+            {
+                "id": 2537,
+                "groupId": 14,
+                "name": "Number of restaurants - 1"
+            },
+            {
+                "id": 2137,
+                "groupId": 10,
+                "name": "Smoke-free property"
+            },
+            {
+                "id": 2047,
+                "groupId": 0,
+                "name": "Free newspapers in lobby"
+            },
+            {
+                "id": 369,
+                "groupId": 12,
+                "name": "Laundry facilities"
+            },
+            {
+                "id": 2387,
+                "groupId": 0,
+                "name": "Tours/ticket assistance"
+            },
+            {
+                "id": 3861,
+                "groupId": 1,
+                "name": "Free self parking"
+            },
+            {
+                "id": 8,
+                "groupId": 62,
+                "name": "Elevator"
+            },
+            {
+                "id": 81,
+                "groupId": 6,
+                "name": "Conference space"
+            },
+            {
+                "id": 43,
+                "groupId": 49,
+                "name": "Concierge services"
+            }
+        ],
+        "nearByAttractions": [
+            {
+                "name": "Getwell Hanuman Temple",
+                "distance": "0.6",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Aravind Eye Hospital",
+                "distance": "1.1",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "ThittaiPillaiyar Koil",
+                "distance": "2",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Kanthimathi-Nellaiyapper Temple",
+                "distance": "3.2",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Manonmaniam Sundaranar University",
+                "distance": "11.7",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Krishnapuram Temple",
+                "distance": "12.7",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "PSN College of Engineering and Technology",
+                "distance": "18.5",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Arulmigu Sree Vanamamalai Perumal Temple",
+                "distance": "32.3",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Western Ghats",
+                "distance": "34.5",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Kalyana Theertham",
+                "distance": "41.2",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Kattabomman Memorial Fort",
+                "distance": "47.8",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "Agasthiyar Falls",
+                "distance": "49.1",
+                "unit": "km",
+                "description": null,
+                "type": null
+            },
+            {
+                "name": "The preferred airport for RR INN- Tirunelveli is Tuticorin (TCR)",
+                "distance": "39.1",
+                "unit": "km",
+                "description": null,
+                "type": null
+            }
+        ],
+        "images": [
+            {
+                "caption": "Primary image",
+                "category": "3",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/3a267a4a_z.jpg"
+            },
+            {
+                "caption": "Reception",
+                "category": "10002",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/916c47b9_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430032"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d21f15f5_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430032"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/3ebdfc19_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430031"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/7019708f_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430032",
+                    "221430031"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/be4d5f17_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430033"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/1a164a1b_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430033"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/07c47e39_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430033"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/0612b606_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430033"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/8bf61bc1_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [
+                    "221430031"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/394c26fb_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/1e6fc824_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/f544564d_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d1fff47a_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/51faf671_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/67a68511_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2c61ff48_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/230375d8_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/d8c697b0_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/2e67860b_z.jpg"
+            },
+            {
+                "caption": "Room",
+                "category": "21001",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/9cd5a7a5_z.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "221430033"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/189f0735_z.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "221430031"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/0f155f26_z.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "221430031"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/f839a4f7_z.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [
+                    "221430032"
+                ],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/371449d4_z.jpg"
+            },
+            {
+                "caption": "Bathroom",
+                "category": "23000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/6db79e9b_z.jpg"
+            },
+            {
+                "caption": "Restaurant",
+                "category": "81003",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/8bfe1f0d_z.jpg"
+            },
+            {
+                "caption": "Interior",
+                "category": "83000",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/b319c8d3_z.jpg"
+            },
+            {
+                "caption": "Business center",
+                "category": "83010",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/91e5826a_z.jpg"
+            },
+            {
+                "caption": "Business center",
+                "category": "83010",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/40c7c89d_z.jpg"
+            },
+            {
+                "caption": "Business center",
+                "category": "83010",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/bfaca396_z.jpg"
+            },
+            {
+                "caption": "Exterior",
+                "category": "91024",
+                "type": null,
+                "roomCodes": [],
+                "size": "Xxl",
+                "url": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/e2dc382e_z.jpg"
+            }
+        ],
+        "policies": [
+            {
+                "type": "know_before_you_go",
+                "text": "  This property's policy is to refuse certain bookings for the purpose of group events or parties, including pre-wedding stag/bachelor and hen/bachelorette parties. Only registered guests are allowed in the guestrooms.  Alcohol is not permitted at this property.  "
+            }
+        ],
+        "fees": [
+            {
+                "type": null,
+                "text": null
+            },
+            {
+                "type": null,
+                "text": null
+            }
+        ],
+        "reviews": [
+            {
+                "provider": "EAN",
+                "count": 2,
+                "rating": 5,
+                "url": null,
+                "reviews": null
+            }
+        ],
+        "checkinInfo": {
+            "beginTime": null,
+            "endTime": "anytime",
+            "instructions": [
+                "<ul>  <li>Extra-person charges may apply and vary depending on property policy</li><li>Government-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental charges</li><li>Special requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed</li><li>This property accepts credit cards</li>  </ul>"
+            ],
+            "specialInstructions": [
+                "This property offers transfers from the airport (surcharges may apply). Guests must contact the property with arrival details before travel, using the contact information on the booking confirmation. Front desk staff will greet guests on arrival at the property. Information provided by the property may be translated using automated translation tools.",
+                "We never guarantee on Extra Bed for Extra Adult, It will be subject to availability and may be Chargeable also.",
+                "During Christmas & New year ,Hotel May Request You to pay for Gala Dinner Charges at the time of Check-inn.",
+                "These additional charge are not included in the booking amount and will be collected directly at the hotel.",
+                "Tourism Taxes, City Taxes, Resort Fee, Etc Hotel May request You to pay at the time of Check-inn(Local Currency).",
+                "As per the hotel policy, there might be peak season and long weekend surcharges, which would be payable by guest directly at the hotel.",
+                "In case of peak dates or technical issues causing the hotel to be sold out, an alternative hotel of equal booking value or a full refund will be provided."
+            ],
+            "minAge": 18
+        },
+        "checkoutInfo": {
+            "time": "12:00 PM"
+        },
+        "heroImage": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/3a267a4a_z.jpg",
+        "distance": 0,
+        "locationName": null,
+        "mappings": null,
+        "destinationCode": null,
+        "line1": null,
+        "city": null
+    },
+    "curatedHotels": {
+        "id": "15777057",
+        "name": "RR INN- Tirunelveli",
+        "ratings": "4",
+        "addressLine1": "Old Madurai Road, Tirunelveli Junction"
+    },
+    "status": "success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #7 | LOG ID: #3569 | TIMESTAMP: 2026-09-10 18:16:36
+API NAME / ACTION: MoreRooms
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/a23e517a-326d-49c9-ac62-0ae6c1483977.iXlgtDkJ55iRxsbW61gQHQ/15777057/rooms
+HTTP STATUS: 200 | LATENCY: 2945 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "code": "1211",
+    "message": "No rooms found",
+    "status": "failure"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #8 | LOG ID: #3570 | TIMESTAMP: 2026-09-10 18:16:37
+API NAME / ACTION: MoreRooms_POST
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/Hotel/MoreRooms
+HTTP STATUS: 404 | LATENCY: 556 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "hotelId": "15777057"
+}
+
+RESPONSE BODY:
+{}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #9 | LOG ID: #3571 | TIMESTAMP: 2026-09-10 18:16:46
+API NAME / ACTION: Pricing_POST
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/Hotel/Pricing
+HTTP STATUS: 404 | LATENCY: 536 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "hotelId": "15777057",
+    "roomId": "RM_DLX_01",
+    "provider": "CleartripAPI",
+    "recommendationId": ""
+}
+
+RESPONSE BODY:
+{}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #10 | LOG ID: #3572 | TIMESTAMP: 2026-09-10 18:17:36
+API NAME / ACTION: Pricing
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/a23e517a-326d-49c9-ac62-0ae6c1483977.iXlgtDkJ55iRxsbW61gQHQ/15777057/price/CleartripAPI/REC-6aa2a6e6ee602
+HTTP STATUS: 200 | LATENCY: 1746 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "code": "1215",
+    "message": "Error in pricing",
+    "status": "failure"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #11 | LOG ID: #3573 | TIMESTAMP: 2026-09-10 18:17:40
+API NAME / ACTION: Pricing
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/a23e517a-326d-49c9-ac62-0ae6c1483977.iXlgtDkJ55iRxsbW61gQHQ/15777057/price/CleartripAPI/REC-6aa2a6e6ee602
+HTTP STATUS: 200 | LATENCY: 1654 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "code": "1215",
+    "message": "Error in pricing",
+    "status": "failure"
+}
+================================================================================
+

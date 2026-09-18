@@ -1,0 +1,3308 @@
+--------------------------------------------------------------------------------
+STEP #8 | LOG ID: #2954 | TIMESTAMP: 2026-09-09 12:46:09
+API NAME / ACTION: HotelContent
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/6d3dc8a5-c7d0-4731-93fc-75a6f61d13bc.sVU0kctR3yLyx4l4xTys5J0hwXkxZGIVavk_21mLOKM/content?limit=50&offset=-1&filterdata=false
+HTTP STATUS: 200 | LATENCY: 948 ms | CLIENT IP: 195.201.164.20
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "searchId": "6d3dc8a5-c7d0-4731-93fc-75a6f61d13bc.sVU0kctR3yLyx4l4xTys5J0hwXkxZGIVavk_21mLOKM",
+    "locationId": null,
+    "locationName": null,
+    "hotels": [
+        {
+            "id": "15777057",
+            "name": "RR INN- Tirunelveli",
+            "starRating": 4,
+            "address": "Old Madurai Road, Tirunelveli Junction, Tirunelveli, Tamil Nadu, IN 627001",
+            "distance": 3.5,
+            "heroImage": "https://i.travelapi.com/lodging/31000000/30520000/30518300/30518268/3a267a4a_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 35,
+                    "groupId": 35,
+                    "name": "Multilingual"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 11,
+                    "groupId": 11,
+                    "name": "Television"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 17,
+                    "groupId": 17,
+                    "name": "Fitness Facility"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                },
+                {
+                    "id": 29,
+                    "groupId": 29,
+                    "name": "Banquet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.735341,
+                "long": 77.71138
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 2,
+                "rating": 5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 96,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15650552",
+            "name": "Hotel Aryaas Ressidence",
+            "starRating": 3,
+            "address": "Hotel Aryaas Residence Bypass Junction, Vannarpet, 627003 Tirunelveli, India, Tirunelveli, IN",
+            "distance": 2.82,
+            "heroImage": "https://hg-static.hyperguest.com/99187/images/image_9232590_original.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.72792,
+                "long": 77.7217
+            },
+            "provider": "HyperGuest",
+            "userReview": {
+                "provider": "HyperGuest",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 95,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "41601000",
+            "name": "Anantya In The Village",
+            "starRating": 3,
+            "address": "Vakula, West Maada Street, Alwarthirunagari, 628612 Tuticorin, India, Tuticorin, IN",
+            "distance": 26.87,
+            "heroImage": "https://hg-static.hyperguest.com/69460/images/image_4923928_original.jpg",
+            "facilities": [
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 67,
+                    "groupId": 67,
+                    "name": "Garden"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 76,
+                    "groupId": 76,
+                    "name": "Things To Do"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.60682,
+                "long": 77.93723
+            },
+            "provider": "HyperGuest",
+            "userReview": {
+                "provider": "HyperGuest",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 95,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "37752712",
+            "name": "KA Hotels",
+            "starRating": 3,
+            "address": "18, S Bypass Rd, near New Bus Stand, Mela Kulavanigarpuram, Melapalayam, Tirunelveli, Tamil Nadu 627005, Tirunelveli, IN",
+            "distance": 0.89,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.70904,
+                "long": 77.71954
+            },
+            "provider": "HyperGuest",
+            "userReview": {
+                "provider": "HyperGuest",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 85,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16443315",
+            "name": "Sri Ram Residency",
+            "starRating": 0,
+            "address": "9 South By Pass Road,Vannarpettai,Tirunelveli 627003,Tamilnadu, Tirunelveli, IN",
+            "distance": 2.67,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.726534,
+                "long": 77.721634
+            },
+            "provider": "Atharva",
+            "userReview": {
+                "provider": "Atharva",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 75,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16093079",
+            "name": "Masa Residency",
+            "starRating": 2,
+            "address": "Tirunelveli, Tirunelveli, IN",
+            "distance": 2.73,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.72842,
+                "long": 77.7153
+            },
+            "provider": "Atharva",
+            "userReview": {
+                "provider": "Atharva",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 75,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72380312",
+            "name": "Hotel Meridian Inn",
+            "starRating": 3,
+            "address": "18 S Bypass Rd, 18/2, Palayankottai, TN, IN 627005",
+            "distance": 0.79,
+            "heroImage": "https://i.travelapi.com/lodging/125000000/124300000/124294600/124294591/6c831bd7_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 67,
+                    "groupId": 67,
+                    "name": "Garden"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 8,
+                    "groupId": 8,
+                    "name": "Bar"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 78,
+                    "groupId": 78,
+                    "name": "Food And Drink"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.707068,
+                "long": 77.71981
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 2,
+                "rating": 4.5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72410380",
+            "name": "Christmas Rajan Home Stay ",
+            "starRating": 2,
+            "address": "Plot.no 3 blessing nagar, Xavier's colony, Tirunelveli, Tamil Nadu, IN 627005",
+            "distance": 1.04,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/5415/5415562/images/6ca07dd846e470f6503c54f2342f0049_Z6iRm1.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 15,
+                    "groupId": 15,
+                    "name": "Pets Allowed"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.700531,
+                "long": 77.72219
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Homestay",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16094586",
+            "name": "Zion Residency",
+            "starRating": 0,
+            "address": "1 South Byepass Road Vasantha Nagar Near Tirunelveli New Bus Stand Tirunelveli 627005, Palayankottai, Palayankottai, IN",
+            "distance": 1.46,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.699239,
+                "long": 77.72576
+            },
+            "provider": "RateHawk",
+            "userReview": {
+                "provider": "RateHawk",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "No chain",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "41357001",
+            "name": "AAR Royal Park",
+            "starRating": 2,
+            "address": "No. 996, 1-B,, Near New Bus Station,Vasanth Nagar,, Palayankottai, Tamil Nadu, IN 627007",
+            "distance": 1.52,
+            "heroImage": "https://i.travelapi.com/lodging/134000000/133370000/133366000/133365967/bd332aed_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.700771,
+                "long": 77.72684
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72462112",
+            "name": "Comfort Inn",
+            "starRating": 2,
+            "address": "New Bus Stand, Palayankottai, TN, IN 627005",
+            "distance": 1.53,
+            "heroImage": "https://i.travelapi.com/lodging/126000000/125110000/125103500/125103433/b763d19c_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.700215,
+                "long": 77.72681
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72458465",
+            "name": "ComfortInn",
+            "starRating": 2,
+            "address": "No.5, Bye Pass Road, Vasanth Nagar,Near New Bus Stand, Tirunelveli- 627005, Palayankottai, TN, IN 627002",
+            "distance": 1.53,
+            "heroImage": "https://i.travelapi.com/lodging/129000000/128410000/128400300/128400261/a6236381_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.700218,
+                "long": 77.726814
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "44339000",
+            "name": "AAR Royal Residency - Palmyra",
+            "starRating": 3,
+            "address": "996, 1-B, Vasantha Nagar, AAR Royal Residency (PALMYRA), Palayankottai, Tamil Nadu, IN 627005",
+            "distance": 1.64,
+            "heroImage": "https://i.travelapi.com/lodging/96000000/95770000/95769700/95769631/f909e0d7_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 34,
+                    "groupId": 34,
+                    "name": "Disability Accessible"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 13,
+                    "groupId": 13,
+                    "name": "Swimming Pool"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.700396,
+                "long": 77.727875
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Bed & breakfast",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72438533",
+            "name": "AAR Royal Park, Tirunelveli",
+            "starRating": 3,
+            "address": "No. 996, 1-B, near New Bus Station, Vasanth Nagar, Tirunelveli, Tamil Nadu 627007, Tirunelveli, Tamil Nadu, IN 627005",
+            "distance": 1.65,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/7375/737526/images/e468ff44de541575b2b7b468ad1a0622.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 35,
+                    "groupId": 35,
+                    "name": "Multilingual"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 69,
+                    "groupId": 69,
+                    "name": "Beach"
+                },
+                {
+                    "id": 8,
+                    "groupId": 8,
+                    "name": "Bar"
+                },
+                {
+                    "id": 9,
+                    "groupId": 9,
+                    "name": "Spa"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 13,
+                    "groupId": 13,
+                    "name": "Swimming Pool"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 19,
+                    "groupId": 19,
+                    "name": "Refrigerator"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                },
+                {
+                    "id": 30,
+                    "groupId": 30,
+                    "name": "Medical"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.700396,
+                "long": 77.72795
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15644654",
+            "name": "Hotel Palmyra Grand Suite",
+            "starRating": 3,
+            "address": "996 1 B, Vasantha Nagar, Near New Bus Station, Tirunelveli 996 1 B, Vasantha Nagar, Near New Bus Station, Tir 627007 Tamil Nadu  India, 996 1 B, Vasantha Nagar, Near New Bus Station, Tirunelveli, Tamil Nadu, IN",
+            "distance": 1.67,
+            "heroImage": "https://hotelimages.sunhotels.net/HotelInfo/hotelImage.aspx?id=89315920",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 11,
+                    "groupId": 11,
+                    "name": "Television"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 13,
+                    "groupId": 13,
+                    "name": "Swimming Pool"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.7,
+                "long": 77.728
+            },
+            "provider": "SunHotels",
+            "userReview": {
+                "provider": "SunHotels",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "32815852",
+            "name": "Hotel Venkatateswara",
+            "starRating": 3,
+            "address": "Opp New Bus Stand, Tirunelveli, Tamil Nadu, IN 627005",
+            "distance": 1.72,
+            "heroImage": "https://imgcld.yatra.com/ytimages/image/upload/t_hotel_mobileactualimage/v7788738928/Hotel/Tirunelveli/00184696/t1_4xelXj.png",
+            "facilities": [
+                {
+                    "id": 11,
+                    "groupId": 11,
+                    "name": "Television"
+                },
+                {
+                    "id": 74,
+                    "groupId": 74,
+                    "name": "Transportation"
+                },
+                {
+                    "id": 15,
+                    "groupId": 15,
+                    "name": "Pets Allowed"
+                },
+                {
+                    "id": 48,
+                    "groupId": 48,
+                    "name": "ATM"
+                },
+                {
+                    "id": 79,
+                    "groupId": 79,
+                    "name": "Family Friendly"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.701471,
+                "long": 77.728836
+            },
+            "provider": "TravelGuru",
+            "userReview": {
+                "provider": "Google",
+                "count": 259,
+                "rating": 4,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72271409",
+            "name": "Sri Ram Residency",
+            "starRating": 2,
+            "address": "4 Trivandrum Rd, Palayankottai, TN, IN 627007",
+            "distance": 1.73,
+            "heroImage": "https://i.travelapi.com/lodging/128000000/127160000/127156900/127156862/e3ccc41a_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.701263,
+                "long": 77.72884
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72404137",
+            "name": "Perumalpuram Houses",
+            "starRating": 2,
+            "address": "B -19, Jawahar Nagar, NGO Colony, Tirunelveli, Tamil Nadu, IN 627007",
+            "distance": 1.93,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/5408/5408618/images/909aa308797f1830bef8dc2d198e21fb_EbJDJ8.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 11,
+                    "groupId": 11,
+                    "name": "Television"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.695766,
+                "long": 77.728836
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Villa",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72394871",
+            "name": "Thamira Residency",
+            "starRating": 2,
+            "address": "Near New Bus Stop, NGO A Colony, Vasantha Nagar, Tirunelveli, Tamil Nadu, Palayankottai, TN, IN 627007",
+            "distance": 1.98,
+            "heroImage": "https://i.travelapi.com/lodging/128000000/127520000/127515300/127515221/8a8565fc_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.701059,
+                "long": 77.731186
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "71001264",
+            "name": "Lakshmi Grand",
+            "starRating": 3,
+            "address": "28/2, South Bye Pass Road, Vannarpettai, Tirunelveli, Tamil Nadu 627003, Tirunelveli, Tamil Nadu, IN 627009",
+            "distance": 2.49,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/4672/4672399/images/image_4672399_2df60c07-3b1b-4a8e-bb35-8341357fa5f9.jpeg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 35,
+                    "groupId": 35,
+                    "name": "Multilingual"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.72493,
+                "long": 77.721306
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "55027600",
+            "name": "Hotel Tamil Nadu Tirunelveli",
+            "starRating": 1,
+            "address": "Collectorate Campus, Kokkirakulam, Tirunelveli, Tamil Nadu, IN 627009",
+            "distance": 2.5,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/4279/4279708/images/080d1ec670975e1382de4c135010dfb5.jpeg",
+            "facilities": [
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.726314,
+                "long": 77.71514
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15677146",
+            "name": "Hotel Imperial Regency",
+            "starRating": 2,
+            "address": "#13, South Bye-pass Road, Vannarpet, Kokkirakulam, Tirunelveli, Tamil Nadu, IN 627003",
+            "distance": 2.51,
+            "heroImage": "https://pix8.agoda.net/property/75299199/0/438f5c39eae4a4406d3f9f5c3f7d52b5.jpeg?ce=2&s=2000x",
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.72487,
+                "long": 77.721924
+            },
+            "provider": "ITripJP",
+            "userReview": {
+                "provider": "ITripJP",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16349787",
+            "name": "The Hotel Raja Palace",
+            "starRating": 3,
+            "address": "Palayamkottai, 75,Trivandram Road,, Tirunelveli, Tamil Nadu, 627002, India, Tirunelveli, Tamil Nadu, IN",
+            "distance": 2.6,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/3962/3962418/images/9b812baa05e227f10b544e7ff1ae1971_q799V3.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 48,
+                    "groupId": 48,
+                    "name": "ATM"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.71774,
+                "long": 77.73251
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "70520130",
+            "name": "Hotel Tamilnadu, Tirunelveli",
+            "starRating": 0,
+            "address": "Tourism Campus, near collectorate Campus, Kokkirakulam, Tirunelveli, Tamil Nadu, Tirunelveli, Tamil Nadu, IN 627009",
+            "distance": 2.6,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/4270/4270913/images/image_4270913_d18e69d7-5b2c-4f7d-8e9d-a9c991595845.jpeg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.727273,
+                "long": 77.71518
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16053806",
+            "name": "SPOT ON 43451 Hotel Sakunthala International",
+            "starRating": 2,
+            "address": "1, Trivandrum Road, Vannarpettai, Tirunelveli, Tirunelveli, IN 627003",
+            "distance": 2.73,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.727987,
+                "long": 77.71824
+            },
+            "provider": "RateHawk",
+            "userReview": {
+                "provider": "RateHawk",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "No chain",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15719740",
+            "name": "Regency Tirunelveli By GRT Hotels",
+            "starRating": 4,
+            "address": "10A/1B Trivandrum Road, Vannarpettai, Palayankottai, Tamil Nadu, IN 627003",
+            "distance": 2.78,
+            "heroImage": "https://i.travelapi.com/lodging/22000000/21330000/21324900/21324819/2035f246_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 42,
+                    "groupId": 42,
+                    "name": "RoofTop Terrace"
+                },
+                {
+                    "id": 74,
+                    "groupId": 74,
+                    "name": "Transportation"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 77,
+                    "groupId": 77,
+                    "name": "Guest Services"
+                },
+                {
+                    "id": 78,
+                    "groupId": 78,
+                    "name": "Food And Drink"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 17,
+                    "groupId": 17,
+                    "name": "Fitness Facility"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 29,
+                    "groupId": 29,
+                    "name": "Banquet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.727806,
+                "long": 77.72087
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 30,
+                "rating": 4.3,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16172554",
+            "name": "Capital O 49170 King's Royal Palace",
+            "starRating": 3,
+            "address": "V.V.Tower, Trivandrum Rd, Palayankottai, Palayankottai, IN 627002",
+            "distance": 3.04,
+            "heroImage": "https://cdn.worldota.net/t/1024x768/content/5d/21/5d2183a5fcddffaccd7b19ff6dbc6138540cef0c.jpeg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 11,
+                    "groupId": 11,
+                    "name": "Television"
+                },
+                {
+                    "id": 76,
+                    "groupId": 76,
+                    "name": "Things To Do"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                },
+                {
+                    "id": 30,
+                    "groupId": 30,
+                    "name": "Medical"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.724631,
+                "long": 77.7315
+            },
+            "provider": "RateHawk",
+            "userReview": {
+                "provider": "RateHawk",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "No chain",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "31390976",
+            "name": "Hotel Afna Park",
+            "starRating": 3,
+            "address": "5,North Bypass Road, Vannarpettai, , Tirunelveli, Tamil Nadu, Tirunelveli, Tamil Nadu, 627003, India, Tirunelveli, Tamil Nadu, IN",
+            "distance": 3.12,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/1340/1340450/images/image_1340450_0a4a0acd-793d-431c-ba15-0fc0b262fbe4.jpeg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 9,
+                    "groupId": 9,
+                    "name": "Spa"
+                },
+                {
+                    "id": 74,
+                    "groupId": 74,
+                    "name": "Transportation"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 48,
+                    "groupId": 48,
+                    "name": "ATM"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                },
+                {
+                    "id": 30,
+                    "groupId": 30,
+                    "name": "Medical"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.730719,
+                "long": 77.721886
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15643310",
+            "name": "Sree Bharani Hotels",
+            "starRating": 3,
+            "address": "29A Madurai Road, Tirunelveli Railway Station, Tirunelveli, Tamil Nadu, IN 627001",
+            "distance": 3.15,
+            "heroImage": "https://i.travelapi.com/lodging/20000000/19010000/19009400/19009327/9e45c344_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 8,
+                    "groupId": 8,
+                    "name": "Bar"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 48,
+                    "groupId": 48,
+                    "name": "ATM"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                },
+                {
+                    "id": 29,
+                    "groupId": 29,
+                    "name": "Banquet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.732184,
+                "long": 77.71118
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 18,
+                "rating": 3.5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15402745",
+            "name": "Sri Janakiram Hotels",
+            "starRating": 0,
+            "address": "#30, Madurai Road, Near To Old Bus Stand, 627001 Tirunelveli, India, Tirunelveli, Tirunelveli, IN",
+            "distance": 3.17,
+            "heroImage": "https://cdn.worldota.net/t/1024x768/content/6b/12/6b1285eb1a3e8784677706708efb3aab879ac2c8.jpeg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 7,
+                    "groupId": 7,
+                    "name": "Currency Exchange"
+                },
+                {
+                    "id": 11,
+                    "groupId": 11,
+                    "name": "Television"
+                },
+                {
+                    "id": 74,
+                    "groupId": 74,
+                    "name": "Transportation"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 13,
+                    "groupId": 13,
+                    "name": "Swimming Pool"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room Service"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.732341,
+                "long": 77.71103
+            },
+            "provider": "RateHawk",
+            "userReview": {
+                "provider": "RateHawk",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "No chain",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "71000725",
+            "name": "Square and Dormitory Stays",
+            "starRating": 2,
+            "address": "Barani Nagar, Vannarpettai, Tirunelveli, Palayankottai, Tamil Nadu, IN 627003",
+            "distance": 3.18,
+            "heroImage": "https://i.travelapi.com/lodging/118000000/117310000/117305300/117305213/e8d0e078_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.730312,
+                "long": 77.72449
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Villa",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "39668886",
+            "name": "Hotel Applettree",
+            "starRating": 4,
+            "address": "North By-Pass Road, Vannarpettai, Palayankottai, Tamil Nadu, IN 627003",
+            "distance": 3.2,
+            "heroImage": "https://i.travelapi.com/lodging/23000000/22390000/22387700/22387625/147d2d7e_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 34,
+                    "groupId": 34,
+                    "name": "Disability Accessible"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 67,
+                    "groupId": 67,
+                    "name": "Garden"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 8,
+                    "groupId": 8,
+                    "name": "Bar"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 42,
+                    "groupId": 42,
+                    "name": "RoofTop Terrace"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 78,
+                    "groupId": 78,
+                    "name": "Food And Drink"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 48,
+                    "groupId": 48,
+                    "name": "ATM"
+                },
+                {
+                    "id": 17,
+                    "groupId": 17,
+                    "name": "Fitness Facility"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                },
+                {
+                    "id": 29,
+                    "groupId": 29,
+                    "name": "Banquet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.731274,
+                "long": 77.722305
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 17,
+                "rating": 4.8,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16343480",
+            "name": "Collection O 35975 Npk Residency",
+            "starRating": 0,
+            "address": "6/1, North street, Sindupoondurai, Tirunelveli, Tamil Nadu, IN 627001",
+            "distance": 3.38,
+            "heroImage": "https://cdn.worldota.net/t/1024x768/content/60/80/6080cdde2c93baf2207219a745e0c162bb82f666.jpeg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 9,
+                    "groupId": 9,
+                    "name": "Spa"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 24,
+                    "groupId": 24,
+                    "name": "Room service"
+                },
+                {
+                    "id": 30,
+                    "groupId": 30,
+                    "name": "Medical"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.73429,
+                "long": 77.71207
+            },
+            "provider": "ITripJP",
+            "userReview": {
+                "provider": "ITripJP",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15322626",
+            "name": "TVK Regency",
+            "starRating": 2,
+            "address": "N Bypass Rd,, Vannarpettai,, Palayankottai, Tamil Nadu, IN 627003",
+            "distance": 3.42,
+            "heroImage": "https://i.travelapi.com/lodging/134000000/133920000/133917600/133917517/85cf51c3_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.733352,
+                "long": 77.72244
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15635033",
+            "name": "Hotel Palmyra Grand Inn",
+            "starRating": 4,
+            "address": "64D, Madurai Road, MNH Jewellers Campus, Tirunelveli Junction, Tirunelveli, Tamil Nadu, IN 627001",
+            "distance": 3.44,
+            "heroImage": "https://i.travelapi.com/lodging/21000000/20520000/20517000/20516971/e8158d85_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 32,
+                    "groupId": 32,
+                    "name": "Safe Deposit Box"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 34,
+                    "groupId": 34,
+                    "name": "Disability Accessible"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 67,
+                    "groupId": 67,
+                    "name": "Garden"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 9,
+                    "groupId": 9,
+                    "name": "Spa"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 76,
+                    "groupId": 76,
+                    "name": "Things To Do"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 78,
+                    "groupId": 78,
+                    "name": "Food And Drink"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.734823,
+                "long": 77.71148
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 7,
+                "rating": 3.5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15645087",
+            "name": "Hotel Aryaas",
+            "starRating": 4,
+            "address": "67 Madurai Rd, Tirunelveli, TN, IN 627001",
+            "distance": 3.45,
+            "heroImage": "https://i.travelapi.com/lodging/38000000/37650000/37647700/37647671/9818cf02_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 2,
+                    "groupId": 2,
+                    "name": "Lounge"
+                },
+                {
+                    "id": 34,
+                    "groupId": 34,
+                    "name": "Disability Accessible"
+                },
+                {
+                    "id": 67,
+                    "groupId": 67,
+                    "name": "Garden"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 78,
+                    "groupId": 78,
+                    "name": "Food And Drink"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.734865,
+                "long": 77.7116
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 2,
+                "rating": 3.5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15778732",
+            "name": "Hotel South Avenue",
+            "starRating": 2,
+            "address": "Madurai Rd, Tirunelveli, TN, IN 627001",
+            "distance": 3.5,
+            "heroImage": "https://i.travelapi.com/lodging/129000000/128150000/128144300/128144288/a59ff207_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.735265,
+                "long": 77.71028
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72391915",
+            "name": "Hotel Orange Orchid",
+            "starRating": 2,
+            "address": "17/2, Madurai Main Rd, Thilak Nagar, Tirunelveli Town, Tirunelveli, Tamil Nadu 627001, Tirunelveli, Tamil Nadu, IN",
+            "distance": 3.51,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/5217/5217633/images/image_5217633_9ab74d3f-f56d-44f8-a7d3-d99f0762cc43.jpeg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 35,
+                    "groupId": 35,
+                    "name": "Multilingual"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.735497,
+                "long": 77.71207
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "15299653",
+            "name": "Aryaman Service Appartments",
+            "starRating": 0,
+            "address": "17/2, Thilak Nagar, Madurai Road, Tirunelveli Junction, Tirunelveli 627001, Tirunelveli Town, Tirunelveli, Tamil Nadu 627001, India, Sengulam, Tirunelveli, Tirunelveli, IN",
+            "distance": 3.52,
+            "heroImage": "https://cdn.worldota.net/t/1024x768/content/5c/5a/5c5a05d0edfbefd532de318d6dffb7931eae965f.jpeg",
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.735526,
+                "long": 77.71201
+            },
+            "provider": "RateHawk",
+            "userReview": {
+                "provider": "RateHawk",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "No chain",
+            "locationName": null,
+            "propertyType": "Apartment",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72390303",
+            "name": "SES Naga Cottage",
+            "starRating": 2,
+            "address": "90 Babuji Nagar, Tirunelveli, TN, IN 627001",
+            "distance": 3.53,
+            "heroImage": "https://i.travelapi.com/lodging/121000000/120710000/120704100/120704022/a6d52922_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.735438,
+                "long": 77.70979
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Lodge",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "39642365",
+            "name": "Hotel Sree Annamalaiyar Park",
+            "starRating": 3,
+            "address": "9/1, Madurai Road, Tirunelveli, Tamil Nadu, IN 627001",
+            "distance": 3.83,
+            "heroImage": "https://i.travelapi.com/lodging/20000000/19360000/19359100/19359068/46a7c2c7_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 3,
+                    "groupId": 3,
+                    "name": "Childcare Service"
+                },
+                {
+                    "id": 5,
+                    "groupId": 5,
+                    "name": "Breakfast"
+                },
+                {
+                    "id": 67,
+                    "groupId": 67,
+                    "name": "Garden"
+                },
+                {
+                    "id": 6,
+                    "groupId": 6,
+                    "name": "Business Center"
+                },
+                {
+                    "id": 38,
+                    "groupId": 38,
+                    "name": "Library"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 14,
+                    "groupId": 14,
+                    "name": "Restaurant"
+                },
+                {
+                    "id": 76,
+                    "groupId": 76,
+                    "name": "Things To Do"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 49,
+                    "groupId": 49,
+                    "name": "Concierge Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 18,
+                    "groupId": 18,
+                    "name": "Airport Shuttle"
+                },
+                {
+                    "id": 29,
+                    "groupId": 29,
+                    "name": "Banquet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.73835,
+                "long": 77.71287
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 18,
+                "rating": 3.3,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16473201",
+            "name": "Sri Ram Grand Inn",
+            "starRating": 2,
+            "address": "Opposite to new bus stand, Thirunelveli, Palayankottai, TN, IN 627007",
+            "distance": 3.97,
+            "heroImage": "https://i.travelapi.com/lodging/128000000/127160000/127157300/127157247/9ddb1e32_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.699266,
+                "long": 77.74914
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "71593600",
+            "name": "Ganesh Home Stay",
+            "starRating": 2,
+            "address": "109 Pothigai Nagar Rd, Palayankottai, TN, IN 627007",
+            "distance": 4.01,
+            "heroImage": "https://i.travelapi.com/lodging/117000000/116340000/116335500/116335479/7334004d_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.693205,
+                "long": 77.74824
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16358371",
+            "name": "Ramanas Inn",
+            "starRating": 3,
+            "address": "66 C E 1 E 2 E 3 Madurai Road, TIRUNELVELI, TN, IN 627001",
+            "distance": 4.03,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.74,
+                "long": 77.71
+            },
+            "provider": "TravelGuru",
+            "userReview": {
+                "provider": "TravelGuru",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "41353528",
+            "name": "Hotel Semmeen AC Lodging",
+            "starRating": 0,
+            "address": "Hotel Guru Abhivari Complex, TIRUNELVELI, TN, IN 627001",
+            "distance": 4.03,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.74,
+                "long": 77.71
+            },
+            "provider": "TravelGuru",
+            "userReview": {
+                "provider": "TravelGuru",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "16552699",
+            "name": "Nellai Men's Hostel",
+            "starRating": 0,
+            "address": "D-104 13th Cross Street Maharajanagar Tirunelveli 627011, Palayankottai, Palayankottai, IN",
+            "distance": 4.28,
+            "heroImage": null,
+            "facilities": [],
+            "geoCode": {
+                "lat": 8.704878,
+                "long": 77.75226
+            },
+            "provider": "RateHawk",
+            "userReview": {
+                "provider": "RateHawk",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "No chain",
+            "locationName": null,
+            "propertyType": "Hostel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "41513587",
+            "name": "HOTEL BLUEMOON",
+            "starRating": 2,
+            "address": "940 Tiruchendur Main Rd, Palayankottai, TN, IN 627011",
+            "distance": 5.22,
+            "heroImage": "https://i.travelapi.com/lodging/94000000/93090000/93086700/93086682/47160496_z.jpg",
+            "facilities": [
+                {
+                    "id": 62,
+                    "groupId": 62,
+                    "name": "Elevator"
+                },
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 16,
+                    "groupId": 16,
+                    "name": "Internet"
+                },
+                {
+                    "id": 17,
+                    "groupId": 17,
+                    "name": "Fitness Facility"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.719319,
+                "long": 77.75819
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": null,
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72375483",
+            "name": "Luna Castle",
+            "starRating": 2,
+            "address": "4/919   Kamaraj Nagar, 1, Palayankottai, TN, IN 627011",
+            "distance": 5.4,
+            "heroImage": "https://i.travelapi.com/lodging/119000000/118360000/118351300/118351222/b3a55f83_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.717962,
+                "long": 77.76043
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72498500",
+            "name": "Aala Homestay",
+            "starRating": 2,
+            "address": "168, Mallika Colony, Palayamkottai, Thiyagaraja Nagar, Tirunelveli, Palayankottai, TN, IN 627011",
+            "distance": 5.73,
+            "heroImage": "https://i.travelapi.com/lodging/133000000/132290000/132287000/132286984/afa3f89f_z.jpg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 9,
+                    "groupId": 9,
+                    "name": "Spa"
+                },
+                {
+                    "id": 10,
+                    "groupId": 10,
+                    "name": "Non Smoking"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.68593,
+                "long": 77.76225
+            },
+            "provider": "EAN",
+            "userReview": {
+                "provider": "EAN",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": "Independent",
+            "locationName": null,
+            "propertyType": "Hotel",
+            "images": [],
+            "countryCode": "IN"
+        },
+        {
+            "id": "72391774",
+            "name": "THUYIL HOMESTAY ",
+            "starRating": 1,
+            "address": "48,3Rd East Cross Street, Tirunelveli, Tamil Nadu, IN 627011",
+            "distance": 5.87,
+            "heroImage": "https://rukmini-ct.flixcart.com/w_2048,f_auto,q_auto/ct-hotel-images/places/hotels/cms/4711/4711709/images/image_4711709_57e24625-ad47-4b48-9244-0269e938d096.jpeg",
+            "facilities": [
+                {
+                    "id": 1,
+                    "groupId": 1,
+                    "name": "Parking"
+                },
+                {
+                    "id": 12,
+                    "groupId": 12,
+                    "name": "Laundry Services"
+                },
+                {
+                    "id": 80,
+                    "groupId": 80,
+                    "name": "Conveniences"
+                },
+                {
+                    "id": 59,
+                    "groupId": 59,
+                    "name": "Air Conditioning"
+                }
+            ],
+            "geoCode": {
+                "lat": 8.715018,
+                "long": 77.765625
+            },
+            "provider": "CleartripAPI",
+            "userReview": {
+                "provider": "CleartripAPI",
+                "count": 1,
+                "rating": 3.5,
+                "url": "",
+                "reviews": null
+            },
+            "relevanceScore": 0,
+            "rate": null,
+            "isRecommended": null,
+            "isRefundable": null,
+            "payAtHotel": null,
+            "moreRatesExpected": false,
+            "isSoldOut": false,
+            "freeBreakfast": null,
+            "freeCancellation": null,
+            "chainName": null,
+            "locationName": null,
+            "propertyType": "Homestay",
+            "images": [],
+            "countryCode": "IN"
+        }
+    ],
+    "curatedHotels": [],
+    "filters": null,
+    "total": 61,
+    "status": "success"
+}
+================================================================================
