@@ -1,0 +1,30 @@
+URL: https://voyogos.com/certification_logs_hotel/14.International%20Booking%20-%20Bangkok%20Thailand/12.RetrieveBooking.json
+Method: POST
+Endpoint: /Utils/RetrieveBooking
+Timestamp: 2026-09-18T13:31:03.000Z
+Request Body:
+{
+    "TUI": "HTUI_648cff2611893c23ec4fc438380e2151",
+    "TransactionID": 428114
+}
+
+Response Body:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "BookingConfirmationId": "TestBooking",
+    "HotelConfirmationNumber": "TestBooking",
+    "Status": "Confirmed",
+    "CurrentStatus": "B0",
+    "CheckIn": "09/25/2026",
+    "CheckOut": "09/28/2026",
+    "Rooms": 1,
+    "Adults": 2,
+    "Children": 2,
+    "HotelName": "Grand Palace Hotel & Resort Bangkok",
+    "LeadGuest": "Mr Abdul Rahman",
+    "TotalAmount": 12768,
+    "Currency": "INR"
+}

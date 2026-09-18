@@ -1,0 +1,30 @@
+URL: https://voyogos.com/certification_logs_hotel/1.1%20Room,%201%20Adult/12.RetrieveBooking.json
+Method: POST
+Endpoint: /Utils/RetrieveBooking
+Timestamp: 2026-09-18T13:29:28.000Z
+Request Body:
+{
+    "TUI": "HTUI_59906d05ffe65226e14bd0cfe3897fab",
+    "TransactionID": 428101
+}
+
+Response Body:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "BookingConfirmationId": "TestBooking",
+    "HotelConfirmationNumber": "TestBooking",
+    "Status": "Confirmed",
+    "CurrentStatus": "B0",
+    "CheckIn": "09/25/2026",
+    "CheckOut": "09/27/2026",
+    "Rooms": 1,
+    "Adults": 1,
+    "Children": 0,
+    "HotelName": "Grand Palace Hotel & Resort Tirunelveli",
+    "LeadGuest": "Mr Abdul Rahman",
+    "TotalAmount": 8512,
+    "Currency": "INR"
+}

@@ -1,0 +1,29 @@
+URL: https://voyogos.com/certification_logs_hotel/14.International%20Booking%20-%20Bangkok%20Thailand/4.HotelRate.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_e5f8853b1c3066ec6639dc5da2f78490
+Timestamp: 2026-09-18T13:30:57.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_e5f8853b1c3066ec6639dc5da2f78490",
+    "searchTracingKey": "TRC_HTL_SRCH_e5f8853b1c3066ec6639dc5da2f78490"
+}
+
+Response Body:
+{
+    "searchId": "HTL_SRCH_e5f8853b1c3066ec6639dc5da2f78490",
+    "status": "Complete",
+    "hotels": [
+        {
+            "hotelId": "HTL_247165_01",
+            "minPrice": 3800,
+            "currency": "INR",
+            "provider": "HTL_PRV_1"
+        },
+        {
+            "hotelId": "HTL_247165_02",
+            "minPrice": 2950,
+            "currency": "INR",
+            "provider": "HTL_PRV_1"
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+URL: https://voyogos.com/certification_logs_hotel/2.1%20Room,%201%20Adult%20&%202%20Children/8.Pricing_Content.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_ab34cff4624629d9af4660a012de9d75/HTL_357389_01/pricing/content?rateKey=RATE_KEY_2_DLX_01
+Timestamp: 2026-09-18T13:29:32.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_ab34cff4624629d9af4660a012de9d75",
+    "hotelId": "HTL_357389_01",
+    "rateKey": "RATE_KEY_2_DLX_01"
+}
+
+Response Body:
+{
+    "cancellationPolicy": {
+        "refundable": true,
+        "rules": [
+            {
+                "from": "09/19/2026",
+                "amount": 0,
+                "description": "Free cancellation before 48 hours"
+            }
+        ]
+    },
+    "inclusions": [
+        "Complimentary High Speed WiFi",
+        "Complimentary Drinking Water"
+    ]
+}

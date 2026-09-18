@@ -1,0 +1,29 @@
+URL: https://voyogos.com/certification_logs_hotel/4.2%20Rooms,%201%20Adult%20per%20Room/6.MoreRooms_Content.json
+Method: GET
+Endpoint: /api/hotels/HTL_SRCH_6b34c3ddcd1deb4aa8b6b6d7d42388ec/HTL_247112_01/content
+Timestamp: 2026-09-18T13:29:46.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_6b34c3ddcd1deb4aa8b6b6d7d42388ec",
+    "hotelId": "HTL_247112_01"
+}
+
+Response Body:
+{
+    "hotel": {
+        "id": "HTL_247112_01",
+        "name": "Grand Palace Hotel & Resort Mumbai",
+        "roomTypes": [
+            {
+                "roomTypeId": "RM_DLX_01",
+                "name": "Deluxe Room Garden View",
+                "description": "Spacious room with king bed and balcony"
+            },
+            {
+                "roomTypeId": "RM_SUP_02",
+                "name": "Superior Executive Room",
+                "description": "Executive room with premium city view"
+            }
+        ]
+    }
+}

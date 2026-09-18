@@ -53,6 +53,11 @@
                 <i class="fa-solid fa-clock-rotate-left" style="color: #8b5cf6;"></i> Hotel API Logs Checker
             </a>
         </li>
+        <li>
+            <a href="<?php echo site_url('hotel_cert'); ?>" class="<?php echo ($active == 'hotel_cert') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-certificate" style="color: #ec4899;"></i> Hotel Certification Suite
+            </a>
+        </li>
         <?php endif; ?>
 
         <li class="menu-title"><i class="fa-solid fa-layer-group me-1"></i> Leads & Services</li>

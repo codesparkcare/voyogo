@@ -1,0 +1,21 @@
+URL: https://voyogos.com/certification_logs_hotel/11.International%20Booking%20-%20Dubai%20UAE/9.Pricing.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_9ecb513e5c6ad9e88ea64cc6fe98e30b/HTL_247155_01/pricing?rateKey=RATE_KEY_11_DLX_01
+Timestamp: 2026-09-18T13:30:38.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_9ecb513e5c6ad9e88ea64cc6fe98e30b",
+    "hotelId": "HTL_247155_01",
+    "rateKey": "RATE_KEY_11_DLX_01"
+}
+
+Response Body:
+{
+    "priceBreakup": {
+        "basePrice": 11400,
+        "taxes": 1368,
+        "totalPayable": 12768,
+        "currency": "INR"
+    },
+    "rateToken": "RT_TOKEN_2d492b0a9be123a545e22739cab56760"
+}

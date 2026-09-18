@@ -1,0 +1,32 @@
+URL: https://voyogos.com/certification_logs_hotel/12.International%20Booking%20-%20Singapore/5.HotelContent.json
+Method: POST
+Endpoint: /api/content/hotels
+Timestamp: 2026-09-18T13:30:44.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4",
+    "hotelCodes": [
+        "HTL_247160_01"
+    ]
+}
+
+Response Body:
+{
+    "hotels": [
+        {
+            "id": "HTL_247160_01",
+            "name": "Grand Palace Hotel & Resort Singapore",
+            "starRating": 4,
+            "address": {
+                "line1": "Main Road, Center Hub",
+                "city": "Singapore",
+                "country": "SG"
+            },
+            "geoCode": {
+                "lat": "1.352083",
+                "long": "103.819836"
+            },
+            "description": "Luxury business and leisure stay with premier amenities."
+        }
+    ]
+}

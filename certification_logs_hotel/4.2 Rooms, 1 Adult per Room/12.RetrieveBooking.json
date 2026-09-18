@@ -1,0 +1,30 @@
+URL: https://voyogos.com/certification_logs_hotel/4.2%20Rooms,%201%20Adult%20per%20Room/12.RetrieveBooking.json
+Method: POST
+Endpoint: /Utils/RetrieveBooking
+Timestamp: 2026-09-18T13:29:49.000Z
+Request Body:
+{
+    "TUI": "HTUI_6bbea716867d81aa0df17feb60deee6c",
+    "TransactionID": 428104
+}
+
+Response Body:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "BookingConfirmationId": "TestBooking",
+    "HotelConfirmationNumber": "TestBooking",
+    "Status": "Confirmed",
+    "CurrentStatus": "B0",
+    "CheckIn": "09/25/2026",
+    "CheckOut": "09/27/2026",
+    "Rooms": 2,
+    "Adults": 2,
+    "Children": 0,
+    "HotelName": "Grand Palace Hotel & Resort Mumbai",
+    "LeadGuest": "Mr Abdul Rahman",
+    "TotalAmount": 17024,
+    "Currency": "INR"
+}

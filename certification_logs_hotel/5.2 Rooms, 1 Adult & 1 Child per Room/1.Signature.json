@@ -1,0 +1,26 @@
+URL: https://voyogos.com/certification_logs_hotel/5.2%20Rooms,%201%20Adult%20&%201%20Child%20per%20Room/1.Signature.json
+Method: POST
+Endpoint: /Utils/Signature
+Timestamp: 2026-09-18T13:29:50.000Z
+Request Body:
+{
+    "MerchantID": "300",
+    "ApiKey": "kXAY9yHARK",
+    "ClientID": "bitest",
+    "Password": "staging@1",
+    "AgentCode": " ",
+    "BrowserKey": "caecd3cd30225512c1811070dce615c1"
+}
+
+Response Body:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZXJ0X3Rva2VuIjoiSG90ZWxDZXJ0VG9rZW4ifQ",
+    "MerchantID": 300,
+    "ClientID": "bitest",
+    "ClientName": "Akbar Travels B2B Test",
+    "ExpirationTime": "9/19/2026 6:59:50 PM"
+}

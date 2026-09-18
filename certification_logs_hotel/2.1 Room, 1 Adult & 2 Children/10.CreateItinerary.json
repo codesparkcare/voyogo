@@ -1,0 +1,31 @@
+URL: https://voyogos.com/certification_logs_hotel/2.1%20Room,%201%20Adult%20&%202%20Children/10.CreateItinerary.json
+Method: POST
+Endpoint: /Flights/CreateItinerary
+Timestamp: 2026-09-18T13:29:33.000Z
+Request Body:
+{
+    "BookingType": "HP",
+    "SearchID": "HTL_SRCH_ab34cff4624629d9af4660a012de9d75",
+    "HotelID": "HTL_357389_01",
+    "RateKey": "RATE_KEY_2_DLX_01",
+    "Guests": {
+        "lead_title": "Mr",
+        "lead_first": "Abdul",
+        "lead_last": "Rahman",
+        "email": "support@voyogo.com",
+        "mobile": "9876543210"
+    },
+    "TotalAmount": 8512
+}
+
+Response Body:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "TransactionID": 428102,
+    "TUI": "HTUI_fc685b7c79286be974344a64d9db30ee",
+    "Status": "ItineraryCreated",
+    "TotalPayable": 8512
+}

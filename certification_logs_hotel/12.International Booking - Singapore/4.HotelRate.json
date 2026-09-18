@@ -1,0 +1,29 @@
+URL: https://voyogos.com/certification_logs_hotel/12.International%20Booking%20-%20Singapore/4.HotelRate.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4
+Timestamp: 2026-09-18T13:30:42.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4",
+    "searchTracingKey": "TRC_HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4"
+}
+
+Response Body:
+{
+    "searchId": "HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4",
+    "status": "Complete",
+    "hotels": [
+        {
+            "hotelId": "HTL_247160_01",
+            "minPrice": 3800,
+            "currency": "INR",
+            "provider": "HTL_PRV_1"
+        },
+        {
+            "hotelId": "HTL_247160_02",
+            "minPrice": 2950,
+            "currency": "INR",
+            "provider": "HTL_PRV_1"
+        }
+    ]
+}

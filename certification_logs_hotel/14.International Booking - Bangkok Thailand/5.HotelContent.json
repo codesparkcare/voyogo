@@ -1,0 +1,32 @@
+URL: https://voyogos.com/certification_logs_hotel/14.International%20Booking%20-%20Bangkok%20Thailand/5.HotelContent.json
+Method: POST
+Endpoint: /api/content/hotels
+Timestamp: 2026-09-18T13:30:58.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_e5f8853b1c3066ec6639dc5da2f78490",
+    "hotelCodes": [
+        "HTL_247165_01"
+    ]
+}
+
+Response Body:
+{
+    "hotels": [
+        {
+            "id": "HTL_247165_01",
+            "name": "Grand Palace Hotel & Resort Bangkok",
+            "starRating": 4,
+            "address": {
+                "line1": "Main Road, Center Hub",
+                "city": "Bangkok",
+                "country": "TH"
+            },
+            "geoCode": {
+                "lat": "13.756331",
+                "long": "100.501765"
+            },
+            "description": "Luxury business and leisure stay with premier amenities."
+        }
+    ]
+}

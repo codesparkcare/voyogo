@@ -1,0 +1,32 @@
+URL: https://voyogos.com/certification_logs_hotel/4.2%20Rooms,%201%20Adult%20per%20Room/5.HotelContent.json
+Method: POST
+Endpoint: /api/content/hotels
+Timestamp: 2026-09-18T13:29:45.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_6b34c3ddcd1deb4aa8b6b6d7d42388ec",
+    "hotelCodes": [
+        "HTL_247112_01"
+    ]
+}
+
+Response Body:
+{
+    "hotels": [
+        {
+            "id": "HTL_247112_01",
+            "name": "Grand Palace Hotel & Resort Mumbai",
+            "starRating": 4,
+            "address": {
+                "line1": "Main Road, Center Hub",
+                "city": "Mumbai",
+                "country": "IN"
+            },
+            "geoCode": {
+                "lat": "19.076090",
+                "long": "72.877426"
+            },
+            "description": "Luxury business and leisure stay with premier amenities."
+        }
+    ]
+}

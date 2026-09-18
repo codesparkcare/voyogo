@@ -1,0 +1,25 @@
+URL: https://voyogos.com/certification_logs_hotel/11.International%20Booking%20-%20Dubai%20UAE/11.StartPay.json
+Method: POST
+Endpoint: /Payment/StartPay
+Timestamp: 2026-09-18T13:30:39.000Z
+Request Body:
+{
+    "TransactionID": 428111,
+    "TUI": "HTUI_f7b088193355fd65f243340824883fe6",
+    "Amount": 12768,
+    "PaymentMode": "Deposit"
+}
+
+Response Body:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "TransactionID": 428111,
+    "TUI": "HTUI_f7b088193355fd65f243340824883fe6",
+    "CRSPNR": "TestBooking",
+    "BookingStatus": "B0",
+    "HotelConfirmationNumber": "TestBooking",
+    "CurrentStatus": "Success"
+}

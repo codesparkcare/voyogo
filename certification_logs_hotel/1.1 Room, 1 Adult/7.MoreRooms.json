@@ -1,0 +1,24 @@
+URL: https://voyogos.com/certification_logs_hotel/1.1%20Room,%201%20Adult/7.MoreRooms.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_db9ae06e63273dfddac2bcb8b8b88a11/HTL_357389_01/rooms
+Timestamp: 2026-09-18T13:29:15.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_db9ae06e63273dfddac2bcb8b8b88a11",
+    "hotelId": "HTL_357389_01"
+}
+
+Response Body:
+{
+    "recommendations": [
+        {
+            "recommendationId": "REC_01",
+            "rateKey": "RATE_KEY_1_DLX_01",
+            "roomTypeId": "RM_DLX_01",
+            "boardType": "Room Only",
+            "totalFare": 7600,
+            "currency": "INR",
+            "isRefundable": true
+        }
+    ]
+}

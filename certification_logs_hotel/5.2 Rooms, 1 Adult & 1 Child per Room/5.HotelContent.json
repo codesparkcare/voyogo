@@ -1,0 +1,32 @@
+URL: https://voyogos.com/certification_logs_hotel/5.2%20Rooms,%201%20Adult%20&%201%20Child%20per%20Room/5.HotelContent.json
+Method: POST
+Endpoint: /api/content/hotels
+Timestamp: 2026-09-18T13:29:52.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_9872874b2325fad02a16c376329bedd4",
+    "hotelCodes": [
+        "HTL_247076_01"
+    ]
+}
+
+Response Body:
+{
+    "hotels": [
+        {
+            "id": "HTL_247076_01",
+            "name": "Grand Palace Hotel & Resort Delhi",
+            "starRating": 4,
+            "address": {
+                "line1": "Main Road, Center Hub",
+                "city": "Delhi",
+                "country": "IN"
+            },
+            "geoCode": {
+                "lat": "28.613939",
+                "long": "77.209021"
+            },
+            "description": "Luxury business and leisure stay with premier amenities."
+        }
+    ]
+}

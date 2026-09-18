@@ -1,0 +1,41 @@
+URL: https://voyogos.com/certification_logs_hotel/12.International%20Booking%20-%20Singapore/3.Init.json
+Method: POST
+Endpoint: /api/hotels/search/init
+Timestamp: 2026-09-18T13:30:41.000Z
+Request Body:
+{
+    "locationId": "247160",
+    "geoCode": {
+        "lat": "1.352083",
+        "long": "103.819836"
+    },
+    "currency": "INR",
+    "culture": "en-US",
+    "checkIn": "09/25/2026",
+    "checkOut": "09/28/2026",
+    "rooms": [
+        {
+            "adults": 2,
+            "children": 1,
+            "childAges": [
+                "6"
+            ]
+        }
+    ],
+    "agentCode": " ",
+    "destinationCountryCode": "SG",
+    "nationality": "IN",
+    "countryOfResidence": "IN",
+    "channelId": "b2bIndiaDeals",
+    "segmentId": "NewRevamp",
+    "companyId": "1",
+    "gstPercentage": 0,
+    "tdsPercentage": 0
+}
+
+Response Body:
+{
+    "searchId": "HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4",
+    "searchTracingKey": "TRC_HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4",
+    "status": "Success"
+}

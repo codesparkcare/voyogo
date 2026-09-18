@@ -1,0 +1,42 @@
+URL: https://voyogos.com/certification_logs_hotel/2.1%20Room,%201%20Adult%20&%202%20Children/3.Init.json
+Method: POST
+Endpoint: /api/hotels/search/init
+Timestamp: 2026-09-18T13:29:29.000Z
+Request Body:
+{
+    "locationId": "357389",
+    "geoCode": {
+        "lat": "8.713913",
+        "long": "77.756653"
+    },
+    "currency": "INR",
+    "culture": "en-US",
+    "checkIn": "09/25/2026",
+    "checkOut": "09/27/2026",
+    "rooms": [
+        {
+            "adults": 1,
+            "children": 2,
+            "childAges": [
+                "7",
+                "3"
+            ]
+        }
+    ],
+    "agentCode": " ",
+    "destinationCountryCode": "IN",
+    "nationality": "IN",
+    "countryOfResidence": "IN",
+    "channelId": "b2bIndiaDeals",
+    "segmentId": "NewRevamp",
+    "companyId": "1",
+    "gstPercentage": 0,
+    "tdsPercentage": 0
+}
+
+Response Body:
+{
+    "searchId": "HTL_SRCH_ab34cff4624629d9af4660a012de9d75",
+    "searchTracingKey": "TRC_HTL_SRCH_ab34cff4624629d9af4660a012de9d75",
+    "status": "Success"
+}

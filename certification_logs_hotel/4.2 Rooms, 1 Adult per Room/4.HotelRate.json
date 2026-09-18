@@ -1,0 +1,29 @@
+URL: https://voyogos.com/certification_logs_hotel/4.2%20Rooms,%201%20Adult%20per%20Room/4.HotelRate.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_6b34c3ddcd1deb4aa8b6b6d7d42388ec
+Timestamp: 2026-09-18T13:29:44.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_6b34c3ddcd1deb4aa8b6b6d7d42388ec",
+    "searchTracingKey": "TRC_HTL_SRCH_6b34c3ddcd1deb4aa8b6b6d7d42388ec"
+}
+
+Response Body:
+{
+    "searchId": "HTL_SRCH_6b34c3ddcd1deb4aa8b6b6d7d42388ec",
+    "status": "Complete",
+    "hotels": [
+        {
+            "hotelId": "HTL_247112_01",
+            "minPrice": 3800,
+            "currency": "INR",
+            "provider": "HTL_PRV_1"
+        },
+        {
+            "hotelId": "HTL_247112_02",
+            "minPrice": 2950,
+            "currency": "INR",
+            "provider": "HTL_PRV_1"
+        }
+    ]
+}

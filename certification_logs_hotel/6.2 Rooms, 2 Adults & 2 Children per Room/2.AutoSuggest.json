@@ -1,0 +1,26 @@
+URL: https://voyogos.com/certification_logs_hotel/6.2%20Rooms,%202%20Adults%20&%202%20Children%20per%20Room/2.AutoSuggest.json
+Method: GET
+Endpoint: /api/content/autosuggest?term=Bengaluru
+Timestamp: 2026-09-18T13:29:58.000Z
+Request Body:
+{
+    "term": "Bengaluru"
+}
+
+Response Body:
+{
+    "locations": [
+        {
+            "id": "247124",
+            "name": "Bengaluru",
+            "fullName": "Bengaluru, India",
+            "code": null,
+            "type": "city",
+            "country": "IN",
+            "coordinates": {
+                "lat": "12.971599",
+                "long": "77.594563"
+            }
+        }
+    ]
+}

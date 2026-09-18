@@ -1,0 +1,29 @@
+URL: https://voyogos.com/certification_logs_hotel/3.1%20Room,%202%20Adults%20&%202%20Children%20(Different%20Ages)/6.MoreRooms_Content.json
+Method: GET
+Endpoint: /api/hotels/HTL_SRCH_03f69ff20d7588c3f51acbaf342786a7/HTL_329184_01/content
+Timestamp: 2026-09-18T13:29:39.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_03f69ff20d7588c3f51acbaf342786a7",
+    "hotelId": "HTL_329184_01"
+}
+
+Response Body:
+{
+    "hotel": {
+        "id": "HTL_329184_01",
+        "name": "Grand Palace Hotel & Resort Goa",
+        "roomTypes": [
+            {
+                "roomTypeId": "RM_DLX_01",
+                "name": "Deluxe Room Garden View",
+                "description": "Spacious room with king bed and balcony"
+            },
+            {
+                "roomTypeId": "RM_SUP_02",
+                "name": "Superior Executive Room",
+                "description": "Executive room with premium city view"
+            }
+        ]
+    }
+}

@@ -1,0 +1,39 @@
+URL: https://voyogos.com/certification_logs_hotel/11.International%20Booking%20-%20Dubai%20UAE/3.Init.json
+Method: POST
+Endpoint: /api/hotels/search/init
+Timestamp: 2026-09-18T13:30:34.000Z
+Request Body:
+{
+    "locationId": "247155",
+    "geoCode": {
+        "lat": "25.204849",
+        "long": "55.270783"
+    },
+    "currency": "INR",
+    "culture": "en-US",
+    "checkIn": "09/25/2026",
+    "checkOut": "09/28/2026",
+    "rooms": [
+        {
+            "adults": 2,
+            "children": 0,
+            "childAges": []
+        }
+    ],
+    "agentCode": " ",
+    "destinationCountryCode": "AE",
+    "nationality": "IN",
+    "countryOfResidence": "IN",
+    "channelId": "b2bIndiaDeals",
+    "segmentId": "NewRevamp",
+    "companyId": "1",
+    "gstPercentage": 0,
+    "tdsPercentage": 0
+}
+
+Response Body:
+{
+    "searchId": "HTL_SRCH_9ecb513e5c6ad9e88ea64cc6fe98e30b",
+    "searchTracingKey": "TRC_HTL_SRCH_9ecb513e5c6ad9e88ea64cc6fe98e30b",
+    "status": "Success"
+}

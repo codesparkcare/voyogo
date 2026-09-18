@@ -88,6 +88,11 @@ $route['flight_cert'] = 'flight_cert/index';
 $route['cert'] = 'flight_cert/index';
 $route['admin/flight_cert'] = 'flight_cert/index';
 
+$route['hotel_cert'] = 'hotel_cert/index';
+$route['hotel-cert'] = 'hotel_cert/index';
+$route['hotelcert'] = 'hotel_cert/index';
+$route['admin/hotel_cert'] = 'hotel_cert/index';
+
 /* ==========================================================================
    Franchise Admin & Store Owner (B2B) Routes
    ========================================================================== */

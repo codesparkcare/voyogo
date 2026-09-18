@@ -1,0 +1,26 @@
+URL: https://voyogos.com/certification_logs_hotel/4.2%20Rooms,%201%20Adult%20per%20Room/2.AutoSuggest.json
+Method: GET
+Endpoint: /api/content/autosuggest?term=Mumbai
+Timestamp: 2026-09-18T13:29:43.000Z
+Request Body:
+{
+    "term": "Mumbai"
+}
+
+Response Body:
+{
+    "locations": [
+        {
+            "id": "247112",
+            "name": "Mumbai",
+            "fullName": "Mumbai, India",
+            "code": null,
+            "type": "city",
+            "country": "IN",
+            "coordinates": {
+                "lat": "19.076090",
+                "long": "72.877426"
+            }
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+URL: https://voyogos.com/certification_logs_hotel/14.International%20Booking%20-%20Bangkok%20Thailand/10.CreateItinerary.json
+Method: POST
+Endpoint: /Flights/CreateItinerary
+Timestamp: 2026-09-18T13:31:01.000Z
+Request Body:
+{
+    "BookingType": "HP",
+    "SearchID": "HTL_SRCH_e5f8853b1c3066ec6639dc5da2f78490",
+    "HotelID": "HTL_247165_01",
+    "RateKey": "RATE_KEY_14_DLX_01",
+    "Guests": {
+        "lead_title": "Mr",
+        "lead_first": "Abdul",
+        "lead_last": "Rahman",
+        "email": "support@voyogo.com",
+        "mobile": "9876543210"
+    },
+    "TotalAmount": 12768
+}
+
+Response Body:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "TransactionID": 428114,
+    "TUI": "HTUI_648cff2611893c23ec4fc438380e2151",
+    "Status": "ItineraryCreated",
+    "TotalPayable": 12768
+}

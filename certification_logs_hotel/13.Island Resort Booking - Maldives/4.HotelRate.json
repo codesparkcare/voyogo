@@ -1,0 +1,29 @@
+URL: https://voyogos.com/certification_logs_hotel/13.Island%20Resort%20Booking%20-%20Maldives/4.HotelRate.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_35fa2be80422d603181fa09f3b9340b8
+Timestamp: 2026-09-18T13:30:50.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_35fa2be80422d603181fa09f3b9340b8",
+    "searchTracingKey": "TRC_HTL_SRCH_35fa2be80422d603181fa09f3b9340b8"
+}
+
+Response Body:
+{
+    "searchId": "HTL_SRCH_35fa2be80422d603181fa09f3b9340b8",
+    "status": "Complete",
+    "hotels": [
+        {
+            "hotelId": "HTL_247180_01",
+            "minPrice": 3800,
+            "currency": "INR",
+            "provider": "HTL_PRV_1"
+        },
+        {
+            "hotelId": "HTL_247180_02",
+            "minPrice": 2950,
+            "currency": "INR",
+            "provider": "HTL_PRV_1"
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+URL: https://voyogos.com/certification_logs_hotel/5.2%20Rooms,%201%20Adult%20&%201%20Child%20per%20Room/2.AutoSuggest.json
+Method: GET
+Endpoint: /api/content/autosuggest?term=Delhi
+Timestamp: 2026-09-18T13:29:50.000Z
+Request Body:
+{
+    "term": "Delhi"
+}
+
+Response Body:
+{
+    "locations": [
+        {
+            "id": "247076",
+            "name": "Delhi",
+            "fullName": "Delhi, India",
+            "code": null,
+            "type": "city",
+            "country": "IN",
+            "coordinates": {
+                "lat": "28.613939",
+                "long": "77.209021"
+            }
+        }
+    ]
+}

@@ -1,0 +1,42 @@
+URL: https://voyogos.com/certification_logs_hotel/3.1%20Room,%202%20Adults%20&%202%20Children%20(Different%20Ages)/3.Init.json
+Method: POST
+Endpoint: /api/hotels/search/init
+Timestamp: 2026-09-18T13:29:37.000Z
+Request Body:
+{
+    "locationId": "329184",
+    "geoCode": {
+        "lat": "15.299326",
+        "long": "74.123996"
+    },
+    "currency": "INR",
+    "culture": "en-US",
+    "checkIn": "09/25/2026",
+    "checkOut": "09/27/2026",
+    "rooms": [
+        {
+            "adults": 2,
+            "children": 2,
+            "childAges": [
+                "8",
+                "4"
+            ]
+        }
+    ],
+    "agentCode": " ",
+    "destinationCountryCode": "IN",
+    "nationality": "IN",
+    "countryOfResidence": "IN",
+    "channelId": "b2bIndiaDeals",
+    "segmentId": "NewRevamp",
+    "companyId": "1",
+    "gstPercentage": 0,
+    "tdsPercentage": 0
+}
+
+Response Body:
+{
+    "searchId": "HTL_SRCH_03f69ff20d7588c3f51acbaf342786a7",
+    "searchTracingKey": "TRC_HTL_SRCH_03f69ff20d7588c3f51acbaf342786a7",
+    "status": "Success"
+}

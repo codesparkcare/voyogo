@@ -21,6 +21,7 @@ class BenzyHotelApi {
     protected $gstPercentage = 0;
     protected $tdsPercentage = 0;
     protected $tokenDetails = array();
+    protected $lastLog = null;
 
     public function __construct() {
         $this->CI =& get_instance();
@@ -129,6 +130,20 @@ class BenzyHotelApi {
             $curlError
         );
 
+        $this->lastLog = array(
+            'action'        => $actionName,
+            'method'        => $method,
+            'url'           => $url,
+            'endpoint'      => parse_url($url, PHP_URL_PATH),
+            'timestamp'     => gmdate('Y-m-d\TH:i:s.v\Z'),
+            'request_raw'   => is_string($payload) ? $payload : json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+            'response_raw'  => $response,
+            'http_code'     => $httpCode,
+            'error'         => $curlError,
+            'duration_ms'   => $durationMs,
+            'data'          => json_decode($response, true)
+        );
+
         return array(
             'http_code' => $httpCode,
             'response'  => $response,
@@ -136,6 +151,31 @@ class BenzyHotelApi {
             'error'     => $curlError,
             'duration'  => $durationMs
         );
+    }
+
+    public function getLastLog() {
+        return $this->lastLog;
+    }
+
+    public function setLastLog($log) {
+        $this->lastLog = $log;
+    }
+
+    public function createLogEntry($method, $endpoint, $url, $reqData, $respData, $httpCode = 200) {
+        $reqJson = is_string($reqData) ? $reqData : json_encode($reqData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $respJson = is_string($respData) ? $respData : json_encode($respData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $entry = array(
+            'method'       => $method,
+            'endpoint'     => $endpoint,
+            'url'          => $url,
+            'timestamp'    => gmdate('Y-m-d\TH:i:s.v\Z'),
+            'request_raw'  => $reqJson,
+            'response_raw' => $respJson,
+            'http_code'    => $httpCode,
+            'data'         => is_array($respData) ? $respData : json_decode($respJson, true)
+        );
+        $this->lastLog = $entry;
+        return $entry;
     }
 
     // =========================================================================
@@ -1099,6 +1139,54 @@ class BenzyHotelApi {
             return $res['json'];
         }
         return false;
+    }
+
+    public function getHotelRates($searchId, $searchTracingKey = '') {
+        $token = $this->generateToken();
+        $rateUrl = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/rate';
+        $rateRes = $this->makeRequest('HotelRate', $rateUrl, array(), 'GET', $token);
+        if ($rateRes['http_code'] !== 200 || empty($rateRes['json']['hotels'])) {
+            $altRateUrl = $this->hotelUrl . '/Hotel/HotelRate';
+            $rateRes = $this->makeRequest('HotelRate_POST', $altRateUrl, array('searchId' => $searchId), 'POST', $token);
+        }
+        return $rateRes['json'] ?? array();
+    }
+
+    public function getHotelContent($searchId, $hotelCodes = array()) {
+        $token = $this->generateToken();
+        $contentUrl = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/content?limit=50&offset=-1&filterdata=false';
+        $contentRes = $this->makeRequest('HotelContent', $contentUrl, array(), 'GET', $token);
+        if ($contentRes['http_code'] !== 200 || empty($contentRes['json']['hotels'])) {
+            $altContentUrl = $this->hotelUrl . '/Hotel/HotelContent';
+            $contentRes = $this->makeRequest('HotelContent_POST', $altContentUrl, array('limit' => '50', 'offset' => '-1', 'filterdata' => 'false'), 'POST', $token);
+        }
+        return $contentRes['json'] ?? array();
+    }
+
+    public function getMoreRooms($searchId, $hotelId) {
+        $token = $this->generateToken();
+        $roomsUrl = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/rooms';
+        $roomsRes = $this->makeRequest('MoreRooms', $roomsUrl, array(), 'GET', $token);
+        if ($roomsRes['http_code'] !== 200) {
+            $altUrl = $this->hotelUrl . '/Hotel/MoreRooms';
+            $roomsRes = $this->makeRequest('MoreRooms_POST', $altUrl, array('hotelId' => $hotelId), 'POST', $token);
+        }
+        return $roomsRes['json'] ?? array();
+    }
+
+    public function getPricing($searchId, $hotelId, $rateKey) {
+        $token = $this->generateToken();
+        $pricingUrl = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/pricing?rateKey=' . urlencode($rateKey);
+        $pricingRes = $this->makeRequest('Pricing', $pricingUrl, array(), 'GET', $token);
+        if ($pricingRes['http_code'] !== 200) {
+            $altUrl = $this->hotelUrl . '/Hotel/Pricing';
+            $pricingRes = $this->makeRequest('Pricing_POST', $altUrl, array('hotelId' => $hotelId, 'rateKey' => $rateKey), 'POST', $token);
+        }
+        return $pricingRes['json'] ?? array();
+    }
+
+    public function startPayment($transactionId, $tui, $amount) {
+        return $this->startPay($transactionId, $amount, $tui);
     }
 
     // =========================================================================

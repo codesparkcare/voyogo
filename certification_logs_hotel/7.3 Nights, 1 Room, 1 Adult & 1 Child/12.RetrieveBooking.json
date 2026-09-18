@@ -1,0 +1,30 @@
+URL: https://voyogos.com/certification_logs_hotel/7.3%20Nights,%201%20Room,%201%20Adult%20&%201%20Child/12.RetrieveBooking.json
+Method: POST
+Endpoint: /Utils/RetrieveBooking
+Timestamp: 2026-09-18T13:30:11.000Z
+Request Body:
+{
+    "TUI": "HTUI_4da59a23784d4faa8d58519b2e56135f",
+    "TransactionID": 428107
+}
+
+Response Body:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "BookingConfirmationId": "TestBooking",
+    "HotelConfirmationNumber": "TestBooking",
+    "Status": "Confirmed",
+    "CurrentStatus": "B0",
+    "CheckIn": "09/25/2026",
+    "CheckOut": "09/28/2026",
+    "Rooms": 1,
+    "Adults": 1,
+    "Children": 1,
+    "HotelName": "Grand Palace Hotel & Resort Chennai",
+    "LeadGuest": "Mr Abdul Rahman",
+    "TotalAmount": 12768,
+    "Currency": "INR"
+}

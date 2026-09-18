@@ -1,0 +1,21 @@
+URL: https://voyogos.com/certification_logs_hotel/2.1%20Room,%201%20Adult%20&%202%20Children/9.Pricing.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_ab34cff4624629d9af4660a012de9d75/HTL_357389_01/pricing?rateKey=RATE_KEY_2_DLX_01
+Timestamp: 2026-09-18T13:29:33.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_ab34cff4624629d9af4660a012de9d75",
+    "hotelId": "HTL_357389_01",
+    "rateKey": "RATE_KEY_2_DLX_01"
+}
+
+Response Body:
+{
+    "priceBreakup": {
+        "basePrice": 7600,
+        "taxes": 912,
+        "totalPayable": 8512,
+        "currency": "INR"
+    },
+    "rateToken": "RT_TOKEN_751004766f812907ad6c9f55965826f9"
+}

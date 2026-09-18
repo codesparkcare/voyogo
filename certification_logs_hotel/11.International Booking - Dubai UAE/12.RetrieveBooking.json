@@ -1,0 +1,30 @@
+URL: https://voyogos.com/certification_logs_hotel/11.International%20Booking%20-%20Dubai%20UAE/12.RetrieveBooking.json
+Method: POST
+Endpoint: /Utils/RetrieveBooking
+Timestamp: 2026-09-18T13:30:40.000Z
+Request Body:
+{
+    "TUI": "HTUI_f7b088193355fd65f243340824883fe6",
+    "TransactionID": 428111
+}
+
+Response Body:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "BookingConfirmationId": "TestBooking",
+    "HotelConfirmationNumber": "TestBooking",
+    "Status": "Confirmed",
+    "CurrentStatus": "B0",
+    "CheckIn": "09/25/2026",
+    "CheckOut": "09/28/2026",
+    "Rooms": 1,
+    "Adults": 2,
+    "Children": 0,
+    "HotelName": "Grand Palace Hotel & Resort Dubai",
+    "LeadGuest": "Mr Abdul Rahman",
+    "TotalAmount": 12768,
+    "Currency": "INR"
+}

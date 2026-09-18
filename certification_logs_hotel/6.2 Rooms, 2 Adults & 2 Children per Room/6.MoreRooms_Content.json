@@ -1,0 +1,29 @@
+URL: https://voyogos.com/certification_logs_hotel/6.2%20Rooms,%202%20Adults%20&%202%20Children%20per%20Room/6.MoreRooms_Content.json
+Method: GET
+Endpoint: /api/hotels/HTL_SRCH_700f28cf473731af4596756a2db00f04/HTL_247124_01/content
+Timestamp: 2026-09-18T13:30:00.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_700f28cf473731af4596756a2db00f04",
+    "hotelId": "HTL_247124_01"
+}
+
+Response Body:
+{
+    "hotel": {
+        "id": "HTL_247124_01",
+        "name": "Grand Palace Hotel & Resort Bengaluru",
+        "roomTypes": [
+            {
+                "roomTypeId": "RM_DLX_01",
+                "name": "Deluxe Room Garden View",
+                "description": "Spacious room with king bed and balcony"
+            },
+            {
+                "roomTypeId": "RM_SUP_02",
+                "name": "Superior Executive Room",
+                "description": "Executive room with premium city view"
+            }
+        ]
+    }
+}

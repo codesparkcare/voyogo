@@ -255,6 +255,21 @@
                 </div>
             </div>
 
+            <!-- Helpful Tools -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-link me-2 text-primary"></i> Helpful Tools</h6>
+                    <div class="d-flex flex-column gap-2">
+                        <a href="<?php echo site_url('hotel_cert'); ?>" class="btn btn-light text-start border rounded-3 py-2">
+                            <i class="fa-solid fa-certificate text-danger me-2"></i> Hotel Certification Suite
+                        </a>
+                        <a href="<?php echo site_url('admin/hotel_api_logs'); ?>" class="btn btn-light text-start border rounded-3 py-2">
+                            <i class="fa-solid fa-clock-rotate-left text-primary me-2"></i> Hotel API Activity & Logs
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <!-- 14 APIs Guide Reference Card -->
             <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-white border-0 pt-3 pb-0">

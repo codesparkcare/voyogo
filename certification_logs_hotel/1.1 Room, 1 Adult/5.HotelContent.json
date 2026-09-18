@@ -1,0 +1,32 @@
+URL: https://voyogos.com/certification_logs_hotel/1.1%20Room,%201%20Adult/5.HotelContent.json
+Method: POST
+Endpoint: /api/content/hotels
+Timestamp: 2026-09-18T13:29:14.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_db9ae06e63273dfddac2bcb8b8b88a11",
+    "hotelCodes": [
+        "HTL_357389_01"
+    ]
+}
+
+Response Body:
+{
+    "hotels": [
+        {
+            "id": "HTL_357389_01",
+            "name": "Grand Palace Hotel & Resort Tirunelveli",
+            "starRating": 4,
+            "address": {
+                "line1": "Main Road, Center Hub",
+                "city": "Tirunelveli",
+                "country": "IN"
+            },
+            "geoCode": {
+                "lat": "8.713913",
+                "long": "77.756653"
+            },
+            "description": "Luxury business and leisure stay with premier amenities."
+        }
+    ]
+}

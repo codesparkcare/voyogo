@@ -1,0 +1,25 @@
+URL: https://voyogos.com/certification_logs_hotel/12.International%20Booking%20-%20Singapore/11.StartPay.json
+Method: POST
+Endpoint: /Payment/StartPay
+Timestamp: 2026-09-18T13:30:47.000Z
+Request Body:
+{
+    "TransactionID": 428112,
+    "TUI": "HTUI_dec8a0d4da495c0bc9cb0daf3bbd355f",
+    "Amount": 12768,
+    "PaymentMode": "Deposit"
+}
+
+Response Body:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "TransactionID": 428112,
+    "TUI": "HTUI_dec8a0d4da495c0bc9cb0daf3bbd355f",
+    "CRSPNR": "TestBooking",
+    "BookingStatus": "B0",
+    "HotelConfirmationNumber": "TestBooking",
+    "CurrentStatus": "Success"
+}

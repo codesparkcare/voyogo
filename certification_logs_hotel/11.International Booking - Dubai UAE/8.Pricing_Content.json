@@ -1,0 +1,28 @@
+URL: https://voyogos.com/certification_logs_hotel/11.International%20Booking%20-%20Dubai%20UAE/8.Pricing_Content.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_9ecb513e5c6ad9e88ea64cc6fe98e30b/HTL_247155_01/pricing/content?rateKey=RATE_KEY_11_DLX_01
+Timestamp: 2026-09-18T13:30:37.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_9ecb513e5c6ad9e88ea64cc6fe98e30b",
+    "hotelId": "HTL_247155_01",
+    "rateKey": "RATE_KEY_11_DLX_01"
+}
+
+Response Body:
+{
+    "cancellationPolicy": {
+        "refundable": true,
+        "rules": [
+            {
+                "from": "09/19/2026",
+                "amount": 0,
+                "description": "Free cancellation before 48 hours"
+            }
+        ]
+    },
+    "inclusions": [
+        "Complimentary High Speed WiFi",
+        "Complimentary Drinking Water"
+    ]
+}

@@ -1,0 +1,21 @@
+URL: https://voyogos.com/certification_logs_hotel/4.2%20Rooms,%201%20Adult%20per%20Room/9.Pricing.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_6b34c3ddcd1deb4aa8b6b6d7d42388ec/HTL_247112_01/pricing?rateKey=RATE_KEY_4_DLX_01
+Timestamp: 2026-09-18T13:29:47.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_6b34c3ddcd1deb4aa8b6b6d7d42388ec",
+    "hotelId": "HTL_247112_01",
+    "rateKey": "RATE_KEY_4_DLX_01"
+}
+
+Response Body:
+{
+    "priceBreakup": {
+        "basePrice": 15200,
+        "taxes": 1824,
+        "totalPayable": 17024,
+        "currency": "INR"
+    },
+    "rateToken": "RT_TOKEN_a9396ec28dab6421671c691887c3b3bd"
+}

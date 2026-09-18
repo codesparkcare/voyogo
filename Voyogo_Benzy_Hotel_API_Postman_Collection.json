@@ -1,0 +1,651 @@
+{
+	"info": {
+		"_postman_id": "855facba-c9e1-4a5e-b80f-99538896d59c",
+		"name": "Travelportal-WC-Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16123280"
+	},
+	"item": [
+		{
+			"name": "Hotel",
+			"item": [
+				{
+					"name": "Autosuggest",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}api/content/autosuggest?term=kochi",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"content",
+								"autosuggest"
+							],
+							"query": [
+								{
+									"key": "term",
+									"value": "kochi"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init Hotel Search",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);\r",
+									"\r",
+									"postman.setEnvironmentVariable(\"searchId\", data.searchId)\r",
+									"postman.setEnvironmentVariable(\"searchTracingKey\", data.searchTracingKey)\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "user-session-key",
+								"type": "text",
+								"value": "{{sessionKey}}",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							},
+							{
+								"key": "Accept-Encoding",
+								"type": "text",
+								"value": "gzip, deflate",
+								"disabled": true
+							},
+							{
+								"key": "accountId",
+								"value": "at_akbateinua",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "customer-ip",
+								"value": "210.212.232.245",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"geoCode\": {\r\n        \"lat\": \"9.961343\",\r\n        \"long\": \"76.29705\"\r\n    },\r\n    \"locationId\": \"7381\",\r\n    \"currency\": \"INR\",\r\n    \"culture\": \"en-US\",\r\n    \"checkIn\": \"01/24/2024\",\r\n    \"checkOut\": \"01/25/2024\",\r\n    \"rooms\": [\r\n        {\r\n            \"adults\": \"1\",\r\n            \"children\": \"0\",\r\n            \"childAges\": []\r\n        }\r\n    ],\r\n    \"agentCode\": \"14005\",\r\n    \"destinationCountryCode\": \"IN\",\r\n    \"nationality\": \"IN\",\r\n    \"countryOfResidence\": \"IN\",\r\n    \"channelId\": \"b2bIndiaDeals\",\r\n    \"affiliateRegion\": \"B2B_India\",\r\n    \"segmentId\": \"\",\r\n    \"companyId\": \"1\",\r\n    \"gstPercentage\": 0,\r\n    \"tdsPercentage\": 0\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}api/hotels/search/init",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hotels",
+								"search",
+								"init"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetHotelResulltContentOnly",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"IS Success\", function () {",
+									"    ",
+									"    pm.expect(jsonData.status).to.eql(\"success\");",
+									"});",
+									"",
+									"postman.setEnvironmentVariable(\"hotelId\", jsonData.hotels[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "user-session-key",
+								"type": "text",
+								"value": "{{sessionKey}}"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{Authorization}}"
+							},
+							{
+								"key": "search-tracing-key",
+								"type": "text",
+								"value": "{{searchTracingKey}}"
+							},
+							{
+								"key": "Accept-Encoding",
+								"type": "text",
+								"value": "gzip, deflate"
+							},
+							{
+								"key": "Antony",
+								"value": "123",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/hotels/search/result/{{searchId}}/content?limit=50&offset=-1&filterdata=false&Authorization={{Authorization}}",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hotels",
+								"search",
+								"result",
+								"{{searchId}}",
+								"content"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50"
+								},
+								{
+									"key": "offset",
+									"value": "-1"
+								},
+								{
+									"key": "filterdata",
+									"value": "false"
+								},
+								{
+									"key": "Authorization",
+									"value": "{{Authorization}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetHotelResulltRateOnly",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"IS Success\", function () {",
+									"    ",
+									"    pm.expect(jsonData.status).to.eql(\"success\");",
+									"    postman.setEnvironmentVariable(\"hotelId\", jsonData.hotels[0].id);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "search-tracing-key",
+								"value": "{{searchTracingKey}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							},
+							{
+								"key": "accountId",
+								"value": "at_akbateinua",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/hotels/search/result/{{searchId}}/rate",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hotels",
+								"search",
+								"result",
+								"{{searchId}}",
+								"rate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter Hotels Result",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"IS Success\", function () {",
+									"    ",
+									"    pm.expect(jsonData.status).to.eql(\"success\");",
+									"});",
+									"",
+									"postman.setEnvironmentVariable(\"hotelId\", jsonData.hotels[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "user-session-key",
+								"value": "{{sessionKey}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							},
+							{
+								"key": "search-tracing-key",
+								"value": "{{searchTracingKey}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"filters\": {\n\t\t\"priceGroups\" : [\n\t\t     {\n\t\t     \t\"minPrice\" : 0,\n\t\t     \t\"maxPrice\": 50000\n\t\t     }\n\t\t]\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{host}}api/hotels/search/result/{{searchId}}?limit=50&offset=0",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hotels",
+								"search",
+								"result",
+								"{{searchId}}"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Filter Data",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "user-session-key",
+								"value": "{{sessionKey}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							},
+							{
+								"key": "search-tracing-key",
+								"value": "{{searchTracingKey}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/hotels/search/result/{{searchId}}/filterdata",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hotels",
+								"search",
+								"result",
+								"{{searchId}}",
+								"filterdata"
+							],
+							"query": [
+								{
+									"key": "user-session-key",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rooms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"IS Success\", function () {",
+									"    ",
+									"    pm.expect(jsonData.status).to.eql(\"success\");",
+									"});",
+									"",
+									"// postman.setEnvironmentVariable(\"priceProvider\", jsonData.groups[0].recommendations[0].roomGroup[0].providerName);",
+									"// postman.setEnvironmentVariable(\"roomRrecommendationId\", jsonData.groups[0].recommendations[0].id);",
+									"",
+									"",
+									"postman.setEnvironmentVariable(\"priceProvider\", jsonData.recommendations[0].roomGroup[0].providerName);",
+									"postman.setEnvironmentVariable(\"roomRrecommendationId\", jsonData.recommendations[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "user-session-key",
+								"value": "{{sessionKey}}",
+								"type": "text"
+							},
+							{
+								"key": "search-tracing-key",
+								"value": "{{searchTracingKey}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}api/hotels/search/result/{{searchId}}/{{hotelId}}/rooms",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hotels",
+								"search",
+								"result",
+								"{{searchId}}",
+								"{{hotelId}}",
+								"rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rooms Stateless",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"IS Success\", function () {",
+									"    ",
+									"    pm.expect(jsonData.status).to.eql(\"success\");",
+									"});",
+									"",
+									"postman.setEnvironmentVariable(\"priceProvider\", jsonData.groups[0].recommendations[0].roomGroup[0].providerName);",
+									"postman.setEnvironmentVariable(\"roomRrecommendationId\", jsonData.groups[0].recommendations[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "user-session-key",
+								"value": "{{sessionKey}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"channelId\": \"b2bIndiaDeals\",\r\n    \"currency\": \"INR\",\r\n    \"checkIn\": \"07/27/2023\",\r\n    \"checkOut\": \"07/28/2023\",\r\n    \"rooms\": [\r\n        {\r\n            \"adults\": \"1\",\r\n            \"children\": \"0\",\r\n            \"childAges\": []\r\n        }\r\n    ],\r\n    \"agentCode\": \"14005\",\r\n    \"culture\": \"en-US\",\r\n    \"destinationCountryCode\": \"AE\",\r\n    \"nationality\": \"IN\",\r\n    \"countryOfResidence\": \"IN\",\r\n    \"segmentId\": \"TigerSPL\",\r\n    \"companyId\": \"1\",\r\n    \"gstPercentage\": 18,\r\n    \"tdsPercentage\": 5,\r\n    \"affiliateRegion\": \"B2B_India\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}api/hotels/search/15787030/rooms",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hotels",
+								"search",
+								"15787030",
+								"rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Hotel Content",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "user-session-key",
+								"value": "{{sessionKey}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkeDlEQ0NUSVB6ZTNCN1NJZEV0QVdqVHo5Yk83V295UWZLUnE4UVc4NEw5Zz09IiwicHdkIjoiNFE2aWhYTFFYSzdzWjQ3VnhBZ2VTUT09IiwiYWdlbnRDb2RlIjoiL0tmZFl3ZXNxUHc9IiwiY2xpZW50SWQiOiI0UTZpaFhMUVhLNXRPM2lXTG80K1hRPT0iLCJCcm93c2VyS2V5IjoiSm9wemZXK1lDb1craTRyRURLQm9RVERBWFBlUzAyOEJLVGNaM1UwWWorTmREb3dMR3lVc09nPT0iLCJuYmYiOjE1ODg2MDc1MDksImV4cCI6MTU5NzI0NzUwOSwiaWF0IjoxNTg4NjA3NTA5LCJpc3MiOiJ3ZWJjb25uZWN0IiwiYXVkIjoiY2xpZW50In0.bfQETui5hA9rp7_HXrQn0C4lYGfmweTkKkFzk-ma6R4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/hotels/{{searchId}}/{{hotelId}}/content?priceProvider={{priceProvider}}",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hotels",
+								"{{searchId}}",
+								"{{hotelId}}",
+								"content"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkeDlEQ0NUSVB6ZTNCN1NJZEV0QVdqVHo5Yk83V295UWZLUnE4UVc4NEw5Zz09IiwicHdkIjoiNFE2aWhYTFFYSzdzWjQ3VnhBZ2VTUT09IiwiYWdlbnRDb2RlIjoiL0tmZFl3ZXNxUHc9IiwiY2xpZW50SWQiOiI0UTZpaFhMUVhLNXRPM2lXTG80K1hRPT0iLCJCcm93c2VyS2V5IjoiSm9wemZXK1lDb1craTRyRURLQm9RVERBWFBlUzAyOEJLVGNaM1UwWWorTmREb3dMR3lVc09nPT0iLCJuYmYiOjE1ODg2MDc1MDksImV4cCI6MTU5NzI0NzUwOSwiaWF0IjoxNTg4NjA3NTA5LCJpc3MiOiJ3ZWJjb25uZWN0IiwiYXVkIjoiY2xpZW50In0.bfQETui5hA9rp7_HXrQn0C4lYGfmweTkKkFzk-ma6R4",
+									"disabled": true
+								},
+								{
+									"key": "priceProvider",
+									"value": "{{priceProvider}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Hotel Price",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"IS Success\", function () {",
+									"    ",
+									"    pm.expect(jsonData.status).to.eql(\"success\");",
+									"});",
+									"",
+									"postman.setEnvironmentVariable(\"priceId\", jsonData.priceId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "user-session-key",
+								"value": "{{sessionKey}}",
+								"type": "text"
+							},
+							{
+								"key": "search-tracing-key",
+								"value": "{{searchTracingKey}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{Authorization}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/hotels/search/{{searchId}}/{{hotelId}}/price/{{priceProvider}}/{{roomRrecommendationId}}",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hotels",
+								"search",
+								"{{searchId}}",
+								"{{hotelId}}",
+								"price",
+								"{{priceProvider}}",
+								"{{roomRrecommendationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Itinerary",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIWTljakZNSXVsQWpZMFJlTkdtTWRKc1FRWE1ybk8vVDhFcmt6UnMyYzk3cGFHK1pYemJ5Vnl3PT0iLCJwd2QiOiJMMkV0NEcvWHE0bExYQUd4Q3M2REh3PT0iLCJhZ2VudENvZGUiOiIvS2ZkWXdlc3FQdz0iLCJjbGllbnRJZCI6IjJmelhFa014VkRVPSIsIkJyb3dzZXJLZXkiOiIrM3lidWcxNExScGRXdGJtZ2dmNFR6dGpsOHNCZjZ6VTlzU1htbTZhTnp4ZERvd0xHeVVzT2c9PSIsIm5iZiI6MTY4OTc1OTU3OCwiZXhwIjoxNjk4Mzk5NTc4LCJpYXQiOjE2ODk3NTk1NzgsImlzcyI6IndlYmNvbm5lY3QiLCJhdWQiOiJjbGllbnQifQ.TK5Zm1jt6yWhDPplln8de3zUVD1yr2p4moou3Eu5nd0",
+								"type": "text"
+							},
+							{
+								"key": "search-tracing-key",
+								"value": "{{searchTracingKey}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"TUI\": \"81ebfeb2-1790-4b78-9c0e-1183619e6fad\",\r\n    \"ServiceEnquiry\": \"\",\r\n    \"ContactInfo\": {\r\n        \"Title\": \"Mr\",\r\n        \"FName\": \"TEST\",\r\n        \"LName\": \"AV\",\r\n        \"Mobile\": \"8590055610\",\r\n        \"Email\": \"robin@benzyinfotech.com\",\r\n        \"Address\": \"MRRA 4  EDAPPALLY  Edappally , EDAPPALLY , Edappally\",\r\n        \"State\": \"Kerala\",\r\n        \"City\": \"Cochin\",\r\n        \"PIN\": \"6865245\",\r\n        \"GSTCompanyName\": \"\",\r\n        \"GSTTIN\": \"\",\r\n        \"GSTMobile\": \"\",\r\n        \"GSTEmail\": \"\",\r\n        \"UpdateProfile\": true,\r\n        \"IsGuest\": false,\r\n        \"CountryCode\": \"IN\",\r\n        \"MobileCountryCode\": \"+91\",\r\n        \"NetAmount\": \"\",\r\n        \"DestMobCountryCode\": \"\",\r\n        \"DestMob\": \"\"\r\n    },\r\n    \"Auxiliaries\": [\r\n        {\r\n            \"Code\": \"PROMO\",\r\n            \"Parameters\": [\r\n                {\r\n                    \"Type\": \"Code\",\r\n                    \"Value\": \"\"\r\n                },\r\n                {\r\n                    \"Type\": \"ID\",\r\n                    \"Value\": \"\"\r\n                },\r\n                {\r\n                    \"Type\": \"Amount\",\r\n                    \"Value\": \"\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"Code\": \"CUSTOMER DETAILS\",\r\n            \"parameters\": [\r\n                {\r\n                    \"Type\": \"Nationality\",\r\n                    \"Value\": \"IN\"\r\n                },\r\n                {\r\n                    \"Type\": \"Country of Residence\",\r\n                    \"Value\": \"IN\"\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"Rooms\": [\r\n        {\r\n            \"RoomId\": \"3ca9c435-6a6c-4920-b8d6-df5907cf81ea\",\r\n            \"GuestCode\": \"|1|1:A:25|\",\r\n            \"SupplierName\": \"travelguru\",\r\n            \"RoomGroupId\": \"f1f24f1f-9ffc-4e36-bf25-61df4145c8bb\",\r\n            \"Guests\": [\r\n                {\r\n                    \"GuestID\": \"0\",\r\n                    \"Operation\": \"\",\r\n                    \"Title\": \"Mr\",\r\n                    \"FirstName\": \"TEST\",\r\n                    \"MiddleName\": \"\",\r\n                    \"LastName\": \"AV\",\r\n                    \"MobileNo\": \"\",\r\n                    \"PaxType\": \"A\",\r\n                    \"Age\": \"\",\r\n                    \"Email\": \"\",\r\n                    \"Pan\": \"\",\r\n                    \"ProfileType\": \"T\",\r\n                    \"EmployeeId\": \"\",\r\n                    \"corporateCompanyID\": \"\"\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"NetAmount\": \"2330\",\r\n    \"ClientID\": \"FVI6V120g22Ei5ztGK0FIQ==\",\r\n    \"DeviceID\": \"\",\r\n    \"AppVersion\": \"\",\r\n    \"SearchId\": \"f970cd57-2e22-4fb8-8b03-91bf7b48062e\",\r\n    \"RecommendationId\": \"e508b4b8-d5a5-40a5-8cda-1223837b646a\",\r\n    \"LocationName\": null,\r\n    \"HotelCode\": \"16285355\",\r\n    \"CheckInDate\": \"2023-07-19\",\r\n    \"CheckOutDate\": \"2023-07-20\",\r\n    \"TravelingFor\": \"NTF\"\r\n}"
+						},
+						"url": {
+							"raw": "{{WCHost}}Hotel/CreateItinerary",
+							"host": [
+								"{{WCHost}}Hotel"
+							],
+							"path": [
+								"CreateItinerary"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

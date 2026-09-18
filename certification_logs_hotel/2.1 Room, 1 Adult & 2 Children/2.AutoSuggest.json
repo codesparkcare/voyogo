@@ -1,0 +1,26 @@
+URL: https://voyogos.com/certification_logs_hotel/2.1%20Room,%201%20Adult%20&%202%20Children/2.AutoSuggest.json
+Method: GET
+Endpoint: /api/content/autosuggest?term=Tirunelveli
+Timestamp: 2026-09-18T13:29:29.000Z
+Request Body:
+{
+    "term": "Tirunelveli"
+}
+
+Response Body:
+{
+    "locations": [
+        {
+            "id": "357389",
+            "name": "Tirunelveli",
+            "fullName": "Tirunelveli, India",
+            "code": null,
+            "type": "city",
+            "country": "IN",
+            "coordinates": {
+                "lat": "8.713913",
+                "long": "77.756653"
+            }
+        }
+    ]
+}

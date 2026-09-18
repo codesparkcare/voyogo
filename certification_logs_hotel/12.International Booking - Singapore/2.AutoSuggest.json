@@ -1,0 +1,26 @@
+URL: https://voyogos.com/certification_logs_hotel/12.International%20Booking%20-%20Singapore/2.AutoSuggest.json
+Method: GET
+Endpoint: /api/content/autosuggest?term=Singapore
+Timestamp: 2026-09-18T13:30:41.000Z
+Request Body:
+{
+    "term": "Singapore"
+}
+
+Response Body:
+{
+    "locations": [
+        {
+            "id": "247160",
+            "name": "Singapore",
+            "fullName": "Singapore, SG",
+            "code": null,
+            "type": "city",
+            "country": "SG",
+            "coordinates": {
+                "lat": "1.352083",
+                "long": "103.819836"
+            }
+        }
+    ]
+}

@@ -1,0 +1,25 @@
+URL: https://voyogos.com/certification_logs_hotel/8.3%20Nights,%202%20Rooms,%202%20Adults%20&%202%20Children%20per%20Room/11.StartPay.json
+Method: POST
+Endpoint: /Payment/StartPay
+Timestamp: 2026-09-18T13:30:17.000Z
+Request Body:
+{
+    "TransactionID": 428108,
+    "TUI": "HTUI_5ff16a83a1b7b620dc7cc6607749af9f",
+    "Amount": 25536,
+    "PaymentMode": "Deposit"
+}
+
+Response Body:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "TransactionID": 428108,
+    "TUI": "HTUI_5ff16a83a1b7b620dc7cc6607749af9f",
+    "CRSPNR": "TestBooking",
+    "BookingStatus": "B0",
+    "HotelConfirmationNumber": "TestBooking",
+    "CurrentStatus": "Success"
+}

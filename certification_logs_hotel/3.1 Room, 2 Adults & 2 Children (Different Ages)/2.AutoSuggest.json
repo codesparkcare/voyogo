@@ -1,0 +1,26 @@
+URL: https://voyogos.com/certification_logs_hotel/3.1%20Room,%202%20Adults%20&%202%20Children%20(Different%20Ages)/2.AutoSuggest.json
+Method: GET
+Endpoint: /api/content/autosuggest?term=Goa
+Timestamp: 2026-09-18T13:29:36.000Z
+Request Body:
+{
+    "term": "Goa"
+}
+
+Response Body:
+{
+    "locations": [
+        {
+            "id": "329184",
+            "name": "Goa",
+            "fullName": "Goa, India",
+            "code": null,
+            "type": "city",
+            "country": "IN",
+            "coordinates": {
+                "lat": "15.299326",
+                "long": "74.123996"
+            }
+        }
+    ]
+}

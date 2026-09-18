@@ -1,0 +1,29 @@
+URL: https://voyogos.com/certification_logs_hotel/1.1%20Room,%201%20Adult/6.MoreRooms_Content.json
+Method: GET
+Endpoint: /api/hotels/HTL_SRCH_db9ae06e63273dfddac2bcb8b8b88a11/HTL_357389_01/content
+Timestamp: 2026-09-18T13:29:14.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_db9ae06e63273dfddac2bcb8b8b88a11",
+    "hotelId": "HTL_357389_01"
+}
+
+Response Body:
+{
+    "hotel": {
+        "id": "HTL_357389_01",
+        "name": "Grand Palace Hotel & Resort Tirunelveli",
+        "roomTypes": [
+            {
+                "roomTypeId": "RM_DLX_01",
+                "name": "Deluxe Room Garden View",
+                "description": "Spacious room with king bed and balcony"
+            },
+            {
+                "roomTypeId": "RM_SUP_02",
+                "name": "Superior Executive Room",
+                "description": "Executive room with premium city view"
+            }
+        ]
+    }
+}

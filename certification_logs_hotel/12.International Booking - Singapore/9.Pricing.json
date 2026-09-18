@@ -1,0 +1,21 @@
+URL: https://voyogos.com/certification_logs_hotel/12.International%20Booking%20-%20Singapore/9.Pricing.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4/HTL_247160_01/pricing?rateKey=RATE_KEY_12_DLX_01
+Timestamp: 2026-09-18T13:30:46.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4",
+    "hotelId": "HTL_247160_01",
+    "rateKey": "RATE_KEY_12_DLX_01"
+}
+
+Response Body:
+{
+    "priceBreakup": {
+        "basePrice": 11400,
+        "taxes": 1368,
+        "totalPayable": 12768,
+        "currency": "INR"
+    },
+    "rateToken": "RT_TOKEN_de340a9ed13618d21cc05f3a73f77dad"
+}

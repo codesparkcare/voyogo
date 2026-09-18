@@ -1,0 +1,28 @@
+URL: https://voyogos.com/certification_logs_hotel/12.International%20Booking%20-%20Singapore/8.Pricing_Content.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4/HTL_247160_01/pricing/content?rateKey=RATE_KEY_12_DLX_01
+Timestamp: 2026-09-18T13:30:45.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4",
+    "hotelId": "HTL_247160_01",
+    "rateKey": "RATE_KEY_12_DLX_01"
+}
+
+Response Body:
+{
+    "cancellationPolicy": {
+        "refundable": true,
+        "rules": [
+            {
+                "from": "09/19/2026",
+                "amount": 0,
+                "description": "Free cancellation before 48 hours"
+            }
+        ]
+    },
+    "inclusions": [
+        "Complimentary High Speed WiFi",
+        "Complimentary Drinking Water"
+    ]
+}

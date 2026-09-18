@@ -1,0 +1,21 @@
+URL: https://voyogos.com/certification_logs_hotel/7.3%20Nights,%201%20Room,%201%20Adult%20&%201%20Child/9.Pricing.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_2eb6e2214e052edb2bc0235ed78630ee/HTL_247123_01/pricing?rateKey=RATE_KEY_7_DLX_01
+Timestamp: 2026-09-18T13:30:08.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_2eb6e2214e052edb2bc0235ed78630ee",
+    "hotelId": "HTL_247123_01",
+    "rateKey": "RATE_KEY_7_DLX_01"
+}
+
+Response Body:
+{
+    "priceBreakup": {
+        "basePrice": 11400,
+        "taxes": 1368,
+        "totalPayable": 12768,
+        "currency": "INR"
+    },
+    "rateToken": "RT_TOKEN_f2d3d2b7c2becc2d1bf12aad4759e7b0"
+}

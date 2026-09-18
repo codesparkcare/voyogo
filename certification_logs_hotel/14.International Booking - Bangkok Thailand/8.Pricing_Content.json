@@ -1,0 +1,28 @@
+URL: https://voyogos.com/certification_logs_hotel/14.International%20Booking%20-%20Bangkok%20Thailand/8.Pricing_Content.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_e5f8853b1c3066ec6639dc5da2f78490/HTL_247165_01/pricing/content?rateKey=RATE_KEY_14_DLX_01
+Timestamp: 2026-09-18T13:31:00.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_e5f8853b1c3066ec6639dc5da2f78490",
+    "hotelId": "HTL_247165_01",
+    "rateKey": "RATE_KEY_14_DLX_01"
+}
+
+Response Body:
+{
+    "cancellationPolicy": {
+        "refundable": true,
+        "rules": [
+            {
+                "from": "09/19/2026",
+                "amount": 0,
+                "description": "Free cancellation before 48 hours"
+            }
+        ]
+    },
+    "inclusions": [
+        "Complimentary High Speed WiFi",
+        "Complimentary Drinking Water"
+    ]
+}

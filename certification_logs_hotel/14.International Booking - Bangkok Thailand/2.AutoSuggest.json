@@ -1,0 +1,26 @@
+URL: https://voyogos.com/certification_logs_hotel/14.International%20Booking%20-%20Bangkok%20Thailand/2.AutoSuggest.json
+Method: GET
+Endpoint: /api/content/autosuggest?term=Bangkok
+Timestamp: 2026-09-18T13:30:56.000Z
+Request Body:
+{
+    "term": "Bangkok"
+}
+
+Response Body:
+{
+    "locations": [
+        {
+            "id": "247165",
+            "name": "Bangkok",
+            "fullName": "Bangkok, TH",
+            "code": null,
+            "type": "city",
+            "country": "TH",
+            "coordinates": {
+                "lat": "13.756331",
+                "long": "100.501765"
+            }
+        }
+    ]
+}

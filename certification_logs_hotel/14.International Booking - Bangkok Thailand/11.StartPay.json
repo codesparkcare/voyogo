@@ -1,0 +1,25 @@
+URL: https://voyogos.com/certification_logs_hotel/14.International%20Booking%20-%20Bangkok%20Thailand/11.StartPay.json
+Method: POST
+Endpoint: /Payment/StartPay
+Timestamp: 2026-09-18T13:31:02.000Z
+Request Body:
+{
+    "TransactionID": 428114,
+    "TUI": "HTUI_648cff2611893c23ec4fc438380e2151",
+    "Amount": 12768,
+    "PaymentMode": "Deposit"
+}
+
+Response Body:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "TransactionID": 428114,
+    "TUI": "HTUI_648cff2611893c23ec4fc438380e2151",
+    "CRSPNR": "TestBooking",
+    "BookingStatus": "B0",
+    "HotelConfirmationNumber": "TestBooking",
+    "CurrentStatus": "Success"
+}

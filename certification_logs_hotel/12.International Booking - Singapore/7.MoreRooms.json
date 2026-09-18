@@ -1,0 +1,24 @@
+URL: https://voyogos.com/certification_logs_hotel/12.International%20Booking%20-%20Singapore/7.MoreRooms.json
+Method: GET
+Endpoint: /api/hotels/search/result/HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4/HTL_247160_01/rooms
+Timestamp: 2026-09-18T13:30:45.000Z
+Request Body:
+{
+    "searchId": "HTL_SRCH_e042e08a89340d120bc6e4f0974e6dc4",
+    "hotelId": "HTL_247160_01"
+}
+
+Response Body:
+{
+    "recommendations": [
+        {
+            "recommendationId": "REC_01",
+            "rateKey": "RATE_KEY_12_DLX_01",
+            "roomTypeId": "RM_DLX_01",
+            "boardType": "Room Only",
+            "totalFare": 11400,
+            "currency": "INR",
+            "isRefundable": true
+        }
+    ]
+}

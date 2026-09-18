@@ -1,0 +1,26 @@
+URL: https://voyogos.com/certification_logs_hotel/11.International%20Booking%20-%20Dubai%20UAE/2.AutoSuggest.json
+Method: GET
+Endpoint: /api/content/autosuggest?term=Dubai
+Timestamp: 2026-09-18T13:30:34.000Z
+Request Body:
+{
+    "term": "Dubai"
+}
+
+Response Body:
+{
+    "locations": [
+        {
+            "id": "247155",
+            "name": "Dubai",
+            "fullName": "Dubai, AE",
+            "code": null,
+            "type": "city",
+            "country": "AE",
+            "coordinates": {
+                "lat": "25.204849",
+                "long": "55.270783"
+            }
+        }
+    ]
+}
