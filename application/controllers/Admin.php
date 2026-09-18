@@ -208,6 +208,108 @@ class Admin extends CI_Controller {
     }
 
     /**
+     * Retrieve live hotel booking from Benzy Hotel API
+     */
+    public function hotel_retrieve_booking($id)
+    {
+        $this->_check_login();
+        $this->load->model('Hotel_model');
+        $this->load->library('BenzyHotelApi');
+
+        $booking = $this->Hotel_model->get_hotel_booking_by_id($id);
+        if (!$booking) {
+            if ($this->input->is_ajax_request()) {
+                return $this->output
+                    ->set_content_type('application/json')
+                    ->set_status_header(404)
+                    ->set_output(json_encode(array('status' => 'error', 'message' => 'Booking not found')));
+            }
+            $this->session->set_flashdata('error', 'Booking record not found.');
+            redirect('admin/manage_hotel_bookings');
+        }
+
+        $txnId = $booking['transaction_id'] ?? $booking['supplier_reference'];
+        $tui   = $booking['tui'] ?? null;
+
+        if (empty($txnId)) {
+            $msg = 'Cannot retrieve booking: Missing Transaction ID / Reference Number.';
+            if ($this->input->is_ajax_request()) {
+                return $this->output
+                    ->set_content_type('application/json')
+                    ->set_status_header(400)
+                    ->set_output(json_encode(array('status' => 'error', 'message' => $msg)));
+            }
+            $this->session->set_flashdata('error', $msg);
+            redirect('admin/manage_hotel_bookings');
+        }
+
+        $res = $this->benzyhotelapi->retrieveBooking($txnId, $tui);
+
+        if ($this->input->is_ajax_request()) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array(
+                    'status'    => ($res['http_code'] === 200) ? 'success' : 'error',
+                    'http_code' => $res['http_code'],
+                    'booking'   => $booking,
+                    'api_data'  => $res['json'] ?? null,
+                    'raw'       => $res['response'] ?? null
+                )));
+        }
+
+        if ($res['http_code'] === 200 && !empty($res['json'])) {
+            $bStatus = $res['json']['BookingStatus'] ?? ($res['json']['CurrentStatus'] ?? 'Success');
+            $this->session->set_flashdata('success', 'Akbar/Benzy Retrieve Booking Successful! Supplier Status: ' . $bStatus);
+        } else {
+            $this->session->set_flashdata('error', 'Supplier RetrieveBooking returned HTTP ' . $res['http_code'] . ': ' . substr($res['response'] ?? 'Unknown Error', 0, 150));
+        }
+        redirect('admin/manage_hotel_bookings');
+    }
+
+    /**
+     * Cancel Hotel Booking with Benzy API
+     */
+    public function hotel_cancel_booking()
+    {
+        $this->_check_login();
+        $this->load->model('Hotel_model');
+        $this->load->library('BenzyHotelApi');
+
+        $id      = $this->input->post('booking_id');
+        $remarks = trim($this->input->post('remarks') ?: 'Customer Request');
+
+        $booking = $this->Hotel_model->get_hotel_booking_by_id($id);
+        if (!$booking) {
+            $this->session->set_flashdata('error', 'Booking record not found.');
+            redirect('admin/manage_hotel_bookings');
+        }
+
+        $txnId = $booking['transaction_id'] ?? $booking['supplier_reference'];
+        $tui   = $booking['tui'] ?? null;
+
+        if (empty($txnId)) {
+            $this->session->set_flashdata('error', 'Cannot cancel booking: Missing Transaction ID / Reference Number.');
+            redirect('admin/manage_hotel_bookings');
+        }
+
+        $res = $this->benzyhotelapi->cancelBooking($txnId, $tui, null, $remarks);
+
+        $code = $res['json']['Code'] ?? (string)$res['http_code'];
+        $cancId = $res['json']['CancellationID'] ?? null;
+        $isSuccess = ($res['http_code'] === 200 && ($code === '200' || !empty($cancId)));
+
+        if ($isSuccess) {
+            $this->Hotel_model->cancel_hotel_booking($booking['id'], $cancId, $remarks);
+            $this->session->set_flashdata('success', 'Hotel booking successfully cancelled with Akbar/Benzy! Cancellation ID: ' . ($cancId ?: 'Confirmed'));
+        } else {
+            $errMsg = !empty($res['json']['Msg']) ? (is_array($res['json']['Msg']) ? implode(', ', $res['json']['Msg']) : $res['json']['Msg']) : ($res['response'] ?: 'Unknown error');
+            $this->session->set_flashdata('error', 'Cancellation failed with Akbar/Benzy: ' . substr($errMsg, 0, 200));
+        }
+
+        redirect('admin/manage_hotel_bookings');
+    }
+
+    /**
      * View Enquiries
      */
     public function enquiries()
@@ -717,6 +819,7 @@ class Admin extends CI_Controller {
                 'live_hotel_url'        => trim($this->input->post('live_hotel_url')),
                 'live_itinerary_url'    => trim($this->input->post('live_itinerary_url')),
                 'live_booking_url'      => trim($this->input->post('live_booking_url')),
+                'live_segment_id'       => trim($this->input->post('live_segment_id')) ?: 'NewRevamp',
                 'sandbox_client_id'     => trim($this->input->post('sandbox_client_id')),
                 'sandbox_password'      => trim($this->input->post('sandbox_password')),
                 'sandbox_merchant_id'   => trim($this->input->post('sandbox_merchant_id')),
@@ -727,6 +830,10 @@ class Admin extends CI_Controller {
                 'sandbox_hotel_url'     => trim($this->input->post('sandbox_hotel_url')),
                 'sandbox_itinerary_url' => trim($this->input->post('sandbox_itinerary_url')),
                 'sandbox_booking_url'   => trim($this->input->post('sandbox_booking_url')),
+                'sandbox_segment_id'    => trim($this->input->post('sandbox_segment_id')) ?: 'NewRevamp',
+                'company_id'            => trim($this->input->post('company_id')) ?: '1',
+                'gst_percentage'        => (float)$this->input->post('gst_percentage'),
+                'tds_percentage'        => (float)$this->input->post('tds_percentage'),
                 'channel_id'            => trim($this->input->post('channel_id')) ?: 'b2bIndiaDeals',
                 'is_enabled'            => $this->input->post('is_enabled') ? 1 : 0
             );

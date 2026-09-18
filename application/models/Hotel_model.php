@@ -40,6 +40,11 @@ class Hotel_model extends CI_Model {
                 'sandbox_hotel_url'     => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://travelportalapi.benzyinfotech.com'),
                 'sandbox_itinerary_url' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapihotels.benzyinfotech.com'),
                 'sandbox_booking_url'   => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapiflights.benzyinfotech.com'),
+                'live_segment_id'       => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'NewRevamp'),
+                'sandbox_segment_id'    => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'NewRevamp'),
+                'company_id'            => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => '1'),
+                'gst_percentage'        => array('type' => 'DECIMAL', 'constraint' => '5,2', 'default' => '0.00'),
+                'tds_percentage'        => array('type' => 'DECIMAL', 'constraint' => '5,2', 'default' => '0.00'),
                 'channel_id'            => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'b2bIndiaDeals'),
                 'is_enabled'            => array('type' => 'TINYINT', 'constraint' => 1, 'default' => 1),
                 'updated_at'            => array('type' => 'DATETIME', 'null' => TRUE)
@@ -61,6 +66,7 @@ class Hotel_model extends CI_Model {
                 'live_hotel_url'        => 'https://apiagents.akbartravelsonline.com',
                 'live_itinerary_url'    => 'https://apiagents.akbartravelsonline.com',
                 'live_booking_url'      => 'https://apiagents.akbartravelsonline.com',
+                'live_segment_id'       => 'NewRevamp',
                 'sandbox_client_id'     => 'bitest',
                 'sandbox_password'      => 'staging@1',
                 'sandbox_merchant_id'   => '300',
@@ -71,19 +77,28 @@ class Hotel_model extends CI_Model {
                 'sandbox_hotel_url'     => 'https://travelportalapi.benzyinfotech.com',
                 'sandbox_itinerary_url' => 'https://b2bapihotels.benzyinfotech.com',
                 'sandbox_booking_url'   => 'https://b2bapiflights.benzyinfotech.com',
+                'sandbox_segment_id'    => 'NewRevamp',
+                'company_id'            => '1',
+                'gst_percentage'        => 0.00,
+                'tds_percentage'        => 0.00,
                 'channel_id'            => 'b2bIndiaDeals',
                 'is_enabled'            => 1,
                 'updated_at'            => date('Y-m-d H:i:s')
             );
             $this->db->insert('hotel_api_settings', $default);
         } else {
-            // Auto-migrate new URL columns if missing in existing hotel_api_settings table
+            // Auto-migrate new URL and segment columns if missing in existing hotel_api_settings table
             $existing_settings_cols = $this->db->list_fields('hotel_api_settings');
             $new_settings_cols = array(
                 'live_itinerary_url'    => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
                 'live_booking_url'      => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
                 'sandbox_itinerary_url' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapihotels.benzyinfotech.com'),
-                'sandbox_booking_url'   => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapiflights.benzyinfotech.com')
+                'sandbox_booking_url'   => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapiflights.benzyinfotech.com'),
+                'live_segment_id'       => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'NewRevamp'),
+                'sandbox_segment_id'    => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'NewRevamp'),
+                'company_id'            => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => '1'),
+                'gst_percentage'        => array('type' => 'DECIMAL', 'constraint' => '5,2', 'default' => '0.00'),
+                'tds_percentage'        => array('type' => 'DECIMAL', 'constraint' => '5,2', 'default' => '0.00')
             );
             foreach ($new_settings_cols as $col => $col_def) {
                 if (!in_array($col, $existing_settings_cols)) {
@@ -99,45 +114,49 @@ class Hotel_model extends CI_Model {
 
         // 2. hotel_bookings table (Self-Healing Table & Missing Column Migration)
         $booking_fields = array(
-            'id'                  => array('type' => 'INT', 'constraint' => 11, 'auto_increment' => TRUE),
-            'booking_reference'   => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
-            'booking_ref'         => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
-            'supplier_reference'  => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
-            'transaction_id'      => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
-            'voucher_number'      => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
-            'hotel_id'            => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
-            'hotel_name'          => array('type' => 'VARCHAR', 'constraint' => 255, 'null' => TRUE),
-            'hotel_address'       => array('type' => 'TEXT', 'null' => TRUE),
-            'hotel_image'         => array('type' => 'TEXT', 'null' => TRUE),
-            'star_rating'         => array('type' => 'INT', 'constraint' => 2, 'default' => 3),
-            'room_type'           => array('type' => 'VARCHAR', 'constraint' => 255, 'null' => TRUE),
-            'board_type'          => array('type' => 'VARCHAR', 'constraint' => 255, 'null' => TRUE),
-            'destination_city'    => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
-            'checkin_date'        => array('type' => 'DATE', 'null' => TRUE),
-            'checkout_date'       => array('type' => 'DATE', 'null' => TRUE),
-            'nights_count'        => array('type' => 'INT', 'constraint' => 4, 'default' => 1),
-            'rooms_count'         => array('type' => 'INT', 'constraint' => 4, 'default' => 1),
-            'adults_count'        => array('type' => 'INT', 'constraint' => 4, 'default' => 2),
-            'children_count'      => array('type' => 'INT', 'constraint' => 4, 'default' => 0),
-            'guests_count'        => array('type' => 'INT', 'constraint' => 4, 'default' => 2),
-            'lead_guest_title'    => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'Mr'),
-            'lead_guest_name'     => array('type' => 'VARCHAR', 'constraint' => 150, 'null' => TRUE),
-            'primary_guest_name'  => array('type' => 'VARCHAR', 'constraint' => 150, 'null' => TRUE),
-            'lead_guest_email'    => array('type' => 'VARCHAR', 'constraint' => 150, 'null' => TRUE),
-            'guest_email'         => array('type' => 'VARCHAR', 'constraint' => 150, 'null' => TRUE),
-            'lead_guest_phone'    => array('type' => 'VARCHAR', 'constraint' => 30, 'null' => TRUE),
-            'guest_phone'         => array('type' => 'VARCHAR', 'constraint' => 30, 'null' => TRUE),
-            'guest_details_json'  => array('type' => 'LONGTEXT', 'null' => TRUE),
-            'special_requests'    => array('type' => 'TEXT', 'null' => TRUE),
-            'total_amount'        => array('type' => 'DECIMAL', 'constraint' => '10,2', 'default' => '0.00'),
-            'tax_amount'          => array('type' => 'DECIMAL', 'constraint' => '10,2', 'default' => '0.00'),
-            'currency'            => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'INR'),
-            'payment_id'          => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
-            'payment_status'      => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => 'paid'),
-            'booking_status'      => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => 'confirmed'),
-            'cancellation_policy' => array('type' => 'TEXT', 'null' => TRUE),
-            'created_at'          => array('type' => 'DATETIME', 'null' => TRUE),
-            'updated_at'          => array('type' => 'DATETIME', 'null' => TRUE)
+            'id'                   => array('type' => 'INT', 'constraint' => 11, 'auto_increment' => TRUE),
+            'booking_reference'    => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'booking_ref'          => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'supplier_reference'   => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'transaction_id'       => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'tui'                  => array('type' => 'VARCHAR', 'constraint' => 255, 'null' => TRUE),
+            'voucher_number'       => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'hotel_id'             => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'hotel_name'           => array('type' => 'VARCHAR', 'constraint' => 255, 'null' => TRUE),
+            'hotel_address'        => array('type' => 'TEXT', 'null' => TRUE),
+            'hotel_image'          => array('type' => 'TEXT', 'null' => TRUE),
+            'star_rating'          => array('type' => 'INT', 'constraint' => 2, 'default' => 3),
+            'room_type'            => array('type' => 'VARCHAR', 'constraint' => 255, 'null' => TRUE),
+            'board_type'           => array('type' => 'VARCHAR', 'constraint' => 255, 'null' => TRUE),
+            'destination_city'     => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'checkin_date'         => array('type' => 'DATE', 'null' => TRUE),
+            'checkout_date'        => array('type' => 'DATE', 'null' => TRUE),
+            'nights_count'         => array('type' => 'INT', 'constraint' => 4, 'default' => 1),
+            'rooms_count'          => array('type' => 'INT', 'constraint' => 4, 'default' => 1),
+            'adults_count'         => array('type' => 'INT', 'constraint' => 4, 'default' => 2),
+            'children_count'       => array('type' => 'INT', 'constraint' => 4, 'default' => 0),
+            'guests_count'         => array('type' => 'INT', 'constraint' => 4, 'default' => 2),
+            'lead_guest_title'     => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'Mr'),
+            'lead_guest_name'      => array('type' => 'VARCHAR', 'constraint' => 150, 'null' => TRUE),
+            'primary_guest_name'   => array('type' => 'VARCHAR', 'constraint' => 150, 'null' => TRUE),
+            'lead_guest_email'     => array('type' => 'VARCHAR', 'constraint' => 150, 'null' => TRUE),
+            'guest_email'          => array('type' => 'VARCHAR', 'constraint' => 150, 'null' => TRUE),
+            'lead_guest_phone'     => array('type' => 'VARCHAR', 'constraint' => 30, 'null' => TRUE),
+            'guest_phone'          => array('type' => 'VARCHAR', 'constraint' => 30, 'null' => TRUE),
+            'guest_details_json'   => array('type' => 'LONGTEXT', 'null' => TRUE),
+            'special_requests'     => array('type' => 'TEXT', 'null' => TRUE),
+            'total_amount'         => array('type' => 'DECIMAL', 'constraint' => '10,2', 'default' => '0.00'),
+            'tax_amount'           => array('type' => 'DECIMAL', 'constraint' => '10,2', 'default' => '0.00'),
+            'currency'             => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'INR'),
+            'payment_id'           => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'payment_status'       => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => 'paid'),
+            'booking_status'       => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => 'confirmed'),
+            'cancellation_id'      => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'cancellation_remarks' => array('type' => 'TEXT', 'null' => TRUE),
+            'cancelled_at'         => array('type' => 'DATETIME', 'null' => TRUE),
+            'cancellation_policy'  => array('type' => 'TEXT', 'null' => TRUE),
+            'created_at'           => array('type' => 'DATETIME', 'null' => TRUE),
+            'updated_at'           => array('type' => 'DATETIME', 'null' => TRUE)
         );
 
         if (!$this->db->table_exists('hotel_bookings')) {
@@ -216,6 +235,21 @@ class Hotel_model extends CI_Model {
     }
 
     /**
+     * Get Hotel Booking By Primary ID
+     */
+    public function get_hotel_booking_by_id($id) {
+        $this->ensure_tables_exist();
+        $row = $this->db->get_where('hotel_bookings', array('id' => (int)$id))->row_array();
+        if ($row) {
+            if (empty($row['booking_reference'])) $row['booking_reference'] = $row['booking_ref'] ?? ('VOY-HTL-' . $row['id']);
+            if (empty($row['lead_guest_name'])) $row['lead_guest_name'] = $row['primary_guest_name'] ?? 'Guest';
+            if (empty($row['lead_guest_email'])) $row['lead_guest_email'] = $row['guest_email'] ?? '';
+            if (empty($row['lead_guest_phone'])) $row['lead_guest_phone'] = $row['guest_phone'] ?? '';
+        }
+        return $row;
+    }
+
+    /**
      * Save New Hotel Booking
      */
     public function save_hotel_booking($data) {
@@ -260,6 +294,24 @@ class Hotel_model extends CI_Model {
         }
         $this->db->where('id', $id);
         return $this->db->update('hotel_bookings', $data);
+    }
+
+    /**
+     * Mark Hotel Booking as Cancelled with API details
+     */
+    public function cancel_hotel_booking($id, $cancellationId = null, $remarks = '') {
+        $data = array(
+            'booking_status'       => 'cancelled',
+            'cancellation_id'      => (string)$cancellationId,
+            'cancellation_remarks' => (string)$remarks,
+            'cancelled_at'         => date('Y-m-d H:i:s'),
+            'updated_at'           => date('Y-m-d H:i:s')
+        );
+        $existingFields = $this->db->list_fields('hotel_bookings');
+        $filteredData = array_intersect_key($data, array_flip($existingFields));
+
+        $this->db->where('id', (int)$id);
+        return $this->db->update('hotel_bookings', $filteredData);
     }
 
     /**

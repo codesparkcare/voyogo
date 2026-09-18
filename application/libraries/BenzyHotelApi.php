@@ -16,6 +16,10 @@ class BenzyHotelApi {
     protected $bookingUrl = '';
     protected $hotelUrl = ''; // backward compatibility alias
     protected $channelId = 'b2bIndiaDeals';
+    protected $segmentId = 'NewRevamp';
+    protected $companyId = '1';
+    protected $gstPercentage = 0;
+    protected $tdsPercentage = 0;
     protected $tokenDetails = array();
 
     public function __construct() {
@@ -30,10 +34,14 @@ class BenzyHotelApi {
      */
     public function loadSettings() {
         $settings = $this->CI->Hotel_model->get_hotel_api_settings();
-        $this->environment = $settings['environment'] ?? 'live';
-        $this->channelId = $settings['channel_id'] ?? 'b2bIndiaDeals';
+        $this->environment   = $settings['environment'] ?? 'live';
+        $this->channelId     = $settings['channel_id'] ?? 'b2bIndiaDeals';
+        $this->companyId     = !empty($settings['company_id']) ? (string)$settings['company_id'] : '1';
+        $this->gstPercentage = isset($settings['gst_percentage']) ? (float)$settings['gst_percentage'] : 0;
+        $this->tdsPercentage = isset($settings['tds_percentage']) ? (float)$settings['tds_percentage'] : 0;
 
         if ($this->environment === 'live') {
+            $this->segmentId = !empty($settings['live_segment_id']) ? trim($settings['live_segment_id']) : 'NewRevamp';
             $this->credentials = array(
                 'MerchantID' => $settings['live_merchant_id'] ?? '200',
                 'ApiKey'     => $settings['live_api_key'] ?? '069ab7973ac12116ccc1802546ad52bf',
@@ -48,6 +56,7 @@ class BenzyHotelApi {
             $this->bookingUrl   = rtrim($settings['live_booking_url'] ?? 'https://apiagents.akbartravelsonline.com', '/');
             $this->hotelUrl     = $this->searchUrl;
         } else {
+            $this->segmentId = !empty($settings['sandbox_segment_id']) ? trim($settings['sandbox_segment_id']) : 'NewRevamp';
             $this->credentials = array(
                 'MerchantID' => $settings['sandbox_merchant_id'] ?? '300',
                 'ApiKey'     => $settings['sandbox_api_key'] ?? 'kXAY9yHARK',
@@ -292,10 +301,10 @@ class BenzyHotelApi {
             'countryOfResidence'     => 'IN',
             'channelId'              => $this->channelId,
             'affiliateRegion'        => 'B2B_India',
-            'segmentId'              => 'NewRevamp',
-            'companyId'              => '1',
-            'gstPercentage'          => 0,
-            'tdsPercentage'          => 0
+            'segmentId'              => $this->segmentId,
+            'companyId'              => $this->companyId,
+            'gstPercentage'          => $this->gstPercentage,
+            'tdsPercentage'          => $this->tdsPercentage
         );
 
         if (!empty($locationId)) {
@@ -947,6 +956,14 @@ class BenzyHotelApi {
         $tokenDetails = $this->getTokenDetails();
         $clientId = $tokenDetails['ClientID'] ?? ($this->credentials['ClientID'] ?? 'FVI6V120g22Ei5ztGK0FIQ==');
 
+        // Auto-fetch TUI from hotel_bookings if not passed explicitly
+        if (empty($tui)) {
+            $booking = $this->CI->db->get_where('hotel_bookings', array('transaction_id' => (string)$transactionId))->row_array();
+            if (!empty($booking['tui'])) {
+                $tui = $booking['tui'];
+            }
+        }
+
         // Confirmed Endpoint from Benzy official SamplePayloads: {HotelBookingURL}/Utils/RetrieveBooking (PDF Page 75)
         $url = $this->bookingUrl . '/Utils/RetrieveBooking';
 
@@ -972,13 +989,33 @@ class BenzyHotelApi {
     // =========================================================================
     // 10. CANCEL BOOKING ({HotelItineraryURL}/Hotel/CancelHotelBooking)
     // =========================================================================
-    public function cancelBooking($transactionId, $tui = null, $yearType = '19', $remarks = 'Customer Request') {
+    public function cancelBooking($transactionId, $tui = null, $yearType = null, $remarks = 'Customer Request') {
         $token = $this->generateToken();
+
+        // If TUI or YearType is missing, call RetrieveBooking first to get FinYearID and TUI per Benzy spec (PDF Page 87)
+        if (empty($yearType) || empty($tui)) {
+            $retrieveRes = $this->retrieveBooking($transactionId, $tui);
+            if (!empty($retrieveRes['json'])) {
+                $retData = $retrieveRes['json'];
+                if (empty($yearType) && !empty($retData['FinYearID'])) {
+                    $yearType = (string)$retData['FinYearID'];
+                }
+                if (empty($tui) && !empty($retData['TUI'])) {
+                    $tui = (string)$retData['TUI'];
+                }
+            }
+        }
+
+        // Fallback default FinYearID if not returned by supplier
+        if (empty($yearType)) {
+            $yearType = '19';
+        }
+
         // Official Endpoint per PDF Page 87: {HotelItineraryURL}/Hotel/CancelHotelBooking
         $url = $this->itineraryUrl . '/Hotel/CancelHotelBooking';
 
         $payload = array(
-            'Remarks'       => $remarks,
+            'Remarks'       => $remarks ?: 'Customer Request',
             'TUI'           => $tui,
             'TransactionID' => (int)$transactionId,
             'YearType'      => (string)$yearType
@@ -986,6 +1023,30 @@ class BenzyHotelApi {
 
         $res = $this->makeRequest('CancelHotelBooking', $url, $payload, 'POST', $token);
         return $res;
+    }
+
+    // =========================================================================
+    // 14. AGENT PROFILE ({HotelUtilsURL}/Utils/AgentProfile or token decoding)
+    // =========================================================================
+    public function getAgentProfile() {
+        $token = $this->generateToken();
+        $tokenDetails = $this->getTokenDetails();
+
+        // Try direct AgentProfile endpoint on Utils
+        $url = $this->utilsUrl . '/Utils/AgentProfile';
+        $res = $this->makeRequest('AgentProfile', $url, array('Token' => $token), 'POST', $token);
+        if ($res['http_code'] === 200 && !empty($res['json'])) {
+            return $res['json'];
+        }
+
+        // Secondary endpoint attempt on Hotel Search
+        $url2 = $this->searchUrl . '/api/agent/profile';
+        $res2 = $this->makeRequest('AgentProfile_Alt', $url2, array(), 'GET', $token);
+        if ($res2['http_code'] === 200 && !empty($res2['json'])) {
+            return $res2['json'];
+        }
+
+        return $tokenDetails;
     }
 
     // =========================================================================

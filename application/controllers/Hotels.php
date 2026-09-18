@@ -347,6 +347,7 @@ class Hotels extends CI_Controller {
             'booking_ref'        => $bookingRef,
             'supplier_reference' => $suppRef,
             'transaction_id'     => $txnId,
+            'tui'                => $tui,
             'voucher_number'     => $voucherNum,
             'hotel_id'           => $hotel_id,
             'hotel_name'         => $hotel_name,

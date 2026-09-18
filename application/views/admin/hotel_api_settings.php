@@ -115,6 +115,11 @@
                                     <label class="form-label small fw-bold text-secondary">Live Hotel Booking & Payment URL</label>
                                     <input type="text" name="live_booking_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_booking_url'] ?? 'https://apiagents.akbartravelsonline.com'); ?>" placeholder="https://apiagents.akbartravelsonline.com">
                                 </div>
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-bold text-secondary">Live Segment ID (htdealCode from AgentProfile)</label>
+                                    <input type="text" name="live_segment_id" class="form-control font-monospace small" value="<?php echo htmlspecialchars($settings['live_segment_id'] ?? 'NewRevamp'); ?>" placeholder="NewRevamp">
+                                    <div class="form-text text-muted" style="font-size: 11px;">Injected into Hotel Init Search as <code>segmentId</code>. Default: <code>NewRevamp</code> or value of <code>htdealCode</code> assigned by Benzy support.</div>
+                                </div>
                             </div>
                         </div>
 
@@ -164,6 +169,11 @@
                                     <label class="form-label small fw-bold text-secondary">Sandbox Booking & Payment URL ({HotelBookingURL})</label>
                                     <input type="text" name="sandbox_booking_url" class="form-control" value="<?php echo htmlspecialchars($settings['sandbox_booking_url'] ?? 'https://b2bapiflights.benzyinfotech.com'); ?>" placeholder="https://b2bapiflights.benzyinfotech.com">
                                 </div>
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-bold text-secondary">Sandbox Segment ID (htdealCode from AgentProfile)</label>
+                                    <input type="text" name="sandbox_segment_id" class="form-control font-monospace small" value="<?php echo htmlspecialchars($settings['sandbox_segment_id'] ?? 'NewRevamp'); ?>" placeholder="NewRevamp">
+                                    <div class="form-text text-muted" style="font-size: 11px;">Injected into Hotel Init Search as <code>segmentId</code> in Sandbox. Default: <code>NewRevamp</code> or htdealCode.</div>
+                                </div>
                             </div>
                         </div>
 
@@ -178,6 +188,21 @@
                                     <input class="form-check-input" type="checkbox" name="is_enabled" id="isEnabled" value="1" <?php echo ($settings['is_enabled']) ? 'checked' : ''; ?>>
                                     <label class="form-check-label fw-bold text-dark" for="isEnabled">Enable Hotel Search & Booking APIs</label>
                                 </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-secondary">Company ID (Init Payload)</label>
+                                <input type="text" name="company_id" class="form-control" value="<?php echo htmlspecialchars($settings['company_id'] ?? '1'); ?>" placeholder="1">
+                                <div class="form-text text-muted" style="font-size: 11px;">Default: <code>1</code> (from AgentProfile)</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-secondary">GST Percentage (%)</label>
+                                <input type="number" step="0.01" name="gst_percentage" class="form-control" value="<?php echo htmlspecialchars($settings['gst_percentage'] ?? '0.00'); ?>" placeholder="0.00">
+                                <div class="form-text text-muted" style="font-size: 11px;">Default: <code>0.00</code></div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-secondary">TDS Percentage (%)</label>
+                                <input type="number" step="0.01" name="tds_percentage" class="form-control" value="<?php echo htmlspecialchars($settings['tds_percentage'] ?? '0.00'); ?>" placeholder="0.00">
+                                <div class="form-text text-muted" style="font-size: 11px;">Default: <code>0.00</code></div>
                             </div>
                         </div>
 

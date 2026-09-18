@@ -68,25 +68,74 @@
                                 <span class="badge <?php echo ($bStatus == 'Confirmed') ? 'bg-success' : (($bStatus == 'Cancelled') ? 'bg-danger' : 'bg-warning'); ?>">
                                     <?php echo htmlspecialchars($bStatus); ?>
                                 </span>
+                                <?php if (!empty($b['cancellation_id'])): ?>
+                                    <div class="text-muted small font-monospace" style="font-size: 10px;">Canc ID: <?php echo htmlspecialchars($b['cancellation_id']); ?></div>
+                                <?php endif; ?>
                             </td>
                             <td class="text-end">
                                 <div class="btn-group">
                                     <a href="<?php echo site_url('hotels/confirmation/' . $ref); ?>" target="_blank" class="btn btn-sm btn-outline-danger" title="Print Voucher">
-                                        <i class="fa-solid fa-print"></i> Voucher
+                                        <i class="fa-solid fa-print"></i>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editHotelModal<?php echo $b['id']; ?>" title="Edit Status">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="retrieveHotelBooking(<?php echo $b['id']; ?>, '<?php echo htmlspecialchars($ref, ENT_QUOTES); ?>')" title="Retrieve live status from Akbar/Benzy API">
+                                        <i class="fa-solid fa-rotate"></i> Retrieve
+                                    </button>
+                                    <?php if ($bStatus !== 'Cancelled'): ?>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelHotelModal<?php echo $b['id']; ?>" title="Cancel Booking via Akbar/Benzy API">
+                                        <i class="fa-solid fa-ban"></i> Cancel
+                                    </button>
+                                    <?php endif; ?>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editHotelModal<?php echo $b['id']; ?>" title="Manual Status Edit">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
                                 </div>
 
-                                <!-- Status Update Modal -->
+                                <!-- Benzy API Cancel Confirmation Modal -->
+                                <?php if ($bStatus !== 'Cancelled'): ?>
+                                <div class="modal fade text-start" id="cancelHotelModal<?php echo $b['id']; ?>" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0 shadow">
+                                            <form action="<?php echo site_url('admin/hotel_cancel_booking'); ?>" method="POST">
+                                                <input type="hidden" name="booking_id" value="<?php echo $b['id']; ?>">
+                                                <div class="modal-header bg-danger text-white">
+                                                    <h5 class="modal-title fw-bold">
+                                                        <i class="fa-solid fa-triangle-exclamation me-2"></i> Cancel Booking with Akbar/Benzy API
+                                                    </h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="mb-3">
+                                                        Are you sure you want to cancel booking <strong>#<?php echo htmlspecialchars($ref); ?></strong>?
+                                                    </p>
+                                                    <div class="alert alert-warning small mb-3">
+                                                        <i class="fa-solid fa-circle-info me-1"></i>
+                                                        This will send a live request to <code>{HotelItineraryURL}/Hotel/CancelHotelBooking</code> with Transaction ID <strong><?php echo htmlspecialchars($b['transaction_id'] ?? $b['supplier_reference']); ?></strong>. The FinYearID will be automatically resolved via RetrieveBooking.
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-bold small">Cancellation Remarks (Required by Benzy API)</label>
+                                                        <input type="text" name="remarks" class="form-control" value="Customer Request" required placeholder="Reason for cancellation">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Keep Booking</button>
+                                                    <button type="submit" class="btn btn-danger fw-bold">
+                                                        <i class="fa-solid fa-ban me-1"></i> Confirm Cancellation with Supplier
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
+
+                                <!-- Status Update Modal (Manual) -->
                                 <div class="modal fade text-start" id="editHotelModal<?php echo $b['id']; ?>" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content border-0 shadow">
                                             <form action="<?php echo site_url('admin/update_hotel_status'); ?>" method="POST">
                                                 <input type="hidden" name="booking_id" value="<?php echo $b['id']; ?>">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title fw-bold">Update Hotel Booking #<?php echo htmlspecialchars($b['booking_ref']); ?></h5>
+                                                    <h5 class="modal-title fw-bold">Update Hotel Booking #<?php echo htmlspecialchars($b['booking_ref'] ?? $ref); ?></h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
@@ -129,3 +178,117 @@
         </div>
     </div>
 </div>
+
+<!-- Modal for Viewing Live RetrieveBooking API Response -->
+<div class="modal fade" id="retrieveBookingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold" id="retrieveModalTitle">
+                    <i class="fa-solid fa-cloud-arrow-down me-2"></i> Live RetrieveBooking API Response
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="retrieveModalBody">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="mt-2 text-muted small">Querying Akbar / Benzy RetrieveBooking API...</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function retrieveHotelBooking(bookingId, ref) {
+    const modalEl = document.getElementById('retrieveBookingModal');
+    const modal = new bootstrap.Modal(modalEl);
+    document.getElementById('retrieveModalTitle').innerHTML = '<i class="fa-solid fa-cloud-arrow-down me-2"></i> Live RetrieveBooking - #' + ref;
+    document.getElementById('retrieveModalBody').innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+            <div class="mt-2 text-muted small">Querying Akbar / Benzy RetrieveBooking API ({HotelBookingURL}/Utils/RetrieveBooking)...</div>
+        </div>
+    `;
+    modal.show();
+
+    fetch('<?php echo site_url("admin/hotel_retrieve_booking"); ?>/' + bookingId, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'success' && data.api_data) {
+            const d = data.api_data;
+            let html = `
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <div class="p-2 border rounded bg-light">
+                            <small class="text-muted d-block">Booking Status</small>
+                            <span class="badge ${d.BookingStatus === 'B0' || d.BookingStatus === 'Confirmed' ? 'bg-success' : 'bg-warning text-dark'} fs-6">${d.BookingStatus || d.CurrentStatus || 'N/A'}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-2 border rounded bg-light">
+                            <small class="text-muted d-block">FinYearID (YearType)</small>
+                            <span class="fw-bold font-monospace text-primary">${d.FinYearID || '19'}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-2 border rounded bg-light">
+                            <small class="text-muted d-block">Supplier Confirmation ID</small>
+                            <span class="fw-bold font-monospace">${d.BookingConfirmationId || d.HotelConfirmationNumber || 'Pending'}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-2 border rounded bg-light">
+                            <small class="text-muted d-block">Transaction ID</small>
+                            <span class="font-monospace">${d.TransactionId || d.TransactionID || 'N/A'}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-2 border rounded bg-light">
+                            <small class="text-muted d-block">TUI</small>
+                            <span class="font-monospace small text-truncate d-block">${d.TUI || 'N/A'}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-2 border rounded bg-light">
+                            <small class="text-muted d-block">Gross / Net Fare</small>
+                            <strong>₹ ${d.GrossFare || 0}</strong> <span class="text-muted small">(Net: ₹ ${d.NetFare || 0})</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-2 border rounded bg-light">
+                            <small class="text-muted d-block">Check-In & Check-Out</small>
+                            <span>${d.CheckInDate || 'N/A'} &rarr; ${d.CheckOutDate || 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="fw-bold mt-3 mb-2 text-secondary">Raw Supplier JSON Response:</h6>
+                <pre class="p-3 bg-dark text-white rounded small" style="max-height: 250px; overflow-y: auto;"><code>${JSON.stringify(d, null, 2)}</code></pre>
+            `;
+            document.getElementById('retrieveModalBody').innerHTML = html;
+        } else {
+            document.getElementById('retrieveModalBody').innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                    ${data.message || (data.api_data ? JSON.stringify(data.api_data) : 'Failed to retrieve booking from supplier.')}
+                </div>
+                ${data.raw ? `<pre class="p-3 bg-light border rounded small mt-2"><code>${data.raw}</code></pre>` : ''}
+            `;
+        }
+    })
+    .catch(err => {
+        document.getElementById('retrieveModalBody').innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fa-solid fa-triangle-exclamation me-2"></i> Network error while contacting server: ${err.message}
+            </div>
+        `;
+    });
+}
+</script>
