@@ -244,7 +244,7 @@
 <!-- Top Green Utility Strip (Exact Colors from Screenshot 2) -->
 <div class="f-top-strip">
     <div class="f-top-strip-left">
-        <span><i class="fa-solid fa-headset"></i> 24x7 Support: <strong>1800-123-4567 / +91 22 4066 6000</strong></span>
+        <span><i class="fa-solid fa-headset"></i> 24x7 Support: <strong>+91 8098999096 / +91 8098999095</strong></span>
         <span><i class="fa-solid fa-envelope"></i> support@voyogo.com</span>
     </div>
     <div class="f-top-strip-right">
@@ -321,15 +321,15 @@
 
     <!-- Flash Alerts -->
     <?php if ($this->session->flashdata('success')): ?>
-        <div class="alert-box alert-success">
-            <i class="fa-solid fa-circle-check" style="font-size: 16px;"></i>
-            <span><?php echo $this->session->flashdata('success'); ?></span>
-        </div>
+            <div class="alert-box alert-success">
+                <i class="fa-solid fa-circle-check" style="font-size: 16px;"></i>
+                <span><?php echo $this->session->flashdata('success'); ?></span>
+            </div>
     <?php endif; ?>
 
     <?php if ($this->session->flashdata('error')): ?>
-        <div class="alert-box alert-danger">
-            <i class="fa-solid fa-triangle-exclamation" style="font-size: 16px;"></i>
-            <span><?php echo $this->session->flashdata('error'); ?></span>
-        </div>
+            <div class="alert-box alert-danger">
+                <i class="fa-solid fa-triangle-exclamation" style="font-size: 16px;"></i>
+                <span><?php echo $this->session->flashdata('error'); ?></span>
+            </div>
     <?php endif; ?>

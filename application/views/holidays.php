@@ -155,17 +155,7 @@
               <div class="ref-form-group">
                 <div class="ref-input-box">
                   <i class="fa-solid fa-location-dot ref-input-icon"></i>
-                  <select name="destination" class="ref-select" required>
-                    <option value="" disabled selected>Travel Destination *</option>
-                    <option value="Bali, Indonesia">Bali, Indonesia</option>
-                    <option value="Maldives">Maldives</option>
-                    <option value="Singapore & Malaysia">Singapore & Malaysia</option>
-                    <option value="Thailand">Thailand</option>
-                    <option value="Dubai, UAE">Dubai, UAE</option>
-                    <option value="Europe - Swiss & Paris">Europe - Swiss & Paris</option>
-                    <option value="Kashmir, India">Kashmir, India</option>
-                    <option value="Goa, India">Goa, India</option>
-                  </select>
+                  <input type="text" name="destination" class="ref-input" placeholder="Travel Destination *" required>
                 </div>
               </div>
 
@@ -797,7 +787,7 @@
       <div class="package-grid" id="intlGrid">
 
         <!-- 1. Bali -->
-        <div class="package-card" onclick="openEnquiryModal('Bali Tour Package')">
+        <div class="package-card" onclick="openEnquiryModal('Bali Tropical Escape')">
           <div class="pkg-card-img"
             style="background-image: url('<?php echo base_url('assets/images/voyogo bali.png'); ?>');">
             <span class="pkg-duration-badge">5D & 4N</span>
@@ -823,7 +813,7 @@
         </div>
 
         <!-- 2. China -->
-        <div class="package-card" onclick="openEnquiryModal('China Tour Package')">
+        <div class="package-card" onclick="openEnquiryModal('China Imperial & Wonders')">
           <div class="pkg-card-img"
             style="background-image: url('<?php echo base_url('assets/images/voyogo china.png'); ?>');">
             <span class="pkg-duration-badge">8D & 7N</span>
@@ -848,34 +838,8 @@
           </div>
         </div>
 
-        <!-- 3. Dubai -->
-        <div class="package-card" onclick="openEnquiryModal('Dubai Tour Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo dubai.png'); ?>');">
-            <span class="pkg-duration-badge">5D & 4N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Dubai Luxury Getaway</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Dubai (3) → Desert Resort (1)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹99,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- 4. Sri Lanka -->
-        <div class="package-card" onclick="openEnquiryModal('Sri Lanka Tour Package')">
+        <!-- 3. Sri Lanka -->
+        <div class="package-card" onclick="openEnquiryModal('Sri Lanka Island Discovery')">
           <div class="pkg-card-img"
             style="background-image: url('<?php echo base_url('assets/images/voyogo srilanka.png'); ?>');">
             <span class="pkg-duration-badge">5D & 4N</span>
@@ -900,14 +864,14 @@
           </div>
         </div>
 
-        <!-- 5. Vietnam -->
-        <div class="package-card" onclick="openEnquiryModal('Vietnam Tour Package')">
+        <!-- 4. Vietnam -->
+        <div class="package-card" onclick="openEnquiryModal('Vietnam Heritage & Cruise')">
           <div class="pkg-card-img"
             style="background-image: url('<?php echo base_url('assets/images/voyogo vietnom.png'); ?>');">
             <span class="pkg-duration-badge">6D & 5N</span>
           </div>
           <div class="pkg-card-body">
-            <h3 class="pkg-title">Vietnam Heritage Tour</h3>
+            <h3 class="pkg-title">Vietnam Heritage & Cruise</h3>
             <div class="pkg-route">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -926,8 +890,8 @@
           </div>
         </div>
 
-        <!-- 6. Singapore & Malaysia -->
-        <div class="package-card" onclick="openEnquiryModal('Singapore & Malaysia Tour Package')">
+        <!-- 5. Singapore & Malaysia -->
+        <div class="package-card" onclick="openEnquiryModal('Singapore & Malaysia Combo')">
           <div class="pkg-card-img"
             style="background-image: url('<?php echo base_url('assets/images/voyogo Singapore &malaysia.png'); ?>');">
             <span class="pkg-duration-badge">6D & 5N</span>
@@ -952,8 +916,8 @@
           </div>
         </div>
 
-        <!-- 7. Vietnam & Cambodia -->
-        <div class="package-card" onclick="openEnquiryModal('Vietnam & Cambodia Tour Package')">
+        <!-- 6. Vietnam & Cambodia -->
+        <div class="package-card" onclick="openEnquiryModal('Vietnam & Cambodia Expedition')">
           <div class="pkg-card-img"
             style="background-image: url('<?php echo base_url('assets/images/voyogo vietnom & Combodia.png'); ?>');">
             <span class="pkg-duration-badge">8D & 7N</span>
@@ -978,8 +942,8 @@
           </div>
         </div>
 
-        <!-- 8. Japan -->
-        <div class="package-card" onclick="openEnquiryModal('Japan Tour Package')">
+        <!-- 7. Japan -->
+        <div class="package-card" onclick="openEnquiryModal('Japan Cherry Blossom Wonders')">
           <div class="pkg-card-img"
             style="background-image: url('<?php echo base_url('assets/images/voyogo japan.png'); ?>');">
             <span class="pkg-duration-badge">8D & 7N</span>
@@ -1004,240 +968,6 @@
           </div>
         </div>
 
-        <!-- 9. China Avatar Wonders -->
-        <div class="package-card" onclick="openEnquiryModal('China Avatar Wonders Tour')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo china.png'); ?>');">
-            <span class="pkg-duration-badge">8D & 7N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">China Avatar & Great Wall</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Beijing (4) → Zhangjiajie (3)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹2,05,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- 10. Egypt -->
-        <div class="package-card" onclick="openEnquiryModal('Egypt Tour Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo egypt.png'); ?>');">
-            <span class="pkg-duration-badge">8D & 7N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Egypt Pyramids & Nile Cruise</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Cairo (3) → Aswan (4)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹1,89,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- 11. USA -->
-        <div class="package-card" onclick="openEnquiryModal('USA Tour Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo usa.png'); ?>');">
-            <span class="pkg-duration-badge">21D & 20N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">USA Coast to Coast Wonders</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>New York (7) → Orlando (6) → LA (7)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹7,59,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- 12. Scandinavia -->
-        <div class="package-card" onclick="openEnquiryModal('Scandinavia Tour Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo scandinavia.png'); ?>');">
-            <span class="pkg-duration-badge">10D & 9N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Scandinavia Aurora & Fjords</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Oslo (4) → Bergen (5)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹3,84,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- 13. Kenya -->
-        <div class="package-card" onclick="openEnquiryModal('Kenya Tour Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo kenya.png'); ?>');">
-            <span class="pkg-duration-badge">6D & 5N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Kenya Wildlife Safari</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Nairobi (2) → Masai Mara (3)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹2,59,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- 14. Sri Lanka Honeymoon -->
-        <div class="package-card" onclick="openEnquiryModal('Sri Lanka Special Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo srilanka.png'); ?>');">
-            <span class="pkg-duration-badge">5D & 4N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Sri Lanka Beach & Hills</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Nuwara Eliya (2) → Galle (2)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹57,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- 15. Europe -->
-        <div class="package-card" onclick="openEnquiryModal('Europe Tour Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo europe.png'); ?>');">
-            <span class="pkg-duration-badge">10D & 9N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Grand Europe Highlights</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Paris (3) → Swiss (3) → Rome (3)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹2,79,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- 16. Canada with Alaska -->
-        <div class="package-card" onclick="openEnquiryModal('Canada with Alaska Tour Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo canada with alaska.png'); ?>');">
-            <span class="pkg-duration-badge">15D & 14N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Canada with Alaska Cruise</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Vancouver (5) → Alaska Cruise (9)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹7,79,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- 17. Russia -->
-        <div class="package-card" onclick="openEnquiryModal('Russia Tour Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo russia.png'); ?>');">
-            <span class="pkg-duration-badge">8D & 7N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Russia Imperial Odyssey</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Moscow (4) → St. Petersburg (3)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹1,45,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
       </div>
     </div>
 
@@ -1256,9 +986,8 @@
         <div class="dom-tabs">
           <span class="dom-tab active">East India</span>
           <span class="dom-tab">North India</span>
-          <span class="dom-tab">South India</span>
-          <span class="dom-tab">Central India</span>
-          <span class="dom-tab">West India</span>
+          <span class="dom-tab">West & Central India</span>
+          <span class="dom-tab">Island</span>
         </div>
       </div>
 
@@ -1273,190 +1002,8 @@
     <div class="package-grid-container">
       <div class="package-grid" id="domGrid">
 
-        <!-- Card 1: Andaman -->
-        <div class="package-card" onclick="openEnquiryModal('Andaman Domestic Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo andaman.png'); ?>');">
-            <span class="pkg-duration-badge">5D & 4N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Andaman Tour Package</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Port Blair (2) → Havelock (2)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹25,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- Card 2: Goa -->
-        <div class="package-card" onclick="openEnquiryModal('Goa Domestic Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo goa.png'); ?>');">
-            <span class="pkg-duration-badge">5D & 4N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Goa Beach Retreat</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>North Goa (2) → South Goa (2)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹17,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- Card 3: Shimla & Manali -->
-        <div class="package-card" onclick="openEnquiryModal('Shimla & Manali Domestic Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo simla & manali.png'); ?>');">
-            <span class="pkg-duration-badge">5D & 4N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Shimla & Manali Escape</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Shimla (2) → Manali (2)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹17,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- Card 4: Rajasthan -->
-        <div class="package-card" onclick="openEnquiryModal('Rajasthan Domestic Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo rajasthan.png'); ?>');">
-            <span class="pkg-duration-badge">5D & 4N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Royal Rajasthan Heritage</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Jaipur (2) → Udaipur (2)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹20,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- Card 5: Golden Triangle -->
-        <div class="package-card" onclick="openEnquiryModal('Golden Triangle Domestic Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo golden triangle.png'); ?>');">
-            <span class="pkg-duration-badge">5D & 4N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Golden Triangle Tour</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Delhi (2) → Agra (1) → Jaipur (1)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹17,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- Card 6: Kashmir -->
-        <div class="package-card" onclick="openEnquiryModal('Kashmir Domestic Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo kashmir.png'); ?>');">
-            <span class="pkg-duration-badge">5D & 4N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Kashmir Paradise Tour</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Srinagar (2) → Gulmarg (2)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹22,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- Card 7: Darjeeling -->
-        <div class="package-card" onclick="openEnquiryModal('Darjeeling Domestic Package')">
-          <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo dorjeeing.png'); ?>');">
-            <span class="pkg-duration-badge">5D & 4N</span>
-          </div>
-          <div class="pkg-card-body">
-            <h3 class="pkg-title">Simply Darjeeling</h3>
-            <div class="pkg-route">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>Darjeeling (4)</span>
-            </div>
-          </div>
-          <div class="pkg-price-strip">
-            <div class="pkg-price-box">
-              <span class="pkg-old-price">Starting @</span>
-              <span class="pkg-new-price">₹22,000/-</span>
-            </div>
-            <button class="btn-view-details">View Details</button>
-          </div>
-        </div>
-
-        <!-- Card 8: Meghalaya -->
-        <div class="package-card" onclick="openEnquiryModal('Meghalaya Domestic Package')">
+        <!-- Card 1: Meghalaya -->
+        <div class="package-card" onclick="openEnquiryModal('Meghalaya Explorer')">
           <div class="pkg-card-img"
             style="background-image: url('<?php echo base_url('assets/images/voyogo meghalaya.png'); ?>');">
             <span class="pkg-duration-badge">5D & 4N</span>
@@ -1481,21 +1028,21 @@
           </div>
         </div>
 
-        <!-- Card 9: Bhutan -->
-        <div class="package-card" onclick="openEnquiryModal('Bhutan Domestic Package')">
+        <!-- Card 2: Darjeeling -->
+        <div class="package-card" onclick="openEnquiryModal('Darjeeling Special')">
           <div class="pkg-card-img"
-            style="background-image: url('<?php echo base_url('assets/images/voyogo bhutan.png'); ?>');">
-            <span class="pkg-duration-badge">6D & 5N</span>
+            style="background-image: url('<?php echo base_url('assets/images/voyogo dorjeeing.png'); ?>');">
+            <span class="pkg-duration-badge">5D & 4N</span>
           </div>
           <div class="pkg-card-body">
-            <h3 class="pkg-title">Bhutan Cultural Journey</h3>
+            <h3 class="pkg-title">Darjeeling Special</h3>
             <div class="pkg-route">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
-              <span>Paro (3) → Thimphu (2)</span>
+              <span>Darjeeling (4)</span>
             </div>
           </div>
           <div class="pkg-price-strip">
@@ -1716,4 +1263,7 @@
 </div>
 
 <!-- Holiday Pages Script -->
+<script>
+  window.VOYOGO_BASE_URL = '<?php echo base_url(); ?>';
+</script>
 <script src="<?php echo base_url('assets/js/pages_main.js?v=' . time()); ?>"></script>

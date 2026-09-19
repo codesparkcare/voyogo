@@ -157,15 +157,7 @@
                 <label class="ref-label">Cruise Destination <span class="ref-req">*</span></label>
                 <div class="ref-input-box">
                   <i class="fa-solid fa-location-dot ref-input-icon"></i>
-                  <select name="destination" class="ref-select" required>
-                    <option value="" disabled selected>Select Destination</option>
-                    <option value="Singapore Cruise">Singapore Cruise</option>
-                    <option value="Dubai & Arabian Gulf Cruise">Dubai Cruise</option>
-                    <option value="Mediterranean Cruise">Mediterranean Cruise</option>
-                    <option value="Alaska Cruise Glaciers">Alaska Cruise</option>
-                    <option value="Bahamas & Caribbean Cruise">Bahamas & Caribbean</option>
-                    <option value="Goa to Mumbai Coastal Cruise">Goa to Mumbai Cruise</option>
-                  </select>
+                  <input type="text" name="destination" class="ref-input" placeholder="Select Destination" required>
                 </div>
               </div>
 
@@ -786,16 +778,7 @@
         <!-- Cruise Destination * -->
         <div class="cruise-form-group">
           <label class="cruise-form-label">Cruise Destination <span class="req-star">*</span></label>
-          <select name="destination" class="cruise-select" required>
-            <option value="" disabled selected>Select Destination</option>
-            <option value="Singapore & Malaysia Cruise">Singapore & Malaysia Cruise</option>
-            <option value="Bahamas & Caribbean Cruise">Bahamas & Caribbean Cruise</option>
-            <option value="Mediterranean & Greek Isles">Mediterranean & Greek Isles</option>
-            <option value="Alaska Glaciers Voyage">Alaska Glaciers Voyage</option>
-            <option value="Antarctica Expedition Voyage">Antarctica Expedition Voyage</option>
-            <option value="Dubai & Arabian Gulf Cruise">Dubai & Arabian Gulf Cruise</option>
-            <option value="Europe River Cruise">Europe River Cruise</option>
-          </select>
+          <input type="text" name="destination" class="cruise-input" placeholder="Select Destination" required>
         </div>
 
         <!-- Travel Date * & No. of Travelers * -->

@@ -112,8 +112,9 @@ $route['franchise-admin/wallet_update']           = 'Franchise_admin/wallet_upda
 $route['franchise-admin/wallet-update']           = 'Franchise_admin/wallet_update';
 $route['franchise-admin/bookings']                = 'Franchise_admin/bookings';
 
-// Franchise Store Owner (B2B Portal)
+// Franchise Store Owner (B2B Portal) & Landing Page
 $route['franchise']                               = 'Franchise/index';
+$route['franchise/submit_enquiry']                = 'Franchise/submit_enquiry';
 $route['franchise/login']                         = 'Franchise/login';
 $route['franchise/logout']                        = 'Franchise/logout';
 $route['franchise/flight']                        = 'Franchise/flight';

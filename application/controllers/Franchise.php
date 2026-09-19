@@ -38,6 +38,133 @@ class Franchise extends CI_Controller {
     }
 
     // =========================================================================
+    // 0. FRANCHISE PUBLIC LANDING PAGE & ENQUIRY
+    // =========================================================================
+    public function index() {
+        $data['title'] = "Voyogo Franchise Opportunity - Travel Together GROW BIGGER";
+        $data['page_title'] = "Franchise Opportunity - Voyogo";
+        $data['active_page'] = "franchise";
+        $this->load->view('includes/header', $data);
+        $this->load->view('franchise_landing', $data);
+        $this->load->view('includes/footer', $data);
+    }
+
+    public function submit_enquiry() {
+        if ($this->input->server('REQUEST_METHOD') !== 'POST') {
+            redirect('franchise');
+            return;
+        }
+
+        $client_name         = trim((string)$this->input->post('client_name'));
+        $country_code        = trim((string)$this->input->post('country_code')) ?: '+91';
+        $mobile_number       = trim((string)$this->input->post('mobile_number'));
+        $email               = trim((string)$this->input->post('email'));
+        $otp                 = trim((string)$this->input->post('otp'));
+        $city                = trim((string)$this->input->post('city'));
+        $state               = trim((string)$this->input->post('state'));
+        $preferred_location  = trim((string)$this->input->post('preferred_location'));
+        $own_business        = trim((string)$this->input->post('own_business')) ?: 'No';
+        $current_profession  = trim((string)$this->input->post('current_profession'));
+        $start_timeline      = trim((string)$this->input->post('start_timeline')) ?: 'Immediately';
+        $previous_franchise  = trim((string)$this->input->post('previous_franchise')) ?: 'No';
+        $association_member  = trim((string)$this->input->post('association_member')) ?: 'No';
+        
+        $associations_input  = $this->input->post('associations');
+        $associations_list   = is_array($associations_input) ? $associations_input : array();
+        $other_association   = trim((string)$this->input->post('other_association'));
+        if (!empty($other_association)) {
+            $associations_list[] = 'Other: ' . $other_association;
+        }
+        $associations_str    = implode(', ', $associations_list);
+
+        $hear_about_us       = trim((string)$this->input->post('hear_about_us')) ?: 'Website';
+        $message             = trim((string)$this->input->post('message'));
+
+        if (empty($client_name) || empty($mobile_number)) {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(array('status' => 'error', 'message' => 'Please provide your name and mobile number.'));
+                return;
+            }
+            $this->session->set_flashdata('error_msg', 'Please provide your name and mobile number.');
+            redirect('franchise');
+            return;
+        }
+
+        if ($country_code && $mobile_number && strpos($mobile_number, '+') !== 0) {
+            $formatted_phone = $country_code . ' ' . $mobile_number;
+        } else {
+            $formatted_phone = $mobile_number;
+        }
+
+        // Auto-create franchise_enquiries table if it doesn't exist
+        $this->db->query("CREATE TABLE IF NOT EXISTS `franchise_enquiries` (
+            `id` INT AUTO_INCREMENT PRIMARY KEY,
+            `client_name` VARCHAR(191) NOT NULL,
+            `mobile_number` VARCHAR(50) NOT NULL,
+            `email` VARCHAR(191) DEFAULT NULL,
+            `otp` VARCHAR(20) DEFAULT NULL,
+            `city` VARCHAR(191) DEFAULT NULL,
+            `state` VARCHAR(100) DEFAULT NULL,
+            `preferred_location` VARCHAR(255) DEFAULT NULL,
+            `own_business` VARCHAR(20) DEFAULT 'No',
+            `current_profession` VARCHAR(191) DEFAULT NULL,
+            `start_timeline` VARCHAR(100) DEFAULT NULL,
+            `previous_franchise` VARCHAR(20) DEFAULT 'No',
+            `association_member` VARCHAR(20) DEFAULT 'No',
+            `associations` TEXT DEFAULT NULL,
+            `hear_about_us` VARCHAR(100) DEFAULT NULL,
+            `message` TEXT DEFAULT NULL,
+            `status` VARCHAR(50) DEFAULT 'New',
+            `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+        $enquiry_data = array(
+            'client_name'        => $client_name,
+            'mobile_number'      => $formatted_phone,
+            'email'              => $email,
+            'otp'                => $otp,
+            'city'               => $city,
+            'state'              => $state,
+            'preferred_location' => $preferred_location,
+            'own_business'       => $own_business,
+            'current_profession' => $current_profession,
+            'start_timeline'     => $start_timeline,
+            'previous_franchise' => $previous_franchise,
+            'association_member' => $association_member,
+            'associations'       => $associations_str,
+            'hear_about_us'      => $hear_about_us,
+            'message'            => $message,
+            'status'             => 'New',
+            'created_at'         => date('Y-m-d H:i:s')
+        );
+
+        $this->db->insert('franchise_enquiries', $enquiry_data);
+
+        // Also insert into generic enquiries table if it exists
+        if ($this->db->table_exists('enquiries')) {
+            $this->db->insert('enquiries', array(
+                'name'         => $client_name,
+                'email'        => $email,
+                'phone'        => $formatted_phone,
+                'package_name' => 'Franchise Opportunity (' . ($city ?: 'All India') . ')',
+                'message'      => "State: {$state} | Location: {$preferred_location} | Timeline: {$start_timeline} | Business: {$current_profession} | Associations: {$associations_str} | Note: {$message}",
+                'created_at'   => date('Y-m-d H:i:s')
+            ));
+        }
+
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array(
+                'status'  => 'success',
+                'message' => 'Thank you! Your Franchise Enquiry has been submitted successfully. Our franchise development team will contact you shortly.'
+            ));
+            return;
+        }
+
+        $this->session->set_flashdata('success_msg', 'Thank you! Your Franchise Enquiry has been submitted successfully. Our franchise development team will contact you shortly.');
+        redirect('franchise');
+    }
+
+    // =========================================================================
     // 1. AUTHENTICATION
     // =========================================================================
     public function login() {
@@ -86,7 +213,7 @@ class Franchise extends CI_Controller {
     // =========================================================================
     // 2. STORE B2B DASHBOARD (FLIGHT SEARCH MATCHING USER'S SCREENSHOT)
     // =========================================================================
-    public function index() {
+    public function dashboard() {
         redirect('franchise/flight');
     }
 

@@ -144,17 +144,7 @@
                     <label class="ref-label">Location <span class="ref-req">*</span></label>
                     <div class="ref-input-box">
                       <i class="fa-solid fa-location-dot ref-input-icon"></i>
-                      <select name="location" class="ref-select" required>
-                        <option value="" disabled selected>Select City</option>
-                        <option value="Mumbai">Mumbai</option>
-                        <option value="Delhi NCR">Delhi NCR</option>
-                        <option value="Bangalore">Bangalore</option>
-                        <option value="Chennai">Chennai</option>
-                        <option value="Hyderabad">Hyderabad</option>
-                        <option value="Kolkata">Kolkata</option>
-                        <option value="Pune">Pune</option>
-                        <option value="Ahmedabad">Ahmedabad</option>
-                      </select>
+                      <input type="text" name="location" class="ref-input" placeholder="Select City" required>
                     </div>
                   </div>
 

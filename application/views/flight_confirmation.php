@@ -195,7 +195,7 @@
 
             <!-- Footer terms -->
             <div style="background: #f1f5f9; padding: 16px 32px; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0;">
-                * Terms & Conditions: Boarding closes 25 minutes prior to departure. Passengers must carry photo ID. Voyogo 24x7 Customer Support: 1800-123-4567.
+                * Terms & Conditions: Boarding closes 25 minutes prior to departure. Passengers must carry photo ID. Voyogo 24x7 Customer Support: +91 8098999096.
             </div>
 
         </div>

@@ -145,19 +145,7 @@
                 <div class="ref-form-group">
                   <div class="ref-input-box">
                     <i class="fa-solid fa-location-dot ref-input-icon"></i>
-                    <select name="destination" class="ref-select" required>
-                      <option value="" disabled selected>Destination Country *</option>
-                      <option value="Schengen Visa (France, Germany, Italy, etc.)">Schengen Visa (Europe)</option>
-                      <option value="United Kingdom (UK)">United Kingdom (UK)</option>
-                      <option value="United States of America (USA)">United States of America (USA)</option>
-                      <option value="Canada">Canada</option>
-                      <option value="Australia">Australia</option>
-                      <option value="New Zealand">New Zealand</option>
-                      <option value="Dubai / United Arab Emirates">Dubai / United Arab Emirates</option>
-                      <option value="Singapore">Singapore</option>
-                      <option value="Thailand">Thailand</option>
-                      <option value="Japan">Japan</option>
-                    </select>
+                    <input type="text" name="destination" class="ref-input" placeholder="Destination Country *" required>
                   </div>
                 </div>
 
@@ -305,36 +293,26 @@
       <div class="visa-grid" id="visaGrid">
         <!-- AC Cards -->
         <div class="visa-card-item" onclick="openEnquiryModal('Malaysia AC Visa')">
-          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/jpeg/voyogo malaysia.png'); ?>');">
-            <span class="visa-badge ac">AC</span>
-          </div>
+          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/jpeg/voyogo malaysia.png'); ?>');"></div>
           <div class="visa-card-body">
             <h3 class="visa-card-title">Malaysia AC</h3>
             <div class="visa-card-info"><span>Rs.500</span></div>
           </div>
         </div>
         <div class="visa-card-item" onclick="openEnquiryModal('Sri Lanka AC Visa')">
-          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo srilanka.png'); ?>');">
-            <span class="visa-badge ac">AC</span>
-          </div>
+          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo srilanka.png'); ?>');"></div>
           <div class="visa-card-body"><h3 class="visa-card-title">Sri Lanka AC</h3><div class="visa-card-info"><span>Rs.500</span></div></div>
         </div>
         <div class="visa-card-item" onclick="openEnquiryModal('Thailand AC Visa')">
-          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo thailand.png'); ?>');">
-            <span class="visa-badge ac">AC</span>
-          </div>
+          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo thailand.png'); ?>');"></div>
           <div class="visa-card-body"><h3 class="visa-card-title">Thailand AC</h3><div class="visa-card-info"><span>Rs.500</span></div></div>
         </div>
         <div class="visa-card-item" onclick="openEnquiryModal('Hong Kong AC Visa')">
-          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/jpeg/voyogo hong kong.png'); ?>');">
-            <span class="visa-badge ac">AC</span>
-          </div>
+          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/voyogo hong kong.png'); ?>');"></div>
           <div class="visa-card-body"><h3 class="visa-card-title">Hong Kong AC</h3><div class="visa-card-info"><span>Rs.500</span></div></div>
         </div>
         <div class="visa-card-item" onclick="openEnquiryModal('Philippines Health Arrival Card')">
-          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/jpeg/voyogo philipines.png'); ?>');">
-            <span class="visa-badge ac">AC</span>
-          </div>
+          <div class="visa-card-img" style="background-image: url('<?php echo base_url('assets/images/jpeg/voyogo philipines.png'); ?>');"></div>
           <div class="visa-card-body"><h3 class="visa-card-title">Philippines Health Arrival Card</h3><div class="visa-card-info"><span>Rs.500</span></div></div>
         </div>
 

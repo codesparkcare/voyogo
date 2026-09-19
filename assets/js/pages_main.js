@@ -1075,23 +1075,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const domData = {
     'East India': [
-      { title: 'Darjeeling Special', badge: '5D & 4N', route: 'Darjeeling (4)', oldPrice: '₹25,000/-', price: '₹22,000/-', theme: 'pkg-card-olive', bgImage: 'assets/images/voyogo dorjeeing.png' },
-      { title: 'Meghalaya Explorer', badge: '5D & 4N', route: 'Shillong (3) → Cherrapunji (1)', oldPrice: '₹25,000/-', price: '₹22,000/-', theme: 'pkg-card-blue', bgImage: 'assets/images/voyogo meghalaya.png' },
-      { title: 'Bhutan Wonders', badge: '6D & 5N', route: 'Paro (3) → Thimphu (2)', oldPrice: '₹70,000/-', price: '₹22,000/-', theme: 'pkg-card-grey', bgImage: 'assets/images/voyogo bhutan.png' }
+      { title: 'Meghalaya Explorer', badge: '5D & 4N', route: 'Shillong (3) → Cherrapunji (1)', oldPrice: 'Starting @', price: '₹22,000/-', theme: 'pkg-card-blue', bgImage: 'assets/images/voyogo meghalaya.png' },
+      { title: 'Darjeeling Special', badge: '5D & 4N', route: 'Darjeeling (4)', oldPrice: 'Starting @', price: '₹22,000/-', theme: 'pkg-card-olive', bgImage: 'assets/images/voyogo dorjeeing.png' }
     ],
     'North India': [
-      { title: 'Shimla & Manali Escapade', badge: '5D & 4N', route: 'Shimla (2) → Manali (2)', oldPrice: '₹20,000/-', price: '₹17,000/-', theme: 'pkg-card-olive', bgImage: 'assets/images/voyogo simla & manali.png' },
-      { title: 'Kashmir Heavenly Gateway', badge: '5D & 4N', route: 'Srinagar (2) → Gulmarg (2)', oldPrice: '₹25,000/-', price: '₹22,000/-', theme: 'pkg-card-blue', bgImage: 'assets/images/voyogo kashmir.png' },
-      { title: 'Golden Triangle Special', badge: '5D & 4N', route: 'Delhi (2) → Agra (1) → Jaipur (1)', oldPrice: '₹20,000/-', price: '₹17,000/-', theme: 'pkg-card-amber', bgImage: 'assets/images/voyogo golden triangle.png' }
+      { title: 'Shimla & Manali Escape', badge: '5D & 4N', route: 'Shimla (2) → Manali (2)', oldPrice: 'Starting @', price: '₹17,000/-', theme: 'pkg-card-olive', bgImage: 'assets/images/voyogo simla & manali.png' },
+      { title: 'Kashmir Heavenly Gateway', badge: '5D & 4N', route: 'Srinagar (2) → Gulmarg (2)', oldPrice: 'Starting @', price: '₹22,000/-', theme: 'pkg-card-blue', bgImage: 'assets/images/voyogo kashmir.png' },
+      { title: 'Golden Triangle Special', badge: '5D & 4N', route: 'Delhi (2) → Agra (1) → Jaipur (1)', oldPrice: 'Starting @', price: '₹17,000/-', theme: 'pkg-card-amber', bgImage: 'assets/images/voyogo golden triangle.png' },
+      { title: 'Royal Rajasthan Heritage', badge: '5D & 4N', route: 'Jaipur (2) → Udaipur (2)', oldPrice: 'Starting @', price: '₹20,000/-', theme: 'pkg-card-amber', bgImage: 'assets/images/voyogo rajasthan.png' }
     ],
-    'South India': [
-      { title: 'Andaman Island Paradise', badge: '5D & 4N', route: 'Port Blair (2) → Havelock (2)', oldPrice: '₹28,000/-', price: '₹25,000/-', theme: 'pkg-card-green', bgImage: 'assets/images/voyogo andaman.png' }
+    'West & Central India': [
+      { title: 'Royal Heritage of Central India', badge: '5D & 4N', route: 'Gwalior (2) → Khajuraho (2)', oldPrice: 'Starting @', price: '₹20,000/-', theme: 'pkg-card-amber', bgImage: 'assets/images/voyogo golden triangle.png' },
+      { title: 'Madhya Pradesh Explorer', badge: '5D & 4N', route: 'Bhopal (2) → Ujjain (1) → Indore (1)', oldPrice: 'Starting @', price: '₹18,000/-', theme: 'pkg-card-teal', bgImage: 'assets/images/voyogo rajasthan.png' },
+      { title: 'Goa Sun & Beach Retreat', badge: '5D & 4N', route: 'North Goa (2) → South Goa (2)', oldPrice: 'Starting @', price: '₹17,000/-', theme: 'pkg-card-teal', bgImage: 'assets/images/voyogo goa.png' }
     ],
-    'Central India': [
-      { title: 'Royal Rajasthan Express', badge: '5D & 4N', route: 'Jaipur (2) → Udaipur (2)', oldPrice: '₹23,000/-', price: '₹20,000/-', theme: 'pkg-card-amber', bgImage: 'assets/images/voyogo rajasthan.png' }
-    ],
-    'West India': [
-      { title: 'Goa Sun & Beach Retreat', badge: '5D & 4N', route: 'North Goa (2) → South Goa (2)', oldPrice: '₹20,000/-', price: '₹17,000/-', theme: 'pkg-card-teal', bgImage: 'assets/images/voyogo goa.png' }
+    'Island': [
+      { title: 'Andaman Island Paradise', badge: '5D & 4N', route: 'Port Blair (2) → Havelock (2)', oldPrice: 'Starting @', price: '₹25,000/-', theme: 'pkg-card-green', bgImage: 'assets/images/voyogo andaman.png' }
     ]
   };
 
@@ -1116,9 +1115,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function createPackageCardHTML(item) {
+    const bgUrl = item.bgImage.startsWith('http') || item.bgImage.startsWith('/') ? item.bgImage : ((window.VOYOGO_BASE_URL || '') + item.bgImage);
     return `
       <div class="package-card" onclick="openEnquiryModal('${item.title}')">
-        <div class="pkg-card-img" style="background-image: url('${item.bgImage}');">
+        <div class="pkg-card-img" style="background-image: url('${bgUrl}');">
           <span class="pkg-duration-badge">${item.badge}</span>
         </div>
         <div class="pkg-card-body">
@@ -1130,7 +1130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="pkg-price-strip">
           <div class="pkg-price-box">
-            <span class="pkg-old-price">${item.oldPrice}</span>
+            <span class="pkg-old-price">${item.oldPrice || 'Starting @'}</span>
             <span class="pkg-new-price">${item.price}</span>
           </div>
           <button class="btn-view-details">View Details</button>
@@ -1229,85 +1229,98 @@ document.addEventListener('DOMContentLoaded', () => {
     { country: 'Malaysia AC', badge: 'AC', badgeClass: 'ac', price: 'Rs.500', bgImage: 'assets/images/jpeg/voyogo malaysia.png' },
     { country: 'Sri Lanka AC', badge: 'AC', badgeClass: 'ac', price: 'Rs.500', bgImage: 'assets/images/voyogo srilanka.png' },
     { country: 'Thailand AC', badge: 'AC', badgeClass: 'ac', price: 'Rs.500', bgImage: 'assets/images/voyogo thailand.png' },
-    { country: 'Hong Kong AC', badge: 'AC', badgeClass: 'ac', price: 'Rs.500', bgImage: 'assets/images/jpeg/voyogo hong kong.png' },
+    { country: 'Hong Kong AC', badge: 'AC', badgeClass: 'ac', price: 'Rs.500', bgImage: 'assets/images/voyogo hong kong.png' },
     { country: 'Philippines Health Arrival Card', badge: 'AC', badgeClass: 'ac', price: 'Rs.500', bgImage: 'assets/images/jpeg/voyogo philipines.png' },
-    { country: 'Bali E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,500', bgImage: 'assets/images/voyogo bali .png' },
-    { country: 'Bali Levy', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/jpeg/voyogo bali levi.png' },
+    { country: 'Singapore Arrival Card', badge: 'AC', badgeClass: 'ac', price: 'Rs.500', bgImage: 'assets/images/voyogo singapore.png' },
+    { country: 'Bali E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,500', bgImage: 'assets/images/voyogo bali.png' },
+    { country: 'Bali Levy', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/voyogo bali levy.png' },
     { country: 'Bali Arrival Card', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.300', bgImage: 'assets/images/jpeg/voyogo bali levi.png' },
-    { country: 'Vietnam E-VISA + Arrival Card', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,000', bgImage: 'assets/images/jpeg/voyogo vietnam.png' },
-    { country: 'Egypt E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/jpeg/voyogo egypt.png' },
+    { country: 'Vietnam E-VISA + Arrival Card', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,000', bgImage: 'assets/images/voyogo vietnom.png' },
+    { country: 'Egypt E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/voyogo egypt.png' },
     { country: 'Dubai E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo dubai.png' },
     { country: 'Kazakhstan', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/voyogo almaty.png' },
-    { country: 'Dubai Adult E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,500', bgImage: 'assets/images/voyogo dubai.png' },
-    { country: 'Dubai Child E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/voyogo dubai.png' },
+    { country: 'Dubai Adult E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,500', bgImage: 'assets/images/voyogo dubai e- visa.png' },
+    { country: 'Dubai Child E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/voyogo dubai clint e- visa.png' },
+    { country: 'Australia ETA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,500', bgImage: 'assets/images/voyogo australia.png' },
     { country: 'UK E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.23,000', bgImage: 'assets/images/jpeg/voyogo uk.png' },
     { country: 'Kenya E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,000', bgImage: 'assets/images/voyogo kenya.png' },
-    { country: 'Tanzania E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/jpeg/voyogo tanzania.png' },
-    { country: 'Azerbaijan E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,500', bgImage: 'assets/images/jpeg/voyogo azerbaijan.png' },
-    { country: 'Zimbabwe E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/jpeg/voyogo zimbabwe.png' },
-    { country: 'Georgia E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2,000', bgImage: 'assets/images/jpeg/voyogo azerbaijan.png' },
-    { country: 'Rwanda E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,500', bgImage: 'assets/images/voyogo south africe.png' },
-    { country: 'Uganda E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,500', bgImage: 'assets/images/voyogo south africe.png' },
-    { country: 'Madagascar E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo south africe.png' },
-    { country: 'Myanmar E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,500', bgImage: 'assets/images/voyogo thailand.png' },
-    { country: 'Austria E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.24,500', bgImage: 'assets/images/voyogo europe.png' },
-    { country: 'New Zealand E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.24,500', bgImage: 'assets/images/voyogo europe.png' },
-    { country: 'Zimbabwe ETA', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/jpeg/voyogo zimbabwe.png' },
-    { country: 'Albania', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2-3', bgImage: 'assets/images/voyogo europe.png' },
+    { country: 'Tanzania E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/voyogo tanzania.png' },
+    { country: 'Azerbaijan E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,500', bgImage: 'assets/images/voyogo Azerbaijan.png' },
+    { country: 'Zimbabwe E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/voyogo zimbabw.png' },
+    { country: 'Georgia E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2,000', bgImage: 'assets/images/voyogo georgia.png' },
+    { country: 'Rwanda E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,500', bgImage: 'assets/images/voyogo rwanda.png' },
+    { country: 'Uganda E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,500', bgImage: 'assets/images/voyogo usand.png' },
+    { country: 'Madagascar E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo madagascar.png' },
+    { country: 'Myanmar E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,500', bgImage: 'assets/images/voyogo myanmar.png' },
+    { country: 'Austria E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.24,500', bgImage: 'assets/images/voyogo austria.png' },
+    { country: 'New Zealand E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.24,500', bgImage: 'assets/images/voyogo newzealand.png' },
+    { country: 'Zimbabwe ETA', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/voyogo zimbabw.png' },
+    { country: 'Albania', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2-3', bgImage: 'assets/images/voyogo albania.png' },
     { country: 'BHUTAN Permit', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo bhutan.png' },
-    { country: 'Myanmar E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,000', bgImage: 'assets/images/voyogo thailand.png' },
     { country: 'South Korea E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo south korea.png' },
-    { country: 'Laos E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,500', bgImage: 'assets/images/jpeg/voyogo vietnam.png' },
+    { country: 'Laos E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,500', bgImage: 'assets/images/voyogo Loas.png' },
     { country: 'Turkey E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/jpeg/voyogo turkey.png' },
-    { country: 'China Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.10,000', bgImage: 'assets/images/jpeg/voyogo china.png' },
+    { country: 'Singapore E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2,500', bgImage: 'assets/images/voyogo singapore.png' },
+    { country: 'Russia E-VISA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,000', bgImage: 'assets/images/voyogo russia.png' },
+    { country: 'China Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.10,000', bgImage: 'assets/images/voyogo china.png' },
     { country: 'China Express Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.14,000', bgImage: 'assets/images/jpeg/voyogo china express.png' },
     { country: 'Japan Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.3,000', bgImage: 'assets/images/voyogo japan.png' },
     { country: 'Turkey Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.24,000', bgImage: 'assets/images/jpeg/voyogo turkey.png' },
-    { country: 'Canada Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.20,000', bgImage: 'assets/images/jpeg/voyogo canada.png' },
-    { country: 'Schengen Visa Specialist Only', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.14,000', bgImage: 'assets/images/voyogo europe.png' },
-    { country: 'USA Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.35,000', bgImage: 'assets/images/voyogo usa.png' }
+    { country: 'Canada Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.20,000', bgImage: 'assets/images/voyogo canada with alaska.png' },
+    { country: 'Schengen Visa Specialist Only', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.14,000', bgImage: 'assets/images/voyogo schengan.png' },
+    { country: 'USA Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.35,000', bgImage: 'assets/images/voyogo usa.png' },
+    { country: 'Australia Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.18,000', bgImage: 'assets/images/voyogo australia.png' },
+    { country: 'Russia Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.12,000', bgImage: 'assets/images/voyogo russia.png' },
+    { country: 'South Africa Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.8,500', bgImage: 'assets/images/voyogo south africe.png' }
   ];
 
   // E-VISA and STICKER VISA tab data with correct entries
   const visaData = {
     'E-VISA': [
-      { country: 'Bali E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,500', bgImage: 'assets/images/voyogo bali .png' },
-      { country: 'Bali-Levy', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/jpeg/voyogo bali levi.png' },
+      { country: 'Bali E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,500', bgImage: 'assets/images/voyogo bali.png' },
+      { country: 'Bali-Levy', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/voyogo bali levy.png' },
       { country: 'Bali Arrival Card', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.300', bgImage: 'assets/images/jpeg/voyogo bali levi.png' },
-      { country: 'Vietnam E-Visa + Arrival Card', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,000', bgImage: 'assets/images/jpeg/voyogo vietnam.png' },
-      { country: 'Egypt E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/jpeg/voyogo egypt.png' },
+      { country: 'Vietnam E-Visa + Arrival Card', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,000', bgImage: 'assets/images/voyogo vietnom.png' },
+      { country: 'Egypt E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/voyogo egypt.png' },
       { country: 'Dubai E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo dubai.png' },
       { country: 'Kazakhstan', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/voyogo almaty.png' },
-      { country: 'Dubai Adult E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,500', bgImage: 'assets/images/voyogo dubai.png' },
-      { country: 'Dubai Child E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/voyogo dubai.png' },
+      { country: 'Dubai Adult E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,500', bgImage: 'assets/images/voyogo dubai e- visa.png' },
+      { country: 'Dubai Child E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/voyogo dubai clint e- visa.png' },
+      { country: 'Australia ETA', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,500', bgImage: 'assets/images/voyogo australia.png' },
       { country: 'UK E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.23,000', bgImage: 'assets/images/jpeg/voyogo uk.png' },
       { country: 'Kenya E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,000', bgImage: 'assets/images/voyogo kenya.png' },
-      { country: 'Tanzania E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/jpeg/voyogo tanzania.png' },
-      { country: 'Azerbaijan E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,500', bgImage: 'assets/images/jpeg/voyogo azerbaijan.png' },
-      { country: 'Zimbabwe E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/jpeg/voyogo zimbabwe.png' },
-      { country: 'Georgia E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2,000', bgImage: 'assets/images/jpeg/voyogo azerbaijan.png' },
-      { country: 'Rwanda E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,500', bgImage: 'assets/images/voyogo south africe.png' },
-      { country: 'Uganda E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,500', bgImage: 'assets/images/voyogo south africe.png' },
-      { country: 'Madagascar E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo south africe.png' },
-      { country: 'Myanmar E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,500', bgImage: 'assets/images/voyogo thailand.png' },
-      { country: 'Austria E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.24,500', bgImage: 'assets/images/voyogo europe.png' },
-      { country: 'New Zealand E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.24,500', bgImage: 'assets/images/voyogo europe.png' },
-      { country: 'Zimbabwe ETA', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/jpeg/voyogo zimbabwe.png' },
-      { country: 'Albania', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2-3', bgImage: 'assets/images/voyogo europe.png' },
+      { country: 'Tanzania E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/voyogo tanzania.png' },
+      { country: 'Azerbaijan E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.3,500', bgImage: 'assets/images/voyogo Azerbaijan.png' },
+      { country: 'Zimbabwe E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.4,000', bgImage: 'assets/images/voyogo zimbabw.png' },
+      { country: 'Georgia E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2,000', bgImage: 'assets/images/voyogo georgia.png' },
+      { country: 'Rwanda E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,500', bgImage: 'assets/images/voyogo rwanda.png' },
+      { country: 'Uganda E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,500', bgImage: 'assets/images/voyogo usand.png' },
+      { country: 'Madagascar E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo madagascar.png' },
+      { country: 'Myanmar E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,500', bgImage: 'assets/images/voyogo myanmar.png' },
+      { country: 'Austria E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.24,500', bgImage: 'assets/images/voyogo austria.png' },
+      { country: 'New Zealand E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.24,500', bgImage: 'assets/images/voyogo newzealand.png' },
+      { country: 'Zimbabwe ETA', badge: 'E-VISA', badgeClass: 'e-visa', price: '-', bgImage: 'assets/images/voyogo zimbabw.png' },
+      { country: 'Albania', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2-3', bgImage: 'assets/images/voyogo albania.png' },
       { country: 'BHUTAN Permit', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo bhutan.png' },
-      { country: 'Myanmar E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,000', bgImage: 'assets/images/voyogo thailand.png' },
       { country: 'South Korea E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/voyogo south korea.png' },
-      { country: 'Laos E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,500', bgImage: 'assets/images/jpeg/voyogo vietnam.png' },
-      { country: 'Turkey E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/jpeg/voyogo turkey.png' }
+      { country: 'Laos E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.7,500', bgImage: 'assets/images/voyogo Loas.png' },
+      { country: 'Turkey E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.5,000', bgImage: 'assets/images/jpeg/voyogo turkey.png' },
+      { country: 'Singapore E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.2,500', bgImage: 'assets/images/voyogo singapore.png' },
+      { country: 'Russia E-Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.6,000', bgImage: 'assets/images/voyogo russia.png' },
+      { country: 'Nepal Permit / Visa', badge: 'E-VISA', badgeClass: 'e-visa', price: 'Rs.1,500', bgImage: 'assets/images/voyogo nepal.png' }
     ],
     'STICKER VISA': [
-      { country: 'China', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.10,000', bgImage: 'assets/images/jpeg/voyogo china.png' },
+      { country: 'China', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.10,000', bgImage: 'assets/images/voyogo china.png' },
       { country: 'China Express', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.14,000', bgImage: 'assets/images/jpeg/voyogo china express.png' },
       { country: 'Japan', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.3,000', bgImage: 'assets/images/voyogo japan.png' },
       { country: 'Turkey', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.24,000', bgImage: 'assets/images/jpeg/voyogo turkey.png' },
-      { country: 'Canada Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.20,000', bgImage: 'assets/images/jpeg/voyogo canada.png' },
-      { country: 'Schengen Visa Specialist Only', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.14,000', bgImage: 'assets/images/voyogo europe.png' },
-      { country: 'USA', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.35,000', bgImage: 'assets/images/voyogo usa.png' }
+      { country: 'Canada Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.20,000', bgImage: 'assets/images/voyogo canada with alaska.png' },
+      { country: 'Schengen Visa Specialist Only', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.14,000', bgImage: 'assets/images/voyogo schengan.png' },
+      { country: 'USA', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.35,000', bgImage: 'assets/images/voyogo usa.png' },
+      { country: 'Australia Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.18,000', bgImage: 'assets/images/voyogo australia.png' },
+      { country: 'Russia Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.12,000', bgImage: 'assets/images/voyogo russia.png' },
+      { country: 'South Africa Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.8,500', bgImage: 'assets/images/voyogo south africe.png' },
+      { country: 'UK Sticker Visa', badge: 'STICKER', badgeClass: 'sticker', price: 'Rs.22,000', bgImage: 'assets/images/jpeg/voyogo uk.png' }
     ]
   };
 
@@ -1321,9 +1334,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       return `
       <div class="visa-card-item" onclick="openEnquiryModal('${item.country}')">
-        <div class="visa-card-img" style="background-image: url('${img}');">
-          ${item.badge ? `<span class="visa-badge ${item.badgeClass || ''}">${item.badge}</span>` : ''}
-        </div>
+        <div class="visa-card-img" style="background-image: url('${img}');"></div>
         <div class="visa-card-body">
           <h3 class="visa-card-title">${item.country}</h3>
           <div class="visa-card-info"><span>${item.price}</span></div>
