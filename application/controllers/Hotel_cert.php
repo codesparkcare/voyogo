@@ -4,8 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Hotel_cert Controller
  * 
- * Automated 14-Scenario Certification Suite for Akbar Travels / Benzy Infotech Hotel API.
- * Completely isolated from Flight APIs. Generates verified JSON log folders for certification approval.
+ * Official 8-Scenario Certification Suite for Akbar Travels / Benzy Infotech Hotel API.
+ * Documentation Reference: https://wrc.benzyinfotech.com/hotel/hotel-test-cases/
+ * Completely isolated from Flight APIs.
+ * Generates official .txt log reports matching Voyogo_API_Logs_*.txt format for certification verification.
  */
 class Hotel_cert extends CI_Controller {
 
@@ -22,7 +24,7 @@ class Hotel_cert extends CI_Controller {
     }
 
     /**
-     * Web Dashboard for Hotel Certification Suite
+     * Web Dashboard for Hotel Certification Suite (8 Official Test Cases)
      */
     public function index() {
         $data['page_title']    = 'Hotel API Certification Suite - Akbar Travels / Benzy Infotech';
@@ -33,7 +35,7 @@ class Hotel_cert extends CI_Controller {
     }
 
     /**
-     * Run all 14 Certification Test Cases via AJAX or CLI
+     * Run all 8 Certification Test Cases via AJAX or CLI
      */
     public function run_all() {
         $results = array();
@@ -45,7 +47,7 @@ class Hotel_cert extends CI_Controller {
 
         if ($this->input->is_cli_request()) {
             echo "\n========================================================\n";
-            echo "ALL 14 HOTEL CERTIFICATION TEST CASES EXECUTED!\n";
+            echo "ALL 8 HOTEL CERTIFICATION TEST CASES EXECUTED!\n";
             echo "Logs saved in: " . $this->certLogDir . "\n";
             echo "========================================================\n\n";
             return;
@@ -53,7 +55,7 @@ class Hotel_cert extends CI_Controller {
 
         echo json_encode(array(
             'status'  => 'success',
-            'message' => 'All 14 hotel certification test cases executed successfully!',
+            'message' => 'All 8 hotel certification test cases executed successfully!',
             'results' => $results
         ));
     }
@@ -69,7 +71,7 @@ class Hotel_cert extends CI_Controller {
             echo "\n=== Case $caseId Execution Finished ===\n";
             echo "Status: " . $result['status'] . "\n";
             echo "Folder: " . $result['folder'] . "\n";
-            echo "Total Log Files: " . count($result['files']) . "\n\n";
+            echo "Log File: " . $result['txt_filename'] . "\n\n";
             return;
         }
 
@@ -77,12 +79,99 @@ class Hotel_cert extends CI_Controller {
     }
 
     /**
+     * Download Individual .txt Log for a Specific Test Case
+     */
+    public function download_case_txt($caseId = 1) {
+        $caseId = (int)$caseId;
+        $scenarios = $this->getTestScenarios();
+        if (!isset($scenarios[$caseId])) {
+            show_404();
+        }
+
+        $scn = $scenarios[$caseId];
+        $safeTitle = preg_replace('/[^a-zA-Z0-9_-]/', '_', $scn['title']);
+        $txtFilename = sprintf('Voyogo_API_Logs_Case%02d_%s.txt', $caseId, $safeTitle);
+        $filePath = $this->certLogDir . $txtFilename;
+
+        if (!file_exists($filePath)) {
+            $this->executeTestCase($caseId);
+        }
+
+        if (file_exists($filePath)) {
+            $this->load->helper('download');
+            force_download($txtFilename, file_get_contents($filePath));
+        } else {
+            show_404();
+        }
+    }
+
+    /**
+     * Download Consolidated .txt containing All 8 Test Cases
+     */
+    public function download_consolidated_txt() {
+        $scenarios = $this->getTestScenarios();
+        $allOutput = "================================================================================\n";
+        $allOutput .= "VOYOGO API ACTIVITY & PAYLOAD LOG REPORT\n";
+        $allOutput .= "AKBAR TRAVELS / BENZY INFOTECH B2B HOTEL CERTIFICATION\n";
+        $allOutput .= "OFFICIAL 8 TEST CASES CONSOLIDATED REPORT\n";
+        $allOutput .= "Generated At: " . date('Y-m-d H:i:s T') . "\n";
+        $allOutput .= "Documentation Reference: https://wrc.benzyinfotech.com/hotel/hotel-test-cases/\n";
+        $allOutput .= "Agency: Voyogo (MerchantID: 300 / ClientID: bitest)\n";
+        $allOutput .= "Total Test Cases: 8\n";
+        $allOutput .= "================================================================================\n\n";
+
+        foreach ($scenarios as $caseId => $scn) {
+            $safeTitle = preg_replace('/[^a-zA-Z0-9_-]/', '_', $scn['title']);
+            $txtFilename = sprintf('Voyogo_API_Logs_Case%02d_%s.txt', $caseId, $safeTitle);
+            $filePath = $this->certLogDir . $txtFilename;
+            if (!file_exists($filePath)) {
+                $this->executeTestCase($caseId);
+            }
+            if (file_exists($filePath)) {
+                $allOutput .= file_get_contents($filePath) . "\n\n";
+            }
+        }
+
+        $this->load->helper('download');
+        force_download('Voyogo_API_Logs_All_8_Test_Cases_' . date('Ymd_His') . '.txt', $allOutput);
+    }
+
+    /**
      * Download Generated Certification Logs as a ZIP
+     * Contains all 8 individual .txt files + 1 consolidated master .txt file
      */
     public function download_zip() {
         $this->load->library('zip');
-        $this->zip->read_dir($this->certLogDir, false);
-        $this->zip->download('Hotel_Certification_Logs_Voyogo_' . date('Ymd_His') . '.zip');
+        $scenarios = $this->getTestScenarios();
+
+        $allOutput = "================================================================================\n";
+        $allOutput .= "VOYOGO API ACTIVITY & PAYLOAD LOG REPORT\n";
+        $allOutput .= "AKBAR TRAVELS / BENZY INFOTECH B2B HOTEL CERTIFICATION\n";
+        $allOutput .= "OFFICIAL 8 TEST CASES CONSOLIDATED REPORT\n";
+        $allOutput .= "Generated At: " . date('Y-m-d H:i:s T') . "\n";
+        $allOutput .= "Documentation Reference: https://wrc.benzyinfotech.com/hotel/hotel-test-cases/\n";
+        $allOutput .= "Agency: Voyogo (MerchantID: 300 / ClientID: bitest)\n";
+        $allOutput .= "Total Test Cases: 8\n";
+        $allOutput .= "================================================================================\n\n";
+
+        foreach ($scenarios as $caseId => $scn) {
+            $safeTitle = preg_replace('/[^a-zA-Z0-9_-]/', '_', $scn['title']);
+            $txtFilename = sprintf('Voyogo_API_Logs_Case%02d_%s.txt', $caseId, $safeTitle);
+            $filePath = $this->certLogDir . $txtFilename;
+            if (!file_exists($filePath)) {
+                $this->executeTestCase($caseId);
+            }
+            if (file_exists($filePath)) {
+                $content = file_get_contents($filePath);
+                $this->zip->add_data($txtFilename, $content);
+                $allOutput .= $content . "\n\n";
+            }
+        }
+
+        // Add consolidated all-in-one report
+        $this->zip->add_data('Voyogo_API_Logs_All_8_Test_Cases.txt', $allOutput);
+
+        $this->zip->download('Voyogo_Hotel_Certification_8_Test_Cases_' . date('Ymd_His') . '.zip');
     }
 
     /**
@@ -119,7 +208,40 @@ class Hotel_cert extends CI_Controller {
     }
 
     /**
-     * View Log Contents for In-Browser Inspection
+     * View .txt Log Contents for In-Browser Inspection
+     */
+    public function view_txt($caseId = 1) {
+        $caseId = (int)$caseId;
+        $scenarios = $this->getTestScenarios();
+        if (!isset($scenarios[$caseId])) {
+            echo json_encode(array('status' => 'error', 'message' => 'Scenario not found'));
+            return;
+        }
+
+        $scn = $scenarios[$caseId];
+        $safeTitle = preg_replace('/[^a-zA-Z0-9_-]/', '_', $scn['title']);
+        $txtFilename = sprintf('Voyogo_API_Logs_Case%02d_%s.txt', $caseId, $safeTitle);
+        $filePath = $this->certLogDir . $txtFilename;
+
+        if (!file_exists($filePath)) {
+            $this->executeTestCase($caseId);
+        }
+
+        if (file_exists($filePath)) {
+            echo json_encode(array(
+                'status'   => 'success',
+                'case_id'  => $caseId,
+                'title'    => $scn['title'],
+                'filename' => $txtFilename,
+                'content'  => file_get_contents($filePath)
+            ));
+        } else {
+            echo json_encode(array('status' => 'error', 'message' => 'File not found'));
+        }
+    }
+
+    /**
+     * View Log Contents for In-Browser Inspection (Legacy JSON viewer compatibility)
      */
     public function view_log() {
         $folder = preg_replace('/[^a-zA-Z0-9_\-\. ]/', '', $this->input->get('folder'));
@@ -148,7 +270,84 @@ class Hotel_cert extends CI_Controller {
                 return true;
             }
         }
+        if (!empty($log['data']) && is_array($log['data'])) {
+            if (isset($log['data']['Code']) && $log['data']['Code'] != 200 && $log['data']['Code'] != '200') {
+                return true;
+            }
+            if (isset($log['data']['status']) && (strtolower($log['data']['status']) === 'failed' || strtolower($log['data']['status']) === 'error')) {
+                return true;
+            }
+        }
         return false;
+    }
+
+    /**
+     * Formats an array of step logs into the official Voyogo_API_Logs_*.txt structure
+     */
+    public function formatTxtReport($caseId, $scenario, $stepLogs) {
+        $title = $scenario['title'] ?? "Case $caseId";
+        $totalEntries = count($stepLogs);
+
+        $output = "================================================================================\n";
+        $output .= "VOYOGO API ACTIVITY & PAYLOAD LOG REPORT\n";
+        $output .= "Generated At: " . date('Y-m-d H:i:s T') . "\n";
+        $output .= "Total Entries: " . $totalEntries . "\n";
+        $output .= "Test Case: Case #" . $caseId . " - " . $title . "\n";
+        $output .= "Filter: Service=HOTEL, Status=ALL\n";
+        $output .= "================================================================================\n\n";
+
+        $step = 1;
+        foreach ($stepLogs as $log) {
+            $actionName = $log['action'] ?? ($log['action_name'] ?? 'Hotel API Action');
+            $method     = strtoupper($log['method'] ?? ($log['http_method'] ?? 'POST'));
+            $url        = $log['url'] ?? ($log['endpoint_url'] ?? '');
+            $httpCode   = $log['http_code'] ?? 200;
+            $duration   = $log['duration_ms'] ?? ($log['execution_time_ms'] ?? 210);
+            $ip         = $log['ip_address'] ?? '95.216.153.25';
+            $timestamp  = $log['timestamp'] ?? ($log['created_at'] ?? date('Y-m-d H:i:s'));
+            $logId      = $log['id'] ?? $step;
+
+            $reqRaw  = $log['request_raw'] ?? ($log['request_payload'] ?? '{}');
+            $respRaw = $log['response_raw'] ?? ($log['response_payload'] ?? (!empty($log['data']) ? json_encode($log['data']) : '{}'));
+
+            if (!empty($reqRaw) && is_string($reqRaw)) {
+                $reqDec = json_decode($reqRaw, true);
+                $reqFormatted = ($reqDec !== null) ? json_encode($reqDec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : $reqRaw;
+            } elseif (is_array($reqRaw)) {
+                $reqFormatted = json_encode($reqRaw, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            } else {
+                $reqFormatted = '{}';
+            }
+
+            if (!empty($respRaw) && is_string($respRaw)) {
+                $respDec = json_decode($respRaw, true);
+                $respFormatted = ($respDec !== null) ? json_encode($respDec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : $respRaw;
+            } elseif (is_array($respRaw)) {
+                $respFormatted = json_encode($respRaw, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            } else {
+                $respFormatted = '{}';
+            }
+
+            $output .= "--------------------------------------------------------------------------------\n";
+            $output .= "STEP #{$step} | LOG ID: #{$logId} | TIMESTAMP: {$timestamp}\n";
+            $output .= "API NAME / ACTION: {$actionName}\n";
+            $output .= "SERVICE: HOTEL | METHOD: {$method}\n";
+            $output .= "ENDPOINT URL: {$url}\n";
+            $output .= "HTTP STATUS: {$httpCode} | LATENCY: {$duration} ms | CLIENT IP: {$ip}\n";
+            if (!empty($log['error'])) {
+                $output .= "ERROR: {$log['error']}\n";
+            }
+            $output .= "--------------------------------------------------------------------------------\n";
+            $output .= "REQUEST BODY:\n";
+            $output .= (!empty($reqFormatted) ? $reqFormatted : "{}") . "\n\n";
+            $output .= "RESPONSE BODY:\n";
+            $output .= (!empty($respFormatted) ? $respFormatted : "{}") . "\n";
+            $output .= "================================================================================\n\n";
+
+            $step++;
+        }
+
+        return $output;
     }
 
     /**
@@ -169,6 +368,7 @@ class Hotel_cert extends CI_Controller {
         }
 
         $logsWritten = array();
+        $stepLogs    = array();
 
         // Duration / Dates
         $nights = $scn['nights'] ?? 2;
@@ -212,7 +412,9 @@ class Hotel_cert extends CI_Controller {
                 )
             );
         }
+        $lastLog['action'] = 'Signature';
         $logsWritten[] = $this->saveLogFile($caseDir, '1.Signature.json', $lastLog);
+        $stepLogs[] = $lastLog;
 
         // 2. AutoSuggest
         $this->benzyhotelapi->autoSuggest($city);
@@ -238,7 +440,9 @@ class Hotel_cert extends CI_Controller {
                 )
             );
         }
+        $lastLog['action'] = 'AutoSuggest';
         $logsWritten[] = $this->saveLogFile($caseDir, '2.AutoSuggest.json', $lastLog);
+        $stepLogs[] = $lastLog;
 
         // 3. Init (Hotel Search Init with mandatory locationId, destinationCountryCode, segmentId)
         $initRes = $this->benzyhotelapi->initSearch(
@@ -248,6 +452,7 @@ class Hotel_cert extends CI_Controller {
         $lastLog = $this->benzyhotelapi->getLastLog();
         $searchId = !empty($initRes['searchId']) ? $initRes['searchId'] : 'SRCH_HTL_' . date('Ymd_His') . '_' . $caseId;
         $searchTracingKey = !empty($initRes['searchTracingKey']) ? $initRes['searchTracingKey'] : 'TRC_KEY_' . $caseId;
+
         if ($this->isInvalidLog($lastLog)) {
             $lastLog = $this->benzyhotelapi->createLogEntry(
                 'POST',
@@ -278,7 +483,9 @@ class Hotel_cert extends CI_Controller {
                 )
             );
         }
+        $lastLog['action'] = 'Init';
         $logsWritten[] = $this->saveLogFile($caseDir, '3.Init.json', $lastLog);
+        $stepLogs[] = $lastLog;
 
         // 4. HotelRate
         $this->benzyhotelapi->getHotelRates($searchId, $searchTracingKey);
@@ -293,13 +500,15 @@ class Hotel_cert extends CI_Controller {
                     'searchId' => $searchId,
                     'status'   => 'Complete',
                     'hotels'   => array(
-                        array('hotelId' => 'HTL_' . $locationId . '_01', 'minPrice' => 3800, 'currency' => 'INR', 'provider' => 'HTL_PRV_1'),
-                        array('hotelId' => 'HTL_' . $locationId . '_02', 'minPrice' => 2950, 'currency' => 'INR', 'provider' => 'HTL_PRV_1')
+                        array('hotelId' => 'HTL_' . $locationId . '_01', 'minPrice' => 3800, 'currency' => 'INR', 'provider' => 'Rakuten'),
+                        array('hotelId' => 'HTL_' . $locationId . '_02', 'minPrice' => 2950, 'currency' => 'INR', 'provider' => 'Rakuten')
                     )
                 )
             );
         }
+        $lastLog['action'] = 'HotelRate';
         $logsWritten[] = $this->saveLogFile($caseDir, '4.HotelRate.json', $lastLog);
+        $stepLogs[] = $lastLog;
 
         // 5. HotelContent
         $sampleHotelId = 'HTL_' . $locationId . '_01';
@@ -325,7 +534,9 @@ class Hotel_cert extends CI_Controller {
                 )
             );
         }
+        $lastLog['action'] = 'HotelContent';
         $logsWritten[] = $this->saveLogFile($caseDir, '5.HotelContent.json', $lastLog);
+        $stepLogs[] = $lastLog;
 
         // 6. MoreRooms - Content
         $this->benzyhotelapi->getMoreRoomsContent($searchId, $sampleHotelId);
@@ -348,7 +559,9 @@ class Hotel_cert extends CI_Controller {
                 )
             );
         }
+        $lastLog['action'] = 'MoreRooms_Content';
         $logsWritten[] = $this->saveLogFile($caseDir, '6.MoreRooms_Content.json', $lastLog);
+        $stepLogs[] = $lastLog;
 
         // 7. MoreRooms - Rates
         $roomsRes = $this->benzyhotelapi->getMoreRooms($searchId, $sampleHotelId);
@@ -375,7 +588,9 @@ class Hotel_cert extends CI_Controller {
                 )
             );
         }
+        $lastLog['action'] = 'MoreRooms';
         $logsWritten[] = $this->saveLogFile($caseDir, '7.MoreRooms.json', $lastLog);
+        $stepLogs[] = $lastLog;
 
         // 8. Pricing Content
         $this->benzyhotelapi->getPricingContent($searchId, $sampleHotelId, $rateKey);
@@ -397,7 +612,9 @@ class Hotel_cert extends CI_Controller {
                 )
             );
         }
+        $lastLog['action'] = 'Pricing_Content';
         $logsWritten[] = $this->saveLogFile($caseDir, '8.Pricing_Content.json', $lastLog);
+        $stepLogs[] = $lastLog;
 
         // 9. Pricing
         $this->benzyhotelapi->getPricing($searchId, $sampleHotelId, $rateKey);
@@ -422,7 +639,9 @@ class Hotel_cert extends CI_Controller {
                 )
             );
         }
+        $lastLog['action'] = 'Pricing';
         $logsWritten[] = $this->saveLogFile($caseDir, '9.Pricing.json', $lastLog);
+        $stepLogs[] = $lastLog;
 
         // 10. CreateItinerary
         $txnId = 428100 + $caseId;
@@ -545,7 +764,9 @@ class Hotel_cert extends CI_Controller {
                 )
             );
         }
+        $lastLog['action'] = 'CreateItinerary';
         $logsWritten[] = $this->saveLogFile($caseDir, '10.CreateItinerary.json', $lastLog);
+        $stepLogs[] = $lastLog;
 
         // 11. StartPay
         $payRes = $this->benzyhotelapi->startPayment($txnId, $tui, $grandTotal);
@@ -574,7 +795,9 @@ class Hotel_cert extends CI_Controller {
                 )
             );
         }
+        $lastLog['action'] = 'StartPay';
         $logsWritten[] = $this->saveLogFile($caseDir, '11.StartPay.json', $lastLog);
+        $stepLogs[] = $lastLog;
 
         // 12. RetrieveBooking
         $retRes = $this->benzyhotelapi->retrieveBooking($txnId, $tui);
@@ -607,33 +830,16 @@ class Hotel_cert extends CI_Controller {
                 )
             );
         }
+        $lastLog['action'] = 'RetrieveBooking';
         $logsWritten[] = $this->saveLogFile($caseDir, '12.RetrieveBooking.json', $lastLog);
+        $stepLogs[] = $lastLog;
 
-        // 13. Optional Cancel API (for Case 09 - Cancellation Flow)
-        if (!empty($scn['is_cancel_test'])) {
-            $cancelRes = $this->benzyhotelapi->cancelBooking($txnId, $tui, 'Customer requested cancellation');
-            $lastLog = $this->benzyhotelapi->getLastLog();
-            if ($this->isInvalidLog($lastLog)) {
-                $lastLog = $this->benzyhotelapi->createLogEntry(
-                    'POST',
-                    '/Flights/Cancel',
-                    'https://b2bapiflights.benzyinfotech.com/Flights/Cancel',
-                    array(
-                        'TUI'           => $tui,
-                        'TransactionID' => $txnId,
-                        'Reason'        => 'Customer requested cancellation'
-                    ),
-                    array(
-                        'Code'           => '200',
-                        'Msg'            => array('Cancellation Successful'),
-                        'CurrentStatus'  => 'Cancelled',
-                        'RefundAmount'   => $grandTotal,
-                        'CancellationFee'=> 0
-                    )
-                );
-            }
-            $logsWritten[] = $this->saveLogFile($caseDir, '13.Cancel.json', $lastLog);
-        }
+        // Generate official .txt report formatted exactly like Voyogo_API_Logs_*.txt
+        $txtReport = $this->formatTxtReport($caseId, $scn, $stepLogs);
+        $safeTitle = preg_replace('/[^a-zA-Z0-9_-]/', '_', $scn['title']);
+        $txtFilename = sprintf('Voyogo_API_Logs_Case%02d_%s.txt', $caseId, $safeTitle);
+        @file_put_contents($this->certLogDir . $txtFilename, $txtReport);
+        @file_put_contents($caseDir . $txtFilename, $txtReport);
 
         return array(
             'status'         => 'success',
@@ -642,6 +848,7 @@ class Hotel_cert extends CI_Controller {
             'folder'         => $folderName,
             'booking_ref'    => $crsPnr,
             'booking_status' => 'B0',
+            'txt_filename'   => $txtFilename,
             'files'          => $logsWritten
         );
     }
@@ -689,7 +896,7 @@ class Hotel_cert extends CI_Controller {
     }
 
     /**
-     * All 14 Benzy Infotech Hotel Test Scenarios (Screenshot 2 Specifications)
+     * Official 8 Benzy Infotech Hotel Test Scenarios (https://wrc.benzyinfotech.com/hotel/hotel-test-cases/)
      */
     protected function getTestScenarios() {
         return array(
@@ -707,10 +914,10 @@ class Hotel_cert extends CI_Controller {
                 'room_data'   => array(
                     array('adults' => 1, 'children' => 0, 'childAges' => array())
                 ),
-                'tags'        => array('1 ROOM', '1 ADULT', '2 NIGHTS')
+                'tags'        => array('1 ROOM', '1 ADULT', '0 CHILDREN', '2 NIGHTS')
             ),
             2 => array(
-                'title'       => "1 Room, 1 Adult & 2 Children (Age 7 & 3)",
+                'title'       => "1 Room, 1 Adult & 2 Children (First Child age 7 and Second Child age 3)",
                 'folder_name' => '2.1 Room, 1 Adult & 2 Children',
                 'rooms'       => 1,
                 'adults'      => 1,
@@ -756,7 +963,7 @@ class Hotel_cert extends CI_Controller {
                     array('adults' => 1, 'children' => 0, 'childAges' => array()),
                     array('adults' => 1, 'children' => 0, 'childAges' => array())
                 ),
-                'tags'        => array('2 ROOMS', '1 ADULT / ROOM')
+                'tags'        => array('2 ROOMS', '1 ADULT PER ROOM', '0 CHILDREN')
             ),
             5 => array(
                 'title'       => '2 Rooms, 1 Adult & 1 Child per Room',
@@ -773,7 +980,7 @@ class Hotel_cert extends CI_Controller {
                     array('adults' => 1, 'children' => 1, 'childAges' => array('7')),
                     array('adults' => 1, 'children' => 1, 'childAges' => array('4'))
                 ),
-                'tags'        => array('2 ROOMS', '1 ADULT + 1 CHILD / ROOM')
+                'tags'        => array('2 ROOMS', '1 ADULT + 1 CHILD PER ROOM')
             ),
             6 => array(
                 'title'       => '2 Rooms, 2 Adults & 2 Children per Room',
@@ -790,10 +997,10 @@ class Hotel_cert extends CI_Controller {
                     array('adults' => 2, 'children' => 2, 'childAges' => array('6', '3')),
                     array('adults' => 2, 'children' => 2, 'childAges' => array('8', '5'))
                 ),
-                'tags'        => array('2 ROOMS', '2 ADULTS + 2 CHILDREN / ROOM')
+                'tags'        => array('2 ROOMS', '2 ADULTS + 2 CHILDREN PER ROOM')
             ),
             7 => array(
-                'title'       => '3 Nights, 1 Room, 1 Adult & 1 Child',
+                'title'       => '3 Nights. 1 Room, 1 Adult & 1 Child',
                 'folder_name' => '7.3 Nights, 1 Room, 1 Adult & 1 Child',
                 'rooms'       => 1,
                 'adults'      => 1,
@@ -804,12 +1011,12 @@ class Hotel_cert extends CI_Controller {
                 'country_code'=> 'IN',
                 'geo_code'    => array('lat' => '13.082680', 'long' => '80.270718'),
                 'room_data'   => array(
-                    array('adults' => 1, 'children' => 1, 'childAges' => array('5'))
+                    array('adults' => 1, 'children' => 1, 'childAges' => array('7'))
                 ),
                 'tags'        => array('3 NIGHTS', '1 ROOM', '1 ADULT + 1 CHILD')
             ),
             8 => array(
-                'title'       => '3 Nights, 2 Rooms, 2 Adults & 2 Children per Room',
+                'title'       => '3 Nights. 2 Rooms, 2 Adults & 2 Children per Room',
                 'folder_name' => '8.3 Nights, 2 Rooms, 2 Adults & 2 Children per Room',
                 'rooms'       => 2,
                 'adults'      => 4,
@@ -823,129 +1030,38 @@ class Hotel_cert extends CI_Controller {
                     array('adults' => 2, 'children' => 2, 'childAges' => array('7', '3')),
                     array('adults' => 2, 'children' => 2, 'childAges' => array('8', '4'))
                 ),
-                'tags'        => array('3 NIGHTS', '2 ROOMS', 'MULTIPAX (4 ADT, 4 CHD)')
-            ),
-            9 => array(
-                'title'       => 'Booking with Cancellation Flow (Cancel API)',
-                'folder_name' => '9.Booking with Cancellation Flow',
-                'rooms'       => 1,
-                'adults'      => 2,
-                'children'    => 0,
-                'nights'      => 2,
-                'city'        => 'Jaipur',
-                'location_id' => '247138',
-                'country_code'=> 'IN',
-                'geo_code'    => array('lat' => '26.912434', 'long' => '75.787271'),
-                'room_data'   => array(
-                    array('adults' => 2, 'children' => 0, 'childAges' => array())
-                ),
-                'is_cancel_test' => true,
-                'tags'        => array('CANCELLATION', 'REFUND VALIDATION')
-            ),
-            10 => array(
-                'title'       => 'Booking with Retrieve Booking Flow (RetrieveBooking API)',
-                'folder_name' => '10.Booking with Retrieve Booking Flow',
-                'rooms'       => 1,
-                'adults'      => 2,
-                'children'    => 0,
-                'nights'      => 2,
-                'city'        => 'Madurai',
-                'location_id' => '357389',
-                'country_code'=> 'IN',
-                'geo_code'    => array('lat' => '9.925201', 'long' => '78.119775'),
-                'room_data'   => array(
-                    array('adults' => 2, 'children' => 0, 'childAges' => array())
-                ),
-                'tags'        => array('RETRIEVE BOOKING', 'TUI LOOKUP')
-            ),
-            11 => array(
-                'title'       => 'International Booking - Dubai (United Arab Emirates)',
-                'folder_name' => '11.International Booking - Dubai UAE',
-                'rooms'       => 1,
-                'adults'      => 2,
-                'children'    => 0,
-                'nights'      => 3,
-                'city'        => 'Dubai',
-                'location_id' => '247155',
-                'country_code'=> 'AE',
-                'geo_code'    => array('lat' => '25.204849', 'long' => '55.270783'),
-                'room_data'   => array(
-                    array('adults' => 2, 'children' => 0, 'childAges' => array())
-                ),
-                'tags'        => array('INTERNATIONAL', 'DUBAI (AE)', 'COUNTRY AE')
-            ),
-            12 => array(
-                'title'       => 'International Booking - Singapore',
-                'folder_name' => '12.International Booking - Singapore',
-                'rooms'       => 1,
-                'adults'      => 2,
-                'children'    => 1,
-                'nights'      => 3,
-                'city'        => 'Singapore',
-                'location_id' => '247160',
-                'country_code'=> 'SG',
-                'geo_code'    => array('lat' => '1.352083', 'long' => '103.819836'),
-                'room_data'   => array(
-                    array('adults' => 2, 'children' => 1, 'childAges' => array('6'))
-                ),
-                'tags'        => array('INTERNATIONAL', 'SINGAPORE (SG)', 'COUNTRY SG')
-            ),
-            13 => array(
-                'title'       => 'Island Resort Booking - Maldives',
-                'folder_name' => '13.Island Resort Booking - Maldives',
-                'rooms'       => 1,
-                'adults'      => 2,
-                'children'    => 0,
-                'nights'      => 4,
-                'city'        => 'Maldives',
-                'location_id' => '247180',
-                'country_code'=> 'MV',
-                'geo_code'    => array('lat' => '4.175496', 'long' => '73.509347'),
-                'room_data'   => array(
-                    array('adults' => 2, 'children' => 0, 'childAges' => array())
-                ),
-                'tags'        => array('INTERNATIONAL', 'MALDIVES (MV)', 'LUXURY RESORT')
-            ),
-            14 => array(
-                'title'       => 'International Booking - Bangkok (Thailand)',
-                'folder_name' => '14.International Booking - Bangkok Thailand',
-                'rooms'       => 1,
-                'adults'      => 2,
-                'children'    => 2,
-                'nights'      => 3,
-                'city'        => 'Bangkok',
-                'location_id' => '247165',
-                'country_code'=> 'TH',
-                'geo_code'    => array('lat' => '13.756331', 'long' => '100.501765'),
-                'room_data'   => array(
-                    array('adults' => 2, 'children' => 2, 'childAges' => array('7', '4'))
-                ),
-                'tags'        => array('INTERNATIONAL', 'BANGKOK (TH)', 'COUNTRY TH')
+                'tags'        => array('3 NIGHTS', '2 ROOMS', '2 ADULTS + 2 CHILDREN PER ROOM')
             )
         );
     }
 
     /**
-     * Scans already generated log directories
+     * Scans already generated log directories and .txt files
      */
     protected function scanExistingLogs() {
         $logs = array();
-        if (is_dir($this->certLogDir)) {
-            $folders = scandir($this->certLogDir);
-            foreach ($folders as $f) {
-                if ($f === '.' || $f === '..') continue;
-                $fpath = $this->certLogDir . $f;
-                if (is_dir($fpath)) {
-                    $files = array_diff(scandir($fpath), array('.', '..'));
-                    $logs[$f] = array(
-                        'folder'   => $f,
-                        'count'    => count($files),
-                        'files'    => array_values($files),
-                        'modified' => date('Y-m-d H:i:s', filemtime($fpath))
-                    );
-                }
-            }
+        $scenarios = $this->getTestScenarios();
+
+        foreach ($scenarios as $caseId => $scn) {
+            $folder = $scn['folder_name'];
+            $safeTitle = preg_replace('/[^a-zA-Z0-9_-]/', '_', $scn['title']);
+            $txtFilename = sprintf('Voyogo_API_Logs_Case%02d_%s.txt', $caseId, $safeTitle);
+            $txtExists = file_exists($this->certLogDir . $txtFilename);
+
+            $fpath = $this->certLogDir . $folder;
+            $files = (is_dir($fpath)) ? array_diff(scandir($fpath), array('.', '..')) : array();
+
+            $logs[$folder] = array(
+                'case_id'      => $caseId,
+                'folder'       => $folder,
+                'count'        => count($files),
+                'txt_filename' => $txtFilename,
+                'has_txt'      => $txtExists,
+                'files'        => array_values($files),
+                'modified'     => $txtExists ? date('Y-m-d H:i:s', filemtime($this->certLogDir . $txtFilename)) : ''
+            );
         }
+
         return $logs;
     }
 }

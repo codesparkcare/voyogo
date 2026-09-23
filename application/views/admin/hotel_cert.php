@@ -6,7 +6,7 @@
     <title><?= $page_title; ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -48,7 +48,7 @@
         }
 
         .container {
-            max-width: 1280px;
+            max-width: 1320px;
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -84,7 +84,7 @@
 
         .header-actions {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
@@ -92,14 +92,15 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 12px 22px;
+            padding: 11px 20px;
             border-radius: 10px;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.2s ease;
             text-decoration: none;
             border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .btn-white {
@@ -129,10 +130,20 @@
             transform: translateY(-2px);
         }
 
+        .btn-indigo {
+            background: #6366f1;
+            color: #ffffff;
+        }
+        .btn-indigo:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+        }
+
         .btn-outline-white {
             background: transparent;
             color: #ffffff;
             border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: none;
         }
         .btn-outline-white:hover {
             background: rgba(255, 255, 255, 0.1);
@@ -168,11 +179,12 @@
         }
 
         .meta-info h4 {
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--text-muted);
             margin-bottom: 4px;
+            font-weight: 700;
         }
 
         .meta-info p {
@@ -201,7 +213,7 @@
 
         .scenarios-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(370px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 24px;
         }
 
@@ -294,26 +306,61 @@
             align-items: center;
             border-top: 1px solid #f1f5f9;
             padding-top: 16px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .status-badge {
             font-size: 12px;
-            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 6px;
+            flex-wrap: wrap;
         }
 
-        .status-ready { color: #10b981; }
-        .status-missing { color: #94a3b8; }
-        .status-running { color: #6366f1; }
-        .status-done { color: #059669; }
+        .status-ready {
+            color: #10b981;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-missing {
+            color: #94a3b8;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-running {
+            color: #3b82f6;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-done {
+            color: #059669;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
 
         .btn-run {
-            background: #f8fafc;
-            color: #0f172a;
-            border: 1px solid #cbd5e1;
-            padding: 8px 16px;
+            background: #4f46e5;
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
             border-radius: 8px;
             font-size: 12px;
             font-weight: 700;
@@ -325,9 +372,36 @@
         }
 
         .btn-run:hover {
-            background: #4f46e5;
+            background: #4338ca;
+            transform: translateY(-1px);
+        }
+
+        .btn-run:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-dl-sm {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-dl-sm:hover {
+            background: #10b981;
             color: #ffffff;
-            border-color: #4f46e5;
+            border-color: #10b981;
         }
 
         /* Toast notification */
@@ -369,8 +443,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(5px);
             z-index: 10000;
             align-items: center;
             justify-content: center;
@@ -380,10 +454,10 @@
         .modal-content {
             background: #ffffff;
             width: 100%;
-            max-width: 900px;
-            max-height: 85vh;
+            max-width: 1000px;
+            max-height: 90vh;
             border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -404,63 +478,61 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            color: #f8fafc;
+        }
+
+        .modal-tools {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-modal-action {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }
+
+        .btn-modal-action:hover {
+            background: rgba(255, 255, 255, 0.25);
         }
 
         .modal-close {
             background: transparent;
             border: none;
             color: #94a3b8;
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
+            padding: 0 4px;
+            margin-left: 10px;
         }
         .modal-close:hover { color: #ffffff; }
 
         .modal-body {
-            padding: 20px;
+            padding: 0;
             overflow-y: auto;
             flex: 1;
-            display: flex;
-            gap: 20px;
-        }
-
-        .modal-file-list {
-            width: 260px;
-            border-right: 1px solid #e2e8f0;
-            padding-right: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .modal-file-item {
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #334155;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.15s;
-        }
-
-        .modal-file-item:hover, .modal-file-item.active {
-            background: #eef2ff;
-            color: #4f46e5;
+            background: #0b1120;
         }
 
         .modal-file-viewer {
-            flex: 1;
-            background: #0f172a;
-            border-radius: 8px;
-            padding: 14px;
-            color: #e2e8f0;
-            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            color: #38bdf8;
+            font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
             font-size: 12px;
-            overflow-x: auto;
+            line-height: 1.6;
             white-space: pre-wrap;
-            max-height: 60vh;
+            word-break: break-all;
         }
     </style>
 </head>
@@ -476,18 +548,21 @@
                         <span class="badge-cert">B2B Hotel Certification</span>
                     </div>
                     <p style="color: #cbd5e1; font-size: 14px; margin-top: 6px;">
-                        Akbar Travels / Benzy Infotech 14-Scenario Compliance & Automated Log Generator
+                        Akbar Travels / Benzy Infotech 8-Scenario Compliance & Official .txt Log Generator
                     </p>
                 </div>
                 <div class="header-actions">
                     <button class="btn btn-white" id="btnRunAll" onclick="runAllCases()">
-                        <i class="fa-solid fa-play"></i> Run All 14 Scenarios
+                        <i class="fa-solid fa-play"></i> Run All 8 Scenarios
                     </button>
-                    <a href="<?= site_url('hotel_cert/download_postman'); ?>" class="btn btn-orange">
-                        <i class="fa-solid fa-file-code"></i> Postman Collection (.json)
+                    <a href="<?= site_url('hotel_cert/download_consolidated_txt'); ?>" class="btn btn-indigo">
+                        <i class="fa-solid fa-file-lines"></i> Download Consolidated .txt
                     </a>
                     <a href="<?= site_url('hotel_cert/download_zip'); ?>" class="btn btn-success">
-                        <i class="fa-solid fa-file-zipper"></i> Download Logs ZIP
+                        <i class="fa-solid fa-file-zipper"></i> Download 8 Cases (.txt ZIP)
+                    </a>
+                    <a href="<?= site_url('hotel_cert/download_postman'); ?>" class="btn btn-orange">
+                        <i class="fa-solid fa-file-code"></i> Postman Collection (.json)
                     </a>
                     <a href="<?= site_url('admin/hotel_api_settings'); ?>" class="btn btn-outline-white">
                         <i class="fa-solid fa-sliders"></i> API Settings
@@ -507,7 +582,7 @@
                 </div>
                 <div class="meta-info">
                     <h4>Total Scenarios</h4>
-                    <p>14 Test Cases</p>
+                    <p>8 Official Test Cases</p>
                 </div>
             </div>
 
@@ -523,11 +598,11 @@
 
             <div class="meta-card">
                 <div class="meta-icon" style="background: #fdf2f8; color: #db2777;">
-                    <i class="fa-solid fa-file-lines"></i>
+                    <i class="fa-solid fa-file-invoice"></i>
                 </div>
                 <div class="meta-info">
-                    <h4>Files Per Scenario</h4>
-                    <p>12–13 JSON Files</p>
+                    <h4>Export Format</h4>
+                    <p>Voyogo_API_Logs_*.txt</p>
                 </div>
             </div>
 
@@ -545,9 +620,9 @@
         <!-- Section Title -->
         <div class="section-head">
             <div>
-                <h2><i class="fa-solid fa-layer-group" style="color: #4f46e5;"></i> 14 Certification Test Scenarios</h2>
+                <h2><i class="fa-solid fa-layer-group" style="color: #4f46e5;"></i> 8 Official Benzy Test Scenarios</h2>
                 <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">
-                    Standardized 13-step flow: Signature &rarr; AutoSuggest &rarr; Init &rarr; Rates &rarr; Content &rarr; MoreRooms &rarr; Pricing &rarr; CreateItinerary &rarr; StartPay &rarr; RetrieveBooking &rarr; Cancel
+                    Documentation Reference: <a href="https://wrc.benzyinfotech.com/hotel/hotel-test-cases/" target="_blank" style="color: #4f46e5; text-decoration: underline;">https://wrc.benzyinfotech.com/hotel/hotel-test-cases/</a> | Standardized 12-Step Flow
                 </p>
             </div>
             <div>
@@ -562,14 +637,14 @@
             <?php foreach ($cases as $id => $c): ?>
                 <?php 
                     $paddedId = str_pad($id, 2, '0', STR_PAD_LEFT);
-                    $folder = $c['folder_name'];
-                    $hasLogs = isset($existing_logs[$folder]) && $existing_logs[$folder]['count'] >= 10;
-                    $fileCount = isset($existing_logs[$folder]) ? $existing_logs[$folder]['count'] : 0;
+                    $folder   = $c['folder_name'];
+                    $hasTxt   = isset($existing_logs[$folder]) && !empty($existing_logs[$folder]['has_txt']);
+                    $txtFile  = isset($existing_logs[$folder]) ? $existing_logs[$folder]['txt_filename'] : '';
                 ?>
                 <div class="scenario-card" id="card-<?= $id; ?>">
                     <div>
                         <div class="card-top">
-                            <span class="case-number"><?= $paddedId; ?></span>
+                            <span class="case-number">CASE <?= $paddedId; ?></span>
                             <div class="tags-cluster">
                                 <?php foreach ($c['tags'] as $idx => $tag): ?>
                                     <?php 
@@ -596,25 +671,31 @@
                             </div>
                             <div>
                                 <i class="fa-solid fa-code-branch" style="color: #8b5cf6; width: 14px;"></i>
-                                <span><strong>Sequence:</strong> 1...13 JSON Steps</span>
+                                <span><strong>Sequence:</strong> 12 Verified AkbarAPI Steps (RetrieveBooking Confirmed)</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="card-bottom">
                         <div class="status-badge" id="status-<?= $id; ?>">
-                            <?php if ($hasLogs): ?>
+                            <?php if ($hasTxt): ?>
                                 <span class="status-ready">
-                                    <i class="fa-solid fa-circle-check"></i> Ready (<?= $fileCount; ?> files)
+                                    <i class="fa-solid fa-circle-check"></i> Ready (.txt)
                                 </span>
-                                <a href="javascript:void(0)" onclick="openLogModal('<?= htmlspecialchars($folder); ?>')" style="font-size: 11px; color: #4f46e5; margin-left: 6px; text-decoration: underline;">View</a>
+                                <a href="javascript:void(0)" onclick="openTxtModal(<?= $id; ?>)" style="font-size: 11px; color: #4f46e5; margin-left: 4px; font-weight: 700; text-decoration: underline;">View</a>
                             <?php else: ?>
                                 <span class="status-missing"><i class="fa-regular fa-clock"></i> Not Run</span>
                             <?php endif; ?>
                         </div>
-                        <button class="btn-run" id="btn-run-<?= $id; ?>" onclick="runSingleCase(<?= $id; ?>)">
-                            <i class="fa-solid fa-play"></i> Run Case
-                        </button>
+                        
+                        <div class="card-actions">
+                            <a href="<?= site_url('hotel_cert/download_case_txt/' . $id); ?>" class="btn-dl-sm" id="btn-dl-<?= $id; ?>" title="Download Case <?= $id; ?> .txt Log">
+                                <i class="fa-solid fa-download"></i> .txt
+                            </a>
+                            <button class="btn-run" id="btn-run-<?= $id; ?>" onclick="runSingleCase(<?= $id; ?>)">
+                                <i class="fa-solid fa-play"></i> Run Case
+                            </button>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -628,19 +709,24 @@
         <span id="toastText">Executing Hotel Certification Suite...</span>
     </div>
 
-    <!-- Modal for Viewing Log Files -->
+    <!-- Modal for Viewing .txt Log Files -->
     <div id="logModal" class="log-modal" onclick="if(event.target === this) closeLogModal();">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-file-code"></i> <span id="modalFolderTitle">Log Inspector</span></h3>
-                <button class="modal-close" onclick="closeLogModal()">&times;</button>
+                <h3><i class="fa-solid fa-file-lines" style="color: #38bdf8;"></i> <span id="modalFolderTitle">Log Inspector</span></h3>
+                <div class="modal-tools">
+                    <button class="btn-modal-action" onclick="copyModalContent()">
+                        <i class="fa-solid fa-copy"></i> Copy Log
+                    </button>
+                    <a href="#" id="modalDlBtn" class="btn-modal-action">
+                        <i class="fa-solid fa-download"></i> Download .txt
+                    </a>
+                    <button class="modal-close" onclick="closeLogModal()">&times;</button>
+                </div>
             </div>
             <div class="modal-body">
-                <div class="modal-file-list" id="modalFileList">
-                    <!-- Populated dynamically -->
-                </div>
                 <div class="modal-file-viewer" id="modalFileViewer">
-                    Click a step file on the left to inspect the HTTP Request and Response.
+                    Loading log content...
                 </div>
             </div>
         </div>
@@ -648,7 +734,6 @@
 
     <script>
         const baseUrl = '<?= site_url("hotel_cert"); ?>';
-        const existingLogsData = <?= json_encode($existing_logs); ?>;
 
         function showToast(text, showSpinner = true) {
             const toast = document.getElementById('toastBanner');
@@ -673,25 +758,18 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Running...';
             statusEl.innerHTML = '<span class="status-running"><i class="fa-solid fa-spinner fa-spin"></i> Executing...</span>';
-            showToast(`Executing Hotel Test Scenario 0${caseId}...`, true);
+            showToast(`Executing Hotel Test Case 0${caseId}...`, true);
 
             try {
                 const res = await fetch(`${baseUrl}/run_case/${caseId}`);
                 const data = await res.json();
                 
                 if (data.status === 'success') {
-                    statusEl.innerHTML = `<span class="status-done"><i class="fa-solid fa-circle-check"></i> Confirmed (Ref: ${data.booking_ref})</span> <a href="javascript:void(0)" onclick="openLogModal('${data.folder}')" style="font-size: 11px; color: #4f46e5; margin-left: 6px; text-decoration: underline;">View</a>`;
-                    showToast(`Scenario 0${caseId} Completed! Ref: ${data.booking_ref}`, false);
-                    
-                    // Update cache for modal viewer
-                    existingLogsData[data.folder] = {
-                        folder: data.folder,
-                        count: data.files ? data.files.length : 12,
-                        files: data.files || []
-                    };
+                    statusEl.innerHTML = `<span class="status-done"><i class="fa-solid fa-circle-check"></i> Confirmed (${data.booking_ref})</span> <a href="javascript:void(0)" onclick="openTxtModal(${caseId})" style="font-size: 11px; color: #4f46e5; margin-left: 4px; font-weight: 700; text-decoration: underline;">View</a>`;
+                    showToast(`Case 0${caseId} Completed! Ref: ${data.booking_ref}`, false);
                 } else {
                     statusEl.innerHTML = `<span style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Error</span>`;
-                    showToast(`Scenario 0${caseId} Failed: ${data.message}`, false);
+                    showToast(`Case 0${caseId} Failed: ${data.message}`, false);
                 }
             } catch (err) {
                 statusEl.innerHTML = `<span style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Network Err</span>`;
@@ -706,75 +784,50 @@
         async function runAllCases() {
             const btn = document.getElementById('btnRunAll');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Executing All 14 Scenarios...';
-            showToast('Running all 14 hotel certification scenarios in batch...', true);
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Executing All 8 Scenarios...';
+            showToast('Running all 8 official Benzy certification scenarios...', true);
 
-            for (let i = 1; i <= 14; i++) {
+            for (let i = 1; i <= 8; i++) {
                 await runSingleCase(i);
             }
 
             btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-play"></i> Run All 14 Scenarios';
-            showToast('All 14 Hotel Certification Scenarios Completed Successfully!', false);
+            btn.innerHTML = '<i class="fa-solid fa-play"></i> Run All 8 Scenarios';
+            showToast('All 8 Hotel Certification Test Cases Completed Successfully!', false);
             hideToast(4000);
         }
 
-        function openLogModal(folderName) {
+        async function openTxtModal(caseId) {
             const modal = document.getElementById('logModal');
             const titleEl = document.getElementById('modalFolderTitle');
-            const listEl = document.getElementById('modalFileList');
             const viewerEl = document.getElementById('modalFileViewer');
+            const dlBtn = document.getElementById('modalDlBtn');
 
-            titleEl.textContent = folderName;
-            viewerEl.textContent = 'Select a step file on the left to inspect the payload.';
-            listEl.innerHTML = '';
-
-            const stepFiles = [
-                '1.Signature.json',
-                '2.AutoSuggest.json',
-                '3.Init.json',
-                '4.HotelRate.json',
-                '5.HotelContent.json',
-                '6.MoreRooms_Content.json',
-                '7.MoreRooms.json',
-                '8.Pricing_Content.json',
-                '9.Pricing.json',
-                '10.CreateItinerary.json',
-                '11.StartPay.json',
-                '12.RetrieveBooking.json',
-                '13.Cancel.json'
-            ];
-
-            stepFiles.forEach((file, idx) => {
-                const item = document.createElement('div');
-                item.className = 'modal-file-item';
-                item.innerHTML = `<i class="fa-solid fa-file-code"></i> ${file}`;
-                item.onclick = () => {
-                    document.querySelectorAll('.modal-file-item').forEach(el => el.classList.remove('active'));
-                    item.classList.add('active');
-                    loadFileContent(folderName, file);
-                };
-                listEl.appendChild(item);
-            });
-
+            titleEl.textContent = `Case ${caseId} Official AkbarAPI Log Report`;
+            viewerEl.textContent = 'Loading official .txt log payload...';
+            dlBtn.href = `${baseUrl}/download_case_txt/${caseId}`;
             modal.style.display = 'flex';
-            if (listEl.firstChild) listEl.firstChild.click();
-        }
 
-        async function loadFileContent(folder, file) {
-            const viewerEl = document.getElementById('modalFileViewer');
-            viewerEl.textContent = 'Loading ' + file + '...';
             try {
-                const res = await fetch(`${baseUrl}/view_log?folder=${encodeURIComponent(folder)}&file=${encodeURIComponent(file)}`);
+                const res = await fetch(`${baseUrl}/view_txt/${caseId}`);
                 const data = await res.json();
                 if (data.status === 'success') {
+                    titleEl.textContent = data.filename;
                     viewerEl.textContent = data.content;
                 } else {
-                    viewerEl.textContent = 'Log content not found or step was skipped for this scenario.';
+                    viewerEl.textContent = 'Log content could not be loaded.';
                 }
             } catch (e) {
                 viewerEl.textContent = 'Failed to load log file.';
             }
+        }
+
+        function copyModalContent() {
+            const viewerEl = document.getElementById('modalFileViewer');
+            navigator.clipboard.writeText(viewerEl.textContent).then(() => {
+                showToast('Log contents copied to clipboard!', false);
+                hideToast(2000);
+            });
         }
 
         function closeLogModal() {
