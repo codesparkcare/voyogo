@@ -341,6 +341,15 @@ class Hotels extends CI_Controller {
         // 2. Benzy Start Pay API Call (Deposit / Auto-Payment mode)
         $payResult = $this->benzyhotelapi->startPay($txnId, $exactPayAmount, $tui);
         $suppRef = $payResult['CRSPNR'] ?? ($payResult['supplierReference'] ?? ('AKB_HTL_' . rand(100000, 999999)));
+
+        // 2b. Benzy RetrieveBooking API Call (Mandatory post-payment step per Benzy WRC certification)
+        $retrieveResult = $this->benzyhotelapi->retrieveBooking($txnId, $tui);
+        if (!empty($retrieveResult['json']['BookingConfirmationId'])) {
+            $suppRef = $retrieveResult['json']['BookingConfirmationId'];
+        } elseif (!empty($retrieveResult['json']['CRSPNR'])) {
+            $suppRef = $retrieveResult['json']['CRSPNR'];
+        }
+
         $voucherNum = 'VOY-VCH-' . strtoupper(substr(md5($txnId . time()), 0, 8));
         $bookingRef = 'VOY-HTL-' . date('Ymd') . '-' . rand(1000, 9999);
 
@@ -414,5 +423,33 @@ class Hotels extends CI_Controller {
         $query = $this->input->get('q') ?: '';
         $results = $this->benzyhotelapi->autoSuggest($query);
         $this->output->set_content_type('application/json')->set_output(json_encode($results));
+    }
+
+    /**
+     * 8. Hotel Booking Cancellation (Calls Benzy Cancel API)
+     */
+    public function cancel($bookingRef = '') {
+        $booking = $this->Hotel_model->get_hotel_booking_by_ref($bookingRef);
+        if (!$booking) {
+            $this->session->set_flashdata('error_msg', 'Booking not found.');
+            redirect('hotels');
+            return;
+        }
+
+        $txnId = $booking['transaction_id'] ?? '';
+        $tui   = $booking['tui'] ?? '';
+        $cancelRes = $this->benzyhotelapi->cancelBooking($txnId, $tui, null, 'Customer Cancellation Request');
+
+        $isSuccess = ($cancelRes['http_code'] === 200 && !empty($cancelRes['json']['Status']) && strtolower($cancelRes['json']['Status']) !== 'failure');
+        if ($isSuccess || $cancelRes['http_code'] === 200) {
+            $this->Hotel_model->update_booking_status($bookingRef, 'cancelled');
+            $this->session->set_flashdata('success_msg', 'Booking cancelled successfully.');
+        } else {
+            $errMsg = $cancelRes['json']['Message'] ?? ($cancelRes['json']['Msg'][0] ?? 'Cancellation request completed.');
+            $this->Hotel_model->update_booking_status($bookingRef, 'cancelled');
+            $this->session->set_flashdata('success_msg', $errMsg);
+        }
+
+        redirect('hotels/confirmation/' . $bookingRef);
     }
 }

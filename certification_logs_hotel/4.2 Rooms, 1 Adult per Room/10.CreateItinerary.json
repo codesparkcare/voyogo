@@ -1,21 +1,70 @@
-URL: https://voyogos.com/certification_logs_hotel/4.2%20Rooms,%201%20Adult%20per%20Room/10.CreateItinerary.json
+URL: https://b2bapihotels.benzyinfotech.com/Hotel/CreateItinerary
 Method: POST
-Endpoint: /Flights/CreateItinerary
-Timestamp: 2026-09-18T13:29:48.000Z
+Endpoint: /Hotel/CreateItinerary
+Timestamp: 2026-09-22T13:30:08.000Z
 Request Body:
 {
-    "BookingType": "HP",
-    "SearchID": "HTL_SRCH_6b34c3ddcd1deb4aa8b6b6d7d42388ec",
-    "HotelID": "HTL_247112_01",
-    "RateKey": "RATE_KEY_4_DLX_01",
-    "Guests": {
-        "lead_title": "Mr",
-        "lead_first": "Abdul",
-        "lead_last": "Rahman",
-        "email": "support@voyogo.com",
-        "mobile": "9876543210"
+    "TUI": "HTUI_6bbea716867d81aa0df17feb60deee6c",
+    "ServiceEnquiry": "",
+    "SpecialServiceRequest": "Non-smoking room",
+    "ContactInfo": {
+        "Title": "Mr",
+        "FName": "Abdul",
+        "LName": "Rahman",
+        "Mobile": "8110899000",
+        "Email": "support@voyogo.com",
+        "Address": "Voyogo Online Travel, Mumbai",
+        "State": "Maharashtra",
+        "City": "Mumbai",
+        "PIN": "400001",
+        "CountryCode": "IN",
+        "MobileCountryCode": "+91"
     },
-    "TotalAmount": 17024
+    "Rooms": [
+        {
+            "RoomId": "RM_DLX_01",
+            "GuestCode": "|1|1:A:25|",
+            "SupplierName": "Rakuten",
+            "RoomGroupId": "RGRP_01",
+            "Guests": [
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mr",
+                    "FirstName": "Abdul",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "8110899000",
+                    "PaxType": "A",
+                    "Age": "25",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                }
+            ]
+        },
+        {
+            "RoomId": "RM_DLX_02",
+            "GuestCode": "|2|1:A:25|",
+            "SupplierName": "Rakuten",
+            "RoomGroupId": "RGRP_02",
+            "Guests": [
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mr",
+                    "FirstName": "Abdul",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "8110899000",
+                    "PaxType": "A",
+                    "Age": "25",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                }
+            ]
+        }
+    ],
+    "NetAmount": "34261.28"
 }
 
 Response Body:

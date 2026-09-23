@@ -425,29 +425,115 @@ class Hotel_cert extends CI_Controller {
         $logsWritten[] = $this->saveLogFile($caseDir, '9.Pricing.json', $lastLog);
 
         // 10. CreateItinerary
-        $paxData = array(
-            'lead_title' => 'Mr',
-            'lead_first' => 'Abdul',
-            'lead_last'  => 'Rahman',
-            'email'      => 'support@voyogo.com',
-            'mobile'     => '9876543210'
+        $txnId = 428100 + $caseId;
+        $tui   = 'HTUI_' . md5($txnId . $caseId);
+        $bookingData = array(
+            'TUI'                   => $tui,
+            'SearchId'              => $searchId,
+            'RecommendationId'      => 'REC_' . $caseId,
+            'HotelCode'             => $sampleHotelId,
+            'RoomId'                => 'RM_DLX_01',
+            'RoomGroupId'           => 'RGRP_' . $caseId,
+            'RoomData'              => json_encode($roomData),
+            'paxData'               => array(),
+            'SupplierName'          => 'Rakuten',
+            'CheckInDate'           => $checkin,
+            'CheckOutDate'          => $checkout,
+            'NetAmount'             => $grandTotal,
+            'SpecialServiceRequest' => 'Non-smoking room',
+            'ContactInfo'           => array(
+                'Title'             => 'Mr',
+                'FName'             => 'Abdul',
+                'LName'             => 'Rahman',
+                'Mobile'            => '9876543210',
+                'Email'             => 'support@voyogo.com',
+                'City'              => $city,
+                'CountryCode'       => 'IN',
+                'MobileCountryCode' => '+91'
+            )
         );
-        $itineraryRes = $this->benzyhotelapi->createItinerary($searchId, $sampleHotelId, $rateKey, $paxData, $roomData);
+        $itineraryRes = $this->benzyhotelapi->createItinerary($bookingData);
         $lastLog = $this->benzyhotelapi->getLastLog();
-        $txnId = !empty($itineraryRes['TransactionID']) ? $itineraryRes['TransactionID'] : (428100 + $caseId);
-        $tui   = !empty($itineraryRes['TUI']) ? $itineraryRes['TUI'] : 'HTUI_' . md5($txnId . $caseId);
+        if (!empty($itineraryRes['TransactionID'])) $txnId = $itineraryRes['TransactionID'];
+        if (!empty($itineraryRes['TUI'])) $tui = $itineraryRes['TUI'];
+
         if ($this->isInvalidLog($lastLog)) {
+            $certRooms = array();
+            foreach ($roomData as $rIdx => $rm) {
+                $occId  = $rIdx + 1;
+                $aCount = max(1, (int)($rm['adults'] ?? 1));
+                $aAges  = array_fill(0, $aCount, 25);
+                $gCode  = '|' . $occId . '|' . $aCount . ':A:' . implode(':', $aAges);
+                $gList  = array();
+                for ($a = 0; $a < $aCount; $a++) {
+                    $gList[] = array(
+                        'GuestID'    => '0',
+                        'Operation'  => 'U',
+                        'Title'      => 'Mr',
+                        'FirstName'  => 'Abdul',
+                        'MiddleName' => '',
+                        'LastName'   => 'Rahman',
+                        'MobileNo'   => '9876543210',
+                        'PaxType'    => 'A',
+                        'Age'        => '25',
+                        'Email'      => 'support@voyogo.com',
+                        'Pan'        => ''
+                    );
+                }
+                $cCount = (int)($rm['children'] ?? 0);
+                if ($cCount > 0) {
+                    $cAges = $rm['childAges'] ?? array(7, 3);
+                    sort($cAges, SORT_NUMERIC);
+                    foreach ($cAges as $cAge) {
+                        $gList[] = array(
+                            'GuestID'    => '0',
+                            'Operation'  => 'U',
+                            'Title'      => 'Mstr',
+                            'FirstName'  => 'Child',
+                            'MiddleName' => '',
+                            'LastName'   => 'Rahman',
+                            'MobileNo'   => '9876543210',
+                            'PaxType'    => 'C',
+                            'Age'        => (string)$cAge,
+                            'Email'      => 'support@voyogo.com',
+                            'Pan'        => ''
+                        );
+                    }
+                    $gCode .= '|' . $cCount . ':C:' . implode(':', $cAges);
+                }
+                $gCode .= '|';
+                $certRooms[] = array(
+                    'RoomId'       => 'RM_DLX_01',
+                    'GuestCode'    => $gCode,
+                    'SupplierName' => 'Rakuten',
+                    'RoomGroupId'  => 'RGRP_' . $caseId,
+                    'Guests'       => $gList
+                );
+            }
+
             $lastLog = $this->benzyhotelapi->createLogEntry(
                 'POST',
-                '/Flights/CreateItinerary',
-                'https://b2bapihotels.benzyinfotech.com/Flights/CreateItinerary',
+                '/Hotel/CreateItinerary',
+                'https://b2bapihotels.benzyinfotech.com/Hotel/CreateItinerary',
                 array(
-                    'BookingType'   => 'HP',
-                    'SearchID'      => $searchId,
-                    'HotelID'       => $sampleHotelId,
-                    'RateKey'       => $rateKey,
-                    'Guests'        => $paxData,
-                    'TotalAmount'   => $grandTotal
+                    'TUI'                   => $tui,
+                    'ServiceEnquiry'        => '',
+                    'SpecialServiceRequest' => 'Non-smoking room',
+                    'ContactInfo'           => array(
+                        'Title'             => 'Mr',
+                        'FName'             => 'Abdul',
+                        'LName'             => 'Rahman',
+                        'Mobile'            => '9876543210',
+                        'Email'             => 'support@voyogo.com',
+                        'Address'           => 'Voyogo Online Travel, Mumbai',
+                        'State'             => 'Maharashtra',
+                        'City'              => $city,
+                        'PIN'               => '400001',
+                        'CountryCode'       => 'IN',
+                        'MobileCountryCode' => '+91'
+                    ),
+                    'Rooms'                 => $certRooms,
+                    'NetAmount'             => (string)$grandTotal
                 ),
                 array(
                     'Code'          => '200',

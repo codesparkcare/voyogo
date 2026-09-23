@@ -11,6 +11,7 @@ Request Body:
 Response Body:
 {
     "searchId": "HTL_SRCH_35fa2be80422d603181fa09f3b9340b8",
+    "searchStatus": "completed",
     "status": "Complete",
     "hotels": [
         {

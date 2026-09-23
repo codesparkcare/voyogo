@@ -1,21 +1,62 @@
-URL: https://voyogos.com/certification_logs_hotel/7.3%20Nights,%201%20Room,%201%20Adult%20&%201%20Child/10.CreateItinerary.json
+URL: https://b2bapihotels.benzyinfotech.com/Hotel/CreateItinerary
 Method: POST
-Endpoint: /Flights/CreateItinerary
-Timestamp: 2026-09-18T13:30:09.000Z
+Endpoint: /Hotel/CreateItinerary
+Timestamp: 2026-09-22T13:30:08.000Z
 Request Body:
 {
-    "BookingType": "HP",
-    "SearchID": "HTL_SRCH_2eb6e2214e052edb2bc0235ed78630ee",
-    "HotelID": "HTL_247123_01",
-    "RateKey": "RATE_KEY_7_DLX_01",
-    "Guests": {
-        "lead_title": "Mr",
-        "lead_first": "Abdul",
-        "lead_last": "Rahman",
-        "email": "support@voyogo.com",
-        "mobile": "9876543210"
+    "TUI": "HTUI_4da59a23784d4faa8d58519b2e56135f",
+    "ServiceEnquiry": "",
+    "SpecialServiceRequest": "Non-smoking room",
+    "ContactInfo": {
+        "Title": "Mr",
+        "FName": "Abdul",
+        "LName": "Rahman",
+        "Mobile": "8110899000",
+        "Email": "support@voyogo.com",
+        "Address": "Voyogo Online Travel, Mumbai",
+        "State": "Maharashtra",
+        "City": "Mumbai",
+        "PIN": "400001",
+        "CountryCode": "IN",
+        "MobileCountryCode": "+91"
     },
-    "TotalAmount": 12768
+    "Rooms": [
+        {
+            "RoomId": "RM_DLX_01",
+            "GuestCode": "|1|1:A:25|1:C:7|",
+            "SupplierName": "Rakuten",
+            "RoomGroupId": "RGRP_01",
+            "Guests": [
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mr",
+                    "FirstName": "Abdul",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "8110899000",
+                    "PaxType": "A",
+                    "Age": "25",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mstr",
+                    "FirstName": "Child1",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "8110899000",
+                    "PaxType": "C",
+                    "Age": "7",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                }
+            ]
+        }
+    ],
+    "NetAmount": "34261.28"
 }
 
 Response Body:

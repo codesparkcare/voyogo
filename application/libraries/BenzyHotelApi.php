@@ -402,15 +402,15 @@ class BenzyHotelApi {
         $searchTracingKey = $initData['searchTracingKey'];
         $token = $this->generateToken();
 
-        // 1. Hotel Rate Endpoint (Poll until completed per Benzy specification, up to 8 attempts with 1.0s delay)
+        // 1. Hotel Rate Endpoint (Poll until searchStatus is completed per Benzy specification)
         $rateUrl = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/rate';
         $rateRes = null;
-        for ($attempt = 1; $attempt <= 8; $attempt++) {
+        for ($attempt = 1; $attempt <= 12; $attempt++) {
             if ($attempt > 1) {
-                usleep(1000000); // 1.0 second
+                usleep(1500000); // 1.5 seconds delay between polls
             }
             $rateRes = $this->makeRequest('HotelRate', $rateUrl, array(), 'GET', $token);
-            if ($rateRes['http_code'] === 200 && !empty($rateRes['json']['searchStatus']) && strtolower($rateRes['json']['searchStatus']) === 'completed') {
+            if ($rateRes['http_code'] === 200 && !empty($rateRes['json']['searchStatus']) && strtolower(trim($rateRes['json']['searchStatus'])) === 'completed') {
                 break;
             }
         }
@@ -692,7 +692,7 @@ class BenzyHotelApi {
                 '_guestCode' => '|1|1:A:25|',
                 '_guests'    => array(
                     array(
-                        'GuestID'    => 'G1',
+                        'GuestID'    => '0',
                         'Operation'  => 'U',
                         'Title'      => $title,
                         'FirstName'  => $fname,
@@ -700,7 +700,7 @@ class BenzyHotelApi {
                         'LastName'   => $lname,
                         'MobileNo'   => $mobile,
                         'PaxType'    => 'A',
-                        'Age'        => '',
+                        'Age'        => '25',
                         'Email'      => $email,
                         'Pan'        => ''
                     )
@@ -726,7 +726,7 @@ class BenzyHotelApi {
                     $pLname    = !empty($paxAdult['lname']) ? trim($paxAdult['lname']) : $lname;
 
                     $roomGuests[] = array(
-                        'GuestID'    => 'G' . $guestIdx,
+                        'GuestID'    => '0',
                         'Operation'  => 'U',
                         'Title'      => $pTitle,
                         'FirstName'  => $pFname,
@@ -734,7 +734,7 @@ class BenzyHotelApi {
                         'LastName'   => $pLname,
                         'MobileNo'   => $mobile,
                         'PaxType'    => 'A',
-                        'Age'        => '',
+                        'Age'        => '25',
                         'Email'      => $email,
                         'Pan'        => ''
                     );
@@ -772,7 +772,7 @@ class BenzyHotelApi {
                         $cAge     = $childAgesClean[$ci];
 
                         $roomGuests[] = array(
-                            'GuestID'    => 'G' . $guestIdx,
+                            'GuestID'    => '0',
                             'Operation'  => 'U',
                             'Title'      => $cTitle,
                             'FirstName'  => $cFname,
@@ -780,7 +780,7 @@ class BenzyHotelApi {
                             'LastName'   => $cLname,
                             'MobileNo'   => $mobile,
                             'PaxType'    => 'C',
-                            'Age'        => $cAge,
+                            'Age'        => (string)$cAge,
                             'Email'      => $email,
                             'Pan'        => ''
                         );
@@ -1144,8 +1144,17 @@ class BenzyHotelApi {
     public function getHotelRates($searchId, $searchTracingKey = '') {
         $token = $this->generateToken();
         $rateUrl = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/rate';
-        $rateRes = $this->makeRequest('HotelRate', $rateUrl, array(), 'GET', $token);
-        if ($rateRes['http_code'] !== 200 || empty($rateRes['json']['hotels'])) {
+        $rateRes = null;
+        for ($attempt = 1; $attempt <= 12; $attempt++) {
+            if ($attempt > 1) {
+                usleep(1500000); // 1.5s delay between polls
+            }
+            $rateRes = $this->makeRequest('HotelRate', $rateUrl, array(), 'GET', $token);
+            if ($rateRes['http_code'] === 200 && !empty($rateRes['json']['searchStatus']) && strtolower(trim($rateRes['json']['searchStatus'])) === 'completed') {
+                break;
+            }
+        }
+        if (!$rateRes || $rateRes['http_code'] !== 200 || empty($rateRes['json']['hotels'])) {
             $altRateUrl = $this->hotelUrl . '/Hotel/HotelRate';
             $rateRes = $this->makeRequest('HotelRate_POST', $altRateUrl, array('searchId' => $searchId), 'POST', $token);
         }
