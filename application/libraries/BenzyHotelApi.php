@@ -1108,23 +1108,11 @@ class BenzyHotelApi {
 
     /**
      * Resolves segmentId dynamically using htdealCode from AgentProfile API response
-     * Requirement from Benzy Infotech certification team: when htdealCode is empty/null, pass null.
+     * Requirement from Benzy Infotech certification team:
+     * - Always calls and logs AgentProfile API so it is visible in activity logs
+     * - When htdealCode is empty/null, passes null as segmentId in Init request.
      */
     public function resolveSegmentId() {
-        if ($this->htdealCode !== null) {
-            return $this->htdealCode;
-        }
-
-        // Check local cache first (1 hour TTL)
-        $cacheFile = APPPATH . 'cache/benzy_htdealcode_' . $this->environment . '.json';
-        if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < 3600)) {
-            $cached = @json_decode(file_get_contents($cacheFile), true);
-            if (is_array($cached) && array_key_exists('htdealCode', $cached)) {
-                $this->htdealCode = !empty($cached['htdealCode']) ? trim($cached['htdealCode']) : null;
-                return $this->htdealCode;
-            }
-        }
-
         try {
             $profile = $this->getAgentProfile();
 
@@ -1151,13 +1139,6 @@ class BenzyHotelApi {
                 // If htdealCode from AgentProfile is empty or null, pass null as requested by Benzy team
                 $trimmed = is_string($dealCode) ? trim($dealCode) : $dealCode;
                 $this->htdealCode = (!empty($trimmed)) ? $trimmed : null;
-
-                @file_put_contents($cacheFile, json_encode(array(
-                    'htdealCode' => $this->htdealCode,
-                    'timestamp'  => date('Y-m-d H:i:s'),
-                    'profile'    => $profile
-                )));
-
                 return $this->htdealCode;
             }
         } catch (\Throwable $e) {

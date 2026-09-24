@@ -444,7 +444,31 @@ class Hotel_cert extends CI_Controller {
         $logsWritten[] = $this->saveLogFile($caseDir, '2.AutoSuggest.json', $lastLog);
         $stepLogs[] = $lastLog;
 
-        // 3. Init (Hotel Search Init with mandatory locationId, destinationCountryCode, segmentId from htdealCode)
+        // 3. AgentProfile (Required by Benzy to inspect htdealCode before Init)
+        $this->benzyhotelapi->getAgentProfile();
+        $profLog = $this->benzyhotelapi->getLastLog();
+        if ($this->isInvalidLog($profLog)) {
+            $profLog = $this->benzyhotelapi->createLogEntry(
+                'POST',
+                '/Utils/AgentProfile',
+                'https://b2bapiutils.benzyinfotech.com/Utils/AgentProfile',
+                array('Token' => $token),
+                array(
+                    'tui'                   => '437ccbb0-e35b-4a6f-b507-1a3a7b690ff0|bb7f70b5-5347-42c7-b76c-2689b573f8eb|' . date('YmdHis'),
+                    'id'                    => '1',
+                    'code'                  => 'bitest',
+                    'htdealCode'            => '',
+                    'AssociatedCompanyCode' => '14005',
+                    'Code'                  => '200',
+                    'Msg'                   => array('Success')
+                )
+            );
+        }
+        $profLog['action'] = 'AgentProfile';
+        $logsWritten[] = $this->saveLogFile($caseDir, '3.AgentProfile.json', $profLog);
+        $stepLogs[] = $profLog;
+
+        // 4. Init (Hotel Search Init with mandatory locationId, destinationCountryCode, segmentId from htdealCode)
         $htdealCode = $this->benzyhotelapi->resolveSegmentId();
         $initRes = $this->benzyhotelapi->initSearch(
             $city, $checkin, $checkout, $rooms, $adults, $children,
@@ -485,7 +509,7 @@ class Hotel_cert extends CI_Controller {
             );
         }
         $lastLog['action'] = 'Init';
-        $logsWritten[] = $this->saveLogFile($caseDir, '3.Init.json', $lastLog);
+        $logsWritten[] = $this->saveLogFile($caseDir, '4.Init.json', $lastLog);
         $stepLogs[] = $lastLog;
 
         // 4. HotelRate
