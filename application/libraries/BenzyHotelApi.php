@@ -1108,10 +1108,10 @@ class BenzyHotelApi {
 
     /**
      * Resolves segmentId dynamically using htdealCode from AgentProfile API response
-     * Requirement from Benzy Infotech certification team.
+     * Requirement from Benzy Infotech certification team: when htdealCode is empty/null, pass null.
      */
     public function resolveSegmentId() {
-        if (!empty($this->htdealCode)) {
+        if ($this->htdealCode !== null) {
             return $this->htdealCode;
         }
 
@@ -1119,15 +1119,14 @@ class BenzyHotelApi {
         $cacheFile = APPPATH . 'cache/benzy_htdealcode_' . $this->environment . '.json';
         if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < 3600)) {
             $cached = @json_decode(file_get_contents($cacheFile), true);
-            if (!empty($cached['htdealCode'])) {
-                $this->htdealCode = trim($cached['htdealCode']);
+            if (is_array($cached) && array_key_exists('htdealCode', $cached)) {
+                $this->htdealCode = !empty($cached['htdealCode']) ? trim($cached['htdealCode']) : null;
                 return $this->htdealCode;
             }
         }
 
         try {
             $profile = $this->getAgentProfile();
-            $dealCode = null;
 
             if (is_array($profile)) {
                 $dealCode = $profile['htdealCode']
@@ -1148,23 +1147,25 @@ class BenzyHotelApi {
                 if (!empty($profile['code'])) {
                     $this->credentials['AgentCode'] = (string)$profile['code'];
                 }
-            }
 
-            if (!empty($dealCode)) {
-                $this->htdealCode = trim($dealCode);
+                // If htdealCode from AgentProfile is empty or null, pass null as requested by Benzy team
+                $trimmed = is_string($dealCode) ? trim($dealCode) : $dealCode;
+                $this->htdealCode = (!empty($trimmed)) ? $trimmed : null;
+
                 @file_put_contents($cacheFile, json_encode(array(
                     'htdealCode' => $this->htdealCode,
                     'timestamp'  => date('Y-m-d H:i:s'),
                     'profile'    => $profile
                 )));
+
                 return $this->htdealCode;
             }
         } catch (\Throwable $e) {
             log_message('error', 'Failed to resolve htdealCode from AgentProfile: ' . $e->getMessage());
         }
 
-        // Fallback to configured segmentId from admin settings or default 'NewRevamp'
-        $this->htdealCode = !empty($this->segmentId) ? $this->segmentId : 'NewRevamp';
+        // When htdealCode is empty or not set in AgentProfile, pass null per Benzy requirement
+        $this->htdealCode = null;
         return $this->htdealCode;
     }
 

@@ -472,7 +472,7 @@ class Hotel_cert extends CI_Controller {
                     'nationality'            => 'IN',
                     'countryOfResidence'     => 'IN',
                     'channelId'              => 'b2bIndiaDeals',
-                    'segmentId'              => !empty($htdealCode) ? $htdealCode : 'NewRevamp',
+                    'segmentId'              => !empty($htdealCode) ? $htdealCode : null,
                     'companyId'              => '1',
                     'gstPercentage'          => 0,
                     'tdsPercentage'          => 0
