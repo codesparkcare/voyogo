@@ -17,6 +17,8 @@ class BenzyHotelApi {
     protected $hotelUrl = ''; // backward compatibility alias
     protected $channelId = 'b2bIndiaDeals';
     protected $segmentId = 'NewRevamp';
+    protected $htdealCode = null;
+    protected $agentProfile = null;
     protected $companyId = '1';
     protected $gstPercentage = 0;
     protected $tdsPercentage = 0;
@@ -345,11 +347,13 @@ class BenzyHotelApi {
             }
         }
 
-        // Compliant with Roopesh/Benzy requirements:
+        // Compliant with Benzy Infotech requirements:
         // 1. locationId: Always passed in Init Request
         // 2. destinationCountryCode: Passed from "country" leg of autosuggest response
-        // 3. segmentId: Passed as htdealCode from settings/profile
+        // 3. segmentId: Passed using htdealCode returned in the AgentProfile API response
         // 4. geoCode: Always included with coordinates
+        $segmentId = $this->resolveSegmentId();
+
         $payload = array(
             'locationId'             => $dest['locationId'],
             'geoCode'                => $dest['geoCode'],
@@ -364,7 +368,7 @@ class BenzyHotelApi {
             'countryOfResidence'     => 'IN',
             'channelId'              => $this->channelId,
             'affiliateRegion'        => 'B2B_India',
-            'segmentId'              => $this->segmentId,
+            'segmentId'              => $segmentId,
             'companyId'              => $this->companyId,
             'gstPercentage'          => $this->gstPercentage,
             'tdsPercentage'          => $this->tdsPercentage
@@ -1100,6 +1104,72 @@ class BenzyHotelApi {
         }
 
         return $tokenDetails;
+    }
+
+    /**
+     * Resolves segmentId dynamically using htdealCode from AgentProfile API response
+     * Requirement from Benzy Infotech certification team.
+     */
+    public function resolveSegmentId() {
+        if (!empty($this->htdealCode)) {
+            return $this->htdealCode;
+        }
+
+        // Check local cache first (1 hour TTL)
+        $cacheFile = APPPATH . 'cache/benzy_htdealcode_' . $this->environment . '.json';
+        if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < 3600)) {
+            $cached = @json_decode(file_get_contents($cacheFile), true);
+            if (!empty($cached['htdealCode'])) {
+                $this->htdealCode = trim($cached['htdealCode']);
+                return $this->htdealCode;
+            }
+        }
+
+        try {
+            $profile = $this->getAgentProfile();
+            $dealCode = null;
+
+            if (is_array($profile)) {
+                $dealCode = $profile['htdealCode']
+                    ?? $profile['HtdealCode']
+                    ?? $profile['HTDealCode']
+                    ?? $profile['dealCode']
+                    ?? ($profile['data']['htdealCode'] ?? null);
+
+                if (isset($profile['GST'])) {
+                    $this->gstPercentage = (float)$profile['GST'];
+                }
+                if (isset($profile['TDS'])) {
+                    $this->tdsPercentage = (float)$profile['TDS'];
+                }
+                if (!empty($profile['id'])) {
+                    $this->companyId = (string)$profile['id'];
+                }
+                if (!empty($profile['code'])) {
+                    $this->credentials['AgentCode'] = (string)$profile['code'];
+                }
+            }
+
+            if (!empty($dealCode)) {
+                $this->htdealCode = trim($dealCode);
+                @file_put_contents($cacheFile, json_encode(array(
+                    'htdealCode' => $this->htdealCode,
+                    'timestamp'  => date('Y-m-d H:i:s'),
+                    'profile'    => $profile
+                )));
+                return $this->htdealCode;
+            }
+        } catch (\Throwable $e) {
+            log_message('error', 'Failed to resolve htdealCode from AgentProfile: ' . $e->getMessage());
+        }
+
+        // Fallback to configured segmentId from admin settings or default 'NewRevamp'
+        $this->htdealCode = !empty($this->segmentId) ? $this->segmentId : 'NewRevamp';
+        return $this->htdealCode;
+    }
+
+    public function getHtDealCode() {
+        return $this->resolveSegmentId();
     }
 
     // =========================================================================

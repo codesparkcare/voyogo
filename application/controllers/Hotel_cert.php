@@ -444,7 +444,8 @@ class Hotel_cert extends CI_Controller {
         $logsWritten[] = $this->saveLogFile($caseDir, '2.AutoSuggest.json', $lastLog);
         $stepLogs[] = $lastLog;
 
-        // 3. Init (Hotel Search Init with mandatory locationId, destinationCountryCode, segmentId)
+        // 3. Init (Hotel Search Init with mandatory locationId, destinationCountryCode, segmentId from htdealCode)
+        $htdealCode = $this->benzyhotelapi->resolveSegmentId();
         $initRes = $this->benzyhotelapi->initSearch(
             $city, $checkin, $checkout, $rooms, $adults, $children,
             $locationId, $geoCode, $roomData, $countryCode
@@ -471,7 +472,7 @@ class Hotel_cert extends CI_Controller {
                     'nationality'            => 'IN',
                     'countryOfResidence'     => 'IN',
                     'channelId'              => 'b2bIndiaDeals',
-                    'segmentId'              => 'NewRevamp',
+                    'segmentId'              => !empty($htdealCode) ? $htdealCode : 'NewRevamp',
                     'companyId'              => '1',
                     'gstPercentage'          => 0,
                     'tdsPercentage'          => 0
