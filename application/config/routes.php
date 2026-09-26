@@ -56,6 +56,12 @@ $route['admin/customers'] = 'admin/manage_customers';
 $route['admin/customers/toggle/(:num)'] = 'admin/toggle_customer_status/$1';
 $route['admin/customers/delete/(:num)'] = 'admin/delete_customer/$1';
 
+// Exclusive Deals Management Routes
+$route['admin/deals'] = 'admin/manage_deals';
+$route['admin/deals/save'] = 'admin/save_deal';
+$route['admin/deals/toggle/(:num)'] = 'admin/toggle_deal_status/$1';
+$route['admin/deals/delete/(:num)'] = 'admin/delete_deal/$1';
+
 // Service Leads & Enquiries Routes
 $route['admin/visas'] = 'admin/manage_visas';
 $route['admin/visas/status/(:num)'] = 'admin/update_visa_status/$1';

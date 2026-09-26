@@ -1377,4 +1377,109 @@ class Admin extends CI_Controller {
         $this->session->set_flashdata('success', 'Cruise enquiry deleted successfully!');
         redirect('admin/cruises');
     }
+
+    /* ==========================================================================
+       EXCLUSIVE DEALS MANAGEMENT (Akbar-Style Deals)
+       ========================================================================== */
+    public function manage_deals()
+    {
+        $this->_check_login();
+        $search   = trim($this->input->get('search') ?: '');
+        $category = trim($this->input->get('category') ?: '');
+        $status   = trim($this->input->get('status') ?: '');
+
+        $total_filtered = $this->Admin_model->count_deals($category, $status, $search);
+        $paging = $this->_get_pagination_params($total_filtered, 15);
+
+        $data['deals']           = $this->Admin_model->get_deals($paging['limit'], $paging['offset'], $category, $status, $search);
+        $data['total_count']     = $this->Admin_model->count_deals();
+        $data['hot_deals_count'] = $this->Admin_model->count_deals('HOT DEALS');
+        $data['flight_count']    = $this->Admin_model->count_deals('FLIGHT');
+        $data['hotel_count']     = $this->Admin_model->count_deals('HOTEL');
+        $data['holidays_count']  = $this->Admin_model->count_deals('HOLIDAYS');
+        $data['visa_count']      = $this->Admin_model->count_deals('VISA');
+
+        $data['paging']          = $paging;
+        $data['search']          = $search;
+        $data['category_filter'] = $category;
+        $data['status_filter']   = $status;
+        $data['active_menu']     = 'deals';
+
+        $this->load->view('admin/layout/header', $data);
+        $this->load->view('admin/layout/sidebar', $data);
+        $this->load->view('admin/manage_deals', $data);
+        $this->load->view('admin/layout/footer', $data);
+    }
+
+    public function save_deal()
+    {
+        $this->_check_login();
+        $id = $this->input->post('id');
+
+        $image_url = trim($this->input->post('image_url') ?: '');
+
+        // Handle file upload if present
+        if (!empty($_FILES['image_file']['name'])) {
+            $upload_path = FCPATH . 'uploads/deals/';
+            if (!is_dir($upload_path)) {
+                mkdir($upload_path, 0755, true);
+            }
+            $config['upload_path']   = $upload_path;
+            $config['allowed_types'] = 'gif|jpg|jpeg|png|webp';
+            $config['max_size']      = 5120; // 5MB
+            $config['file_name']     = 'deal_' . time() . '_' . rand(100, 999);
+
+            $this->load->library('upload', $config);
+            if ($this->upload->do_upload('image_file')) {
+                $upload_data = $this->upload->data();
+                $image_url = base_url('uploads/deals/' . $upload_data['file_name']);
+            }
+        }
+
+        if (empty($image_url)) {
+            $image_url = 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80';
+        }
+
+        $deal_data = array(
+            'category'      => $this->input->post('category') ?: 'HOT DEALS',
+            'title'         => trim($this->input->post('title')),
+            'subtitle'      => trim($this->input->post('subtitle')),
+            'promo_code'    => strtoupper(trim($this->input->post('promo_code'))),
+            'discount_text' => trim($this->input->post('discount_text')),
+            'image_url'     => $image_url,
+            'link_url'      => trim($this->input->post('link_url') ?: '#'),
+            'sort_order'    => (int)$this->input->post('sort_order'),
+            'status'        => $this->input->post('status') ?: 'active'
+        );
+
+        if (!empty($id)) {
+            $this->Admin_model->update_deal($id, $deal_data);
+            $this->session->set_flashdata('success', 'Exclusive Deal updated successfully!');
+        } else {
+            $this->Admin_model->add_deal($deal_data);
+            $this->session->set_flashdata('success', 'New Exclusive Deal published successfully!');
+        }
+
+        redirect('admin/deals');
+    }
+
+    public function toggle_deal_status($id)
+    {
+        $this->_check_login();
+        $new_status = $this->Admin_model->toggle_deal_status($id);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(['success' => true, 'status' => $new_status]);
+            return;
+        }
+        $this->session->set_flashdata('success', 'Deal status updated to ' . ucfirst($new_status));
+        redirect('admin/deals');
+    }
+
+    public function delete_deal($id)
+    {
+        $this->_check_login();
+        $this->Admin_model->delete_deal($id);
+        $this->session->set_flashdata('success', 'Deal deleted successfully!');
+        redirect('admin/deals');
+    }
 }

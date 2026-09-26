@@ -484,6 +484,86 @@ class Admin_model extends CI_Model {
         $this->db->where('id', (int)$id);
         return $this->db->delete('cruise_enquiries');
     }
+
+    /* ==========================================================================
+       EXCLUSIVE DEALS METHODS
+       ========================================================================== */
+    public function get_deals($limit = null, $offset = 0, $category = '', $status = '', $search = '') {
+        if (!$this->db->table_exists('exclusive_deals')) return array();
+        if (!empty($category)) $this->db->where('category', $category);
+        if (!empty($status)) $this->db->where('status', $status);
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('title', $search);
+            $this->db->or_like('subtitle', $search);
+            $this->db->or_like('promo_code', $search);
+            $this->db->or_like('discount_text', $search);
+            $this->db->group_end();
+        }
+        $this->db->order_by('sort_order', 'ASC');
+        $this->db->order_by('id', 'DESC');
+        if ($limit !== null) {
+            return $this->db->get('exclusive_deals', $limit, $offset)->result_array();
+        }
+        return $this->db->get('exclusive_deals')->result_array();
+    }
+
+    public function count_deals($category = '', $status = '', $search = '') {
+        if (!$this->db->table_exists('exclusive_deals')) return 0;
+        if (!empty($category)) $this->db->where('category', $category);
+        if (!empty($status)) $this->db->where('status', $status);
+        if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like('title', $search);
+            $this->db->or_like('subtitle', $search);
+            $this->db->or_like('promo_code', $search);
+            $this->db->or_like('discount_text', $search);
+            $this->db->group_end();
+        }
+        return $this->db->count_all_results('exclusive_deals');
+    }
+
+    public function get_deal($id) {
+        return $this->db->get_where('exclusive_deals', array('id' => (int)$id))->row_array();
+    }
+
+    public function add_deal($data) {
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $this->db->insert('exclusive_deals', $data);
+        return $this->db->insert_id();
+    }
+
+    public function update_deal($id, $data) {
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        $this->db->where('id', (int)$id);
+        return $this->db->update('exclusive_deals', $data);
+    }
+
+    public function delete_deal($id) {
+        $this->db->where('id', (int)$id);
+        return $this->db->delete('exclusive_deals');
+    }
+
+    public function toggle_deal_status($id) {
+        $deal = $this->get_deal($id);
+        if ($deal) {
+            $new_status = ($deal['status'] === 'active') ? 'inactive' : 'active';
+            $this->update_deal($id, array('status' => $new_status));
+            return $new_status;
+        }
+        return false;
+    }
+
+    public function get_active_deals($category = '') {
+        if (!$this->db->table_exists('exclusive_deals')) return array();
+        $this->db->where('status', 'active');
+        if (!empty($category)) {
+            $this->db->where('category', $category);
+        }
+        $this->db->order_by('sort_order', 'ASC');
+        $this->db->order_by('id', 'DESC');
+        return $this->db->get('exclusive_deals')->result_array();
+    }
 }
 
 

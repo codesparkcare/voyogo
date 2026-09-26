@@ -3,23 +3,23 @@
         
         <!-- Trust Badges Bar -->
         <div class="container" style="margin-bottom: 40px;">
-            <div class="features-grid">
-                <div class="feature-box">
+            <div class="features-grid" data-scroll="fade-up">
+                <div class="feature-box" data-scroll-child>
                     <div class="feature-icon"><i class="fa-solid fa-headset"></i></div>
                     <h3>24x7 Customer Care</h3>
                     <p>Get instant assistance for flight modifications & refunds anytime.</p>
                 </div>
-                <div class="feature-box">
+                <div class="feature-box" data-scroll-child>
                     <div class="feature-icon"><i class="fa-solid fa-tag"></i></div>
                     <h3>Best Price Guarantee</h3>
                     <p>Find lower airfares elsewhere? We match the price plus extra cashback!</p>
                 </div>
-                <div class="feature-box">
+                <div class="feature-box" data-scroll-child>
                     <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
                     <h3>Instant Booking & Cancellation</h3>
                     <p>Seamless zero-hassle ticket confirmation and instant wallet refunds.</p>
                 </div>
-                <div class="feature-box">
+                <div class="feature-box" data-scroll-child>
                     <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
                     <h3>100% Secure Payments</h3>
                     <p>Protected by 256-bit SSL encryption across credit cards, UPI & NetBanking.</p>
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div class="footer-top">
+        <div class="footer-top" data-scroll="fade-up">
             <div class="container">
                 <div class="footer-grid">
                     
@@ -37,18 +37,18 @@
                             <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png') : './assets/images/logo.png'; ?>" alt="Voyogo Logo" style="max-height: 44px; width: auto;">
                         </div>
                         <p>Voyogo is India's leading online travel company offering great deals on flight bookings, hotel reservations, holiday packages, visas, and forex services. Book cheap domestic & international air tickets with ease.</p>
-                        <div style="display: flex; gap: 12px; font-size: 18px; color: #ffffff;">
-                            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-                            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-                            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <div class="social-icons-row">
+                            <a href="#" aria-label="Facebook" class="social-icon social-fb"><i class="fa-brands fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter" class="social-icon social-tw"><i class="fa-brands fa-x-twitter"></i></a>
+                            <a href="#" aria-label="Instagram" class="social-icon social-ig"><i class="fa-brands fa-instagram"></i></a>
+                            <a href="#" aria-label="YouTube" class="social-icon social-yt"><i class="fa-brands fa-youtube"></i></a>
+                            <a href="#" aria-label="LinkedIn" class="social-icon social-li"><i class="fa-brands fa-linkedin-in"></i></a>
                         </div>
                     </div>
 
                     <!-- Column 2: Flight Routes -->
                     <div class="footer-col">
-                        <h4>Popular Flight Routes</h4>
+                        <h4>Useful Links</h4>
                         <ul class="footer-links">
                             <li><a href="<?php echo function_exists('site_url') ? site_url('flight') : '#'; ?>">Delhi to Mumbai Flights</a></li>
                             <li><a href="<?php echo function_exists('site_url') ? site_url('flight') : '#'; ?>">Bangalore to Goa Flights</a></li>
@@ -60,7 +60,7 @@
 
                     <!-- Column 3: Top Hotel Stays -->
                     <div class="footer-col">
-                        <h4>Top Hotel Destinations</h4>
+                        <h4>Site Link</h4>
                         <ul class="footer-links">
                             <li><a href="<?php echo function_exists('site_url') ? site_url('hotels') : '#'; ?>">Hotels in Goa</a></li>
                             <li><a href="<?php echo function_exists('site_url') ? site_url('hotels') : '#'; ?>">Hotels in Dubai</a></li>
@@ -90,12 +90,8 @@
                 <div>
                     <p>&copy; <?php echo date('Y'); ?> Voyogo Travel Pvt. Ltd. All rights reserved.</p>
                 </div>
-                <div class="payment-badge-group">
-                    <i class="fa-brands fa-cc-visa" title="Visa"></i>
-                    <i class="fa-brands fa-cc-mastercard" title="MasterCard"></i>
-                    <i class="fa-brands fa-cc-amex" title="American Express"></i>
-                    <i class="fa-brands fa-google-pay" title="Google Pay"></i>
-                    <i class="fa-solid fa-building-columns" title="NetBanking"></i>
+                <div class="footer-credit">
+                    <span>Design By <a href="https://codespark.online" target="_blank" rel="noopener noreferrer" class="codespark-link">CODESPARK</a></span>
                 </div>
             </div>
         </div>

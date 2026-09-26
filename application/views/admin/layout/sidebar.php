@@ -19,6 +19,11 @@
                 <i class="fa-solid fa-gauge-high"></i> Dashboard
             </a>
         </li>
+        <li>
+            <a href="<?php echo site_url('admin/deals'); ?>" class="<?php echo ($active == 'deals') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-fire" style="color: #ef4444;"></i> Exclusive Deals
+            </a>
+        </li>
         
         <li class="menu-title"><i class="fa-solid fa-plane me-1"></i> Flight Management</li>
         <li>

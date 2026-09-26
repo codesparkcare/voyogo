@@ -432,5 +432,27 @@ CREATE TABLE IF NOT EXISTS `cruise_enquiries` (
   INDEX `idx_cruise_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- =====================================================
+-- Exclusive Deals Schema (Dynamic Admin Promotions)
+-- =====================================================
+CREATE TABLE IF NOT EXISTS `exclusive_deals` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `category` ENUM('HOT DEALS', 'FLIGHT', 'HOTEL', 'HOLIDAYS', 'VISA') NOT NULL DEFAULT 'HOT DEALS',
+  `title` VARCHAR(255) NOT NULL,
+  `subtitle` VARCHAR(255) DEFAULT NULL,
+  `promo_code` VARCHAR(50) DEFAULT NULL,
+  `discount_text` VARCHAR(100) DEFAULT NULL,
+  `image_url` TEXT NOT NULL,
+  `link_url` VARCHAR(255) DEFAULT '#',
+  `sort_order` INT(11) NOT NULL DEFAULT 0,
+  `status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_category_status` (`category`, `status`),
+  KEY `idx_sort` (`sort_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 
 

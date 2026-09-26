@@ -7,15 +7,145 @@ $defaultNights   = 4;
 <style>
 .akbar-hero-section {
     position: relative;
-    background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=85') no-repeat center center / cover;
+    background: #061a3a;
     padding: 70px 0 100px 0;
     min-height: 480px;
+    overflow: visible;
 }
-.akbar-hero-overlay {
+
+/* Hotel Hero Slider Styles */
+.hotel-slider-wrap {
     position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(9, 32, 75, 0.65) 0%, rgba(13, 52, 112, 0.75) 50%, rgba(9, 32, 75, 0.9) 100%);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
 }
+
+.hotel-slider-track {
+    display: flex;
+    width: 400%;
+    height: 100%;
+    transition: transform 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+}
+
+.hotel-slide {
+    width: 25%;
+    height: 100%;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.hotel-slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.hotel-slider-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(6, 26, 58, 0.6) 0%, rgba(9, 32, 75, 0.45) 45%, rgba(9, 32, 75, 0.78) 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.hotel-slider-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.hotel-slider-arrow {
+    position: absolute;
+    top: 48%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: auto;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.25s ease;
+    font-size: 16px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.hotel-slider-arrow:hover {
+    background: rgba(255, 255, 255, 0.95);
+    color: #09204b;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.hotel-slider-arrow.prev {
+    left: 24px;
+}
+
+.hotel-slider-arrow.next {
+    right: 24px;
+}
+
+.hotel-slider-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: auto;
+    z-index: 5;
+}
+
+.hotel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.hotel-dot:hover {
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.hotel-dot.active {
+    width: 28px;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 900px) {
+    .hotel-slider-arrow {
+        display: none;
+    }
+}
+
 .akbar-hero-container {
     position: relative;
     z-index: 10;
@@ -630,30 +760,53 @@ $defaultNights   = 4;
     gap: 28px;
 }
 .deals-heading {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-size: 24px;
     font-weight: 800;
-    color: #0f172a;
+    color: #0b1e3d;
     margin: 0;
+    letter-spacing: -0.3px;
 }
 .deals-tabs {
     display: flex;
-    gap: 20px;
+    align-items: center;
+    gap: 10px;
 }
 .deals-tab-btn {
     background: none;
     border: none;
-    font-size: 13px;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 13.5px;
     font-weight: 700;
     color: #64748b;
-    padding: 6px 0;
+    padding: 8px 12px 10px;
     cursor: pointer;
     position: relative;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+.deals-tab-btn:hover {
+    color: #0b1e3d;
+    background: #f8fafc;
 }
 .deals-tab-btn.active {
-    color: #eb2027;
-    border-bottom: 2px solid #eb2027;
+    color: #eb2027 !important;
+    font-weight: 800 !important;
+    border-bottom: none !important;
+    background: transparent;
+}
+.deals-tab-btn.active::after {
+    content: '' !important;
+    display: block !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 10px !important;
+    right: 10px !important;
+    height: 3px !important;
+    background: #eb2027 !important;
+    border-radius: 3px !important;
 }
 .deals-grid {
     display: grid;
@@ -767,7 +920,161 @@ $defaultNights   = 4;
 
 <!-- Hero Section with Akbar Travels Style Search Engine -->
 <section class="akbar-hero-section">
-    <div class="akbar-hero-overlay"></div>
+    <!-- Hotel Hero Background Slider -->
+    <div class="hotel-slider-wrap">
+        <div class="hotel-slider-track" id="hotelSliderTrack">
+            <div class="hotel-slide">
+                <img src="<?php echo base_url('assets/images/Hotel_Booking_Slider/hotel_banner1.png'); ?>" alt="Hotel Banner 1" class="hotel-slide-img">
+            </div>
+            <div class="hotel-slide">
+                <img src="<?php echo base_url('assets/images/Hotel_Booking_Slider/hotel_banner2.png'); ?>" alt="Hotel Banner 2" class="hotel-slide-img">
+            </div>
+            <div class="hotel-slide">
+                <img src="<?php echo base_url('assets/images/Hotel_Booking_Slider/hotel_banner3.png'); ?>" alt="Hotel Banner 3" class="hotel-slide-img">
+            </div>
+            <!-- Seamless infinite loop clone of Banner 1 -->
+            <div class="hotel-slide">
+                <img src="<?php echo base_url('assets/images/Hotel_Booking_Slider/hotel_banner1.png'); ?>" alt="Hotel Banner 1 Loop" class="hotel-slide-img">
+            </div>
+        </div>
+        
+        <!-- Subtle Gradient Overlay for contrast and readability -->
+        <div class="hotel-slider-overlay"></div>
+    </div>
+
+    <!-- Slider Controls: Dots & Arrows -->
+    <div class="hotel-slider-controls">
+        <button type="button" class="hotel-slider-arrow prev" id="hotelSliderPrev" aria-label="Previous Slide">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button type="button" class="hotel-slider-arrow next" id="hotelSliderNext" aria-label="Next Slide">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <div class="hotel-slider-dots" id="hotelSliderDots">
+            <button type="button" class="hotel-dot active" data-slide="0" aria-label="Slide 1"></button>
+            <button type="button" class="hotel-dot" data-slide="1" aria-label="Slide 2"></button>
+            <button type="button" class="hotel-dot" data-slide="2" aria-label="Slide 3"></button>
+        </div>
+    </div>
+
+    <!-- Hotel Background Auto-Scroll Script -->
+    <script>
+    (function initHotelSliderDirect() {
+        function runSlider() {
+            var track = document.getElementById('hotelSliderTrack');
+            var dots = document.querySelectorAll('.hotel-dot');
+            var prevBtn = document.getElementById('hotelSliderPrev');
+            var nextBtn = document.getElementById('hotelSliderNext');
+            if (!track || window.__hotelSliderRunning) return;
+            window.__hotelSliderRunning = true;
+
+            var currentSlide = 0;
+            var isTransitioning = false;
+            var realSlidesCount = 3;
+            var totalSlidesCount = 4;
+            var slideInterval = 3500; // 3.5s auto-scroll
+            var timer = null;
+
+            function updateDots(idx) {
+                var activeIndex = idx % realSlidesCount;
+                for (var i = 0; i < dots.length; i++) {
+                    if (i === activeIndex) {
+                        dots[i].classList.add('active');
+                    } else {
+                        dots[i].classList.remove('active');
+                    }
+                }
+            }
+
+            function moveToSlide(idx, animated) {
+                if (animated) {
+                    track.style.transition = 'transform 0.85s cubic-bezier(0.25, 1, 0.5, 1)';
+                } else {
+                    track.style.transition = 'none';
+                }
+                currentSlide = idx;
+                var offset = -(currentSlide * (100 / totalSlidesCount));
+                track.style.transform = 'translateX(' + offset + '%)';
+                updateDots(currentSlide);
+            }
+
+            function nextSlide() {
+                if (isTransitioning) return;
+                isTransitioning = true;
+                moveToSlide(currentSlide + 1, true);
+            }
+
+            function prevSlide() {
+                if (isTransitioning) return;
+                isTransitioning = true;
+                if (currentSlide <= 0) {
+                    moveToSlide(totalSlidesCount - 1, false);
+                    void track.offsetWidth;
+                    moveToSlide(realSlidesCount - 1, true);
+                } else {
+                    moveToSlide(currentSlide - 1, true);
+                }
+            }
+
+            track.addEventListener('transitionend', function() {
+                isTransitioning = false;
+                if (currentSlide >= totalSlidesCount - 1) {
+                    moveToSlide(0, false);
+                    void track.offsetWidth;
+                }
+            });
+
+            function startTimer() {
+                stopTimer();
+                timer = setInterval(nextSlide, slideInterval);
+            }
+
+            function stopTimer() {
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+            }
+
+            for (var d = 0; d < dots.length; d++) {
+                (function(index) {
+                    dots[index].addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (isTransitioning) return;
+                        isTransitioning = true;
+                        moveToSlide(index, true);
+                        startTimer();
+                    });
+                })(d);
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    nextSlide();
+                    startTimer();
+                });
+            }
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    prevSlide();
+                    startTimer();
+                });
+            }
+
+            // Start auto-scrolling immediately
+            startTimer();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', runSlider);
+        } else {
+            runSlider();
+        }
+    })();
+    </script>
     <div class="akbar-hero-container">
         
         <!-- Headline -->
@@ -985,24 +1292,24 @@ $defaultNights   = 4;
 </section>
 
 <!-- Exclusive Deals Section (Matching Akbar Travels UI) -->
-<section class="exclusive-deals-section">
+<section class="exclusive-deals-section" data-scroll="fade-up">
     <div class="container">
         
         <div class="deals-header-row">
             <div class="deals-title-wrap">
                 <h2 class="deals-heading">Exclusive Deals</h2>
                 <div class="deals-tabs">
-                    <button class="deals-tab-btn" onclick="filterDealsTab(this, 'all')">HOT DEAL</button>
+                    <button class="deals-tab-btn active" onclick="filterDealsTab(this, 'all')">HOT DEAL</button>
                     <button class="deals-tab-btn" onclick="filterDealsTab(this, 'flight')">FLIGHT</button>
-                    <button class="deals-tab-btn active" onclick="filterDealsTab(this, 'hotel')">HOTEL</button>
+                    <button class="deals-tab-btn" onclick="filterDealsTab(this, 'hotel')">HOTEL</button>
                     <button class="deals-tab-btn" onclick="filterDealsTab(this, 'holidays')">HOLIDAYS</button>
                     <button class="deals-tab-btn" onclick="filterDealsTab(this, 'cruise')">CRUISE</button>
                 </div>
             </div>
-            <div>
-                <a href="<?php echo site_url('hotels'); ?>" style="color: #eb2027; font-size: 13px; font-weight: 700; text-decoration: none; margin-right: 12px;">View All Deals</a>
-                <span style="background: #f1f5f9; padding: 6px 12px; border-radius: 50%; font-size: 13px; cursor: pointer; color: #475569;"><i class="fa-solid fa-chevron-left"></i></span>
-                <span style="background: #0d3470; padding: 6px 12px; border-radius: 50%; font-size: 13px; cursor: pointer; color: #ffffff;"><i class="fa-solid fa-chevron-right"></i></span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a href="<?php echo site_url('hotels'); ?>" style="color: #eb2027; font-size: 13.5px; font-weight: 700; text-decoration: none; margin-right: 6px;">View All Deals</a>
+                <span style="background: #f1f5f9; width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; cursor: pointer; color: #475569;"><i class="fa-solid fa-chevron-left"></i></span>
+                <span style="background: #0d3470; width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; cursor: pointer; color: #ffffff;"><i class="fa-solid fa-chevron-right"></i></span>
             </div>
         </div>
 
@@ -1059,27 +1366,11 @@ $defaultNights   = 4;
 
         </div>
 
-        <!-- Bank Discount Banner -->
-        <div class="bank-promo-banner">
-            <div style="display: flex; align-items: center; gap: 16px;">
-                <div style="width: 50px; height: 50px; background: #fee2e2; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                    <i class="fa-solid fa-credit-card" style="font-size: 24px; color: #eb2027;"></i>
-                </div>
-                <div>
-                    <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 800; color: #0f172a;">Flat 25% off on Domestic & International Hotels</h4>
-                    <p style="margin: 0; font-size: 13px; color: #64748b;">with HDFC Bank Credit Card EMI Offers & instant partner discounts.</p>
-                </div>
-            </div>
-            <div>
-                <a href="<?php echo site_url('hotels'); ?>" style="background: #0d3470; color: #fff; padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: 700; text-decoration: none;">CLAIM DISCOUNT</a>
-            </div>
-        </div>
-
     </div>
 </section>
 
 <!-- Featured Destinations Section -->
-<section class="section-padding" style="background: #f8fafc;">
+<section class="section-padding" style="background: #f8fafc;" data-scroll="blur-in">
     <div class="container">
         
         <div class="section-header">
@@ -1089,7 +1380,7 @@ $defaultNights   = 4;
             </div>
         </div>
 
-        <div class="cards-grid">
+        <div class="cards-grid" data-scroll="fade-up" data-scroll-delay="200">
             
             <div class="destination-card">
                 <div class="card-img-wrapper">
@@ -1155,6 +1446,251 @@ $defaultNights   = 4;
 
     </div>
 </section>
+
+<!-- Why Choose voyogos.com Section -->
+<section class="why-choose-section" data-scroll="fade-up">
+    <div class="container">
+        
+        <h2 class="why-choose-title">Why Choose voyogos.com</h2>
+
+        <!-- 4 Key Value Propositions -->
+        <div class="why-features-grid" data-scroll="scale-in" data-scroll-delay="200">
+            
+            <!-- Feature 1: Easy Booking -->
+            <div class="why-feature-item">
+                <div class="why-feature-icon-direct">
+                    <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="planeGrad" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#38bdf8"/>
+                                <stop offset="1" stop-color="#0284c7"/>
+                            </linearGradient>
+                            <linearGradient id="cloudGrad" x1="0" y1="0" x2="20" y2="10" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#e0f2fe"/>
+                                <stop offset="1" stop-color="#bae6fd"/>
+                            </linearGradient>
+                        </defs>
+                        <ellipse cx="14" cy="38" rx="8" ry="4" fill="url(#cloudGrad)"/>
+                        <ellipse cx="22" cy="40" rx="6" ry="3" fill="url(#cloudGrad)"/>
+                        <path d="M21 16L32 6C33.5 4.5 36 5.5 36 7.5L34 19L44 26C45 26.8 44.5 28.5 43.2 28.5L32 27L24 37C23.2 38 21.8 38.2 21 37.5L19 35.8C18.2 35 18.5 33.5 19.5 32.8L25 28L15 25L9 29C8.2 29.5 7.2 29.2 6.8 28.5L5.8 26.8C5.2 26 5.8 24.8 6.8 24.5L14 22L21 16Z" fill="url(#planeGrad)" filter="drop-shadow(0px 3px 5px rgba(2, 132, 199, 0.3))"/>
+                    </svg>
+                </div>
+                <div class="why-feature-text">
+                    <h4>Easy Booking</h4>
+                    <p>Book online within minutes.</p>
+                </div>
+            </div>
+
+            <!-- Vertical Divider -->
+            <div class="why-divider"></div>
+
+            <!-- Feature 2: Best Price Guarantee -->
+            <div class="why-feature-item">
+                <div class="why-feature-icon-direct">
+                    <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="goldCoinGrad" x1="18" y1="2" x2="42" y2="28" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#fde047"/>
+                                <stop offset="0.6" stop-color="#eab308"/>
+                                <stop offset="1" stop-color="#ca8a04"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Coin -->
+                        <circle cx="30" cy="17" r="13" fill="url(#goldCoinGrad)" filter="drop-shadow(0px 3px 5px rgba(202, 138, 4, 0.35))"/>
+                        <circle cx="30" cy="17" r="10" stroke="#fef08a" stroke-width="1.5" stroke-dasharray="2 2" fill="none"/>
+                        <text x="30" y="22" font-size="14" font-weight="900" text-anchor="middle" fill="#854d0e" font-family="'Outfit', sans-serif">₹</text>
+                        <!-- Hand Thumbs Up -->
+                        <path d="M10 28V42H16V28H10ZM18 42H27C28.5 42 29.8 41 30.2 39.6L32.2 33C32.6 31.6 31.6 30.2 30.2 30.2H23.5L24.8 23.8C25.1 22.2 24 20.8 22.4 20.8C21.5 20.8 20.7 21.2 20.2 21.8L18 24.5V42Z" fill="#2563eb"/>
+                        <path d="M8 30H14V42H8V30Z" fill="#1d4ed8"/>
+                    </svg>
+                </div>
+                <div class="why-feature-text">
+                    <h4>Best Price Guarantee</h4>
+                    <p>Competitive rates &amp; exclusive weekly deals.</p>
+                </div>
+            </div>
+
+            <!-- Vertical Divider -->
+            <div class="why-divider"></div>
+
+            <!-- Feature 3: Global Network -->
+            <div class="why-feature-item">
+                <div class="why-feature-icon-direct">
+                    <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="globeGrad" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#2dd4bf"/>
+                                <stop offset="1" stop-color="#0f766e"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="24" cy="24" r="17" fill="url(#globeGrad)" filter="drop-shadow(0px 3px 5px rgba(15, 118, 110, 0.3))"/>
+                        <ellipse cx="24" cy="24" rx="9" ry="17" stroke="#ccfbf1" stroke-width="1.2" fill="none"/>
+                        <line x1="7" y1="24" x2="41" y2="24" stroke="#ccfbf1" stroke-width="1.2"/>
+                        <line x1="11" y1="16" x2="37" y2="16" stroke="#ccfbf1" stroke-width="1.2" stroke-dasharray="2 1"/>
+                        <line x1="11" y1="32" x2="37" y2="32" stroke="#ccfbf1" stroke-width="1.2" stroke-dasharray="2 1"/>
+                        <!-- Location Pushpins -->
+                        <circle cx="16" cy="14" r="3.5" fill="#ef4444"/>
+                        <circle cx="16" cy="14" r="1.2" fill="#ffffff"/>
+                        <circle cx="33" cy="29" r="3.5" fill="#ef4444"/>
+                        <circle cx="33" cy="29" r="1.2" fill="#ffffff"/>
+                        <path d="M16 14 Q 25 18 33 29" stroke="#fda4af" stroke-width="1.8" stroke-dasharray="2 2" fill="none"/>
+                    </svg>
+                </div>
+                <div class="why-feature-text">
+                    <h4>Global Network</h4>
+                    <p>150+ Offices around the world.</p>
+                </div>
+            </div>
+
+            <!-- Vertical Divider -->
+            <div class="why-divider"></div>
+
+            <!-- Feature 4: 24/7 Network -->
+            <div class="why-feature-item">
+                <div class="why-feature-icon-direct">
+                    <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="badgeGrad" x1="6" y1="6" x2="42" y2="40" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#fb923c"/>
+                                <stop offset="1" stop-color="#ea580c"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Ribbon tails -->
+                        <path d="M18 29L14 44L24 38L34 44L30 29" fill="#c2410c"/>
+                        <!-- Rosette star -->
+                        <path d="M24 5L27.5 9.8L33.3 9L34.5 14.8L40.2 16.5L39.1 22.3L43.3 26L39.6 30.2L41.3 35.9L35.6 37.2L34.4 43L28.7 41.2L24.5 45L20.8 41.3L15.1 43L13.9 37.2L8.2 35.9L9.9 30.2L6.2 26L10.4 22.3L9.3 16.5L15 14.8L16.2 9L22 9.8L24 5Z" fill="url(#badgeGrad)" filter="drop-shadow(0px 3px 5px rgba(234, 88, 12, 0.3))"/>
+                        <circle cx="24.5" cy="25" r="9.5" fill="#ffffff"/>
+                        <text x="24.5" y="29.5" font-size="13" font-weight="900" text-anchor="middle" fill="#ea580c" font-family="'Outfit', sans-serif">%</text>
+                    </svg>
+                </div>
+                <div class="why-feature-text">
+                    <h4>24/7 Network</h4>
+                    <p>Round-the-clock assistance anytime, anywhere.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- App Download & Mobile Experience Banner -->
+        <div class="why-app-banner" data-scroll="fade-right">
+            
+            <!-- Left Side: Dual-Phone 3D Mockup Image -->
+            <div class="why-app-phones-col">
+                <img src="<?php echo base_url('assets/images/voyogo_phones_app.jpg'); ?>" alt="Voyogos Mobile App Mockup" class="why-phones-real-img">
+            </div>
+
+            <!-- Center Copy Column -->
+            <div class="why-app-copy-col">
+                <h3>Travel like a Pro - Download &amp; go!</h3>
+                
+                <ul class="why-app-checklist">
+                    <li><i class="fa-solid fa-circle-check"></i> Instant booking</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Manage your booking</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Real time updates</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Exclusive Deals</li>
+                    <li><i class="fa-solid fa-circle-check"></i> &amp; much more...</li>
+                </ul>
+
+                <div class="why-app-downloads-counter">
+                    <strong>1.9M+ Downloads &amp; counting...</strong>
+                    <div class="why-app-stars">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                        <span>4.6/5 - Ratings</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side (Curved White Shape with QR Code, Store Badges & Woman Traveler Model) -->
+            <div class="why-app-right-arch">
+                
+                <!-- QR Code & CTA -->
+                <div class="why-qr-box">
+                    <div class="qr-code-img-wrap">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&amp;data=https://voyogos.com" alt="Scan QR Code" class="qr-code-img">
+                    </div>
+                    <span class="qr-label">Scan the QR Code to download the voyogos.com Mobile App</span>
+                    
+                    <div class="app-store-badges">
+                        <a href="https://play.google.com/store" target="_blank" class="store-badge-btn" rel="noopener">
+                            <i class="fa-brands fa-google-play"></i>
+                            <div class="store-text">
+                                <small>GET IT ON</small>
+                                <strong>Google Play</strong>
+                            </div>
+                        </a>
+                        <a href="https://www.apple.com/app-store/" target="_blank" class="store-badge-btn" rel="noopener">
+                            <i class="fa-brands fa-apple"></i>
+                            <div class="store-text">
+                                <small>Download on the</small>
+                                <strong>App Store</strong>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <span class="app-cta-sub">DOWNLOAD OUR APP iOS | Android</span>
+                    <strong class="app-cta-bold">DOWNLOAD THE APP NOW!!</strong>
+                </div>
+
+                <!-- Traveler Model Image with Red Suitcase & Sunhat -->
+                <div class="why-traveler-woman-col">
+                    <img src="<?php echo base_url('assets/images/traveler_woman_ok.jpg'); ?>" alt="Voyogos Traveler" class="why-traveler-woman-img">
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Corporate Tabs & Information Row -->
+        <div class="why-tabs-bar" data-scroll="fade-up">
+            
+            <div class="why-tabs-nav" id="whyTabsNav">
+                <button type="button" class="why-tab-link active" onclick="switchWhyTab('about', this)">Why voyogos.com?</button>
+                <button type="button" class="why-tab-link" onclick="switchWhyTab('company', this)">Company Information</button>
+                <button type="button" class="why-tab-link" onclick="switchWhyTab('mobile', this)">voyogos.com On Mobile</button>
+            </div>
+
+            <div class="why-tabs-links-right">
+                <a href="<?php echo site_url('hotels'); ?>" class="why-action-link">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: #0284c7;"></i> Travel Update
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Tab Content Panes -->
+        <div class="why-tab-pane active" id="whyTabAbout">
+            <p>voyogos.com brings unbeatable value with daily flight deals, exclusive discounts, seasonal offers and one of the widest selections of flights, hotels, and holiday packages. Travellers can compare fares across multiple airlines, explore different flights and choose from countless stay options worldwide. Add visa services, sightseeing activities, and travel insurance, browse multiple tour packages - all in one place. You get a complete travel hub designed to simplify every part of your journey. Whether you're planning a family vacation, business trip, or last-minute getaway, <a href="https://voyogos.com" target="_blank" style="color: #0284c7; font-weight: 700;">voyogos.com</a> offers real-time availability, secure payments, and smooth navigation, ensuring a hassle-free booking experience every single time.</p>
+        </div>
+
+        <div class="why-tab-pane" id="whyTabCompany" style="display: none;">
+            <p>voyogos.com is a premier travel portal dedicated to simplifying travel planning and booking worldwide. With modern travel technology and dedicated customer support, voyogos.com serves thousands of leisure and corporate travelers, delivering 24/7 dedicated support and unbeatable flight and hotel partnerships across global destinations.</p>
+        </div>
+
+        <div class="why-tab-pane" id="whyTabMobile" style="display: none;">
+            <p>The voyogos.com mobile application puts the power of a world-class travel agency in your pocket. Experience lightning-fast flight bookings, real-time flight status tracking, exclusive app-only flash discounts, zero-fee payment gateways, and 1-tap ticket modifications. Available on both iOS and Android with a stellar 4.6/5 customer rating.</p>
+        </div>
+
+    </div>
+</section>
+
+<script>
+function switchWhyTab(tabKey, btn) {
+    const tabs = document.querySelectorAll('.why-tab-link');
+    tabs.forEach(t => t.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    var aboutPane = document.getElementById('whyTabAbout');
+    var compPane  = document.getElementById('whyTabCompany');
+    var mobPane   = document.getElementById('whyTabMobile');
+    if (aboutPane) aboutPane.style.display = (tabKey === 'about') ? 'block' : 'none';
+    if (compPane)  compPane.style.display  = (tabKey === 'company') ? 'block' : 'none';
+    if (mobPane)   mobPane.style.display   = (tabKey === 'mobile') ? 'block' : 'none';
+}
+</script>
 
 <!-- Interactive Akbar-Style Search Controller JavaScript -->
 <script>

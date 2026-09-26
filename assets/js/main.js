@@ -361,13 +361,24 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // =========================================================================
-  // 3. TRIP TYPE TOGGLE (One Way / Round Trip / Multi City)
+  // 3. TRIP TYPE TOGGLE & DUAL-MONTH LINKED CALENDAR
   // =========================================================================
   const tripTypeRadios = document.querySelectorAll('input[name="tripType"]');
+  const departureDateBox = document.getElementById('departureDateBox');
   const returnDateBox = document.getElementById('returnDateBox');
   const standardSearchGrid = document.getElementById('standardSearchGrid');
   const multiCitySearchContainer = document.getElementById('multiCitySearchContainer');
+  const flightCalendarDropdown = document.getElementById('flightCalendarDropdown');
+  const dualCalendarMonthsWrap = document.getElementById('dualCalendarMonthsWrap');
+  const calTabDeparture = document.getElementById('calTabDeparture');
+  const calTabReturn = document.getElementById('calTabReturn');
+  const calStatusBadge = document.getElementById('calStatusBadge');
+  const calDepDateText = document.getElementById('calDepDateText');
+  const calRetDateText = document.getElementById('calRetDateText');
+  const closeCalBtn = document.getElementById('closeCalBtn');
+  const calDoneBtn = document.getElementById('calDoneBtn');
 
+  // Trip Type Radio Switcher
   if (tripTypeRadios.length > 0) {
     tripTypeRadios.forEach(radio => {
       radio.addEventListener('change', function() {
@@ -380,9 +391,11 @@ document.addEventListener('DOMContentLoaded', function() {
           multiInputs.forEach(inp => inp.disabled = true);
           if (returnDateBox) {
             returnDateBox.style.opacity = '0.5';
-            returnDateBox.style.pointerEvents = 'none';
-            const returnInput = returnDateBox.querySelector('input');
+            returnDateBox.style.pointerEvents = 'auto'; // Keep clickable so user can click to switch to Round Trip!
+            const returnInput = document.getElementById('returnDateInput');
             if (returnInput) returnInput.disabled = true;
+            const returnSub = document.getElementById('returnDateSub');
+            if (returnSub) returnSub.textContent = 'Save up to 20% on round trips';
           }
         } else if (this.value === 'roundtrip') {
           if (standardSearchGrid) standardSearchGrid.style.display = 'grid';
@@ -391,17 +404,436 @@ document.addEventListener('DOMContentLoaded', function() {
           if (returnDateBox) {
             returnDateBox.style.opacity = '1';
             returnDateBox.style.pointerEvents = 'auto';
-            const returnInput = returnDateBox.querySelector('input');
+            const returnInput = document.getElementById('returnDateInput');
             if (returnInput) returnInput.disabled = false;
+            const returnSub = document.getElementById('returnDateSub');
+            if (returnSub && returnInput && returnInput.value) {
+              const rD = new Date(returnInput.value + 'T00:00:00');
+              if (!isNaN(rD)) {
+                returnSub.textContent = rD.toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+              }
+            }
           }
         } else if (this.value === 'multicity') {
           if (standardSearchGrid) standardSearchGrid.style.display = 'none';
           if (multiCitySearchContainer) multiCitySearchContainer.style.display = 'block';
           multiInputs.forEach(inp => inp.disabled = false);
         }
+        if (flightCalendarDropdown && flightCalendarDropdown.style.display === 'block') {
+          renderDualCalendar();
+        }
       });
     });
   }
+
+  // Dual-Calendar State
+  let calViewYear = new Date().getFullYear();
+  let calViewMonth = new Date().getMonth();
+  let currentCalMode = 'departure'; // 'departure' or 'return'
+
+  function formatYMD(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function formatDMY(d) {
+    const day = String(d.getDate()).padStart(2, '0');
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const y = d.getFullYear();
+    return `${day}/${m}/${y}`;
+  }
+
+  function formatNice(d) {
+    return d.toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  function updateHeaderDisplays() {
+    const depInput = document.getElementById('departureDateInput');
+    const retInput = document.getElementById('returnDateInput');
+    const isRoundTrip = document.getElementById('hiddenTripType') && document.getElementById('hiddenTripType').value === 'roundtrip';
+
+    if (depInput && depInput.value) {
+      const d = new Date(depInput.value + 'T00:00:00');
+      if (!isNaN(d)) {
+        if (calDepDateText) calDepDateText.textContent = formatNice(d);
+        const depValText = document.getElementById('depDateValText');
+        if (depValText) depValText.textContent = formatDMY(d);
+        const depSub = document.getElementById('departureDateSub');
+        if (depSub) depSub.textContent = formatNice(d);
+      }
+    }
+
+    if (retInput && retInput.value) {
+      const d = new Date(retInput.value + 'T00:00:00');
+      if (!isNaN(d)) {
+        if (calRetDateText) calRetDateText.textContent = formatNice(d);
+        const retValText = document.getElementById('retDateValText');
+        if (retValText) retValText.textContent = formatDMY(d);
+        const retSub = document.getElementById('returnDateSub');
+        if (retSub && isRoundTrip) {
+          retSub.textContent = formatNice(d);
+        }
+      }
+    }
+
+    // Active mode styles
+    if (calTabDeparture && calTabReturn) {
+      if (currentCalMode === 'departure') {
+        calTabDeparture.style.borderColor = '#0d3470';
+        calTabDeparture.style.background = '#e0f2fe';
+        calTabDeparture.querySelector('strong').style.color = '#0d3470';
+
+        calTabReturn.style.borderColor = '#e2e8f0';
+        calTabReturn.style.background = '#ffffff';
+        calTabReturn.querySelector('strong').style.color = '#64748b';
+
+        if (calStatusBadge) {
+          calStatusBadge.textContent = 'Picking Departure Date';
+          calStatusBadge.style.background = '#e0f2fe';
+          calStatusBadge.style.color = '#0369a1';
+        }
+      } else {
+        calTabDeparture.style.borderColor = '#e2e8f0';
+        calTabDeparture.style.background = '#ffffff';
+        calTabDeparture.querySelector('strong').style.color = '#64748b';
+
+        calTabReturn.style.borderColor = '#16a34a';
+        calTabReturn.style.background = '#dcfce7';
+        calTabReturn.querySelector('strong').style.color = '#15803d';
+
+        if (calStatusBadge) {
+          calStatusBadge.textContent = 'Picking Return Date';
+          calStatusBadge.style.background = '#dcfce7';
+          calStatusBadge.style.color = '#15803d';
+        }
+      }
+    }
+  }
+
+  function buildMonthHTML(year, month, isLeft) {
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const depInput = document.getElementById('departureDateInput');
+    const retInput = document.getElementById('returnDateInput');
+    const isRoundTrip = document.getElementById('hiddenTripType') && document.getElementById('hiddenTripType').value === 'roundtrip';
+
+    const depDate = depInput && depInput.value ? new Date(depInput.value + 'T00:00:00') : null;
+    const retDate = (isRoundTrip && retInput && retInput.value) ? new Date(retInput.value + 'T00:00:00') : null;
+
+    let html = `<div class="cal-month-box">`;
+    html += `<div class="cal-month-nav-header">`;
+    if (isLeft) {
+      const isPast = (year < today.getFullYear()) || (year === today.getFullYear() && month <= today.getMonth());
+      html += `<button type="button" class="cal-nav-btn" id="calPrevMonthBtn" ${isPast ? 'disabled' : ''}><i class="fa-solid fa-chevron-left"></i></button>`;
+    } else {
+      html += `<div></div>`;
+    }
+    html += `<h4>${monthNames[month]} ${year}</h4>`;
+    if (!isLeft) {
+      html += `<button type="button" class="cal-nav-btn" id="calNextMonthBtn"><i class="fa-solid fa-chevron-right"></i></button>`;
+    } else {
+      html += `<div></div>`;
+    }
+    html += `</div>`;
+
+    html += `<table class="cal-month-table">
+      <thead>
+        <tr>
+          <th>Su</th><th>Mo</th><th>Tu</th><th>We</th><th>Th</th><th>Fr</th><th>Sa</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    let dateNum = 1;
+    for (let row = 0; row < 6; row++) {
+      if (dateNum > daysInMonth) break;
+      html += `<tr>`;
+      for (let col = 0; col < 7; col++) {
+        if (row === 0 && col < firstDay) {
+          html += `<td></td>`;
+        } else if (dateNum > daysInMonth) {
+          html += `<td></td>`;
+        } else {
+          const thisDate = new Date(year, month, dateNum);
+          thisDate.setHours(0, 0, 0, 0);
+          const ymd = formatYMD(thisDate);
+          const isPast = thisDate < today;
+          const isToday = thisDate.getTime() === today.getTime();
+          const isDep = depDate && thisDate.getTime() === depDate.getTime();
+          const isRet = retDate && thisDate.getTime() === retDate.getTime();
+          const inRange = depDate && retDate && thisDate > depDate && thisDate < retDate;
+
+          let classes = ['cal-day-btn'];
+          if (isPast) classes.push('disabled');
+          if (isToday) classes.push('today');
+          if (isDep) classes.push('selected-dep');
+          if (isRet) classes.push('selected-ret');
+          if (inRange) classes.push('in-range');
+
+          let tag = '';
+          if (isDep && isRet) tag = '<span class="day-tag">Dep/Ret</span>';
+          else if (isDep) tag = '<span class="day-tag">Dep</span>';
+          else if (isRet) tag = '<span class="day-tag">Ret</span>';
+
+          html += `<td>
+            <button type="button" class="${classes.join(' ')}" data-date="${ymd}" ${isPast ? 'disabled' : ''}>
+              <span>${dateNum}</span>
+              ${tag}
+            </button>
+          </td>`;
+          dateNum++;
+        }
+      }
+      html += `</tr>`;
+    }
+
+    html += `</tbody></table></div>`;
+    return html;
+  }
+
+  function renderDualCalendar() {
+    if (!dualCalendarMonthsWrap) return;
+
+    let m1Year = calViewYear;
+    let m1Month = calViewMonth;
+    let m2Year = m1Year;
+    let m2Month = m1Month + 1;
+    if (m2Month > 11) {
+      m2Month = 0;
+      m2Year++;
+    }
+
+    const html1 = buildMonthHTML(m1Year, m1Month, true);
+    const html2 = buildMonthHTML(m2Year, m2Month, false);
+
+    dualCalendarMonthsWrap.innerHTML = html1 + html2;
+    updateHeaderDisplays();
+
+    // Bind navigation buttons
+    const prevBtn = document.getElementById('calPrevMonthBtn');
+    const nextBtn = document.getElementById('calNextMonthBtn');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        calViewMonth--;
+        if (calViewMonth < 0) {
+          calViewMonth = 11;
+          calViewYear--;
+        }
+        renderDualCalendar();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        calViewMonth++;
+        if (calViewMonth > 11) {
+          calViewMonth = 0;
+          calViewYear++;
+        }
+        renderDualCalendar();
+      });
+    }
+
+    // Bind day clicks
+    const dayBtns = dualCalendarMonthsWrap.querySelectorAll('.cal-day-btn:not(.disabled)');
+    dayBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const selectedYMD = this.getAttribute('data-date');
+        if (!selectedYMD) return;
+
+        const clickedDate = new Date(selectedYMD + 'T00:00:00');
+        const depInput = document.getElementById('departureDateInput');
+        const retInput = document.getElementById('returnDateInput');
+        const hiddenTripType = document.getElementById('hiddenTripType');
+        const isRoundTrip = hiddenTripType && hiddenTripType.value === 'roundtrip';
+
+        if (currentCalMode === 'departure') {
+          // Set Departure
+          if (depInput) depInput.value = selectedYMD;
+          
+          if (isRoundTrip) {
+            // Check if return date is before new departure
+            if (retInput && retInput.value) {
+              const currentRet = new Date(retInput.value + 'T00:00:00');
+              if (currentRet < clickedDate) {
+                // Auto adjust return date to departure + 4 days
+                const newRet = new Date(clickedDate);
+                newRet.setDate(newRet.getDate() + 4);
+                retInput.value = formatYMD(newRet);
+              }
+            }
+            // Auto switch to picking return date
+            currentCalMode = 'return';
+            renderDualCalendar();
+          } else {
+            // One Way mode: departure selected
+            // Switch mode to return so user can optionally pick return date for Round Trip!
+            currentCalMode = 'return';
+            renderDualCalendar();
+          }
+        } else if (currentCalMode === 'return') {
+          // Picking Return date
+          const currentDep = depInput && depInput.value ? new Date(depInput.value + 'T00:00:00') : new Date();
+
+          if (clickedDate < currentDep) {
+            // Clicked earlier than departure -> make this the new departure date!
+            if (depInput) depInput.value = selectedYMD;
+            currentCalMode = 'return';
+            renderDualCalendar();
+          } else {
+            // Valid return date selected!
+            if (retInput) retInput.value = selectedYMD;
+
+            // AUTOMATICALLY SELECT ROUND TRIP!
+            const roundTripRadio = document.querySelector('input[name="tripType"][value="roundtrip"]');
+            if (roundTripRadio) {
+              roundTripRadio.checked = true;
+              roundTripRadio.dispatchEvent(new Event('change'));
+            }
+
+            renderDualCalendar();
+
+            // Smooth close after brief highlight
+            setTimeout(() => {
+              closeCalendar();
+            }, 250);
+          }
+        }
+      });
+    });
+  }
+
+  function openFlightCalendar(mode) {
+    currentCalMode = mode || 'departure';
+    const depInput = document.getElementById('departureDateInput');
+    const retInput = document.getElementById('returnDateInput');
+
+    if (currentCalMode === 'return' && retInput && retInput.value) {
+      const rd = new Date(retInput.value + 'T00:00:00');
+      if (!isNaN(rd)) {
+        calViewYear = rd.getFullYear();
+        calViewMonth = rd.getMonth();
+      }
+    } else if (depInput && depInput.value) {
+      const dd = new Date(depInput.value + 'T00:00:00');
+      if (!isNaN(dd)) {
+        calViewYear = dd.getFullYear();
+        calViewMonth = dd.getMonth();
+      }
+    }
+
+    if (flightCalendarDropdown) {
+      flightCalendarDropdown.style.display = 'block';
+      renderDualCalendar();
+    }
+  }
+
+  function closeCalendar() {
+    if (flightCalendarDropdown) {
+      flightCalendarDropdown.style.display = 'none';
+    }
+  }
+
+  // Open calendar on Departure click
+  if (departureDateBox) {
+    departureDateBox.addEventListener('click', function(e) {
+      e.stopPropagation();
+      // Close other popups if open
+      const fromDrop = document.getElementById('fromCityDropdown');
+      const toDrop = document.getElementById('toCityDropdown');
+      const passDrop = document.getElementById('passengerDropdown');
+      if (fromDrop) fromDrop.classList.remove('open');
+      if (toDrop) toDrop.classList.remove('open');
+      if (passDrop) passDrop.classList.remove('open');
+
+      openFlightCalendar('departure');
+    });
+  }
+
+  // Open calendar on Return click -> AUTOMATICALLY SELECT ROUND TRIP!
+  if (returnDateBox) {
+    returnDateBox.addEventListener('click', function(e) {
+      e.stopPropagation();
+      // Close other popups if open
+      const fromDrop = document.getElementById('fromCityDropdown');
+      const toDrop = document.getElementById('toCityDropdown');
+      const passDrop = document.getElementById('passengerDropdown');
+      if (fromDrop) fromDrop.classList.remove('open');
+      if (toDrop) toDrop.classList.remove('open');
+      if (passDrop) passDrop.classList.remove('open');
+
+      const hiddenTripType = document.getElementById('hiddenTripType');
+      if (!hiddenTripType || hiddenTripType.value !== 'roundtrip') {
+        const roundTripRadio = document.querySelector('input[name="tripType"][value="roundtrip"]');
+        if (roundTripRadio) {
+          roundTripRadio.checked = true;
+          roundTripRadio.dispatchEvent(new Event('change'));
+        }
+      }
+
+      openFlightCalendar('return');
+    });
+  }
+
+  // Internal tab switches inside calendar header
+  if (calTabDeparture) {
+    calTabDeparture.addEventListener('click', function(e) {
+      e.stopPropagation();
+      currentCalMode = 'departure';
+      renderDualCalendar();
+    });
+  }
+
+  if (calTabReturn) {
+    calTabReturn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const hiddenTripType = document.getElementById('hiddenTripType');
+      if (!hiddenTripType || hiddenTripType.value !== 'roundtrip') {
+        const roundTripRadio = document.querySelector('input[name="tripType"][value="roundtrip"]');
+        if (roundTripRadio) {
+          roundTripRadio.checked = true;
+          roundTripRadio.dispatchEvent(new Event('change'));
+        }
+      }
+      currentCalMode = 'return';
+      renderDualCalendar();
+    });
+  }
+
+  if (closeCalBtn) {
+    closeCalBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeCalendar();
+    });
+  }
+
+  if (calDoneBtn) {
+    calDoneBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeCalendar();
+    });
+  }
+
+  // Close calendar when clicking outside
+  document.addEventListener('click', function(e) {
+    if (flightCalendarDropdown && flightCalendarDropdown.style.display === 'block') {
+      if (!flightCalendarDropdown.contains(e.target) && 
+          (!departureDateBox || !departureDateBox.contains(e.target)) && 
+          (!returnDateBox || !returnDateBox.contains(e.target))) {
+        closeCalendar();
+      }
+    }
+  });
 
   // Multi-City Dynamic Leg Builder
   const addMultiLegBtn = document.getElementById('addMultiLegBtn');
@@ -780,4 +1212,343 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // =========================================================================
+  // EXCLUSIVE DEALS TAB FILTER & CAROUSEL NAVIGATION (Akbar-Style)
+  // =========================================================================
+  const dealsCarouselContainer = document.getElementById('dealsCarouselContainer');
+  const dealsTabsNav = document.getElementById('dealsTabsNav');
+  const dealsPrevBtn = document.getElementById('dealsPrevBtn');
+  const dealsNextBtn = document.getElementById('dealsNextBtn');
+
+  if (dealsTabsNav && dealsCarouselContainer) {
+    const tabBtns = dealsTabsNav.querySelectorAll('.deals-tab-btn');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        tabBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        const selectedCat = this.getAttribute('data-cat');
+        const cards = dealsCarouselContainer.querySelectorAll('.deal-banner-card');
+        
+        cards.forEach(card => {
+          const cardCat = card.getAttribute('data-category');
+          if (selectedCat === 'HOT DEALS') {
+            card.style.display = 'block';
+          } else if (cardCat === selectedCat) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+        dealsCarouselContainer.scrollTo({ left: 0, behavior: 'smooth' });
+      });
+    });
+
+    if (dealsPrevBtn) {
+      dealsPrevBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        dealsCarouselContainer.scrollBy({ left: -390, behavior: 'smooth' });
+      });
+    }
+
+    if (dealsNextBtn) {
+      dealsNextBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        dealsCarouselContainer.scrollBy({ left: 390, behavior: 'smooth' });
+      });
+    }
+  }
+
 });
+
+// Global Promo Code Copy Handler
+window.copyPromoCode = function(e, code) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  if (!code) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(() => {
+      if (e && e.currentTarget) {
+        const el = e.currentTarget;
+        const originalHTML = el.innerHTML;
+        el.innerHTML = '<i class="fa-solid fa-check" style="color: #4ade80;"></i> COPIED!';
+        setTimeout(() => {
+          el.innerHTML = originalHTML;
+        }, 1600);
+      }
+    }).catch(() => {
+      prompt('Copy promo code:', code);
+    });
+  } else {
+    prompt('Copy promo code:', code);
+  }
+};
+
+// =========================================================================
+// Hero Background Flight Banner Slider
+// =========================================================================
+(function() {
+  function initHeroSlider() {
+    var track = document.getElementById('heroSliderTrack');
+    var dots = document.querySelectorAll('.hero-dot');
+    var prevBtn = document.getElementById('heroSliderPrev');
+    var nextBtn = document.getElementById('heroSliderNext');
+
+    if (!track || window.__heroSliderRunning) return;
+    window.__heroSliderRunning = true;
+
+    var currentSlide = 0;
+    var isTransitioning = false;
+    var realSlidesCount = 3;
+    var totalSlidesCount = 4;
+    var slideInterval = 3500;
+    var timer = null;
+
+    function updateDots(idx) {
+      var activeIndex = idx % realSlidesCount;
+      for (var i = 0; i < dots.length; i++) {
+        dots[i].classList.toggle('active', i === activeIndex);
+      }
+    }
+
+    function moveToSlide(idx, animated) {
+      track.style.transition = animated ? 'transform 0.85s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
+      currentSlide = idx;
+      var offset = -(currentSlide * (100 / totalSlidesCount));
+      track.style.transform = 'translateX(' + offset + '%)';
+      updateDots(currentSlide);
+    }
+
+    function nextSlide() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      moveToSlide(currentSlide + 1, true);
+    }
+
+    function prevSlide() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      if (currentSlide <= 0) {
+        moveToSlide(totalSlidesCount - 1, false);
+        void track.offsetWidth;
+        moveToSlide(realSlidesCount - 1, true);
+      } else {
+        moveToSlide(currentSlide - 1, true);
+      }
+    }
+
+    track.addEventListener('transitionend', function() {
+      isTransitioning = false;
+      if (currentSlide >= totalSlidesCount - 1) {
+        moveToSlide(0, false);
+        void track.offsetWidth;
+      }
+    });
+
+    function startTimer() {
+      stopTimer();
+      timer = setInterval(nextSlide, slideInterval);
+    }
+
+    function stopTimer() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    dots.forEach(function(dot, index) {
+      dot.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (isTransitioning) return;
+        isTransitioning = true;
+        moveToSlide(index, true);
+        startTimer();
+      });
+    });
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        nextSlide();
+        startTimer();
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        prevSlide();
+        startTimer();
+      });
+    }
+
+    startTimer();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHeroSlider);
+  } else {
+    initHeroSlider();
+  }
+})();
+
+// =========================================================================
+// Hotel Hero Background Slider
+// =========================================================================
+(function() {
+  function initHotelSlider() {
+    var track = document.getElementById('hotelSliderTrack');
+    var dots = document.querySelectorAll('.hotel-dot');
+    var prevBtn = document.getElementById('hotelSliderPrev');
+    var nextBtn = document.getElementById('hotelSliderNext');
+
+    if (!track || window.__hotelSliderRunning) return;
+    window.__hotelSliderRunning = true;
+
+    var currentSlide = 0;
+    var isTransitioning = false;
+    var realSlidesCount = 3;
+    var totalSlidesCount = 4;
+    var slideInterval = 3500;
+    var timer = null;
+
+    function updateDots(idx) {
+      var activeIndex = idx % realSlidesCount;
+      for (var i = 0; i < dots.length; i++) {
+        dots[i].classList.toggle('active', i === activeIndex);
+      }
+    }
+
+    function moveToSlide(idx, animated) {
+      track.style.transition = animated ? 'transform 0.85s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
+      currentSlide = idx;
+      var offset = -(currentSlide * (100 / totalSlidesCount));
+      track.style.transform = 'translateX(' + offset + '%)';
+      updateDots(currentSlide);
+    }
+
+    function nextSlide() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      moveToSlide(currentSlide + 1, true);
+    }
+
+    function prevSlide() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      if (currentSlide <= 0) {
+        moveToSlide(totalSlidesCount - 1, false);
+        void track.offsetWidth;
+        moveToSlide(realSlidesCount - 1, true);
+      } else {
+        moveToSlide(currentSlide - 1, true);
+      }
+    }
+
+    track.addEventListener('transitionend', function() {
+      isTransitioning = false;
+      if (currentSlide >= totalSlidesCount - 1) {
+        moveToSlide(0, false);
+        void track.offsetWidth;
+      }
+    });
+
+    function startTimer() {
+      stopTimer();
+      timer = setInterval(nextSlide, slideInterval);
+    }
+
+    function stopTimer() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    dots.forEach(function(dot, index) {
+      dot.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (isTransitioning) return;
+        isTransitioning = true;
+        moveToSlide(index, true);
+        startTimer();
+      });
+    });
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        nextSlide();
+        startTimer();
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        prevSlide();
+        startTimer();
+      });
+    }
+
+    startTimer();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHotelSlider);
+  } else {
+    initHotelSlider();
+  }
+})();
+
+// =============================================================================
+// SCROLL REVEAL ANIMATION ENGINE — Intersection Observer
+// =============================================================================
+(function initScrollReveal() {
+  function setup() {
+    var elements = document.querySelectorAll('[data-scroll]');
+    if (!elements.length) return;
+
+    // Check for Intersection Observer support
+    if (!('IntersectionObserver' in window)) {
+      // Fallback: show everything immediately
+      elements.forEach(function(el) { el.classList.add('is-visible'); });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          // Add delay if specified
+          var delay = entry.target.getAttribute('data-scroll-delay');
+          if (delay) {
+            setTimeout(function() {
+              entry.target.classList.add('is-visible');
+            }, parseInt(delay, 10));
+          } else {
+            entry.target.classList.add('is-visible');
+          }
+          // Once revealed, stop observing (one-shot animation)
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.08,   // Trigger when 8% visible — earlier, smoother
+      rootMargin: '0px 0px -20px 0px'  // Minimal bottom margin
+    });
+
+    elements.forEach(function(el) {
+      observer.observe(el);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setup);
+  } else {
+    setup();
+  }
+})();

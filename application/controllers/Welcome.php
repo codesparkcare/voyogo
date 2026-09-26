@@ -18,6 +18,7 @@ class Welcome extends CI_Controller {
     {
         $data['page_title'] = 'Voyogo - Book Cheap Flight Tickets Online';
         $data['active_page'] = 'flight';
+        $data['exclusive_deals'] = $this->Admin_model->get_active_deals();
 
         $this->load->view('includes/header', $data);
         $this->load->view('index', $data);
