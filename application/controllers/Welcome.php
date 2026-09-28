@@ -65,9 +65,38 @@ class Welcome extends CI_Controller {
 
         preg_match('/\(([A-Z]{3})\)/', $from_raw, $from_match);
         preg_match('/\(([A-Z]{3})\)/', $to_raw, $to_match);
-        
-        $from = isset($from_match[1]) ? $from_match[1] : (strlen($from_raw) == 3 ? strtoupper($from_raw) : 'DEL');
-        $to   = isset($to_match[1]) ? $to_match[1] : (strlen($to_raw) == 3 ? strtoupper($to_raw) : 'BOM');
+
+        $cityCodeMap = array(
+            'mumbai' => 'BOM', 'bombay' => 'BOM',
+            'delhi' => 'DEL', 'new delhi' => 'DEL',
+            'bangalore' => 'BLR', 'bengaluru' => 'BLR',
+            'chennai' => 'MAA', 'madras' => 'MAA',
+            'kolkata' => 'CCU', 'calcutta' => 'CCU',
+            'hyderabad' => 'HYD', 'ahmedabad' => 'AMD',
+            'pune' => 'PNQ', 'goa' => 'GOI', 'mopa' => 'GOX',
+            'jaipur' => 'JAI', 'kochi' => 'COK', 'cochin' => 'COK',
+            'lucknow' => 'LKO', 'guwahati' => 'GAU',
+            'chandigarh' => 'IXC', 'srinagar' => 'SXR'
+        );
+
+        $from_code_param = strtoupper(trim($this->input->post('from_code') ?: $this->input->get('from_code') ?: ''));
+        $to_code_param   = strtoupper(trim($this->input->post('to_code') ?: $this->input->get('to_code') ?: ''));
+
+        $from = !empty($from_code_param) && strlen($from_code_param) == 3 ? $from_code_param : (
+            isset($from_match[1]) ? $from_match[1] : (
+                strlen($from_raw) == 3 ? strtoupper($from_raw) : (
+                    $cityCodeMap[strtolower(trim($from_raw))] ?? 'DEL'
+                )
+            )
+        );
+
+        $to = !empty($to_code_param) && strlen($to_code_param) == 3 ? $to_code_param : (
+            isset($to_match[1]) ? $to_match[1] : (
+                strlen($to_raw) == 3 ? strtoupper($to_raw) : (
+                    $cityCodeMap[strtolower(trim($to_raw))] ?? 'BOM'
+                )
+            )
+        );
 
         $this->load->library('BenzyFlightApi');
         

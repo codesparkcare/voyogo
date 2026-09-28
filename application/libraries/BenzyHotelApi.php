@@ -446,8 +446,9 @@ class BenzyHotelApi {
         }
 
         // Resilient Fallback for UI demonstration & testing
+        $fallback = $this->getFallbackHotels($city, $checkin, $checkout);
         return array(
-            'hotels'           => $this->getFallbackHotels($city, $checkin, $checkout),
+            'hotels'           => $this->formatHotelResults($fallback, $searchId, $searchTracingKey),
             'searchId'         => $searchId,
             'searchTracingKey' => $searchTracingKey
         );
@@ -576,7 +577,12 @@ class BenzyHotelApi {
                             'board'            => $boardName,
                             'refundable'       => !empty($rg['refundable']),
                             'cancellation'     => $cancelText,
-                            'inclusions'       => !empty($rg['includes']) ? $rg['includes'] : array('Free High-Speed WiFi', '24h Room Service', 'Complimentary Bottled Water')
+                            'inclusions'       => !empty($rg['includes']) ? $rg['includes'] : array('Free High-Speed WiFi', '24h Room Service', 'Complimentary Bottled Water'),
+                            'images'           => array(
+                                'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1000&q=80',
+                                'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80',
+                                'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80'
+                            )
                         );
                     }
                 }
@@ -594,7 +600,12 @@ class BenzyHotelApi {
                     'board'            => $rm['board'] ?? 'Breakfast Included',
                     'refundable'       => true,
                     'cancellation'     => 'Free cancellation until 48 hours before check-in',
-                    'inclusions'       => array('Free WiFi', 'Tea/Coffee Maker')
+                    'inclusions'       => array('Free WiFi', 'Tea/Coffee Maker'),
+                    'images'           => array(
+                        'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1000&q=80',
+                        'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80',
+                        'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80'
+                    )
                 );
             }
         }
@@ -1255,6 +1266,31 @@ class BenzyHotelApi {
     // =========================================================================
     protected function formatHotelResults($apiHotels, $searchId, $searchTracingKey = '') {
         $formatted = array();
+        $sampleGalleries = array(
+            array(
+                'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80'
+            ),
+            array(
+                'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'
+            ),
+            array(
+                'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80'
+            )
+        );
+
+        $idx = 0;
         foreach ($apiHotels as $h) {
             // Support both nested rate object (per spec) and flat rate value
             $pricePerNight = 4500;
@@ -1282,24 +1318,107 @@ class BenzyHotelApi {
                 }
             }
             if (empty($amenitiesList)) {
-                $amenitiesList = array('Free WiFi', 'Swimming Pool', 'Breakfast Included', 'Spa', 'Free Cancellation');
+                $amenitiesList = array('Parking', 'Free Wifi', 'Room Service', 'Pool', 'Restaurant', 'Gym');
             }
 
-            $formatted[] = array(
-                'id'              => $h['id'] ?? 'HTL_' . rand(100, 999),
-                'name'            => $h['name'] ?? 'Luxury Resort & Spa',
-                'star_rating'     => (int)($h['starRating'] ?? 4),
-                'rating'          => !empty($h['userReview']['rating']) ? number_format($h['userReview']['rating'], 1) : number_format(rand(42, 49) / 10, 1),
-                'reviews_count'   => !empty($h['userReview']['count']) ? (int)$h['userReview']['count'] : rand(120, 850),
-                'location'        => $h['address'] ?? ($h['locationName'] ?? 'City Center'),
-                'price_per_night' => $pricePerNight,
-                'image'           => !empty($h['heroImage']) ? $h['heroImage'] : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
-                'amenities'       => $amenitiesList,
-                'free_breakfast'  => !empty($h['freeBreakfast']) || rand(0, 1) === 1,
-                'free_cancellation' => isset($h['freeCancellation']) ? (bool)$h['freeCancellation'] : true,
-                'searchId'        => $searchId,
-                'searchTracingKey'=> $searchTracingKey
+            $heroImg = !empty($h['heroImage']) ? $h['heroImage'] : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80';
+            
+            // Build gallery array
+            $gallery = array();
+            if (!empty($h['images']) && is_array($h['images'])) {
+                foreach ($h['images'] as $im) {
+                    if (is_string($im)) $gallery[] = $im;
+                    elseif (is_array($im) && !empty($im['url'])) $gallery[] = $im['url'];
+                }
+            }
+            if (empty($gallery)) {
+                $pool = $sampleGalleries[$idx % count($sampleGalleries)];
+                $gallery = array_merge(array($heroImg), $pool);
+                $gallery = array_values(array_unique($gallery));
+            }
+
+            $hotelName = $h['name'] ?? 'Luxury Resort & Spa';
+            $starRating = (int)($h['starRating'] ?? 4);
+            $numRating = !empty($h['userReview']['rating']) ? (float)$h['userReview']['rating'] : round(rand(41, 49) / 10, 1);
+            $ratingText = ($numRating >= 4.5) ? 'Excellent' : (($numRating >= 4.0) ? 'Very Good' : 'Good');
+            $originalPrice = (float)($h['originalPrice'] ?? round($pricePerNight * 1.28));
+            $taxFee = (float)($h['taxFee'] ?? round($pricePerNight * 0.18));
+            $savedAmount = max(0, $originalPrice - $pricePerNight);
+
+            // Detect Chain
+            $chain = 'Independent Hotels';
+            if (stripos($hotelName, 'Hilton') !== false) $chain = 'Hilton Worldwide';
+            elseif (stripos($hotelName, 'IHG') !== false || stripos($hotelName, 'Holiday Inn') !== false) $chain = 'IHG';
+            elseif (stripos($hotelName, 'Atour') !== false) $chain = 'Atour';
+            elseif (stripos($hotelName, 'GRT') !== false) $chain = 'GRT Hotels';
+            elseif (stripos($hotelName, 'Taj') !== false) $chain = 'Taj Hotels';
+            elseif (stripos($hotelName, 'Radisson') !== false) $chain = 'Radisson Blu';
+            elseif (stripos($hotelName, 'Novotel') !== false) $chain = 'Accor Novotel';
+
+            // Sample Room Types with Room Galleries for this hotel
+            $hotelRoomTypes = array(
+                array(
+                    'type_id'        => 'RM_DLX_' . ($idx + 1),
+                    'name'           => 'Deluxe King Room',
+                    'price'          => $pricePerNight,
+                    'price_per_night'=> $pricePerNight,
+                    'board'          => 'Breakfast Included',
+                    'cancellation'   => 'Free cancellation until 48 hours before check-in',
+                    'refundable'     => true,
+                    'bed'            => '1 Extra-large Double Bed (King Size)',
+                    'size'           => '360 sq. ft.',
+                    'inclusions'     => array('Free High-Speed WiFi', 'Complimentary Breakfast', 'City View', 'Air Conditioning'),
+                    'images'         => array(
+                        'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1000&q=80',
+                        'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80',
+                        'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80'
+                    )
+                ),
+                array(
+                    'type_id'        => 'RM_SUP_' . ($idx + 1),
+                    'name'           => 'Premium Suite with Balcony',
+                    'price'          => round($pricePerNight * 1.35),
+                    'price_per_night'=> round($pricePerNight * 1.35),
+                    'board'          => 'Breakfast & Dinner Included',
+                    'cancellation'   => 'Free cancellation until 24 hours before check-in',
+                    'refundable'     => true,
+                    'bed'            => '1 King Bed + 1 Sofa Bed',
+                    'size'           => '520 sq. ft.',
+                    'inclusions'     => array('Free High-Speed WiFi', 'Breakfast & Dinner', 'Private Balcony', 'Bathtub & Rain Shower'),
+                    'images'         => array(
+                        'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1000&q=80',
+                        'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1000&q=80',
+                        'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80',
+                        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1000&q=80'
+                    )
+                )
             );
+
+            $formatted[] = array(
+                'id'                => $h['id'] ?? 'HTL_' . rand(100, 999),
+                'name'              => $hotelName,
+                'star_rating'       => $starRating,
+                'rating'            => number_format($numRating, 1),
+                'rating_text'       => $ratingText,
+                'reviews_count'     => !empty($h['userReview']['count']) ? (int)$h['userReview']['count'] : rand(45, 950),
+                'location'          => $h['address'] ?? ($h['locationName'] ?? 'City Center, Near Hub'),
+                'price_per_night'   => $pricePerNight,
+                'original_price'    => $originalPrice,
+                'tax_fee'           => $taxFee,
+                'saved_amount'      => $savedAmount,
+                'image'             => $heroImg,
+                'gallery'           => $gallery,
+                'amenities'         => $amenitiesList,
+                'chain'             => $chain,
+                'property_type'     => (stripos($hotelName, 'Resort') !== false) ? 'Resort' : 'Hotel',
+                'free_breakfast'    => !empty($h['freeBreakfast']) || rand(0, 1) === 1,
+                'free_cancellation' => isset($h['freeCancellation']) ? (bool)$h['freeCancellation'] : true,
+                'is_sold_out'       => ($idx === 0 && !empty($h['isSoldOut'])), // support sold out demo
+                'room_types'        => $hotelRoomTypes,
+                'searchId'          => $searchId,
+                'searchTracingKey'  => $searchTracingKey
+            );
+            $idx++;
         }
         return $formatted;
     }

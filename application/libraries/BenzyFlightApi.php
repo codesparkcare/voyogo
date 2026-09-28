@@ -2693,13 +2693,14 @@ class BenzyFlightApi {
                 'duration'        => !empty($flight['Duration']) ? trim($flight['Duration']) : '03h 20m',
                 'stops'           => isset($journey['Stops']) ? (int)$journey['Stops'] : 0,
                 'cabin_class'     => !empty($flight['Cabin']) ? ($flight['Cabin'] == 'B' ? 'Business' : 'Economy') : 'Economy',
+                'aircraft'        => !empty($flight['AirCraft']) ? $flight['AirCraft'] : (!empty($flight['Aircraft']) ? $flight['Aircraft'] : 'BOEING'),
                 'price'           => $grossFare,
                 'base_fare'       => $netFare,
                 'net_amount'      => $netFare,
                 'gross_amount'    => $grossFare,
                 'taxes'           => $taxes,
-                'checkin_baggage' => '15 Kgs (1 piece per pax)',
-                'cabin_baggage'   => '7 Kgs (1 piece per pax)',
+                'checkin_baggage' => 'Adult - 15Kg',
+                'cabin_baggage'   => 'Adult - 7Kg',
                 'refundable'      => isset($flight['Refundable']) && $flight['Refundable'] === 'Y',
                 'raw'             => $data
             );
@@ -2736,11 +2737,12 @@ class BenzyFlightApi {
                 'duration'        => '2h 15m',
                 'stops'           => isset($journey['Stops']) ? (int)$journey['Stops'] : 0,
                 'cabin_class'     => 'Economy',
+                'aircraft'        => 'BOEING',
                 'price'           => $grossFare,
                 'base_fare'       => $netFare,
                 'taxes'           => $taxes,
-                'checkin_baggage' => '15 Kgs (1 piece per pax)',
-                'cabin_baggage'   => '7 Kgs (1 piece per pax)',
+                'checkin_baggage' => 'Adult - 15Kg',
+                'cabin_baggage'   => 'Adult - 7Kg',
                 'refundable'      => true,
                 'raw'             => $data
             );
@@ -2825,11 +2827,12 @@ class BenzyFlightApi {
             'duration' => '2h 15m',
             'stops' => 0,
             'cabin_class' => 'Economy',
+            'aircraft' => 'BOEING',
             'price' => $price,
             'base_fare' => round($price * 0.82),
             'taxes' => round($price * 0.18),
-            'checkin_baggage' => '15 Kgs (1 piece per pax)',
-            'cabin_baggage' => '7 Kgs (1 piece per pax)',
+            'checkin_baggage' => 'Adult - 15Kg',
+            'cabin_baggage' => 'Adult - 7Kg',
             'refundable' => true
         );
     }

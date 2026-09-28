@@ -125,76 +125,109 @@
                         </div>
                     </div>
 
-                    <!-- Interactive Accordion Tabs: Baggage & Cancellation Rules -->
-                    <div style="border-top: 1px solid #f1f5f9; padding-top: 16px;">
-                        <div style="display: flex; gap: 15px; border-bottom: 2px solid #e2e8f0; margin-bottom: 14px;">
-                            <button type="button" class="tab-btn active-tab" onclick="switchReviewTab('baggageTab', this)" style="padding: 8px 16px; border: none; background: none; font-weight: 700; font-size: 13px; color: #2563eb; border-bottom: 2px solid #2563eb; cursor: pointer; margin-bottom: -2px;">
-                                <i class="fa-solid fa-suitcase-rolling"></i> Baggage Policy
-                            </button>
-                            <button type="button" class="tab-btn" onclick="switchReviewTab('rulesTab', this)" style="padding: 8px 16px; border: none; background: none; font-weight: 700; font-size: 13px; color: #64748b; border-bottom: 2px solid transparent; cursor: pointer; margin-bottom: -2px;">
-                                <i class="fa-solid fa-file-contract"></i> Cancellation & Fare Rules
-                            </button>
-                        </div>
+                    <!-- Flight Specs & Baggage Allowance (4 Columns) + Cancellation Below (No Tab UI) -->
+                    <div style="border-top: 1px solid #f1f5f9; padding-top: 16px; margin-top: 16px;">
+                        <?php
+                        $aircraftDisplay = !empty($flight['aircraft']) ? strtoupper(trim($flight['aircraft'])) : '';
+                        if (empty($aircraftDisplay) || $aircraftDisplay === 'AIRBUS JET') {
+                            $aircraftDisplay = 'BOEING';
+                        } elseif ($aircraftDisplay === '320' || $aircraftDisplay === 'A320') {
+                            $aircraftDisplay = 'AIRBUS A320';
+                        } elseif ($aircraftDisplay === '737' || $aircraftDisplay === 'B737') {
+                            $aircraftDisplay = 'BOEING 737';
+                        } elseif ($aircraftDisplay === '787') {
+                            $aircraftDisplay = 'BOEING 787';
+                        }
+                        if (empty($aircraftDisplay)) {
+                            $aircraftDisplay = 'BOEING';
+                        }
 
-                        <!-- Baggage Tab Content -->
-                        <div id="baggageTab" class="tab-content" style="display: block;">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; background: #f8fafc; padding: 14px 18px; border-radius: 8px; border: 1px solid #edf2f7;">
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <i class="fa-solid fa-suitcase" style="font-size: 24px; color: #2563eb;"></i>
-                                    <div>
-                                        <span style="font-size: 12px; color: #64748b; display: block; font-weight: 600;">Check-in Baggage Allowance</span>
-                                        <strong style="font-size: 14px; color: #0f172a;"><?php echo htmlspecialchars($flight['checkin_baggage'] ?? '15 Kgs (1 piece)'); ?></strong>
-                                    </div>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <i class="fa-solid fa-briefcase" style="font-size: 24px; color: #16a34a;"></i>
-                                    <div>
-                                        <span style="font-size: 12px; color: #64748b; display: block; font-weight: 600;">Cabin Baggage Allowance</span>
-                                        <strong style="font-size: 14px; color: #0f172a;"><?php echo htmlspecialchars($flight['cabin_baggage'] ?? '7 Kgs (1 piece)'); ?></strong>
-                                    </div>
-                                </div>
+                        $travelClassDisplay = !empty($flight['cabin_class']) ? ucfirst(strtolower($flight['cabin_class'])) : (!empty($search_query['cabin_class']) ? ucfirst(strtolower($search_query['cabin_class'])) : 'Economy');
+
+                        $rawCheckin = !empty($flight['checkin_baggage']) ? $flight['checkin_baggage'] : 'Adult - 15Kg';
+                        if (stripos($rawCheckin, 'Adult') !== false) {
+                            $checkinDisplay = $rawCheckin;
+                        } elseif (preg_match('/(\d+)\s*Kg/i', $rawCheckin, $m)) {
+                            $checkinDisplay = 'Adult - ' . $m[1] . 'Kg';
+                        } else {
+                            $checkinDisplay = 'Adult - 15Kg';
+                        }
+
+                        $rawCabin = !empty($flight['cabin_baggage']) ? $flight['cabin_baggage'] : 'Adult - 7Kg';
+                        if (stripos($rawCabin, 'Adult') !== false) {
+                            $cabinDisplay = $rawCabin;
+                        } elseif (preg_match('/(\d+)\s*Kg/i', $rawCabin, $m)) {
+                            $cabinDisplay = 'Adult - ' . $m[1] . 'Kg';
+                        } else {
+                            $cabinDisplay = 'Adult - 7Kg';
+                        }
+                        ?>
+                        <div class="flight-specs-strip">
+                            <div class="spec-col">
+                                <div class="spec-col-title">Aircraft</div>
+                                <div class="spec-col-value"><?php echo htmlspecialchars($aircraftDisplay); ?></div>
+                            </div>
+                            <div class="spec-divider"></div>
+                            <div class="spec-col">
+                                <div class="spec-col-title">Travel Class</div>
+                                <div class="spec-col-value"><?php echo htmlspecialchars($travelClassDisplay); ?></div>
+                            </div>
+                            <div class="spec-divider"></div>
+                            <div class="spec-col" style="flex: 1.2;">
+                                <div class="spec-col-title">Check-In Baggage</div>
+                                <div class="spec-col-value"><?php echo htmlspecialchars($checkinDisplay); ?></div>
+                            </div>
+                            <div class="spec-divider"></div>
+                            <div class="spec-col">
+                                <div class="spec-col-title">Cabin Baggage</div>
+                                <div class="spec-col-value"><?php echo htmlspecialchars($cabinDisplay); ?></div>
                             </div>
                         </div>
 
-                        <!-- Fare Rules Tab Content -->
-                        <div id="rulesTab" class="tab-content" style="display: none;">
-                            <div style="background: #f8fafc; padding: 14px 18px; border-radius: 8px; border: 1px solid #edf2f7;">
-                                <h4 style="font-size: 13px; font-weight: 800; color: #0d3470; margin-top: 0; margin-bottom: 8px;">Cancellation Penalty Fees (Per Pax)</h4>
-                                <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 12px;">
-                                    <thead>
-                                        <tr style="background: #e2e8f0; color: #334155; text-align: left;">
-                                            <th style="padding: 6px 10px;">Timeframe Before Departure</th>
-                                            <th style="padding: 6px 10px;">Cancellation Charge</th>
-                                            <th style="padding: 6px 10px;">Date Change Charge</th>
+                        <!-- Cancellation & Date Change Policy (Brought Down, Always Visible) -->
+                        <div style="background: #f8fafc; padding: 16px 20px; border-radius: 8px; border: 1px solid #edf2f7; margin-top: 14px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                                <h4 style="font-size: 13.5px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-file-contract" style="color: #2563eb;"></i> Cancellation & Date Change Policy (Per Pax)
+                                </h4>
+                                <span style="font-size: 11px; font-weight: 700; color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 4px;">
+                                    <?php echo !empty($flight['refundable']) ? 'Refundable' : 'Standard Rules'; ?>
+                                </span>
+                            </div>
+                            <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 10px; background: #ffffff; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0;">
+                                <thead>
+                                    <tr style="background: #f1f5f9; color: #334155; text-align: left; border-bottom: 1px solid #e2e8f0;">
+                                        <th style="padding: 8px 12px; font-weight: 700;">Timeframe Before Departure</th>
+                                        <th style="padding: 8px 12px; font-weight: 700;">Cancellation Charge</th>
+                                        <th style="padding: 8px 12px; font-weight: 700;">Date Change Charge</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($fare_rules['cancellation'])): ?>
+                                        <?php foreach ($fare_rules['cancellation'] as $idx => $rule): ?>
+                                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                                <td style="padding: 8px 12px; font-weight: 600; color: #475569;"><?php echo htmlspecialchars($rule['time']); ?></td>
+                                                <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;"><?php echo htmlspecialchars($rule['fee']); ?></td>
+                                                <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;"><?php echo htmlspecialchars($fare_rules['date_change'][$idx]['fee'] ?? '₹ 2,500 + Diff'); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                                            <td style="padding: 8px 12px; font-weight: 600; color: #475569;">2 hours to 24 hours</td>
+                                            <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;">₹ 3,500 per pax</td>
+                                            <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;">₹ 3,000 + Fare Diff</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php if (!empty($fare_rules['cancellation'])): ?>
-                                            <?php foreach ($fare_rules['cancellation'] as $idx => $rule): ?>
-                                                <tr style="border-bottom: 1px solid #e2e8f0;">
-                                                    <td style="padding: 6px 10px; font-weight: 600; color: #475569;"><?php echo htmlspecialchars($rule['time']); ?></td>
-                                                    <td style="padding: 6px 10px; font-weight: 700; color: #dc2626;"><?php echo htmlspecialchars($rule['fee']); ?></td>
-                                                    <td style="padding: 6px 10px; font-weight: 700; color: #2563eb;"><?php echo htmlspecialchars($fare_rules['date_change'][$idx]['fee'] ?? '₹ 2,500 + Diff'); ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <tr style="border-bottom: 1px solid #e2e8f0;">
-                                                <td style="padding: 6px 10px; font-weight: 600;">2 hours to 24 hours</td>
-                                                <td style="padding: 6px 10px; font-weight: 700; color: #dc2626;">₹ 3,500 per pax</td>
-                                                <td style="padding: 6px 10px; font-weight: 700; color: #2563eb;">₹ 3,000 + Fare Diff</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 6px 10px; font-weight: 600;">More than 24 hours</td>
-                                                <td style="padding: 6px 10px; font-weight: 700; color: #dc2626;">₹ 3,000 per pax</td>
-                                                <td style="padding: 6px 10px; font-weight: 700; color: #2563eb;">₹ 2,500 + Fare Diff</td>
-                                            </tr>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
-                                <p style="font-size: 11px; color: #64748b; margin: 0;">
-                                    <i class="fa-solid fa-circle-info" style="color: #2563eb;"></i> Convenience fee & addon service charges are non-refundable.
-                                </p>
-                            </div>
+                                        <tr>
+                                            <td style="padding: 8px 12px; font-weight: 600; color: #475569;">More than 24 hours</td>
+                                            <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;">₹ 3,000 per pax</td>
+                                            <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;">₹ 2,500 + Fare Diff</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                            <p style="font-size: 11px; color: #64748b; margin: 0; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-circle-info" style="color: #2563eb;"></i> Convenience fee & addon service charges are non-refundable.
+                            </p>
                         </div>
                     </div>
 
@@ -254,6 +287,35 @@
                             <div style="font-size: 16px; font-weight: 800; color: #0d3470; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['to_code']); ?></div>
                             <div style="font-size: 12px; color: #475569; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><?php echo htmlspecialchars($return_flight['to_airport'] ?? 'Airport'); ?></div>
                             <span style="display: inline-block; font-size: 11px; font-weight: 700; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['to_terminal'] ?? 'Terminal 2'); ?></span>
+                        </div>
+                    </div>
+
+                    <!-- Return Flight 4-Column Specs Strip -->
+                    <?php
+                    $retAircraft = !empty($return_flight['aircraft']) ? strtoupper(trim($return_flight['aircraft'])) : 'BOEING';
+                    $retClass = !empty($return_flight['cabin_class']) ? ucfirst(strtolower($return_flight['cabin_class'])) : $travelClassDisplay;
+                    $retCheckin = !empty($return_flight['checkin_baggage']) ? $return_flight['checkin_baggage'] : $checkinDisplay;
+                    $retCabin = !empty($return_flight['cabin_baggage']) ? $return_flight['cabin_baggage'] : $cabinDisplay;
+                    ?>
+                    <div class="flight-specs-strip" style="margin-top: 16px;">
+                        <div class="spec-col">
+                            <div class="spec-col-title">Aircraft</div>
+                            <div class="spec-col-value"><?php echo htmlspecialchars($retAircraft); ?></div>
+                        </div>
+                        <div class="spec-divider"></div>
+                        <div class="spec-col">
+                            <div class="spec-col-title">Travel Class</div>
+                            <div class="spec-col-value"><?php echo htmlspecialchars($retClass); ?></div>
+                        </div>
+                        <div class="spec-divider"></div>
+                        <div class="spec-col" style="flex: 1.2;">
+                            <div class="spec-col-title">Check-In Baggage</div>
+                            <div class="spec-col-value"><?php echo htmlspecialchars($retCheckin); ?></div>
+                        </div>
+                        <div class="spec-divider"></div>
+                        <div class="spec-col">
+                            <div class="spec-col-title">Cabin Baggage</div>
+                            <div class="spec-col-value"><?php echo htmlspecialchars($retCabin); ?></div>
                         </div>
                     </div>
                 </div>
@@ -939,6 +1001,50 @@ function showProcessingModal(message) {
     </div>
 </div>
 <style>
+.flight-specs-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    padding: 14px 24px;
+    border-radius: 8px;
+    border: 1px solid #edf2f7;
+}
+.spec-col {
+    flex: 1;
+    min-width: 0;
+}
+.spec-col-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 4px;
+    letter-spacing: -0.2px;
+}
+.spec-col-value {
+    font-size: 13.5px;
+    color: #334155;
+    font-weight: 500;
+}
+.spec-divider {
+    width: 2px;
+    height: 30px;
+    background: #0ea5e9;
+    border-radius: 2px;
+    margin: 0 20px;
+    flex-shrink: 0;
+}
+@media (max-width: 640px) {
+    .flight-specs-strip {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 16px !important;
+        padding: 14px 16px !important;
+    }
+    .spec-divider {
+        display: none !important;
+    }
+}
 @keyframes pulseProgress {
     0% { width: 30%; }
     50% { width: 90%; }
