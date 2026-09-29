@@ -218,13 +218,14 @@ class Hotels extends CI_Controller {
             }
         }
 
-        if ($baseRateVal === null || $baseRateVal <= 0) {
+        if ($taxAmountVal !== null && $taxAmountVal > 0 && $baseRateVal !== null && ($baseRateVal * $rooms) < $grandTotal) {
+            $baseTotal = round($baseRateVal * $rooms, 2);
+            $taxes = round($taxAmountVal * $rooms, 2);
+            $discountTotal = ($discountAmountVal !== null && $discountAmountVal > 0) ? round($discountAmountVal * $rooms, 2) : 0;
+        } else {
+            // Hospitality standard tax & service charges breakdown (12% GST/VAT + Municipal Tourism Fees)
             $baseTotal = round($grandTotal / 1.12, 2);
             $taxes = round($grandTotal - $baseTotal, 2);
-            $discountTotal = 0;
-        } else {
-            $baseTotal = round($baseRateVal * $rooms, 2);
-            $taxes = ($taxAmountVal !== null && $taxAmountVal > 0) ? round($taxAmountVal * $rooms, 2) : round(max(0, $grandTotal - $baseTotal), 2);
             $discountTotal = ($discountAmountVal !== null && $discountAmountVal > 0) ? round($discountAmountVal * $rooms, 2) : 0;
         }
 

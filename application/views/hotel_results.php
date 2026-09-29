@@ -38,9 +38,8 @@ if ($minPrice == 999999) $minPrice = 2000;
 if ($maxPrice == 0) $maxPrice = 60000;
 ?>
 
-<!-- Leaflet Map CSS & JS for Interactive Map View (Akbar Travels Style) -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Google Maps JavaScript API for Interactive Map View -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEMcMuPBXIMcL_ngk4igC95zyh2fWiWlI"></script>
 
 <!-- Modern CSS for Hotel Search Results Page -->
 <style>
@@ -424,16 +423,26 @@ if ($maxPrice == 0) $maxPrice = 60000;
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45));
 }
 
-/* Custom InfoWindow Popup (Exact Screenshot 2) */
-.leaflet-popup-content-wrapper {
+/* Google Maps InfoWindow Styling (Exact Screenshot 2 Matching) */
+.gm-style .gm-style-iw-c {
     padding: 0 !important;
     border-radius: 8px !important;
-    overflow: hidden !important;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.18) !important;
+    max-width: 320px !important;
 }
-.leaflet-popup-content {
-    margin: 0 !important;
-    line-height: 1.4 !important;
+.gm-style .gm-style-iw-d {
+    overflow: hidden !important;
+    padding: 0 !important;
+    max-height: none !important;
+}
+.gm-style .gm-ui-hover-effect {
+    top: 6px !important;
+    right: 6px !important;
+}
+.hotel-card.selected-on-map {
+    border: 2px solid #ef4444 !important;
+    box-shadow: 0 4px 18px rgba(239, 68, 68, 0.22) !important;
+    background-color: #fffafb !important;
 }
 .map-hotel-popup-box {
     width: 270px;
@@ -2049,14 +2058,14 @@ if ($maxPrice == 0) $maxPrice = 60000;
                      data-wifi="<?php echo (stripos(implode(',', $hAmenities), 'wifi') !== false) ? '1' : '0'; ?>"
                      data-lat="<?php echo htmlspecialchars($h['latitude'] ?? ''); ?>"
                      data-lng="<?php echo htmlspecialchars($h['longitude'] ?? ''); ?>"
-                     onclick="focusHotelOnMap(<?php echo $idx; ?>)"
-                     style="margin-bottom: 20px;">
+                     onclick="onHotelCardClick(<?php echo $idx; ?>)"
+                     style="margin-bottom: 20px; cursor: pointer;">
                     
                     <!-- Main Hotel Card Content -->
                     <div class="hotel-card-main">
                         
                         <!-- Left Image Box with Gallery Trigger (Akbar Travels Style) -->
-                        <div class="hotel-card-image-box" onclick="openHotelGallery(<?php echo $idx; ?>)">
+                        <div class="hotel-card-image-box" onclick="event.stopPropagation(); openHotelGallery(<?php echo $idx; ?>)">
                             <img src="<?php echo htmlspecialchars($hHeroImg); ?>" alt="<?php echo htmlspecialchars($hName); ?>" loading="lazy">
                             <div class="hotel-card-gallery-badge">
                                 <i class="fa-solid fa-camera"></i> <?php echo count($hGallery); ?> Photos
@@ -2067,7 +2076,7 @@ if ($maxPrice == 0) $maxPrice = 60000;
                         <div class="hotel-card-info-box">
                             <div>
                                 <div class="hotel-card-title-row">
-                                    <h3 class="hotel-card-title" onclick="window.location.href='<?php echo $detailUrl; ?>'"><?php echo htmlspecialchars($hName); ?></h3>
+                                    <h3 class="hotel-card-title" onclick="event.stopPropagation(); window.open('<?php echo $detailUrl; ?>', '_blank')"><?php echo htmlspecialchars($hName); ?></h3>
                                     <span class="star-gold-icons">
                                         <?php echo str_repeat('★', max(1, min(5, $hStar))); ?>
                                     </span>
@@ -2136,7 +2145,7 @@ if ($maxPrice == 0) $maxPrice = 60000;
                                 </div>
 
                                 <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
-                                    <button type="button" class="btn-shortlist" onclick="toggleShortlist(this)">
+                                    <button type="button" class="btn-shortlist" onclick="event.stopPropagation(); toggleShortlist(this)">
                                         <i class="fa-regular fa-heart"></i> Shortlist
                                     </button>
                                 </div>
@@ -2169,7 +2178,7 @@ if ($maxPrice == 0) $maxPrice = 60000;
                                     'search_tracing_key' => $sTrace ?? ''
                                 )));
                                 ?>
-                                <a href="<?php echo $detailUrl; ?>" target="_blank" class="btn-select-room" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                                <a href="<?php echo $detailUrl; ?>" target="_blank" onclick="event.stopPropagation();" class="btn-select-room" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
                                     View Room
                                 </a>
                             </div>
@@ -2838,11 +2847,26 @@ if (cityInput && suggestionsBox) {
 }
 
 // ========================================================
-// 7. INTERACTIVE SPLIT MAP VIEW ENGINE (Akbar Travels Style Screenshot 2)
+// 7. GOOGLE MAPS SPLIT VIEW ENGINE (Akbar Travels Style Screenshot 2)
 // ========================================================
-let hotelMap = null;
-let hotelMarkers = [];
+let googleMap = null;
+let googleMarkers = [];
+let activeInfoWindow = null;
 let isMapViewActive = false;
+let selectedHotelIndex = null;
+
+// Normal and Active Red Pin SVGs matching Screenshot 2
+const RED_PIN_ICON = {
+    url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='32' height='38' fill='%23ef4444'%3E%3Cpath d='M12 0C7.58 0 4 3.58 4 8c0 5.25 7 13 8 14 1-1 8-8.75 8-14 0-4.42-3.58-8-8-8zm0 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z'/%3E%3C/svg%3E",
+    scaledSize: { width: 32, height: 38 },
+    anchor: { x: 16, y: 38 }
+};
+
+const ACTIVE_PIN_ICON = {
+    url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='42' height='50' fill='%23b91c1c'%3E%3Cpath d='M12 0C7.58 0 4 3.58 4 8c0 5.25 7 13 8 14 1-1 8-8.75 8-14 0-4.42-3.58-8-8-8zm0 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z'/%3E%3C/svg%3E",
+    scaledSize: { width: 42, height: 50 },
+    anchor: { x: 21, y: 50 }
+};
 
 function toggleMapView(enable) {
     const resultsContainer = document.querySelector('.hotel-results-container');
@@ -2859,11 +2883,29 @@ function toggleMapView(enable) {
         if (resultsContainer) resultsContainer.classList.add('map-split-active');
         if (backBar) backBar.style.display = 'block';
         if (mapCol) mapCol.style.display = 'block';
-        initOrUpdateHotelMap();
+        initOrUpdateGoogleMap();
+
+        // Select first visible hotel on map view open
+        let firstIdx = null;
+        for (let i = 0; i < hotelCards.length; i++) {
+            if (hotelCards[i].style.display !== 'none') {
+                firstIdx = i;
+                break;
+            }
+        }
+        if (firstIdx !== null) {
+            setTimeout(() => {
+                selectHotelOnMap(firstIdx, false);
+            }, 300);
+        }
     } else {
         if (resultsContainer) resultsContainer.classList.remove('map-split-active');
         if (backBar) backBar.style.display = 'none';
         if (mapCol) mapCol.style.display = 'none';
+        document.querySelectorAll('.hotel-card.selected-on-map').forEach(c => c.classList.remove('selected-on-map'));
+        if (activeInfoWindow) {
+            activeInfoWindow.close();
+        }
     }
 }
 
@@ -2892,64 +2934,73 @@ function getCityCenterCoords() {
     for (const h of HOTELS_DATA) {
         if (h.lat && h.lng) return [h.lat, h.lng];
     }
-    return [13.0827, 80.2707]; // Chennai default
+    return [25.2048, 55.2708]; // Dubai default
 }
 
-function initOrUpdateHotelMap() {
-    if (typeof L === 'undefined') {
-        setTimeout(initOrUpdateHotelMap, 300);
+function initOrUpdateGoogleMap() {
+    if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+        setTimeout(initOrUpdateGoogleMap, 200);
         return;
     }
 
     const mapElem = document.getElementById('hotelInteractiveMap');
     if (!mapElem) return;
 
-    const center = getCityCenterCoords();
+    const centerCoords = getCityCenterCoords();
+    const mapCenter = { lat: centerCoords[0], lng: centerCoords[1] };
 
-    if (!hotelMap) {
-        hotelMap = L.map('hotelInteractiveMap', {
-            center: center,
-            zoom: 12,
-            zoomControl: true
+    if (!googleMap) {
+        googleMap = new google.maps.Map(mapElem, {
+            center: mapCenter,
+            zoom: 13,
+            mapTypeControl: false,
+            streetViewControl: false,
+            fullscreenControl: false,
+            zoomControl: true,
+            styles: [
+                {
+                    featureType: "poi",
+                    elementType: "labels",
+                    stylers: [{ visibility: "off" }]
+                }
+            ]
         });
 
-        // CartoDB Voyager clean tiles (Google-like pastel map style matching Screenshot 2)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; CARTO',
-            maxZoom: 19,
-            subdomains: 'abcd'
-        }).addTo(hotelMap);
+        activeInfoWindow = new google.maps.InfoWindow();
     } else {
-        hotelMap.invalidateSize();
+        google.maps.event.trigger(googleMap, 'resize');
     }
 
-    // Clear existing markers
-    hotelMarkers.forEach(m => m.marker.remove());
-    hotelMarkers = [];
+    // Clear previous markers
+    googleMarkers.forEach(m => m.marker.setMap(null));
+    googleMarkers = [];
 
-    const bounds = [];
+    const bounds = new google.maps.LatLngBounds();
 
     HOTELS_DATA.forEach((hotel, idx) => {
         let lat = hotel.lat;
         let lng = hotel.lng;
 
-        // If coordinates missing, generate deterministic offset around city center
         if (!lat || !lng) {
             const angle = (idx * 137.5) * (Math.PI / 180);
             const radius = 0.015 + ((idx % 7) * 0.008);
-            lat = center[0] + (Math.sin(angle) * radius);
-            lng = center[1] + (Math.cos(angle) * radius);
+            lat = centerCoords[0] + (Math.sin(angle) * radius);
+            lng = centerCoords[1] + (Math.cos(angle) * radius);
         }
 
-        bounds.push([lat, lng]);
+        const latLng = new google.maps.LatLng(lat, lng);
+        bounds.extend(latLng);
 
-        // Custom red pin icon matching Akbar Travels Screenshot 2
-        const pinIcon = L.divIcon({
-            className: 'custom-map-marker',
-            html: `<div class="map-marker-pin" id="markerPin_${idx}"></div>`,
-            iconSize: [32, 38],
-            iconAnchor: [16, 38],
-            popupAnchor: [0, -38]
+        const marker = new google.maps.Marker({
+            position: latLng,
+            map: googleMap,
+            title: hotel.name,
+            icon: {
+                url: RED_PIN_ICON.url,
+                scaledSize: new google.maps.Size(RED_PIN_ICON.scaledSize.width, RED_PIN_ICON.scaledSize.height),
+                anchor: new google.maps.Point(RED_PIN_ICON.anchor.x, RED_PIN_ICON.anchor.y)
+            },
+            zIndex: 100
         });
 
         const starStr = '★'.repeat(Math.max(1, Math.min(5, hotel.stars)));
@@ -2962,7 +3013,7 @@ function initOrUpdateHotelMap() {
                 <div class="map-popup-body">
                     <img src="${hotel.image}" alt="${hotel.name}" class="map-popup-thumb">
                     <div class="map-popup-actions">
-                        <a href="${hotel.detailUrl}" class="btn-map-select-room">Select Room</a>
+                        <a href="${hotel.detailUrl}" target="_blank" class="btn-map-select-room">Select Room</a>
                         <button type="button" class="btn-map-shortlist" onclick="alert('Added ${hotel.name.replace(/'/g, "\\'")} to Shortlist!')">
                             <i class="fa-regular fa-heart"></i> Shortlist
                         </button>
@@ -2971,61 +3022,93 @@ function initOrUpdateHotelMap() {
             </div>
         `;
 
-        const marker = L.marker([lat, lng], { icon: pinIcon }).addTo(hotelMap);
-        marker.bindPopup(popupContent, { maxWidth: 300, minWidth: 260 });
-
-        marker.on('click', () => {
-            // Scroll to hotel card in left column
-            const card = document.getElementById(`hotelCard_${idx}`);
-            if (card) {
-                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                card.style.outline = '2px solid #ef4444';
-                setTimeout(() => { card.style.outline = ''; }, 2000);
-            }
+        marker.addListener('click', () => {
+            selectHotelOnMap(idx, true);
         });
 
-        hotelMarkers.push({
+        googleMarkers.push({
             index: idx,
             id: hotel.id,
             marker: marker,
             lat: lat,
-            lng: lng
+            lng: lng,
+            content: popupContent
         });
     });
 
-    if (bounds.length > 0) {
-        hotelMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+    if (HOTELS_DATA.length > 0 && googleMap) {
+        googleMap.fitBounds(bounds);
     }
 }
 
-function focusHotelOnMap(idx) {
-    if (!isMapViewActive) {
-        toggleMapView(true);
-    }
-    setTimeout(() => {
-        const item = hotelMarkers.find(m => m.index === idx);
-        if (item && hotelMap) {
-            hotelMap.setView([item.lat, item.lng], 15, { animate: true });
-            item.marker.openPopup();
+// Called when hotel card in left list is clicked
+function onHotelCardClick(idx) {
+    // Only interact with map if user has explicitly opened map view
+    if (!isMapViewActive) return;
+    selectHotelOnMap(idx, false);
+}
+
+function selectHotelOnMap(idx, shouldScrollCard) {
+    if (!isMapViewActive || !googleMap) return;
+
+    selectedHotelIndex = idx;
+
+    // Highlight selected card on left list
+    document.querySelectorAll('.hotel-card').forEach((card, cIdx) => {
+        if (cIdx === idx) {
+            card.classList.add('selected-on-map');
+            if (shouldScrollCard) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        } else {
+            card.classList.remove('selected-on-map');
         }
-    }, 250);
+    });
+
+    // Update marker pins on map and pan to selected hotel
+    googleMarkers.forEach(m => {
+        if (m.index === idx) {
+            m.marker.setIcon({
+                url: ACTIVE_PIN_ICON.url,
+                scaledSize: new google.maps.Size(ACTIVE_PIN_ICON.scaledSize.width, ACTIVE_PIN_ICON.scaledSize.height),
+                anchor: new google.maps.Point(ACTIVE_PIN_ICON.anchor.x, ACTIVE_PIN_ICON.anchor.y)
+            });
+            m.marker.setZIndex(999);
+
+            googleMap.panTo({ lat: m.lat, lng: m.lng });
+            if (googleMap.getZoom() < 14) {
+                googleMap.setZoom(15);
+            }
+
+            if (activeInfoWindow) {
+                activeInfoWindow.setContent(m.content);
+                activeInfoWindow.open(googleMap, m.marker);
+            }
+        } else {
+            m.marker.setIcon({
+                url: RED_PIN_ICON.url,
+                scaledSize: new google.maps.Size(RED_PIN_ICON.scaledSize.width, RED_PIN_ICON.scaledSize.height),
+                anchor: new google.maps.Point(RED_PIN_ICON.anchor.x, RED_PIN_ICON.anchor.y)
+            });
+            m.marker.setZIndex(100);
+        }
+    });
+}
+
+// Backward compatibility alias
+function focusHotelOnMap(idx) {
+    if (isMapViewActive) {
+        selectHotelOnMap(idx, false);
+    }
 }
 
 function updateMapMarkersVisibility() {
-    if (!hotelMap || hotelMarkers.length === 0) return;
+    if (!googleMap || googleMarkers.length === 0) return;
     hotelCards.forEach((card, idx) => {
         const isVisible = card.style.display !== 'none';
-        const item = hotelMarkers.find(m => m.index === idx);
+        const item = googleMarkers.find(m => m.index === idx);
         if (item) {
-            if (isVisible) {
-                if (!hotelMap.hasLayer(item.marker)) {
-                    item.marker.addTo(hotelMap);
-                }
-            } else {
-                if (hotelMap.hasLayer(item.marker)) {
-                    item.marker.remove();
-                }
-            }
+            item.marker.setVisible(isVisible);
         }
     });
 }

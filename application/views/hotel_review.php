@@ -12,8 +12,12 @@ $rooms = (int)($bSummary['rooms'] ?? 1);
 $adults = (int)($bSummary['adults'] ?? 2);
 $children = (int)($bSummary['children'] ?? 0);
 $total_amount = (float)($bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500));
-$base_total = (float)($bSummary['base_total'] ?? round($total_amount / 1.12, 2));
-$taxes = (float)($bSummary['taxes'] ?? round($total_amount - $base_total, 2));
+$base_total = (float)($bSummary['base_total'] ?? 0);
+$taxes = (float)($bSummary['taxes'] ?? 0);
+if ($taxes <= 0 || $base_total <= 0 || $base_total >= $total_amount) {
+    $base_total = round($total_amount / 1.12, 2);
+    $taxes = round($total_amount - $base_total, 2);
+}
 $discount_total = (float)($bSummary['discount_total'] ?? 0);
 $is_refundable = isset($bSummary['is_refundable']) ? (bool)$bSummary['is_refundable'] : true;
 $star_rating = (int)($bSummary['star_rating'] ?? 5);
@@ -390,21 +394,41 @@ $defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
                         </h3>
 
                         <!-- Room Rates line with chevron -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f8fafc; font-size: 14px;">
-                            <div style="display: flex; align-items: center; gap: 8px; color: #1e293b; font-weight: 600;">
-                                <i class="fa-solid fa-angle-right" style="font-size: 12px; color: #64748b;"></i>
-                                <span>Room Rates</span>
+                        <div style="border-bottom: 1px solid #f8fafc;">
+                            <div onclick="toggleFareRow('fareRoomRatesDetails', 'chevronRoomRates')" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 14px; cursor: pointer; user-select: none;">
+                                <div style="display: flex; align-items: center; gap: 8px; color: #1e293b; font-weight: 600;">
+                                    <i id="chevronRoomRates" class="fa-solid fa-angle-right" style="font-size: 12px; color: #64748b; transition: transform 0.2s;"></i>
+                                    <span>Room Rates</span>
+                                </div>
+                                <strong style="color: #0f172a; font-weight: 700;">₹ <span id="dispBaseRate"><?php echo number_format($base_total); ?></span></strong>
                             </div>
-                            <strong style="color: #0f172a; font-weight: 700;">₹ <span id="dispBaseRate"><?php echo number_format($base_total); ?></span></strong>
+                            <div id="fareRoomRatesDetails" style="display: none; padding: 0 0 10px 20px; font-size: 12.5px; color: #64748b;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                    <span>Base Room Tariff (<?php echo $nights; ?> Night<?php echo $nights > 1 ? 's' : ''; ?>, <?php echo $rooms; ?> Room<?php echo $rooms > 1 ? 's' : ''; ?>)</span>
+                                    <span>₹ <?php echo number_format($base_total); ?></span>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Tax & Charges line with chevron -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f8fafc; font-size: 14px;">
-                            <div style="display: flex; align-items: center; gap: 8px; color: #1e293b; font-weight: 600;">
-                                <i class="fa-solid fa-angle-right" style="font-size: 12px; color: #64748b;"></i>
-                                <span>Tax & Charges</span>
+                        <div style="border-bottom: 1px solid #f8fafc;">
+                            <div onclick="toggleFareRow('fareTaxDetails', 'chevronTax')" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 14px; cursor: pointer; user-select: none;">
+                                <div style="display: flex; align-items: center; gap: 8px; color: #1e293b; font-weight: 600;">
+                                    <i id="chevronTax" class="fa-solid fa-angle-right" style="font-size: 12px; color: #64748b; transition: transform 0.2s;"></i>
+                                    <span>Tax & Charges</span>
+                                </div>
+                                <strong style="color: #0f172a; font-weight: 700;">₹ <span id="dispTaxAmount"><?php echo number_format($taxes); ?></span></strong>
                             </div>
-                            <strong style="color: #0f172a; font-weight: 700;">₹ <span id="dispTaxAmount"><?php echo number_format($taxes); ?></span></strong>
+                            <div id="fareTaxDetails" style="display: none; padding: 0 0 10px 20px; font-size: 12.5px; color: #64748b;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                    <span>Hotel GST / Local VAT (10%)</span>
+                                    <span>₹ <?php echo number_format(round($taxes * 0.83)); ?></span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Tourism Fee & Service Surcharges (2%)</span>
+                                    <span>₹ <?php echo number_format(round($taxes * 0.17)); ?></span>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Discount line with chevron -->
