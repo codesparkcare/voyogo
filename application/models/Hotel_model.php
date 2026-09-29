@@ -23,12 +23,12 @@ class Hotel_model extends CI_Model {
                 'live_client_id'      => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'APISKYPLANETN'),
                 'live_password'       => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'SUB@908#54961'),
                 'live_merchant_id'    => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => '200'),
-                'live_api_key'        => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => '069ab7973ac12116ccc1802546ad52bf'),
+                'live_api_key'        => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'kXAY9yHARK'),
                 'live_browser_key'    => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => '069ab7973ac12116ccc1802546ad52bf'),
                 'live_agent_code'     => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ' '),
                 'live_utils_url'        => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiutilsagents.akbartravelsonline.com'),
-                'live_hotel_url'        => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
-                'live_itinerary_url'    => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
+                'live_hotel_url'        => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://travelportal.akbartravels.com'),
+                'live_itinerary_url'    => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apihotelsagents.akbartravelsonline.com'),
                 'live_booking_url'      => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
                 'sandbox_client_id'     => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'bitest'),
                 'sandbox_password'      => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'staging@1'),
@@ -59,12 +59,12 @@ class Hotel_model extends CI_Model {
                 'live_client_id'        => 'APISKYPLANETN',
                 'live_password'         => 'SUB@908#54961',
                 'live_merchant_id'      => '200',
-                'live_api_key'          => '069ab7973ac12116ccc1802546ad52bf',
+                'live_api_key'          => 'kXAY9yHARK',
                 'live_browser_key'      => '069ab7973ac12116ccc1802546ad52bf',
                 'live_agent_code'       => ' ',
                 'live_utils_url'        => 'https://apiutilsagents.akbartravelsonline.com',
-                'live_hotel_url'        => 'https://apiagents.akbartravelsonline.com',
-                'live_itinerary_url'    => 'https://apiagents.akbartravelsonline.com',
+                'live_hotel_url'        => 'https://travelportal.akbartravels.com',
+                'live_itinerary_url'    => 'https://apihotelsagents.akbartravelsonline.com',
                 'live_booking_url'      => 'https://apiagents.akbartravelsonline.com',
                 'live_segment_id'       => 'NewRevamp',
                 'sandbox_client_id'     => 'bitest',
@@ -90,7 +90,7 @@ class Hotel_model extends CI_Model {
             // Auto-migrate new URL and segment columns if missing in existing hotel_api_settings table
             $existing_settings_cols = $this->db->list_fields('hotel_api_settings');
             $new_settings_cols = array(
-                'live_itinerary_url'    => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
+                'live_itinerary_url'    => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apihotelsagents.akbartravelsonline.com'),
                 'live_booking_url'      => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://apiagents.akbartravelsonline.com'),
                 'sandbox_itinerary_url' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapihotels.benzyinfotech.com'),
                 'sandbox_booking_url'   => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'https://b2bapiflights.benzyinfotech.com'),
@@ -105,6 +105,15 @@ class Hotel_model extends CI_Model {
                     $this->dbforge->add_column('hotel_api_settings', array($col => $col_def));
                 }
             }
+            // Update live URLs and credentials to match production email
+            $this->db->where('id', 1)->update('hotel_api_settings', array(
+                'live_api_key'       => 'kXAY9yHARK',
+                'live_hotel_url'     => 'https://travelportal.akbartravels.com',
+                'live_itinerary_url' => 'https://apihotelsagents.akbartravelsonline.com',
+                'live_booking_url'   => 'https://apiagents.akbartravelsonline.com',
+                'live_utils_url'     => 'https://apiutilsagents.akbartravelsonline.com'
+            ));
+
             // Update sandbox_booking_url to official Flight/Booking host for Payment/StartPay & Booking APIs
             $this->db->where('sandbox_booking_url', 'https://b2bapihotels.benzyinfotech.com');
             $this->db->or_where('sandbox_booking_url', '');
@@ -151,6 +160,7 @@ class Hotel_model extends CI_Model {
             'payment_id'           => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
             'payment_status'       => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => 'paid'),
             'booking_status'       => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => 'confirmed'),
+            'booking_status_code'  => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'B0'),
             'cancellation_id'      => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
             'cancellation_remarks' => array('type' => 'TEXT', 'null' => TRUE),
             'cancelled_at'         => array('type' => 'DATETIME', 'null' => TRUE),
@@ -333,4 +343,64 @@ class Hotel_model extends CI_Model {
             'revenue'   => (float)$revenue
         );
     }
+
+    // =========================================================================
+    // BENZY / AKBAR HOTEL API STATUS CODES (OFFICIAL SPECIFICATION)
+    // =========================================================================
+    const STATUS_ITINERARY_SAVED  = 'I8'; // Itinerary Saved
+    const STATUS_IN_PROGRESS      = 'IP'; // Booking InProgress
+    const STATUS_SUCCESS          = 'B0'; // Booking Success
+    const STATUS_FAILED           = 'B1'; // Booking Failed
+    const STATUS_CANCEL_REQUEST   = 'CR'; // Cancel Request
+    const STATUS_CANCELLED        = 'CD'; // Cancelled
+    const STATUS_CANCEL_REFUND    = 'CF'; // Cancel Refund
+    const STATUS_CANCEL_REJECTED  = 'CJ'; // Cancel Rejected
+
+    /**
+     * Get label, badge color, and normalized status from Benzy Status Code
+     */
+    public static function get_status_info($code) {
+        $code = strtoupper(trim((string)$code));
+        $map = array(
+            'I8' => array('code' => 'I8', 'label' => 'Itinerary Saved',    'badge' => 'info',      'color' => '#0284c7', 'system_status' => 'pending'),
+            'IP' => array('code' => 'IP', 'label' => 'Booking InProgress', 'badge' => 'warning',   'color' => '#d97706', 'system_status' => 'in_progress'),
+            'B0' => array('code' => 'B0', 'label' => 'Booking Success',    'badge' => 'success',   'color' => '#16a34a', 'system_status' => 'confirmed'),
+            'B1' => array('code' => 'B1', 'label' => 'Booking Failed',     'badge' => 'danger',    'color' => '#dc2626', 'system_status' => 'failed'),
+            'CR' => array('code' => 'CR', 'label' => 'Cancel Request',     'badge' => 'warning',   'color' => '#ea580c', 'system_status' => 'cancel_requested'),
+            'CD' => array('code' => 'CD', 'label' => 'Cancelled',          'badge' => 'secondary', 'color' => '#64748b', 'system_status' => 'cancelled'),
+            'CF' => array('code' => 'CF', 'label' => 'Cancel Refund',      'badge' => 'info',      'color' => '#7c3aed', 'system_status' => 'refunded'),
+            'CJ' => array('code' => 'CJ', 'label' => 'Cancel Rejected',    'badge' => 'danger',    'color' => '#991b1b', 'system_status' => 'cancel_rejected'),
+        );
+
+        return $map[$code] ?? array(
+            'code'          => $code ?: 'B0',
+            'label'         => $code ? "Status $code" : 'Confirmed',
+            'badge'         => 'success',
+            'color'         => '#16a34a',
+            'system_status' => 'confirmed'
+        );
+    }
+
+    /**
+     * Update booking with Benzy Status Code & System Status
+     */
+    public function update_booking_status_code($bookingRef, $code, $supplierRef = null) {
+        $info = self::get_status_info($code);
+        $data = array(
+            'booking_status_code' => $info['code'],
+            'booking_status'      => $info['system_status'],
+            'updated_at'          => date('Y-m-d H:i:s')
+        );
+        if (!empty($supplierRef)) {
+            $data['supplier_reference'] = $supplierRef;
+        }
+
+        $existingFields = $this->db->list_fields('hotel_bookings');
+        $filtered = array_intersect_key($data, array_flip($existingFields));
+
+        $this->db->where('booking_ref', $bookingRef);
+        $this->db->or_where('booking_reference', $bookingRef);
+        return $this->db->update('hotel_bookings', $filtered);
+    }
 }
+

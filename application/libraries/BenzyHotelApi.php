@@ -7,6 +7,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class BenzyHotelApi {
 
+    // Status Codes as specified by Benzy Infotech / Akbar Travels
+    const STATUS_ITINERARY_SAVED  = 'I8'; // Itinerary Saved
+    const STATUS_IN_PROGRESS      = 'IP'; // Booking InProgress
+    const STATUS_SUCCESS          = 'B0'; // Booking Success
+    const STATUS_FAILED           = 'B1'; // Booking Failed
+    const STATUS_CANCEL_REQUEST   = 'CR'; // Cancel Request
+    const STATUS_CANCELLED        = 'CD'; // Cancelled
+    const STATUS_CANCEL_REFUND    = 'CF'; // Cancel Refund
+    const STATUS_CANCEL_REJECTED  = 'CJ'; // Cancel Rejected
+
     protected $CI;
     protected $environment = 'live'; // 'live' or 'sandbox'
     protected $credentials = array();
@@ -47,15 +57,15 @@ class BenzyHotelApi {
             $this->segmentId = !empty($settings['live_segment_id']) ? trim($settings['live_segment_id']) : 'NewRevamp';
             $this->credentials = array(
                 'MerchantID' => $settings['live_merchant_id'] ?? '200',
-                'ApiKey'     => $settings['live_api_key'] ?? '069ab7973ac12116ccc1802546ad52bf',
+                'ApiKey'     => $settings['live_api_key'] ?? 'kXAY9yHARK',
                 'ClientID'   => $settings['live_client_id'] ?? 'APISKYPLANETN',
                 'Password'   => $settings['live_password'] ?? 'SUB@908#54961',
                 'AgentCode'  => $settings['live_agent_code'] ?? ' ',
                 'BrowserKey' => $settings['live_browser_key'] ?? '069ab7973ac12116ccc1802546ad52bf'
             );
             $this->utilsUrl     = rtrim($settings['live_utils_url'] ?? 'https://apiutilsagents.akbartravelsonline.com', '/');
-            $this->searchUrl    = rtrim($settings['live_hotel_url'] ?? 'https://apiagents.akbartravelsonline.com', '/');
-            $this->itineraryUrl = rtrim($settings['live_itinerary_url'] ?? 'https://apiagents.akbartravelsonline.com', '/');
+            $this->searchUrl    = rtrim($settings['live_hotel_url'] ?? 'https://travelportal.akbartravels.com', '/');
+            $this->itineraryUrl = rtrim($settings['live_itinerary_url'] ?? 'https://apihotelsagents.akbartravelsonline.com', '/');
             $this->bookingUrl   = rtrim($settings['live_booking_url'] ?? 'https://apiagents.akbartravelsonline.com', '/');
             $this->hotelUrl     = $this->searchUrl;
         } else {

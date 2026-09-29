@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label small fw-bold text-secondary">Live API Key</label>
-                                    <input type="text" name="live_api_key" class="form-control font-monospace small" value="<?php echo htmlspecialchars($settings['live_api_key']); ?>" placeholder="API Key">
+                                    <input type="text" name="live_api_key" class="form-control font-monospace small" value="<?php echo htmlspecialchars($settings['live_api_key']); ?>" placeholder="kXAY9yHARK (Same as flight)">
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label small fw-bold text-secondary">Live Browser Key / Key</label>
@@ -104,15 +104,15 @@
                                     <input type="text" name="live_utils_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_utils_url'] ?? 'https://apiutilsagents.akbartravelsonline.com'); ?>" placeholder="https://apiutilsagents.akbartravelsonline.com">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-bold text-secondary">Live Hotel Search URL</label>
-                                    <input type="text" name="live_hotel_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_hotel_url'] ?? 'https://apiagents.akbartravelsonline.com'); ?>" placeholder="https://apiagents.akbartravelsonline.com">
+                                    <label class="form-label small fw-bold text-secondary">Live Hotel Search URL (Init to Pricing)</label>
+                                    <input type="text" name="live_hotel_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_hotel_url'] ?? 'https://travelportal.akbartravels.com'); ?>" placeholder="https://travelportal.akbartravels.com">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-bold text-secondary">Live Hotel Itinerary URL</label>
-                                    <input type="text" name="live_itinerary_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_itinerary_url'] ?? 'https://apiagents.akbartravelsonline.com'); ?>" placeholder="https://apiagents.akbartravelsonline.com">
+                                    <label class="form-label small fw-bold text-secondary">Live Hotel Itinerary URL (Create Itinerary)</label>
+                                    <input type="text" name="live_itinerary_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_itinerary_url'] ?? 'https://apihotelsagents.akbartravelsonline.com'); ?>" placeholder="https://apihotelsagents.akbartravelsonline.com">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-bold text-secondary">Live Hotel Booking & Payment URL</label>
+                                    <label class="form-label small fw-bold text-secondary">Live Hotel Booking URL (Retrieve Booking & StartPay)</label>
                                     <input type="text" name="live_booking_url" class="form-control" value="<?php echo htmlspecialchars($settings['live_booking_url'] ?? 'https://apiagents.akbartravelsonline.com'); ?>" placeholder="https://apiagents.akbartravelsonline.com">
                                 </div>
                                 <div class="col-md-12">

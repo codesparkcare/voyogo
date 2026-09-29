@@ -350,47 +350,61 @@ class Hotels extends CI_Controller {
             $suppRef = $retrieveResult['json']['CRSPNR'];
         }
 
+        // Determine Official Benzy Status Code (e.g. B0 = Success, IP = InProgress, B1 = Failed)
+        $statusCode = Hotel_model::STATUS_SUCCESS; // 'B0'
+        if (!empty($retrieveResult['json']['BookingStatus'])) {
+            $statusCode = trim($retrieveResult['json']['BookingStatus']);
+        } elseif (!empty($retrieveResult['json']['CurrentStatus'])) {
+            $statusCode = trim($retrieveResult['json']['CurrentStatus']);
+        } elseif (!empty($payResult['BookStatus'])) {
+            $statusCode = trim($payResult['BookStatus']);
+        }
+
+        $statusInfo = Hotel_model::get_status_info($statusCode);
+        $systemStatus = $statusInfo['system_status'] ?? 'confirmed';
+
         $voucherNum = 'VOY-VCH-' . strtoupper(substr(md5($txnId . time()), 0, 8));
         $bookingRef = 'VOY-HTL-' . date('Ymd') . '-' . rand(1000, 9999);
 
         // 3. Save to database
         $saveData = array(
-            'booking_reference'  => $bookingRef,
-            'booking_ref'        => $bookingRef,
-            'supplier_reference' => $suppRef,
-            'transaction_id'     => $txnId,
-            'tui'                => $tui,
-            'voucher_number'     => $voucherNum,
-            'hotel_id'           => $hotel_id,
-            'hotel_name'         => $hotel_name,
-            'hotel_address'      => $hotel_address,
-            'hotel_image'        => $hotel_image,
-            'star_rating'        => 5,
-            'room_type'          => $room_type,
-            'board_type'         => $board_type,
-            'destination_city'   => $city,
-            'checkin_date'       => $checkin,
-            'checkout_date'      => $checkout,
-            'nights_count'       => $nights,
-            'rooms_count'        => $rooms,
-            'adults_count'       => $adults,
-            'children_count'     => $children,
-            'guests_count'       => $adults + $children,
-            'lead_guest_title'   => $lead_title,
-            'lead_guest_name'    => $lead_name,
-            'primary_guest_name' => $lead_name,
-            'lead_guest_email'   => $lead_email,
-            'guest_email'        => $lead_email,
-            'lead_guest_phone'   => $lead_phone,
-            'guest_phone'        => $lead_phone,
-            'special_requests'   => $special_req,
-            'total_amount'       => $total_amount,
-            'tax_amount'         => $tax_amount,
-            'currency'           => 'INR',
-            'payment_id'         => $razorpay_id,
-            'payment_status'     => 'paid',
-            'booking_status'     => 'confirmed',
-            'cancellation_policy'=> 'Free cancellation until 48 hours before check-in'
+            'booking_reference'   => $bookingRef,
+            'booking_ref'         => $bookingRef,
+            'supplier_reference'  => $suppRef,
+            'transaction_id'      => $txnId,
+            'tui'                 => $tui,
+            'voucher_number'      => $voucherNum,
+            'hotel_id'            => $hotel_id,
+            'hotel_name'          => $hotel_name,
+            'hotel_address'       => $hotel_address,
+            'hotel_image'         => $hotel_image,
+            'star_rating'         => 5,
+            'room_type'           => $room_type,
+            'board_type'          => $board_type,
+            'destination_city'    => $city,
+            'checkin_date'        => $checkin,
+            'checkout_date'       => $checkout,
+            'nights_count'        => $nights,
+            'rooms_count'         => $rooms,
+            'adults_count'        => $adults,
+            'children_count'      => $children,
+            'guests_count'        => $adults + $children,
+            'lead_guest_title'    => $lead_title,
+            'lead_guest_name'     => $lead_name,
+            'primary_guest_name'  => $lead_name,
+            'lead_guest_email'    => $lead_email,
+            'guest_email'         => $lead_email,
+            'lead_guest_phone'    => $lead_phone,
+            'guest_phone'         => $lead_phone,
+            'special_requests'    => $special_req,
+            'total_amount'        => $total_amount,
+            'tax_amount'          => $tax_amount,
+            'currency'            => 'INR',
+            'payment_id'          => $razorpay_id,
+            'payment_status'      => 'paid',
+            'booking_status'      => $systemStatus,
+            'booking_status_code' => $statusCode,
+            'cancellation_policy' => 'Free cancellation until 48 hours before check-in'
         );
 
         $this->Hotel_model->save_hotel_booking($saveData);
@@ -440,13 +454,21 @@ class Hotels extends CI_Controller {
         $tui   = $booking['tui'] ?? '';
         $cancelRes = $this->benzyhotelapi->cancelBooking($txnId, $tui, null, 'Customer Cancellation Request');
 
+        $cancelCode = Hotel_model::STATUS_CANCELLED; // 'CD'
+        if (!empty($cancelRes['json']['Status'])) {
+            $resStatus = strtoupper(trim($cancelRes['json']['Status']));
+            if (in_array($resStatus, array('CD', 'CR', 'CF', 'CJ'))) {
+                $cancelCode = $resStatus;
+            }
+        }
+
         $isSuccess = ($cancelRes['http_code'] === 200 && !empty($cancelRes['json']['Status']) && strtolower($cancelRes['json']['Status']) !== 'failure');
+        $this->Hotel_model->update_booking_status_code($bookingRef, $cancelCode);
+
         if ($isSuccess || $cancelRes['http_code'] === 200) {
-            $this->Hotel_model->update_booking_status($bookingRef, 'cancelled');
-            $this->session->set_flashdata('success_msg', 'Booking cancelled successfully.');
+            $this->session->set_flashdata('success_msg', 'Booking cancellation request submitted successfully.');
         } else {
             $errMsg = $cancelRes['json']['Message'] ?? ($cancelRes['json']['Msg'][0] ?? 'Cancellation request completed.');
-            $this->Hotel_model->update_booking_status($bookingRef, 'cancelled');
             $this->session->set_flashdata('success_msg', $errMsg);
         }
 

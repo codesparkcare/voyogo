@@ -65,9 +65,18 @@
                             <td class="fw-bold text-success">₹ <?php echo number_format($b['total_amount']); ?></td>
                             <td><small class="text-muted font-monospace"><?php echo htmlspecialchars($b['supplier_reference'] ?? ($b['payment_id'] ?? '-')); ?></small></td>
                             <td>
-                                <span class="badge <?php echo ($bStatus == 'Confirmed') ? 'bg-success' : (($bStatus == 'Cancelled') ? 'bg-danger' : 'bg-warning'); ?>">
-                                    <?php echo htmlspecialchars($bStatus); ?>
+                                <?php 
+                                $statusCode = $b['booking_status_code'] ?? '';
+                                $statusInfo = !empty($statusCode) ? Hotel_model::get_status_info($statusCode) : null;
+                                $badgeClass = $statusInfo ? ('bg-' . $statusInfo['badge']) : (($bStatus == 'Confirmed') ? 'bg-success' : (($bStatus == 'Cancelled') ? 'bg-danger' : 'bg-warning'));
+                                $statusText = $statusInfo ? $statusInfo['label'] : $bStatus;
+                                ?>
+                                <span class="badge <?php echo $badgeClass; ?>">
+                                    <?php echo htmlspecialchars($statusText); ?>
                                 </span>
+                                <?php if (!empty($statusCode)): ?>
+                                    <div class="text-muted small font-monospace" style="font-size: 10px;">Code: <strong><?php echo htmlspecialchars($statusCode); ?></strong></div>
+                                <?php endif; ?>
                                 <?php if (!empty($b['cancellation_id'])): ?>
                                     <div class="text-muted small font-monospace" style="font-size: 10px;">Canc ID: <?php echo htmlspecialchars($b['cancellation_id']); ?></div>
                                 <?php endif; ?>
