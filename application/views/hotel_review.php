@@ -457,15 +457,15 @@ $defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
                         </div>
 
                         <div style="display: flex; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; background: #fff;">
-                            <input type="text" id="promoCodeInput" placeholder="Enter Promo Code" value="ATHOTEL" style="flex: 1; padding: 10px 14px; border: none; outline: none; font-size: 13.5px; font-weight: 800; text-transform: uppercase; color: #15803d; letter-spacing: 0.5px;">
+                            <input type="text" id="promoCodeInput" placeholder="ENTER PROMO CODE" value="" onkeypress="if(event.key === 'Enter') { event.preventDefault(); applyHotelPromo(); }" style="flex: 1; padding: 10px 14px; border: none; outline: none; font-size: 13.5px; font-weight: 700; text-transform: uppercase; color: #1e293b; letter-spacing: 0.5px;">
                             <button type="button" id="btnApplyPromo" onclick="applyHotelPromo()" style="background: #16a34a; color: #ffffff; width: 48px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: background 0.15s;">
                                 <i class="fa-solid fa-check"></i>
                             </button>
                         </div>
 
-                        <div id="promoFeedbackMsg" style="font-size: 12px; color: #16a34a; font-weight: 700; margin-top: 10px; display: flex; align-items: center; gap: 6px;">
+                        <div id="promoFeedbackMsg" style="display: none; font-size: 12px; color: #16a34a; font-weight: 700; margin-top: 10px; align-items: center; gap: 6px;">
                             <i class="fa-solid fa-circle-check"></i>
-                            <span>Your Promocode has been applied you've saved ₹ <strong id="promoSavedVal"><?php echo number_format($discount_total > 0 ? $discount_total : 500); ?></strong></span>
+                            <span>Your Promocode has been applied you've saved ₹ <strong id="promoSavedVal">0</strong></span>
                         </div>
                     </div>
 
@@ -642,6 +642,7 @@ function applyHotelPromo() {
 
     if (!code) {
         if (feedback) {
+            feedback.style.display = 'flex';
             feedback.style.color = '#dc2626';
             feedback.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please enter a promo code.';
         }
@@ -661,6 +662,7 @@ function applyHotelPromo() {
     if (payBtn) payBtn.innerHTML = '<i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Pay ₹ ' + newTotal.toLocaleString() + ' & Confirm Voucher';
 
     if (feedback) {
+        feedback.style.display = 'flex';
         feedback.style.color = '#16a34a';
         feedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> Your Promocode <strong>' + code + '</strong> has been applied you\'ve saved ₹ <strong>' + discount.toLocaleString() + '</strong>';
     }
