@@ -38,6 +38,10 @@ if ($minPrice == 999999) $minPrice = 2000;
 if ($maxPrice == 0) $maxPrice = 60000;
 ?>
 
+<!-- Leaflet Map CSS & JS for Interactive Map View (Akbar Travels Style) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <!-- Modern CSS for Hotel Search Results Page -->
 <style>
 :root {
@@ -319,6 +323,191 @@ if ($maxPrice == 0) $maxPrice = 60000;
     color: #083f6b;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* ========================================================
+   SPLIT MAP VIEW MODE (Akbar Travels Style Screenshot 2)
+   ======================================================== */
+.hotel-results-container.map-split-active {
+    max-width: 1600px !important;
+}
+
+.hotel-results-container.map-split-active .results-split-wrapper {
+    display: flex !important;
+    gap: 20px;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.hotel-results-container.map-split-active .hotel-list-split-col {
+    flex: 1 1 48% !important;
+    max-width: 48% !important;
+    max-height: calc(100vh - 86px);
+    overflow-y: auto;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.hotel-results-container.map-split-active .hotel-map-split-col {
+    display: block !important;
+    flex: 1 1 52% !important;
+    max-width: 52% !important;
+    height: calc(100vh - 86px) !important;
+    position: sticky !important;
+    top: 76px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+    background: #e2e8f0;
+}
+
+.back-to-list-link {
+    color: #2563eb;
+    font-weight: 700;
+    font-size: 13.5px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0;
+    transition: color 0.15s;
+}
+.back-to-list-link:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* Red Circular Close Button on Top-Right of Map (Exact Screenshot 2) */
+.map-split-close-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 1000;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #ef4444;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    transition: transform 0.15s, background 0.15s;
+}
+.map-split-close-btn:hover {
+    background: #dc2626;
+    transform: scale(1.08);
+}
+
+/* Custom Marker Pin */
+.custom-map-marker {
+    background: transparent;
+    border: none;
+}
+.map-marker-pin {
+    width: 32px;
+    height: 38px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444'%3E%3Cpath d='M12 0C7.58 0 4 3.58 4 8c0 5.25 7 13 8 14 1-1 8-8.75 8-14 0-4.42-3.58-8-8-8zm0 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z'/%3E%3C/svg%3E") no-repeat center center;
+    background-size: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+.map-marker-pin:hover, .map-marker-pin.active {
+    transform: scale(1.25);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45));
+}
+
+/* Custom InfoWindow Popup (Exact Screenshot 2) */
+.leaflet-popup-content-wrapper {
+    padding: 0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+.leaflet-popup-content {
+    margin: 0 !important;
+    line-height: 1.4 !important;
+}
+.map-hotel-popup-box {
+    width: 270px;
+    padding: 14px;
+    font-family: inherit;
+    background: #ffffff;
+}
+.map-popup-header {
+    margin-bottom: 8px;
+}
+.map-popup-title {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 3px 0;
+    line-height: 1.3;
+}
+.map-popup-stars {
+    color: #f59e0b;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+.map-popup-body {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.map-popup-thumb {
+    width: 80px;
+    height: 68px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+.map-popup-actions {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.btn-map-select-room {
+    background: #ef4444;
+    color: #ffffff !important;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 7px 10px;
+    border-radius: 6px;
+    text-align: center;
+    text-decoration: none !important;
+    display: block;
+    box-shadow: 0 2px 6px rgba(239,68,68,0.3);
+    transition: background 0.15s;
+}
+.btn-map-select-room:hover {
+    background: #dc2626;
+}
+.btn-map-shortlist {
+    background: #ffffff;
+    color: #0284c7;
+    border: 1px solid #0284c7;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: background 0.15s;
+}
+.btn-map-shortlist:hover {
+    background: #f0f9ff;
 }
 
 /* Unified Filters Container (Single White Box with Dividers) */
@@ -1462,7 +1651,7 @@ if ($maxPrice == 0) $maxPrice = 60000;
         <aside class="hotel-filter-sidebar">
             
             <!-- SEE MAP VIEW Card -->
-            <div class="map-view-trigger-card" id="btnSeeMapView">
+            <div class="map-view-trigger-card" id="btnSeeMapView" onclick="toggleMapView(true)">
                 <i class="fa-solid fa-location-dot map-view-pin-icon"></i>
                 <span class="map-view-text">SEE MAP VIEW</span>
             </div>
@@ -1779,30 +1968,42 @@ if ($maxPrice == 0) $maxPrice = 60000;
         <!-- ========================================================
              RIGHT HOTEL RESULTS AREA
              ======================================================== -->
-        <main class="results-area-col">
+        <main class="results-area-col" id="resultsAreaCol">
             
-            <!-- Top Results Summary & Sort Options (Exact Screenshot) -->
-            <div class="results-top-header">
-                <p class="results-count-text">
-                    Showing <strong id="visibleHotelCount"><?php echo count($hotels); ?></strong> of <strong id="totalHotelCount"><?php echo count($hotels); ?></strong> hotels found
-                </p>
+            <div class="results-split-wrapper" id="resultsSplitWrapper">
+                
+                <!-- Left Hotel Listings Column -->
+                <div class="hotel-list-split-col" id="hotelListSplitCol">
 
-                <div class="results-sort-bar">
-                    <span class="sort-label">SORT BY</span>
-                    <span class="sort-item active" data-sort="featured" onclick="sortHotels('featured', this)">
-                        FEATURED <i class="fa-solid fa-arrow-down" style="font-size: 11px;"></i>
-                    </span>
-                    <span class="sort-item" data-sort="rating" onclick="sortHotels('rating', this)">
-                        RATING
-                    </span>
-                    <span class="sort-item" data-sort="price" onclick="sortHotels('price', this)">
-                        PRICE <i class="fa-solid fa-sort" style="font-size: 11px; margin-left: 2px;"></i>
-                    </span>
-                </div>
-            </div>
+                    <!-- Back to List View Button (Shown only when Map View is active, Screenshot 2) -->
+                    <div class="map-view-back-bar" id="mapViewBackBar" style="display: none; margin-bottom: 12px;">
+                        <a href="javascript:void(0)" onclick="toggleMapView(false)" class="back-to-list-link">
+                            <i class="fa-solid fa-arrow-left"></i> Back to List view
+                        </a>
+                    </div>
 
-            <!-- Hotel Listings Container -->
-            <div id="hotelListContainer">
+                    <!-- Top Results Summary & Sort Options (Exact Screenshot) -->
+                    <div class="results-top-header">
+                        <p class="results-count-text">
+                            Showing <strong id="visibleHotelCount"><?php echo count($hotels); ?></strong> of <strong id="totalHotelCount"><?php echo count($hotels); ?></strong> hotels found
+                        </p>
+
+                        <div class="results-sort-bar">
+                            <span class="sort-label">SORT BY</span>
+                            <span class="sort-item active" data-sort="featured" onclick="sortHotels('featured', this)">
+                                FEATURED <i class="fa-solid fa-arrow-down" style="font-size: 11px;"></i>
+                            </span>
+                            <span class="sort-item" data-sort="rating" onclick="sortHotels('rating', this)">
+                                RATING
+                            </span>
+                            <span class="sort-item" data-sort="price" onclick="sortHotels('price', this)">
+                                PRICE <i class="fa-solid fa-sort" style="font-size: 11px; margin-left: 2px;"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Hotel Listings Container -->
+                    <div id="hotelListContainer">
                 <?php 
                 if (!empty($hotels)):
                     $idx = 0;
@@ -1831,6 +2032,8 @@ if ($maxPrice == 0) $maxPrice = 60000;
                 ?>
                 <div class="hotel-card" 
                      id="hotelCard_<?php echo $idx; ?>"
+                     data-idx="<?php echo $idx; ?>"
+                     data-id="<?php echo htmlspecialchars($hId); ?>"
                      data-name="<?php echo htmlspecialchars(strtolower($hName)); ?>"
                      data-price="<?php echo $hPrice; ?>"
                      data-stars="<?php echo $hStar; ?>"
@@ -1840,6 +2043,13 @@ if ($maxPrice == 0) $maxPrice = 60000;
                      data-amenities="<?php echo htmlspecialchars(strtolower(implode(',', $hAmenities))); ?>"
                      data-available="<?php echo $isSoldOut ? '0' : '1'; ?>"
                      data-featured="<?php echo $idx; ?>"
+                     data-voyogo-choice="<?php echo (!empty($h['is_voyogo_choice']) || (float)$hRating >= 4.0 || (int)$hStar >= 4) ? '1' : '0'; ?>"
+                     data-free-cancellation="<?php echo !empty($h['free_cancellation']) ? '1' : '0'; ?>"
+                     data-free-breakfast="<?php echo !empty($h['free_breakfast']) ? '1' : '0'; ?>"
+                     data-wifi="<?php echo (stripos(implode(',', $hAmenities), 'wifi') !== false) ? '1' : '0'; ?>"
+                     data-lat="<?php echo htmlspecialchars($h['latitude'] ?? ''); ?>"
+                     data-lng="<?php echo htmlspecialchars($h['longitude'] ?? ''); ?>"
+                     onclick="focusHotelOnMap(<?php echo $idx; ?>)"
                      style="margin-bottom: 20px;">
                     
                     <!-- Main Hotel Card Content -->
@@ -1992,7 +2202,18 @@ if ($maxPrice == 0) $maxPrice = 60000;
                     </button>
                 </div>
                 <?php endif; ?>
-            </div>
+                    </div> <!-- closes #hotelListContainer -->
+                </div> <!-- closes #hotelListSplitCol -->
+
+                <!-- Right Map Split Column (Shown when Map View is active, Screenshot 2) -->
+                <div class="hotel-map-split-col" id="hotelMapSplitCol" style="display: none; position: relative;">
+                    <button type="button" class="map-split-close-btn" onclick="toggleMapView(false)" title="Close Map View">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <div id="hotelInteractiveMap" style="width: 100%; height: 100%;"></div>
+                </div>
+
+            </div> <!-- closes #resultsSplitWrapper -->
 
         </main>
     </div>
@@ -2138,27 +2359,7 @@ if ($maxPrice == 0) $maxPrice = 60000;
     </div>
 </div>
 
-<!-- 3. INTERACTIVE MAP VIEW MODAL -->
-<div class="modify-search-modal-overlay" id="mapViewModalOverlay" role="dialog" aria-modal="true">
-    <div class="modify-search-modal-box" style="max-width: 950px; height: 85vh; display: flex; flex-direction: column;">
-        <div class="modify-modal-head">
-            <h3><i class="fa-solid fa-map-location-dot" style="margin-right: 8px;"></i> Hotels in <?php echo htmlspecialchars($qCity); ?> - Map View</h3>
-            <button type="button" class="modify-modal-close" id="btnMapModalClose">&times;</button>
-        </div>
-        <div style="flex: 1; position: relative;">
-            <iframe 
-                width="100%" 
-                height="100%" 
-                frameborder="0" 
-                scrolling="no" 
-                marginheight="0" 
-                marginwidth="0" 
-                src="https://maps.google.com/maps?q=<?php echo urlencode($qCity); ?>+Hotels&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                style="border: none;">
-            </iframe>
-        </div>
-    </div>
-</div>
+<!-- Interactive Map View is embedded in split mode above -->
 
 <!-- ========================================================
      JAVASCRIPT: Filtering, Galleries, Modals & Sorting
@@ -2167,7 +2368,9 @@ if ($maxPrice == 0) $maxPrice = 60000;
 // Hotel Data Array populated from PHP
 const HOTELS_DATA = <?php 
     $hotelsJson = array();
+    $idx = 0;
     foreach ($hotels as $h) {
+        $hId = $h['id'] ?? ('HTL_' . $idx);
         $hero = !empty($h['image']) ? $h['image'] : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80';
         $gal = !empty($h['gallery']) && is_array($h['gallery']) ? $h['gallery'] : array($hero);
         $roomsFormatted = array();
@@ -2179,11 +2382,23 @@ const HOTELS_DATA = <?php
                 );
             }
         }
+        $detailUrl = site_url('hotels/detail/' . $hId . '?city=' . urlencode($qCity) . '&checkin=' . $qCheckin . '&checkout=' . $qCheckout . '&rooms=' . $qRooms . '&adults=' . $qAdults . '&children=' . $qChildren . (!empty($qRoomData) ? '&roomData=' . urlencode($qRoomData) : '') . (!empty($sId) ? '&search_id=' . urlencode($sId) : '') . (!empty($sTrace) ? '&search_tracing_key=' . urlencode($sTrace) : ''));
+
         $hotelsJson[] = array(
-            'name'    => $h['name'] ?? 'Hotel',
-            'gallery' => $gal,
-            'rooms'   => $roomsFormatted
+            'index'     => $idx,
+            'id'        => $hId,
+            'name'      => $h['name'] ?? 'Hotel',
+            'stars'     => (int)($h['star_rating'] ?? 4),
+            'rating'    => (float)($h['rating'] ?? 4.5),
+            'price'     => (float)($h['price_per_night'] ?? 4500),
+            'image'     => $hero,
+            'gallery'   => $gal,
+            'rooms'     => $roomsFormatted,
+            'lat'       => !empty($h['latitude']) ? (float)$h['latitude'] : null,
+            'lng'       => !empty($h['longitude']) ? (float)$h['longitude'] : null,
+            'detailUrl' => $detailUrl
         );
+        $idx++;
     }
     echo json_encode($hotelsJson);
 ?>;
@@ -2265,6 +2480,24 @@ function applyFilters() {
             show = false;
         }
 
+        // 2b. Popular Filters (Screenshot 3 Fix: Voyogo Choice, Free Cancellation, Breakfast Available, Wifi)
+        if (show && selected.popular.length > 0) {
+            for (const pop of selected.popular) {
+                if (pop === 'choice' && card.getAttribute('data-voyogo-choice') !== '1') {
+                    show = false; break;
+                }
+                if (pop === 'cancellation' && card.getAttribute('data-free-cancellation') !== '1') {
+                    show = false; break;
+                }
+                if (pop === 'breakfast' && card.getAttribute('data-free-breakfast') !== '1') {
+                    show = false; break;
+                }
+                if (pop === 'wifi' && card.getAttribute('data-wifi') !== '1') {
+                    show = false; break;
+                }
+            }
+        }
+
         // 3. Customer Ratings
         if (show && selected.rating.length > 0) {
             const minSelectedRating = Math.min(...selected.rating.map(Number));
@@ -2320,6 +2553,9 @@ function applyFilters() {
     if (visibleCountElem) {
         visibleCountElem.textContent = visibleCount;
     }
+
+    // Keep map markers synchronized with visible hotel cards
+    updateMapMarkersVisibility();
 }
 
 // Attach filter listeners
@@ -2602,31 +2838,196 @@ if (cityInput && suggestionsBox) {
 }
 
 // ========================================================
-// 7. MAP VIEW MODAL TRIGGER
+// 7. INTERACTIVE SPLIT MAP VIEW ENGINE (Akbar Travels Style Screenshot 2)
 // ========================================================
-const mapModal = document.getElementById('mapViewModalOverlay');
-const btnSeeMap = document.getElementById('btnSeeMapView');
-const btnCloseMap = document.getElementById('btnMapModalClose');
+let hotelMap = null;
+let hotelMarkers = [];
+let isMapViewActive = false;
 
-if (btnSeeMap && mapModal) {
-    btnSeeMap.onclick = () => {
-        mapModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    };
+function toggleMapView(enable) {
+    const resultsContainer = document.querySelector('.hotel-results-container');
+    const backBar = document.getElementById('mapViewBackBar');
+    const mapCol = document.getElementById('hotelMapSplitCol');
+    
+    if (typeof enable === 'boolean') {
+        isMapViewActive = enable;
+    } else {
+        isMapViewActive = !isMapViewActive;
+    }
+
+    if (isMapViewActive) {
+        if (resultsContainer) resultsContainer.classList.add('map-split-active');
+        if (backBar) backBar.style.display = 'block';
+        if (mapCol) mapCol.style.display = 'block';
+        initOrUpdateHotelMap();
+    } else {
+        if (resultsContainer) resultsContainer.classList.remove('map-split-active');
+        if (backBar) backBar.style.display = 'none';
+        if (mapCol) mapCol.style.display = 'none';
+    }
 }
-if (btnCloseMap && mapModal) {
-    btnCloseMap.onclick = () => {
-        mapModal.classList.remove('active');
-        document.body.style.overflow = '';
-    };
+
+// City coordinates mapping for automatic centering
+const CITY_COORDS_MAP = {
+    'dubai': [25.2048, 55.2708],
+    'mumbai': [19.0760, 72.8777],
+    'chennai': [13.0827, 80.2707],
+    'delhi': [28.6139, 77.2090],
+    'bengaluru': [12.9716, 77.5946],
+    'bangalore': [12.9716, 77.5946],
+    'goa': [15.2993, 74.1240],
+    'tirunelveli': [8.7139, 77.7567],
+    'madurai': [9.9252, 78.1198],
+    'kochi': [9.9312, 76.2673],
+    'singapore': [1.3521, 103.8198],
+    'london': [51.5074, -0.1278]
+};
+
+function getCityCenterCoords() {
+    const cityStr = '<?php echo strtolower(addslashes($qCity)); ?>';
+    for (const k in CITY_COORDS_MAP) {
+        if (cityStr.includes(k)) return CITY_COORDS_MAP[k];
+    }
+    // Check first hotel with lat/lng
+    for (const h of HOTELS_DATA) {
+        if (h.lat && h.lng) return [h.lat, h.lng];
+    }
+    return [13.0827, 80.2707]; // Chennai default
 }
-if (mapModal) {
-    mapModal.onclick = (e) => {
-        if (e.target === mapModal) {
-            mapModal.classList.remove('active');
-            document.body.style.overflow = '';
+
+function initOrUpdateHotelMap() {
+    if (typeof L === 'undefined') {
+        setTimeout(initOrUpdateHotelMap, 300);
+        return;
+    }
+
+    const mapElem = document.getElementById('hotelInteractiveMap');
+    if (!mapElem) return;
+
+    const center = getCityCenterCoords();
+
+    if (!hotelMap) {
+        hotelMap = L.map('hotelInteractiveMap', {
+            center: center,
+            zoom: 12,
+            zoomControl: true
+        });
+
+        // CartoDB Voyager clean tiles (Google-like pastel map style matching Screenshot 2)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; CARTO',
+            maxZoom: 19,
+            subdomains: 'abcd'
+        }).addTo(hotelMap);
+    } else {
+        hotelMap.invalidateSize();
+    }
+
+    // Clear existing markers
+    hotelMarkers.forEach(m => m.marker.remove());
+    hotelMarkers = [];
+
+    const bounds = [];
+
+    HOTELS_DATA.forEach((hotel, idx) => {
+        let lat = hotel.lat;
+        let lng = hotel.lng;
+
+        // If coordinates missing, generate deterministic offset around city center
+        if (!lat || !lng) {
+            const angle = (idx * 137.5) * (Math.PI / 180);
+            const radius = 0.015 + ((idx % 7) * 0.008);
+            lat = center[0] + (Math.sin(angle) * radius);
+            lng = center[1] + (Math.cos(angle) * radius);
         }
-    };
+
+        bounds.push([lat, lng]);
+
+        // Custom red pin icon matching Akbar Travels Screenshot 2
+        const pinIcon = L.divIcon({
+            className: 'custom-map-marker',
+            html: `<div class="map-marker-pin" id="markerPin_${idx}"></div>`,
+            iconSize: [32, 38],
+            iconAnchor: [16, 38],
+            popupAnchor: [0, -38]
+        });
+
+        const starStr = '★'.repeat(Math.max(1, Math.min(5, hotel.stars)));
+        const popupContent = `
+            <div class="map-hotel-popup-box">
+                <div class="map-popup-header">
+                    <h4 class="map-popup-title">${hotel.name}</h4>
+                    <span class="map-popup-stars">${starStr}</span>
+                </div>
+                <div class="map-popup-body">
+                    <img src="${hotel.image}" alt="${hotel.name}" class="map-popup-thumb">
+                    <div class="map-popup-actions">
+                        <a href="${hotel.detailUrl}" class="btn-map-select-room">Select Room</a>
+                        <button type="button" class="btn-map-shortlist" onclick="alert('Added ${hotel.name.replace(/'/g, "\\'")} to Shortlist!')">
+                            <i class="fa-regular fa-heart"></i> Shortlist
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const marker = L.marker([lat, lng], { icon: pinIcon }).addTo(hotelMap);
+        marker.bindPopup(popupContent, { maxWidth: 300, minWidth: 260 });
+
+        marker.on('click', () => {
+            // Scroll to hotel card in left column
+            const card = document.getElementById(`hotelCard_${idx}`);
+            if (card) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                card.style.outline = '2px solid #ef4444';
+                setTimeout(() => { card.style.outline = ''; }, 2000);
+            }
+        });
+
+        hotelMarkers.push({
+            index: idx,
+            id: hotel.id,
+            marker: marker,
+            lat: lat,
+            lng: lng
+        });
+    });
+
+    if (bounds.length > 0) {
+        hotelMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+    }
+}
+
+function focusHotelOnMap(idx) {
+    if (!isMapViewActive) {
+        toggleMapView(true);
+    }
+    setTimeout(() => {
+        const item = hotelMarkers.find(m => m.index === idx);
+        if (item && hotelMap) {
+            hotelMap.setView([item.lat, item.lng], 15, { animate: true });
+            item.marker.openPopup();
+        }
+    }, 250);
+}
+
+function updateMapMarkersVisibility() {
+    if (!hotelMap || hotelMarkers.length === 0) return;
+    hotelCards.forEach((card, idx) => {
+        const isVisible = card.style.display !== 'none';
+        const item = hotelMarkers.find(m => m.index === idx);
+        if (item) {
+            if (isVisible) {
+                if (!hotelMap.hasLayer(item.marker)) {
+                    item.marker.addTo(hotelMap);
+                }
+            } else {
+                if (hotelMap.hasLayer(item.marker)) {
+                    item.marker.remove();
+                }
+            }
+        }
+    });
 }
 
 // Share button copy link

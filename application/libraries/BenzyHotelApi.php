@@ -1463,6 +1463,16 @@ class BenzyHotelApi {
                 )
             );
 
+            $lat = null;
+            $lng = null;
+            if (!empty($h['geoCode'])) {
+                $lat = $h['geoCode']['lat'] ?? ($h['geoCode']['latitude'] ?? null);
+                $lng = $h['geoCode']['long'] ?? ($h['geoCode']['longitude'] ?? null);
+            } elseif (!empty($h['coordinates'])) {
+                $lat = $h['coordinates']['lat'] ?? ($h['coordinates']['latitude'] ?? null);
+                $lng = $h['coordinates']['long'] ?? ($h['coordinates']['longitude'] ?? null);
+            }
+
             $formatted[] = array(
                 'id'                => $h['id'] ?? 'HTL_' . rand(100, 999),
                 'name'              => $hotelName,
@@ -1471,6 +1481,8 @@ class BenzyHotelApi {
                 'rating_text'       => $ratingText,
                 'reviews_count'     => !empty($h['userReview']['count']) ? (int)$h['userReview']['count'] : rand(45, 950),
                 'location'          => $h['address'] ?? ($h['locationName'] ?? 'City Center, Near Hub'),
+                'latitude'          => $lat ? (float)$lat : null,
+                'longitude'         => $lng ? (float)$lng : null,
                 'price_per_night'   => $pricePerNight,
                 'original_price'    => $originalPrice,
                 'tax_fee'           => $taxFee,

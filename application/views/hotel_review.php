@@ -8,7 +8,18 @@ $room_type = $bSummary['room_type'] ?? 'Deluxe Room';
 $checkin_date = $bSummary['checkin_date'] ?? ($bSummary['checkin'] ?? date('Y-m-d', strtotime('+2 days')));
 $checkout_date = $bSummary['checkout_date'] ?? ($bSummary['checkout'] ?? date('Y-m-d', strtotime('+5 days')));
 $nights = $bSummary['nights'] ?? max(1, round((strtotime($checkout_date) - strtotime($checkin_date)) / 86400));
-$total_amount = $bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500);
+$rooms = (int)($bSummary['rooms'] ?? 1);
+$adults = (int)($bSummary['adults'] ?? 2);
+$children = (int)($bSummary['children'] ?? 0);
+$total_amount = (float)($bSummary['total_amount'] ?? ($bSummary['grand_total'] ?? 4500));
+$base_total = (float)($bSummary['base_total'] ?? round($total_amount / 1.12, 2));
+$taxes = (float)($bSummary['taxes'] ?? round($total_amount - $base_total, 2));
+$discount_total = (float)($bSummary['discount_total'] ?? 0);
+$is_refundable = isset($bSummary['is_refundable']) ? (bool)$bSummary['is_refundable'] : true;
+$star_rating = (int)($bSummary['star_rating'] ?? 5);
+$inclusions = !empty($bSummary['inclusions']) && is_array($bSummary['inclusions']) ? $bSummary['inclusions'] : array('Free High-Speed WiFi', 'Complimentary Breakfast', 'Early Check-in Subject to Availability');
+$cancellation_text = !empty($bSummary['cancellation_text']) ? $bSummary['cancellation_text'] : ($is_refundable ? 'Free cancellation up to 48 hours before check-in.' : 'Non-refundable booking.');
+$changeRoomUrl = site_url('hotels/detail/' . $hotel_id . '?city=' . urlencode($bSummary['city'] ?? 'Goa') . '&checkin=' . urlencode($checkin_date) . '&checkout=' . urlencode($checkout_date) . '&rooms=' . $rooms . '&adults=' . $adults . '&children=' . $children . (!empty($bSummary['roomData']) ? '&roomData=' . urlencode($bSummary['roomData']) : '') . (!empty($bSummary['search_id']) ? '&search_id=' . urlencode($bSummary['search_id']) : '') . (!empty($bSummary['tui']) ? '&search_tracing_key=' . urlencode($bSummary['tui']) : ''));
 
 $isUserLoggedIn   = isset($this->session) && $this->session->userdata('user_logged_in');
 $sessionUserName  = $isUserLoggedIn ? ($this->session->userdata('user_name') ?: '') : '';
@@ -74,17 +85,115 @@ $defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
             
             <!-- Left Side Form -->
             <div>
-                <!-- Hotel Summary Card -->
-                <div style="background: #ffffff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; display: flex; gap: 20px;">
-                    <img src="<?php echo htmlspecialchars($hotel_image); ?>" alt="hotel" style="width: 140px; height: 110px; object-fit: cover; border-radius: 8px;">
-                    <div>
-                        <h3 style="margin: 0 0 6px 0; font-size: 18px; color: #0d3470;"><?php echo htmlspecialchars($hotel_name); ?></h3>
-                        <p style="font-size: 13px; color: #64748b; margin: 0 0 8px 0;"><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> <?php echo htmlspecialchars($hotel_address); ?></p>
-                        <div style="font-size: 14px; font-weight: 700; color: #16a34a;"><?php echo htmlspecialchars($room_type); ?></div>
-                        <div style="font-size: 12px; color: #64748b; margin-top: 4px;">
-                            Check-In: <strong><?php echo date('D, d M Y', strtotime($checkin_date)); ?></strong> &nbsp;|&nbsp; Check-Out: <strong><?php echo date('D, d M Y', strtotime($checkout_date)); ?></strong> (<?php echo $nights; ?> Nights)
+                <!-- Section Title (Exact Screenshot 5 Matching) -->
+                <h3 style="font-family: var(--font-heading); font-size: 19px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 14px;">
+                    Review your Hotel details
+                </h3>
+
+                <!-- Hotel Details Card (Exact Screenshot 5 Matching) -->
+                <div style="background: #ffffff; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; overflow: hidden;">
+                    
+                    <!-- Card Top Header -->
+                    <div style="padding: 18px 22px 14px 22px; border-bottom: 1px solid #f1f5f9;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                    <h3 style="margin: 0; font-size: 20px; font-weight: 800; color: #09204b;"><?php echo htmlspecialchars($hotel_name); ?></h3>
+                                    <span style="color: #f59e0b; font-size: 15px; letter-spacing: 2px;">
+                                        <?php echo str_repeat('★', max(1, min(5, $star_rating))); ?>
+                                    </span>
+                                </div>
+                                <div style="font-size: 13px; color: #0284c7; margin-top: 6px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <span><?php echo htmlspecialchars($hotel_address); ?></span>
+                                </div>
+                            </div>
+                            <div>
+                                <?php if ($is_refundable): ?>
+                                    <span style="font-size: 13px; font-weight: 700; color: #16a34a; background: #f0fdf4; padding: 4px 10px; border-radius: 4px; border: 1px solid #bbf7d0;">
+                                        <i class="fa-solid fa-check"></i> Free Cancellation
+                                    </span>
+                                <?php else: ?>
+                                    <span style="font-size: 13px; font-weight: 700; color: #dc2626;">
+                                        Non-Refundable
+                                    </span>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Card Body -->
+                    <div style="padding: 20px 22px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+                        <!-- Hotel Image Thumbnail -->
+                        <div style="flex-shrink: 0;">
+                            <img src="<?php echo htmlspecialchars($hotel_image); ?>" alt="<?php echo htmlspecialchars($hotel_name); ?>" style="width: 175px; height: 115px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+                        </div>
+
+                        <!-- Dates & Duration Strip -->
+                        <div style="flex: 1; min-width: 280px;">
+                            <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                                <!-- Check-in -->
+                                <div>
+                                    <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">CHECK-IN</div>
+                                    <div style="font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1.2; margin-top: 2px;">
+                                        <?php echo date('M d', strtotime($checkin_date)); ?>
+                                    </div>
+                                    <div style="font-size: 12px; font-weight: 600; color: #64748b; margin-top: 2px;">
+                                        <?php echo date('D', strtotime($checkin_date)); ?>, 4:00 PM
+                                    </div>
+                                </div>
+
+                                <!-- Center Dashed Duration -->
+                                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 110px;">
+                                    <div style="width: 100%; border-top: 2px dashed #cbd5e1; margin-bottom: 4px;"></div>
+                                    <div style="font-size: 12px; font-weight: 700; color: #475569;"><?php echo $nights; ?> Night<?php echo $nights > 1 ? 's' : ''; ?></div>
+                                </div>
+
+                                <!-- Check-out -->
+                                <div>
+                                    <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">CHECK-OUT</div>
+                                    <div style="font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1.2; margin-top: 2px;">
+                                        <?php echo date('M d', strtotime($checkout_date)); ?>
+                                    </div>
+                                    <div style="font-size: 12px; font-weight: 600; color: #64748b; margin-top: 2px;">
+                                        <?php echo date('D', strtotime($checkout_date)); ?>, 4:00 PM
+                                    </div>
+                                </div>
+
+                                <!-- Change Room Button -->
+                                <div style="margin-left: auto;">
+                                    <a href="<?php echo $changeRoomUrl; ?>" style="color: #0284c7; font-size: 12.5px; font-weight: 800; text-transform: uppercase; text-decoration: underline; letter-spacing: 0.5px;">
+                                        CHANGE ROOM
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Rooms & Guests -->
+                            <div style="margin-top: 14px; font-size: 13px; color: #475569;">
+                                <span style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 8px;">ROOMS & GUESTS</span>
+                                <strong style="color: #0f172a; font-size: 15px;"><?php echo $rooms; ?></strong> Room &nbsp; 
+                                <strong style="color: #0f172a; font-size: 15px;"><?php echo ($adults + $children); ?></strong> Guest<?php echo ($adults + $children) > 1 ? 's' : ''; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Bar (Room Type + Guests + Inclusions) -->
+                    <div style="background: #fafafa; border-top: 1px solid #f1f5f9; padding: 12px 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                            <span style="font-size: 13px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
+                                <?php echo htmlspecialchars($room_type); ?>
+                            </span>
+                            <span style="font-size: 12.5px; font-weight: 700; color: #475569; text-transform: uppercase;">
+                                <strong style="color: #0f172a;"><?php echo $adults; ?></strong> ADULT<?php echo $adults > 1 ? 'S' : ''; ?><?php echo $children > 0 ? ', <strong style="color: #0f172a;">' . $children . '</strong> CHILD' . ($children > 1 ? 'REN' : '') : ''; ?>
+                            </span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 14px; font-size: 12.5px;">
+                            <a href="javascript:void(0)" onclick="openEssentialInfoModal()" style="color: #0284c7; text-decoration: underline; font-weight: 600;">Essential Info</a>
+                            <span style="color: #cbd5e1;">|</span>
+                            <a href="javascript:void(0)" onclick="openInclusionsModal()" style="color: #0284c7; text-decoration: underline; font-weight: 600;">Inclusions</a>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Main Guest Form -->
@@ -270,30 +379,81 @@ $defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
                 </form>
             </div>
 
-            <!-- Right Side Price Breakdown -->
+            <!-- Right Side Price Breakdown (Exact Screenshot 5 Matching) -->
             <div>
-                <div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; position: sticky; top: 100px;">
-                    <h3 style="font-family: var(--font-heading); font-size: 18px; color: #0d3470; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-                        Price Summary
-                    </h3>
+                <div style="position: sticky; top: 90px; display: flex; flex-direction: column; gap: 20px;">
+                    
+                    <!-- Fare Summary Card -->
+                    <div style="background: #ffffff; border-radius: 8px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); border: 1px solid #e2e8f0;">
+                        <h3 style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 18px;">
+                            Fare Summary
+                        </h3>
 
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
-                        <span style="color: #64748b;">Room Charges (<?php echo $nights; ?> Nights)</span>
-                        <strong style="color: #1e293b;">₹ <?php echo number_format($total_amount); ?></strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
-                        <span style="color: #64748b;">Hotel Taxes & Service Charges</span>
-                        <strong style="color: #16a34a;">INCLUDED</strong>
+                        <!-- Room Rates line with chevron -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f8fafc; font-size: 14px;">
+                            <div style="display: flex; align-items: center; gap: 8px; color: #1e293b; font-weight: 600;">
+                                <i class="fa-solid fa-angle-right" style="font-size: 12px; color: #64748b;"></i>
+                                <span>Room Rates</span>
+                            </div>
+                            <strong style="color: #0f172a; font-weight: 700;">₹ <span id="dispBaseRate"><?php echo number_format($base_total); ?></span></strong>
+                        </div>
+
+                        <!-- Tax & Charges line with chevron -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f8fafc; font-size: 14px;">
+                            <div style="display: flex; align-items: center; gap: 8px; color: #1e293b; font-weight: 600;">
+                                <i class="fa-solid fa-angle-right" style="font-size: 12px; color: #64748b;"></i>
+                                <span>Tax & Charges</span>
+                            </div>
+                            <strong style="color: #0f172a; font-weight: 700;">₹ <span id="dispTaxAmount"><?php echo number_format($taxes); ?></span></strong>
+                        </div>
+
+                        <!-- Discount line with chevron -->
+                        <div id="dispDiscountRow" style="display: <?php echo ($discount_total > 0) ? 'flex' : 'none'; ?>; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f8fafc; font-size: 14px;">
+                            <div style="display: flex; align-items: center; gap: 8px; color: #1e293b; font-weight: 600;">
+                                <i class="fa-solid fa-angle-right" style="font-size: 12px; color: #64748b;"></i>
+                                <span>Discount</span>
+                            </div>
+                            <strong style="color: #16a34a; font-weight: 700;">- ₹ <span id="dispDiscountAmount"><?php echo number_format($discount_total); ?></span></strong>
+                        </div>
+
+                        <!-- Total Amount -->
+                        <div style="border-top: 1px solid #e2e8f0; margin-top: 14px; padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 16px; font-weight: 800; color: #0f172a;">Total Amount:</span>
+                            <strong style="font-size: 22px; font-weight: 900; color: #0f172a;">₹ <span id="dispTotalAmount"><?php echo number_format($total_amount); ?></span></strong>
+                        </div>
                     </div>
 
-                    <div style="border-top: 2px dashed #cbd5e1; padding-top: 14px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 16px; font-weight: 800; color: #09204b;">Total Amount</span>
-                        <strong style="font-size: 22px; color: #ef4444;">₹ <?php echo number_format($total_amount); ?></strong>
+                    <!-- Promo Code Card (Exact Screenshot 5 Matching) -->
+                    <div style="background: #ffffff; border-radius: 8px; padding: 20px 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); border: 1px solid #e2e8f0;">
+                        <h4 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 6px;">
+                            Promo code
+                        </h4>
+                        <div style="font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 12px;">
+                            Apply Promo Code
+                        </div>
+
+                        <div style="display: flex; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; background: #fff;">
+                            <input type="text" id="promoCodeInput" placeholder="Enter Promo Code" value="ATHOTEL" style="flex: 1; padding: 10px 14px; border: none; outline: none; font-size: 13.5px; font-weight: 800; text-transform: uppercase; color: #15803d; letter-spacing: 0.5px;">
+                            <button type="button" id="btnApplyPromo" onclick="applyHotelPromo()" style="background: #16a34a; color: #ffffff; width: 48px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: background 0.15s;">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                        </div>
+
+                        <div id="promoFeedbackMsg" style="font-size: 12px; color: #16a34a; font-weight: 700; margin-top: 10px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Your Promocode has been applied you've saved ₹ <strong id="promoSavedVal"><?php echo number_format($discount_total > 0 ? $discount_total : 500); ?></strong></span>
+                        </div>
                     </div>
 
-                    <div style="background: #f8fafc; border-radius: 8px; padding: 12px; margin-top: 20px; font-size: 12px; color: #64748b;">
-                        <i class="fa-solid fa-shield-cat" style="color: #2563eb;"></i> 100% Safe & Secure Payment with Razorpay SSL Encryption.
+                    <!-- Razorpay Security Badge -->
+                    <div style="background: #f8fafc; border-radius: 8px; padding: 14px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 12px;">
+                        <i class="fa-solid fa-shield-halved" style="color: #2563eb; font-size: 22px;"></i>
+                        <div style="font-size: 12px; color: #64748b; line-height: 1.4;">
+                            <strong style="color: #334155;">100% Safe & Secure Payment</strong><br>
+                            Protected by 256-bit SSL Bank-Grade Encryption.
+                        </div>
                     </div>
+
                 </div>
             </div>
 
@@ -444,7 +604,107 @@ function showHotelProcessingModal(message) {
         overlay.style.display = 'flex';
     }
 }
+
+// Promo Code Application Functionality
+function applyHotelPromo() {
+    var input = document.getElementById('promoCodeInput');
+    var code = input ? input.value.trim().toUpperCase() : '';
+    var feedback = document.getElementById('promoFeedbackMsg');
+    var savedSpan = document.getElementById('promoSavedVal');
+    var discRow = document.getElementById('dispDiscountRow');
+    var discSpan = document.getElementById('dispDiscountAmount');
+    var totalSpan = document.getElementById('dispTotalAmount');
+    var payBtn = document.getElementById('payHotelRazorpayBtn');
+
+    if (!code) {
+        if (feedback) {
+            feedback.style.color = '#dc2626';
+            feedback.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please enter a promo code.';
+        }
+        return;
+    }
+
+    var baseTotal = <?php echo (float)$base_total; ?>;
+    var currentTotal = <?php echo (float)$total_amount; ?>;
+    var discount = Math.round(baseTotal * 0.08); // 8% promo savings
+    if (discount < 300) discount = 300;
+    var newTotal = Math.max(1, currentTotal - discount);
+
+    if (savedSpan) savedSpan.innerText = discount.toLocaleString();
+    if (discSpan) discSpan.innerText = discount.toLocaleString();
+    if (totalSpan) totalSpan.innerText = newTotal.toLocaleString();
+    if (discRow) discRow.style.display = 'flex';
+    if (payBtn) payBtn.innerHTML = '<i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Pay ₹ ' + newTotal.toLocaleString() + ' & Confirm Voucher';
+
+    if (feedback) {
+        feedback.style.color = '#16a34a';
+        feedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> Your Promocode <strong>' + code + '</strong> has been applied you\'ve saved ₹ <strong>' + discount.toLocaleString() + '</strong>';
+    }
+}
+
+// Modals for Inclusions & Essential Info
+function openEssentialInfoModal() {
+    var overlay = document.getElementById('essentialInfoModal');
+    if (overlay) overlay.style.display = 'flex';
+}
+function closeEssentialInfoModal() {
+    var overlay = document.getElementById('essentialInfoModal');
+    if (overlay) overlay.style.display = 'none';
+}
+function openInclusionsModal() {
+    var overlay = document.getElementById('inclusionsModal');
+    if (overlay) overlay.style.display = 'flex';
+}
+function closeInclusionsModal() {
+    var overlay = document.getElementById('inclusionsModal');
+    if (overlay) overlay.style.display = 'none';
+}
 </script>
+
+<!-- Essential Info Modal -->
+<div id="essentialInfoModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 99999; backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #ffffff; border-radius: 12px; max-width: 520px; width: 100%; padding: 26px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+            <h4 style="margin: 0; font-size: 17px; font-weight: 800; color: #09204b;"><i class="fa-solid fa-circle-info" style="color: #0284c7; margin-right: 6px;"></i> Essential Hotel Information</h4>
+            <button type="button" onclick="closeEssentialInfoModal()" style="border: none; background: transparent; font-size: 20px; color: #64748b; cursor: pointer;">&times;</button>
+        </div>
+        <div style="font-size: 13.5px; color: #334155; line-height: 1.6;">
+            <div style="margin-bottom: 14px;">
+                <strong style="color: #0f172a;">Check-in / Check-out:</strong><br>
+                Standard check-in time is 2:00 PM - 4:00 PM. Standard check-out time is 11:00 AM - 12:00 PM.
+            </div>
+            <div style="margin-bottom: 14px;">
+                <strong style="color: #0f172a;">Cancellation Policy:</strong><br>
+                <?php echo htmlspecialchars($cancellation_text); ?>
+            </div>
+            <div>
+                <strong style="color: #0f172a;">Guest Identity:</strong><br>
+                Government photo ID required at check-in for all adult guests (Passport, Voter ID, Driving License).
+            </div>
+        </div>
+        <div style="text-align: right; margin-top: 20px;">
+            <button type="button" onclick="closeEssentialInfoModal()" style="background: #0d3470; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer;">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Inclusions Modal -->
+<div id="inclusionsModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 99999; backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #ffffff; border-radius: 12px; max-width: 500px; width: 100%; padding: 26px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+            <h4 style="margin: 0; font-size: 17px; font-weight: 800; color: #09204b;"><i class="fa-solid fa-gift" style="color: #16a34a; margin-right: 6px;"></i> Room Inclusions</h4>
+            <button type="button" onclick="closeInclusionsModal()" style="border: none; background: transparent; font-size: 20px; color: #64748b; cursor: pointer;">&times;</button>
+        </div>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #334155; line-height: 1.8;">
+            <?php foreach ($inclusions as $inc): ?>
+                <li><i class="fa-solid fa-check" style="color: #16a34a; margin-right: 6px;"></i> <?php echo htmlspecialchars($inc); ?></li>
+            <?php endforeach; ?>
+        </ul>
+        <div style="text-align: right; margin-top: 20px;">
+            <button type="button" onclick="closeInclusionsModal()" style="background: #16a34a; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer;">Got It</button>
+        </div>
+    </div>
+</div>
 
 <!-- Hotel Payment Processing Fullscreen Modal Overlay -->
 <div id="hotelPaymentProcessingOverlay" style="display: none; position: fixed; inset: 0; background: rgba(13, 52, 112, 0.94); z-index: 999999; backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; flex-direction: column; color: #ffffff; text-align: center; padding: 20px;">

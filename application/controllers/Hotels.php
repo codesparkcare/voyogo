@@ -182,8 +182,51 @@ class Hotels extends CI_Controller {
         $nights = max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
         // $price from Benzy API is already the finalized total stay price for all nights
         $grandTotal = round($price * $rooms, 2);
-        $baseTotal = round($grandTotal / 1.12, 2);
-        $taxes = round($grandTotal - $baseTotal, 2);
+
+        $baseRateVal = null;
+        $taxAmountVal = null;
+        $discountAmountVal = null;
+        $isRefundable = true;
+        $inclusionsList = array();
+        $cancellationPolicyText = '';
+
+        if (!empty($reprice['roomGroup'][0])) {
+            $rg = $reprice['roomGroup'][0];
+            if (isset($rg['baseRate'])) $baseRateVal = (float)$rg['baseRate'];
+            if (!empty($rg['taxes']) && is_array($rg['taxes'])) {
+                $taxAmountVal = 0;
+                foreach ($rg['taxes'] as $tx) {
+                    $taxAmountVal += (float)($tx['amount'] ?? 0);
+                }
+            }
+            if (!empty($rg['discounts']) && is_array($rg['discounts'])) {
+                $discountAmountVal = 0;
+                foreach ($rg['discounts'] as $dc) {
+                    $discountAmountVal += (float)($dc['amount'] ?? 0);
+                }
+            }
+            if (isset($rg['refundable'])) {
+                $isRefundable = (bool)$rg['refundable'];
+            } elseif (isset($rg['refundability'])) {
+                $isRefundable = (stripos($rg['refundability'], 'non') === false);
+            }
+            if (!empty($rg['includes']) && is_array($rg['includes'])) {
+                $inclusionsList = $rg['includes'];
+            }
+            if (!empty($rg['cancellationPolicies'][0]['text'])) {
+                $cancellationPolicyText = $rg['cancellationPolicies'][0]['text'];
+            }
+        }
+
+        if ($baseRateVal === null || $baseRateVal <= 0) {
+            $baseTotal = round($grandTotal / 1.12, 2);
+            $taxes = round($grandTotal - $baseTotal, 2);
+            $discountTotal = 0;
+        } else {
+            $baseTotal = round($baseRateVal * $rooms, 2);
+            $taxes = ($taxAmountVal !== null && $taxAmountVal > 0) ? round($taxAmountVal * $rooms, 2) : round(max(0, $grandTotal - $baseTotal), 2);
+            $discountTotal = ($discountAmountVal !== null && $discountAmountVal > 0) ? round($discountAmountVal * $rooms, 2) : 0;
+        }
 
         $bookingArray = array(
             'hotel_id'          => $hotel_id,
@@ -211,8 +254,13 @@ class Hotels extends CI_Controller {
             'price'             => $price,
             'base_total'        => $baseTotal,
             'taxes'             => $taxes,
+            'discount_total'    => $discountTotal,
             'grand_total'       => $grandTotal,
-            'total_amount'      => $grandTotal
+            'total_amount'      => $grandTotal,
+            'is_refundable'     => $isRefundable,
+            'inclusions'        => $inclusionsList,
+            'cancellation_text' => $cancellationPolicyText,
+            'star_rating'       => (int)($this->input->post('star_rating') ?: 4)
         );
 
         $data['booking_data']    = $bookingArray;
