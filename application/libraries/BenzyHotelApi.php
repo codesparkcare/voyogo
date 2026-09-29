@@ -467,7 +467,7 @@ class BenzyHotelApi {
     // =========================================================================
     // 5. MORE ROOMS & CONTENT (/api/hotels/{searchId}/{hotelId}/content & /rooms)
     // =========================================================================
-    public function getHotelDetails($hotelId, $searchId = null, $city = 'Goa', $checkin = null, $checkout = null) {
+    public function getHotelDetails($hotelId, $searchId = null, $city = 'Goa', $checkin = null, $checkout = null, $searchTracingKey = null) {
         $token = $this->generateToken();
         $fallbackDetail = $this->getFallbackHotelDetail($hotelId, $city, $checkin, $checkout);
 
@@ -475,18 +475,30 @@ class BenzyHotelApi {
         $apiRoomsData = null;
 
         if ($searchId) {
+            $customRoomsHeaders = array();
+            if (!empty($searchTracingKey)) {
+                $customRoomsHeaders['search-tracing-key'] = $searchTracingKey;
+            }
+
             // 1. More Rooms - Content: {HotelSearchURL}/api/hotels/{searchId}/{hotelId}/content (PDF Page 22)
             $contentUrl = $this->hotelUrl . '/api/hotels/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/content';
-            $contentRes = $this->makeRequest('HotelDetails_Content', $contentUrl, array(), 'GET', $token);
+            $contentRes = $this->makeRequest('HotelDetails_Content', $contentUrl, array(), 'GET', $token, $customRoomsHeaders);
             if ($contentRes['http_code'] === 200 && !empty($contentRes['json']['hotel'])) {
                 $apiContentData = $contentRes['json']['hotel'];
             }
 
-            // 2. More Rooms - Rates: {HotelSearchURL}/api/hotels/search/result/{searchId}/{hotelId}/rooms (PDF Page 24)
+            // 2. More Rooms - Rates: {HotelSearchURL}/api/hotels/search/result/{searchId}/{hotelId}/rooms (PDF Page 24 & Step_10_MoreRooms.txt)
+            // Note: Benzy certified logs use POST with [] payload. Postman uses GET. We try POST first, then GET fallback.
             $roomsUrl = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/rooms';
-            $roomsRes = $this->makeRequest('MoreRooms', $roomsUrl, array(), 'GET', $token);
+            $roomsRes = $this->makeRequest('MoreRooms', $roomsUrl, array(), 'POST', $token, $customRoomsHeaders);
             if ($roomsRes['http_code'] === 200 && (!empty($roomsRes['json']['recommendations']) || !empty($roomsRes['json']['rooms']))) {
                 $apiRoomsData = $roomsRes['json'];
+            } else {
+                // Fallback to GET
+                $roomsResGet = $this->makeRequest('MoreRooms_GET', $roomsUrl, array(), 'GET', $token, $customRoomsHeaders);
+                if ($roomsResGet['http_code'] === 200 && (!empty($roomsResGet['json']['recommendations']) || !empty($roomsResGet['json']['rooms']))) {
+                    $apiRoomsData = $roomsResGet['json'];
+                }
             }
         }
 
@@ -574,6 +586,36 @@ class BenzyHotelApi {
                             $cancelText = strip_tags($rg['cancellationPolicies'][0]['text']);
                         }
 
+                        // Room images from Benzy live API
+                        $roomImages = array();
+                        if (!empty($roomObj['images']) && is_array($roomObj['images'])) {
+                            foreach ($roomObj['images'] as $imgItem) {
+                                if (!empty($imgItem['url'])) {
+                                    $roomImages[] = $imgItem['url'];
+                                }
+                            }
+                        }
+                        if (empty($roomImages) && !empty($hotel['gallery'])) {
+                            $roomImages = array_slice($hotel['gallery'], 0, 4);
+                        }
+                        if (empty($roomImages)) {
+                            $roomImages = array(
+                                'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1000&q=80',
+                                'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80'
+                            );
+                        }
+
+                        // Published strike price & taxes
+                        $publishedRate = (float)($rg['publishedRate'] ?? round($rate * 1.25));
+                        $taxAmount = 0;
+                        if (!empty($rg['taxes']) && is_array($rg['taxes'])) {
+                            foreach ($rg['taxes'] as $tx) {
+                                $taxAmount += (float)($tx['amount'] ?? 0);
+                            }
+                        }
+
+                        $availability = isset($rg['availability']) ? (int)$rg['availability'] : null;
+
                         $roomTypes[] = array(
                             'type_id'          => $roomId,
                             'room_id'          => $roomId,
@@ -584,15 +626,15 @@ class BenzyHotelApi {
                             'price'            => $rate > 0 ? $rate : 2500,
                             'total_price'      => $rate > 0 ? $rate : 2500,
                             'price_per_night'  => $perNightRate > 0 ? $perNightRate : round(($rate > 0 ? $rate : 2500) / $nightsCount, 2),
+                            'published_rate'   => $publishedRate,
+                            'tax_amount'       => $taxAmount,
+                            'availability'     => $availability,
+                            'urgency'          => (!empty($availability) && $availability <= 3) ? ($availability . ' Room' . ($availability > 1 ? 's' : '') . ' Left') : '',
                             'board'            => $boardName,
                             'refundable'       => !empty($rg['refundable']),
                             'cancellation'     => $cancelText,
-                            'inclusions'       => !empty($rg['includes']) ? $rg['includes'] : array('Free High-Speed WiFi', '24h Room Service', 'Complimentary Bottled Water'),
-                            'images'           => array(
-                                'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1000&q=80',
-                                'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80',
-                                'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80'
-                            )
+                            'inclusions'       => !empty($rg['includes']) ? (array)$rg['includes'] : array('Free High-Speed WiFi', '24h Room Service', 'Complimentary Bottled Water'),
+                            'images'           => $roomImages
                         );
                     }
                 }
@@ -607,14 +649,19 @@ class BenzyHotelApi {
                     'provider'         => $rm['providerName'] ?? 'CleartripAPI',
                     'name'             => $rm['name'] ?? 'Deluxe Room',
                     'price'            => (float)($rm['totalRate'] ?? ($rm['price'] ?? 2500)),
+                    'total_price'      => (float)($rm['totalRate'] ?? ($rm['price'] ?? 2500)),
+                    'price_per_night'  => round(((float)($rm['totalRate'] ?? ($rm['price'] ?? 2500))) / $nightsCount, 2),
+                    'published_rate'   => round(((float)($rm['totalRate'] ?? ($rm['price'] ?? 2500))) * 1.25),
+                    'tax_amount'       => 0,
+                    'availability'     => null,
+                    'urgency'          => '',
                     'board'            => $rm['board'] ?? 'Breakfast Included',
                     'refundable'       => true,
                     'cancellation'     => 'Free cancellation until 48 hours before check-in',
                     'inclusions'       => array('Free WiFi', 'Tea/Coffee Maker'),
                     'images'           => array(
                         'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1000&q=80',
-                        'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80',
-                        'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80'
+                        'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80'
                     )
                 );
             }
@@ -622,7 +669,7 @@ class BenzyHotelApi {
 
         if (!empty($roomTypes)) {
             $hotel['room_types'] = $roomTypes;
-            $hotel['price_per_night'] = $roomTypes[0]['price'];
+            $hotel['price_per_night'] = $roomTypes[0]['price_per_night'] ?? $roomTypes[0]['price'];
             $hotel['no_rooms_available'] = false;
         } elseif (!empty($searchId)) {
             // Live Benzy search performed, but Benzy returned 0 rooms for this hotel/occupancy
@@ -637,22 +684,39 @@ class BenzyHotelApi {
     // =========================================================================
     // 6. PRICING RECHECK (/api/hotels/search/{searchId}/{hotelId}/price/{provider}/{recommendationId})
     // =========================================================================
-    public function repriceRoom($hotelId, $roomId, $provider = 'CleartripAPI', $searchId = null, $recommendationId = null) {
+    public function repriceRoom($hotelId, $roomId, $provider = 'CleartripAPI', $searchId = null, $recommendationId = null, $searchTracingKey = null) {
         $token = $this->generateToken();
+        $customHeaders = array();
+        if (!empty($searchTracingKey)) {
+            $customHeaders['search-tracing-key'] = $searchTracingKey;
+        }
 
         if ($searchId && $recommendationId) {
             $url = $this->hotelUrl . '/api/hotels/search/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/price/' . urlencode($provider) . '/' . urlencode($recommendationId);
 
-            // Attempt 1
-            $res = $this->makeRequest('Pricing', $url, array(), 'GET', $token);
-            $pricingResult = ($res['http_code'] === 200 && !empty($res['json'])) ? $res['json'] : null;
+            // 1. In certified Step_11_Pricing.txt, the method is POST with [] body.
+            $res = $this->makeRequest('Pricing', $url, array(), 'POST', $token, $customHeaders);
+            $pricingResult = ($res['http_code'] === 200 && !empty($res['json']) && ($res['json']['status'] ?? '') !== 'failure') ? $res['json'] : null;
 
-            // If first attempt returned failure status (e.g. Benzy code 1215), retry once
-            if (!$pricingResult || ($pricingResult['status'] ?? '') === 'failure') {
-                sleep(2); // brief pause before retry
-                $res2 = $this->makeRequest('Pricing', $url, array(), 'GET', $token);
-                if ($res2['http_code'] === 200 && !empty($res2['json'])) {
-                    $pricingResult = $res2['json'];
+            // 2. If POST was not successful, try GET (matching Postman collection)
+            if (!$pricingResult) {
+                $resGet = $this->makeRequest('Pricing_GET', $url, array(), 'GET', $token, $customHeaders);
+                if ($resGet['http_code'] === 200 && !empty($resGet['json']) && ($resGet['json']['status'] ?? '') !== 'failure') {
+                    $pricingResult = $resGet['json'];
+                }
+            }
+
+            // 3. Retry once if initial attempts returned failure status (e.g. temporary latency or supplier recheck)
+            if (!$pricingResult) {
+                sleep(1);
+                $resRetry = $this->makeRequest('Pricing_Retry', $url, array(), 'POST', $token, $customHeaders);
+                if ($resRetry['http_code'] === 200 && !empty($resRetry['json'])) {
+                    $pricingResult = $resRetry['json'];
+                } else {
+                    $resRetryGet = $this->makeRequest('Pricing_Retry_GET', $url, array(), 'GET', $token, $customHeaders);
+                    if ($resRetryGet['http_code'] === 200 && !empty($resRetryGet['json'])) {
+                        $pricingResult = $resRetryGet['json'];
+                    }
                 }
             }
 
@@ -669,7 +733,7 @@ class BenzyHotelApi {
             'recommendationId' => $recommendationId
         );
 
-        $res = $this->makeRequest('Pricing_POST', $altUrl, $payload, 'POST', $token);
+        $res = $this->makeRequest('Pricing_POST', $altUrl, $payload, 'POST', $token, $customHeaders);
         return $res['json'] ?? array('status' => 'success', 'priceValidated' => true);
     }
 

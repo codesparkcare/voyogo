@@ -102,7 +102,7 @@ class Hotels extends CI_Controller {
         $search_id = $this->input->get('search_id') ?: null;
         $search_tracing_key = $this->input->get('search_tracing_key') ?: null;
 
-        $hotel = $this->benzyhotelapi->getHotelDetails($hotel_id, $search_id, $city, $checkin, $checkout);
+        $hotel = $this->benzyhotelapi->getHotelDetails($hotel_id, $search_id, $city, $checkin, $checkout, $search_tracing_key);
 
         $data['hotel']              = $hotel;
         $data['city']               = $city;
@@ -159,10 +159,18 @@ class Hotels extends CI_Controller {
         $provider          = $this->input->post('provider') ?: 'CleartripAPI';
 
         // Validate Live Pricing with API
-        if (!empty($search_id) && !empty($recommendation_id)) {
-            $reprice = $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, $provider, $search_id, $recommendation_id);
+        $isMockBooking = (strpos($recommendation_id, 'REC_DLX') !== false || 
+                          strpos($recommendation_id, 'REC_SUP') !== false || 
+                          strpos($recommendation_id, 'REC_EXC') !== false || 
+                          strpos($hotel_id, 'HTL_') !== false ||
+                          empty($search_id) || 
+                          empty($recommendation_id));
+
+        if (!$isMockBooking) {
+            $reprice = $this->benzyhotelapi->repriceRoom($hotel_id, $room_id, $provider, $search_id, $recommendation_id, $tui);
             if (!empty($reprice['status']) && $reprice['status'] === 'failure') {
-                $this->session->set_flashdata('error', 'Room pricing is currently unavailable with the hotel supplier (' . ($reprice['message'] ?? 'Pricing error') . '). Please choose an alternative room or hotel.');
+                $errMsg = !empty($reprice['message']) ? $reprice['message'] : 'Pricing error';
+                $this->session->set_flashdata('error', 'Room pricing is currently unavailable with the hotel supplier (' . $errMsg . '). Please choose an alternative room or hotel.');
                 redirect('hotels/detail/' . urlencode($hotel_id) . '?city=' . urlencode($city) . '&checkin=' . urlencode($checkin) . '&checkout=' . urlencode($checkout) . '&rooms=' . urlencode($rooms) . '&adults=' . urlencode($adults) . '&children=' . urlencode($children) . '&search_id=' . urlencode($search_id) . '&search_tracing_key=' . urlencode($tui) . '&roomData=' . urlencode($roomDataRaw));
                 return;
             }

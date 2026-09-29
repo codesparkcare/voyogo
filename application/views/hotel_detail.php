@@ -59,153 +59,258 @@ $execImages = array(
     'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80'
 );
 
-$cancelDateDisplay = '28 Sep 2026';
+$cancelDateDisplay = date('d M Y', strtotime($qCheckin . ' -1 day'));
+if (empty($cancelDateDisplay) || $cancelDateDisplay === '01 Jan 1970') {
+    $cancelDateDisplay = date('d M Y', strtotime('+2 days'));
+}
 
-// Room Categories & Multi-Rate Plans exactly matching Screenshot 1
-$roomCategories = array(
-    // 1. Deluxe Category
-    array(
-        'category_name' => 'Deluxe',
-        'images'        => $deluxeImages,
-        'rates'         => array(
-            array(
-                'title'             => 'Room Only',
-                'refundable'        => false,
-                'is_recommended'    => true,
-                'board'             => 'Room Only',
-                'inclusions'        => array('Room Only'),
-                'cancellation'      => '',
-                'urgency'           => '',
-                'strike_price'      => 47294,
-                'price'             => 37223,
-                'tax'               => 1882,
-                'saved'             => 8189,
-                'has_additional_fee'=> true,
-                'room_id'           => 'RM_DLX_01',
-                'room_group_id'     => 'RGRP_01',
-                'recommendation_id' => 'REC_DLX_01'
-            ),
-            array(
-                'title'             => 'Room Only | Free Cancellation',
-                'refundable'        => true,
-                'is_recommended'    => false,
-                'board'             => 'Room Only',
-                'inclusions'        => array('Room Only'),
-                'cancellation'      => 'Free cancellation till ' . $cancelDateDisplay,
-                'urgency'           => '1 Room Left',
-                'strike_price'      => 46856,
-                'price'             => 35482,
-                'tax'               => 3568,
-                'saved'             => 7806,
-                'has_additional_fee'=> false,
-                'room_id'           => 'RM_DLX_02',
-                'room_group_id'     => 'RGRP_01',
-                'recommendation_id' => 'REC_DLX_02'
+// Build Room Categories & Rates:
+// If live hotel has room_types from Benzy API, map them dynamically to Screenshot 1 category/rate UI.
+$roomCategories = array();
+
+if (!empty($hotel['room_types']) && is_array($hotel['room_types'])) {
+    $groupedCategories = array();
+    $firstRateOverall = true;
+
+    foreach ($hotel['room_types'] as $rt) {
+        $rawName = trim($rt['name'] ?? 'Deluxe Room');
+        // Clean category name if it contains sub-tier info
+        $catName = $rawName;
+        if (strpos($catName, ' - ') !== false) {
+            $parts = explode(' - ', $catName);
+            $catName = trim($parts[0]);
+        }
+        if (empty($catName)) {
+            $catName = 'Deluxe Room';
+        }
+
+        if (!isset($groupedCategories[$catName])) {
+            $catImgs = !empty($rt['images']) ? $rt['images'] : (!empty($hotel['gallery']) ? array_slice($hotel['gallery'], 0, 4) : $deluxeImages);
+            $groupedCategories[$catName] = array(
+                'category_name' => $catName,
+                'images'        => $catImgs,
+                'rates'         => array()
+            );
+        }
+
+        $boardName = !empty($rt['board']) ? trim($rt['board']) : 'Room Only';
+        if (strtolower($boardName) === 'bed and breakfast' || strtolower($boardName) === 'bedandbreakfast') {
+            $boardName = 'Breakfast Included';
+        } elseif (empty($boardName) || strtolower($boardName) === 'other' || strtolower($boardName) === 'roomonly') {
+            $boardName = 'Room Only';
+        }
+
+        $isRefundable = !empty($rt['refundable']);
+        $cancelText = !empty($rt['cancellation']) ? trim($rt['cancellation']) : ($isRefundable ? ('Free cancellation till ' . $cancelDateDisplay) : '');
+
+        $rateTitle = $boardName;
+        if ($isRefundable && stripos($rateTitle, 'free cancellation') === false && stripos($rateTitle, 'cancellation') === false) {
+            $rateTitle .= ' | Free Cancellation';
+        }
+
+        $pricePerNight = !empty($rt['price_per_night']) ? (float)$rt['price_per_night'] : (float)($rt['price'] ?? 3500);
+        $totalPrice = !empty($rt['total_price']) ? (float)$rt['total_price'] : ($pricePerNight * $qNightsCount);
+        $strikePrice = !empty($rt['published_rate']) ? (float)$rt['published_rate'] : round($pricePerNight * 1.25);
+        if ($strikePrice <= $pricePerNight) {
+            $strikePrice = round($pricePerNight * 1.25);
+        }
+        $tax = !empty($rt['tax_amount']) ? round($rt['tax_amount']) : round($pricePerNight * 0.05);
+        $saved = max(0, $strikePrice - $pricePerNight);
+
+        $isRecommended = $firstRateOverall;
+        if ($firstRateOverall) {
+            $firstRateOverall = false;
+        }
+
+        $urgencyTag = !empty($rt['urgency']) ? $rt['urgency'] : ($isRefundable ? '1 Room Left' : '');
+
+        $groupedCategories[$catName]['rates'][] = array(
+            'title'             => $rateTitle,
+            'refundable'        => $isRefundable,
+            'is_recommended'    => $isRecommended,
+            'board'             => $boardName,
+            'inclusions'        => !empty($rt['inclusions']) ? (array)$rt['inclusions'] : array($boardName),
+            'cancellation'      => $cancelText,
+            'urgency'           => $urgencyTag,
+            'strike_price'      => round($strikePrice),
+            'price'             => round($pricePerNight),
+            'total_price'       => round($totalPrice),
+            'tax'               => round($tax),
+            'saved'             => round($saved),
+            'has_additional_fee'=> false,
+            'room_id'           => $rt['room_id'] ?? ('RM_' . uniqid()),
+            'room_group_id'     => $rt['room_group_id'] ?? ('RG_' . uniqid()),
+            'recommendation_id' => $rt['recommendation_id'] ?? '',
+            'provider'          => $rt['provider'] ?? 'CleartripAPI'
+        );
+    }
+
+    if (!empty($groupedCategories)) {
+        $roomCategories = array_values($groupedCategories);
+    }
+}
+
+// Fallback to demo room categories if hotel has no live API rooms (e.g. demo hotel HTL_101)
+if (empty($roomCategories)) {
+    $roomCategories = array(
+        // 1. Deluxe Category
+        array(
+            'category_name' => 'Deluxe',
+            'images'        => $deluxeImages,
+            'rates'         => array(
+                array(
+                    'title'             => 'Room Only',
+                    'refundable'        => false,
+                    'is_recommended'    => true,
+                    'board'             => 'Room Only',
+                    'inclusions'        => array('Room Only'),
+                    'cancellation'      => '',
+                    'urgency'           => '',
+                    'strike_price'      => 47294,
+                    'price'             => 37223,
+                    'total_price'       => 37223 * $qNightsCount,
+                    'tax'               => 1882,
+                    'saved'             => 8189,
+                    'has_additional_fee'=> true,
+                    'room_id'           => 'RM_DLX_01',
+                    'room_group_id'     => 'RGRP_01',
+                    'recommendation_id' => 'REC_DLX_01',
+                    'provider'          => 'CleartripAPI'
+                ),
+                array(
+                    'title'             => 'Room Only | Free Cancellation',
+                    'refundable'        => true,
+                    'is_recommended'    => false,
+                    'board'             => 'Room Only',
+                    'inclusions'        => array('Room Only'),
+                    'cancellation'      => 'Free cancellation till ' . $cancelDateDisplay,
+                    'urgency'           => '1 Room Left',
+                    'strike_price'      => 46856,
+                    'price'             => 35482,
+                    'total_price'       => 35482 * $qNightsCount,
+                    'tax'               => 3568,
+                    'saved'             => 7806,
+                    'has_additional_fee'=> false,
+                    'room_id'           => 'RM_DLX_02',
+                    'room_group_id'     => 'RGRP_01',
+                    'recommendation_id' => 'REC_DLX_02',
+                    'provider'          => 'CleartripAPI'
+                )
+            )
+        ),
+
+        // 2. Superior Deluxe Category
+        array(
+            'category_name' => 'Superior Deluxe',
+            'images'        => $supImages,
+            'rates'         => array(
+                array(
+                    'title'             => 'Room Only',
+                    'refundable'        => false,
+                    'is_recommended'    => false,
+                    'board'             => 'Room Only',
+                    'inclusions'        => array('Room Only'),
+                    'cancellation'      => '',
+                    'urgency'           => '',
+                    'strike_price'      => 50930,
+                    'price'             => 40087,
+                    'total_price'       => 40087 * $qNightsCount,
+                    'tax'               => 2024,
+                    'saved'             => 8819,
+                    'has_additional_fee'=> true,
+                    'room_id'           => 'RM_SUP_01',
+                    'room_group_id'     => 'RGRP_02',
+                    'recommendation_id' => 'REC_SUP_01',
+                    'provider'          => 'CleartripAPI'
+                ),
+                array(
+                    'title'             => 'Room Only | Free Cancellation',
+                    'refundable'        => true,
+                    'is_recommended'    => false,
+                    'board'             => 'Room Only',
+                    'inclusions'        => array('Room Only'),
+                    'cancellation'      => 'Free cancellation till ' . $cancelDateDisplay,
+                    'urgency'           => '1 Room Left',
+                    'strike_price'      => 50459,
+                    'price'             => 38211,
+                    'total_price'       => 38211 * $qNightsCount,
+                    'tax'               => 3842,
+                    'saved'             => 8406,
+                    'has_additional_fee'=> false,
+                    'room_id'           => 'RM_SUP_02',
+                    'room_group_id'     => 'RGRP_02',
+                    'recommendation_id' => 'REC_SUP_02',
+                    'provider'          => 'CleartripAPI'
+                )
+            )
+        ),
+
+        // 3. Executive Category
+        array(
+            'category_name' => 'Executive',
+            'images'        => $execImages,
+            'rates'         => array(
+                array(
+                    'title'             => 'Room With Breakfast',
+                    'refundable'        => false,
+                    'is_recommended'    => false,
+                    'board'             => 'Breakfast Included',
+                    'inclusions'        => array('BedAndBreakfast', 'Breakfast'),
+                    'cancellation'      => '',
+                    'urgency'           => '',
+                    'strike_price'      => 49610,
+                    'price'             => 34730,
+                    'total_price'       => 34730 * $qNightsCount,
+                    'tax'               => 7139,
+                    'saved'             => 7641,
+                    'has_additional_fee'=> true,
+                    'room_id'           => 'RM_EXC_01',
+                    'room_group_id'     => 'RGRP_03',
+                    'recommendation_id' => 'REC_EXC_01',
+                    'provider'          => 'CleartripAPI'
+                ),
+                array(
+                    'title'             => 'Room With Breakfast, Lunch And Dinner | Free Cancellation',
+                    'refundable'        => true,
+                    'is_recommended'    => false,
+                    'board'             => 'Full Board',
+                    'inclusions'        => array('Full Board'),
+                    'cancellation'      => '',
+                    'urgency'           => '1 Room Left',
+                    'strike_price'      => 51258,
+                    'price'             => 38817,
+                    'total_price'       => 38817 * $qNightsCount,
+                    'tax'               => 3901,
+                    'saved'             => 8540,
+                    'has_additional_fee'=> false,
+                    'room_id'           => 'RM_EXC_02',
+                    'room_group_id'     => 'RGRP_03',
+                    'recommendation_id' => 'REC_EXC_02',
+                    'provider'          => 'CleartripAPI'
+                ),
+                array(
+                    'title'             => 'Other | Free Cancellation',
+                    'refundable'        => true,
+                    'is_recommended'    => false,
+                    'board'             => 'Full Board',
+                    'inclusions'        => array('Full Board'),
+                    'cancellation'      => 'Free cancellation till ' . $cancelDateDisplay,
+                    'urgency'           => '1 Room Left',
+                    'strike_price'      => 55881,
+                    'price'             => 42319,
+                    'total_price'       => 42319 * $qNightsCount,
+                    'tax'               => 4252,
+                    'saved'             => 9310,
+                    'has_additional_fee'=> false,
+                    'room_id'           => 'RM_EXC_03',
+                    'room_group_id'     => 'RGRP_03',
+                    'recommendation_id' => 'REC_EXC_03',
+                    'provider'          => 'CleartripAPI'
+                )
             )
         )
-    ),
-
-    // 2. Superior Deluxe Category
-    array(
-        'category_name' => 'Superior Deluxe',
-        'images'        => $supImages,
-        'rates'         => array(
-            array(
-                'title'             => 'Room Only',
-                'refundable'        => false,
-                'is_recommended'    => false,
-                'board'             => 'Room Only',
-                'inclusions'        => array('Room Only'),
-                'cancellation'      => '',
-                'urgency'           => '',
-                'strike_price'      => 50930,
-                'price'             => 40087,
-                'tax'               => 2024,
-                'saved'             => 8819,
-                'has_additional_fee'=> true,
-                'room_id'           => 'RM_SUP_01',
-                'room_group_id'     => 'RGRP_02',
-                'recommendation_id' => 'REC_SUP_01'
-            ),
-            array(
-                'title'             => 'Room Only | Free Cancellation',
-                'refundable'        => true,
-                'is_recommended'    => false,
-                'board'             => 'Room Only',
-                'inclusions'        => array('Room Only'),
-                'cancellation'      => 'Free cancellation till ' . $cancelDateDisplay,
-                'urgency'           => '1 Room Left',
-                'strike_price'      => 50459,
-                'price'             => 38211,
-                'tax'               => 3842,
-                'saved'             => 8406,
-                'has_additional_fee'=> false,
-                'room_id'           => 'RM_SUP_02',
-                'room_group_id'     => 'RGRP_02',
-                'recommendation_id' => 'REC_SUP_02'
-            )
-        )
-    ),
-
-    // 3. Executive Category
-    array(
-        'category_name' => 'Executive',
-        'images'        => $execImages,
-        'rates'         => array(
-            array(
-                'title'             => 'Room With Breakfast',
-                'refundable'        => false,
-                'is_recommended'    => false,
-                'board'             => 'Breakfast Included',
-                'inclusions'        => array('BedAndBreakfast', 'Breakfast'),
-                'cancellation'      => '',
-                'urgency'           => '',
-                'strike_price'      => 49610,
-                'price'             => 34730,
-                'tax'               => 7139,
-                'saved'             => 7641,
-                'has_additional_fee'=> true,
-                'room_id'           => 'RM_EXC_01',
-                'room_group_id'     => 'RGRP_03',
-                'recommendation_id' => 'REC_EXC_01'
-            ),
-            array(
-                'title'             => 'Room With Breakfast, Lunch And Dinner | Free Cancellation',
-                'refundable'        => true,
-                'is_recommended'    => false,
-                'board'             => 'Full Board',
-                'inclusions'        => array('Full Board'),
-                'cancellation'      => '',
-                'urgency'           => '1 Room Left',
-                'strike_price'      => 51258,
-                'price'             => 38817,
-                'tax'               => 3901,
-                'saved'             => 8540,
-                'has_additional_fee'=> false,
-                'room_id'           => 'RM_EXC_02',
-                'room_group_id'     => 'RGRP_03',
-                'recommendation_id' => 'REC_EXC_02'
-            ),
-            array(
-                'title'             => 'Other | Free Cancellation',
-                'refundable'        => true,
-                'is_recommended'    => false,
-                'board'             => 'Full Board',
-                'inclusions'        => array('Full Board'),
-                'cancellation'      => 'Free cancellation till ' . $cancelDateDisplay,
-                'urgency'           => '1 Room Left',
-                'strike_price'      => 55881,
-                'price'             => 42319,
-                'tax'               => 4252,
-                'saved'             => 9310,
-                'has_additional_fee'=> false,
-                'room_id'           => 'RM_EXC_03',
-                'room_group_id'     => 'RGRP_03',
-                'recommendation_id' => 'REC_EXC_03'
-            )
-        )
-    )
-);
+    );
+}
 ?>
 
 <style>
@@ -1389,6 +1494,13 @@ body {
     <section class="rooms-section-wrapper" id="rooms-section">
         <h2 class="rooms-section-title">Rooms &amp; Rates</h2>
 
+        <?php if (!empty($this->session) && $this->session->flashdata('error')): ?>
+        <div style="background: #fff1f2; border: 1px solid #fecdd3; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; color: #9f1239; font-size: 14px; font-weight: 600;">
+            <i class="fa-solid fa-circle-exclamation" style="font-size: 18px; color: #e11d48; flex-shrink: 0;"></i>
+            <span><?php echo htmlspecialchars($this->session->flashdata('error')); ?></span>
+        </div>
+        <?php endif; ?>
+
         <!-- Filter Rooms By Strip -->
         <div class="rooms-filter-strip">
             <div class="rooms-filter-left">
@@ -1418,6 +1530,20 @@ body {
 
         <!-- Room Categories & Multiple Rate Options (Screenshot 1 Matching) -->
         <div id="roomCategoriesContainer">
+            <?php if (!empty($hotel['no_rooms_available'])): ?>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 40px 24px; text-align: center; margin: 20px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                    <div style="width: 56px; height: 56px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px auto;">
+                        <i class="fa-solid fa-hotel"></i>
+                    </div>
+                    <h3 style="font-size: 18px; font-weight: 700; color: #0d3470; margin-bottom: 8px;">No Rooms Currently Available</h3>
+                    <p style="font-size: 14px; color: #64748b; max-width: 500px; margin: 0 auto 20px auto;">
+                        The hotel supplier does not have any rooms available for the selected dates (<?php echo date('d M', strtotime($qCheckin)); ?> - <?php echo date('d M Y', strtotime($qCheckout)); ?>) or guest occupancy. Please try adjusting your travel dates or select another hotel.
+                    </p>
+                    <button type="button" onclick="document.getElementById('btnOpenModify').click()" style="background: #e11d48; color: #ffffff; border: none; padding: 11px 26px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer;">
+                        <i class="fa-solid fa-sliders"></i> Modify Dates &amp; Guests
+                    </button>
+                </div>
+            <?php else: ?>
             <?php 
             $catIdx = 0;
             foreach ($roomCategories as $cat):
@@ -1516,7 +1642,7 @@ body {
                                             <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($r['room_id']); ?>">
                                             <input type="hidden" name="room_group_id" value="<?php echo htmlspecialchars($r['room_group_id']); ?>">
                                             <input type="hidden" name="recommendation_id" value="<?php echo htmlspecialchars($r['recommendation_id']); ?>">
-                                            <input type="hidden" name="provider" value="CleartripAPI">
+                                            <input type="hidden" name="provider" value="<?php echo htmlspecialchars($r['provider'] ?? 'CleartripAPI'); ?>">
                                             <input type="hidden" name="board_type" value="<?php echo htmlspecialchars($r['board']); ?>">
                                             <input type="hidden" name="price" value="<?php echo htmlspecialchars($rTotalStay); ?>">
                                             <input type="hidden" name="price_per_night" value="<?php echo htmlspecialchars($r['price']); ?>">
@@ -1532,7 +1658,7 @@ body {
                                             <input type="hidden" name="tui" value="<?php echo htmlspecialchars($sTrace); ?>">
 
                                             <button type="submit" class="btn-book-red">
-                                                Book Now
+                                                 Book Now
                                             </button>
                                         </form>
                                     </div>
@@ -1554,6 +1680,7 @@ body {
             <?php 
                 $catIdx++;
             endforeach; 
+            endif;
             ?>
         </div>
     </section>
