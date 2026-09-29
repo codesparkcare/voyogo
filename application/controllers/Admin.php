@@ -752,7 +752,8 @@ class Admin extends CI_Controller {
             $output .= "--------------------------------------------------------------------------------\n";
             $output .= "STEP #{$step} | LOG ID: #{$log['id']} | TIMESTAMP: {$log['created_at']}\n";
             $output .= "API NAME / ACTION: {$log['action_name']}\n";
-            $output .= "SERVICE: " . strtoupper($log['service_type']) . " | METHOD: " . strtoupper(isset($log['http_method']) ? $log['http_method'] : 'POST') . "\n";
+            $logMethod = !empty($log['request_method']) ? $log['request_method'] : (!empty($log['http_method']) ? $log['http_method'] : 'POST');
+            $output .= "SERVICE: " . strtoupper($log['service_type']) . " | METHOD: " . strtoupper($logMethod) . "\n";
             $output .= "ENDPOINT URL: {$log['endpoint_url']}\n";
             $output .= "HTTP STATUS: {$log['http_code']} | LATENCY: {$log['execution_time_ms']} ms | CLIENT IP: {$log['ip_address']}\n";
             if (!empty($log['error_message'])) {

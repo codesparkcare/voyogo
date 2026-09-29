@@ -487,17 +487,17 @@ class BenzyHotelApi {
                 $apiContentData = $contentRes['json']['hotel'];
             }
 
-            // 2. More Rooms - Rates: {HotelSearchURL}/api/hotels/search/result/{searchId}/{hotelId}/rooms (PDF Page 24 & Step_10_MoreRooms.txt)
-            // Note: Benzy certified logs use POST with [] payload. Postman uses GET. We try POST first, then GET fallback.
+            // 2. More Rooms - Rates: {HotelSearchURL}/api/hotels/search/result/{searchId}/{hotelId}/rooms (PDF Page 37)
+            // Official Benzy B2C specification specifies Method : GET.
             $roomsUrl = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/rooms';
-            $roomsRes = $this->makeRequest('MoreRooms', $roomsUrl, array(), 'POST', $token, $customRoomsHeaders);
+            $roomsRes = $this->makeRequest('MoreRooms', $roomsUrl, array(), 'GET', $token, $customRoomsHeaders);
             if ($roomsRes['http_code'] === 200 && (!empty($roomsRes['json']['recommendations']) || !empty($roomsRes['json']['rooms']))) {
                 $apiRoomsData = $roomsRes['json'];
-            } else {
-                // Fallback to GET
-                $roomsResGet = $this->makeRequest('MoreRooms_GET', $roomsUrl, array(), 'GET', $token, $customRoomsHeaders);
-                if ($roomsResGet['http_code'] === 200 && (!empty($roomsResGet['json']['recommendations']) || !empty($roomsResGet['json']['rooms']))) {
-                    $apiRoomsData = $roomsResGet['json'];
+            } else if ($roomsRes['http_code'] !== 405) {
+                // Secondary fallback to POST (for legacy sandbox/staging environments)
+                $roomsResPost = $this->makeRequest('MoreRooms_POST', $roomsUrl, array(), 'POST', $token, $customRoomsHeaders);
+                if ($roomsResPost['http_code'] === 200 && (!empty($roomsResPost['json']['recommendations']) || !empty($roomsResPost['json']['rooms']))) {
+                    $apiRoomsData = $roomsResPost['json'];
                 }
             }
         }
@@ -694,29 +694,24 @@ class BenzyHotelApi {
         if ($searchId && $recommendationId) {
             $url = $this->hotelUrl . '/api/hotels/search/' . urlencode($searchId) . '/' . urlencode($hotelId) . '/price/' . urlencode($provider) . '/' . urlencode($recommendationId);
 
-            // 1. In certified Step_11_Pricing.txt, the method is POST with [] body.
-            $res = $this->makeRequest('Pricing', $url, array(), 'POST', $token, $customHeaders);
+            // 1. Official Benzy B2C specification specifies Method : GET (PDF Page 57)
+            $res = $this->makeRequest('Pricing', $url, array(), 'GET', $token, $customHeaders);
             $pricingResult = ($res['http_code'] === 200 && !empty($res['json']) && ($res['json']['status'] ?? '') !== 'failure') ? $res['json'] : null;
 
-            // 2. If POST was not successful, try GET (matching Postman collection)
-            if (!$pricingResult) {
-                $resGet = $this->makeRequest('Pricing_GET', $url, array(), 'GET', $token, $customHeaders);
-                if ($resGet['http_code'] === 200 && !empty($resGet['json']) && ($resGet['json']['status'] ?? '') !== 'failure') {
-                    $pricingResult = $resGet['json'];
+            // 2. Fallback to POST only if GET returned an unexpected non-405 response (legacy sandbox compatibility)
+            if (!$pricingResult && $res['http_code'] !== 405) {
+                $resPost = $this->makeRequest('Pricing_POST', $url, array(), 'POST', $token, $customHeaders);
+                if ($resPost['http_code'] === 200 && !empty($resPost['json']) && ($resPost['json']['status'] ?? '') !== 'failure') {
+                    $pricingResult = $resPost['json'];
                 }
             }
 
-            // 3. Retry once if initial attempts returned failure status (e.g. temporary latency or supplier recheck)
+            // 3. Retry once with GET if initial attempt returned temporary failure status (e.g. latency or supplier rate refresh)
             if (!$pricingResult) {
                 sleep(1);
-                $resRetry = $this->makeRequest('Pricing_Retry', $url, array(), 'POST', $token, $customHeaders);
-                if ($resRetry['http_code'] === 200 && !empty($resRetry['json'])) {
+                $resRetry = $this->makeRequest('Pricing_Retry', $url, array(), 'GET', $token, $customHeaders);
+                if ($resRetry['http_code'] === 200 && !empty($resRetry['json']) && ($resRetry['json']['status'] ?? '') !== 'failure') {
                     $pricingResult = $resRetry['json'];
-                } else {
-                    $resRetryGet = $this->makeRequest('Pricing_Retry_GET', $url, array(), 'GET', $token, $customHeaders);
-                    if ($resRetryGet['http_code'] === 200 && !empty($resRetryGet['json'])) {
-                        $pricingResult = $resRetryGet['json'];
-                    }
                 }
             }
 

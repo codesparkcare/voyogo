@@ -299,7 +299,7 @@ class Hotel_cert extends CI_Controller {
         $step = 1;
         foreach ($stepLogs as $log) {
             $actionName = $log['action'] ?? ($log['action_name'] ?? 'Hotel API Action');
-            $method     = strtoupper($log['method'] ?? ($log['http_method'] ?? 'POST'));
+            $method     = strtoupper($log['method'] ?? ($log['request_method'] ?? ($log['http_method'] ?? 'POST')));
             $url        = $log['url'] ?? ($log['endpoint_url'] ?? '');
             $httpCode   = $log['http_code'] ?? 200;
             $duration   = $log['duration_ms'] ?? ($log['execution_time_ms'] ?? 210);
