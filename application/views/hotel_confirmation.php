@@ -41,9 +41,14 @@ $booking = $b;
                         <strong><?php echo htmlspecialchars($booking['booking_ref']); ?></strong></span>
                 </div>
                 <div style="text-align: right;">
+                    <?php 
+                    $statusCode = $booking['booking_status_code'] ?? 'B0';
+                    $statusInfo = Hotel_model::get_status_info($statusCode);
+                    $icon = in_array($statusCode, ['B1', 'CD', 'CJ']) ? 'fa-circle-xmark' : (in_array($statusCode, ['IP', 'I8', 'CR', 'CF']) ? 'fa-clock' : 'fa-circle-check');
+                    ?>
                     <span
-                        style="background: #22c55e; color: #ffffff; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 800; display: inline-block;">
-                        <i class="fa-solid fa-circle-check"></i> RESERVATION CONFIRMED
+                        style="background: <?php echo $statusInfo['color']; ?>; color: #ffffff; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 800; display: inline-block;">
+                        <i class="fa-solid <?php echo $icon; ?>"></i> <?php echo strtoupper($statusInfo['label']); ?>
                     </span>
                     <div style="font-size: 11px; color: #cbd5e1; margin-top: 6px;">Booked On:
                         <?php echo date('d M Y, H:i', strtotime($booking['created_at'])); ?></div>
