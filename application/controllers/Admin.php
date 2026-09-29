@@ -1041,10 +1041,18 @@ class Admin extends CI_Controller {
             }
         }
 
+        // Synchronize Hotel API settings and bookings table
+        if (!isset($this->Hotel_model)) {
+            $this->load->model('Hotel_model');
+        }
+        if (isset($this->Hotel_model) && method_exists($this->Hotel_model, 'ensure_tables_exist')) {
+            $this->Hotel_model->ensure_tables_exist();
+        }
+
         // Restore original database debug setting
         $this->db->db_debug = $saved_debug;
 
-        $this->session->set_flashdata('success', 'All database tables including Service Leads and Franchise Module have been synchronized successfully!');
+        $this->session->set_flashdata('success', 'All database tables including Hotel API Settings, Service Leads, and Franchise Module have been synchronized successfully!');
         redirect('admin');
     }
 
