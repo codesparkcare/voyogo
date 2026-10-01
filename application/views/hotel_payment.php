@@ -753,6 +753,13 @@ body {
         </div>
     </div>
 
+    <!-- Back to Review Navigation -->
+    <div style="margin-bottom: 16px;">
+        <a href="<?php echo site_url('hotels/review'); ?>" style="color: #0b438c; font-weight: 700; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: color 0.15s;">
+            <i class="fa-solid fa-arrow-left"></i> Back to Review & Guest Details
+        </a>
+    </div>
+
     <!-- Main Grid: Left Payment Details & Right Fare Breakdown -->
     <div class="payment-grid-layout">
         

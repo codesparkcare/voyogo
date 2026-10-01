@@ -137,6 +137,37 @@ class Hotels extends CI_Controller {
      * 4. Guest Details & Review Page
      */
     public function review() {
+        // Cache-control headers so browser Back button restores page from cache without ERR_CACHE_MISS
+        header("Cache-Control: private, max-age=10800, pre-check=10800");
+        header("Pragma: private");
+        header("Expires: " . gmdate("D, d M Y H:i:s", time() + 10800) . " GMT");
+
+        $isPost = ($this->input->server('REQUEST_METHOD') === 'POST' && $this->input->post('hotel_name'));
+        if (!$isPost) {
+            $cached = $this->session->userdata('hotel_review_booking');
+            if (!empty($cached)) {
+                $bookingArray = $cached;
+                $paymentBooking = $this->session->userdata('hotel_payment_booking');
+                if (!empty($paymentBooking['pax'])) {
+                    $bookingArray['pax'] = $paymentBooking['pax'];
+                    $bookingArray['primary_guest_name'] = $paymentBooking['primary_guest_name'] ?? ($bookingArray['primary_guest_name'] ?? '');
+                    $bookingArray['guest_email'] = $paymentBooking['guest_email'] ?? ($bookingArray['guest_email'] ?? '');
+                    $bookingArray['guest_phone'] = $paymentBooking['guest_phone'] ?? ($bookingArray['guest_phone'] ?? '');
+                }
+
+                $data['booking_data']    = $bookingArray;
+                $data['booking_summary'] = $bookingArray;
+                $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
+                $data['page_title'] = "Review Booking: " . ($bookingArray['hotel_name'] ?? 'Hotel') . " - Voyogo";
+                $data['active_page'] = 'hotels';
+
+                $this->load->view('includes/header', $data);
+                $this->load->view('hotel_review', $data);
+                $this->load->view('includes/footer', $data);
+                return;
+            }
+        }
+
         $hotel_id       = $this->input->post('hotel_id') ?: 'HTL_101';
         $hotel_name     = $this->input->post('hotel_name') ?: 'Taj Exotica Resort & Spa';
         $hotel_address  = $this->input->post('hotel_address') ?: 'Benaulim Beach, Goa';
@@ -264,6 +295,8 @@ class Hotels extends CI_Controller {
             'star_rating'       => (int)($this->input->post('star_rating') ?: 4)
         );
 
+        $this->session->set_userdata('hotel_review_booking', $bookingArray);
+
         $data['booking_data']    = $bookingArray;
         $data['booking_summary'] = $bookingArray;
         $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
@@ -279,6 +312,10 @@ class Hotels extends CI_Controller {
      * 4b. Dedicated Hotel Payment Page (Akbar Travels Style Screenshot 2 & 3)
      */
     public function payment() {
+        header("Cache-Control: private, max-age=10800, pre-check=10800");
+        header("Pragma: private");
+        header("Expires: " . gmdate("D, d M Y H:i:s", time() + 10800) . " GMT");
+
         if ($this->input->server('REQUEST_METHOD') === 'POST' && $this->input->post('hotel_name')) {
             $hotel_id       = $this->input->post('hotel_id');
             $hotel_name     = $this->input->post('hotel_name');
@@ -359,12 +396,20 @@ class Hotels extends CI_Controller {
             );
 
             $this->session->set_userdata('hotel_payment_booking', $bookingArray);
-        } else {
-            $bookingArray = $this->session->userdata('hotel_payment_booking');
-            if (empty($bookingArray)) {
-                redirect('hotels');
-                return;
-            }
+            $this->session->set_userdata('hotel_review_booking', $bookingArray);
+
+            // Post-Redirect-Get (PRG): redirect via GET so back-navigation and refresh are clean without ERR_CACHE_MISS
+            redirect('hotels/payment', 'location', 303);
+            return;
+        }
+
+        $bookingArray = $this->session->userdata('hotel_payment_booking');
+        if (empty($bookingArray)) {
+            $bookingArray = $this->session->userdata('hotel_review_booking');
+        }
+        if (empty($bookingArray)) {
+            redirect('hotels');
+            return;
         }
 
         $sessionUser = $this->session->userdata('user');
