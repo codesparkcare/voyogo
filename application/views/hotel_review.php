@@ -377,8 +377,8 @@ $defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
                         </div>
                     </div>
 
-                    <!-- 3. Travel Services Card (Screenshot 1 Matching) -->
-                    <div style="background: #ffffff; border-radius: 12px; padding: 22px 24px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
+                    <!-- 3. Travel Services Card (Hidden per user request) -->
+                    <div style="display: none;">
                         <h3 style="font-family: var(--font-heading); font-size: 18px; color: #0d3470; margin-top: 0; margin-bottom: 6px; font-weight: 700;">
                             Travel services
                         </h3>
