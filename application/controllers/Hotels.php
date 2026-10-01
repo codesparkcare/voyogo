@@ -276,6 +276,115 @@ class Hotels extends CI_Controller {
     }
 
     /**
+     * 4b. Dedicated Hotel Payment Page (Akbar Travels Style Screenshot 2 & 3)
+     */
+    public function payment() {
+        if ($this->input->server('REQUEST_METHOD') === 'POST' && $this->input->post('hotel_name')) {
+            $hotel_id       = $this->input->post('hotel_id');
+            $hotel_name     = $this->input->post('hotel_name');
+            $hotel_address  = $this->input->post('hotel_address');
+            $hotel_image    = $this->input->post('hotel_image');
+            $room_type      = $this->input->post('room_type');
+            $room_id        = $this->input->post('room_id');
+            $room_group_id  = $this->input->post('room_group_id');
+            $rec_id         = $this->input->post('recommendation_id');
+            $search_id      = $this->input->post('search_id');
+            $tui            = $this->input->post('tui');
+            $board_type     = $this->input->post('board_type');
+            $city           = $this->input->post('city');
+            $checkin        = $this->input->post('checkin') ?: $this->input->post('checkin_date');
+            $checkout       = $this->input->post('checkout') ?: $this->input->post('checkout_date');
+            $rooms          = (int)$this->input->post('rooms') ?: 1;
+            $adults         = (int)$this->input->post('adults') ?: 2;
+            $children       = (int)$this->input->post('children') ?: 0;
+            $roomDataRaw    = $this->input->post('roomData') ?: '';
+            $provider       = $this->input->post('provider') ?: 'CleartripAPI';
+            $nights         = (int)$this->input->post('nights') ?: max(1, round((strtotime($checkout) - strtotime($checkin)) / 86400));
+            $total_amount   = (float)$this->input->post('grand_total') ?: ((float)$this->input->post('total_amount') ?: 0);
+            $base_total     = (float)$this->input->post('base_total') ?: round($total_amount / 1.12, 2);
+            $taxes          = (float)$this->input->post('taxes') ?: round($total_amount - $base_total, 2);
+            $discount_total = (float)$this->input->post('discount_total') ?: 0;
+
+            $paxData        = $this->input->post('pax') ?: array();
+            $lead_phone     = $this->input->post('guest_phone') ?: '9876543210';
+            $lead_email     = $this->input->post('guest_email') ?: 'guest@voyogo.com';
+            $primary_name   = $this->input->post('primary_guest_name') ?: '';
+            if (empty($primary_name) && !empty($paxData[0]['adults'][0]['fname'])) {
+                $pTitle = $paxData[0]['adults'][0]['title'] ?? 'Mr';
+                $pFname = $paxData[0]['adults'][0]['fname'] ?? '';
+                $pLname = $paxData[0]['adults'][0]['lname'] ?? '';
+                $primary_name = trim("$pTitle. $pFname $pLname");
+            }
+            if (empty($primary_name)) {
+                $primary_name = 'Guest User';
+            }
+
+            $bookingArray = array(
+                'hotel_id'          => $hotel_id,
+                'hotel_name'        => $hotel_name,
+                'hotel_address'     => $hotel_address,
+                'hotel_image'       => $hotel_image,
+                'room_type'         => $room_type,
+                'room_id'           => $room_id,
+                'room_group_id'     => $room_group_id,
+                'recommendation_id' => $rec_id,
+                'search_id'         => $search_id,
+                'tui'               => $tui,
+                'board_type'        => $board_type,
+                'city'              => $city,
+                'checkin'           => $checkin,
+                'checkout'          => $checkout,
+                'checkin_date'      => $checkin,
+                'checkout_date'     => $checkout,
+                'nights'            => $nights,
+                'rooms'             => $rooms,
+                'adults'            => $adults,
+                'children'          => $children,
+                'roomData'          => $roomDataRaw,
+                'provider'          => $provider,
+                'base_total'        => $base_total,
+                'taxes'             => $taxes,
+                'discount_total'    => $discount_total,
+                'grand_total'       => $total_amount,
+                'total_amount'      => $total_amount,
+                'is_refundable'     => (bool)($this->input->post('is_refundable') !== '0'),
+                'inclusions'        => $this->input->post('inclusions') ?: array(),
+                'cancellation_text' => $this->input->post('cancellation_text') ?: 'Free cancellation available',
+                'star_rating'       => (int)($this->input->post('star_rating') ?: 5),
+                'pax'               => $paxData,
+                'primary_guest_name'=> $primary_name,
+                'guest_email'       => $lead_email,
+                'guest_phone'       => $lead_phone,
+                'travel_insurance'  => $this->input->post('travel_insurance') ? 1 : 0
+            );
+
+            $this->session->set_userdata('hotel_payment_booking', $bookingArray);
+        } else {
+            $bookingArray = $this->session->userdata('hotel_payment_booking');
+            if (empty($bookingArray)) {
+                redirect('hotels');
+                return;
+            }
+        }
+
+        $sessionUser = $this->session->userdata('user');
+        $isUserLoggedIn = !empty($sessionUser);
+        $sessionUserName = $sessionUser['name'] ?? ($sessionUser['first_name'] ?? '');
+
+        $data['booking'] = $bookingArray;
+        $data['booking_data'] = $bookingArray;
+        $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
+        $data['isUserLoggedIn'] = $isUserLoggedIn;
+        $data['sessionUserName'] = $sessionUserName;
+        $data['page_title'] = "Payment: " . ($bookingArray['hotel_name'] ?? 'Hotel') . " - Voyogo";
+        $data['active_page'] = 'hotels';
+
+        $this->load->view('includes/header', $data);
+        $this->load->view('hotel_payment', $data);
+        $this->load->view('includes/footer', $data);
+    }
+
+    /**
      * 5. Process Payment & Complete Hotel Booking
      */
     public function process_payment() {

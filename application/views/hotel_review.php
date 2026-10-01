@@ -201,7 +201,7 @@ $defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
                 </div>
 
                 <!-- Main Guest Form -->
-                <form id="hotelBookingForm" action="<?php echo site_url('hotels/process_payment'); ?>" method="POST">
+                <form id="hotelBookingForm" action="<?php echo site_url('hotels/payment'); ?>" method="POST">
                     
                     <input type="hidden" name="hotel_id" value="<?php echo htmlspecialchars($hotel_id); ?>">
                     <input type="hidden" name="hotel_name" value="<?php echo htmlspecialchars($hotel_name); ?>">
@@ -225,10 +225,14 @@ $defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
                     <input type="hidden" name="roomData" value="<?php echo htmlspecialchars($booking_data['roomData'] ?? ''); ?>">
                     <input type="hidden" name="provider" value="<?php echo htmlspecialchars($booking_data['provider'] ?? 'CleartripAPI'); ?>">
                     <input type="hidden" name="nights" value="<?php echo htmlspecialchars($booking_data['nights'] ?? 1); ?>">
+                    <input type="hidden" name="base_total" value="<?php echo htmlspecialchars($base_total); ?>">
+                    <input type="hidden" name="taxes" value="<?php echo htmlspecialchars($taxes); ?>">
+                    <input type="hidden" name="discount_total" value="<?php echo htmlspecialchars($discount_total); ?>">
                     <input type="hidden" name="grand_total" value="<?php echo htmlspecialchars($total_amount); ?>">
-                    <input type="hidden" name="taxes" value="<?php echo htmlspecialchars($booking_data['taxes'] ?? 0); ?>">
                     <input type="hidden" name="total_amount" value="<?php echo htmlspecialchars($total_amount); ?>">
-                    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
+                    <input type="hidden" name="star_rating" value="<?php echo htmlspecialchars($star_rating); ?>">
+                    <input type="hidden" name="is_refundable" value="<?php echo $is_refundable ? '1' : '0'; ?>">
+                    <input type="hidden" name="cancellation_text" value="<?php echo htmlspecialchars($cancellation_text ?? 'Free cancellation available'); ?>">
                     <input type="hidden" name="primary_guest_name" id="hidden_primary_guest_name" value="<?php echo htmlspecialchars($sessionUserName ?: ''); ?>">
 
                     <?php
@@ -373,10 +377,53 @@ $defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
                         </div>
                     </div>
 
-                    <!-- Payment Action Button -->
-                    <div style="text-align: right;">
-                        <button type="button" id="payHotelRazorpayBtn" class="btn-search" style="padding: 14px 32px; font-size: 16px; background: linear-gradient(135deg, #09204b, #fa3a3a); border-radius: 8px; cursor: pointer;">
-                            <i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Pay ₹ <?php echo number_format($total_amount); ?> & Confirm Voucher
+                    <!-- 3. Travel Services Card (Screenshot 1 Matching) -->
+                    <div style="background: #ffffff; border-radius: 12px; padding: 22px 24px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
+                        <h3 style="font-family: var(--font-heading); font-size: 18px; color: #0d3470; margin-top: 0; margin-bottom: 6px; font-weight: 700;">
+                            Travel services
+                        </h3>
+                        <div style="font-size: 12.5px; color: #64748b; margin-bottom: 14px;">
+                            Save more by using our frequent travel service
+                        </div>
+                        <label style="display: inline-flex; align-items: center; gap: 12px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 18px; cursor: pointer; background: #f8fafc; transition: all 0.2s;">
+                            <input type="checkbox" name="travel_insurance" value="1" style="width: 18px; height: 18px; accent-color: #0d3470; cursor: pointer;">
+                            <i class="fa-solid fa-suitcase-medical" style="font-size: 22px; color: #0284c7;"></i>
+                            <span style="font-size: 14px; font-weight: 700; color: #1e293b;">Domestic Travel Insurance</span>
+                        </label>
+                    </div>
+
+                    <!-- 4. Essential Information Card (Exact Screenshot 1 Matching) -->
+                    <div style="background: #ffffff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
+                        <h3 style="font-family: var(--font-heading); font-size: 18px; color: #0d3470; margin-top: 0; margin-bottom: 16px; font-weight: 700;">
+                            Essential Information
+                        </h3>
+                        <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; font-size: 13px; color: #334155; line-height: 1.7; background: #ffffff;">
+                            
+                            <h4 style="font-size: 13.5px; font-weight: 800; color: #09204b; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                                HOTEL POLICY
+                            </h4>
+                            <p style="margin: 0 0 8px 0;">Unmarried couples allowed</p>
+                            <p style="margin: 0 0 8px 0;">Local ids are allowed Acceptable ID Proofs are Passport, Aadhar, Driving License, and Govt. ID IDs of the same city at the property are allowed</p>
+                            <p style="margin: 0 0 8px 0;">Pets NOT allowed within the premises</p>
+                            <p style="margin: 0 0 8px 0;">Non-Veg allowed within the premises Outside food is not allowed</p>
+                            <p style="margin: 0 0 18px 0;">Certain hotels may have mandatory gala dinner charges for Christmas and New Year's Eve, which, if applicable, are payable directly at the property during check-in. Bookings for 5 rooms or more will be treated as a group booking. Different policies and conditions may apply. Please contact the property for more information.</p>
+
+                            <h4 style="font-size: 13.5px; font-weight: 800; color: #09204b; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                                CHECKIN SPECIAL INSTRUCTIONS
+                            </h4>
+                            <p style="margin: 0 0 8px 0;">These additional charge are not included in the booking amount and will be collected directly at the hotel.</p>
+                            <p style="margin: 0 0 8px 0;">Extra beds for additional adults are subject to availability at the hotel and may be chargeable.</p>
+                            <p style="margin: 0 0 8px 0;">During Christmas, New Year, or festive seasons, hotels may collect Gala Meal charges at check-in. If these charges are not included in the booking, they must be paid directly at the hotel.</p>
+                            <p style="margin: 0 0 8px 0;">Hotels may also collect tourism taxes, city taxes, resort fees, or similar mandatory charges at check-in (payable in local currency).</p>
+                            <p style="margin: 0 0 8px 0;">Peak-season or long-weekend surcharges may apply as per hotel policy and must be paid directly by the guest.</p>
+                            <p style="margin: 0;">In rare cases, if the hotel is sold out due to peak dates or technical issues, an alternative hotel of similar value or a full refund will be provided.</p>
+                        </div>
+                    </div>
+
+                    <!-- Continue to Payment Button (Exact Screenshot 1 Matching) -->
+                    <div style="text-align: right; margin-bottom: 24px;">
+                        <button type="submit" id="btnContinueToPayment" style="background: #ef4444; color: #ffffff; border: none; padding: 14px 42px; font-size: 15px; font-weight: 800; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35); transition: background 0.15s, transform 0.15s;">
+                            CONTINUE TO PAYMENT
                         </button>
                     </div>
 
@@ -541,85 +588,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.getElementById('payHotelRazorpayBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-
-    if (!isUserLoggedIn) {
-        if (typeof window.triggerBookingLogin === 'function') {
-            window.triggerBookingLogin('Please sign in with mobile OTP to complete payment and confirm your hotel reservation.');
-        } else {
-            alert('Please sign in to complete payment.');
+// Form submit validation & lead guest name population before navigating to Payment page
+var form = document.getElementById('hotelBookingForm');
+if (form) {
+    form.addEventListener('submit', function(e) {
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            form.reportValidity();
+            return false;
         }
-        return;
-    }
 
-    var form = document.getElementById('hotelBookingForm');
-    if (form && !form.checkValidity()) {
-        form.reportValidity();
-        return;
-    }
-
-    var amountInPaise = <?php echo (int)($total_amount * 100); ?>;
-    var leadFname = document.querySelector('input[name="pax[0][adults][0][fname]"]') ? document.querySelector('input[name="pax[0][adults][0][fname]"]').value.trim() : '';
-    var leadLname = document.querySelector('input[name="pax[0][adults][0][lname]"]') ? document.querySelector('input[name="pax[0][adults][0][lname]"]').value.trim() : '';
-    var guestName = (leadFname + ' ' + leadLname).trim();
-    if (!guestName) {
-        var primInput = document.querySelector('input[name="primary_guest_name"]');
-        if (primInput) guestName = primInput.value.trim();
-    }
-    if (!guestName) guestName = 'Guest User';
-
-    var hiddenPrim = document.getElementById('hidden_primary_guest_name');
-    if (hiddenPrim) hiddenPrim.value = guestName;
-
-    var guestEmail = document.querySelector('input[name="guest_email"]') ? document.querySelector('input[name="guest_email"]').value.trim() : '';
-    var guestPhone = document.querySelector('input[name="guest_phone"]') ? document.querySelector('input[name="guest_phone"]').value.trim() : '';
-
-    if (!guestEmail || !guestPhone) {
-        alert('Please fill in your Contact email and mobile number.');
-        return;
-    }
-
-    var options = {
-        "key": "<?php echo !empty($razorpay_settings['razorpay_key_id']) ? htmlspecialchars($razorpay_settings['razorpay_key_id']) : 'rzp_test_TTVGSNKy0V1o7B'; ?>",
-        "amount": amountInPaise,
-        "currency": "<?php echo !empty($razorpay_settings['currency']) ? htmlspecialchars($razorpay_settings['currency']) : 'INR'; ?>",
-        "name": "<?php echo !empty($razorpay_settings['merchant_name']) ? htmlspecialchars($razorpay_settings['merchant_name']) : 'Voyogo Hotel Booking'; ?>",
-        "description": "Hotel Voucher - <?php echo htmlspecialchars($hotel_name); ?>",
-        "image": "<?php echo base_url('assets/images/logo.png'); ?>",
-        "handler": function (response){
-            showHotelProcessingModal("Payment Verified (HTTP 200 OK)! Generating your Official Hotel Voucher...");
-            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
-            document.getElementById('hotelBookingForm').submit();
-        },
-        "prefill": {
-            "name": guestName,
-            "email": guestEmail,
-            "contact": guestPhone
-        },
-        "theme": {
-            "color": "<?php echo !empty($razorpay_settings['theme_color']) ? htmlspecialchars($razorpay_settings['theme_color']) : '#fa3a3a'; ?>"
-        },
-        "modal": {
-            "ondismiss": function() {
-                if (confirm("Razorpay Test Gateway Window Closed. Complete hotel voucher booking in Test Payment Mode?")) {
-                    showHotelProcessingModal("Confirming Test Booking & Generating Hotel Voucher...");
-                    document.getElementById('razorpay_payment_id').value = "pay_test_htl_" + Math.floor(Math.random() * 1000000);
-                    document.getElementById('hotelBookingForm').submit();
-                }
-            }
+        var leadFname = document.querySelector('input[name="pax[0][adults][0][fname]"]') ? document.querySelector('input[name="pax[0][adults][0][fname]"]').value.trim() : '';
+        var leadLname = document.querySelector('input[name="pax[0][adults][0][lname]"]') ? document.querySelector('input[name="pax[0][adults][0][lname]"]').value.trim() : '';
+        var guestName = (leadFname + ' ' + leadLname).trim();
+        if (!guestName) {
+            var primInput = document.querySelector('input[name="primary_guest_name"]');
+            if (primInput) guestName = primInput.value.trim();
         }
-    };
-
-    try {
-        var rzp1 = new Razorpay(options);
-        rzp1.open();
-    } catch(err) {
-        showHotelProcessingModal("Processing Hotel Booking Confirmation...");
-        document.getElementById('razorpay_payment_id').value = "pay_test_htl_" + Math.floor(Math.random() * 1000000);
-        document.getElementById('hotelBookingForm').submit();
-    }
-});
+        if (guestName) {
+            var hiddenPrim = document.getElementById('hidden_primary_guest_name');
+            if (hiddenPrim) hiddenPrim.value = guestName;
+        }
+    });
+}
 
 function showHotelProcessingModal(message) {
     var overlay = document.getElementById('hotelPaymentProcessingOverlay');
