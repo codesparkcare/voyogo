@@ -10,6 +10,7 @@ $route['flight/review/(.+)'] = 'welcome/flight_review';
 $route['flight/review'] = 'welcome/flight_review';
 $route['flight/search'] = 'welcome/search_flights';
 $route['flight/process_payment'] = 'welcome/process_flight_payment';
+$route['flight/ajax_fare_details'] = 'welcome/ajax_fare_details';
 $route['flight/confirmation/(:any)'] = 'welcome/flight_confirmation/$1';
 $route['flight'] = 'welcome/index';
 

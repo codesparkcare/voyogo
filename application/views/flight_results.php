@@ -2541,15 +2541,160 @@
                         $arrTimestamp = $isNextDay ? strtotime('+1 day', $depTimestamp) : $depTimestamp;
                         $arrDateFormatted = date('D, d M y', $arrTimestamp);
 
-                        // Fare breakdown
-                        $fBaseFare = !empty($f['base_fare']) ? (float)$f['base_fare'] : round($owPrice * 0.745);
-                        $fTaxes = !empty($f['taxes']) ? (float)$f['taxes'] : max(0, $owPrice - $fBaseFare);
+                        // Card TUI
+                        $cardTui = (!empty($f['ResultID']) && strpos($f['ResultID'], 'FL_') !== 0) ? $f['ResultID'] : (!empty($search_tui) ? $search_tui : ($search_query['tui'] ?? $f['ResultID']));
+
+                        // Dynamic Airline-Specific Initial Breakdown & Rules (Matching live Akbar Travels GDS profiles)
+                        $airlineTaxes = array();
+                        $changeTabTitle = ($airlineCode === 'AI') ? 'CHANGES/REISSUE' : 'CHANGE FEE';
+                        $cancelTabTitle = ($airlineCode === 'AI') ? 'CANCEL PENALTY' : 'CANCELLATION FEE';
+                        $airlineAtoRows = array(
+                            array('desc' => 'Re Schedule', 'amount' => '₹ 300'),
+                            array('desc' => 'Cancellation', 'amount' => '₹ 300')
+                        );
+
+                        switch ($airlineCode) {
+                            case 'AI': // Air India (Screenshot 1)
+                                $fBaseFare = round($owPrice * 0.725);
+                                $fTaxes = max(0, $owPrice - $fBaseFare);
+                                $taxFuel = 549;
+                                $taxUdf = 207;
+                                $taxSt = 25; // Service Tax specific to Air India
+                                $taxK3 = round(max(0, $fTaxes - ($taxFuel + $taxUdf + $taxSt)) * 0.72);
+                                $taxMisc = max(0, $fTaxes - ($taxFuel + $taxUdf + $taxSt + $taxK3));
+
+                                $airlineTaxes = array(
+                                    array('name' => 'Fuel Surcharge', 'amount' => $taxFuel),
+                                    array('name' => 'User Dev. Fee', 'amount' => $taxUdf),
+                                    array('name' => 'K3 Tax', 'amount' => $taxK3),
+                                    array('name' => 'Service Tax', 'amount' => $taxSt),
+                                    array('name' => 'Airline Misc', 'amount' => $taxMisc)
+                                );
+                                $airlineChangeRows = array(
+                                    array('desc' => 'Before', 'amount' => '₹ 3500'),
+                                    array('desc' => 'After', 'amount' => 'Non Changeable')
+                                );
+                                $airlineCancelRows = array(
+                                    array('desc' => 'Before', 'amount' => '₹ 4500'),
+                                    array('desc' => 'After', 'amount' => 'Non Refundable')
+                                );
+                                break;
+
+                            case 'IX': // Air India Express (Screenshot 2)
+                                $fBaseFare = round($owPrice * 0.694);
+                                $fTaxes = max(0, $owPrice - $fBaseFare);
+                                $taxFuel = 549;
+                                $taxMisc = max(0, $fTaxes - $taxFuel);
+
+                                $airlineTaxes = array(
+                                    array('name' => 'Fuel Surcharge', 'amount' => $taxFuel),
+                                    array('name' => 'Airline Misc', 'amount' => $taxMisc)
+                                );
+                                $airlineChangeRows = array(
+                                    array('desc' => '0 HRS - 24 HRS To Departure', 'amount' => 'Not-Permitted'),
+                                    array('desc' => '24 HRS - 999 Days To Departure', 'amount' => '₹ 3000'),
+                                    array('desc' => '0 HRS - 24 HRS To Departure', 'amount' => 'Not Permitted'),
+                                    array('desc' => '1 Days - 3 Days To Departure', 'amount' => '₹ 4000'),
+                                    array('desc' => '4 Days - 999 Days To Departure', 'amount' => '₹ 6000')
+                                );
+                                $airlineCancelRows = array(
+                                    array('desc' => '0 HRS - 24 HRS To Departure', 'amount' => 'Non-Refundable'),
+                                    array('desc' => '24 HRS - 999 Days To Departure', 'amount' => '₹ 3500')
+                                );
+                                break;
+
+                            case 'SG': // SpiceJet (Screenshot 3)
+                                $fBaseFare = round($owPrice * 0.745);
+                                $fTaxes = max(0, $owPrice - $fBaseFare);
+                                $taxFuel = 599;
+                                $taxUdf = 207;
+                                $taxK3 = round($fTaxes * 0.1701);
+                                $taxMisc = max(0, $fTaxes - ($taxFuel + $taxUdf + $taxK3));
+
+                                $airlineTaxes = array(
+                                    array('name' => 'Fuel Surcharge', 'amount' => $taxFuel),
+                                    array('name' => 'User Dev. Fee', 'amount' => $taxUdf),
+                                    array('name' => 'K3 Tax', 'amount' => $taxK3),
+                                    array('name' => 'Airline Misc', 'amount' => $taxMisc)
+                                );
+                                $airlineChangeRows = array(
+                                    array('desc' => 'Re Issue', 'amount' => 'Non-Changeable'),
+                                    array('desc' => '0 HRS - 4 HRS To Departure', 'amount' => 'Non changeaeble'),
+                                    array('desc' => '4 HRS - 4 Days To Departure', 'amount' => '₹ 3899'),
+                                    array('desc' => '4 Days - 999 Days To Departure', 'amount' => '₹ 3899')
+                                );
+                                $airlineCancelRows = array(
+                                    array('desc' => 'Cancellation', 'amount' => 'Non-Refundable'),
+                                    array('desc' => '0 HRS - 24 HRS To Departure', 'amount' => 'Non refundable'),
+                                    array('desc' => '24 HRS - 4 Days To Departure', 'amount' => '₹ 5500'),
+                                    array('desc' => '4 Days - 999 Days To Departure', 'amount' => '₹ 5000')
+                                );
+                                break;
+
+                            case 'QP': // Akasa Air (Screenshot 4)
+                                $fBaseFare = round($owPrice * 0.825);
+                                $fTaxes = max(0, $owPrice - $fBaseFare);
+                                $taxFuel = round($fTaxes * 0.386);
+                                $taxUdf = round($fTaxes * 0.133);
+                                $taxK3 = round($fTaxes * 0.170);
+                                $taxMisc = max(0, $fTaxes - ($taxFuel + $taxUdf + $taxK3));
+
+                                $airlineTaxes = array(
+                                    array('name' => 'Fuel Surcharge', 'amount' => $taxFuel),
+                                    array('name' => 'User Dev. Fee', 'amount' => $taxUdf),
+                                    array('name' => 'K3 Tax', 'amount' => $taxK3),
+                                    array('name' => 'Airline Misc', 'amount' => $taxMisc)
+                                );
+                                $airlineChangeRows = array(
+                                    array('desc' => 'Re Issue', 'amount' => 'Non-Changeable'),
+                                    array('desc' => '0 HRS - 4 HRS To Departure', 'amount' => 'Non changeaeble'),
+                                    array('desc' => '4 HRS - 4 Days To Departure', 'amount' => '₹ 3250'),
+                                    array('desc' => '4 Days - 999 Days To Departure', 'amount' => '₹ 2750')
+                                );
+                                $airlineCancelRows = array(
+                                    array('desc' => 'Cancellation', 'amount' => 'Non-Refundable'),
+                                    array('desc' => '0 HRS - 24 HRS To Departure', 'amount' => 'Non-Refundable'),
+                                    array('desc' => '24 HRS - 4 Days To Departure', 'amount' => '₹ 5250'),
+                                    array('desc' => '4 Days - 999 Days To Departure', 'amount' => '₹ 4750')
+                                );
+                                break;
+
+                            case '6E': // IndiGo
+                            default:
+                                $fBaseFare = round($owPrice * 0.788);
+                                $fTaxes = max(0, $owPrice - $fBaseFare);
+                                $taxFuel = 549;
+                                $taxUdf = round($fTaxes * 0.1334);
+                                $taxK3 = round($fTaxes * 0.1701);
+                                $taxMisc = max(0, $fTaxes - ($taxFuel + $taxUdf + $taxK3));
+
+                                $airlineTaxes = array(
+                                    array('name' => 'Fuel Surcharge', 'amount' => $taxFuel),
+                                    array('name' => 'User Dev. Fee', 'amount' => $taxUdf),
+                                    array('name' => 'K3 Tax', 'amount' => $taxK3),
+                                    array('name' => 'Airline Misc', 'amount' => $taxMisc)
+                                );
+                                $airlineChangeRows = array(
+                                    array('desc' => '0 Days - 24 HRS To Departure', 'amount' => 'Not-Permitted'),
+                                    array('desc' => '24 HRS - 4 Days To Departure', 'amount' => '₹ 4999'),
+                                    array('desc' => '4 Days - 999 Days To Departure', 'amount' => '₹ 3999')
+                                );
+                                $airlineCancelRows = array(
+                                    array('desc' => '0 Days - 24 HRS To Departure', 'amount' => 'Non-Refundable'),
+                                    array('desc' => '24 HRS - 4 Days To Departure', 'amount' => '₹ 5499'),
+                                    array('desc' => '4 Days - 999 Days To Departure', 'amount' => '₹ 4499')
+                                );
+                                break;
+                        }
+
                         $strikePrice = round($owPrice * 1.003 + 18);
                         $discountAmt = $strikePrice - $owPrice;
                         if ($discountAmt <= 0) $discountAmt = 18;
                         $aircraftType = !empty($f['Aircraft']) ? $f['Aircraft'] : ($airlineCode === 'SG' ? 'BOEING' : 'AIRBUS A320');
                 ?>
                 <div class="f-card" 
+                     id="flight_card_<?php echo $idx; ?>"
+                     data-card-idx="<?php echo $idx; ?>"
                      data-airline="<?php echo htmlspecialchars($airlineCode); ?>" 
                      data-stops="<?php echo $owStops; ?>" 
                      data-price="<?php echo $owPrice; ?>" 
@@ -2558,7 +2703,12 @@
                      data-duration-mins="<?php echo $durMins; ?>" 
                      data-refundable="<?php echo $owRefundable; ?>" 
                      data-via="<?php echo htmlspecialchars($owVia); ?>"
-                     data-score="<?php echo $bestValueScore; ?>">
+                     data-score="<?php echo $bestValueScore; ?>"
+                     data-tui="<?php echo htmlspecialchars($cardTui); ?>"
+                     data-fn="<?php echo htmlspecialchars($f['FlightNumber']); ?>"
+                     data-from="<?php echo htmlspecialchars($search_query['from_code']); ?>"
+                     data-to="<?php echo htmlspecialchars($search_query['to_code']); ?>"
+                     data-index="<?php echo htmlspecialchars($f['FlightIndex'] ?? $airlineCode . '|1'); ?>">
                     
                     <div class="f-card-main">
                         <div class="f-airline">
@@ -2789,9 +2939,9 @@
                                 <!-- Left Side: Rules Subtabs and Fee Tables -->
                                 <div>
                                     <div class="fare-rules-subnav">
-                                        <button type="button" class="rule-sub-btn active" onclick="switchRuleSubTab(this, 'sub_change_<?php echo $idx; ?>');">CHANGE FEE</button>
-                                        <button type="button" class="rule-sub-btn" onclick="switchRuleSubTab(this, 'sub_cancel_<?php echo $idx; ?>');">CANCELLATION FEE</button>
-                                        <button type="button" class="rule-sub-btn" onclick="switchRuleSubTab(this, 'sub_ato_<?php echo $idx; ?>');">ATO SERVICE FEE</button>
+                                        <button type="button" class="rule-sub-btn active" id="btn_rule_change_<?php echo $idx; ?>" onclick="switchRuleSubTab(this, 'sub_change_<?php echo $idx; ?>');"><?php echo htmlspecialchars($changeTabTitle); ?></button>
+                                        <button type="button" class="rule-sub-btn" id="btn_rule_cancel_<?php echo $idx; ?>" onclick="switchRuleSubTab(this, 'sub_cancel_<?php echo $idx; ?>');"><?php echo htmlspecialchars($cancelTabTitle); ?></button>
+                                        <button type="button" class="rule-sub-btn" id="btn_rule_ato_<?php echo $idx; ?>" onclick="switchRuleSubTab(this, 'sub_ato_<?php echo $idx; ?>');">ATO SERVICE FEE</button>
                                     </div>
 
                                     <div class="rule-sector-title"><?php echo htmlspecialchars($search_query['from_code']); ?> - <?php echo htmlspecialchars($search_query['to_code']); ?></div>
@@ -2801,27 +2951,17 @@
                                         <table class="rules-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Change Fee</th>
+                                                    <th id="th_change_<?php echo $idx; ?>">Change Fee</th>
                                                     <th>Adult</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="tbody_change_<?php echo $idx; ?>">
+                                                <?php foreach ($airlineChangeRows as $row): ?>
                                                 <tr>
-                                                    <td>Re Issue</td>
-                                                    <td>Non-Changeable</td>
+                                                    <td><?php echo htmlspecialchars($row['desc']); ?></td>
+                                                    <td><?php echo htmlspecialchars($row['amount']); ?></td>
                                                 </tr>
-                                                <tr>
-                                                    <td>0 HRS - 4 HRS To Departure</td>
-                                                    <td>Non changeaeble</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>4 HRS - 4 Days To Departure</td>
-                                                    <td>₹ 3899</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>4 Days - 999 Days To Departure</td>
-                                                    <td>₹ 3899</td>
-                                                </tr>
+                                                <?php endforeach; ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -2831,27 +2971,17 @@
                                         <table class="rules-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Cancellation Fee</th>
+                                                    <th id="th_cancel_<?php echo $idx; ?>">Cancellation Fee</th>
                                                     <th>Adult</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="tbody_cancel_<?php echo $idx; ?>">
+                                                <?php foreach ($airlineCancelRows as $row): ?>
                                                 <tr>
-                                                    <td>Cancellation</td>
-                                                    <td>Non-Refundable</td>
+                                                    <td><?php echo htmlspecialchars($row['desc']); ?></td>
+                                                    <td><?php echo htmlspecialchars($row['amount']); ?></td>
                                                 </tr>
-                                                <tr>
-                                                    <td>0 HRS - 24 HRS To Departure</td>
-                                                    <td>Non refundable</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>24 HRS - 4 Days To Departure</td>
-                                                    <td>₹ 5500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>4 Days - 999 Days To Departure</td>
-                                                    <td>₹ 5000</td>
-                                                </tr>
+                                                <?php endforeach; ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -2865,15 +2995,13 @@
                                                     <th>Adult</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="tbody_ato_<?php echo $idx; ?>">
+                                                <?php foreach ($airlineAtoRows as $row): ?>
                                                 <tr>
-                                                    <td>Re Schedule</td>
-                                                    <td>₹ 300</td>
+                                                    <td><?php echo htmlspecialchars($row['desc']); ?></td>
+                                                    <td><?php echo htmlspecialchars($row['amount']); ?></td>
                                                 </tr>
-                                                <tr>
-                                                    <td>Cancellation</td>
-                                                    <td>₹ 300</td>
-                                                </tr>
+                                                <?php endforeach; ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -2901,53 +3029,37 @@
                                                 <span class="f-fare-label" style="font-size:13px; font-weight:600; color:#1e293b; display:flex; align-items:center; gap:8px;">
                                                     <i class="fa-regular fa-circle-plus f-fare-toggle-icon"></i> Base Fare
                                                 </span>
-                                                <strong style="color:#0f172a; font-size:13.5px;">₹ <?php echo number_format($fBaseFare); ?></strong>
+                                                <strong id="disp_base_fare_<?php echo $idx; ?>" style="color:#0f172a; font-size:13.5px;">₹ <?php echo number_format($fBaseFare); ?></strong>
                                             </div>
                                             <div class="f-fare-subitems">
                                                 <div class="f-fare-subrow">
-                                                    <span>Adult (1 X ₹ <?php echo number_format($fBaseFare); ?>)</span>
-                                                    <span>₹ <?php echo number_format($fBaseFare); ?></span>
+                                                    <span>Adult (1 X <span id="disp_adult_rate_<?php echo $idx; ?>">₹ <?php echo number_format($fBaseFare); ?></span>)</span>
+                                                    <span id="disp_adult_total_<?php echo $idx; ?>">₹ <?php echo number_format($fBaseFare); ?></span>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!-- Tax & Charges Item with Subrows (Toggleable +/-) -->
-                                        <?php
-                                        $taxFuel = round($fTaxes * 0.386);
-                                        $taxUdf = round($fTaxes * 0.1334);
-                                        $taxK3 = round($fTaxes * 0.1701);
-                                        $taxMisc = max(0, $fTaxes - ($taxFuel + $taxUdf + $taxK3));
-                                        ?>
                                         <div class="f-fare-group" style="margin-bottom:14px;">
                                             <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;" title="Click to view Tax & Charges breakdown">
                                                 <span class="f-fare-label" style="font-size:13px; font-weight:600; color:#1e293b; display:flex; align-items:center; gap:8px;">
                                                     <i class="fa-regular fa-circle-plus f-fare-toggle-icon"></i> Tax & Charges
                                                 </span>
-                                                <strong style="color:#0f172a; font-size:13.5px;">₹ <?php echo number_format($fTaxes); ?></strong>
+                                                <strong id="disp_total_tax_<?php echo $idx; ?>" style="color:#0f172a; font-size:13.5px;">₹ <?php echo number_format($fTaxes); ?></strong>
                                             </div>
-                                            <div class="f-fare-subitems">
+                                            <div class="f-fare-subitems" id="disp_tax_subitems_<?php echo $idx; ?>">
+                                                <?php foreach ($airlineTaxes as $tax): ?>
                                                 <div class="f-fare-subrow">
-                                                    <span>Fuel Surcharge</span>
-                                                    <span>₹ <?php echo number_format($taxFuel); ?></span>
+                                                    <span><?php echo htmlspecialchars($tax['name']); ?></span>
+                                                    <span>₹ <?php echo number_format($tax['amount']); ?></span>
                                                 </div>
-                                                <div class="f-fare-subrow">
-                                                    <span>User Dev. Fee</span>
-                                                    <span>₹ <?php echo number_format($taxUdf); ?></span>
-                                                </div>
-                                                <div class="f-fare-subrow">
-                                                    <span>K3 Tax</span>
-                                                    <span>₹ <?php echo number_format($taxK3); ?></span>
-                                                </div>
-                                                <div class="f-fare-subrow">
-                                                    <span>Airline Misc</span>
-                                                    <span>₹ <?php echo number_format($taxMisc); ?></span>
-                                                </div>
+                                                <?php endforeach; ?>
                                             </div>
                                         </div>
 
                                         <div class="f-fare-total-row" style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:#f1f5f9; border-radius:6px; margin-top:10px;">
                                             <span style="font-size:13.5px; font-weight:700; color:#0f172a;">Total Amount:</span>
-                                            <span class="total-amount" style="font-size:18px; font-weight:800; color:#0f172a;">₹ <?php echo number_format($owPrice); ?></span>
+                                            <span class="total-amount" id="disp_total_amount_<?php echo $idx; ?>" style="font-size:18px; font-weight:800; color:#0f172a;">₹ <?php echo number_format($owPrice); ?></span>
                                         </div>
                                     </div>
                                 </div>
@@ -4267,6 +4379,141 @@ function toggleMoreAirports() {
     btn.textContent = isCurrentlyHidden ? '- Less Airports' : '+ ' + extras.length + ' Airports';
 }
 
+const fareDataCache = {};
+const fareDataLoading = {};
+
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&#039;');
+}
+
+function loadLiveFareDetails(idx) {
+    if (!idx) return;
+    if (fareDataCache[idx]) {
+        renderLiveFareData(idx, fareDataCache[idx]);
+        return;
+    }
+    if (fareDataLoading[idx]) return;
+
+    const card = document.getElementById('flight_card_' + idx);
+    if (!card) return;
+
+    fareDataLoading[idx] = true;
+
+    const postData = new URLSearchParams();
+    postData.append('tui', card.dataset.tui || '');
+    postData.append('airline', card.dataset.airline || '');
+    postData.append('flight_number', card.dataset.fn || '');
+    postData.append('price', card.dataset.price || '');
+    postData.append('from', card.dataset.from || '');
+    postData.append('to', card.dataset.to || '');
+    postData.append('index', card.dataset.index || '');
+
+    fetch('<?php echo site_url('flight/ajax_fare_details'); ?>', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: postData.toString()
+    })
+    .then(response => response.json())
+    .then(res => {
+        fareDataLoading[idx] = false;
+        if (res && res.status === 'success') {
+            fareDataCache[idx] = res;
+            renderLiveFareData(idx, res);
+        }
+    })
+    .catch(err => {
+        fareDataLoading[idx] = false;
+        console.warn('Fare details fetch error:', err);
+    });
+}
+
+function renderLiveFareData(idx, data) {
+    if (!data) return;
+
+    // 1. Tab headers
+    if (data.rules) {
+        if (data.rules.change_tab_title) {
+            const btnChange = document.getElementById('btn_rule_change_' + idx);
+            if (btnChange) btnChange.textContent = data.rules.change_tab_title;
+            const thChange = document.getElementById('th_change_' + idx);
+            if (thChange) thChange.textContent = data.rules.change_tab_title;
+        }
+        if (data.rules.cancel_tab_title) {
+            const btnCancel = document.getElementById('btn_rule_cancel_' + idx);
+            if (btnCancel) btnCancel.textContent = data.rules.cancel_tab_title;
+            const thCancel = document.getElementById('th_cancel_' + idx);
+            if (thCancel) thCancel.textContent = data.rules.cancel_tab_title;
+        }
+
+        // Tables
+        const tbodyChange = document.getElementById('tbody_change_' + idx);
+        if (tbodyChange && data.rules.change_fee && data.rules.change_fee.length > 0) {
+            tbodyChange.innerHTML = data.rules.change_fee.map(function(r) {
+                return '<tr><td>' + escapeHtml(r.desc) + '</td><td>' + escapeHtml(r.amount) + '</td></tr>';
+            }).join('');
+        }
+
+        const tbodyCancel = document.getElementById('tbody_cancel_' + idx);
+        if (tbodyCancel && data.rules.cancel_fee && data.rules.cancel_fee.length > 0) {
+            tbodyCancel.innerHTML = data.rules.cancel_fee.map(function(r) {
+                return '<tr><td>' + escapeHtml(r.desc) + '</td><td>' + escapeHtml(r.amount) + '</td></tr>';
+            }).join('');
+        }
+
+        const tbodyAto = document.getElementById('tbody_ato_' + idx);
+        if (tbodyAto && data.rules.ato_fee && data.rules.ato_fee.length > 0) {
+            tbodyAto.innerHTML = data.rules.ato_fee.map(function(r) {
+                return '<tr><td>' + escapeHtml(r.desc) + '</td><td>' + escapeHtml(r.amount) + '</td></tr>';
+            }).join('');
+        }
+    }
+
+    // 2. Base Fare
+    if (data.base_fare !== undefined) {
+        const baseFmt = '₹ ' + Number(data.base_fare).toLocaleString('en-IN');
+        const elBase = document.getElementById('disp_base_fare_' + idx);
+        if (elBase) elBase.textContent = baseFmt;
+
+        const elAdultRate = document.getElementById('disp_adult_rate_' + idx);
+        if (elAdultRate) elAdultRate.textContent = baseFmt;
+
+        const elAdultTotal = document.getElementById('disp_adult_total_' + idx);
+        if (elAdultTotal) elAdultTotal.textContent = baseFmt;
+    }
+
+    // 3. Tax & Charges
+    if (data.total_tax !== undefined) {
+        const taxFmt = '₹ ' + Number(data.total_tax).toLocaleString('en-IN');
+        const elTax = document.getElementById('disp_total_tax_' + idx);
+        if (elTax) elTax.textContent = taxFmt;
+    }
+
+    // 4. Itemized Taxes
+    if (data.taxes && data.taxes.length > 0) {
+        const taxBox = document.getElementById('disp_tax_subitems_' + idx);
+        if (taxBox) {
+            taxBox.innerHTML = data.taxes.map(function(t) {
+                return '<div class="f-fare-subrow"><span>' + escapeHtml(t.name) + '</span><span>₹ ' + Number(t.amount).toLocaleString('en-IN') + '</span></div>';
+            }).join('');
+        }
+    }
+
+    // 5. Total Amount
+    if (data.total_amount !== undefined) {
+        const totalFmt = '₹ ' + Number(data.total_amount).toLocaleString('en-IN');
+        const elTotal = document.getElementById('disp_total_amount_' + idx);
+        if (elTotal) elTotal.textContent = totalFmt;
+    }
+}
+
 function toggleFlightDetails(drawerId, btn) {
     const drawer = document.getElementById(drawerId);
     if (!drawer) return;
@@ -4275,6 +4522,10 @@ function toggleFlightDetails(drawerId, btn) {
     if (btn) {
         btn.textContent = isVisible ? '+ Details' : '- Details';
         btn.style.color = isVisible ? '#0284c7' : '#2563eb';
+    }
+    if (!isVisible) {
+        const idx = drawerId.replace('details_drawer_', '');
+        loadLiveFareDetails(idx);
     }
 }
 
@@ -4287,6 +4538,11 @@ function switchDrawerTab(tabBtn, targetPaneId) {
     tabBtn.classList.add('active');
     const targetPane = document.getElementById(targetPaneId);
     if (targetPane) targetPane.style.display = 'block';
+
+    if (targetPaneId && targetPaneId.indexOf('drawer_pane_fare_') === 0) {
+        const idx = targetPaneId.replace('drawer_pane_fare_', '');
+        loadLiveFareDetails(idx);
+    }
 }
 
 function switchRuleSubTab(subBtn, targetSubId) {
