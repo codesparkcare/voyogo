@@ -1483,6 +1483,37 @@
         font-size: 12px;
         margin-right: 4px;
     }
+    .f-fare-parent {
+        cursor: pointer;
+        user-select: none;
+        padding: 2px 0;
+        transition: color 0.15s ease;
+    }
+    .f-fare-parent:hover .f-fare-label {
+        color: #0f172a;
+    }
+    .f-fare-parent:hover .f-fare-toggle-icon {
+        color: #0284c7;
+    }
+    .f-fare-toggle-icon {
+        color: #475569;
+        font-size: 14px;
+        margin-right: 6px;
+        transition: transform 0.15s ease, color 0.15s ease;
+    }
+    .f-fare-subitems {
+        display: none;
+        padding-left: 22px;
+        flex-direction: column;
+        gap: 5px;
+        margin-top: 6px;
+    }
+    .f-fare-subrow {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #64748b;
+    }
     .f-fare-total-row {
         display: flex;
         justify-content: space-between;
@@ -2778,23 +2809,23 @@
                                             <span style="font-size:12.5px; color:#0284c7; font-weight:600;">1 Traveller</span>
                                         </div>
 
-                                        <!-- Base Fare Item with Subrow -->
+                                        <!-- Base Fare Item with Subrow (Toggleable +/-) -->
                                         <div class="f-fare-group" style="margin-bottom:12px;">
-                                            <div class="f-fare-row f-fare-parent" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                                                <span style="font-size:13px; font-weight:600; color:#1e293b; display:flex; align-items:center; gap:6px;">
-                                                    <i class="fa-regular fa-circle-minus" style="color:#64748b; font-size:13px;"></i> Base Fare
+                                            <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;" title="Click to view Base Fare breakdown">
+                                                <span class="f-fare-label" style="font-size:13px; font-weight:600; color:#1e293b; display:flex; align-items:center; gap:8px;">
+                                                    <i class="fa-regular fa-circle-plus f-fare-toggle-icon"></i> Base Fare
                                                 </span>
                                                 <strong style="color:#0f172a; font-size:13.5px;">₹ <?php echo number_format($fBaseFare); ?></strong>
                                             </div>
-                                            <div class="f-fare-subitems" style="padding-left:22px; display:flex; flex-direction:column; gap:4px;">
-                                                <div class="f-fare-subrow" style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+                                            <div class="f-fare-subitems">
+                                                <div class="f-fare-subrow">
                                                     <span>Adult (1 X ₹ <?php echo number_format($fBaseFare); ?>)</span>
                                                     <span>₹ <?php echo number_format($fBaseFare); ?></span>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <!-- Tax & Charges Item with Subrows -->
+                                        <!-- Tax & Charges Item with Subrows (Toggleable +/-) -->
                                         <?php
                                         $taxFuel = round($fTaxes * 0.386);
                                         $taxUdf = round($fTaxes * 0.1334);
@@ -2802,26 +2833,26 @@
                                         $taxMisc = max(0, $fTaxes - ($taxFuel + $taxUdf + $taxK3));
                                         ?>
                                         <div class="f-fare-group" style="margin-bottom:14px;">
-                                            <div class="f-fare-row f-fare-parent" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                                                <span style="font-size:13px; font-weight:600; color:#1e293b; display:flex; align-items:center; gap:6px;">
-                                                    <i class="fa-regular fa-circle-minus" style="color:#64748b; font-size:13px;"></i> Tax & Charges
+                                            <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;" title="Click to view Tax & Charges breakdown">
+                                                <span class="f-fare-label" style="font-size:13px; font-weight:600; color:#1e293b; display:flex; align-items:center; gap:8px;">
+                                                    <i class="fa-regular fa-circle-plus f-fare-toggle-icon"></i> Tax & Charges
                                                 </span>
                                                 <strong style="color:#0f172a; font-size:13.5px;">₹ <?php echo number_format($fTaxes); ?></strong>
                                             </div>
-                                            <div class="f-fare-subitems" style="padding-left:22px; display:flex; flex-direction:column; gap:5px;">
-                                                <div class="f-fare-subrow" style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+                                            <div class="f-fare-subitems">
+                                                <div class="f-fare-subrow">
                                                     <span>Fuel Surcharge</span>
                                                     <span>₹ <?php echo number_format($taxFuel); ?></span>
                                                 </div>
-                                                <div class="f-fare-subrow" style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+                                                <div class="f-fare-subrow">
                                                     <span>User Dev. Fee</span>
                                                     <span>₹ <?php echo number_format($taxUdf); ?></span>
                                                 </div>
-                                                <div class="f-fare-subrow" style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+                                                <div class="f-fare-subrow">
                                                     <span>K3 Tax</span>
                                                     <span>₹ <?php echo number_format($taxK3); ?></span>
                                                 </div>
-                                                <div class="f-fare-subrow" style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+                                                <div class="f-fare-subrow">
                                                     <span>Airline Misc</span>
                                                     <span>₹ <?php echo number_format($taxMisc); ?></span>
                                                 </div>
@@ -4181,6 +4212,25 @@ function switchRuleSubTab(subBtn, targetSubId) {
     subBtn.classList.add('active');
     const targetSub = document.getElementById(targetSubId);
     if (targetSub) targetSub.style.display = 'block';
+}
+
+function toggleFareBreakdown(triggerEl) {
+    const group = triggerEl.closest('.f-fare-group');
+    if (!group) return;
+    const subitems = group.querySelector('.f-fare-subitems');
+    const icon = group.querySelector('.f-fare-toggle-icon');
+    if (!subitems || !icon) return;
+
+    const isHidden = (subitems.style.display === 'none' || window.getComputedStyle(subitems).display === 'none');
+    if (isHidden) {
+        subitems.style.display = 'flex';
+        icon.classList.remove('fa-circle-plus');
+        icon.classList.add('fa-circle-minus');
+    } else {
+        subitems.style.display = 'none';
+        icon.classList.remove('fa-circle-minus');
+        icon.classList.add('fa-circle-plus');
+    }
 }
 
 function updatePriceSlider(val) {
