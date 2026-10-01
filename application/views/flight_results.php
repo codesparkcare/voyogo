@@ -2203,18 +2203,20 @@
                 </div>
             </div>
 
-            <!-- Airlines -->
+            <!-- Airlines (Checkbox on Right, Unselected by Default) -->
             <div class="filter-section">
                 <h4 class="filter-title">Airlines</h4>
                 <div id="airlineFilterList">
                     <?php foreach ($airlineData as $aCode => $aInfo): ?>
-                    <label class="airline-filter-row">
-                        <span class="airline-filter-info">
-                            <input type="checkbox" class="airline-checkbox" value="<?php echo htmlspecialchars($aCode); ?>" checked onchange="applyFilters();" style="width:17px; height:17px; accent-color:#0d3470; cursor:pointer;">
+                    <label class="airline-filter-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:11px; cursor:pointer;">
+                        <span class="airline-filter-info" style="display:flex; align-items:center; gap:10px;">
                             <img src="<?php echo htmlspecialchars($aInfo['logo']); ?>" alt="" class="airline-filter-logo" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($aInfo['name']); ?>&background=0d3470&color=fff';">
                             <span style="color:#000000; font-weight:700;"><?php echo htmlspecialchars($aInfo['name']); ?> (<?php echo $aInfo['count']; ?>)</span>
                         </span>
-                        <span class="airline-filter-price" style="color:#000000; font-weight:800;">₹ <?php echo number_format($aInfo['min']); ?></span>
+                        <span style="display:flex; align-items:center; gap:10px;">
+                            <span class="airline-filter-price" style="color:#000000; font-weight:800;">₹ <?php echo number_format($aInfo['min']); ?></span>
+                            <input type="checkbox" class="airline-checkbox" value="<?php echo htmlspecialchars($aCode); ?>" onchange="applyFilters();" style="width:17px; height:17px; accent-color:#0d3470; cursor:pointer;">
+                        </span>
                     </label>
                     <?php endforeach; ?>
                 </div>
@@ -2707,7 +2709,7 @@
                                         </table>
                                     </div>
 
-                                    <!-- Subpane: Cancellation Fee -->
+                                    <!-- Subpane: Cancellation Fee (Screenshot 1) -->
                                     <div class="rule-subpane" id="sub_cancel_<?php echo $idx; ?>" style="display:none;">
                                         <table class="rules-table">
                                             <thead>
@@ -2718,34 +2720,42 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>0 HRS - 4 HRS To Departure</td>
+                                                    <td>Cancellation</td>
+                                                    <td>Non-Refundable</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>0 HRS - 24 HRS To Departure</td>
                                                     <td>Non refundable</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>4 HRS - 4 Days To Departure</td>
-                                                    <td>₹ 3999</td>
+                                                    <td>24 HRS - 4 Days To Departure</td>
+                                                    <td>₹ 5500</td>
                                                 </tr>
                                                 <tr>
                                                     <td>4 Days - 999 Days To Departure</td>
-                                                    <td>₹ 3499</td>
+                                                    <td>₹ 5000</td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
 
-                                    <!-- Subpane: ATO Service Fee -->
+                                    <!-- Subpane: ATO Service Fee (Screenshot 2) -->
                                     <div class="rule-subpane" id="sub_ato_<?php echo $idx; ?>" style="display:none;">
                                         <table class="rules-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Service</th>
-                                                    <th>Fee</th>
+                                                    <th>ATO Service Fee</th>
+                                                    <th>Adult</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>Airline Airport Ticket Counter (ATO) Service</td>
-                                                    <td>₹ 500 per passenger</td>
+                                                    <td>Re Schedule</td>
+                                                    <td>₹ 300</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Cancellation</td>
+                                                    <td>₹ 300</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -2760,24 +2770,67 @@
                                     </ul>
                                 </div>
 
-                                <!-- Right Side: Fare Details Breakdown Card -->
+                                <!-- Right Side: Fare Details Breakdown Card (Screenshots 1 & 2) -->
                                 <div>
                                     <div class="f-fare-details-box">
                                         <div class="f-fare-details-header">
-                                            <strong>Fare Details</strong>
-                                            <span>1 Traveller</span>
+                                            <strong style="font-size:14px; color:#0f172a;">Fare Details</strong>
+                                            <span style="font-size:12.5px; color:#0284c7; font-weight:600;">1 Traveller</span>
                                         </div>
-                                        <div class="f-fare-row">
-                                            <span><i class="fa-solid fa-circle-plus"></i> Base Fare</span>
-                                            <strong style="color:#0f172a;">₹ <?php echo number_format($fBaseFare); ?></strong>
+
+                                        <!-- Base Fare Item with Subrow -->
+                                        <div class="f-fare-group" style="margin-bottom:12px;">
+                                            <div class="f-fare-row f-fare-parent" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                                <span style="font-size:13px; font-weight:600; color:#1e293b; display:flex; align-items:center; gap:6px;">
+                                                    <i class="fa-regular fa-circle-minus" style="color:#64748b; font-size:13px;"></i> Base Fare
+                                                </span>
+                                                <strong style="color:#0f172a; font-size:13.5px;">₹ <?php echo number_format($fBaseFare); ?></strong>
+                                            </div>
+                                            <div class="f-fare-subitems" style="padding-left:22px; display:flex; flex-direction:column; gap:4px;">
+                                                <div class="f-fare-subrow" style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+                                                    <span>Adult (1 X ₹ <?php echo number_format($fBaseFare); ?>)</span>
+                                                    <span>₹ <?php echo number_format($fBaseFare); ?></span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="f-fare-row">
-                                            <span><i class="fa-solid fa-circle-plus"></i> Tax & Charges</span>
-                                            <strong style="color:#0f172a;">₹ <?php echo number_format($fTaxes); ?></strong>
+
+                                        <!-- Tax & Charges Item with Subrows -->
+                                        <?php
+                                        $taxFuel = round($fTaxes * 0.386);
+                                        $taxUdf = round($fTaxes * 0.1334);
+                                        $taxK3 = round($fTaxes * 0.1701);
+                                        $taxMisc = max(0, $fTaxes - ($taxFuel + $taxUdf + $taxK3));
+                                        ?>
+                                        <div class="f-fare-group" style="margin-bottom:14px;">
+                                            <div class="f-fare-row f-fare-parent" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                                <span style="font-size:13px; font-weight:600; color:#1e293b; display:flex; align-items:center; gap:6px;">
+                                                    <i class="fa-regular fa-circle-minus" style="color:#64748b; font-size:13px;"></i> Tax & Charges
+                                                </span>
+                                                <strong style="color:#0f172a; font-size:13.5px;">₹ <?php echo number_format($fTaxes); ?></strong>
+                                            </div>
+                                            <div class="f-fare-subitems" style="padding-left:22px; display:flex; flex-direction:column; gap:5px;">
+                                                <div class="f-fare-subrow" style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+                                                    <span>Fuel Surcharge</span>
+                                                    <span>₹ <?php echo number_format($taxFuel); ?></span>
+                                                </div>
+                                                <div class="f-fare-subrow" style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+                                                    <span>User Dev. Fee</span>
+                                                    <span>₹ <?php echo number_format($taxUdf); ?></span>
+                                                </div>
+                                                <div class="f-fare-subrow" style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+                                                    <span>K3 Tax</span>
+                                                    <span>₹ <?php echo number_format($taxK3); ?></span>
+                                                </div>
+                                                <div class="f-fare-subrow" style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+                                                    <span>Airline Misc</span>
+                                                    <span>₹ <?php echo number_format($taxMisc); ?></span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="f-fare-total-row">
-                                            <span>Total Amount:</span>
-                                            <span class="total-amount">₹ <?php echo number_format($owPrice); ?></span>
+
+                                        <div class="f-fare-total-row" style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:#f1f5f9; border-radius:6px; margin-top:10px;">
+                                            <span style="font-size:13.5px; font-weight:700; color:#0f172a;">Total Amount:</span>
+                                            <span class="total-amount" style="font-size:18px; font-weight:800; color:#0f172a;">₹ <?php echo number_format($owPrice); ?></span>
                                         </div>
                                     </div>
                                 </div>
@@ -4150,8 +4203,8 @@ function resetAllFilters() {
     selectedDepSlots = [];
     selectedArrSlots = [];
 
-    // 4. Reset Airlines
-    document.querySelectorAll('.airline-checkbox').forEach(cb => cb.checked = true);
+    // 4. Reset Airlines (All unchecked by default to show all results)
+    document.querySelectorAll('.airline-checkbox').forEach(cb => cb.checked = false);
 
     // 5. Reset Price Range Slider
     const slider = document.getElementById('priceRangeSlider');
@@ -4172,10 +4225,10 @@ function applyFilters() {
     const slider = document.getElementById('priceRangeSlider');
     const maxPrice = slider ? parseFloat(slider.value) : Infinity;
 
-    // Selected Airlines
+    // Selected Airlines (If none selected, show all airlines!)
     const selectedAirlines = Array.from(document.querySelectorAll('.airline-checkbox:checked')).map(cb => cb.value.toUpperCase());
     
-    // Selected Connecting Airports
+    // Selected Connecting Airports (If none selected, show all connecting flights!)
     const selectedAirports = Array.from(document.querySelectorAll('.connect-airport-cb:checked')).map(cb => cb.value.toUpperCase());
 
     let visibleCount = 0;
@@ -4213,8 +4266,8 @@ function applyFilters() {
         let matchArr = true;
         if (selectedArrSlots.length > 0 && !selectedArrSlots.includes(arrSlot)) matchArr = false;
 
-        // 5. Airline check
-        let matchAirline = selectedAirlines.includes(airline);
+        // 5. Airline check (If none selected, show ALL. If selected, show only checked airlines!)
+        let matchAirline = (selectedAirlines.length === 0) || selectedAirlines.includes(airline);
 
         // 6. Price Slider check
         let matchPrice = (price <= maxPrice);
@@ -4251,7 +4304,7 @@ function applyFilters() {
 
             let matchStops = (selectedStopFilter === 'all') || (selectedStopFilter === '0' && stops === 0) || (selectedStopFilter === '1' && stops === 1) || (selectedStopFilter === '1+' && stops >= 1) || (selectedStopFilter === '2+' && stops >= 2);
             let matchDep = (selectedDepSlots.length === 0) || selectedDepSlots.includes(depSlot);
-            let matchAirline = selectedAirlines.includes(airline);
+            let matchAirline = (selectedAirlines.length === 0) || selectedAirlines.includes(airline);
             let matchPrice = (price <= maxPrice);
 
             const isMatch = matchStops && matchDep && matchAirline && matchPrice;
@@ -4269,7 +4322,7 @@ function applyFilters() {
 
             let matchStops = (selectedStopFilter === 'all') || (selectedStopFilter === '0' && stops === 0) || (selectedStopFilter === '1' && stops === 1) || (selectedStopFilter === '1+' && stops >= 1) || (selectedStopFilter === '2+' && stops >= 2);
             let matchDep = (selectedDepSlots.length === 0) || selectedDepSlots.includes(depSlot);
-            let matchAirline = selectedAirlines.includes(airline);
+            let matchAirline = (selectedAirlines.length === 0) || selectedAirlines.includes(airline);
             let matchPrice = (price <= maxPrice);
 
             const isMatch = matchStops && matchDep && matchAirline && matchPrice;
