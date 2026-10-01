@@ -1160,10 +1160,76 @@
         text-decoration: underline;
     }
 
+    /* Fix Flight Card Grid to Prevent Overlapping of Price & Book Now */
+    .f-card-main {
+        display: grid !important;
+        grid-template-columns: 140px minmax(210px, 1fr) 60px minmax(115px, auto) 115px !important;
+        align-items: center !important;
+        gap: 16px !important;
+        padding: 18px 20px !important;
+    }
+
+    .f-seats {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #ef4444;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: center;
+    }
+    .f-seats i {
+        font-size: 16px;
+        margin-bottom: 3px;
+    }
+
+    .f-price {
+        text-align: right !important;
+        white-space: nowrap !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
+        min-width: 110px !important;
+    }
+
+    .f-action {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
+        width: 115px !important;
+        min-width: 115px !important;
+    }
+
+    .f-book-btn {
+        background: #ef4444 !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 6px !important;
+        padding: 9px 12px !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        cursor: pointer !important;
+        width: 100% !important;
+        max-width: 115px !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
+        line-height: 1.2 !important;
+        transition: background 0.15s ease !important;
+    }
+    .f-book-btn:hover {
+        background: #dc2626 !important;
+    }
+
     /* Details Toggle Button & Indicators */
     .btn-details-toggle {
         background: none;
         border: none;
+        outline: none !important;
+        box-shadow: none !important;
         color: #0284c7;
         font-size: 12.5px;
         font-weight: 700;
@@ -1175,6 +1241,10 @@
     .btn-details-toggle:hover {
         color: #0369a1;
     }
+    .btn-details-toggle:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
     .badge-refundable-r {
         display: inline-flex;
         align-items: center;
@@ -1182,6 +1252,22 @@
         font-weight: 800;
         font-size: 12px;
         color: #16a34a;
+    }
+
+    @media (max-width: 1120px) {
+        .f-card-main {
+            grid-template-columns: 130px minmax(180px, 1fr) 55px minmax(105px, auto) 110px !important;
+            gap: 12px !important;
+            padding: 16px 16px !important;
+        }
+        .f-action {
+            width: 110px !important;
+            min-width: 110px !important;
+        }
+        .f-book-btn {
+            max-width: 110px !important;
+            font-size: 13.5px !important;
+        }
     }
 
     /* Akbar Travels Style Flight Details Drawer */
