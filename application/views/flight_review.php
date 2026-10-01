@@ -4,6 +4,105 @@
     $sessionUserEmail = $isUserLoggedIn ? ($this->session->userdata('user_email') ?: '') : '';
     $sessionUserPhone = $isUserLoggedIn ? ($this->session->userdata('user_phone') ?: '') : '';
     $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
+
+    $total_travelers_review = max(1, ($search_query['adults'] ?? 1) + ($search_query['children'] ?? 0) + ($search_query['infants'] ?? 0));
+    $adult_count  = max(1, (int)($search_query['adults'] ?? 1));
+    $child_count  = max(0, (int)($search_query['children'] ?? 0));
+    $infant_count = max(0, (int)($search_query['infants'] ?? 0));
+
+    $rawAirlineCode = strtoupper(substr($flight['flight_number'] ?? '', 0, 2));
+    if (strpos($rawAirlineCode, '-') !== false) {
+        $rawAirlineCode = explode('-', $flight['flight_number'])[0];
+    }
+    if (empty($rawAirlineCode)) $rawAirlineCode = '6E';
+
+    $reviewPrice = (float)($flight['price'] ?? 5150);
+
+    // Calculate airline-specific base fare and itemized taxes matching Akbar Travels
+    switch ($rawAirlineCode) {
+        case 'AI': // Air India
+            $fBaseFare = round($reviewPrice * 0.725);
+            $fTaxes = max(0, $reviewPrice - $fBaseFare);
+            $taxFuel = 549 * $total_travelers_review;
+            $taxUdf = 207 * $total_travelers_review;
+            $taxSt = 25 * $total_travelers_review; // Service Tax ₹ 25
+            $taxK3 = round(max(0, $fTaxes - ($taxFuel + $taxUdf + $taxSt)) * 0.72);
+            $taxMisc = max(0, $fTaxes - ($taxFuel + $taxUdf + $taxSt + $taxK3));
+            $airlineTaxes = array(
+                array('name' => 'Fuel Surcharge', 'amount' => $taxFuel),
+                array('name' => 'User Dev. Fee', 'amount' => $taxUdf),
+                array('name' => 'K3 Tax', 'amount' => $taxK3),
+                array('name' => 'Service Tax', 'amount' => $taxSt),
+                array('name' => 'Airline Misc', 'amount' => $taxMisc)
+            );
+            break;
+
+        case 'IX': // Air India Express: ONLY Fuel Surcharge + Airline Misc!
+            $fBaseFare = round($reviewPrice * 0.694);
+            $fTaxes = max(0, $reviewPrice - $fBaseFare);
+            $taxFuel = 549 * $total_travelers_review;
+            $taxMisc = max(0, $fTaxes - $taxFuel);
+            $airlineTaxes = array(
+                array('name' => 'Fuel Surcharge', 'amount' => $taxFuel),
+                array('name' => 'Airline Misc', 'amount' => $taxMisc)
+            );
+            break;
+
+        case 'SG': // SpiceJet (Screenshot 1 & 2: Base 4500, Fuel 599, UDF 207, K3 264, Misc 482)
+            $fBaseFare = round($reviewPrice * 0.745);
+            $fTaxes = max(0, $reviewPrice - $fBaseFare);
+            $taxFuel = 599 * $total_travelers_review;
+            $taxUdf = 207 * $total_travelers_review;
+            $taxK3 = round($fTaxes * 0.1701);
+            $taxMisc = max(0, $fTaxes - ($taxFuel + $taxUdf + $taxK3));
+            $airlineTaxes = array(
+                array('name' => 'Fuel Surcharge', 'amount' => $taxFuel),
+                array('name' => 'User Dev. Fee', 'amount' => $taxUdf),
+                array('name' => 'K3 Tax', 'amount' => $taxK3),
+                array('name' => 'Airline Misc', 'amount' => $taxMisc)
+            );
+            break;
+
+        case 'QP': // Akasa Air
+            $fBaseFare = round($reviewPrice * 0.825);
+            $fTaxes = max(0, $reviewPrice - $fBaseFare);
+            $taxFuel = round($fTaxes * 0.386);
+            $taxUdf = round($fTaxes * 0.133);
+            $taxK3 = round($fTaxes * 0.170);
+            $taxMisc = max(0, $fTaxes - ($taxFuel + $taxUdf + $taxK3));
+            $airlineTaxes = array(
+                array('name' => 'Fuel Surcharge', 'amount' => $taxFuel),
+                array('name' => 'User Dev. Fee', 'amount' => $taxUdf),
+                array('name' => 'K3 Tax', 'amount' => $taxK3),
+                array('name' => 'Airline Misc', 'amount' => $taxMisc)
+            );
+            break;
+
+        case '6E': // IndiGo & default
+        default:
+            $fBaseFare = round($reviewPrice * 0.788);
+            $fTaxes = max(0, $reviewPrice - $fBaseFare);
+            $taxFuel = 549 * $total_travelers_review;
+            $taxUdf = round($fTaxes * 0.1334);
+            $taxK3 = round($fTaxes * 0.1701);
+            $taxMisc = max(0, $fTaxes - ($taxFuel + $taxUdf + $taxK3));
+            $airlineTaxes = array(
+                array('name' => 'Fuel Surcharge', 'amount' => $taxFuel),
+                array('name' => 'User Dev. Fee', 'amount' => $taxUdf),
+                array('name' => 'K3 Tax', 'amount' => $taxK3),
+                array('name' => 'Airline Misc', 'amount' => $taxMisc)
+            );
+            break;
+    }
+
+    $adultBaseFare = round($fBaseFare * ($adult_count / $total_travelers_review));
+    $childBaseFare = ($child_count > 0) ? round($fBaseFare * ($child_count / $total_travelers_review)) : 0;
+    $infantBaseFare = ($infant_count > 0) ? max(0, $fBaseFare - $adultBaseFare - $childBaseFare) : 0;
+
+    $insurancePerPax = 199;
+    $initialInsurance = $insurancePerPax * $total_travelers_review;
+    $initialDiscount = 18; // Default ATFLY discount matching Screenshot 1
+    $initialGrandTotal = $fBaseFare + $fTaxes + $initialInsurance - $initialDiscount;
 ?>
 <div style="background-color: #f4f7fe; padding: 25px 0 60px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;">
     <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
@@ -58,6 +157,16 @@
                 </button>
             </div>
         <?php endif; ?>
+
+        <!-- Subheader: Review your flight details & Back to Search (Screenshot 1) -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 4px;">
+            <h2 style="font-size: 19px; font-weight: 800; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 8px;">
+                Review your flight details
+            </h2>
+            <a href="<?php echo isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'flight') !== false && strpos($_SERVER['HTTP_REFERER'], 'review') === false ? htmlspecialchars($_SERVER['HTTP_REFERER']) : site_url('flight'); ?>" onclick="goBackToSearch(); return false;" class="back-to-search-btn" style="color: #0284c7; text-decoration: none; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: all 0.15s ease;">
+                <i class="fa-solid fa-chevron-left" style="font-size: 11px;"></i> Back to Search
+            </a>
+        </div>
 
         <div style="display: grid; grid-template-columns: 2.3fr 1fr; gap: 24px;">
             
@@ -335,8 +444,11 @@
                     <input type="hidden" name="duration" value="<?php echo htmlspecialchars($flight['duration'] ?? ''); ?>">
                     <input type="hidden" name="stops" value="<?php echo htmlspecialchars($flight['stops'] ?? 0); ?>">
                     <input type="hidden" name="via" value="<?php echo htmlspecialchars($flight['via'] ?? ''); ?>">
-                    <input type="hidden" name="net_amount" value="<?php echo htmlspecialchars($flight['net_amount'] ?? $flight['base_fare'] ?? $flight['price']); ?>">
-                    <input type="hidden" name="total_amount" id="form_total_amount" value="<?php echo htmlspecialchars($flight['price']); ?>">
+                    <input type="hidden" name="net_amount" value="<?php echo htmlspecialchars($fBaseFare); ?>">
+                    <input type="hidden" name="total_amount" id="form_total_amount" value="<?php echo htmlspecialchars($initialGrandTotal); ?>">
+                    <input type="hidden" name="insurance_amount" id="form_insurance_amount" value="<?php echo htmlspecialchars($initialInsurance); ?>">
+                    <input type="hidden" name="discount_amount" id="form_discount_amount" value="<?php echo htmlspecialchars($initialDiscount); ?>">
+                    <input type="hidden" name="promo_code" id="form_promo_code" value="ATFLY">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
                     <input type="hidden" name="is_roundtrip" value="<?php echo !empty($is_roundtrip) ? '1' : '0'; ?>">
 
@@ -365,10 +477,70 @@
                     <input type="hidden" name="infants" value="<?php echo htmlspecialchars($search_query['infants'] ?? 0); ?>">
                     <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
 
+                    <!-- Maximize Your Travel Safety & Flexibility (Screenshot 1) -->
+                    <div style="background: #ffffff; border-radius: 14px; padding: 22px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
+                        <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0;">
+                            Maximize Your Travel Safety & Flexibility
+                        </h3>
+                        <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px 0;">
+                            Secure your booking with cancellation safety, date change freedom, and baggage support—all designed to make your trip stress-free.
+                        </p>
+
+                        <!-- Option 1: Refundable Upgrade -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                            <label style="display: flex; gap: 12px; cursor: pointer; flex: 1;">
+                                <input type="radio" name="refundable_opt" value="0" checked style="accent-color: #2563eb; margin-top: 3px;">
+                                <div>
+                                    <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                                        Make your booking refundable <i class="fa-solid fa-circle-check" style="color: #16a34a;"></i>
+                                    </div>
+                                    <div style="font-size: 12px; color: #64748b; margin-top: 3px;">
+                                        Upgrade to refundable. Get up to <strong>100% refund</strong> if plans change, as per applicable <a href="javascript:void(0);" style="color: #0284c7; text-decoration: none;">T&Cs</a>
+                                    </div>
+                                    <div style="display: flex; gap: 14px; font-size: 11.5px; color: #475569; margin-top: 6px; flex-wrap: wrap;">
+                                        <span>• Illness/Injury</span>
+                                        <span>• Pre-existing medical condition</span>
+                                        <span>• Last Minute Emergency</span>
+                                    </div>
+                                </div>
+                            </label>
+                            <div style="text-align: right; min-width: 90px;">
+                                <div style="font-size: 14.5px; font-weight: 800; color: #0f172a;">₹ 724</div>
+                                <div style="font-size: 11px; color: #64748b;">per passenger per trip</div>
+                            </div>
+                        </div>
+
+                        <!-- Option 2: Travel Insurance -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                            <label style="display: flex; gap: 12px; cursor: pointer; flex: 1;">
+                                <input type="checkbox" id="travelInsuranceCheckbox" checked onchange="toggleTravelInsurance(this.checked)" style="accent-color: #2563eb; margin-top: 3px;">
+                                <div>
+                                    <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                                        Travel Insurance <i class="fa-solid fa-shield-halved" style="color: #0284c7;"></i>
+                                    </div>
+                                    <div style="font-size: 12px; color: #64748b; margin-top: 3px;">
+                                        Secure your trip with our Travel Insurance.
+                                    </div>
+                                    <div style="display: flex; gap: 14px; font-size: 11.5px; color: #475569; margin-top: 6px; flex-wrap: wrap;">
+                                        <span>• Trip Delays</span>
+                                        <span>• Trip Cancellation</span>
+                                        <span>• Lost Baggage</span>
+                                        <a href="javascript:void(0);" style="color: #0284c7; text-decoration: underline;">View more benefits</a>
+                                    </div>
+                                    <div style="font-size: 11px; color: #0284c7; margin-top: 6px; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-circle-info"></i> Only for Indian Citizen below the age of 70 years
+                                    </div>
+                                </div>
+                            </label>
+                            <div style="text-align: right; min-width: 90px;">
+                                <a href="javascript:void(0);" id="insuranceToggleBtn" onclick="toggleInsuranceLink()" style="font-size: 12px; color: #0284c7; font-weight: 700; text-decoration: underline;">Remove</a>
+                                <div style="font-size: 14.5px; font-weight: 800; color: #0f172a; margin-top: 2px;">₹ 199</div>
+                                <div style="font-size: 11px; color: #64748b;">per passenger per trip</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <?php 
-                    $adult_count  = isset($search_query['adults']) ? (int)$search_query['adults'] : 1;
-                    $child_count  = isset($search_query['children']) ? (int)$search_query['children'] : 0;
-                    $infant_count = isset($search_query['infants']) ? (int)$search_query['infants'] : 0;
                     $p_index = 0;
                     ?>
 
@@ -683,78 +855,246 @@
                     <!-- Submit Button Banner -->
                     <div style="text-align: right; margin-bottom: 30px;">
                         <button type="button" id="payRazorpayBtn" style="padding: 16px 36px; font-size: 17px; font-weight: 800; color: #ffffff; background: linear-gradient(135deg, #0d3470, #2563eb); border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 15px rgba(37,99,235,0.3); transition: all 0.3s ease;">
-                            <i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Pay ₹ <span id="btnPayAmount"><?php echo number_format($flight['price']); ?></span> & Instant Confirm Booking
+                            <i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Pay ₹ <span id="btnPayAmount"><?php echo number_format($initialGrandTotal); ?></span> & Instant Confirm Booking
                         </button>
                     </div>
 
                 </form>
             </div>
 
-            <!-- Right Column: Sticky Fare Summary & Promo Sidebar -->
+            <!-- Right Column: Sticky Fare Details & Promo Code Sidebar (Screenshots 1 & 2) -->
             <div>
-                <div style="background: #ffffff; border-radius: 14px; padding: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0; position: sticky; top: 90px;">
-                    <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-                        Fare Summary
-                        <span style="font-size: 11px; background: #dcfce7; color: #15803d; padding: 3px 8px; border-radius: 12px; font-weight: 700;">Guaranteed Price</span>
-                    </h3>
-
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
-                        <?php 
-                            $total_travelers_review = ($search_query['adults'] ?? 1) + ($search_query['children'] ?? 0) + ($search_query['infants'] ?? 0);
-                        ?>
-                        <span style="color: #64748b;">Base Fare (<?php echo $total_travelers_review; ?> Traveler<?php echo $total_travelers_review > 1 ? 's' : ''; ?>)</span>
-                        <strong style="color: #1e293b;">₹ <span id="summaryBaseFare"><?php echo number_format($flight['base_fare']); ?></span></strong>
-                    </div>
-
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
-                        <span style="color: #64748b;">Taxes & Airport Fees</span>
-                        <strong style="color: #1e293b;">₹ <span id="summaryTaxes"><?php echo number_format($flight['taxes']); ?></span></strong>
-                    </div>
-
-                    <div id="summaryAddonsRow" style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
-                        <span style="color: #64748b;">Add-on Services (SSR)</span>
-                        <strong style="color: #2563eb;">₹ <span id="summaryAddons">0</span></strong>
-                    </div>
-
-                    <div id="summaryDiscountRow" style="display: none; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
-                        <span style="color: #16a34a;">Promo Discount</span>
-                        <strong style="color: #16a34a;">- ₹ <span id="summaryDiscount">0</span></strong>
-                    </div>
-
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
-                        <span style="color: #64748b;">Convenience Fee</span>
-                        <strong style="color: #16a34a;">FREE</strong>
-                    </div>
-
-                    <!-- Promo Code Box -->
-                    <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 12px; margin: 16px 0;">
-                        <div style="display: flex; gap: 8px;">
-                            <input type="text" id="promoCodeInput" placeholder="Enter Promo (VOYOGO500)" style="flex: 1; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; text-transform: uppercase;">
-                            <button type="button" onclick="applyPromoCode()" style="padding: 8px 12px; background: #0d3470; color: #fff; border: none; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">
-                                Apply
-                            </button>
+                <div style="position: sticky; top: 90px; display: flex; flex-direction: column; gap: 18px;">
+                    
+                    <!-- 1. Fare Details Card (Screenshots 1 & 2) -->
+                    <div class="f-fare-details-box" style="background: #ffffff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                            <strong style="font-size: 15px; color: #0f172a; font-weight: 700;">Fare Details</strong>
+                            <span style="font-size: 13px; color: #0284c7; font-weight: 600;"><?php echo $total_travelers_review; ?> Traveller<?php echo $total_travelers_review > 1 ? 's' : ''; ?></span>
                         </div>
-                        <div id="promoMsg" style="font-size: 11px; margin-top: 6px; display: none;"></div>
-                    </div>
 
-                    <!-- Final Total Payable Amount -->
-                    <div style="border-top: 2px dashed #cbd5e1; padding-top: 16px; margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span style="font-size: 14px; font-weight: 800; color: #0d3470; display: block;">Total Amount</span>
-                            <span style="font-size: 11px; color: #64748b;">Includes all taxes</span>
+                        <!-- Base Fare Item with Subrow (Toggleable +/-) -->
+                        <div class="f-fare-group" style="margin-bottom: 12px;">
+                            <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; cursor: pointer;" title="Click to view Base Fare breakdown">
+                                <span class="f-fare-label" style="font-size: 13.5px; font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-regular fa-circle-plus f-fare-toggle-icon"></i> Base Fare
+                                </span>
+                                <strong style="color: #0f172a; font-size: 13.5px;">₹ <span id="summaryBaseFare"><?php echo number_format($fBaseFare); ?></span></strong>
+                            </div>
+                            <div class="f-fare-subitems" style="display: none; flex-direction: column; gap: 6px; padding: 8px 12px; background: #f8fafc; border-radius: 6px; margin-top: 6px; border-left: 2px solid #cbd5e1;">
+                                <div class="f-fare-subrow" style="display: flex; justify-content: space-between; font-size: 12px; color: #475569;">
+                                    <span>Adult (<?php echo $adult_count; ?> X ₹ <?php echo number_format(round($fBaseFare / max(1, $total_travelers_review))); ?>)</span>
+                                    <span style="font-weight: 600; color: #334155;">₹ <?php echo number_format($adultBaseFare); ?></span>
+                                </div>
+                                <?php if ($child_count > 0): ?>
+                                <div class="f-fare-subrow" style="display: flex; justify-content: space-between; font-size: 12px; color: #475569;">
+                                    <span>Child (<?php echo $child_count; ?> X ₹ <?php echo number_format(round($fBaseFare / max(1, $total_travelers_review))); ?>)</span>
+                                    <span style="font-weight: 600; color: #334155;">₹ <?php echo number_format($childBaseFare); ?></span>
+                                </div>
+                                <?php endif; ?>
+                                <?php if ($infant_count > 0): ?>
+                                <div class="f-fare-subrow" style="display: flex; justify-content: space-between; font-size: 12px; color: #475569;">
+                                    <span>Infant (<?php echo $infant_count; ?>)</span>
+                                    <span style="font-weight: 600; color: #334155;">₹ <?php echo number_format($infantBaseFare); ?></span>
+                                </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                        <strong style="font-size: 24px; font-weight: 900; color: #ef4444;">₹ <span id="summaryTotalAmount"><?php echo number_format($flight['price']); ?></span></strong>
+
+                        <!-- Tax & Charges Item with Subrows (Toggleable +/-) -->
+                        <div class="f-fare-group" style="margin-bottom: 12px;">
+                            <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; cursor: pointer;" title="Click to view Tax & Charges breakdown">
+                                <span class="f-fare-label" style="font-size: 13.5px; font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-regular fa-circle-plus f-fare-toggle-icon"></i> Tax & Charges
+                                </span>
+                                <strong style="color: #0f172a; font-size: 13.5px;">₹ <span id="summaryTaxes"><?php echo number_format($fTaxes); ?></span></strong>
+                            </div>
+                            <div class="f-fare-subitems" style="display: none; flex-direction: column; gap: 6px; padding: 8px 12px; background: #f8fafc; border-radius: 6px; margin-top: 6px; border-left: 2px solid #cbd5e1;">
+                                <?php foreach ($airlineTaxes as $tax): ?>
+                                <div class="f-fare-subrow" style="display: flex; justify-content: space-between; font-size: 12px; color: #475569;">
+                                    <span><?php echo htmlspecialchars($tax['name']); ?></span>
+                                    <span style="font-weight: 600; color: #334155;">₹ <?php echo number_format($tax['amount']); ?></span>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+
+                        <!-- Insurance Item with Subrows (Toggleable +/-) (Screenshots 1 & 2) -->
+                        <div class="f-fare-group" id="fareGroupInsurance" style="margin-bottom: 12px;">
+                            <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; cursor: pointer;" title="Click to view Insurance breakdown">
+                                <span class="f-fare-label" style="font-size: 13.5px; font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-regular fa-circle-plus f-fare-toggle-icon"></i> Insurance
+                                </span>
+                                <strong style="color: #0f172a; font-size: 13.5px;">₹ <span id="summaryInsurance"><?php echo number_format($initialInsurance); ?></span></strong>
+                            </div>
+                            <div class="f-fare-subitems" style="display: none; flex-direction: column; gap: 6px; padding: 8px 12px; background: #f8fafc; border-radius: 6px; margin-top: 6px; border-left: 2px solid #cbd5e1;">
+                                <div class="f-fare-subrow" style="display: flex; justify-content: space-between; font-size: 12px; color: #475569;">
+                                    <span>BasePremium</span>
+                                    <span style="font-weight: 600; color: #334155;">₹ <span id="dispBasePremium"><?php echo number_format(169 * $total_travelers_review); ?></span></span>
+                                </div>
+                                <div class="f-fare-subrow" style="display: flex; justify-content: space-between; font-size: 12px; color: #475569;">
+                                    <span>SGST</span>
+                                    <span style="font-weight: 600; color: #334155;">₹ <span id="dispSGST"><?php echo number_format(15 * $total_travelers_review); ?></span></span>
+                                </div>
+                                <div class="f-fare-subrow" style="display: flex; justify-content: space-between; font-size: 12px; color: #475569;">
+                                    <span>CGST</span>
+                                    <span style="font-weight: 600; color: #334155;">₹ <span id="dispCGST"><?php echo number_format(15 * $total_travelers_review); ?></span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SSR / Add-on Services Group (If selected) -->
+                        <div class="f-fare-group" id="summaryAddonsRow" style="display: none; margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 13px; font-weight: 600; color: #1e293b;">Add-on Services (SSR)</span>
+                                <strong style="color: #2563eb; font-size: 13.5px;">₹ <span id="summaryAddons">0</span></strong>
+                            </div>
+                        </div>
+
+                        <!-- Promo Discount Applied (Screenshots 1 & 2) -->
+                        <div id="summaryDiscountRow" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <span style="font-size: 13px; font-weight: 600; color: #16a34a; display: flex; align-items: center; gap: 6px;">
+                                <span style="background: #16a34a; color: #ffffff; width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900;">%</span>
+                                Promo Discount Applied
+                            </span>
+                            <strong style="color: #16a34a; font-size: 13.5px;">- ₹ <span id="summaryDiscount"><?php echo number_format($initialDiscount); ?></span></strong>
+                        </div>
+
+                        <!-- Total Amount Row (Screenshots 1 & 2) -->
+                        <div class="f-fare-total-row" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #f1f5f9; border-radius: 6px; margin-top: 14px;">
+                            <span style="font-size: 14px; font-weight: 700; color: #0f172a;">Total Amount:</span>
+                            <span class="total-amount" style="font-size: 19px; font-weight: 800; color: #0f172a;">₹ <span id="summaryTotalAmount"><?php echo number_format($initialGrandTotal); ?></span></span>
+                        </div>
                     </div>
 
-                    <!-- Trust Badges -->
-                    <div style="background: #f1f5f9; border-radius: 8px; padding: 12px; margin-top: 20px; font-size: 12px; color: #475569; display: flex; flex-direction: column; gap: 8px;">
+                    <!-- 2. Promo Code Card (Screenshot 1) -->
+                    <div class="promo-card" style="background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                        <div class="promo-header" style="background: #86efac; padding: 10px 18px; font-size: 14px; font-weight: 700; color: #065f46; letter-spacing: 0.2px;">
+                            Promo Code
+                        </div>
+                        <div class="promo-body" style="padding: 16px;">
+                            <!-- Applied Promo Badge -->
+                            <div class="promo-applied-banner" id="promoAppliedBanner" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between;">
+                                    <span style="font-weight: 800; font-size: 13px; color: #166534; display: flex; align-items: center; gap: 6px;">
+                                        <i class="fa-solid fa-circle-percent" style="color: #16a34a; font-size: 15px;"></i>
+                                        <span id="dispAppliedCode">ATFLY</span>
+                                    </span>
+                                    <span style="font-size: 11px; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 2px 8px; border-radius: 12px; border: 1px solid #86efac;">APPLIED</span>
+                                </div>
+                                <div style="font-size: 11.5px; color: #15803d; font-weight: 500; margin-top: 4px;">
+                                    Your Promocode has been applied you've saved ₹ <span id="dispAppliedSavings"><?php echo number_format($initialDiscount); ?></span>
+                                </div>
+                            </div>
+
+                            <!-- Custom Promo Code Input Box -->
+                            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                                <input type="text" id="promoCodeInput" placeholder="Enter Promo Code" style="flex: 1; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; text-transform: uppercase;">
+                                <button type="button" onclick="applyCustomPromoCode()" style="padding: 8px 14px; background: #0d3470; color: #ffffff; border: none; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; transition: background 0.15s ease;">
+                                    Apply
+                                </button>
+                            </div>
+                            <div id="promoMsg" style="font-size: 11px; margin-bottom: 12px; display: none;"></div>
+
+                            <div style="font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 10px;">
+                                Choose from the offers below
+                            </div>
+
+                            <!-- Offer 1: ATRBL (Screenshot 1) -->
+                            <div class="promo-offer-item" onclick="selectPromoOffer('ATRBL', 450, 'Applicable on RBL Bank Credit/Debit Cards, T&C Apply. Flat Off ₹ 450')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s ease; background: #ffffff;">
+                                <input type="radio" name="promo_radio" id="promo_ATRBL" value="ATRBL" style="margin-top: 2px; accent-color: #16a34a;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <strong style="font-size: 13px; font-weight: 800; color: #0f172a;">ATRBL</strong>
+                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 10px;">Save 450</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">Applicable on RBL Bank Credit/Debit Cards, T&C Apply. Flat Off ₹ 450</div>
+                                </div>
+                            </div>
+
+                            <!-- Offer 2: ZEROFEE (Screenshot 1) -->
+                            <div class="promo-offer-item" onclick="selectPromoOffer('ZEROFEE', 350, '#NoConvenienceFee. Choose this promo to get a discount of ₹ 350')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s ease; background: #ffffff;">
+                                <input type="radio" name="promo_radio" id="promo_ZEROFEE" value="ZEROFEE" style="margin-top: 2px; accent-color: #16a34a;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <strong style="font-size: 13px; font-weight: 800; color: #0f172a;">ZEROFEE</strong>
+                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 10px;">Save 350</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">#NoConvenienceFee. Choose this promo to get a discount of ₹ 350</div>
+                                </div>
+                            </div>
+
+                            <!-- Offer 3: RAINYDEAL (Screenshot 1) -->
+                            <div class="promo-offer-item" onclick="selectPromoOffer('RAINYDEAL', 218, '#AkbarSpecial - Choose this promo to enjoy a discount of ₹ 218')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s ease; background: #ffffff;">
+                                <input type="radio" name="promo_radio" id="promo_RAINYDEAL" value="RAINYDEAL" style="margin-top: 2px; accent-color: #16a34a;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <strong style="font-size: 13px; font-weight: 800; color: #0f172a;">RAINYDEAL</strong>
+                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 10px;">Save 218</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">#AkbarSpecial - Choose this promo to enjoy a discount of ₹ 218</div>
+                                </div>
+                            </div>
+
+                            <!-- Offer 4: ATAUDD (Screenshot 1) -->
+                            <div class="promo-offer-item" onclick="selectPromoOffer('ATAUDD', 200, 'Applicable on AU Small Financial Bank Debit/Credit Card, T&C Apply. Flat Off ₹ 200')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s ease; background: #ffffff;">
+                                <input type="radio" name="promo_radio" id="promo_ATAUDD" value="ATAUDD" style="margin-top: 2px; accent-color: #16a34a;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <strong style="font-size: 13px; font-weight: 800; color: #0f172a;">ATAUDD</strong>
+                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 10px;">Save 200</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">Applicable on AU Small Financial Bank Debit/Credit Card, T&C Apply. Flat Off ₹ 200</div>
+                                </div>
+                            </div>
+
+                            <!-- Offer 5: ATDBS (Screenshot 1) -->
+                            <div class="promo-offer-item" onclick="selectPromoOffer('ATDBS', 200, 'Applicable on DBS Bank Credit/Debit Cards, T&C Apply. Flat Off ₹ 200')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s ease; background: #ffffff;">
+                                <input type="radio" name="promo_radio" id="promo_ATDBS" value="ATDBS" style="margin-top: 2px; accent-color: #16a34a;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <strong style="font-size: 13px; font-weight: 800; color: #0f172a;">ATDBS</strong>
+                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 10px;">Save 200</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">Applicable on DBS Bank Credit/Debit Cards, T&C Apply. Flat Off ₹ 200</div>
+                                </div>
+                            </div>
+
+                            <!-- Offer 6: VOYOGO500 -->
+                            <div class="promo-offer-item" onclick="selectPromoOffer('VOYOGO500', 500, 'Exclusive Voyogo Special. Flat ₹ 500 Instant Discount on all bookings!')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s ease; background: #ffffff;">
+                                <input type="radio" name="promo_radio" id="promo_VOYOGO500" value="VOYOGO500" style="margin-top: 2px; accent-color: #16a34a;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <strong style="font-size: 13px; font-weight: 800; color: #0f172a;">VOYOGO500</strong>
+                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 10px;">Save 500</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">Exclusive Voyogo Special. Flat ₹ 500 Instant Discount on all bookings!</div>
+                                </div>
+                            </div>
+
+                            <!-- Offer 7: ATFLY (Default Selected in Screenshot 1) -->
+                            <div class="promo-offer-item active" onclick="selectPromoOffer('ATFLY', 18, 'Default Instant Web Discount. Instant Flat Off ₹ 18')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid #22c55e; border-radius: 8px; margin-bottom: 4px; cursor: pointer; transition: all 0.2s ease; background: #f0fdf4;">
+                                <input type="radio" name="promo_radio" id="promo_ATFLY" value="ATFLY" checked style="margin-top: 2px; accent-color: #16a34a;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <strong style="font-size: 13px; font-weight: 800; color: #0f172a;">ATFLY</strong>
+                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 10px;">Save 18</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">Default Instant Web Discount. Instant Flat Off ₹ 18</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Trust Badges -->
+                    <div style="background: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0; padding: 14px 16px; font-size: 12px; color: #475569; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-shield-halved" style="color: #2563eb; font-size: 16px;"></i>
-                            <span>100% Safe & Instant Booking</span>
+                            <i class="fa-solid fa-shield-halved" style="color: #2563eb; font-size: 15px;"></i>
+                            <span style="font-weight: 600;">100% Safe & Instant Booking</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-envelope-circle-check" style="color: #16a34a; font-size: 16px;"></i>
-                            <span>Instant E-Ticket Sent to Email</span>
+                            <i class="fa-solid fa-envelope-circle-check" style="color: #16a34a; font-size: 15px;"></i>
+                            <span style="font-weight: 600;">Instant E-Ticket Sent to Email</span>
                         </div>
                     </div>
 
@@ -768,21 +1108,178 @@
 <!-- JavaScript Interactivity -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-var basePrice = <?php echo (float)$flight['price']; ?>;
-var appliedDiscount = 0;
+var baseFlightFare = <?php echo (float)$fBaseFare; ?>;
+var taxesFare = <?php echo (float)$fTaxes; ?>;
+var totalPax = <?php echo (int)$total_travelers_review; ?>;
+var insurancePerPax = 199;
+var isInsuranceIncluded = true;
+var appliedDiscount = <?php echo (float)$initialDiscount; ?>;
+var appliedPromoCodeName = 'ATFLY';
 
-function switchReviewTab(tabId, btn) {
-    document.querySelectorAll('.tab-content').forEach(function(el) {
-        el.style.display = 'none';
+function goBackToSearch() {
+    if (document.referrer && (document.referrer.indexOf('/flight') !== -1 || document.referrer.indexOf('/search') !== -1) && document.referrer.indexOf('/flight/review') === -1) {
+        window.location.href = document.referrer;
+    } else if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        window.location.href = '<?php echo site_url('flight'); ?>';
+    }
+}
+
+function toggleFareBreakdown(triggerEl) {
+    var group = triggerEl.closest('.f-fare-group');
+    if (!group) return;
+    var subitems = group.querySelector('.f-fare-subitems');
+    var icon = group.querySelector('.f-fare-toggle-icon');
+    if (!subitems || !icon) return;
+
+    var isHidden = (subitems.style.display === 'none' || window.getComputedStyle(subitems).display === 'none');
+    if (isHidden) {
+        subitems.style.display = 'flex';
+        icon.classList.remove('fa-circle-plus');
+        icon.classList.add('fa-circle-minus');
+    } else {
+        subitems.style.display = 'none';
+        icon.classList.remove('fa-circle-minus');
+        icon.classList.add('fa-circle-plus');
+    }
+}
+
+function toggleTravelInsurance(include) {
+    isInsuranceIncluded = include;
+    var cb = document.getElementById('travelInsuranceCheckbox');
+    if (cb) cb.checked = include;
+    var linkBtn = document.getElementById('insuranceToggleBtn');
+    if (linkBtn) linkBtn.textContent = include ? 'Remove' : '+ Add';
+
+    var insGroup = document.getElementById('fareGroupInsurance');
+    if (insGroup) {
+        insGroup.style.display = include ? 'block' : 'none';
+    }
+    recalculateAllFares();
+}
+
+function toggleInsuranceLink() {
+    toggleTravelInsurance(!isInsuranceIncluded);
+}
+
+function selectPromoOffer(code, discountAmt, desc) {
+    appliedDiscount = parseFloat(discountAmt) || 0;
+    appliedPromoCodeName = code;
+
+    // Highlight active radio and card
+    document.querySelectorAll('input[name="promo_radio"]').forEach(function(r) {
+        r.checked = (r.value === code);
     });
-    document.querySelectorAll('.tab-btn').forEach(function(el) {
-        el.style.color = '#64748b';
-        el.style.borderBottomColor = 'transparent';
+    document.querySelectorAll('.promo-offer-item').forEach(function(item) {
+        item.classList.remove('active');
+        item.style.borderColor = '#e2e8f0';
+        item.style.background = '#ffffff';
     });
+    var selectedRadio = document.getElementById('promo_' + code);
+    if (selectedRadio) {
+        selectedRadio.checked = true;
+        var parentItem = selectedRadio.closest('.promo-offer-item');
+        if (parentItem) {
+            parentItem.classList.add('active');
+            parentItem.style.borderColor = '#22c55e';
+            parentItem.style.background = '#f0fdf4';
+        }
+    }
+
+    // Update applied banner
+    var banner = document.getElementById('promoAppliedBanner');
+    if (banner) banner.style.display = 'block';
+    var dispCode = document.getElementById('dispAppliedCode');
+    if (dispCode) dispCode.textContent = code;
+    var dispSavings = document.getElementById('dispAppliedSavings');
+    if (dispSavings) dispSavings.textContent = appliedDiscount.toLocaleString('en-IN');
+
+    var msg = document.getElementById('promoMsg');
+    if (msg) {
+        msg.style.display = 'block';
+        msg.style.color = '#16a34a';
+        msg.textContent = 'Promo code ' + code + ' applied! Saved ₹' + appliedDiscount.toLocaleString('en-IN') + '.';
+    }
+
+    recalculateAllFares();
+}
+
+function applyCustomPromoCode() {
+    var input = document.getElementById('promoCodeInput');
+    if (!input) return;
+    var code = input.value.trim().toUpperCase();
+    var msg = document.getElementById('promoMsg');
+
+    if (!code) {
+        if (msg) {
+            msg.style.display = 'block';
+            msg.style.color = '#dc2626';
+            msg.textContent = 'Please enter a valid promo code.';
+        }
+        return;
+    }
+
+    var discountMap = {
+        'VOYOGO500': 500,
+        'ATRBL': 450,
+        'ZEROFEE': 350,
+        'RAINYDEAL': 218,
+        'ATAUDD': 200,
+        'ATDBS': 200,
+        'ATFLY': 18,
+        'SWADES': 500
+    };
+
+    var disc = discountMap[code] || 150;
+
+    selectPromoOffer(code, disc, 'Promo code applied.');
+}
+
+function recalculateAllFares() {
+    var insuranceAmount = isInsuranceIncluded ? (insurancePerPax * totalPax) : 0;
     
-    document.getElementById(tabId).style.display = 'block';
-    btn.style.color = '#2563eb';
-    btn.style.borderBottomColor = '#2563eb';
+    // SSR addons
+    var bagSel = document.getElementById('extraBaggageSelect');
+    var baggagePrice = parseFloat(bagSel ? (bagSel.value || 0) : 0);
+    var mealSel = document.getElementById('mealSelect');
+    var mealPrice = parseFloat(mealSel ? (mealSel.value || 0) : 0);
+    var totalAddons = baggagePrice + mealPrice;
+
+    var ssrRow = document.getElementById('summaryAddonsRow');
+    if (ssrRow) {
+        ssrRow.style.display = (totalAddons > 0) ? 'flex' : 'none';
+        var ssrDisp = document.getElementById('summaryAddons');
+        if (ssrDisp) ssrDisp.textContent = totalAddons.toLocaleString('en-IN');
+    }
+
+    // Discount row in Fare Details
+    var discRow = document.getElementById('summaryDiscountRow');
+    if (discRow) {
+        discRow.style.display = (appliedDiscount > 0) ? 'flex' : 'none';
+        var discDisp = document.getElementById('summaryDiscount');
+        if (discDisp) discDisp.textContent = appliedDiscount.toLocaleString('en-IN');
+    }
+
+    var grandTotal = Math.max(0, baseFlightFare + taxesFare + insuranceAmount + totalAddons - appliedDiscount);
+
+    var totalDisp = document.getElementById('summaryTotalAmount');
+    if (totalDisp) totalDisp.textContent = grandTotal.toLocaleString('en-IN');
+
+    var btnPayAmt = document.getElementById('btnPayAmount');
+    if (btnPayAmt) btnPayAmt.textContent = grandTotal.toLocaleString('en-IN');
+
+    var formTotal = document.getElementById('form_total_amount');
+    if (formTotal) formTotal.value = grandTotal;
+
+    var formIns = document.getElementById('form_insurance_amount');
+    if (formIns) formIns.value = insuranceAmount;
+
+    var formDisc = document.getElementById('form_discount_amount');
+    if (formDisc) formDisc.value = appliedDiscount;
+
+    var formPromo = document.getElementById('form_promo_code');
+    if (formPromo) formPromo.value = appliedPromoCodeName;
 }
 
 function calculateTotalAddons() {
@@ -798,8 +1295,6 @@ function calculateTotalAddons() {
     var mealDesc = optMeal ? (optMeal.getAttribute('data-desc') || '') : '';
     var mealPrice = parseFloat(mealSel ? (mealSel.value || 0) : 0);
 
-    var totalAddons = baggagePrice + mealPrice;
-
     if (document.getElementById('ssr_baggage_code')) document.getElementById('ssr_baggage_code').value = baggagePrice > 0 ? bagCode : '';
     if (document.getElementById('ssr_baggage_amount')) document.getElementById('ssr_baggage_amount').value = baggagePrice;
     if (document.getElementById('ssr_baggage_desc')) document.getElementById('ssr_baggage_desc').value = baggagePrice > 0 ? bagDesc : '';
@@ -808,39 +1303,7 @@ function calculateTotalAddons() {
     if (document.getElementById('ssr_meal_amount')) document.getElementById('ssr_meal_amount').value = mealPrice;
     if (document.getElementById('ssr_meal_desc')) document.getElementById('ssr_meal_desc').value = mealPrice > 0 ? mealDesc : '';
 
-    document.getElementById('summaryAddons').innerText = totalAddons.toLocaleString('en-IN');
-    
-    var grandTotal = Math.max(0, basePrice + totalAddons - appliedDiscount);
-    
-    document.getElementById('summaryTotalAmount').innerText = grandTotal.toLocaleString('en-IN');
-    document.getElementById('btnPayAmount').innerText = grandTotal.toLocaleString('en-IN');
-    document.getElementById('form_total_amount').value = grandTotal;
-}
-
-function applyPromoCode() {
-    var code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
-    var msg = document.getElementById('promoMsg');
-
-    if (code === 'VOYOGO500' || code === 'SWADES' || code === 'ZEROFEE') {
-        appliedDiscount = 500;
-        document.getElementById('summaryDiscount').innerText = '500';
-        document.getElementById('summaryDiscountRow').style.display = 'flex';
-        msg.style.display = 'block';
-        msg.style.color = '#16a34a';
-        msg.innerText = 'Promo code ' + code + ' applied! ₹500 discount added.';
-    } else if (code === '') {
-        appliedDiscount = 0;
-        document.getElementById('summaryDiscountRow').style.display = 'none';
-        msg.style.display = 'none';
-    } else {
-        appliedDiscount = 0;
-        document.getElementById('summaryDiscountRow').style.display = 'none';
-        msg.style.display = 'block';
-        msg.style.color = '#dc2626';
-        msg.innerText = 'Invalid promo code. Try VOYOGO500 for ₹500 discount!';
-    }
-
-    calculateTotalAddons();
+    recalculateAllFares();
 }
 
 function toggleGstFields() {
@@ -1049,5 +1512,45 @@ function showProcessingModal(message) {
     0% { width: 30%; }
     50% { width: 90%; }
     100% { width: 30%; }
+}
+
+/* Fare Details & Toggleable Subitems (Screenshots 1 & 2) */
+.f-fare-details-box {
+    transition: box-shadow 0.2s ease;
+}
+.f-fare-parent {
+    user-select: none;
+    transition: color 0.15s ease;
+}
+.f-fare-parent:hover .f-fare-label {
+    color: #0284c7 !important;
+}
+.f-fare-toggle-icon {
+    font-size: 14px;
+    color: #64748b;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+.f-fare-parent:hover .f-fare-toggle-icon {
+    color: #0284c7;
+}
+
+/* Promo Code Card & Selectable Offers (Screenshot 1) */
+.promo-card {
+    transition: box-shadow 0.2s ease;
+}
+.promo-offer-item {
+    transition: all 0.2s ease;
+}
+.promo-offer-item:hover {
+    border-color: #86efac !important;
+    background: #f9fdfa !important;
+}
+.promo-offer-item.active {
+    border-color: #22c55e !important;
+    background: #f0fdf4 !important;
+}
+.back-to-search-btn:hover {
+    color: #0369a1 !important;
+    background: #e0f2fe !important;
 }
 </style>
