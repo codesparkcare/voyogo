@@ -1106,6 +1106,453 @@
         border: 1px dashed #cbd5e1;
         margin-top: 15px;
     }
+
+    /* Akbar Travels Style Stops Grid */
+    .stops-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    .stops-grid-3 .stop-box {
+        border: 1.5px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 10px 4px;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        background: #ffffff;
+        transition: all 0.15s ease;
+        user-select: none;
+    }
+    .stops-grid-3 .stop-box:hover {
+        border-color: #94a3b8;
+        background: #f8fafc;
+    }
+    .stops-grid-3 .stop-box.active {
+        border-color: #0d3470 !important;
+        background: #eff6ff !important;
+    }
+    .stops-grid-3 .stop-box.active .stop-name,
+    .stops-grid-3 .stop-box.active .stop-price {
+        color: #0d3470 !important;
+        font-weight: 800 !important;
+    }
+
+    /* Connecting Airports Section */
+    .connecting-airports-list {
+        display: flex;
+        flex-direction: column;
+    }
+    .btn-more-airports {
+        background: none;
+        border: none;
+        color: #2563eb;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 4px 0;
+        margin-top: 4px;
+        text-align: left;
+    }
+    .btn-more-airports:hover {
+        text-decoration: underline;
+    }
+
+    /* Details Toggle Button & Indicators */
+    .btn-details-toggle {
+        background: none;
+        border: none;
+        color: #0284c7;
+        font-size: 12.5px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: underline;
+        padding: 2px 0;
+        transition: color 0.15s ease;
+    }
+    .btn-details-toggle:hover {
+        color: #0369a1;
+    }
+    .badge-refundable-r {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 12px;
+        color: #16a34a;
+    }
+
+    /* Akbar Travels Style Flight Details Drawer */
+    .f-details-drawer {
+        border-top: 1.5px solid #e2e8f0;
+        background: #ffffff;
+        border-radius: 0 0 8px 8px;
+        padding: 0;
+        margin-top: 0;
+        overflow: hidden;
+        animation: drawerSlideDown 0.25s ease-out;
+    }
+    @keyframes drawerSlideDown {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .f-drawer-nav {
+        display: flex;
+        background: #f0f9ff;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 0 15px;
+        gap: 10px;
+    }
+    .f-drawer-tab {
+        padding: 12px 18px;
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #475569;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .f-drawer-tab:hover {
+        color: #0284c7;
+    }
+    .f-drawer-tab.active {
+        color: #0f172a;
+        font-weight: 700;
+        border-bottom-color: #ef4444;
+    }
+
+    .f-drawer-pane {
+        padding: 18px 20px;
+    }
+
+    /* Tab 1: Flight Information */
+    .f-info-box {
+        border: 1px solid #e0f2fe;
+        border-radius: 8px;
+        background: #f8fafc;
+        padding: 16px 20px;
+    }
+    .f-info-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+    }
+    .f-info-route {
+        font-size: 15px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+    .f-info-aircraft-badge {
+        background: #f1f5f9;
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-size: 12px;
+        color: #334155;
+        display: flex;
+        gap: 12px;
+    }
+    .f-info-aircraft-badge strong {
+        color: #0f172a;
+    }
+    .f-info-aircraft-badge .badge-sep {
+        color: #cbd5e1;
+    }
+
+    .f-leg-card {
+        display: grid;
+        grid-template-columns: 200px 1.5fr 140px 1.5fr;
+        align-items: center;
+        gap: 15px;
+        padding: 10px 0;
+    }
+    .f-leg-airline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .f-leg-airline img {
+        width: 38px;
+        height: 38px;
+        border-radius: 4px;
+    }
+    .f-leg-airline-name strong {
+        display: block;
+        font-size: 14px;
+        color: #1e293b;
+    }
+    .f-leg-airline-name span {
+        font-size: 12px;
+        color: #64748b;
+    }
+    .f-leg-point {
+        display: flex;
+        flex-direction: column;
+    }
+    .f-point-time {
+        font-size: 22px;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.1;
+    }
+    .f-point-date {
+        font-size: 12px;
+        color: #64748b;
+        margin-top: 3px;
+        font-weight: 500;
+    }
+    .f-point-city {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-top: 3px;
+    }
+    .f-point-airport {
+        font-size: 11px;
+        color: #64748b;
+        line-height: 1.3;
+        margin-top: 2px;
+    }
+    .f-point-terminal {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #334155;
+        margin-top: 3px;
+    }
+
+    .f-leg-mid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .f-leg-duration {
+        font-size: 12px;
+        color: #475569;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    .f-leg-flight-line {
+        width: 100%;
+        position: relative;
+        border-top: 1.5px dotted #0284c7;
+        margin: 6px 0;
+    }
+    .f-leg-flight-line i {
+        position: absolute;
+        right: -8px;
+        top: -8px;
+        color: #0284c7;
+        font-size: 13px;
+    }
+
+    .f-info-bottom-ribbon {
+        margin-top: 18px;
+        padding-top: 12px;
+        border-top: 1px dashed #cbd5e1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12.5px;
+        color: #2563eb;
+        font-weight: 600;
+    }
+    .f-ribbon-tag {
+        background: #0d3470;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 800;
+        padding: 2px 7px;
+        border-radius: 3px;
+        letter-spacing: 0.5px;
+    }
+
+    /* Tab 2: Fare Summary & Rules */
+    .fare-rules-layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 20px;
+    }
+    .fare-rules-subnav {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    .rule-sub-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+        font-weight: 700;
+        background: #f1f5f9;
+        color: #475569;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: all 0.15s ease;
+    }
+    .rule-sub-btn.active {
+        background: #eff6ff;
+        color: #0284c7;
+        border-color: #0284c7;
+    }
+    .rule-sector-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 10px;
+    }
+    .rules-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        overflow: hidden;
+        margin-bottom: 15px;
+    }
+    .rules-table th {
+        background: #f0f9ff;
+        color: #0369a1;
+        font-size: 12.5px;
+        font-weight: 700;
+        padding: 10px 14px;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .rules-table td {
+        padding: 10px 14px;
+        font-size: 12.5px;
+        color: #334155;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .rules-table tr:last-child td {
+        border-bottom: none;
+    }
+    .rules-disclaimer-list {
+        margin: 15px 0 0 0;
+        padding-left: 18px;
+        color: #64748b;
+        font-size: 11.5px;
+        line-height: 1.6;
+    }
+    .rules-disclaimer-list li {
+        margin-bottom: 4px;
+    }
+
+    /* Right Side Fare Breakdown Box */
+    .f-fare-details-box {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #fff;
+        padding: 16px 18px;
+        height: fit-content;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .f-fare-details-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 12px;
+    }
+    .f-fare-details-header strong {
+        font-size: 14px;
+        color: #0f172a;
+    }
+    .f-fare-details-header span {
+        font-size: 12.5px;
+        color: #0284c7;
+        font-weight: 600;
+    }
+    .f-fare-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: #334155;
+        margin-bottom: 10px;
+    }
+    .f-fare-row i {
+        color: #64748b;
+        font-size: 12px;
+        margin-right: 4px;
+    }
+    .f-fare-total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 14px;
+        background: #f1f5f9;
+        border-radius: 6px;
+        margin-top: 14px;
+    }
+    .f-fare-total-row span {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+    .f-fare-total-row .total-amount {
+        font-size: 18px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    /* Tab 3: Baggage Information */
+    .baggage-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        overflow: hidden;
+        margin-bottom: 15px;
+    }
+    .baggage-table th {
+        background: #f0f9ff;
+        color: #0369a1;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 11px 16px;
+        text-align: center;
+        border-bottom: 1px solid #e2e8f0;
+        border-right: 1px solid #e2e8f0;
+    }
+    .baggage-table th:last-child {
+        border-right: none;
+    }
+    .baggage-table td {
+        padding: 12px 16px;
+        font-size: 13px;
+        color: #1e293b;
+        text-align: center;
+        border-right: 1px solid #f1f5f9;
+    }
+    .baggage-table td:last-child {
+        border-right: none;
+    }
+    .baggage-alert-box {
+        margin-top: 15px;
+        padding: 12px 16px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 6px;
+        color: #ef4444;
+        font-size: 12px;
+        line-height: 1.5;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .baggage-alert-box i {
+        font-size: 15px;
+        margin-top: 2px;
+    }
     </style>
     
     <!-- Top Search Header Box -->
@@ -1383,6 +1830,37 @@
         'IX' => array('name' => 'Air India Express', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/IX.png')
     );
 
+    // Comprehensive Airport & City Database
+    $airportCityMap = array(
+        'BOM' => array('city' => 'Mumbai', 'name' => 'Chhatrapati Shivaji International airport |Mumbai |IN |India', 'terminal' => 'Terminal 1'),
+        'DEL' => array('city' => 'New Delhi', 'name' => 'Indira Gandhi International |New Delhi |IN |India', 'terminal' => 'Terminal 1D'),
+        'BLR' => array('city' => 'Bangalore', 'name' => 'Kempegowda International Airport |Bangalore |IN |India', 'terminal' => 'Terminal 1'),
+        'HYD' => array('city' => 'Hyderabad', 'name' => 'Rajiv Gandhi International |Hyderabad |IN |India', 'terminal' => 'Terminal 1'),
+        'MAA' => array('city' => 'Chennai', 'name' => 'Chennai International Airport |Chennai |IN |India', 'terminal' => 'Terminal 1'),
+        'CCU' => array('city' => 'Kolkata', 'name' => 'Netaji Subhash Chandra Bose International Airport |Kolkata |IN |India', 'terminal' => 'Terminal 2'),
+        'AMD' => array('city' => 'Ahmedabad', 'name' => 'Sardar Vallabhbhai Patel |Ahmedabad |IN |India', 'terminal' => 'Terminal 1'),
+        'PNQ' => array('city' => 'Pune', 'name' => 'Pune International Airport |Pune |IN |India', 'terminal' => 'Terminal 1'),
+        'GOI' => array('city' => 'Goa (Dabolim)', 'name' => 'Dabolim Airport |Goa |IN |India', 'terminal' => 'Terminal 1'),
+        'GOX' => array('city' => 'Goa (Mopa)', 'name' => 'Manohar International Airport |Goa |IN |India', 'terminal' => 'Terminal 1'),
+        'JAI' => array('city' => 'Jaipur', 'name' => 'Jaipur International Airport |Jaipur |IN |India', 'terminal' => 'Terminal 2'),
+        'LKO' => array('city' => 'Lucknow', 'name' => 'Chaudhary Charan Singh International Airport |Lucknow |IN |India', 'terminal' => 'Terminal 2'),
+        'COK' => array('city' => 'Kochi', 'name' => 'Cochin International Airport |Kochi |IN |India', 'terminal' => 'Terminal 1'),
+        'ATQ' => array('city' => 'Amritsar', 'name' => 'Sri Guru Ram Dass Jee International Airport |Amritsar |IN |India', 'terminal' => 'Terminal 1'),
+        'BHO' => array('city' => 'Bhopal', 'name' => 'Raja Bhoj Airport |Bhopal |IN |India', 'terminal' => 'Terminal 1'),
+        'BBI' => array('city' => 'Bhubaneswar', 'name' => 'Biju Patnaik International Airport |Bhubaneswar |IN |India', 'terminal' => 'Terminal 1'),
+        'GAU' => array('city' => 'Guwahati', 'name' => 'Lokpriya Gopinath Bordoloi International Airport |Guwahati |IN |India', 'terminal' => 'Terminal 1'),
+        'IXC' => array('city' => 'Chandigarh', 'name' => 'Shaheed Bhagat Singh International Airport |Chandigarh |IN |India', 'terminal' => 'Terminal 1'),
+        'SXR' => array('city' => 'Srinagar', 'name' => 'Sheikh ul-Alam International Airport |Srinagar |IN |India', 'terminal' => 'Terminal 1'),
+        'PAT' => array('city' => 'Patna', 'name' => 'Jay Prakash Narayan Airport |Patna |IN |India', 'terminal' => 'Terminal 1'),
+        'VNS' => array('city' => 'Varanasi', 'name' => 'Lal Bahadur Shastri International Airport |Varanasi |IN |India', 'terminal' => 'Terminal 1'),
+        'NAG' => array('city' => 'Nagpur', 'name' => 'Dr. Babasaheb Ambedkar International Airport |Nagpur |IN |India', 'terminal' => 'Terminal 1'),
+        'IDR' => array('city' => 'Indore', 'name' => 'Devi Ahilyabai Holkar Airport |Indore |IN |India', 'terminal' => 'Terminal 1'),
+        'VTZ' => array('city' => 'Visakhapatnam', 'name' => 'Visakhapatnam International Airport |IN', 'terminal' => 'Terminal 1'),
+        'BDQ' => array('city' => 'Vadodara', 'name' => 'Vadodara Airport |IN', 'terminal' => 'Terminal 1'),
+        'UDR' => array('city' => 'Udaipur', 'name' => 'Maharana Pratap Airport |IN', 'terminal' => 'Terminal 1'),
+        'IXR' => array('city' => 'Ranchi', 'name' => 'Birsa Munda Airport |IN', 'terminal' => 'Terminal 1')
+    );
+
     // Normalize Onward Flights
     $onwardFlights = array();
     $activeSearchTui = !empty($search_tui) ? $search_tui : ($search_query['tui'] ?? '');
@@ -1406,6 +1884,11 @@
                 $code = isset($item['airline_code']) ? strtoupper($item['airline_code']) : '6E';
                 $defaultLogo = isset($airlineMap[$code]) ? $airlineMap[$code]['logo'] : 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png';
                 $defaultName = isset($airlineMap[$code]) ? $airlineMap[$code]['name'] : ($code . ' Airlines');
+                $itemStops = isset($item['stops']) ? (int)$item['stops'] : 0;
+                $itemPrice = (float)($item['price'] ?? 4999);
+                $itemBase = (float)($item['base_fare'] ?? round($itemPrice * 0.745));
+                $itemTax = (float)($item['taxes'] ?? max(0, $itemPrice - $itemBase));
+                $itemVia = !empty($item['via']) ? $item['via'] : (!empty($item['Via']) ? $item['Via'] : ($itemStops > 0 ? 'HYD' : ''));
 
                 $onwardFlights[] = array(
                     'ResultID' => (!empty($item['tui']) && strpos($item['tui'], 'FL_') !== 0) ? $item['tui'] : (!empty($activeSearchTui) ? $activeSearchTui : ($item['ResultID'] ?? ('FL_' . ($idx + 100)))),
@@ -1418,14 +1901,28 @@
                     'DepartureTime' => $item['departure_time'] ?? '06:00',
                     'ArrivalTime' => $item['arrival_time'] ?? '08:15',
                     'Duration' => $item['duration'] ?? '2h 15m',
-                    'Stops' => isset($item['stops']) ? (int)$item['stops'] : 0,
-                    'Price' => (float)($item['price'] ?? 4999),
+                    'Stops' => $itemStops,
+                    'via' => $itemVia,
+                    'Via' => $itemVia,
+                    'Price' => $itemPrice,
+                    'base_fare' => $itemBase,
+                    'taxes' => $itemTax,
                     'Baggage' => $item['checkin_baggage'] ?? $item['baggage'] ?? '15 Kgs',
                     'Refundable' => isset($item['refundable']) ? $item['refundable'] : true,
-                    'SeatsLeft' => $item['seats_left'] ?? rand(3, 9)
+                    'SeatsLeft' => $item['seats_left'] ?? rand(1, 9),
+                    'FlightIndex' => $item['flight_index'] ?? $item['Index'] ?? ($code . '|' . ($idx + 1)),
+                    'Aircraft' => !empty($item['AirCraft']) ? $item['AirCraft'] : (!empty($item['aircraft']) ? $item['aircraft'] : ($code === 'SG' ? 'BOEING' : 'AIRBUS A320')),
+                    'cabin_class' => $item['cabin_class'] ?? ($search_query['cabin_class'] ?? 'Economy'),
+                    'DepartureDate' => !empty($item['departure_date']) ? $item['departure_date'] : $search_query['date']
                 );
             } elseif (isset($item['AirlineName']) || isset($item['FlightNumber']) || isset($item['Price'])) {
                 $code = isset($item['AirlineCode']) ? strtoupper($item['AirlineCode']) : '6E';
+                $itemStops = isset($item['Stops']) ? (int)$item['Stops'] : 0;
+                $itemPrice = (float)($item['Price'] ?? 4999);
+                $itemBase = (float)($item['NetFare'] ?? round($itemPrice * 0.745));
+                $itemTax = (float)($item['TotalTransactionFee'] ?? max(0, $itemPrice - $itemBase));
+                $itemVia = !empty($item['via']) ? $item['via'] : (!empty($item['Via']) ? $item['Via'] : ($itemStops > 0 ? 'HYD' : ''));
+
                 $onwardFlights[] = array(
                     'ResultID' => (!empty($item['ResultID']) && strpos($item['ResultID'], 'FL_') !== 0) ? $item['ResultID'] : (!empty($item['tui']) && strpos($item['tui'], 'FL_') !== 0 ? $item['tui'] : (!empty($activeSearchTui) ? $activeSearchTui : ('FL_' . ($idx + 100)))),
                     'AirlineCode' => $code,
@@ -1437,11 +1934,19 @@
                     'DepartureTime' => $item['DepartureTime'] ?? '06:00',
                     'ArrivalTime' => $item['ArrivalTime'] ?? '08:15',
                     'Duration' => $item['Duration'] ?? '2h 15m',
-                    'Stops' => isset($item['Stops']) ? (int)$item['Stops'] : 0,
-                    'Price' => (float)($item['Price'] ?? 4999),
+                    'Stops' => $itemStops,
+                    'via' => $itemVia,
+                    'Via' => $itemVia,
+                    'Price' => $itemPrice,
+                    'base_fare' => $itemBase,
+                    'taxes' => $itemTax,
                     'Baggage' => $item['Baggage'] ?? '15 Kgs',
                     'Refundable' => isset($item['Refundable']) ? $item['Refundable'] : true,
-                    'SeatsLeft' => $item['SeatsLeft'] ?? rand(3, 9)
+                    'SeatsLeft' => $item['SeatsLeft'] ?? rand(1, 9),
+                    'FlightIndex' => $item['Index'] ?? ($code . '|' . ($idx + 1)),
+                    'Aircraft' => !empty($item['AirCraft']) ? $item['AirCraft'] : ($code === 'SG' ? 'BOEING' : 'AIRBUS A320'),
+                    'cabin_class' => $item['Cabin'] ?? ($search_query['cabin_class'] ?? 'Economy'),
+                    'DepartureDate' => !empty($item['DepartureTime']) ? date('Y-m-d', strtotime($item['DepartureTime'])) : $search_query['date']
                 );
             }
         }
@@ -1449,11 +1954,28 @@
 
     if (empty($onwardFlights)) {
         $mockAirlines = array(
-            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E-2134', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '06:00', 'arr' => '08:15', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5150),
-            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG-162', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '09:30', 'arr' => '11:45', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4999),
-            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI-805', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '14:15', 'arr' => '16:30', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5450),
-            array('code' => 'QP', 'name' => 'Akasa Air', 'flight_no' => 'QP-1311', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '18:20', 'arr' => '20:35', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4850),
-            array('code' => 'UK', 'name' => 'Vistara', 'flight_no' => 'UK-945', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/UK.png', 'dep' => '20:45', 'arr' => '23:00', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5800)
+            // Non-Stop Flights (Matching Akbar Travels Screenshot 1 & 2)
+            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 164', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '23:25', 'arr' => '01:50', 'dur' => '2 Hr  25 Min', 'stops' => 0, 'price' => 6034, 'base_fare' => 4500, 'taxes' => 1534, 'via' => '', 'seats' => 1, 'aircraft' => 'BOEING'),
+            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 164', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '23:25', 'arr' => '01:50', 'dur' => '2 Hr  25 Min', 'stops' => 0, 'price' => 6392, 'base_fare' => 4800, 'taxes' => 1592, 'via' => '', 'seats' => 1, 'aircraft' => 'BOEING'),
+            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 164', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '23:25', 'arr' => '01:50', 'dur' => '2 Hr  25 Min', 'stops' => 0, 'price' => 6443, 'base_fare' => 4850, 'taxes' => 1593, 'via' => '', 'seats' => 9, 'aircraft' => 'BOEING'),
+            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 6049', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '19:45', 'arr' => '21:55', 'dur' => '2 Hr 10 Min', 'stops' => 0, 'price' => 6502, 'base_fare' => 4900, 'taxes' => 1602, 'via' => '', 'seats' => 9, 'aircraft' => 'AIRBUS A320'),
+            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 317', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '19:00', 'arr' => '21:15', 'dur' => '2 Hr 15 Min', 'stops' => 0, 'price' => 6502, 'base_fare' => 4900, 'taxes' => 1602, 'via' => '', 'seats' => 9, 'aircraft' => 'AIRBUS A320'),
+            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI - 805', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '14:15', 'arr' => '16:30', 'dur' => '2 Hr 15 Min', 'stops' => 0, 'price' => 6536, 'base_fare' => 4950, 'taxes' => 1586, 'via' => '', 'seats' => 6, 'aircraft' => 'BOEING 787'),
+            array('code' => 'IX', 'name' => 'Air India Express', 'flight_no' => 'IX - 1102', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/IX.png', 'dep' => '11:30', 'arr' => '13:45', 'dur' => '2 Hr 15 Min', 'stops' => 0, 'price' => 6539, 'base_fare' => 4950, 'taxes' => 1589, 'via' => '', 'seats' => 17, 'aircraft' => 'BOEING 737'),
+            array('code' => 'QP', 'name' => 'Akasa Air', 'flight_no' => 'QP - 1311', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '18:20', 'arr' => '20:35', 'dur' => '2 Hr 15 Min', 'stops' => 0, 'price' => 7643, 'base_fare' => 5800, 'taxes' => 1843, 'via' => '', 'seats' => 6, 'aircraft' => 'BOEING 737 MAX'),
+            
+            // 1-Stop Connecting Flights (Matching Lowest 1-Stop Price ₹ 8,316)
+            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 304', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '08:30', 'arr' => '13:45', 'dur' => '5 Hr 15 Min', 'stops' => 1, 'price' => 8316, 'base_fare' => 6400, 'taxes' => 1916, 'via' => 'AMD', 'seats' => 5, 'aircraft' => 'BOEING'),
+            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 5021', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '07:15', 'arr' => '12:45', 'dur' => '5 Hr 30 Min', 'stops' => 1, 'price' => 8650, 'base_fare' => 6700, 'taxes' => 1950, 'via' => 'BLR', 'seats' => 4, 'aircraft' => 'AIRBUS A320'),
+            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI - 631', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '10:00', 'arr' => '15:30', 'dur' => '5 Hr 30 Min', 'stops' => 1, 'price' => 8920, 'base_fare' => 6900, 'taxes' => 2020, 'via' => 'HYD', 'seats' => 6, 'aircraft' => 'AIRBUS A320'),
+            array('code' => 'QP', 'name' => 'Akasa Air', 'flight_no' => 'QP - 1405', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '12:15', 'arr' => '18:00', 'dur' => '5 Hr 45 Min', 'stops' => 1, 'price' => 9100, 'base_fare' => 7050, 'taxes' => 2050, 'via' => 'GOX', 'seats' => 3, 'aircraft' => 'BOEING 737 MAX'),
+            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 782', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '06:45', 'arr' => '12:30', 'dur' => '5 Hr 45 Min', 'stops' => 1, 'price' => 9450, 'base_fare' => 7300, 'taxes' => 2150, 'via' => 'BHO', 'seats' => 5, 'aircraft' => 'AIRBUS A320'),
+            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 812', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '13:00', 'arr' => '19:15', 'dur' => '6 Hr 15 Min', 'stops' => 1, 'price' => 9800, 'base_fare' => 7600, 'taxes' => 2200, 'via' => 'ATQ', 'seats' => 4, 'aircraft' => 'BOEING'),
+            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI - 442', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '09:30', 'arr' => '16:15', 'dur' => '6 Hr 45 Min', 'stops' => 1, 'price' => 10250, 'base_fare' => 7950, 'taxes' => 2300, 'via' => 'BBI', 'seats' => 4, 'aircraft' => 'AIRBUS A320'),
+
+            // 1+ / 2-Stop Flights (Matching Lowest 1+ Price ₹ 18,603)
+            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 901', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '06:00', 'arr' => '14:30', 'dur' => '8 Hr 30 Min', 'stops' => 2, 'price' => 18603, 'base_fare' => 14800, 'taxes' => 3803, 'via' => 'JAI', 'seats' => 2, 'aircraft' => 'AIRBUS A320'),
+            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI - 204', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '07:30', 'arr' => '17:00', 'dur' => '9 Hr 30 Min', 'stops' => 2, 'price' => 19450, 'base_fare' => 15500, 'taxes' => 3950, 'via' => 'NAG', 'seats' => 3, 'aircraft' => 'AIRBUS A320')
         );
         foreach ($mockAirlines as $mIdx => $m) {
             $onwardFlights[] = array(
@@ -1468,10 +1990,18 @@
                 'ArrivalTime' => $m['arr'],
                 'Duration' => $m['dur'],
                 'Stops' => $m['stops'],
+                'via' => $m['via'],
+                'Via' => $m['via'],
                 'Price' => $m['price'],
+                'base_fare' => $m['base_fare'],
+                'taxes' => $m['taxes'],
                 'Baggage' => '15 Kgs',
                 'Refundable' => true,
-                'SeatsLeft' => rand(3, 9)
+                'SeatsLeft' => $m['seats'],
+                'FlightIndex' => $m['code'] . '|' . ($mIdx + 1),
+                'Aircraft' => $m['aircraft'],
+                'cabin_class' => $search_query['cabin_class'] ?? 'Economy',
+                'DepartureDate' => $search_query['date']
             );
         }
     }
@@ -1571,9 +2101,9 @@
                 
                 if (!empty($flt['Refundable'])) $refundableCount++;
                 
-                $via = !empty($flt['via']) ? $flt['via'] : (!empty($flt['Via']) ? $flt['Via'] : '');
+                $via = !empty($flt['via']) ? strtoupper($flt['via']) : (!empty($flt['Via']) ? strtoupper($flt['Via']) : '');
                 if ($s > 0 && !empty($via)) {
-                    $connectingAirports[$via] = true;
+                    $connectingAirports[$via] = ($connectingAirports[$via] ?? 0) + 1;
                 }
             }
             $minPrice = !empty($pricesAll) ? min($pricesAll) : 2500;
@@ -1581,33 +2111,62 @@
             if ($nonStopMin === PHP_INT_MAX) $nonStopMin = 0;
             if ($oneStopMin === PHP_INT_MAX) $oneStopMin = 0;
             if ($twoPlusMin === PHP_INT_MAX) $twoPlusMin = 0;
+            $onePlusMin = $twoPlusMin > 0 ? $twoPlusMin : ($oneStopMin > 0 ? $oneStopMin : 18603);
+            $onePlusCount = $twoPlusCount > 0 ? $twoPlusCount : $oneStopCount;
+
+            // Prepare Connecting Airports dictionary
+            $defaultHubs = array(
+                'AMD' => 'Ahmedabad',
+                'ATQ' => 'Amritsar',
+                'BLR' => 'Bangalore',
+                'BHO' => 'Bhopal',
+                'BBI' => 'Bhubaneswar',
+                'HYD' => 'Hyderabad',
+                'GOX' => 'Goa (Mopa)',
+                'JAI' => 'Jaipur',
+                'LKO' => 'Lucknow',
+                'CCU' => 'Kolkata',
+                'MAA' => 'Chennai',
+                'PNQ' => 'Pune',
+                'COK' => 'Kochi',
+                'PAT' => 'Patna',
+                'NAG' => 'Nagpur',
+                'IDR' => 'Indore',
+                'SXR' => 'Srinagar'
+            );
+
+            $connectingAirportsList = array();
+            foreach ($connectingAirports as $cCode => $cCnt) {
+                $cName = $airportCityMap[$cCode]['city'] ?? ($defaultHubs[$cCode] ?? $cCode);
+                $connectingAirportsList[$cCode] = array('name' => $cName, 'count' => $cCnt);
+            }
+            foreach ($defaultHubs as $cCode => $cName) {
+                if (!isset($connectingAirportsList[$cCode])) {
+                    $connectingAirportsList[$cCode] = array('name' => $cName, 'count' => 0);
+                }
+            }
+            // Sort connecting airports by city name alphabetically
+            uasort($connectingAirportsList, function($a, $b) {
+                return strcmp($a['name'], $b['name']);
+            });
             ?>
             
-            <!-- Stops -->
+            <!-- Stops (Screenshot 1: Non Stop, 1, 1+) -->
             <div class="filter-section">
                 <h4 class="filter-title">Stops</h4>
-                <div class="stops-grid">
-                    <div class="stop-box active" data-stop-filter="all" onclick="toggleStopFilter(this, 'all');">
-                        <span class="stop-name">All (<?php echo count($onwardFlights); ?>)</span>
-                    </div>
-                    <?php if ($nonStopCount > 0): ?>
+                <div class="stops-grid-3">
                     <div class="stop-box" data-stop-filter="0" onclick="toggleStopFilter(this, '0');">
-                        <span class="stop-name">Non Stop (<?php echo $nonStopCount; ?>)</span>
-                        <span class="stop-price">₹ <?php echo number_format($nonStopMin); ?></span>
+                        <span class="stop-name">Non Stop</span>
+                        <span class="stop-price"><?php echo $nonStopMin > 0 ? ('₹ ' . number_format($nonStopMin)) : '--'; ?></span>
                     </div>
-                    <?php endif; ?>
-                    <?php if ($oneStopCount > 0): ?>
                     <div class="stop-box" data-stop-filter="1" onclick="toggleStopFilter(this, '1');">
-                        <span class="stop-name">1 Stop (<?php echo $oneStopCount; ?>)</span>
-                        <span class="stop-price">₹ <?php echo number_format($oneStopMin); ?></span>
+                        <span class="stop-name">1</span>
+                        <span class="stop-price"><?php echo $oneStopMin > 0 ? ('₹ ' . number_format($oneStopMin)) : '--'; ?></span>
                     </div>
-                    <?php endif; ?>
-                    <?php if ($twoPlusCount > 0): ?>
-                    <div class="stop-box" data-stop-filter="2+" onclick="toggleStopFilter(this, '2+');">
-                        <span class="stop-name">2+ Stops (<?php echo $twoPlusCount; ?>)</span>
-                        <span class="stop-price">₹ <?php echo number_format($twoPlusMin); ?></span>
+                    <div class="stop-box" data-stop-filter="1+" onclick="toggleStopFilter(this, '1+');">
+                        <span class="stop-name">1+</span>
+                        <span class="stop-price"><?php echo $onePlusMin > 0 ? ('₹ ' . number_format($onePlusMin)) : '₹ 18,603'; ?></span>
                     </div>
-                    <?php endif; ?>
                 </div>
             </div>
 
@@ -1616,7 +2175,7 @@
                 <h4 class="filter-title">Fare Type</h4>
                 <label class="custom-checkbox" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
                     <input type="checkbox" id="filterRefundable" onchange="applyFilters();" style="width:17px; height:17px; accent-color:#0d3470; cursor:pointer;">
-                    <span style="font-size:13.5px; font-weight:700; color:#000000;">Refundable Fare Only</span>
+                    <span style="font-size:13.5px; font-weight:700; color:#000000;">Refundable</span>
                 </label>
             </div>
 
@@ -1673,16 +2232,28 @@
                 </div>
             </div>
 
-            <!-- Connecting Airports -->
-            <?php if (!empty($connectingAirports)): ?>
-            <div class="filter-section">
+            <!-- Connecting Airports (Screenshot 1) -->
+            <?php if (!empty($connectingAirportsList)): ?>
+            <div class="filter-section" id="connectingAirportsSection">
                 <h4 class="filter-title">Connecting Airports</h4>
-                <?php foreach (array_keys($connectingAirports) as $airport): ?>
-                <label class="custom-checkbox" style="display:flex; align-items:center; gap:10px; margin-bottom:8px; cursor:pointer;">
-                    <input type="checkbox" class="connect-airport-cb" value="<?php echo htmlspecialchars($airport); ?>" checked onchange="applyFilters();" style="width:17px; height:17px; accent-color:#0d3470; cursor:pointer;">
-                    <span style="font-size:13.5px; font-weight:700; color:#000000;">Via <?php echo htmlspecialchars($airport); ?></span>
-                </label>
-                <?php endforeach; ?>
+                <div class="connecting-airports-list">
+                    <?php 
+                    $airIdx = 0;
+                    foreach ($connectingAirportsList as $cCode => $cInfo): 
+                        $airIdx++;
+                        $isExtra = ($airIdx > 5);
+                    ?>
+                    <label class="custom-checkbox connect-airport-item <?php echo $isExtra ? 'extra-airport' : ''; ?>" style="display:<?php echo $isExtra ? 'none' : 'flex'; ?>; align-items:center; gap:10px; margin-bottom:9px; cursor:pointer;">
+                        <input type="checkbox" class="connect-airport-cb" value="<?php echo htmlspecialchars($cCode); ?>" onchange="applyFilters();" style="width:17px; height:17px; accent-color:#0d3470; cursor:pointer;">
+                        <span style="font-size:13.5px; font-weight:600; color:#1e293b;"><?php echo htmlspecialchars($cInfo['name']); ?></span>
+                    </label>
+                    <?php endforeach; ?>
+                </div>
+                <?php if (count($connectingAirportsList) > 5): ?>
+                <button type="button" class="btn-more-airports" id="toggleMoreAirportsBtn" onclick="toggleMoreAirports();" style="background:none; border:none; color:#2563eb; font-size:13px; font-weight:700; cursor:pointer; padding:4px 0; margin-top:2px;">
+                    + <?php echo (count($connectingAirportsList) - 5); ?> Airports
+                </button>
+                <?php endif; ?>
             </div>
             <?php endif; ?>
         </aside>
@@ -1801,7 +2372,7 @@
             <div class="flights-list" id="flightListContainer">
                 <?php 
                 if (!empty($onwardFlights)) {
-                    foreach ($onwardFlights as $f) {
+                    foreach ($onwardFlights as $idx => $f) {
                         // Parse Departure Time Slot
                         $depHour = (int)substr($f['DepartureTime'], 0, 2);
                         $depSlot = 'night';
@@ -1824,12 +2395,40 @@
 
                         $owStops = (int)$f['Stops'];
                         $owPrice = (float)$f['Price'];
-                        $owVia = !empty($f['via']) ? $f['via'] : (!empty($f['Via']) ? $f['Via'] : '');
+                        $owVia = !empty($f['via']) ? strtoupper($f['via']) : (!empty($f['Via']) ? strtoupper($f['Via']) : ($owStops > 0 ? 'HYD' : ''));
                         $owRefundable = !empty($f['Refundable']) ? '1' : '0';
                         $airlineCode = strtoupper($f['AirlineCode'] ?? '6E');
 
                         // Best value composite score
                         $bestValueScore = $owPrice + ($durMins * 8) + ($owStops * 1200);
+
+                        // Airport & City Names for details
+                        $fromCity = $airportCityMap[$search_query['from_code']]['city'] ?? $search_query['from_code'];
+                        $toCity = $airportCityMap[$search_query['to_code']]['city'] ?? $search_query['to_code'];
+                        $fromAirportName = $airportCityMap[$search_query['from_code']]['name'] ?? ($search_query['from_code'] . ' Airport');
+                        $toAirportName = $airportCityMap[$search_query['to_code']]['name'] ?? ($search_query['to_code'] . ' Airport');
+                        $depTerminal = $airportCityMap[$search_query['from_code']]['terminal'] ?? 'Terminal 1';
+                        $arrTerminal = $airportCityMap[$search_query['to_code']]['terminal'] ?? 'Terminal 1D';
+
+                        $viaCity = !empty($owVia) ? ($airportCityMap[$owVia]['city'] ?? $owVia) : '';
+                        $viaAirportName = !empty($owVia) ? ($airportCityMap[$owVia]['name'] ?? ($owVia . ' Airport')) : '';
+
+                        // Date calculations
+                        $depTimestamp = strtotime(!empty($f['DepartureDate']) ? $f['DepartureDate'] : $search_query['date']);
+                        if (!$depTimestamp) $depTimestamp = time();
+                        $depDateFormatted = date('D, d M y', $depTimestamp);
+                        $routeDateFormatted = date('d M', $depTimestamp);
+                        $isNextDay = ($arrHour < $depHour);
+                        $arrTimestamp = $isNextDay ? strtotime('+1 day', $depTimestamp) : $depTimestamp;
+                        $arrDateFormatted = date('D, d M y', $arrTimestamp);
+
+                        // Fare breakdown
+                        $fBaseFare = !empty($f['base_fare']) ? (float)$f['base_fare'] : round($owPrice * 0.745);
+                        $fTaxes = !empty($f['taxes']) ? (float)$f['taxes'] : max(0, $owPrice - $fBaseFare);
+                        $strikePrice = round($owPrice * 1.003 + 18);
+                        $discountAmt = $strikePrice - $owPrice;
+                        if ($discountAmt <= 0) $discountAmt = 18;
+                        $aircraftType = !empty($f['Aircraft']) ? $f['Aircraft'] : ($airlineCode === 'SG' ? 'BOEING' : 'AIRBUS A320');
                 ?>
                 <div class="f-card" 
                      data-airline="<?php echo htmlspecialchars($airlineCode); ?>" 
@@ -1856,7 +2455,7 @@
                         <div class="f-time-block">
                             <div class="f-time-left">
                                 <strong class="f-time"><?php echo htmlspecialchars($f['DepartureTime']); ?></strong>
-                                <span class="f-city"><?php echo htmlspecialchars($search_query['from_code']); ?></span>
+                                <span class="f-city"><?php echo htmlspecialchars($fromCity); ?></span>
                             </div>
                             <div class="f-duration">
                                 <span><?php echo htmlspecialchars($f['Duration']); ?></span>
@@ -1865,32 +2464,32 @@
                                 </div>
                                 <span style="font-size: 11px; color: <?php echo ($owStops == 0) ? '#16a34a' : '#d97706'; ?>; font-weight: 600;">
                                     <?php 
-                                    $owLayover = !empty($f['via']) ? $f['via'] : (!empty($f['Via']) ? $f['Via'] : ($owStops > 0 ? 'HYD' : ''));
-                                    echo ($owStops == 0) ? 'Non-Stop' : ($owStops . ' Stop' . ($owLayover ? (', Via ' . htmlspecialchars($owLayover)) : '')); 
+                                    echo ($owStops == 0) ? 'Non-Stop' : ($owStops . ' Stop' . ($owVia ? (', Via ' . htmlspecialchars($owVia)) : '')); 
                                     ?>
                                 </span>
                             </div>
                             <div class="f-time-right">
                                 <strong class="f-time"><?php echo htmlspecialchars($f['ArrivalTime']); ?></strong>
-                                <span class="f-city"><?php echo htmlspecialchars($search_query['to_code']); ?></span>
+                                <span class="f-city"><?php echo htmlspecialchars($toCity); ?><?php if ($isNextDay): ?> <small style="color:#ef4444; font-size:10px; font-weight:700; display:block;">Next Day</small><?php endif; ?></span>
                             </div>
                         </div>
                         
                         <div class="f-seats">
                             <i class="fa-solid fa-chair" style="color: #ef4444;"></i>
-                            <span><?php echo $f['SeatsLeft']; ?> Seats Left</span>
+                            <span><?php echo $f['SeatsLeft']; ?> Left</span>
                         </div>
                         
-                        <div class="f-price">
-                            <strong>₹ <?php echo number_format($f['Price']); ?></strong>
-                            <span style="font-size:11px; color:#64748b; display:block;"><?php echo ($total_travelers > 1) ? 'total for ' . $total_travelers . ' travelers' : 'per adult'; ?></span>
+                        <div class="f-price" style="text-align:right;">
+                            <div style="font-size:12px; color:#ef4444; text-decoration:line-through; font-weight:600; line-height:1.2;">₹ <?php echo number_format($strikePrice); ?></div>
+                            <strong style="font-size:22px; color:#0f172a; display:block; line-height:1.2;">₹ <?php echo number_format($owPrice); ?></strong>
+                            <div style="font-size:11px; color:#16a34a; font-weight:700; margin-top:2px;">Extra ₹ <?php echo number_format($discountAmt); ?> Off</div>
                         </div>
                         
                         <div class="f-action">
                             <?php 
                             $cardTui = (!empty($f['ResultID']) && strpos($f['ResultID'], 'FL_') !== 0) ? $f['ResultID'] : (!empty($search_tui) ? $search_tui : ($search_query['tui'] ?? $f['ResultID']));
                             ?>
-                            <form action="<?php echo site_url('flight/review'); ?>" method="POST">
+                            <form action="<?php echo site_url('flight/review'); ?>" method="POST" style="width:100%;">
                                 <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($cardTui); ?>">
                                 <input type="hidden" name="tui" value="<?php echo htmlspecialchars($cardTui); ?>">
                                 <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($f['AirlineName']); ?>">
@@ -1910,10 +2509,312 @@
                                 <input type="hidden" name="children" value="<?php echo htmlspecialchars($search_query['children'] ?? 0); ?>">
                                 <input type="hidden" name="infants" value="<?php echo htmlspecialchars($search_query['infants'] ?? 0); ?>">
                                 <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
-                                <button type="submit" class="f-book-btn">BOOK NOW</button>
+                                <button type="submit" class="f-book-btn">Book Now</button>
                             </form>
+                            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:3px; margin-top:6px; width:100%;">
+                                <button type="button" class="btn-details-toggle" id="btn_toggle_<?php echo $idx; ?>" onclick="toggleFlightDetails('details_drawer_<?php echo $idx; ?>', this);">+ Details</button>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="badge-refundable-r" title="Refundable">R</span>
+                                    <i class="fa-solid fa-moon" style="font-size:12px; color:#1e293b;" title="Night Flight"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Notice Row (Screenshot 2: Meal, Seat are chargeable) -->
+                    <div style="padding: 6px 20px 10px 20px; font-size: 11.5px; color: #475569; display: flex; align-items: center; gap: 6px; border-top: 1px dashed #f1f5f9;">
+                        <i class="fa-solid fa-circle-info" style="color: #2563eb;"></i>
+                        <span>Meal, Seat are chargeable.</span>
+                        <a href="javascript:void(0);" onclick="toggleFlightDetails('details_drawer_<?php echo $idx; ?>', document.getElementById('btn_toggle_<?php echo $idx; ?>'));" style="color:#0284c7; text-decoration:none; font-weight:700;">(More)</a>
+                    </div>
+
+                    <!-- Collapsible Details Drawer (Screenshots 3, 4, 5) -->
+                    <div class="f-details-drawer" id="details_drawer_<?php echo $idx; ?>" style="display:none;">
+                        <!-- Drawer Nav Tabs -->
+                        <div class="f-drawer-nav">
+                            <button type="button" class="f-drawer-tab active" onclick="switchDrawerTab(this, 'drawer_pane_info_<?php echo $idx; ?>');">Flight Information</button>
+                            <button type="button" class="f-drawer-tab" onclick="switchDrawerTab(this, 'drawer_pane_fare_<?php echo $idx; ?>');">Fare Summary & Rules</button>
+                            <button type="button" class="f-drawer-tab" onclick="switchDrawerTab(this, 'drawer_pane_baggage_<?php echo $idx; ?>');">Baggage Information</button>
+                        </div>
+
+                        <!-- Tab 1: Flight Information (Screenshot 3) -->
+                        <div class="f-drawer-pane drawer-pane-content" id="drawer_pane_info_<?php echo $idx; ?>">
+                            <div class="f-info-box">
+                                <div class="f-info-header">
+                                    <span class="f-info-route"><?php echo htmlspecialchars($fromCity); ?> &#10231; <?php echo htmlspecialchars($toCity); ?> , <?php echo htmlspecialchars($routeDateFormatted); ?></span>
+                                    <div class="f-info-aircraft-badge">
+                                        <span><strong>Aircraft:</strong> <?php echo htmlspecialchars($aircraftType); ?></span>
+                                        <span class="badge-sep">|</span>
+                                        <span><strong>Travel Class:</strong> <?php echo htmlspecialchars($f['cabin_class'] ?? 'Economy'); ?></span>
+                                    </div>
+                                </div>
+
+                                <?php if ($owStops === 0): ?>
+                                <!-- Non-Stop Flight Leg -->
+                                <div class="f-leg-card">
+                                    <div class="f-leg-airline">
+                                        <img src="<?php echo htmlspecialchars($f['AirlineLogo']); ?>" alt="" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($f['AirlineName']); ?>&background=0d3470&color=fff';">
+                                        <div class="f-leg-airline-name">
+                                            <strong><?php echo htmlspecialchars($f['AirlineName']); ?></strong>
+                                            <span><?php echo htmlspecialchars($f['FlightNumber']); ?></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="f-leg-point">
+                                        <span class="f-point-time"><?php echo htmlspecialchars($f['DepartureTime']); ?></span>
+                                        <span class="f-point-date"><?php echo htmlspecialchars($depDateFormatted); ?></span>
+                                        <span class="f-point-city"><?php echo htmlspecialchars($fromCity); ?> [<?php echo htmlspecialchars($search_query['from_code']); ?>]</span>
+                                        <span class="f-point-airport"><?php echo htmlspecialchars($fromAirportName); ?></span>
+                                        <span class="f-point-terminal"><?php echo htmlspecialchars($depTerminal); ?></span>
+                                    </div>
+
+                                    <div class="f-leg-mid">
+                                        <span class="f-leg-duration"><?php echo htmlspecialchars($f['Duration']); ?></span>
+                                        <div class="f-leg-flight-line">
+                                            <i class="fa-solid fa-plane"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="f-leg-point">
+                                        <span class="f-point-time"><?php echo htmlspecialchars($f['ArrivalTime']); ?></span>
+                                        <span class="f-point-date"><?php echo htmlspecialchars($arrDateFormatted); ?><?php if ($isNextDay): ?> <small style="color:#ef4444; font-weight:700;">Next Day</small><?php endif; ?></span>
+                                        <span class="f-point-city"><?php echo htmlspecialchars($toCity); ?> [<?php echo htmlspecialchars($search_query['to_code']); ?>]</span>
+                                        <span class="f-point-airport"><?php echo htmlspecialchars($toAirportName); ?></span>
+                                        <span class="f-point-terminal"><?php echo htmlspecialchars($arrTerminal); ?></span>
+                                    </div>
+                                </div>
+
+                                <?php else: ?>
+                                <!-- Connecting Flight: Leg 1 + Layover Banner + Leg 2 -->
+                                <div class="f-leg-card">
+                                    <div class="f-leg-airline">
+                                        <img src="<?php echo htmlspecialchars($f['AirlineLogo']); ?>" alt="" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($f['AirlineName']); ?>&background=0d3470&color=fff';">
+                                        <div class="f-leg-airline-name">
+                                            <strong><?php echo htmlspecialchars($f['AirlineName']); ?></strong>
+                                            <span><?php echo htmlspecialchars($f['FlightNumber']); ?></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="f-leg-point">
+                                        <span class="f-point-time"><?php echo htmlspecialchars($f['DepartureTime']); ?></span>
+                                        <span class="f-point-date"><?php echo htmlspecialchars($depDateFormatted); ?></span>
+                                        <span class="f-point-city"><?php echo htmlspecialchars($fromCity); ?> [<?php echo htmlspecialchars($search_query['from_code']); ?>]</span>
+                                        <span class="f-point-airport"><?php echo htmlspecialchars($fromAirportName); ?></span>
+                                        <span class="f-point-terminal"><?php echo htmlspecialchars($depTerminal); ?></span>
+                                    </div>
+
+                                    <div class="f-leg-mid">
+                                        <span class="f-leg-duration">2h 15m</span>
+                                        <div class="f-leg-flight-line">
+                                            <i class="fa-solid fa-plane"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="f-leg-point">
+                                        <span class="f-point-time">Layover Arr</span>
+                                        <span class="f-point-date"><?php echo htmlspecialchars($depDateFormatted); ?></span>
+                                        <span class="f-point-city"><?php echo htmlspecialchars($viaCity); ?> [<?php echo htmlspecialchars($owVia); ?>]</span>
+                                        <span class="f-point-airport"><?php echo htmlspecialchars($viaAirportName); ?></span>
+                                        <span class="f-point-terminal">Terminal 1</span>
+                                    </div>
+                                </div>
+
+                                <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:6px; padding:8px 14px; margin:14px 0; font-size:12.5px; color:#1e40af; font-weight:700; display:flex; align-items:center; gap:8px;">
+                                    <i class="fa-solid fa-clock"></i> Layover in <?php echo htmlspecialchars($viaCity); ?> (<?php echo htmlspecialchars($owVia); ?>): 1h 45m
+                                </div>
+
+                                <div class="f-leg-card">
+                                    <div class="f-leg-airline">
+                                        <img src="<?php echo htmlspecialchars($f['AirlineLogo']); ?>" alt="" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($f['AirlineName']); ?>&background=0d3470&color=fff';">
+                                        <div class="f-leg-airline-name">
+                                            <strong><?php echo htmlspecialchars($f['AirlineName']); ?></strong>
+                                            <span><?php echo htmlspecialchars($f['AirlineCode']); ?>-<?php echo rand(400, 899); ?></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="f-leg-point">
+                                        <span class="f-point-time">Layover Dep</span>
+                                        <span class="f-point-date"><?php echo htmlspecialchars($depDateFormatted); ?></span>
+                                        <span class="f-point-city"><?php echo htmlspecialchars($viaCity); ?> [<?php echo htmlspecialchars($owVia); ?>]</span>
+                                        <span class="f-point-airport"><?php echo htmlspecialchars($viaAirportName); ?></span>
+                                        <span class="f-point-terminal">Terminal 1</span>
+                                    </div>
+
+                                    <div class="f-leg-mid">
+                                        <span class="f-leg-duration">2h 10m</span>
+                                        <div class="f-leg-flight-line">
+                                            <i class="fa-solid fa-plane"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="f-leg-point">
+                                        <span class="f-point-time"><?php echo htmlspecialchars($f['ArrivalTime']); ?></span>
+                                        <span class="f-point-date"><?php echo htmlspecialchars($arrDateFormatted); ?><?php if ($isNextDay): ?> <small style="color:#ef4444; font-weight:700;">Next Day</small><?php endif; ?></span>
+                                        <span class="f-point-city"><?php echo htmlspecialchars($toCity); ?> [<?php echo htmlspecialchars($search_query['to_code']); ?>]</span>
+                                        <span class="f-point-airport"><?php echo htmlspecialchars($toAirportName); ?></span>
+                                        <span class="f-point-terminal"><?php echo htmlspecialchars($arrTerminal); ?></span>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
+
+                                <div class="f-info-bottom-ribbon">
+                                    <span class="f-ribbon-tag">INFO</span>
+                                    <span>Meal, Seat are chargeable.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: Fare Summary & Rules (Screenshot 4) -->
+                        <div class="f-drawer-pane drawer-pane-content" id="drawer_pane_fare_<?php echo $idx; ?>" style="display:none;">
+                            <div class="fare-rules-layout">
+                                <!-- Left Side: Rules Subtabs and Fee Tables -->
+                                <div>
+                                    <div class="fare-rules-subnav">
+                                        <button type="button" class="rule-sub-btn active" onclick="switchRuleSubTab(this, 'sub_change_<?php echo $idx; ?>');">CHANGE FEE</button>
+                                        <button type="button" class="rule-sub-btn" onclick="switchRuleSubTab(this, 'sub_cancel_<?php echo $idx; ?>');">CANCELLATION FEE</button>
+                                        <button type="button" class="rule-sub-btn" onclick="switchRuleSubTab(this, 'sub_ato_<?php echo $idx; ?>');">ATO SERVICE FEE</button>
+                                    </div>
+
+                                    <div class="rule-sector-title"><?php echo htmlspecialchars($search_query['from_code']); ?> - <?php echo htmlspecialchars($search_query['to_code']); ?></div>
+
+                                    <!-- Subpane: Change Fee -->
+                                    <div class="rule-subpane" id="sub_change_<?php echo $idx; ?>">
+                                        <table class="rules-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Change Fee</th>
+                                                    <th>Adult</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Re Issue</td>
+                                                    <td>Non-Changeable</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>0 HRS - 4 HRS To Departure</td>
+                                                    <td>Non changeaeble</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>4 HRS - 4 Days To Departure</td>
+                                                    <td>₹ 3899</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>4 Days - 999 Days To Departure</td>
+                                                    <td>₹ 3899</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Subpane: Cancellation Fee -->
+                                    <div class="rule-subpane" id="sub_cancel_<?php echo $idx; ?>" style="display:none;">
+                                        <table class="rules-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cancellation Fee</th>
+                                                    <th>Adult</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>0 HRS - 4 HRS To Departure</td>
+                                                    <td>Non refundable</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>4 HRS - 4 Days To Departure</td>
+                                                    <td>₹ 3999</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>4 Days - 999 Days To Departure</td>
+                                                    <td>₹ 3499</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Subpane: ATO Service Fee -->
+                                    <div class="rule-subpane" id="sub_ato_<?php echo $idx; ?>" style="display:none;">
+                                        <table class="rules-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Service</th>
+                                                    <th>Fee</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Airline Airport Ticket Counter (ATO) Service</td>
+                                                    <td>₹ 500 per passenger</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <ul class="rules-disclaimer-list">
+                                        <li>The above data is indicatory , fare rules are subject to changes by the Airline from time to time depending upon Fare class and change/cancellation fee amount may also vary based on fluctuations in currency conversion rates.</li>
+                                        <li>Although we will try to keep this section updated regularly.</li>
+                                        <li>Feel free to call our Contact 'Centre for exact cancellation/change fee.</li>
+                                        <li>Cancellation/Date change request will be accepted 30 hrs prior to departure.</li>
+                                        <li>GST + RAF charges applicable on cancellation/Reissue penalty.</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Right Side: Fare Details Breakdown Card -->
+                                <div>
+                                    <div class="f-fare-details-box">
+                                        <div class="f-fare-details-header">
+                                            <strong>Fare Details</strong>
+                                            <span>1 Traveller</span>
+                                        </div>
+                                        <div class="f-fare-row">
+                                            <span><i class="fa-solid fa-circle-plus"></i> Base Fare</span>
+                                            <strong style="color:#0f172a;">₹ <?php echo number_format($fBaseFare); ?></strong>
+                                        </div>
+                                        <div class="f-fare-row">
+                                            <span><i class="fa-solid fa-circle-plus"></i> Tax & Charges</span>
+                                            <strong style="color:#0f172a;">₹ <?php echo number_format($fTaxes); ?></strong>
+                                        </div>
+                                        <div class="f-fare-total-row">
+                                            <span>Total Amount:</span>
+                                            <span class="total-amount">₹ <?php echo number_format($owPrice); ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 3: Baggage Information (Screenshot 5) -->
+                        <div class="f-drawer-pane drawer-pane-content" id="drawer_pane_baggage_<?php echo $idx; ?>" style="display:none;">
+                            <table class="baggage-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sector/Flight</th>
+                                        <th>Check in Baggage</th>
+                                        <th>Cabin Baggage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($search_query['from_code']); ?> - <?php echo htmlspecialchars($search_query['to_code']); ?></td>
+                                        <td>15Kg (Adult)</td>
+                                        <td>7Kg (Adult)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <ul class="rules-disclaimer-list">
+                                <li>The information presented above is as obtained from the airline reservation system. Voyogo does not guarantee the accuracy of this information.</li>
+                                <li>The baggage allowance may vary according to stop-overs, connecting flights and changes in airline rules.</li>
+                            </ul>
+
+                            <div class="baggage-alert-box">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>Adding of additional baggage is subject to load factor of the flight. Incase if baggage could not be added, payment for the additional baggage paid will be reverted.</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="f-card-footer" style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <i class="fa-solid fa-suitcase" style="color: #0d3470;"></i> Check-in Baggage: <strong><?php echo htmlspecialchars($f['Baggage']); ?></strong> Included
@@ -3160,9 +4061,14 @@ let selectedDepSlots = [];
 let selectedArrSlots = [];
 
 function toggleStopFilter(elem, filterVal) {
-    document.querySelectorAll('.stop-box').forEach(b => b.classList.remove('active'));
-    elem.classList.add('active');
-    selectedStopFilter = filterVal;
+    if (elem.classList.contains('active')) {
+        elem.classList.remove('active');
+        selectedStopFilter = 'all';
+    } else {
+        document.querySelectorAll('.stop-box').forEach(b => b.classList.remove('active'));
+        elem.classList.add('active');
+        selectedStopFilter = filterVal;
+    }
     applyFilters();
 }
 
@@ -3180,6 +4086,50 @@ function toggleTimeSlot(elem, type) {
     applyFilters();
 }
 
+function toggleMoreAirports() {
+    const extras = document.querySelectorAll('.connect-airport-item.extra-airport');
+    const btn = document.getElementById('toggleMoreAirportsBtn');
+    if (!extras.length || !btn) return;
+    const isCurrentlyHidden = (extras[0].style.display === 'none');
+    extras.forEach(el => {
+        el.style.display = isCurrentlyHidden ? 'flex' : 'none';
+    });
+    btn.textContent = isCurrentlyHidden ? '- Less Airports' : '+ ' + extras.length + ' Airports';
+}
+
+function toggleFlightDetails(drawerId, btn) {
+    const drawer = document.getElementById(drawerId);
+    if (!drawer) return;
+    const isVisible = (drawer.style.display === 'block');
+    drawer.style.display = isVisible ? 'none' : 'block';
+    if (btn) {
+        btn.textContent = isVisible ? '+ Details' : '- Details';
+        btn.style.color = isVisible ? '#0284c7' : '#2563eb';
+    }
+}
+
+function switchDrawerTab(tabBtn, targetPaneId) {
+    const parentDrawer = tabBtn.closest('.f-details-drawer');
+    if (!parentDrawer) return;
+    parentDrawer.querySelectorAll('.f-drawer-tab').forEach(b => b.classList.remove('active'));
+    parentDrawer.querySelectorAll('.drawer-pane-content').forEach(p => p.style.display = 'none');
+
+    tabBtn.classList.add('active');
+    const targetPane = document.getElementById(targetPaneId);
+    if (targetPane) targetPane.style.display = 'block';
+}
+
+function switchRuleSubTab(subBtn, targetSubId) {
+    const parentContainer = subBtn.closest('.fare-rules-layout');
+    if (!parentContainer) return;
+    parentContainer.querySelectorAll('.rule-sub-btn').forEach(b => b.classList.remove('active'));
+    parentContainer.querySelectorAll('.rule-subpane').forEach(p => p.style.display = 'none');
+
+    subBtn.classList.add('active');
+    const targetSub = document.getElementById(targetSubId);
+    if (targetSub) targetSub.style.display = 'block';
+}
+
 function updatePriceSlider(val) {
     const label = document.getElementById('priceRangeMax');
     if (label) label.textContent = '₹ ' + parseInt(val).toLocaleString('en-IN');
@@ -3189,8 +4139,6 @@ function updatePriceSlider(val) {
 function resetAllFilters() {
     // 1. Reset Stops
     document.querySelectorAll('.stop-box').forEach(b => b.classList.remove('active'));
-    const allBox = document.querySelector('.stop-box[data-stop-filter="all"]');
-    if (allBox) allBox.classList.add('active');
     selectedStopFilter = 'all';
 
     // 2. Reset Fare Type
@@ -3213,7 +4161,7 @@ function resetAllFilters() {
     }
 
     // 6. Reset Connecting Airports
-    document.querySelectorAll('.connect-airport-cb').forEach(cb => cb.checked = true);
+    document.querySelectorAll('.connect-airport-cb').forEach(cb => cb.checked = false);
 
     applyFilters();
 }
@@ -3229,12 +4177,13 @@ function applyFilters() {
     
     // Selected Connecting Airports
     const selectedAirports = Array.from(document.querySelectorAll('.connect-airport-cb:checked')).map(cb => cb.value.toUpperCase());
-    const hasAirportFilters = document.querySelectorAll('.connect-airport-cb').length > 0;
 
     let visibleCount = 0;
 
     // Filter One-Way Flight Cards
     const oneWayCards = document.querySelectorAll('.f-card');
+    const hasMultiStops = Array.from(oneWayCards).some(c => parseInt(c.getAttribute('data-stops') || 0) >= 2);
+
     oneWayCards.forEach(card => {
         const stops = parseInt(card.getAttribute('data-stops') || 0);
         const price = parseFloat(card.getAttribute('data-price') || 0);
@@ -3248,7 +4197,9 @@ function applyFilters() {
         let matchStops = true;
         if (selectedStopFilter === '0') matchStops = (stops === 0);
         else if (selectedStopFilter === '1') matchStops = (stops === 1);
-        else if (selectedStopFilter === '2+') matchStops = (stops >= 2);
+        else if (selectedStopFilter === '1+' || selectedStopFilter === '2+') {
+            matchStops = hasMultiStops ? (stops >= 2) : (stops >= 1);
+        }
 
         // 2. Fare Type check
         let matchRef = true;
@@ -3270,8 +4221,12 @@ function applyFilters() {
 
         // 7. Connecting Airport check
         let matchAirport = true;
-        if (hasAirportFilters && stops > 0 && via) {
-            matchAirport = selectedAirports.includes(via);
+        if (selectedAirports.length > 0) {
+            if (stops === 0) {
+                matchAirport = false;
+            } else {
+                matchAirport = selectedAirports.includes(via);
+            }
         }
 
         const isMatch = matchStops && matchRef && matchDep && matchArr && matchAirline && matchPrice && matchAirport;
@@ -3294,7 +4249,7 @@ function applyFilters() {
             const airline = (card.getAttribute('data-airline') || '').toUpperCase();
             const depSlot = card.getAttribute('data-depslot') || 'morning';
 
-            let matchStops = (selectedStopFilter === 'all') || (selectedStopFilter === '0' && stops === 0) || (selectedStopFilter === '1' && stops === 1) || (selectedStopFilter === '2+' && stops >= 2);
+            let matchStops = (selectedStopFilter === 'all') || (selectedStopFilter === '0' && stops === 0) || (selectedStopFilter === '1' && stops === 1) || (selectedStopFilter === '1+' && stops >= 1) || (selectedStopFilter === '2+' && stops >= 2);
             let matchDep = (selectedDepSlots.length === 0) || selectedDepSlots.includes(depSlot);
             let matchAirline = selectedAirlines.includes(airline);
             let matchPrice = (price <= maxPrice);
@@ -3312,7 +4267,7 @@ function applyFilters() {
             const airline = (card.getAttribute('data-airline') || '').toUpperCase();
             const depSlot = card.getAttribute('data-depslot') || 'morning';
 
-            let matchStops = (selectedStopFilter === 'all') || (selectedStopFilter === '0' && stops === 0) || (selectedStopFilter === '1' && stops === 1) || (selectedStopFilter === '2+' && stops >= 2);
+            let matchStops = (selectedStopFilter === 'all') || (selectedStopFilter === '0' && stops === 0) || (selectedStopFilter === '1' && stops === 1) || (selectedStopFilter === '1+' && stops >= 1) || (selectedStopFilter === '2+' && stops >= 2);
             let matchDep = (selectedDepSlots.length === 0) || selectedDepSlots.includes(depSlot);
             let matchAirline = selectedAirlines.includes(airline);
             let matchPrice = (price <= maxPrice);
