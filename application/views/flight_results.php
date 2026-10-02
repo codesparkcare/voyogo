@@ -1948,6 +1948,70 @@
         border-color: transparent;
         box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3);
     }
+    .btn-rt-view-fare {
+        background: #ffffff;
+        border: 1.5px solid #ea580c;
+        color: #ea580c;
+        padding: 11px 20px;
+        font-size: 14px;
+        font-weight: 800;
+        border-radius: 8px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 2px 6px rgba(234, 88, 12, 0.08);
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+    .btn-rt-view-fare:hover {
+        background: #fff7ed;
+        border-color: #c2410c;
+        color: #c2410c;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(234, 88, 12, 0.15);
+    }
+    .btn-rt-continue {
+        background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+        padding: 11px 24px;
+        font-size: 14.5px;
+        font-weight: 800;
+        border-radius: 8px;
+        border: none;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(234, 88, 12, 0.35);
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+    .btn-rt-continue:hover {
+        background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(234, 88, 12, 0.45);
+    }
+    .btn-rt-back {
+        background: #f8fafc;
+        border: 1.5px solid #cbd5e1;
+        color: #334155;
+        padding: 11px 18px;
+        font-size: 13.5px;
+        font-weight: 700;
+        border-radius: 8px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+    .btn-rt-back:hover {
+        background: #f1f5f9;
+        border-color: #94a3b8;
+        color: #0f172a;
+    }
     </style>
     
     <!-- Top Search Header Box -->
@@ -3037,6 +3101,9 @@
                             $cardTui = (!empty($f['ResultID']) && strpos($f['ResultID'], 'FL_') !== 0) ? $f['ResultID'] : (!empty($search_tui) ? $search_tui : ($search_query['tui'] ?? $f['ResultID']));
                             ?>
                             <form action="<?php echo site_url('flight/review'); ?>" method="POST" style="width:100%;">
+                                <input type="hidden" name="tripType" value="oneway">
+                                <input type="hidden" name="from_city" value="<?php echo htmlspecialchars($search_query['from'] ?? ''); ?>">
+                                <input type="hidden" name="to_city" value="<?php echo htmlspecialchars($search_query['to'] ?? ''); ?>">
                                 <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($cardTui); ?>">
                                 <input type="hidden" name="tui" value="<?php echo htmlspecialchars($cardTui); ?>">
                                 <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($f['AirlineName']); ?>">
@@ -3694,6 +3761,9 @@
 
                         <form action="<?php echo site_url('flight/review'); ?>" method="POST" id="roundTripBookingForm">
                             <input type="hidden" name="is_roundtrip" value="1">
+                            <input type="hidden" name="tripType" value="roundtrip">
+                            <input type="hidden" name="from_city" value="<?php echo htmlspecialchars($search_query['from'] ?? ''); ?>">
+                            <input type="hidden" name="to_city" value="<?php echo htmlspecialchars($search_query['to'] ?? ''); ?>">
                             <input type="hidden" name="flight_id" id="rt_flight_id" value="">
                             <input type="hidden" name="tui" id="rt_tui" value="<?php echo htmlspecialchars($activeSearchTui); ?>">
                             
@@ -3720,6 +3790,7 @@
                             <input type="hidden" name="return_to_code" id="rt_return_to_code" value="<?php echo htmlspecialchars($search_query['from_code']); ?>">
                             <input type="hidden" name="return_departure_time" id="rt_return_departure_time" value="">
                             <input type="hidden" name="return_arrival_time" id="rt_return_arrival_time" value="">
+                            <input type="hidden" name="return_date" value="<?php echo htmlspecialchars($search_query['return_date']); ?>">
                             <input type="hidden" name="return_departure_date" value="<?php echo htmlspecialchars($search_query['return_date']); ?>">
                             <input type="hidden" name="return_price" id="rt_return_price" value="">
                             <input type="hidden" name="return_flight_index" id="rt_return_flight_index" value="">
@@ -3740,11 +3811,14 @@
                             <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
 
                             <div style="display: flex; align-items: center; gap: 10px;">
-                                <button type="button" id="btnRtStickyBack" onclick="hideFareOptionsView();" style="display: none; background: #f8fafc; border: 1.5px solid #cbd5e1; color: #334155; padding: 11px 18px; font-size: 13.5px; font-weight: 700; border-radius: 8px; cursor: pointer; align-items: center; gap: 6px; transition: all 0.2s;">
+                                <button type="button" id="btnRtStickyBack" class="btn-rt-back" onclick="hideFareOptionsView();" style="display: none;">
                                     <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
                                 </button>
-                                <button type="button" id="btnRtAction" class="btn-search" onclick="handleRtStickyAction();" style="background: linear-gradient(135deg, #ea580c 0%, #f97316 100%); padding: 12px 28px; font-size: 15px; font-weight: 800; border-radius: 8px; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(234, 88, 12, 0.35); transition: all 0.2s;">
-                                    <span id="btnRtActionText">VIEW FARE</span> <i class="fa-solid fa-arrow-right" id="btnRtActionIcon"></i>
+                                <button type="button" id="btnRtViewFare" class="btn-rt-view-fare" onclick="showFareOptionsView();">
+                                    <span>VIEW FARE</span> <i class="fa-solid fa-angle-right"></i>
+                                </button>
+                                <button type="button" id="btnRtContinueBooking" class="btn-rt-continue" onclick="submitDirectRoundTripBooking();">
+                                    <span id="btnRtContinueText">Continue Booking</span> <i class="fa-solid fa-arrow-right"></i>
                                 </button>
                             </div>
                         </form>
@@ -4386,12 +4460,14 @@
             // =========================================================
             // AKBAR TRAVELS STYLE FARE OPTIONS CONTROLLER
             // =========================================================
+            function submitDirectRoundTripBooking() {
+                updateRoundTripSelection();
+                const form = document.getElementById('roundTripBookingForm');
+                if (form) form.submit();
+            }
+
             function handleRtStickyAction() {
-                if (!isFareOptionsMode) {
-                    showFareOptionsView();
-                } else {
-                    document.getElementById('roundTripBookingForm').submit();
-                }
+                submitDirectRoundTripBooking();
             }
 
             function showFareOptionsView() {
@@ -4448,11 +4524,14 @@
                 }
 
                 // Update Sticky Bar for Fare Options Mode
-                const btnText = document.getElementById('btnRtActionText');
-                if (btnText) btnText.textContent = 'CONTINUE';
+                const btnViewFare = document.getElementById('btnRtViewFare');
+                if (btnViewFare) btnViewFare.style.display = 'none';
 
                 const stickyBack = document.getElementById('btnRtStickyBack');
                 if (stickyBack) stickyBack.style.display = 'inline-flex';
+
+                const btnContinueText = document.getElementById('btnRtContinueText');
+                if (btnContinueText) btnContinueText.textContent = 'Continue Booking';
 
                 const onwardBadge = document.getElementById('barOnwardFareBadge');
                 if (onwardBadge) {
@@ -4491,11 +4570,14 @@
                 if (layoutGrid) layoutGrid.style.gridTemplateColumns = '240px 1fr';
 
                 // Restore Sticky Bar to View Fare mode
-                const btnText = document.getElementById('btnRtActionText');
-                if (btnText) btnText.textContent = 'VIEW FARE';
+                const btnViewFare = document.getElementById('btnRtViewFare');
+                if (btnViewFare) btnViewFare.style.display = 'inline-flex';
 
                 const stickyBack = document.getElementById('btnRtStickyBack');
                 if (stickyBack) stickyBack.style.display = 'none';
+
+                const btnContinueText = document.getElementById('btnRtContinueText');
+                if (btnContinueText) btnContinueText.textContent = 'Continue Booking';
 
                 const onwardBadge = document.getElementById('barOnwardFareBadge');
                 if (onwardBadge) onwardBadge.style.display = 'none';

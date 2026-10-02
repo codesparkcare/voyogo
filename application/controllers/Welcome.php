@@ -53,9 +53,9 @@ class Welcome extends CI_Controller {
             $date     = isset($multi_date[0]) ? $multi_date[0] : date('Y-m-d', strtotime('+3 days'));
             $is_multicity = true;
         } else {
-            $from_raw = $this->input->post('from_city') ?: $this->input->get('from') ?: 'Delhi (DEL)';
-            $to_raw   = $this->input->post('to_city') ?: $this->input->get('to') ?: 'Mumbai (BOM)';
-            $date     = $this->input->post('departure_date') ?: $this->input->get('date') ?: date('Y-m-d', strtotime('+3 days'));
+            $from_raw = $this->input->post('from_city') ?: $this->input->get('from_city') ?: $this->input->get('from') ?: 'Delhi (DEL)';
+            $to_raw   = $this->input->post('to_city') ?: $this->input->get('to_city') ?: $this->input->get('to') ?: 'Mumbai (BOM)';
+            $date     = $this->input->post('departure_date') ?: $this->input->get('departure_date') ?: $this->input->get('date') ?: date('Y-m-d', strtotime('+3 days'));
         }
 
         $adults      = max(1, (int)($this->input->post('adults') ?: $this->input->get('adults') ?: 1));
@@ -97,6 +97,21 @@ class Welcome extends CI_Controller {
                 )
             )
         );
+
+        $airportNamesQuick = array(
+            'DEL' => 'Delhi (DEL)', 'BOM' => 'Mumbai (BOM)', 'BLR' => 'Bengaluru (BLR)',
+            'MAA' => 'Chennai (MAA)', 'HYD' => 'Hyderabad (HYD)', 'CCU' => 'Kolkata (CCU)',
+            'GOI' => 'Goa (GOI)', 'GOX' => 'Goa (GOX)', 'COK' => 'Kochi (COK)',
+            'AMD' => 'Ahmedabad (AMD)', 'PNQ' => 'Pune (PNQ)', 'JAI' => 'Jaipur (JAI)',
+            'DXB' => 'Dubai (DXB)', 'SIN' => 'Singapore (SIN)', 'BKK' => 'Bangkok (BKK)',
+            'LHR' => 'London (LHR)'
+        );
+        if (strpos($from_raw, '(') === false && isset($airportNamesQuick[$from])) {
+            $from_raw = $airportNamesQuick[$from];
+        }
+        if (strpos($to_raw, '(') === false && isset($airportNamesQuick[$to])) {
+            $to_raw = $airportNamesQuick[$to];
+        }
 
         $this->load->library('BenzyFlightApi');
         
@@ -259,11 +274,15 @@ class Welcome extends CI_Controller {
         $children    = max(0, (int)($this->input->post('children') ?: $this->input->get('children') ?: 0));
         $infants     = max(0, (int)($this->input->post('infants') ?: $this->input->get('infants') ?: 0));
         $cabin_class = $this->input->post('cabin_class') ?: $this->input->get('cabin_class') ?: 'Economy';
-        $is_roundtrip = (bool)($this->input->post('is_roundtrip') ?: ($fare_type === 'RT' || $fare_type === 'RD'));
+        $is_roundtrip = (bool)($this->input->post('is_roundtrip') ?: ($fare_type === 'RT' || $fare_type === 'RD' || $this->input->post('tripType') === 'roundtrip' || $this->input->get('tripType') === 'roundtrip'));
 
-        $from_code_post = strtoupper($this->input->post('from_code') ?: 'DEL');
-        $to_code_post   = strtoupper($this->input->post('to_code') ?: 'BOM');
-        $return_price   = (float)($this->input->post('return_price') ?: $this->input->get('return_price') ?: $price);
+        $from_code_post      = strtoupper($this->input->post('from_code') ?: $this->input->get('from_code') ?: 'DEL');
+        $to_code_post        = strtoupper($this->input->post('to_code') ?: $this->input->get('to_code') ?: 'BOM');
+        $from_city_post      = $this->input->post('from_city') ?: $this->input->get('from_city') ?: $this->input->get('from') ?: '';
+        $to_city_post        = $this->input->post('to_city') ?: $this->input->get('to_city') ?: $this->input->get('to') ?: '';
+        $departure_date_post = $this->input->post('departure_date') ?: $this->input->get('departure_date') ?: $this->input->get('date') ?: '';
+        $return_date_post    = $this->input->post('return_departure_date') ?: $this->input->post('return_date') ?: $this->input->get('return_date') ?: '';
+        $return_price        = (float)($this->input->post('return_price') ?: $this->input->get('return_price') ?: $price);
 
         $flight_number  = $this->input->post('flight_number') ?: '6E-2134';
         $airline_code   = strtoupper(explode('-', $flight_number)[0]);
@@ -334,6 +353,8 @@ class Welcome extends CI_Controller {
         }
         if ($this->input->post('departure_date')) {
             $flightDetails['departure_date'] = $this->input->post('departure_date');
+        } elseif (!empty($departure_date_post)) {
+            $flightDetails['departure_date'] = $departure_date_post;
         }
         if ($this->input->post('duration')) {
             $flightDetails['duration'] = $this->input->post('duration');
@@ -366,7 +387,7 @@ class Welcome extends CI_Controller {
                 'to_code'        => strtoupper($this->input->post('return_to_code') ?: ($flightDetails['from_code'] ?? 'DEL')),
                 'departure_time' => $this->input->post('return_departure_time') ?: '18:00',
                 'arrival_time'   => $this->input->post('return_arrival_time') ?: '20:15',
-                'departure_date' => $this->input->post('return_departure_date') ?: date('Y-m-d', strtotime('+7 days')),
+                'departure_date' => $return_date_post ?: ($this->input->post('return_departure_date') ?: date('Y-m-d', strtotime('+7 days'))),
                 'duration'       => $this->input->post('return_duration') ?: '02h 15m',
                 'stops'          => $returnStops,
                 'via'            => $this->input->post('return_via') ?: ($returnStops > 0 ? 'HYD' : ''),
@@ -431,13 +452,55 @@ class Welcome extends CI_Controller {
         $data['is_roundtrip'] = $is_roundtrip;
         $data['fare_rules'] = $fareRules;
         $data['ssr'] = $ssrOptions;
-        $data['search_query'] = array(
-            'adults'      => $adults,
-            'children'    => $children,
-            'infants'     => $infants,
-            'cabin_class' => $cabin_class,
-            'is_roundtrip' => $is_roundtrip
+        $airportDisplayNames = array(
+            'DEL' => 'Delhi (DEL)', 'BOM' => 'Mumbai (BOM)', 'BLR' => 'Bengaluru (BLR)',
+            'MAA' => 'Chennai (MAA)', 'HYD' => 'Hyderabad (HYD)', 'CCU' => 'Kolkata (CCU)',
+            'GOI' => 'Goa (GOI)', 'GOX' => 'Goa (GOX)', 'COK' => 'Kochi (COK)',
+            'AMD' => 'Ahmedabad (AMD)', 'PNQ' => 'Pune (PNQ)', 'JAI' => 'Jaipur (JAI)',
+            'DXB' => 'Dubai (DXB)', 'SIN' => 'Singapore (SIN)', 'BKK' => 'Bangkok (BKK)',
+            'LHR' => 'London (LHR)'
         );
+        $trip_type_str    = $is_roundtrip ? 'roundtrip' : 'oneway';
+        $actual_from_city = !empty($from_city_post) ? $from_city_post : ($airportDisplayNames[$fromCode] ?? ($flightDetails['from_airport'] ?? ($fromCode . ' (' . $fromCode . ')')));
+        $actual_to_city   = !empty($to_city_post) ? $to_city_post : ($airportDisplayNames[$toCode] ?? ($flightDetails['to_airport'] ?? ($toCode . ' (' . $toCode . ')')));
+        $actual_dep_date  = !empty($flightDetails['departure_date']) ? $flightDetails['departure_date'] : ($departure_date_post ?: date('Y-m-d', strtotime('+3 days')));
+        $actual_ret_date  = ($is_roundtrip && !empty($returnFlight['departure_date'])) ? $returnFlight['departure_date'] : ($return_date_post ?: date('Y-m-d', strtotime('+7 days')));
+
+        $data['search_query'] = array(
+            'from'           => $actual_from_city,
+            'to'             => $actual_to_city,
+            'from_code'      => $fromCode,
+            'to_code'        => $toCode,
+            'date'           => $actual_dep_date,
+            'departure_date' => $actual_dep_date,
+            'return_date'    => $actual_ret_date,
+            'trip_type'      => $trip_type_str,
+            'adults'         => $adults,
+            'children'       => $children,
+            'infants'        => $infants,
+            'cabin_class'    => $cabin_class,
+            'is_roundtrip'   => $is_roundtrip
+        );
+
+        $backSearchParams = array(
+            'tripType'       => $trip_type_str,
+            'from_city'      => $actual_from_city,
+            'to_city'        => $actual_to_city,
+            'from'           => $actual_from_city,
+            'to'             => $actual_to_city,
+            'from_code'      => $fromCode,
+            'to_code'        => $toCode,
+            'date'           => $actual_dep_date,
+            'departure_date' => $actual_dep_date,
+            'adults'         => $adults,
+            'children'       => $children,
+            'infants'        => $infants,
+            'cabin_class'    => $cabin_class
+        );
+        if ($is_roundtrip) {
+            $backSearchParams['return_date'] = $actual_ret_date;
+        }
+        $data['back_search_url'] = site_url('flight/search') . '?' . http_build_query($backSearchParams);
         $data['url_meta'] = array(
             'type' => $type,
             'fare_type' => $is_roundtrip ? 'RT' : $fare_type,

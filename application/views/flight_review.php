@@ -158,12 +158,29 @@
             </div>
         <?php endif; ?>
 
+        <!-- Dedicated Form to accurately return to search results with exact criteria -->
+        <form id="backToSearchForm" action="<?php echo site_url('flight/search'); ?>" method="POST" style="display: none;">
+            <input type="hidden" name="tripType" value="<?php echo !empty($is_roundtrip) ? 'roundtrip' : 'oneway'; ?>">
+            <input type="hidden" name="from_city" value="<?php echo htmlspecialchars($search_query['from'] ?? ($flight['from_airport'] ?? 'Delhi (DEL)')); ?>">
+            <input type="hidden" name="to_city" value="<?php echo htmlspecialchars($search_query['to'] ?? ($flight['to_airport'] ?? 'Mumbai (BOM)')); ?>">
+            <input type="hidden" name="from_code" value="<?php echo htmlspecialchars($search_query['from_code'] ?? ($flight['from_code'] ?? 'DEL')); ?>">
+            <input type="hidden" name="to_code" value="<?php echo htmlspecialchars($search_query['to_code'] ?? ($flight['to_code'] ?? 'BOM')); ?>">
+            <input type="hidden" name="departure_date" value="<?php echo htmlspecialchars($search_query['date'] ?? ($flight['departure_date'] ?? date('Y-m-d'))); ?>">
+            <?php if (!empty($is_roundtrip)): ?>
+            <input type="hidden" name="return_date" value="<?php echo htmlspecialchars($search_query['return_date'] ?? ($return_flight['departure_date'] ?? date('Y-m-d', strtotime('+7 days')))); ?>">
+            <?php endif; ?>
+            <input type="hidden" name="adults" value="<?php echo (int)($search_query['adults'] ?? 1); ?>">
+            <input type="hidden" name="children" value="<?php echo (int)($search_query['children'] ?? 0); ?>">
+            <input type="hidden" name="infants" value="<?php echo (int)($search_query['infants'] ?? 0); ?>">
+            <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
+        </form>
+
         <!-- Subheader: Review your flight details & Back to Search (Screenshot 1) -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 4px;">
             <h2 style="font-size: 19px; font-weight: 800; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 8px;">
                 Review your flight details
             </h2>
-            <a href="<?php echo isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'flight') !== false && strpos($_SERVER['HTTP_REFERER'], 'review') === false ? htmlspecialchars($_SERVER['HTTP_REFERER']) : site_url('flight'); ?>" onclick="goBackToSearch(); return false;" class="back-to-search-btn" style="color: #0284c7; text-decoration: none; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: all 0.15s ease;">
+            <a href="<?php echo htmlspecialchars($back_search_url ?? site_url('flight')); ?>" onclick="goBackToSearch(); return false;" class="back-to-search-btn" style="color: #0284c7; text-decoration: none; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: all 0.15s ease;">
                 <i class="fa-solid fa-chevron-left" style="font-size: 11px;"></i> Back to Search
             </a>
         </div>
@@ -1130,13 +1147,13 @@ var appliedDiscount = <?php echo (float)$initialDiscount; ?>;
 var appliedPromoCodeName = 'ATFLY';
 
 function goBackToSearch() {
-    if (document.referrer && (document.referrer.indexOf('/flight') !== -1 || document.referrer.indexOf('/search') !== -1) && document.referrer.indexOf('/flight/review') === -1) {
-        window.location.href = document.referrer;
-    } else if (window.history.length > 1) {
-        window.history.back();
-    } else {
-        window.location.href = '<?php echo site_url('flight'); ?>';
+    var form = document.getElementById('backToSearchForm');
+    if (form) {
+        form.submit();
+        return;
     }
+    var fallbackUrl = <?php echo json_encode(!empty($back_search_url) ? $back_search_url : site_url('flight')); ?>;
+    window.location.href = fallbackUrl;
 }
 
 function toggleFareBreakdown(triggerEl) {
