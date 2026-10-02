@@ -307,7 +307,7 @@
             </a>
         </div>
 
-        <div style="display: grid; grid-template-columns: 2.3fr 1fr; gap: 24px;">
+        <div class="flight-review-layout-grid" style="display: grid; grid-template-columns: 2.3fr 1fr; gap: 24px;">
             
             <!-- Left Column: Flight Details & Passenger Form -->
             <div>
@@ -656,8 +656,6 @@
                             </p>
                         </div>
                     </div>
-
-                </div>
 
                 <?php if (!empty($return_flight)): ?>
                 <!-- Return Flight Summary Card -->
@@ -2083,5 +2081,10 @@ function showProcessingModal(message) {
 .back-to-search-btn:hover {
     color: #0369a1 !important;
     background: #e0f2fe !important;
+}
+@media (max-width: 992px) {
+    .flight-review-layout-grid {
+        grid-template-columns: 1fr !important;
+    }
 }
 </style>
