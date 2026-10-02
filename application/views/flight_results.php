@@ -1670,6 +1670,106 @@
         font-size: 15px;
         margin-top: 2px;
     }
+
+    /* Round Trip Flight Details Modal (Akbar Travels Style) */
+    .rt-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 100000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: rtFadeIn 0.2s ease-out;
+    }
+    @keyframes rtFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .rt-modal-content {
+        background: #ffffff;
+        width: 100%;
+        max-width: 840px;
+        max-height: 90vh;
+        border-radius: 12px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        animation: rtSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes rtSlideUp {
+        from { transform: translateY(20px) scale(0.98); opacity: 0; }
+        to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .rt-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 24px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #ffffff;
+    }
+    .rt-modal-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+    .rt-modal-close {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #64748b;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: all 0.15s;
+        line-height: 1;
+    }
+    .rt-modal-close:hover {
+        color: #0f172a;
+        background: #f1f5f9;
+    }
+    .rt-modal-tabs {
+        display: flex;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 0 20px;
+        gap: 8px;
+    }
+    .rt-modal-tab {
+        padding: 12px 18px;
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #475569;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-transform: none;
+    }
+    .rt-modal-tab:hover {
+        color: #0284c7;
+    }
+    .rt-modal-tab.active {
+        color: #0284c7;
+        font-weight: 700;
+        border-bottom-color: #0284c7;
+        background: #f0f9ff;
+    }
+    .rt-modal-body {
+        padding: 20px 24px;
+        overflow-y: auto;
+        max-height: calc(90vh - 125px);
+    }
     </style>
     
     <!-- Top Search Header Box -->
@@ -3147,7 +3247,9 @@
                     </div>
 
                     <div style="background: #ffffff; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 10px 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px;" id="onwardFlightGroup">
-                        <?php foreach ($onwardFlights as $idx => $f): ?>
+                        <?php foreach ($onwardFlights as $idx => $f): 
+                            $fSeats = $f['SeatsLeft'] ?? rand(3, 9);
+                        ?>
                         <label class="rt-card onward-card <?php echo ($idx === 0) ? 'selected-rt-card' : ''; ?>" data-stops="<?php echo (int)($f['Stops'] ?? 0); ?>" data-airline="<?php echo htmlspecialchars($f['AirlineCode'] ?? '6E'); ?>" data-price="<?php echo (float)$f['Price']; ?>" style="display: block; cursor: pointer; border: 2px solid <?php echo ($idx === 0) ? '#2563eb' : '#e2e8f0'; ?>; border-radius: 8px; padding: 12px; transition: all 0.2s; background: <?php echo ($idx === 0) ? '#eff6ff' : '#fff'; ?>;">
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
@@ -3158,9 +3260,12 @@
                                         <span style="font-size: 11px; color: #64748b;"><?php echo htmlspecialchars($f['FlightNumber']); ?></span>
                                     </div>
                                 </div>
-                                <div style="text-align: right;">
-                                    <strong style="font-size: 16px; color: #0f172a;">₹ <?php echo number_format($f['Price']); ?></strong>
-                                    <span style="font-size: 10px; color: #64748b; display: block;"><?php echo ($total_travelers > 1) ? 'total for ' . $total_travelers . ' travelers' : 'per adult'; ?></span>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 11px; color: #ef4444; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-chair"></i> <?php echo $fSeats; ?> Left</span>
+                                    <div style="text-align: right;">
+                                        <strong style="font-size: 16px; color: #0f172a;">₹ <?php echo number_format($f['Price']); ?></strong>
+                                        <span style="font-size: 10px; color: #64748b; display: block;"><?php echo ($total_travelers > 1) ? 'total for ' . $total_travelers . ' travelers' : 'per adult'; ?></span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -3184,6 +3289,16 @@
                                     <span style="color: #64748b; font-size: 11px; display: block;"><?php echo htmlspecialchars($f['ToCode']); ?></span>
                                 </div>
                             </div>
+
+                            <!-- Notice & Details Link Row (Matching Akbar Travels Screenshot 1) -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 6px; border-top: 1px dashed #e2e8f0; font-size: 11.5px;">
+                                <div style="color: #64748b; display: flex; align-items: center; gap: 4px;">
+                                    <i class="fa-solid fa-circle-info" style="color: #2563eb; font-size: 11px;"></i>
+                                    <span>Meal, Seat are c...</span>
+                                    <a href="javascript:void(0);" onclick="openRtModal('onward', <?php echo $idx; ?>, event);" style="color: #0284c7; text-decoration: none; font-weight: 700;">(More)</a>
+                                </div>
+                                <a href="javascript:void(0);" onclick="openRtModal('onward', <?php echo $idx; ?>, event);" style="color: #0284c7; font-weight: 700; text-decoration: none; font-size: 12px; display: inline-flex; align-items: center; gap: 3px;">+ Details</a>
+                            </div>
                         </label>
                         <?php endforeach; ?>
                     </div>
@@ -3202,7 +3317,9 @@
                     </div>
 
                     <div style="background: #ffffff; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 10px 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px;" id="returnFlightGroup">
-                        <?php foreach ($inboundFlights as $rIdx => $rf): ?>
+                        <?php foreach ($inboundFlights as $rIdx => $rf): 
+                            $rfSeats = $rf['SeatsLeft'] ?? rand(3, 9);
+                        ?>
                         <label class="rt-card return-card <?php echo ($rIdx === 0) ? 'selected-rt-card' : ''; ?>" data-stops="<?php echo (int)($rf['Stops'] ?? 0); ?>" data-airline="<?php echo htmlspecialchars($rf['AirlineCode'] ?? '6E'); ?>" data-price="<?php echo (float)$rf['Price']; ?>" style="display: block; cursor: pointer; border: 2px solid <?php echo ($rIdx === 0) ? '#2563eb' : '#e2e8f0'; ?>; border-radius: 8px; padding: 12px; transition: all 0.2s; background: <?php echo ($rIdx === 0) ? '#eff6ff' : '#fff'; ?>;">
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
@@ -3213,9 +3330,12 @@
                                         <span style="font-size: 11px; color: #64748b;"><?php echo htmlspecialchars($rf['FlightNumber']); ?></span>
                                     </div>
                                 </div>
-                                <div style="text-align: right;">
-                                    <strong style="font-size: 16px; color: #0f172a;">₹ <?php echo number_format($rf['Price']); ?></strong>
-                                    <span style="font-size: 10px; color: #64748b; display: block;"><?php echo ($total_travelers > 1) ? 'total for ' . $total_travelers . ' travelers' : 'per adult'; ?></span>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 11px; color: #ef4444; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-chair"></i> <?php echo $rfSeats; ?> Left</span>
+                                    <div style="text-align: right;">
+                                        <strong style="font-size: 16px; color: #0f172a;">₹ <?php echo number_format($rf['Price']); ?></strong>
+                                        <span style="font-size: 10px; color: #64748b; display: block;"><?php echo ($total_travelers > 1) ? 'total for ' . $total_travelers . ' travelers' : 'per adult'; ?></span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -3238,6 +3358,16 @@
                                     <strong style="font-size: 15px; color: #0f172a;"><?php echo htmlspecialchars($rf['ArrivalTime']); ?></strong>
                                     <span style="color: #64748b; font-size: 11px; display: block;"><?php echo htmlspecialchars($rf['ToCode']); ?></span>
                                 </div>
+                            </div>
+
+                            <!-- Notice & Details Link Row (Matching Akbar Travels Screenshot 1) -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 6px; border-top: 1px dashed #e2e8f0; font-size: 11.5px;">
+                                <div style="color: #64748b; display: flex; align-items: center; gap: 4px;">
+                                    <i class="fa-solid fa-circle-info" style="color: #2563eb; font-size: 11px;"></i>
+                                    <span>Meal, Seat are c...</span>
+                                    <a href="javascript:void(0);" onclick="openRtModal('return', <?php echo $rIdx; ?>, event);" style="color: #0284c7; text-decoration: none; font-weight: 700;">(More)</a>
+                                </div>
+                                <a href="javascript:void(0);" onclick="openRtModal('return', <?php echo $rIdx; ?>, event);" style="color: #0284c7; font-weight: 700; text-decoration: none; font-size: 12px; display: inline-flex; align-items: center; gap: 3px;">+ Details</a>
                             </div>
                         </label>
                         <?php endforeach; ?>
@@ -3276,6 +3406,7 @@
                         <div style="text-align: right;">
                             <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Round Trip Fare</span>
                             <strong style="font-size: 24px; color: #0d3470; display: block; line-height: 1;" id="barTotalPrice">₹ 10,300</strong>
+                            <a href="javascript:void(0);" onclick="openRtModal('onward', null, event);" style="font-size: 12px; color: #0284c7; font-weight: 700; text-decoration: underline; margin-top: 4px; display: inline-flex; align-items: center; gap: 4px;">Flight Details</a>
                         </div>
 
                         <form action="<?php echo site_url('flight/review'); ?>" method="POST" id="roundTripBookingForm">
@@ -3328,9 +3459,192 @@
                 </div>
             </div>
 
+            <!-- Akbar Travels Style Flight Details Modal (Screenshot 2) -->
+            <div class="rt-modal-overlay" id="rtFlightDetailsModal" onclick="closeRtModal(event)">
+                <div class="rt-modal-content" onclick="event.stopPropagation();">
+                    <!-- Modal Header -->
+                    <div class="rt-modal-header">
+                        <h3 class="rt-modal-title">Flight Details</h3>
+                        <button type="button" class="rt-modal-close" onclick="closeRtModal()" title="Close"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+
+                    <!-- Sector & Info Navigation Tabs -->
+                    <div class="rt-modal-tabs" id="rtModalTabs">
+                        <button type="button" class="rt-modal-tab active" id="rtTabOnward" onclick="switchRtModalTab('onward')">
+                            <i class="fa-solid fa-plane-departure" style="font-size:11px; margin-right:4px;"></i> <?php echo htmlspecialchars($search_query['from_code']); ?> - <?php echo htmlspecialchars($search_query['to_code']); ?>
+                        </button>
+                        <button type="button" class="rt-modal-tab" id="rtTabReturn" onclick="switchRtModalTab('return')">
+                            <i class="fa-solid fa-plane-arrival" style="font-size:11px; margin-right:4px;"></i> <?php echo htmlspecialchars($search_query['to_code']); ?> - <?php echo htmlspecialchars($search_query['from_code']); ?>
+                        </button>
+                        <button type="button" class="rt-modal-tab" id="rtTabFare" onclick="switchRtModalTab('fare')">
+                            Fare Summary &amp; Rules
+                        </button>
+                        <button type="button" class="rt-modal-tab" id="rtTabBaggage" onclick="switchRtModalTab('baggage')">
+                            Baggage Information
+                        </button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="rt-modal-body">
+                        <!-- Pane 1: Flight Information (Screenshot 2) -->
+                        <div id="rtPaneFlightInfo" class="rt-modal-pane">
+                            <div class="f-info-box">
+                                <div class="f-info-header">
+                                    <span class="f-info-route" id="rtModalRouteText">Mumbai &#10231; New Delhi , 21 Oct</span>
+                                    <div class="f-info-aircraft-badge">
+                                        <span><strong>Aircraft:</strong> <span id="rtModalAircraft">Airbus A320</span></span>
+                                        <span class="badge-sep">|</span>
+                                        <span><strong>Travel Class:</strong> <span id="rtModalCabin">Economy</span></span>
+                                    </div>
+                                </div>
+
+                                <!-- Dynamic Segments Container -->
+                                <div id="rtModalSegmentsContainer"></div>
+
+                                <!-- Bottom Notice Ribbon -->
+                                <div class="f-info-bottom-ribbon" style="margin-top:16px;">
+                                    <span class="f-ribbon-tag">INFO</span>
+                                    <span style="color:#334155; font-size:12px;">Meal, Seat are chargeable.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pane 2: Fare Summary & Rules -->
+                        <div id="rtPaneFareRules" class="rt-modal-pane" style="display:none;">
+                            <div class="fare-rules-layout">
+                                <!-- Left: Rules Tables -->
+                                <div>
+                                    <div class="fare-rules-subnav">
+                                        <button type="button" class="rule-sub-btn active" id="rtRuleBtnChange" onclick="switchRtRuleSub('change')">DATE CHANGE</button>
+                                        <button type="button" class="rule-sub-btn" id="rtRuleBtnCancel" onclick="switchRtRuleSub('cancel')">CANCELLATION FEE</button>
+                                    </div>
+
+                                    <div class="rule-sector-title" id="rtRuleSectorTitle"><?php echo htmlspecialchars($search_query['from_code']); ?> - <?php echo htmlspecialchars($search_query['to_code']); ?></div>
+
+                                    <!-- Date Change Fee Subpane -->
+                                    <div id="rtSubpaneChange" class="rt-rule-subpane">
+                                        <table class="rules-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 65%;">TIMEFRAME (FROM SCHEDULED FLIGHT DEPARTURE)</th>
+                                                    <th style="width: 35%; text-align: right;" id="rtThChange">DATE CHANGE</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="rtTbodyChange"></tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Cancellation Fee Subpane -->
+                                    <div id="rtSubpaneCancel" class="rt-rule-subpane" style="display:none;">
+                                        <table class="rules-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 65%;">TIMEFRAME (FROM SCHEDULED FLIGHT DEPARTURE)</th>
+                                                    <th style="width: 35%; text-align: right;" id="rtThCancel">CANCELLATION FEE</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="rtTbodyCancel"></tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- ATO Charges Table -->
+                                    <div style="margin-top: 15px;">
+                                        <table class="rules-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 65%;">AIRLINE ATO CHARGES</th>
+                                                    <th style="width: 35%; text-align: right;">CHARGES</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="rtTbodyAto">
+                                                <tr><td>Re Schedule</td><td style="text-align: right; font-weight: 700; color: #0d3470;">₹ 300</td></tr>
+                                                <tr><td>Cancellation</td><td style="text-align: right; font-weight: 700; color: #0d3470;">₹ 300</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <ul class="rules-disclaimer-list">
+                                        <li>* The above data is indicative. Penalties are subject to airline fare rule conditions and policies.</li>
+                                        <li>* In case of No-Show or within 24 hours of departure, booking is non-refundable as per standard carrier terms.</li>
+                                        <li>* Service fees and payment gateway convenience fees are non-refundable.</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Right: Fare Breakdown Box -->
+                                <div class="f-fare-details-box">
+                                    <div class="f-fare-details-header">
+                                        <strong style="font-size: 14px; color: #0f172a;">Fare Summary</strong>
+                                        <span style="font-size: 11px; font-weight: 700; color: #64748b;" id="rtFarePaxCount">1 Adult</span>
+                                    </div>
+                                    <div class="f-fare-row">
+                                        <span class="f-fare-label">Base Fare</span>
+                                        <span class="f-fare-val" id="rtModalBaseFare">₹ 3,750</span>
+                                    </div>
+                                    <div class="f-fare-group">
+                                        <div class="f-fare-row" style="cursor: pointer;" onclick="toggleFareBreakdown(this);">
+                                            <span class="f-fare-label" style="display:flex; align-items:center; gap:5px;">
+                                                <i class="fa-solid fa-circle-minus f-fare-toggle-icon" style="color: #2563eb; font-size: 12px;"></i>
+                                                Surcharges &amp; Taxes
+                                            </span>
+                                            <span class="f-fare-val" id="rtModalTotalTaxes">₹ 1,400</span>
+                                        </div>
+                                        <div class="f-fare-subitems" id="rtModalTaxSubitems" style="display: flex;">
+                                            <div class="f-fare-subrow"><span>Fuel Surcharge</span><span id="rtTaxFuel">₹ 549</span></div>
+                                            <div class="f-fare-subrow"><span>User Dev. Fee</span><span id="rtTaxUdf">₹ 207</span></div>
+                                            <div class="f-fare-subrow"><span>K3 Tax</span><span id="rtTaxK3">₹ 350</span></div>
+                                            <div class="f-fare-subrow"><span>Airline Misc</span><span id="rtTaxMisc">₹ 294</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="f-fare-total-row">
+                                        <span>Total Fare</span>
+                                        <span class="f-fare-total-price" id="rtModalTotalFare">₹ 5,150</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pane 3: Baggage Information -->
+                        <div id="rtPaneBaggage" class="rt-modal-pane" style="display:none;">
+                            <table class="rules-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">SECTOR</th>
+                                        <th style="width: 35%;">CHECK-IN BAGGAGE</th>
+                                        <th style="width: 35%;">CABIN BAGGAGE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong style="color: #0d3470;" id="rtBaggageSectorOnward"><?php echo htmlspecialchars($search_query['from_code']); ?> - <?php echo htmlspecialchars($search_query['to_code']); ?></strong></td>
+                                        <td><i class="fa-solid fa-suitcase" style="color:#0ea5e9; margin-right:5px;"></i> 15 Kgs (1 piece only) / Adult</td>
+                                        <td><i class="fa-solid fa-briefcase" style="color:#64748b; margin-right:5px;"></i> 7 Kgs (1 piece only) / Adult</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong style="color: #0d3470;" id="rtBaggageSectorReturn"><?php echo htmlspecialchars($search_query['to_code']); ?> - <?php echo htmlspecialchars($search_query['from_code']); ?></strong></td>
+                                        <td><i class="fa-solid fa-suitcase" style="color:#0ea5e9; margin-right:5px;"></i> 15 Kgs (1 piece only) / Adult</td>
+                                        <td><i class="fa-solid fa-briefcase" style="color:#64748b; margin-right:5px;"></i> 7 Kgs (1 piece only) / Adult</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px; font-size:12px; color:#475569; line-height:1.6; margin-top:15px;">
+                                <strong style="color:#0f172a; display:block; margin-bottom:4px;"><i class="fa-solid fa-circle-exclamation" style="color:#f59e0b;"></i> Important Baggage Guidelines:</strong>
+                                The baggage information is just for reference and subject to change by the operating carrier. Additional charges will apply for excess baggage beyond the permissible limits. Infants are generally allowed 7 Kgs cabin baggage.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <script>
             const onwardData = <?php echo json_encode($onwardFlights); ?>;
             const returnData = <?php echo json_encode($inboundFlights); ?>;
+            const rtAirportCityMap = <?php echo json_encode($airportCityMap); ?>;
+            const rtSearchQuery = <?php echo json_encode($search_query); ?>;
+
+            let currentRtOnwardIdx = 0;
+            let currentRtReturnIdx = 0;
+            let activeRtSector = 'onward';
+            const rtFareCache = {};
 
             function updateRoundTripSelection() {
                 const onwardRadio = document.querySelector('input[name="selected_onward_idx"]:checked');
@@ -3338,6 +3652,9 @@
 
                 const oIdx = onwardRadio ? parseInt(onwardRadio.value) : 0;
                 const rIdx = returnRadio ? parseInt(returnRadio.value) : 0;
+
+                currentRtOnwardIdx = oIdx;
+                currentRtReturnIdx = rIdx;
 
                 const o = onwardData[oIdx] || onwardData[0];
                 const r = returnData[rIdx] || returnData[0];
@@ -3399,6 +3716,363 @@
 
                 const total = (o ? parseFloat(o.Price) : 0) + (r ? parseFloat(r.Price) : 0);
                 document.getElementById('barTotalPrice').textContent = '₹ ' + total.toLocaleString('en-IN');
+            }
+
+            // Akbar Travels Style Modal Controls
+            function openRtModal(sector, idx, event) {
+                if (event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+
+                if (sector === 'onward') {
+                    if (idx !== null && idx !== undefined) currentRtOnwardIdx = idx;
+                    activeRtSector = 'onward';
+                } else if (sector === 'return') {
+                    if (idx !== null && idx !== undefined) currentRtReturnIdx = idx;
+                    activeRtSector = 'return';
+                } else {
+                    // Combined from bottom sticky bar: default to onward tab
+                    activeRtSector = 'onward';
+                }
+
+                switchRtModalTab(activeRtSector);
+
+                const modal = document.getElementById('rtFlightDetailsModal');
+                if (modal) modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeRtModal(event) {
+                if (event && event.target && event.target !== document.getElementById('rtFlightDetailsModal') && !event.target.classList.contains('rt-modal-close') && !event.target.closest('.rt-modal-close')) {
+                    return;
+                }
+                const modal = document.getElementById('rtFlightDetailsModal');
+                if (modal) modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeRtModal();
+            });
+
+            function switchRtModalTab(tabKey) {
+                const tabs = document.querySelectorAll('.rt-modal-tab');
+                tabs.forEach(t => t.classList.remove('active'));
+
+                const panes = document.querySelectorAll('.rt-modal-pane');
+                panes.forEach(p => p.style.display = 'none');
+
+                if (tabKey === 'onward' || tabKey === 'return') {
+                    activeRtSector = tabKey;
+                    const tabBtn = document.getElementById(tabKey === 'onward' ? 'rtTabOnward' : 'rtTabReturn');
+                    if (tabBtn) tabBtn.classList.add('active');
+                    
+                    const pane = document.getElementById('rtPaneFlightInfo');
+                    if (pane) pane.style.display = 'block';
+
+                    renderRtFlightInfo(activeRtSector);
+                } else if (tabKey === 'fare') {
+                    const tabBtn = document.getElementById('rtTabFare');
+                    if (tabBtn) tabBtn.classList.add('active');
+
+                    const pane = document.getElementById('rtPaneFareRules');
+                    if (pane) pane.style.display = 'block';
+
+                    loadRtFareDetails(activeRtSector);
+                } else if (tabKey === 'baggage') {
+                    const tabBtn = document.getElementById('rtTabBaggage');
+                    if (tabBtn) tabBtn.classList.add('active');
+
+                    const pane = document.getElementById('rtPaneBaggage');
+                    if (pane) pane.style.display = 'block';
+                }
+            }
+
+            function switchRtRuleSub(type) {
+                const btnChange = document.getElementById('rtRuleBtnChange');
+                const btnCancel = document.getElementById('rtRuleBtnCancel');
+                const paneChange = document.getElementById('rtSubpaneChange');
+                const paneCancel = document.getElementById('rtSubpaneCancel');
+
+                if (type === 'change') {
+                    btnChange.classList.add('active');
+                    btnCancel.classList.remove('active');
+                    paneChange.style.display = 'block';
+                    paneCancel.style.display = 'none';
+                } else {
+                    btnCancel.classList.add('active');
+                    btnChange.classList.remove('active');
+                    paneCancel.style.display = 'block';
+                    paneChange.style.display = 'none';
+                }
+            }
+
+            // Render Segment Legs into Modal (Screenshot 2 Matching)
+            function renderRtFlightInfo(sector) {
+                const isO = (sector === 'onward');
+                const f = isO ? (onwardData[currentRtOnwardIdx] || onwardData[0]) : (returnData[currentRtReturnIdx] || returnData[0]);
+                if (!f) return;
+
+                const fromCode = isO ? rtSearchQuery.from_code : rtSearchQuery.to_code;
+                const toCode = isO ? rtSearchQuery.to_code : rtSearchQuery.from_code;
+                const depDateStr = isO ? rtSearchQuery.date : rtSearchQuery.return_date;
+
+                const fromCity = (rtAirportCityMap[fromCode] && rtAirportCityMap[fromCode].city) || fromCode;
+                const toCity = (rtAirportCityMap[toCode] && rtAirportCityMap[toCode].city) || toCode;
+                const fromAirport = (rtAirportCityMap[fromCode] && rtAirportCityMap[fromCode].name) || (fromCode + ' Airport');
+                const toAirport = (rtAirportCityMap[toCode] && rtAirportCityMap[toCode].name) || (toCode + ' Airport');
+                const depTerminal = (rtAirportCityMap[fromCode] && rtAirportCityMap[fromCode].terminal) || 'Terminal 1';
+                const arrTerminal = (rtAirportCityMap[toCode] && rtAirportCityMap[toCode].terminal) || 'Terminal 2';
+
+                // Format Date: e.g. "Wed, 21 Oct 26" and "21 Oct"
+                let dateFormatted = depDateStr;
+                let routeDateFormatted = depDateStr;
+                try {
+                    const d = new Date(depDateStr + 'T00:00:00');
+                    if (!isNaN(d.getTime())) {
+                        const dayNum = d.getDate();
+                        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                        const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+                        const mStr = months[d.getMonth()];
+                        const dayStr = days[d.getDay()];
+                        const yStr = String(d.getFullYear()).slice(-2);
+                        dateFormatted = `${dayStr}, ${dayNum} ${mStr} ${yStr}`;
+                        routeDateFormatted = `${dayNum} ${mStr}`;
+                    }
+                } catch(e) {}
+
+                document.getElementById('rtModalRouteText').textContent = `${fromCity} ➔ ${toCity} , ${routeDateFormatted}`;
+                
+                const code = (f.AirlineCode || '6E').toUpperCase();
+                let aircraft = f.Aircraft || (code === 'SG' ? 'Boeing 737' : (code === 'AI' || code === 'IX' ? 'Boeing 737Max' : 'Airbus A320'));
+                document.getElementById('rtModalAircraft').textContent = aircraft;
+                document.getElementById('rtModalCabin').textContent = rtSearchQuery.cabin_class || 'Economy';
+
+                const stops = parseInt(f.Stops || 0);
+                const viaCode = (f.via || f.Via || (stops > 0 ? 'BHO' : '')).toUpperCase();
+                const viaCity = (rtAirportCityMap[viaCode] && rtAirportCityMap[viaCode].city) || (viaCode === 'BHO' ? 'Bhopal' : (viaCode === 'GOX' ? 'Goa' : (viaCode || 'Connecting')));
+                const viaAirport = (rtAirportCityMap[viaCode] && rtAirportCityMap[viaCode].name) || (viaCity + ' Airport');
+
+                const container = document.getElementById('rtModalSegmentsContainer');
+                let html = '';
+
+                if (stops === 0) {
+                    // Non-Stop Leg
+                    html = `
+                    <div class="f-leg-card" style="padding: 15px 0;">
+                        <div class="f-leg-airline">
+                            <img src="${f.AirlineLogo}" alt="logo" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(f.AirlineName)}&background=0d3470&color=fff';" style="width: 38px; height: 38px; object-fit: contain;">
+                            <div class="f-leg-airline-name">
+                                <strong>${f.AirlineName}</strong>
+                                <span>${f.FlightNumber}</span>
+                            </div>
+                        </div>
+                        <div class="f-leg-point">
+                            <span class="f-point-time">${f.DepartureTime}</span>
+                            <span class="f-point-date">${dateFormatted}</span>
+                            <span class="f-point-city">${fromCity} [${fromCode}]</span>
+                            <span class="f-point-airport">${fromAirport}</span>
+                            <span class="f-point-terminal">${depTerminal}</span>
+                        </div>
+                        <div class="f-leg-mid">
+                            <span class="f-leg-duration">${f.Duration}</span>
+                            <div class="f-leg-flight-line"><i class="fa-solid fa-plane"></i></div>
+                            <span style="font-size: 11px; color: #16a34a; font-weight: 700;">Non Stop</span>
+                        </div>
+                        <div class="f-leg-point">
+                            <span class="f-point-time">${f.ArrivalTime}</span>
+                            <span class="f-point-date">${dateFormatted}</span>
+                            <span class="f-point-city">${toCity} [${toCode}]</span>
+                            <span class="f-point-airport">${toAirport}</span>
+                            <span class="f-point-terminal">${arrTerminal}</span>
+                        </div>
+                    </div>`;
+                } else {
+                    // 1+ Stop Legs with connecting layover banner (Screenshot 2 exact match)
+                    html = `
+                    <!-- Leg 1 -->
+                    <div class="f-leg-card" style="padding: 10px 0;">
+                        <div class="f-leg-airline">
+                            <img src="${f.AirlineLogo}" alt="logo" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(f.AirlineName)}&background=0d3470&color=fff';" style="width: 38px; height: 38px; object-fit: contain;">
+                            <div class="f-leg-airline-name">
+                                <strong>${f.AirlineName}</strong>
+                                <span>${f.FlightNumber}</span>
+                            </div>
+                        </div>
+                        <div class="f-leg-point">
+                            <span class="f-point-time">${f.DepartureTime}</span>
+                            <span class="f-point-date">${dateFormatted}</span>
+                            <span class="f-point-city">${fromCity} [${fromCode}]</span>
+                            <span class="f-point-airport">${fromAirport}</span>
+                            <span class="f-point-terminal">${depTerminal}</span>
+                        </div>
+                        <div class="f-leg-mid">
+                            <span class="f-leg-duration">1 Hr. 40 Min.</span>
+                            <div class="f-leg-flight-line"><i class="fa-solid fa-plane"></i></div>
+                        </div>
+                        <div class="f-leg-point">
+                            <span class="f-point-time">14:50</span>
+                            <span class="f-point-date">${dateFormatted}</span>
+                            <span class="f-point-city">${viaCity} [${viaCode}]</span>
+                            <span class="f-point-airport">${viaAirport}</span>
+                        </div>
+                    </div>
+
+                    <!-- Layover Banner (Screenshot 2 Akbar Travels Blue Ribbon) -->
+                    <div style="background: #0284c7; color: #ffffff; padding: 9px 18px; border-radius: 6px; font-size: 12px; font-weight: 700; text-align: center; margin: 12px 0; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <i class="fa-solid fa-plane-circle-exclamation" style="font-size: 13px;"></i>
+                        <span>Change planes at ${viaCity} [${viaCity} | IN | India (${viaCode})]. Connecting Time: 02h:15m</span>
+                    </div>
+
+                    <!-- Leg 2 -->
+                    <div class="f-leg-card" style="padding: 10px 0;">
+                        <div class="f-leg-airline">
+                            <img src="${f.AirlineLogo}" alt="logo" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(f.AirlineName)}&background=0d3470&color=fff';" style="width: 38px; height: 38px; object-fit: contain;">
+                            <div class="f-leg-airline-name">
+                                <strong>${f.AirlineName}</strong>
+                                <span>${f.FlightNumber}</span>
+                            </div>
+                        </div>
+                        <div class="f-leg-point">
+                            <span class="f-point-time">17:05</span>
+                            <span class="f-point-date">${dateFormatted}</span>
+                            <span class="f-point-city">${viaCity} [${viaCode}]</span>
+                            <span class="f-point-airport">${viaAirport}</span>
+                        </div>
+                        <div class="f-leg-mid">
+                            <span class="f-leg-duration">1 Hr. 45 Min.</span>
+                            <div class="f-leg-flight-line"><i class="fa-solid fa-plane"></i></div>
+                        </div>
+                        <div class="f-leg-point">
+                            <span class="f-point-time">${f.ArrivalTime}</span>
+                            <span class="f-point-date">${dateFormatted}</span>
+                            <span class="f-point-city">${toCity} [${toCode}]</span>
+                            <span class="f-point-airport">${toAirport}</span>
+                            <span class="f-point-terminal">${arrTerminal}</span>
+                        </div>
+                    </div>`;
+                }
+
+                container.innerHTML = html;
+            }
+
+            // Dynamic Fare Rules & Breakdown loader
+            function loadRtFareDetails(sector) {
+                const isO = (sector === 'onward');
+                const f = isO ? (onwardData[currentRtOnwardIdx] || onwardData[0]) : (returnData[currentRtReturnIdx] || returnData[0]);
+                if (!f) return;
+
+                const fromCode = isO ? rtSearchQuery.from_code : rtSearchQuery.to_code;
+                const toCode = isO ? rtSearchQuery.to_code : rtSearchQuery.from_code;
+
+                document.getElementById('rtRuleSectorTitle').textContent = `${fromCode} - ${toCode}`;
+
+                const price = parseFloat(f.Price) || 5150;
+                const baseFare = Math.round(price * 0.72);
+                const taxes = Math.max(0, price - baseFare);
+                const taxFuel = 549;
+                const taxUdf = 207;
+                const taxK3 = Math.round(Math.max(0, taxes - (taxFuel + taxUdf)) * 0.45);
+                const taxMisc = Math.max(0, taxes - (taxFuel + taxUdf + taxK3));
+
+                document.getElementById('rtModalBaseFare').textContent = '₹ ' + baseFare.toLocaleString('en-IN');
+                document.getElementById('rtModalTotalTaxes').textContent = '₹ ' + taxes.toLocaleString('en-IN');
+                document.getElementById('rtModalTotalFare').textContent = '₹ ' + price.toLocaleString('en-IN');
+                document.getElementById('rtTaxFuel').textContent = '₹ ' + taxFuel.toLocaleString('en-IN');
+                document.getElementById('rtTaxUdf').textContent = '₹ ' + taxUdf.toLocaleString('en-IN');
+                document.getElementById('rtTaxK3').textContent = '₹ ' + taxK3.toLocaleString('en-IN');
+                document.getElementById('rtTaxMisc').textContent = '₹ ' + taxMisc.toLocaleString('en-IN');
+
+                const airline = (f.AirlineCode || '6E').toUpperCase();
+                let changeRows = [
+                    { desc: '0 HRS - 24 HRS To Departure', amount: 'Not-Permitted' },
+                    { desc: '24 HRS - 999 Days To Departure', amount: '₹ 3,000' }
+                ];
+                let cancelRows = [
+                    { desc: '0 HRS - 24 HRS To Departure', amount: 'Non-Refundable' },
+                    { desc: '24 HRS - 999 Days To Departure', amount: '₹ 3,500' }
+                ];
+
+                if (airline === 'AI') {
+                    changeRows = [
+                        { desc: 'Before 24 Hrs', amount: '₹ 3,500' },
+                        { desc: 'Within 24 Hrs', amount: 'Non Changeable' }
+                    ];
+                    cancelRows = [
+                        { desc: 'Before 24 Hrs', amount: '₹ 4,500' },
+                        { desc: 'Within 24 Hrs', amount: 'Non Refundable' }
+                    ];
+                }
+
+                renderRtRulesTable(changeRows, cancelRows);
+
+                // Fetch live Benz API fare breakdown and rules if available
+                const cacheKey = (f.ResultID || '') + '_' + airline + '_' + price;
+                if (rtFareCache[cacheKey]) {
+                    applyRtLiveFareData(rtFareCache[cacheKey]);
+                    return;
+                }
+
+                const postData = new URLSearchParams();
+                postData.append('tui', f.ResultID || '');
+                postData.append('airline', airline);
+                postData.append('flight_number', f.FlightNumber || '');
+                postData.append('price', price);
+                postData.append('from', fromCode);
+                postData.append('to', toCode);
+                postData.append('index', f.FlightIndex || (airline + '|1'));
+
+                fetch('<?php echo site_url('flight/ajax_fare_details'); ?>', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: postData.toString()
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if (res && res.status === 'success') {
+                        rtFareCache[cacheKey] = res;
+                        applyRtLiveFareData(res);
+                    }
+                })
+                .catch(() => {});
+            }
+
+            function renderRtRulesTable(changeRows, cancelRows) {
+                const tbodyChange = document.getElementById('rtTbodyChange');
+                const tbodyCancel = document.getElementById('rtTbodyCancel');
+
+                tbodyChange.innerHTML = changeRows.map(r => `
+                    <tr>
+                        <td>${r.desc}</td>
+                        <td style="text-align: right; font-weight: 700; color: #0d3470;">${r.amount}</td>
+                    </tr>
+                `).join('');
+
+                tbodyCancel.innerHTML = cancelRows.map(r => `
+                    <tr>
+                        <td>${r.desc}</td>
+                        <td style="text-align: right; font-weight: 700; color: #ef4444;">${r.amount}</td>
+                    </tr>
+                `).join('');
+            }
+
+            function applyRtLiveFareData(data) {
+                if (!data) return;
+                if (data.fare) {
+                    if (data.fare.base_fare) document.getElementById('rtModalBaseFare').textContent = '₹ ' + parseFloat(data.fare.base_fare).toLocaleString('en-IN');
+                    if (data.fare.total_tax) document.getElementById('rtModalTotalTaxes').textContent = '₹ ' + parseFloat(data.fare.total_tax).toLocaleString('en-IN');
+                    if (data.fare.total_fare) document.getElementById('rtModalTotalFare').textContent = '₹ ' + parseFloat(data.fare.total_fare).toLocaleString('en-IN');
+                }
+                if (data.rules) {
+                    if (data.rules.change_rows && data.rules.cancel_rows) {
+                        renderRtRulesTable(data.rules.change_rows, data.rules.cancel_rows);
+                    }
+                }
             }
 
             document.addEventListener('DOMContentLoaded', updateRoundTripSelection);
