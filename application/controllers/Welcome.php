@@ -512,8 +512,138 @@ class Welcome extends CI_Controller {
         $data['active_page'] = 'flight';
         $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
 
+        $this->session->set_userdata('flight_booking_data', $data);
+
         $this->load->view('includes/header', $data);
         $this->load->view('flight_review', $data);
+        $this->load->view('includes/footer', $data);
+    }
+
+    /**
+     * Flight Add-on Services Selection (Meals, Baggage, Seats)
+     */
+    public function flight_addons()
+    {
+        $sessionBooking = $this->session->userdata('flight_booking_data') ?: array();
+        $postData = $this->input->post();
+        if (!empty($postData)) {
+            $this->session->set_userdata('flight_review_post', $postData);
+        } else {
+            $postData = $this->session->userdata('flight_review_post') ?: array();
+        }
+
+        if (empty($sessionBooking) && empty($postData)) {
+            redirect('flight');
+            return;
+        }
+
+        $data = array_merge($sessionBooking, $postData);
+        $data['post_data'] = $postData;
+
+        // Parse passenger names and details
+        $titles  = $this->input->post('passenger_title') ?: ($postData['passenger_title'] ?? array());
+        $names   = $this->input->post('passenger_name') ?: ($postData['passenger_name'] ?? array());
+        $dobs    = $this->input->post('passenger_dob') ?: ($postData['passenger_dob'] ?? array());
+        $ages    = $this->input->post('passenger_age') ?: ($postData['passenger_age'] ?? array());
+        $types   = $this->input->post('passenger_type') ?: ($postData['passenger_type'] ?? array());
+
+        $passengers = array();
+        if (is_array($names) && count($names) > 0) {
+            for ($i = 0; $i < count($names); $i++) {
+                $p_idx = $i + 1;
+                $gender = $this->input->post('passenger_gender_' . $p_idx) ?: ($postData['passenger_gender_' . $p_idx] ?? 'Male');
+                $passengers[] = array(
+                    'title'  => isset($titles[$i]) ? $titles[$i] : 'Mr',
+                    'name'   => !empty($names[$i]) ? $names[$i] : 'Passenger ' . $p_idx,
+                    'dob'    => isset($dobs[$i]) ? $dobs[$i] : '',
+                    'age'    => isset($ages[$i]) ? $ages[$i] : '28',
+                    'gender' => $gender,
+                    'type'   => isset($types[$i]) ? $types[$i] : 'Adult'
+                );
+            }
+        } else {
+            $contact_name = $this->input->post('contact_name') ?: ($postData['contact_name'] ?? 'Passenger 1');
+            $passengers[] = array(
+                'title'  => 'Mr',
+                'name'   => $contact_name,
+                'dob'    => '1996-05-15',
+                'age'    => '28',
+                'gender' => 'Male',
+                'type'   => 'Adult'
+            );
+        }
+        $data['passengers'] = $passengers;
+        $data['page_title'] = "Add-on Services: Meals, Baggage & Seats - Voyogo";
+        $data['active_page'] = 'flight';
+
+        $this->load->view('includes/header', $data);
+        $this->load->view('flight_addons', $data);
+        $this->load->view('includes/footer', $data);
+    }
+
+    /**
+     * Dedicated Flight Payment Page (Google Pay, UPI, Cards, Net Banking)
+     */
+    public function flight_payment()
+    {
+        $sessionBooking = $this->session->userdata('flight_booking_data') ?: array();
+        $reviewPost     = $this->session->userdata('flight_review_post') ?: array();
+        $addonsPost     = $this->input->post() ?: array();
+
+        if (!empty($addonsPost)) {
+            $this->session->set_userdata('flight_addons_post', $addonsPost);
+        } else {
+            $addonsPost = $this->session->userdata('flight_addons_post') ?: array();
+        }
+
+        if (empty($sessionBooking) && empty($reviewPost)) {
+            redirect('flight');
+            return;
+        }
+
+        $data = array_merge($sessionBooking, $reviewPost, $addonsPost);
+        $data['review_post'] = $reviewPost;
+        $data['addons_post'] = $addonsPost;
+
+        // Parse passengers
+        $passengers = array();
+        $titles  = $reviewPost['passenger_title'] ?? array();
+        $names   = $reviewPost['passenger_name'] ?? array();
+        $dobs    = $reviewPost['passenger_dob'] ?? array();
+        $ages    = $reviewPost['passenger_age'] ?? array();
+        $types   = $reviewPost['passenger_type'] ?? array();
+
+        if (is_array($names) && count($names) > 0) {
+            for ($i = 0; $i < count($names); $i++) {
+                $p_idx = $i + 1;
+                $gender = $reviewPost['passenger_gender_' . $p_idx] ?? 'Male';
+                $passengers[] = array(
+                    'title'  => isset($titles[$i]) ? $titles[$i] : 'Mr',
+                    'name'   => !empty($names[$i]) ? $names[$i] : 'Passenger ' . $p_idx,
+                    'dob'    => isset($dobs[$i]) ? $dobs[$i] : '',
+                    'age'    => isset($ages[$i]) ? $ages[$i] : '28',
+                    'gender' => $gender,
+                    'type'   => isset($types[$i]) ? $types[$i] : 'Adult'
+                );
+            }
+        } else {
+            $contact_name = $reviewPost['contact_name'] ?? 'Passenger 1';
+            $passengers[] = array(
+                'title'  => 'Mr',
+                'name'   => $contact_name,
+                'dob'    => '1996-05-15',
+                'age'    => '28',
+                'gender' => 'Male',
+                'type'   => 'Adult'
+            );
+        }
+        $data['passengers'] = $passengers;
+        $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
+        $data['page_title'] = "Make Payment - Flight Booking - Voyogo";
+        $data['active_page'] = 'flight';
+
+        $this->load->view('includes/header', $data);
+        $this->load->view('flight_payment', $data);
         $this->load->view('includes/footer', $data);
     }
 

@@ -226,6 +226,7 @@
         }
     }
 ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <div style="background-color: #f4f7fe; padding: 25px 0 60px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;">
     <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
         
@@ -236,13 +237,14 @@
                     <i class="fa-solid fa-plane-departure" style="color: #2563eb;"></i> Review Your Flight Itinerary
                 </h1>
                 <p style="font-size: 13px; color: #64748b; margin: 4px 0 0 0;">
-                    Complete passenger details & revalidate fare before final ticket issuance
+                    Complete passenger details & select fare options before add-on services
                 </p>
             </div>
-            <div style="display: flex; gap: 20px; font-weight: 700; font-size: 13px;">
+            <div style="display: flex; gap: 16px; font-weight: 700; font-size: 13px; flex-wrap: wrap;">
                 <span style="color: #16a34a; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-circle-check"></i> 1. Flight Selected</span>
                 <span style="color: #2563eb; background: #eff6ff; padding: 6px 14px; border-radius: 20px; border: 1px solid #bfdbfe; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-circle-dot"></i> 2. Review & Pax Details</span>
-                <span style="color: #94a3b8; display: flex; align-items: center; gap: 6px;"><i class="fa-regular fa-circle"></i> 3. Payment & E-Ticket</span>
+                <span style="color: #94a3b8; display: flex; align-items: center; gap: 6px;"><i class="fa-regular fa-circle"></i> 3. Add-on Services</span>
+                <span style="color: #94a3b8; display: flex; align-items: center; gap: 6px;"><i class="fa-regular fa-circle"></i> 4. Payment</span>
             </div>
         </div>
 
@@ -974,8 +976,8 @@
                 </div>
                 <?php endif; ?>
 
-                <!-- Form Section -->
-                <form id="bookingForm" action="<?php echo site_url('flight/process_payment'); ?>" method="POST">
+                <!-- Form Section (Points to Step 3: Add-on Services) -->
+                <form id="bookingForm" action="<?php echo site_url('flight/addons'); ?>" method="POST">
                     
                     <input type="hidden" name="tui" value="<?php echo htmlspecialchars($flight['tui'] ?? $url_meta['tui'] ?? ''); ?>">
                     <input type="hidden" name="flight_number" value="<?php echo htmlspecialchars($flight['flight_number']); ?>">
@@ -989,7 +991,18 @@
                     <input type="hidden" name="stops" value="<?php echo htmlspecialchars($flight['stops'] ?? 0); ?>">
                     <input type="hidden" name="via" value="<?php echo htmlspecialchars($flight['via'] ?? ''); ?>">
                     <input type="hidden" name="net_amount" value="<?php echo htmlspecialchars($fBaseFare); ?>">
+                    <input type="hidden" name="base_fare" id="form_base_fare" value="<?php echo htmlspecialchars($fBaseFare); ?>">
+                    <input type="hidden" name="taxes" value="<?php echo htmlspecialchars($fTaxes); ?>">
                     <input type="hidden" name="total_amount" id="form_total_amount" value="<?php echo htmlspecialchars($initialGrandTotal); ?>">
+                    
+                    <!-- More Fare Options Fields -->
+                    <input type="hidden" name="fare_tier" id="form_fare_tier" value="Value">
+                    <input type="hidden" name="fare_tier_price_delta" id="form_fare_tier_price_delta" value="0">
+                    
+                    <!-- Safety & Flexibility Fields -->
+                    <input type="hidden" name="safety_cancellation_type" id="form_safety_cancellation_type" value="">
+                    <input type="hidden" name="safety_cancellation_amount" id="form_safety_cancellation_amount" value="0">
+                    <input type="hidden" name="travel_insurance_selected" id="form_travel_insurance_selected" value="1">
                     <input type="hidden" name="insurance_amount" id="form_insurance_amount" value="<?php echo htmlspecialchars($initialInsurance); ?>">
                     <input type="hidden" name="discount_amount" id="form_discount_amount" value="<?php echo htmlspecialchars($initialDiscount); ?>">
                     <input type="hidden" name="promo_code" id="form_promo_code" value="ATFLY">
@@ -1024,54 +1037,239 @@
                     <input type="hidden" name="infants" value="<?php echo htmlspecialchars($search_query['infants'] ?? 0); ?>">
                     <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
 
-                    <!-- Maximize Your Travel Safety & Flexibility (Screenshot 1) -->
+                    <!-- 1. More Fare Options for Additional Benefits (Screenshot 2) -->
+                    <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
+                        <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin: 0 0 16px 0;">
+                            More Fare Options for Additional Benefits
+                        </h3>
+
+                        <!-- Route Sector Tabs -->
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                            <div class="fare-route-tab active" style="padding: 10px 18px; border-radius: 8px; border: 1.5px solid #0284c7; background: #f0f9ff; cursor: pointer; display: flex; flex-direction: column;">
+                                <div style="font-size: 13.5px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px;">
+                                    <span><?php echo htmlspecialchars($flight['from_code']); ?></span>
+                                    <i class="fa-solid fa-arrow-right" style="font-size: 11px;"></i>
+                                    <span><?php echo htmlspecialchars($flight['to_code']); ?></span>
+                                </div>
+                                <div style="font-size: 11.5px; color: #64748b; font-weight: 600; margin-top: 2px;">
+                                    <?php echo date('D, d M y', strtotime($flight['departure_date'])); ?> &bull; <?php echo (int)($flight['stops'] ?? 0) > 0 ? ((int)$flight['stops'] . ' stop') : 'Non Stop'; ?>
+                                </div>
+                            </div>
+
+                            <?php if (!empty($return_flight)): ?>
+                            <div class="fare-route-tab" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc; cursor: pointer; display: flex; flex-direction: column;">
+                                <div style="font-size: 13.5px; font-weight: 800; color: #334155; display: flex; align-items: center; gap: 6px;">
+                                    <span><?php echo htmlspecialchars($return_flight['from_code']); ?></span>
+                                    <i class="fa-solid fa-arrow-right" style="font-size: 11px;"></i>
+                                    <span><?php echo htmlspecialchars($return_flight['to_code']); ?></span>
+                                </div>
+                                <div style="font-size: 11.5px; color: #64748b; font-weight: 600; margin-top: 2px;">
+                                    <?php echo date('D, d M y', strtotime($return_flight['departure_date'])); ?> &bull; <?php echo (int)($return_flight['stops'] ?? 0) > 0 ? ((int)$return_flight['stops'] . ' stop') : 'Non Stop'; ?>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Economy Starting Pill -->
+                        <div style="margin-bottom: 20px;">
+                            <span style="background: #e0f2fe; color: #0369a1; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+                                Economy <span style="font-weight: 500; color: #475569;">Starting at ₹ <?php echo number_format($fBaseFare + $fTaxes); ?></span>
+                            </span>
+                        </div>
+
+                        <!-- 3 Comparison Cards Grid (Screenshot 2) -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                            
+                            <!-- Tier 1: Value (Most Popular) -->
+                            <div id="fareTierCard_Value" class="fare-tier-card" style="border: 2px solid #0284c7; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-shadow: 0 4px 15px rgba(2,132,199,0.08); transition: all 0.2s ease;">
+                                <div style="position: absolute; top: -12px; right: 14px; background: #16a34a; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(22,163,74,0.3);">
+                                    Most Popular
+                                </div>
+                                <div>
+                                    <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Value</div>
+                                    <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
+                                        ₹ <?php echo number_format($fBaseFare + $fTaxes); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
+                                    </div>
+
+                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
+                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                            <i class="fa-solid fa-suitcase"></i> Baggage
+                                        </div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong>15 Kgs</strong></div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>07 Kgs</strong></div>
+                                    </div>
+
+                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
+                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                            <i class="fa-solid fa-rotate-left"></i> Flexibility
+                                        </div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Cancellation fee apply</div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Available on additional charge</div>
+                                    </div>
+
+                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
+                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                            <i class="fa-solid fa-utensils"></i> Seat & meal
+                                        </div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Seat Selection - Available on additional charges</div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Meal - Available on additional charges</div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="tier-select-btn" onclick="selectFareTier('Value', 0, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #0284c7; color: #ffffff; border: none;">
+                                    Selected
+                                </button>
+                            </div>
+
+                            <!-- Tier 2: Classic -->
+                            <div id="fareTierCard_Classic" class="fare-tier-card" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; transition: all 0.2s ease;">
+                                <div>
+                                    <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Classic</div>
+                                    <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
+                                        ₹ <?php echo number_format($fBaseFare + $fTaxes + 600); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
+                                    </div>
+
+                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
+                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                            <i class="fa-solid fa-suitcase"></i> Baggage
+                                        </div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong>15 Kgs</strong></div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>7 Kgs</strong></div>
+                                    </div>
+
+                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
+                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                            <i class="fa-solid fa-rotate-left"></i> Flexibility
+                                        </div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Available on additional charge</div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Available on additional charge</div>
+                                    </div>
+
+                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
+                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                            <i class="fa-solid fa-utensils"></i> Seat & meal
+                                        </div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Seat Selection - Available on additional charges</div>
+                                        <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Meal - Lite Bite Included</div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="tier-select-btn" onclick="selectFareTier('Classic', 600, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;">
+                                    Select
+                                </button>
+                            </div>
+
+                            <!-- Tier 3: Flex -->
+                            <div id="fareTierCard_Flex" class="fare-tier-card" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; transition: all 0.2s ease;">
+                                <div style="position: absolute; top: -12px; right: 14px; background: #f59e0b; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(245,158,11,0.3);">
+                                    <i class="fa-solid fa-crown" style="font-size: 10px;"></i> Premium
+                                </div>
+                                <div>
+                                    <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Flex</div>
+                                    <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
+                                        ₹ <?php echo number_format($fBaseFare + $fTaxes + 1800); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
+                                    </div>
+
+                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
+                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                            <i class="fa-solid fa-suitcase"></i> Baggage
+                                        </div>
+                                        <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Checked Baggage : <strong>20 Kgs (+5 Kg Extra)</strong></div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>7 Kgs</strong></div>
+                                    </div>
+
+                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
+                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                            <i class="fa-solid fa-rotate-left"></i> Flexibility
+                                        </div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Low Fee Protection</div>
+                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Free date change once</div>
+                                    </div>
+
+                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
+                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                            <i class="fa-solid fa-utensils"></i> Seat & meal
+                                        </div>
+                                        <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Seat Selection - Free Standard Seat Included</div>
+                                        <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Meal - Lite Bite Included</div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="tier-select-btn" onclick="selectFareTier('Flex', 1800, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;">
+                                    Select
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- 2. Maximize Your Travel Safety & Flexibility (Screenshot 1) -->
                     <div style="background: #ffffff; border-radius: 14px; padding: 22px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
-                        <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0;">
+                        <h3 style="font-size: 17px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0;">
                             Maximize Your Travel Safety & Flexibility
                         </h3>
                         <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px 0;">
                             Secure your booking with cancellation safety, date change freedom, and baggage support—all designed to make your trip stress-free.
                         </p>
 
-                        <!-- Option 1: Refundable Upgrade -->
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                        <!-- Option 1: Select for Zero Cancellation (Screenshot 1) -->
+                        <div id="cardZeroCancellation" class="safety-card" style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; transition: all 0.2s ease;">
                             <label style="display: flex; gap: 12px; cursor: pointer; flex: 1;">
-                                <input type="radio" name="refundable_opt" value="0" checked style="accent-color: #2563eb; margin-top: 3px;">
+                                <input type="radio" name="safety_coverage_radio" id="radioZeroCancellation" value="zero_cancellation" onchange="onSafetyRadioChange('zero_cancellation')" style="accent-color: #dc2626; margin-top: 3px;">
                                 <div>
-                                    <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 6px;">
-                                        Make your booking refundable <i class="fa-solid fa-circle-check" style="color: #16a34a;"></i>
+                                    <div style="font-size: 14px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                                        Select for Zero Cancellation <i class="fa-solid fa-circle-check" style="color: #16a34a;"></i>
                                     </div>
-                                    <div style="font-size: 12px; color: #64748b; margin-top: 3px;">
-                                        Upgrade to refundable. Get up to <strong>100% refund</strong> if plans change, as per applicable <a href="javascript:void(0);" style="color: #0284c7; text-decoration: none;">T&Cs</a>
-                                    </div>
-                                    <div style="display: flex; gap: 14px; font-size: 11.5px; color: #475569; margin-top: 6px; flex-wrap: wrap;">
-                                        <span>• Illness/Injury</span>
-                                        <span>• Pre-existing medical condition</span>
-                                        <span>• Last Minute Emergency</span>
+                                    <div style="font-size: 12px; color: #64748b; margin-top: 3px; line-height: 1.4;">
+                                        No Questions asked on cancellation. Get a full refund, in case of cancellation up to 24 hours before departure! <a href="javascript:void(0);" style="color: #0284c7; text-decoration: underline;">T&Cs</a>
                                     </div>
                                 </div>
                             </label>
                             <div style="text-align: right; min-width: 90px;">
-                                <div style="font-size: 14.5px; font-weight: 800; color: #0f172a;">₹ 724</div>
-                                <div style="font-size: 11px; color: #64748b;">per passenger per trip</div>
+                                <a href="javascript:void(0);" id="removeZeroCancelLink" onclick="removeSafetyOption('zero_cancellation')" style="display: none; font-size: 12px; color: #0284c7; font-weight: 700; text-decoration: underline; margin-bottom: 2px;">Remove</a>
+                                <div style="font-size: 16px; font-weight: 900; color: #0f172a;">₹ <?php echo number_format(2365 * $total_travelers_review); ?></div>
                             </div>
                         </div>
 
-                        <!-- Option 2: Travel Insurance -->
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                        <!-- Option 2: Make your booking refundable (Screenshot 1) -->
+                        <div id="cardRefundable" class="safety-card" style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; transition: all 0.2s ease;">
+                            <label style="display: flex; gap: 12px; cursor: pointer; flex: 1;">
+                                <input type="radio" name="safety_coverage_radio" id="radioRefundable" value="refundable" onchange="onSafetyRadioChange('refundable')" style="accent-color: #dc2626; margin-top: 3px;">
+                                <div>
+                                    <div style="font-size: 14px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                                        Make your booking refundable <i class="fa-solid fa-circle-check" style="color: #16a34a;"></i>
+                                    </div>
+                                    <div style="font-size: 12px; color: #64748b; margin-top: 3px; line-height: 1.4;">
+                                        Upgrade to refundable. Get up to <strong>100% refund</strong> if plans change, as per applicable. <a href="javascript:void(0);" style="color: #0284c7; text-decoration: underline;">T&Cs</a>
+                                    </div>
+                                    <div style="display: flex; gap: 14px; font-size: 11.5px; color: #475569; margin-top: 6px; flex-wrap: wrap;">
+                                        <span>&bull; Illness/Injury</span>
+                                        <span>&bull; Pre-existing medical condition</span>
+                                        <span>&bull; Last Minute Emergency</span>
+                                    </div>
+                                </div>
+                            </label>
+                            <div style="text-align: right; min-width: 90px;">
+                                <a href="javascript:void(0);" id="removeRefundableLink" onclick="removeSafetyOption('refundable')" style="display: none; font-size: 12px; color: #0284c7; font-weight: 700; text-decoration: underline; margin-bottom: 2px;">Remove</a>
+                                <div style="font-size: 16px; font-weight: 900; color: #0f172a;">₹ <?php echo number_format(1467 * $total_travelers_review); ?></div>
+                            </div>
+                        </div>
+
+                        <!-- Option 3: Travel Insurance (Screenshot 1) -->
+                        <div id="cardInsurance" class="safety-card" style="background: #f8fafc; border: 1.5px solid #2563eb; border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; transition: all 0.2s ease;">
                             <label style="display: flex; gap: 12px; cursor: pointer; flex: 1;">
                                 <input type="checkbox" id="travelInsuranceCheckbox" checked onchange="toggleTravelInsurance(this.checked)" style="accent-color: #2563eb; margin-top: 3px;">
                                 <div>
-                                    <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                                    <div style="font-size: 14px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 6px;">
                                         Travel Insurance <i class="fa-solid fa-shield-halved" style="color: #0284c7;"></i>
                                     </div>
                                     <div style="font-size: 12px; color: #64748b; margin-top: 3px;">
                                         Secure your trip with our Travel Insurance.
                                     </div>
                                     <div style="display: flex; gap: 14px; font-size: 11.5px; color: #475569; margin-top: 6px; flex-wrap: wrap;">
-                                        <span>• Trip Delays</span>
-                                        <span>• Trip Cancellation</span>
-                                        <span>• Lost Baggage</span>
+                                        <span>&bull; Trip Delays</span>
+                                        <span>&bull; Trip Cancellation</span>
+                                        <span>&bull; Lost Baggage</span>
                                         <a href="javascript:void(0);" style="color: #0284c7; text-decoration: underline;">View more benefits</a>
                                     </div>
                                     <div style="font-size: 11px; color: #0284c7; margin-top: 6px; display: flex; align-items: center; gap: 4px;">
@@ -1081,8 +1279,7 @@
                             </label>
                             <div style="text-align: right; min-width: 90px;">
                                 <a href="javascript:void(0);" id="insuranceToggleBtn" onclick="toggleInsuranceLink()" style="font-size: 12px; color: #0284c7; font-weight: 700; text-decoration: underline;">Remove</a>
-                                <div style="font-size: 14.5px; font-weight: 800; color: #0f172a; margin-top: 2px;">₹ 199</div>
-                                <div style="font-size: 11px; color: #64748b;">per passenger per trip</div>
+                                <div style="font-size: 16px; font-weight: 900; color: #0f172a; margin-top: 2px;">₹ <?php echo number_format(199 * $total_travelers_review); ?></div>
                             </div>
                         </div>
                     </div>
@@ -1227,137 +1424,6 @@
                     </div>
                     <?php endfor; ?>
 
-                    <!-- SSR Add-on Services Card (Meals, Extra Baggage, Seats) -->
-                    <?php
-                    $baggageList = array();
-                    $mealsList = array();
-
-                    // Parse dynamic SSR returned by Benzy Flights/SSR
-                    if (!empty($ssr['Trips']) && is_array($ssr['Trips'])) {
-                        foreach ($ssr['Trips'] as $tr) {
-                            if (!empty($tr['Journey']) && is_array($tr['Journey'])) {
-                                foreach ($tr['Journey'] as $jrn) {
-                                    if (!empty($jrn['Segments']) && is_array($jrn['Segments'])) {
-                                        foreach ($jrn['Segments'] as $seg) {
-                                            if (!empty($seg['SSR']) && is_array($seg['SSR'])) {
-                                                foreach ($seg['SSR'] as $item) {
-                                                    $type = (string)($item['Type'] ?? '');
-                                                    $code = $item['Code'] ?? '';
-                                                    $desc = $item['Description'] ?? '';
-                                                    $charge = isset($item['Charge']) ? (float)$item['Charge'] : (isset($item['SSRNetAmount']) ? (float)$item['SSRNetAmount'] : 0);
-
-                                                    if ($type === '2' || stripos($desc, 'baggage') !== false || stripos($code, 'XBP') !== false || stripos($code, 'IXB') !== false) {
-                                                        if (!isset($baggageList[$code]) && !empty($code)) {
-                                                            $baggageList[$code] = array(
-                                                                'Code'        => $code,
-                                                                'Description' => $desc,
-                                                                'Amount'      => $charge
-                                                            );
-                                                        }
-                                                    } elseif ($type === '1' || stripos($desc, 'meal') !== false || stripos($desc, 'sandwich') !== false || stripos($desc, 'combo') !== false || stripos($desc, 'biryani') !== false) {
-                                                        if (!isset($mealsList[$code]) && !empty($code)) {
-                                                            $mealsList[$code] = array(
-                                                                'Code'        => $code,
-                                                                'Description' => $desc,
-                                                                'Amount'      => $charge
-                                                            );
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    $baggageList = array_values($baggageList);
-                    $mealsList = array_values($mealsList);
-
-                    // Always prepend standard Free baggage option at index 0
-                    array_unshift($baggageList, array(
-                        "Code"        => "FREE",
-                        "Description" => "Standard Cabin (7kg) + Check-in (15kg) - Included",
-                        "Amount"      => 0
-                    ));
-
-                    // Always prepend "No Meal" option at index 0
-                    array_unshift($mealsList, array(
-                        "Code"        => "NO_MEAL",
-                        "Description" => "No In-Flight Meal",
-                        "Amount"      => 0
-                    ));
-
-                    // If still empty, use official live IndiGo Benzy SSR rates
-                    if (count($baggageList) <= 1) {
-                        $baggageList = array(
-                            array("Code" => "FREE", "Description" => "Standard Cabin (7kg) + Check-in (15kg) - Included", "Amount" => 0),
-                            array("Code" => "XBPE", "Description" => "Prepaid Excess Baggage – 3 Kg", "Amount" => 2100),
-                            array("Code" => "XBPA", "Description" => "Prepaid Excess Baggage – 5 Kg", "Amount" => 3250),
-                            array("Code" => "XBPB", "Description" => "Prepaid Excess Baggage – 10 Kg", "Amount" => 6250),
-                            array("Code" => "XBPC", "Description" => "Prepaid Excess Baggage – 15 Kg", "Amount" => 9400),
-                            array("Code" => "XBPJ", "Description" => "Prepaid Excess Baggage – 20 Kg", "Amount" => 12000),
-                            array("Code" => "XBPD", "Description" => "Prepaid Excess Baggage – 30 Kg", "Amount" => 19500),
-                        );
-                    }
-
-                    if (count($mealsList) <= 1) {
-                        $mealsList = array(
-                            array("Code" => "NO_MEAL", "Description" => "No In-Flight Meal", "Amount" => 0),
-                            array("Code" => "VGML", "Description" => "Veg Meal (For Retail Fare)", "Amount" => 400),
-                            array("Code" => "VCSW", "Description" => "6E Eats choice of the day (veg) + beverage", "Amount" => 400),
-                            array("Code" => "VBIR", "Description" => "VEG BIRYANI Combo", "Amount" => 400),
-                            array("Code" => "AGSW", "Description" => "#IndiaByIndiGo regional favourite (veg) + beverage", "Amount" => 400),
-                            array("Code" => "PTSW", "Description" => "Paneer Tikka Sandwich Combo", "Amount" => 500),
-                            array("Code" => "CJSW", "Description" => "Chicken Junglee Sandwich Combo", "Amount" => 500),
-                        );
-                    }
-                    ?>
-                    <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
-                        <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-utensils" style="color: #f59e0b;"></i> Select Add-on Services (SSR)
-                        </h3>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <!-- Extra Baggage -->
-                            <div>
-                                <label style="font-size: 13px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">
-                                    <i class="fa-solid fa-suitcase" style="color: #2563eb;"></i> Extra Check-in Baggage
-                                </label>
-                                <select id="extraBaggageSelect" name="extra_baggage" onchange="calculateTotalAddons()" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #fff;">
-                                    <?php foreach ($baggageList as $bag): 
-                                        $desc = $bag['Description'] ?? $bag['description'] ?? $bag['Name'] ?? 'Extra Baggage';
-                                        $amt = isset($bag['Amount']) ? (float)$bag['Amount'] : (isset($bag['amount']) ? (float)$bag['amount'] : (isset($bag['Price']) ? (float)$bag['Price'] : (isset($bag['price']) ? (float)$bag['price'] : 0)));
-                                        $bCode = $bag['Code'] ?? $bag['code'] ?? ($amt > 0 ? 'XBPE' : '');
-                                    ?>
-                                        <option value="<?php echo $amt; ?>" data-code="<?php echo htmlspecialchars($bCode); ?>" data-desc="<?php echo htmlspecialchars($desc); ?>">
-                                            <?php echo htmlspecialchars($desc); ?> <?php echo ($amt > 0) ? '(+₹' . number_format($amt) . ')' : ''; ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <!-- In-Flight Meal -->
-                            <div>
-                                <label style="font-size: 13px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">
-                                    <i class="fa-solid fa-bowl-food" style="color: #16a34a;"></i> In-Flight Meal Selection
-                                </label>
-                                <select id="mealSelect" name="meal_selection" onchange="calculateTotalAddons()" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #fff;">
-                                    <?php foreach ($mealsList as $meal): 
-                                        $desc = $meal['Description'] ?? $meal['description'] ?? $meal['Name'] ?? 'Meal Selection';
-                                        $amt = isset($meal['Amount']) ? (float)$meal['Amount'] : (isset($meal['amount']) ? (float)$meal['amount'] : (isset($meal['Price']) ? (float)$meal['Price'] : (isset($meal['price']) ? (float)$meal['price'] : 0)));
-                                        $mCode = $meal['Code'] ?? $meal['code'] ?? ($amt > 0 ? 'VGML' : '');
-                                    ?>
-                                        <option value="<?php echo $amt; ?>" data-code="<?php echo htmlspecialchars($mCode); ?>" data-desc="<?php echo htmlspecialchars($desc); ?>">
-                                            <?php echo htmlspecialchars($desc); ?> <?php echo ($amt > 0) ? '(+₹' . number_format($amt) . ')' : ''; ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Contact & GST Details Card -->
                     <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                         <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; display: flex; align-items: center; gap: 8px;">
@@ -1399,10 +1465,10 @@
                         </div>
                     </div>
 
-                    <!-- Submit Button Banner -->
+                    <!-- Submit to Add-on Services (Screenshot 4 & 5) -->
                     <div style="text-align: right; margin-bottom: 30px;">
-                        <button type="button" id="payRazorpayBtn" style="padding: 16px 36px; font-size: 17px; font-weight: 800; color: #ffffff; background: linear-gradient(135deg, #0d3470, #2563eb); border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 15px rgba(37,99,235,0.3); transition: all 0.3s ease;">
-                            <i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Pay ₹ <span id="btnPayAmount"><?php echo number_format($initialGrandTotal); ?></span> & Instant Confirm Booking
+                        <button type="submit" id="continueToAddonsBtn" style="padding: 16px 40px; font-size: 16.5px; font-weight: 800; color: #ffffff; background: linear-gradient(135deg, #0d3470, #2563eb); border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 15px rgba(37,99,235,0.3); transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px;">
+                            <span>Continue to Add-on Services</span> <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
 
@@ -1420,11 +1486,11 @@
                             <span style="font-size: 13px; color: #0284c7; font-weight: 600;"><?php echo $total_travelers_review; ?> Traveller<?php echo $total_travelers_review > 1 ? 's' : ''; ?></span>
                         </div>
 
-                        <!-- Base Fare Item with Subrow (Toggleable +/-) -->
+                        <!-- Base Fare Item with Subrow (Toggleable +/-) (Screenshot 3) -->
                         <div class="f-fare-group" style="margin-bottom: 12px;">
-                            <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; cursor: pointer;" title="Click to view Base Fare breakdown">
+                            <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; cursor: pointer;" title="Click to expand/collapse Base Fare breakdown">
                                 <span class="f-fare-label" style="font-size: 13.5px; font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                                    <i class="fa-regular fa-circle-plus f-fare-toggle-icon"></i> Base Fare
+                                    <span class="f-fare-toggle-circle" style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #0284c7; color: #0284c7; font-size: 13px; font-weight: 700; line-height: 1; user-select: none;">+</span> Base Fare
                                 </span>
                                 <strong style="color: #0f172a; font-size: 13.5px;">₹ <span id="summaryBaseFare"><?php echo number_format($fBaseFare); ?></span></strong>
                             </div>
@@ -1448,11 +1514,11 @@
                             </div>
                         </div>
 
-                        <!-- Tax & Charges Item with Subrows (Toggleable +/-) -->
+                        <!-- Tax & Charges Item with Subrows (Toggleable +/-) (Screenshot 3) -->
                         <div class="f-fare-group" style="margin-bottom: 12px;">
-                            <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; cursor: pointer;" title="Click to view Tax & Charges breakdown">
+                            <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; cursor: pointer;" title="Click to expand/collapse Tax & Charges breakdown">
                                 <span class="f-fare-label" style="font-size: 13.5px; font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                                    <i class="fa-regular fa-circle-plus f-fare-toggle-icon"></i> Tax & Charges
+                                    <span class="f-fare-toggle-circle" style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #0284c7; color: #0284c7; font-size: 13px; font-weight: 700; line-height: 1; user-select: none;">+</span> Tax & Charges
                                 </span>
                                 <strong style="color: #0f172a; font-size: 13.5px;">₹ <span id="summaryTaxes"><?php echo number_format($fTaxes); ?></span></strong>
                             </div>
@@ -1466,11 +1532,11 @@
                             </div>
                         </div>
 
-                        <!-- Insurance Item with Subrows (Toggleable +/-) (Screenshots 1 & 2) -->
+                        <!-- Insurance Item with Subrows (Toggleable +/-) (Screenshot 3) -->
                         <div class="f-fare-group" id="fareGroupInsurance" style="margin-bottom: 12px;">
-                            <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; cursor: pointer;" title="Click to view Insurance breakdown">
+                            <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; cursor: pointer;" title="Click to expand/collapse Insurance breakdown">
                                 <span class="f-fare-label" style="font-size: 13.5px; font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                                    <i class="fa-regular fa-circle-plus f-fare-toggle-icon"></i> Insurance
+                                    <span class="f-fare-toggle-circle" style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #0284c7; color: #0284c7; font-size: 13px; font-weight: 700; line-height: 1; user-select: none;">+</span> Insurance
                                 </span>
                                 <strong style="color: #0f172a; font-size: 13.5px;">₹ <span id="summaryInsurance"><?php echo number_format($initialInsurance); ?></span></strong>
                             </div>
@@ -1487,6 +1553,16 @@
                                     <span>CGST</span>
                                     <span style="font-weight: 600; color: #334155;">₹ <span id="dispCGST"><?php echo number_format(15 * $total_travelers_review); ?></span></span>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Zero Cancellation / Refundable Upgrade Item -->
+                        <div class="f-fare-group" id="fareGroupSafety" style="display: none; margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span class="f-fare-label" style="font-size: 13.5px; font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-shield-heart" style="color: #16a34a;"></i> <span id="summarySafetyLabel">Zero Cancellation</span>
+                                </span>
+                                <strong style="color: #0f172a; font-size: 13.5px;">₹ <span id="summarySafetyAmount">0</span></strong>
                             </div>
                         </div>
 
@@ -1677,19 +1753,135 @@ function toggleFareBreakdown(triggerEl) {
     var group = triggerEl.closest('.f-fare-group');
     if (!group) return;
     var subitems = group.querySelector('.f-fare-subitems');
-    var icon = group.querySelector('.f-fare-toggle-icon');
-    if (!subitems || !icon) return;
+    var circleIcon = group.querySelector('.f-fare-toggle-circle');
+    if (!subitems) return;
 
     var isHidden = (subitems.style.display === 'none' || window.getComputedStyle(subitems).display === 'none');
     if (isHidden) {
         subitems.style.display = 'flex';
-        icon.classList.remove('fa-circle-plus');
-        icon.classList.add('fa-circle-minus');
+        if (circleIcon) {
+            circleIcon.textContent = '−';
+            circleIcon.style.background = '#0284c7';
+            circleIcon.style.color = '#ffffff';
+            circleIcon.style.borderColor = '#0284c7';
+        }
     } else {
         subitems.style.display = 'none';
-        icon.classList.remove('fa-circle-minus');
-        icon.classList.add('fa-circle-plus');
+        if (circleIcon) {
+            circleIcon.textContent = '+';
+            circleIcon.style.background = 'transparent';
+            circleIcon.style.color = '#0284c7';
+            circleIcon.style.borderColor = '#0284c7';
+        }
     }
+}
+
+var zeroCancellationTotal = <?php echo 2365 * $total_travelers_review; ?>;
+var refundableTotal = <?php echo 1467 * $total_travelers_review; ?>;
+var selectedSafetyType = '';
+var selectedSafetyAmount = 0;
+var selectedFareTier = 'Value';
+var fareTierDeltaTotal = 0;
+
+function onSafetyRadioChange(type) {
+    selectedSafetyType = type;
+    if (type === 'zero_cancellation') {
+        selectedSafetyAmount = zeroCancellationTotal;
+        var cZero = document.getElementById('cardZeroCancellation');
+        if (cZero) {
+            cZero.style.borderColor = '#dc2626';
+            cZero.style.background = '#fff5f5';
+        }
+        var rmZero = document.getElementById('removeZeroCancelLink');
+        if (rmZero) rmZero.style.display = 'inline-block';
+
+        var cRef = document.getElementById('cardRefundable');
+        if (cRef) {
+            cRef.style.borderColor = '#e2e8f0';
+            cRef.style.background = '#f8fafc';
+        }
+        var rmRef = document.getElementById('removeRefundableLink');
+        if (rmRef) rmRef.style.display = 'none';
+        var rRef = document.getElementById('radioRefundable');
+        if (rRef) rRef.checked = false;
+    } else if (type === 'refundable') {
+        selectedSafetyAmount = refundableTotal;
+        var cRef = document.getElementById('cardRefundable');
+        if (cRef) {
+            cRef.style.borderColor = '#16a34a';
+            cRef.style.background = '#f0fdf4';
+        }
+        var rmRef = document.getElementById('removeRefundableLink');
+        if (rmRef) rmRef.style.display = 'inline-block';
+
+        var cZero = document.getElementById('cardZeroCancellation');
+        if (cZero) {
+            cZero.style.borderColor = '#e2e8f0';
+            cZero.style.background = '#f8fafc';
+        }
+        var rmZero = document.getElementById('removeZeroCancelLink');
+        if (rmZero) rmZero.style.display = 'none';
+        var rZero = document.getElementById('radioZeroCancellation');
+        if (rZero) rZero.checked = false;
+    }
+
+    if (document.getElementById('form_safety_cancellation_type')) {
+        document.getElementById('form_safety_cancellation_type').value = selectedSafetyType;
+    }
+    if (document.getElementById('form_safety_cancellation_amount')) {
+        document.getElementById('form_safety_cancellation_amount').value = selectedSafetyAmount;
+    }
+
+    var safetyRow = document.getElementById('fareGroupSafety');
+    if (safetyRow) {
+        safetyRow.style.display = 'block';
+        var lbl = document.getElementById('summarySafetyLabel');
+        if (lbl) lbl.textContent = (type === 'zero_cancellation') ? 'Zero Cancellation' : 'Refundable Booking Upgrade';
+        var amt = document.getElementById('summarySafetyAmount');
+        if (amt) amt.textContent = selectedSafetyAmount.toLocaleString('en-IN');
+    }
+
+    recalculateAllFares();
+}
+
+function removeSafetyOption(type) {
+    selectedSafetyType = '';
+    selectedSafetyAmount = 0;
+
+    var rZero = document.getElementById('radioZeroCancellation');
+    if (rZero) rZero.checked = false;
+    var rRef = document.getElementById('radioRefundable');
+    if (rRef) rRef.checked = false;
+
+    var cZero = document.getElementById('cardZeroCancellation');
+    if (cZero) {
+        cZero.style.borderColor = '#e2e8f0';
+        cZero.style.background = '#f8fafc';
+    }
+    var rmZero = document.getElementById('removeZeroCancelLink');
+    if (rmZero) rmZero.style.display = 'none';
+
+    var cRef = document.getElementById('cardRefundable');
+    if (cRef) {
+        cRef.style.borderColor = '#e2e8f0';
+        cRef.style.background = '#f8fafc';
+    }
+    var rmRef = document.getElementById('removeRefundableLink');
+    if (rmRef) rmRef.style.display = 'none';
+
+    if (document.getElementById('form_safety_cancellation_type')) {
+        document.getElementById('form_safety_cancellation_type').value = '';
+    }
+    if (document.getElementById('form_safety_cancellation_amount')) {
+        document.getElementById('form_safety_cancellation_amount').value = 0;
+    }
+
+    var safetyRow = document.getElementById('fareGroupSafety');
+    if (safetyRow) {
+        safetyRow.style.display = 'none';
+    }
+
+    recalculateAllFares();
 }
 
 function toggleTravelInsurance(include) {
@@ -1699,15 +1891,59 @@ function toggleTravelInsurance(include) {
     var linkBtn = document.getElementById('insuranceToggleBtn');
     if (linkBtn) linkBtn.textContent = include ? 'Remove' : '+ Add';
 
+    var insCard = document.getElementById('cardInsurance');
+    if (insCard) {
+        insCard.style.borderColor = include ? '#2563eb' : '#e2e8f0';
+        insCard.style.background = include ? '#f8fafc' : '#ffffff';
+    }
+
     var insGroup = document.getElementById('fareGroupInsurance');
     if (insGroup) {
         insGroup.style.display = include ? 'block' : 'none';
     }
+
+    if (document.getElementById('form_travel_insurance_selected')) {
+        document.getElementById('form_travel_insurance_selected').value = include ? '1' : '0';
+    }
+    if (document.getElementById('form_insurance_amount')) {
+        document.getElementById('form_insurance_amount').value = include ? (insurancePerPax * totalPax) : 0;
+    }
+
     recalculateAllFares();
 }
 
 function toggleInsuranceLink() {
     toggleTravelInsurance(!isInsuranceIncluded);
+}
+
+function selectFareTier(tier, deltaPerPax, btnEl) {
+    selectedFareTier = tier;
+    fareTierDeltaTotal = deltaPerPax * totalPax;
+
+    if (document.getElementById('form_fare_tier')) {
+        document.getElementById('form_fare_tier').value = tier;
+    }
+    if (document.getElementById('form_fare_tier_price_delta')) {
+        document.getElementById('form_fare_tier_price_delta').value = fareTierDeltaTotal;
+    }
+
+    ['Value', 'Classic', 'Flex'].forEach(function(t) {
+        var card = document.getElementById('fareTierCard_' + t);
+        if (card) {
+            var isThis = (t === tier);
+            card.style.borderColor = isThis ? '#0284c7' : '#e2e8f0';
+            card.style.boxShadow = isThis ? '0 4px 15px rgba(2,132,199,0.1)' : 'none';
+            var btn = card.querySelector('.tier-select-btn');
+            if (btn) {
+                btn.textContent = isThis ? 'Selected' : 'Select';
+                btn.style.background = isThis ? '#0284c7' : '#ffffff';
+                btn.style.color = isThis ? '#ffffff' : '#0f172a';
+                btn.style.border = isThis ? 'none' : '1.5px solid #cbd5e1';
+            }
+        }
+    });
+
+    recalculateAllFares();
 }
 
 function selectPromoOffer(code, discountAmt, desc) {
@@ -1779,28 +2015,20 @@ function applyCustomPromoCode() {
     };
 
     var disc = discountMap[code] || 150;
-
     selectPromoOffer(code, disc, 'Promo code applied.');
 }
 
 function recalculateAllFares() {
     var insuranceAmount = isInsuranceIncluded ? (insurancePerPax * totalPax) : 0;
-    
-    // SSR addons
-    var bagSel = document.getElementById('extraBaggageSelect');
-    var baggagePrice = parseFloat(bagSel ? (bagSel.value || 0) : 0);
-    var mealSel = document.getElementById('mealSelect');
-    var mealPrice = parseFloat(mealSel ? (mealSel.value || 0) : 0);
-    var totalAddons = baggagePrice + mealPrice;
+    var currentBase = baseFlightFare + fareTierDeltaTotal;
+    var grandTotal = Math.max(0, currentBase + taxesFare + insuranceAmount + selectedSafetyAmount - appliedDiscount);
 
-    var ssrRow = document.getElementById('summaryAddonsRow');
-    if (ssrRow) {
-        ssrRow.style.display = (totalAddons > 0) ? 'flex' : 'none';
-        var ssrDisp = document.getElementById('summaryAddons');
-        if (ssrDisp) ssrDisp.textContent = totalAddons.toLocaleString('en-IN');
-    }
+    var baseEl = document.getElementById('summaryBaseFare');
+    if (baseEl) baseEl.textContent = currentBase.toLocaleString('en-IN');
 
-    // Discount row in Fare Details
+    var insEl = document.getElementById('summaryInsurance');
+    if (insEl) insEl.textContent = insuranceAmount.toLocaleString('en-IN');
+
     var discRow = document.getElementById('summaryDiscountRow');
     if (discRow) {
         discRow.style.display = (appliedDiscount > 0) ? 'flex' : 'none';
@@ -1808,16 +2036,14 @@ function recalculateAllFares() {
         if (discDisp) discDisp.textContent = appliedDiscount.toLocaleString('en-IN');
     }
 
-    var grandTotal = Math.max(0, baseFlightFare + taxesFare + insuranceAmount + totalAddons - appliedDiscount);
-
     var totalDisp = document.getElementById('summaryTotalAmount');
     if (totalDisp) totalDisp.textContent = grandTotal.toLocaleString('en-IN');
 
-    var btnPayAmt = document.getElementById('btnPayAmount');
-    if (btnPayAmt) btnPayAmt.textContent = grandTotal.toLocaleString('en-IN');
-
     var formTotal = document.getElementById('form_total_amount');
     if (formTotal) formTotal.value = grandTotal;
+
+    var formBase = document.getElementById('form_base_fare');
+    if (formBase) formBase.value = currentBase;
 
     var formIns = document.getElementById('form_insurance_amount');
     if (formIns) formIns.value = insuranceAmount;
@@ -1829,30 +2055,6 @@ function recalculateAllFares() {
     if (formPromo) formPromo.value = appliedPromoCodeName;
 }
 
-function calculateTotalAddons() {
-    var bagSel = document.getElementById('extraBaggageSelect');
-    var optBag = bagSel ? bagSel.options[bagSel.selectedIndex] : null;
-    var bagCode = optBag ? (optBag.getAttribute('data-code') || '') : '';
-    var bagDesc = optBag ? (optBag.getAttribute('data-desc') || '') : '';
-    var baggagePrice = parseFloat(bagSel ? (bagSel.value || 0) : 0);
-
-    var mealSel = document.getElementById('mealSelect');
-    var optMeal = mealSel ? mealSel.options[mealSel.selectedIndex] : null;
-    var mealCode = optMeal ? (optMeal.getAttribute('data-code') || '') : '';
-    var mealDesc = optMeal ? (optMeal.getAttribute('data-desc') || '') : '';
-    var mealPrice = parseFloat(mealSel ? (mealSel.value || 0) : 0);
-
-    if (document.getElementById('ssr_baggage_code')) document.getElementById('ssr_baggage_code').value = baggagePrice > 0 ? bagCode : '';
-    if (document.getElementById('ssr_baggage_amount')) document.getElementById('ssr_baggage_amount').value = baggagePrice;
-    if (document.getElementById('ssr_baggage_desc')) document.getElementById('ssr_baggage_desc').value = baggagePrice > 0 ? bagDesc : '';
-
-    if (document.getElementById('ssr_meal_code')) document.getElementById('ssr_meal_code').value = mealPrice > 0 ? mealCode : '';
-    if (document.getElementById('ssr_meal_amount')) document.getElementById('ssr_meal_amount').value = mealPrice;
-    if (document.getElementById('ssr_meal_desc')) document.getElementById('ssr_meal_desc').value = mealPrice > 0 ? mealDesc : '';
-
-    recalculateAllFares();
-}
-
 function toggleGstFields() {
     var isChecked = document.getElementById('gstToggle').checked;
     document.getElementById('gstFieldsSection').style.display = isChecked ? 'grid' : 'none';
@@ -1860,7 +2062,7 @@ function toggleGstFields() {
 
 var isUserLoggedIn = <?php echo $isUserLoggedIn ? 'true' : 'false'; ?>;
 
-// In-page Login Success Handler (Called by Firebase OTP in header without page reload)
+// In-page Login Success Handler
 window.onBookingReviewLoginSuccess = function(user) {
     isUserLoggedIn = true;
     if (user.name) {
@@ -1885,85 +2087,36 @@ window.onBookingReviewLoginSuccess = function(user) {
         banner.innerHTML = '<div style="display: flex; align-items: center; gap: 14px;">' +
             '<div style="width: 40px; height: 40px; border-radius: 50%; background: #16a34a; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;"><i class="fa-solid fa-circle-check"></i></div>' +
             '<div><div style="font-size: 14.5px; font-weight: 800; color: #166534;">Logged in as ' + (user.name || user.phone) + '</div>' +
-            '<div style="font-size: 12.5px; color: #15803d;">Your verified contact details have been applied. You can now proceed to payment!</div></div>' +
+            '<div style="font-size: 12.5px; color: #15803d;">Your verified contact details have been applied.</div></div>' +
             '</div>' +
             '<span style="font-size: 11.5px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 5px 12px; border-radius: 20px; border: 1px solid #86efac; display: inline-flex; align-items: center; gap: 6px;"><i class="fa-solid fa-shield-halved"></i> Phone Verified</span>';
     }
 };
 
-// Prompt login on page load if guest
-document.addEventListener('DOMContentLoaded', function() {
-    if (!isUserLoggedIn) {
-        setTimeout(function() {
-            if (!isUserLoggedIn && typeof window.triggerBookingLogin === 'function') {
-                window.triggerBookingLogin('Please log in with mobile OTP to continue your flight booking.');
-            }
-        }, 1200);
-    }
-});
-
-document.getElementById('payRazorpayBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-
-    if (!isUserLoggedIn) {
-        if (typeof window.triggerBookingLogin === 'function') {
-            window.triggerBookingLogin('Please sign in with mobile OTP to complete payment and issue your flight ticket.');
-        } else {
-            alert('Please sign in to complete payment.');
-        }
-        return;
-    }
-
-    var finalAmount = parseFloat(document.getElementById('form_total_amount').value);
-    var amountInPaise = Math.round(finalAmount * 100);
-    var contactName = document.querySelector('input[name="contact_name"]').value;
-    var contactEmail = document.querySelector('input[name="contact_email"]').value;
-    var contactPhone = document.querySelector('input[name="contact_phone"]').value;
+// Form submission handler: Validates details and proceeds to Step 3: Add-on Services (Screenshot 4 & 5)
+document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    var contactName = document.querySelector('input[name="contact_name"]').value.trim();
+    var contactEmail = document.querySelector('input[name="contact_email"]').value.trim();
+    var contactPhone = document.querySelector('input[name="contact_phone"]').value.trim();
 
     if (!contactName || !contactEmail || !contactPhone) {
-        alert('Please complete all required contact details.');
-        return;
+        e.preventDefault();
+        alert('Please fill in your Contact Person, Email Address, and Mobile Number.');
+        return false;
     }
 
-    var options = {
-        "key": "<?php echo !empty($razorpay_settings['razorpay_key_id']) ? htmlspecialchars($razorpay_settings['razorpay_key_id']) : 'rzp_test_TTVGSNKy0V1o7B'; ?>",
-        "amount": amountInPaise,
-        "currency": "<?php echo !empty($razorpay_settings['currency']) ? htmlspecialchars($razorpay_settings['currency']) : 'INR'; ?>",
-        "name": "<?php echo !empty($razorpay_settings['merchant_name']) ? htmlspecialchars($razorpay_settings['merchant_name']) : 'Voyogo Travels'; ?>",
-        "description": "Flight Ticket Booking - <?php echo htmlspecialchars($flight['flight_number']); ?>",
-        "image": "<?php echo base_url('assets/images/logo.png'); ?>",
-        "handler": function (response){
-            showProcessingModal("Payment Verified (HTTP 200 OK)! Generating your Official Flight E-Ticket...");
-            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
-            document.getElementById('bookingForm').submit();
-        },
-        "prefill": {
-            "name": contactName,
-            "email": contactEmail,
-            "contact": contactPhone
-        },
-        "theme": {
-            "color": "<?php echo !empty($razorpay_settings['theme_color']) ? htmlspecialchars($razorpay_settings['theme_color']) : '#0d3470'; ?>"
-        },
-        "modal": {
-            "ondismiss": function() {
-                if (confirm("Razorpay Payment Gateway Closed. Would you like to finish test booking using Test Payment Mode?")) {
-                    showProcessingModal("Confirming Test Booking & Generating E-Ticket...");
-                    document.getElementById('razorpay_payment_id').value = "pay_mock_" + Math.floor(Math.random() * 1000000);
-                    document.getElementById('bookingForm').submit();
-                }
-            }
+    var paxNames = document.querySelectorAll('input[name="passenger_name[]"]');
+    for (var i = 0; i < paxNames.length; i++) {
+        if (!paxNames[i].value.trim()) {
+            e.preventDefault();
+            alert('Please enter the full name for Passenger ' + (i + 1) + '.');
+            paxNames[i].focus();
+            return false;
         }
-    };
-
-    try {
-        var rzp1 = new Razorpay(options);
-        rzp1.open();
-    } catch(err) {
-        showProcessingModal("Processing Booking Confirmation...");
-        document.getElementById('razorpay_payment_id').value = "pay_mock_" + Math.floor(Math.random() * 1000000);
-        document.getElementById('bookingForm').submit();
     }
+
+    // Submit proceeds smoothly to flight/addons
+    return true;
 });
 
 function calculatePassengerAge(input) {

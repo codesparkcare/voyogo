@@ -8,6 +8,8 @@ $route['translate_uri_dashes'] = FALSE;
 /* Voyogo Custom Flight Routes */
 $route['flight/review/(.+)'] = 'welcome/flight_review';
 $route['flight/review'] = 'welcome/flight_review';
+$route['flight/addons'] = 'welcome/flight_addons';
+$route['flight/payment'] = 'welcome/flight_payment';
 $route['flight/search'] = 'welcome/search_flights';
 $route['flight/process_payment'] = 'welcome/process_flight_payment';
 $route['flight/ajax_fare_details'] = 'welcome/ajax_fare_details';
