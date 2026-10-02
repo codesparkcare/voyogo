@@ -103,6 +103,7 @@
     $initialInsurance = $insurancePerPax * $total_travelers_review;
     $initialDiscount = 18; // Default ATFLY discount matching Screenshot 1
     $initialGrandTotal = $fBaseFare + $fTaxes + $initialInsurance - $initialDiscount;
+    $retReviewPrice = !empty($return_flight['price']) ? (float)$return_flight['price'] : $reviewPrice;
 
     // Airport Database for detailed connecting flight segments (Screenshot 2)
     $airportDb = array(
@@ -998,6 +999,10 @@
                     <!-- More Fare Options Fields -->
                     <input type="hidden" name="fare_tier" id="form_fare_tier" value="Value">
                     <input type="hidden" name="fare_tier_price_delta" id="form_fare_tier_price_delta" value="0">
+                    <input type="hidden" name="onward_fare_tier" id="form_onward_fare_tier" value="Value">
+                    <input type="hidden" name="onward_fare_tier_price_delta" id="form_onward_fare_tier_price_delta" value="0">
+                    <input type="hidden" name="return_fare_tier" id="form_return_fare_tier" value="Value">
+                    <input type="hidden" name="return_fare_tier_price_delta" id="form_return_fare_tier_price_delta" value="0">
                     
                     <!-- Safety & Flexibility Fields -->
                     <input type="hidden" name="safety_cancellation_type" id="form_safety_cancellation_type" value="">
@@ -1045,8 +1050,8 @@
 
                         <!-- Route Sector Tabs -->
                         <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
-                            <div class="fare-route-tab active" style="padding: 10px 18px; border-radius: 8px; border: 1.5px solid #0284c7; background: #f0f9ff; cursor: pointer; display: flex; flex-direction: column;">
-                                <div style="font-size: 13.5px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px;">
+                            <div id="fareTab_onward" class="fare-route-tab active" onclick="switchFareRouteSector('onward');" style="padding: 10px 18px; border-radius: 8px; border: 1.5px solid #0284c7; background: #f0f9ff; cursor: pointer; display: flex; flex-direction: column; transition: all 0.2s ease;">
+                                <div class="tab-title" style="font-size: 13.5px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px;">
                                     <span><?php echo htmlspecialchars($flight['from_code']); ?></span>
                                     <i class="fa-solid fa-arrow-right" style="font-size: 11px;"></i>
                                     <span><?php echo htmlspecialchars($flight['to_code']); ?></span>
@@ -1057,8 +1062,8 @@
                             </div>
 
                             <?php if (!empty($return_flight)): ?>
-                            <div class="fare-route-tab" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc; cursor: pointer; display: flex; flex-direction: column;">
-                                <div style="font-size: 13.5px; font-weight: 800; color: #334155; display: flex; align-items: center; gap: 6px;">
+                            <div id="fareTab_return" class="fare-route-tab" onclick="switchFareRouteSector('return');" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc; cursor: pointer; display: flex; flex-direction: column; transition: all 0.2s ease;">
+                                <div class="tab-title" style="font-size: 13.5px; font-weight: 800; color: #334155; display: flex; align-items: center; gap: 6px;">
                                     <span><?php echo htmlspecialchars($return_flight['from_code']); ?></span>
                                     <i class="fa-solid fa-arrow-right" style="font-size: 11px;"></i>
                                     <span><?php echo htmlspecialchars($return_flight['to_code']); ?></span>
@@ -1070,137 +1075,277 @@
                             <?php endif; ?>
                         </div>
 
-                        <!-- Economy Starting Pill -->
-                        <div style="margin-bottom: 20px;">
-                            <span style="background: #e0f2fe; color: #0369a1; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
-                                Economy <span style="font-weight: 500; color: #475569;">Starting at ₹ <?php echo number_format($fBaseFare + $fTaxes); ?></span>
-                            </span>
+                        <!-- ONWARD SECTOR CONTAINER -->
+                        <div id="sectorContainer_onward" style="display: block;">
+                            <!-- Economy Starting Pill -->
+                            <div style="margin-bottom: 20px;">
+                                <span style="background: #e0f2fe; color: #0369a1; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+                                    Economy <span style="font-weight: 500; color: #475569;">Starting at ₹ <?php echo number_format($fBaseFare + $fTaxes); ?></span>
+                                </span>
+                            </div>
+
+                            <!-- 3 Comparison Cards Grid (Onward) -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                                
+                                <!-- Tier 1: Value (Most Popular) -->
+                                <div id="fareTierCard_onward_Value" class="fare-tier-card" style="border: 2px solid #0284c7; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-shadow: 0 4px 15px rgba(2,132,199,0.08); transition: all 0.2s ease;">
+                                    <div style="position: absolute; top: -12px; right: 14px; background: #16a34a; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(22,163,74,0.3);">
+                                        Most Popular
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Value</div>
+                                        <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
+                                            ₹ <?php echo number_format($fBaseFare + $fTaxes); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-suitcase"></i> Baggage
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong>15 Kgs</strong></div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>07 Kgs</strong></div>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-rotate-left"></i> Flexibility
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Cancellation fee apply</div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Available on additional charge</div>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-utensils"></i> Seat & meal
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Seat Selection - Available on additional charges</div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Meal - Available on additional charges</div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('onward', 'Value', 0, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #0284c7; color: #ffffff; border: none;">
+                                        Selected
+                                    </button>
+                                </div>
+
+                                <!-- Tier 2: Classic -->
+                                <div id="fareTierCard_onward_Classic" class="fare-tier-card" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; transition: all 0.2s ease;">
+                                    <div>
+                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Classic</div>
+                                        <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
+                                            ₹ <?php echo number_format($fBaseFare + $fTaxes + 600); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-suitcase"></i> Baggage
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong>15 Kgs</strong></div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>7 Kgs</strong></div>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-rotate-left"></i> Flexibility
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Available on additional charge</div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Available on additional charge</div>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-utensils"></i> Seat & meal
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Seat Selection - Available on additional charges</div>
+                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Meal - Lite Bite Included</div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('onward', 'Classic', 600, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;">
+                                        Select
+                                    </button>
+                                </div>
+
+                                <!-- Tier 3: Flex -->
+                                <div id="fareTierCard_onward_Flex" class="fare-tier-card" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; transition: all 0.2s ease;">
+                                    <div style="position: absolute; top: -12px; right: 14px; background: #f59e0b; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(245,158,11,0.3);">
+                                        <i class="fa-solid fa-crown" style="font-size: 10px;"></i> Premium
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Flex</div>
+                                        <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
+                                            ₹ <?php echo number_format($fBaseFare + $fTaxes + 1800); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-suitcase"></i> Baggage
+                                            </div>
+                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Checked Baggage : <strong>20 Kgs (+5 Kg Extra)</strong></div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>7 Kgs</strong></div>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-rotate-left"></i> Flexibility
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Low Fee Protection</div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Free date change once</div>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-utensils"></i> Seat & meal
+                                            </div>
+                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Seat Selection - Free Standard Seat Included</div>
+                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Meal - Lite Bite Included</div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('onward', 'Flex', 1800, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;">
+                                        Select
+                                    </button>
+                                </div>
+
+                            </div>
                         </div>
 
-                        <!-- 3 Comparison Cards Grid (Screenshot 2) -->
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
-                            
-                            <!-- Tier 1: Value (Most Popular) -->
-                            <div id="fareTierCard_Value" class="fare-tier-card" style="border: 2px solid #0284c7; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-shadow: 0 4px 15px rgba(2,132,199,0.08); transition: all 0.2s ease;">
-                                <div style="position: absolute; top: -12px; right: 14px; background: #16a34a; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(22,163,74,0.3);">
-                                    Most Popular
-                                </div>
-                                <div>
-                                    <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Value</div>
-                                    <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
-                                        ₹ <?php echo number_format($fBaseFare + $fTaxes); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
-                                    </div>
-
-                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                            <i class="fa-solid fa-suitcase"></i> Baggage
-                                        </div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong>15 Kgs</strong></div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>07 Kgs</strong></div>
-                                    </div>
-
-                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                            <i class="fa-solid fa-rotate-left"></i> Flexibility
-                                        </div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Cancellation fee apply</div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Available on additional charge</div>
-                                    </div>
-
-                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                            <i class="fa-solid fa-utensils"></i> Seat & meal
-                                        </div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Seat Selection - Available on additional charges</div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Meal - Available on additional charges</div>
-                                    </div>
-                                </div>
-
-                                <button type="button" class="tier-select-btn" onclick="selectFareTier('Value', 0, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #0284c7; color: #ffffff; border: none;">
-                                    Selected
-                                </button>
+                        <?php if (!empty($return_flight)): ?>
+                        <!-- RETURN SECTOR CONTAINER -->
+                        <div id="sectorContainer_return" style="display: none;">
+                            <!-- Economy Starting Pill (Return) -->
+                            <div style="margin-bottom: 20px;">
+                                <span style="background: #e0f2fe; color: #0369a1; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+                                    Economy <span style="font-weight: 500; color: #475569;">Starting at ₹ <?php echo number_format($retReviewPrice); ?></span>
+                                </span>
                             </div>
 
-                            <!-- Tier 2: Classic -->
-                            <div id="fareTierCard_Classic" class="fare-tier-card" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; transition: all 0.2s ease;">
-                                <div>
-                                    <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Classic</div>
-                                    <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
-                                        ₹ <?php echo number_format($fBaseFare + $fTaxes + 600); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
+                            <!-- 3 Comparison Cards Grid (Return) -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                                
+                                <!-- Return Tier 1: Value -->
+                                <div id="fareTierCard_return_Value" class="fare-tier-card" style="border: 2px solid #0284c7; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-shadow: 0 4px 15px rgba(2,132,199,0.08); transition: all 0.2s ease;">
+                                    <div style="position: absolute; top: -12px; right: 14px; background: #16a34a; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(22,163,74,0.3);">
+                                        Most Popular
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Value</div>
+                                        <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
+                                            ₹ <?php echo number_format($retReviewPrice); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-suitcase"></i> Baggage
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong>15 Kgs</strong></div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>07 Kgs</strong></div>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-rotate-left"></i> Flexibility
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Cancellation fee apply</div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Available on additional charge</div>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-utensils"></i> Seat & meal
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Seat Selection - Available on additional charges</div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Meal - Available on additional charges</div>
+                                        </div>
                                     </div>
 
-                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                            <i class="fa-solid fa-suitcase"></i> Baggage
-                                        </div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong>15 Kgs</strong></div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>7 Kgs</strong></div>
-                                    </div>
-
-                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                            <i class="fa-solid fa-rotate-left"></i> Flexibility
-                                        </div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Available on additional charge</div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Available on additional charge</div>
-                                    </div>
-
-                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                            <i class="fa-solid fa-utensils"></i> Seat & meal
-                                        </div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Seat Selection - Available on additional charges</div>
-                                        <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Meal - Lite Bite Included</div>
-                                    </div>
+                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('return', 'Value', 0, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #0284c7; color: #ffffff; border: none;">
+                                        Selected
+                                    </button>
                                 </div>
 
-                                <button type="button" class="tier-select-btn" onclick="selectFareTier('Classic', 600, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;">
-                                    Select
-                                </button>
+                                <!-- Return Tier 2: Classic -->
+                                <div id="fareTierCard_return_Classic" class="fare-tier-card" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; transition: all 0.2s ease;">
+                                    <div>
+                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Classic</div>
+                                        <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
+                                            ₹ <?php echo number_format($retReviewPrice + 600); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-suitcase"></i> Baggage
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong>15 Kgs</strong></div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>7 Kgs</strong></div>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-rotate-left"></i> Flexibility
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Available on additional charge</div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Available on additional charge</div>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-utensils"></i> Seat & meal
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Seat Selection - Available on additional charges</div>
+                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Meal - Lite Bite Included</div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('return', 'Classic', 600, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;">
+                                        Select
+                                    </button>
+                                </div>
+
+                                <!-- Return Tier 3: Flex -->
+                                <div id="fareTierCard_return_Flex" class="fare-tier-card" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; transition: all 0.2s ease;">
+                                    <div style="position: absolute; top: -12px; right: 14px; background: #f59e0b; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(245,158,11,0.3);">
+                                        <i class="fa-solid fa-crown" style="font-size: 10px;"></i> Premium
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Flex</div>
+                                        <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
+                                            ₹ <?php echo number_format($retReviewPrice + 1800); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-suitcase"></i> Baggage
+                                            </div>
+                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Checked Baggage : <strong>20 Kgs (+5 Kg Extra)</strong></div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>7 Kgs</strong></div>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-rotate-left"></i> Flexibility
+                                            </div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Low Fee Protection</div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Free date change once</div>
+                                        </div>
+
+                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
+                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                                <i class="fa-solid fa-utensils"></i> Seat & meal
+                                            </div>
+                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Seat Selection - Free Standard Seat Included</div>
+                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Meal - Lite Bite Included</div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('return', 'Flex', 1800, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;">
+                                        Select
+                                    </button>
+                                </div>
+
                             </div>
-
-                            <!-- Tier 3: Flex -->
-                            <div id="fareTierCard_Flex" class="fare-tier-card" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; transition: all 0.2s ease;">
-                                <div style="position: absolute; top: -12px; right: 14px; background: #f59e0b; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(245,158,11,0.3);">
-                                    <i class="fa-solid fa-crown" style="font-size: 10px;"></i> Premium
-                                </div>
-                                <div>
-                                    <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Flex</div>
-                                    <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
-                                        ₹ <?php echo number_format($fBaseFare + $fTaxes + 1800); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
-                                    </div>
-
-                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                            <i class="fa-solid fa-suitcase"></i> Baggage
-                                        </div>
-                                        <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Checked Baggage : <strong>20 Kgs (+5 Kg Extra)</strong></div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>7 Kgs</strong></div>
-                                    </div>
-
-                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                            <i class="fa-solid fa-rotate-left"></i> Flexibility
-                                        </div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Low Fee Protection</div>
-                                        <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Free date change once</div>
-                                    </div>
-
-                                    <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                            <i class="fa-solid fa-utensils"></i> Seat & meal
-                                        </div>
-                                        <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Seat Selection - Free Standard Seat Included</div>
-                                        <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Meal - Lite Bite Included</div>
-                                    </div>
-                                </div>
-
-                                <button type="button" class="tier-select-btn" onclick="selectFareTier('Flex', 1800, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;">
-                                    Select
-                                </button>
-                            </div>
-
                         </div>
+                        <?php endif; ?>
                     </div>
 
                     <!-- 2. Maximize Your Travel Safety & Flexibility (Screenshot 1) -->
@@ -1916,19 +2061,94 @@ function toggleInsuranceLink() {
     toggleTravelInsurance(!isInsuranceIncluded);
 }
 
-function selectFareTier(tier, deltaPerPax, btnEl) {
-    selectedFareTier = tier;
-    fareTierDeltaTotal = deltaPerPax * totalPax;
+var selectedOnwardTier = 'Value';
+var onwardTierDelta = 0;
+var selectedReturnTier = 'Value';
+var returnTierDelta = 0;
+
+function switchFareRouteSector(sector) {
+    var tabOnward = document.getElementById('fareTab_onward');
+    var tabReturn = document.getElementById('fareTab_return');
+    var secOnward = document.getElementById('sectorContainer_onward');
+    var secReturn = document.getElementById('sectorContainer_return');
+
+    if (sector === 'onward') {
+        if (tabOnward) {
+            tabOnward.style.borderColor = '#0284c7';
+            tabOnward.style.background = '#f0f9ff';
+            var t1 = tabOnward.querySelector('.tab-title');
+            if (t1) t1.style.color = '#0369a1';
+        }
+        if (tabReturn) {
+            tabReturn.style.borderColor = '#e2e8f0';
+            tabReturn.style.background = '#f8fafc';
+            var t2 = tabReturn.querySelector('.tab-title');
+            if (t2) t2.style.color = '#334155';
+        }
+        if (secOnward) secOnward.style.display = 'block';
+        if (secReturn) secReturn.style.display = 'none';
+    } else {
+        if (tabReturn) {
+            tabReturn.style.borderColor = '#0284c7';
+            tabReturn.style.background = '#f0f9ff';
+            var t2 = tabReturn.querySelector('.tab-title');
+            if (t2) t2.style.color = '#0369a1';
+        }
+        if (tabOnward) {
+            tabOnward.style.borderColor = '#e2e8f0';
+            tabOnward.style.background = '#f8fafc';
+            var t1 = tabOnward.querySelector('.tab-title');
+            if (t1) t1.style.color = '#334155';
+        }
+        if (secOnward) secOnward.style.display = 'none';
+        if (secReturn) secReturn.style.display = 'block';
+    }
+}
+
+function selectFareTier(sectorOrTier, tierOrDelta, deltaOrBtn, btnEl) {
+    var sector = 'onward';
+    var tier = sectorOrTier;
+    var deltaPerPax = parseFloat(tierOrDelta) || 0;
+
+    if (sectorOrTier === 'onward' || sectorOrTier === 'return') {
+        sector = sectorOrTier;
+        tier = tierOrDelta;
+        deltaPerPax = parseFloat(deltaOrBtn) || 0;
+    }
+
+    if (sector === 'onward') {
+        selectedOnwardTier = tier;
+        onwardTierDelta = deltaPerPax * totalPax;
+        if (document.getElementById('form_onward_fare_tier')) {
+            document.getElementById('form_onward_fare_tier').value = tier;
+        }
+        if (document.getElementById('form_onward_fare_tier_price_delta')) {
+            document.getElementById('form_onward_fare_tier_price_delta').value = onwardTierDelta;
+        }
+    } else {
+        selectedReturnTier = tier;
+        returnTierDelta = deltaPerPax * totalPax;
+        if (document.getElementById('form_return_fare_tier')) {
+            document.getElementById('form_return_fare_tier').value = tier;
+        }
+        if (document.getElementById('form_return_fare_tier_price_delta')) {
+            document.getElementById('form_return_fare_tier_price_delta').value = returnTierDelta;
+        }
+    }
+
+    selectedFareTier = selectedOnwardTier + (selectedReturnTier && selectedReturnTier !== selectedOnwardTier ? (' / ' + selectedReturnTier) : '');
+    fareTierDeltaTotal = onwardTierDelta + returnTierDelta;
 
     if (document.getElementById('form_fare_tier')) {
-        document.getElementById('form_fare_tier').value = tier;
+        document.getElementById('form_fare_tier').value = selectedFareTier;
     }
     if (document.getElementById('form_fare_tier_price_delta')) {
         document.getElementById('form_fare_tier_price_delta').value = fareTierDeltaTotal;
     }
 
+    // Update UI cards for this sector
     ['Value', 'Classic', 'Flex'].forEach(function(t) {
-        var card = document.getElementById('fareTierCard_' + t);
+        var card = document.getElementById('fareTierCard_' + sector + '_' + t) || document.getElementById('fareTierCard_' + t);
         if (card) {
             var isThis = (t === tier);
             card.style.borderColor = isThis ? '#0284c7' : '#e2e8f0';
