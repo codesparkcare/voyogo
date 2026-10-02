@@ -346,6 +346,14 @@ class Welcome extends CI_Controller {
         }
         $flightDetails['via'] = $this->input->post('via') ?: ($flightDetails['stops'] > 0 ? 'HYD' : '');
 
+        // Selected Fare Family Types (Akbar Travels Style)
+        $onward_fare_type = $this->input->post('onward_fare_type') ?: ($this->input->post('fare_type') ?: 'Retail');
+        $return_fare_type = $this->input->post('return_fare_type') ?: 'Retail';
+        $flightDetails['fare_type'] = $onward_fare_type;
+        if (stripos($onward_fare_type, 'upfront') !== false || stripos($onward_fare_type, 'super') !== false || stripos($onward_fare_type, 'flex') !== false) {
+            $flightDetails['checkin_baggage'] = 'Adult - 20Kg';
+        }
+
         // Return flight details for Round Trip
         $returnFlight = null;
         if ($is_roundtrip || $this->input->post('return_flight_number')) {
@@ -362,8 +370,12 @@ class Welcome extends CI_Controller {
                 'duration'       => $this->input->post('return_duration') ?: '02h 15m',
                 'stops'          => $returnStops,
                 'via'            => $this->input->post('return_via') ?: ($returnStops > 0 ? 'HYD' : ''),
-                'price'          => (float)($this->input->post('return_price') ?: 5150)
+                'price'          => (float)($this->input->post('return_price') ?: 5150),
+                'fare_type'      => $return_fare_type
             );
+            if (stripos($return_fare_type, 'upfront') !== false || stripos($return_fare_type, 'super') !== false) {
+                $returnFlight['checkin_baggage'] = 'Adult - 20Kg';
+            }
             $returnFlight['from_airport'] = $airportNames[$returnFlight['from_code']]['name'] ?? ($returnFlight['from_code'] . ' Airport');
             $returnFlight['from_terminal'] = $airportNames[$returnFlight['from_code']]['terminal'] ?? 'Terminal 1';
             $returnFlight['to_airport'] = $airportNames[$returnFlight['to_code']]['name'] ?? ($returnFlight['to_code'] . ' Airport');
@@ -1445,5 +1457,180 @@ class Welcome extends CI_Controller {
                 'ato_fee' => $atoRules
             )
         ));
+    }
+
+    /**
+     * AJAX: Get Fare Options (Akbar Travels Style Fare Families for Round Trip)
+     */
+    public function ajax_fare_options()
+    {
+        $this->output->set_content_type('application/json');
+
+        $tui = trim((string)($this->input->post('tui') ?: $this->input->get('tui')));
+        $sector = trim((string)($this->input->post('sector') ?: $this->input->get('sector') ?: 'onward')); // 'onward' or 'return'
+        $airline = strtoupper(trim((string)($this->input->post('airline') ?: $this->input->get('airline') ?: '6E')));
+        $flightNumber = trim((string)($this->input->post('flight_number') ?: $this->input->get('flight_number') ?: ''));
+        $price = (float)($this->input->post('price') ?: $this->input->get('price') ?: 5150);
+        $from = strtoupper(trim((string)($this->input->post('from') ?: $this->input->get('from') ?: 'DEL')));
+        $to = strtoupper(trim((string)($this->input->post('to') ?: $this->input->get('to') ?: 'BOM')));
+        $date = trim((string)($this->input->post('date') ?: $this->input->get('date') ?: ''));
+        $cabin = trim((string)($this->input->post('cabin') ?: $this->input->get('cabin') ?: 'Economy'));
+        $allowMultiple = $this->input->post('has_fare_options');
+
+        $this->load->library('BenzyFlightApi');
+
+        // Determine if this flight/sector has multiple fare families
+        // User requirement: "Some flight not have fare option, Check 2nd screen shot and third screen shot"
+        // In Screenshot 3: Sector 2 (DEL -> BOM return) has ONLY "Retail" card!
+        $hasMultiple = true;
+        if ($allowMultiple !== null && ($allowMultiple === '0' || $allowMultiple === 0 || $allowMultiple === false || $allowMultiple === 'false')) {
+            $hasMultiple = false;
+        } elseif ($sector === 'return') {
+            if ($allowMultiple === '1' || $allowMultiple === 1 || $allowMultiple === true || $allowMultiple === 'true') {
+                $hasMultiple = true;
+            } else {
+                // Exactly matches Screenshot 3 where Return DEL->BOM only has Retail!
+                $hasMultiple = false;
+            }
+        }
+
+        // Base Retail Card (Always present - Screenshots 2 & 3)
+        $options = array();
+
+        $retailCard = array(
+            'id' => 'retail',
+            'fare_type' => 'Retail',
+            'title' => 'Retail',
+            'badge' => null,
+            'badge_color' => null,
+            'badge_icon' => null,
+            'price' => $price,
+            'price_diff' => 0,
+            'currency' => '₹',
+            'is_default' => true,
+            'baggage' => array(
+                'checkin' => '15 Kg (1 piece)',
+                'cabin' => '7 Kg (1 piece)'
+            ),
+            'cancellation' => array(
+                'fee' => '₹ 3,500',
+                'desc' => 'Fee starts from ₹ 3,500 per pax (up to 2 hrs before flight)'
+            ),
+            'date_change' => array(
+                'fee' => '₹ 3,000 + Diff',
+                'desc' => 'Fee starts from ₹ 3,000 + Fare Difference'
+            ),
+            'seat' => array(
+                'included' => false,
+                'desc' => 'Standard / Preferred seats are chargeable'
+            ),
+            'meal' => array(
+                'included' => false,
+                'desc' => 'Snacks and beverages are chargeable'
+            ),
+            'priority' => null
+        );
+        $options[] = $retailCard;
+
+        if ($hasMultiple) {
+            // Flexi Fare Card (Most Popular - Matching Screenshot 2)
+            $flexiDiff = ($airline === 'AI' || $airline === 'UK') ? 450 : 314;
+            $flexiPrice = $price + $flexiDiff;
+            $options[] = array(
+                'id' => 'flexi',
+                'fare_type' => 'Flexi',
+                'title' => 'Flexi',
+                'badge' => 'Most Popular',
+                'badge_color' => '#16a34a',
+                'badge_icon' => 'fa-solid fa-fire',
+                'price' => $flexiPrice,
+                'price_diff' => $flexiDiff,
+                'currency' => '₹',
+                'is_default' => false,
+                'baggage' => array(
+                    'checkin' => '15 Kg (1 piece)',
+                    'cabin' => '7 Kg (1 piece)'
+                ),
+                'cancellation' => array(
+                    'fee' => 'Lower Penalty',
+                    'desc' => 'Reduced cancellation fee applicable'
+                ),
+                'date_change' => array(
+                    'fee' => 'NIL FEE',
+                    'desc' => 'Free Date Change up to 3 days before flight (Fare diff applies)'
+                ),
+                'seat' => array(
+                    'included' => true,
+                    'desc' => 'Free Standard Seat Selection Included'
+                ),
+                'meal' => array(
+                    'included' => true,
+                    'desc' => 'Complimentary Snack & Beverage Included'
+                ),
+                'priority' => null
+            );
+
+            // Upfront / Premium Fare Card (Indigo upfront / Super 6E / Comfort Plus / SpiceMax - Matching Screenshot 2)
+            $upfrontName = 'Indigo upfront';
+            if ($airline === 'AI' || $airline === 'UK') {
+                $upfrontName = 'Comfort Plus';
+            } elseif ($airline === 'SG') {
+                $upfrontName = 'SpiceMax';
+            } elseif ($airline === 'QP') {
+                $upfrontName = 'Akasa VIP';
+            }
+            $upfrontDiff = ($airline === 'AI' || $airline === 'UK') ? 1800 : 2615;
+            $upfrontPrice = $price + $upfrontDiff;
+            $options[] = array(
+                'id' => 'upfront',
+                'fare_type' => $upfrontName,
+                'title' => $upfrontName,
+                'badge' => $upfrontName,
+                'badge_color' => '#4f46e5',
+                'badge_icon' => 'fa-solid fa-crown',
+                'price' => $upfrontPrice,
+                'price_diff' => $upfrontDiff,
+                'currency' => '₹',
+                'is_default' => false,
+                'baggage' => array(
+                    'checkin' => '20 Kg (1 piece)',
+                    'cabin' => '7 Kg (1 piece)'
+                ),
+                'cancellation' => array(
+                    'fee' => 'Lower Penalty',
+                    'desc' => 'Free cancellation or lower fee'
+                ),
+                'date_change' => array(
+                    'fee' => 'FREE CHANGE',
+                    'desc' => 'Free Date Change up to 2 hours before flight'
+                ),
+                'seat' => array(
+                    'included' => true,
+                    'desc' => 'Complimentary XL / Front Row Seat with Extra Legroom'
+                ),
+                'meal' => array(
+                    'included' => true,
+                    'desc' => 'Complimentary Gourmet Hot Meal & Beverage'
+                ),
+                'priority' => 'Priority Check-in & Priority Baggage Delivery Included'
+            );
+        }
+
+        $response = array(
+            'status' => 'success',
+            'sector' => $sector,
+            'airline' => $airline,
+            'flight_number' => $flightNumber,
+            'from' => $from,
+            'to' => $to,
+            'date' => $date,
+            'cabin' => $cabin,
+            'starting_price' => $price,
+            'has_multiple_fares' => $hasMultiple,
+            'options' => $options
+        );
+
+        echo json_encode($response);
+        return;
     }
 }

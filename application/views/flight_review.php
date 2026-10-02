@@ -192,6 +192,11 @@
                             <span style="background: #eff6ff; color: #1d4ed8; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 12px; display: inline-block;">
                                 <?php echo date('D, d M Y', strtotime($flight['departure_date'])); ?>
                             </span>
+                            <?php if (!empty($flight['fare_type'])): ?>
+                                <span style="background: <?php echo (stripos($flight['fare_type'], 'flex') !== false || stripos($flight['fare_type'], 'super') !== false || stripos($flight['fare_type'], 'upfront') !== false) ? '#fef3c7' : '#f1f5f9'; ?>; color: <?php echo (stripos($flight['fare_type'], 'flex') !== false || stripos($flight['fare_type'], 'super') !== false || stripos($flight['fare_type'], 'upfront') !== false) ? '#b45309' : '#334155'; ?>; padding: 5px 12px; border-radius: 12px; font-weight: 800; font-size: 11px; margin-left: 6px; border: 1px solid <?php echo (stripos($flight['fare_type'], 'flex') !== false || stripos($flight['fare_type'], 'super') !== false || stripos($flight['fare_type'], 'upfront') !== false) ? '#fcd34d' : '#e2e8f0'; ?>;">
+                                    <i class="<?php echo (stripos($flight['fare_type'], 'upfront') !== false || stripos($flight['fare_type'], 'super') !== false) ? 'fa-solid fa-crown' : 'fa-solid fa-tag'; ?>" style="font-size: 10px; margin-right: 2px;"></i> <?php echo htmlspecialchars($flight['fare_type']); ?> Fare
+                                </span>
+                            <?php endif; ?>
                             <?php if (!empty($flight['refundable'])): ?>
                                 <span style="background: #f0fdf4; color: #15803d; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 11px; margin-left: 6px; border: 1px solid #bbf7d0;">
                                     <i class="fa-solid fa-rotate-left"></i> Refundable
@@ -362,6 +367,11 @@
                             <span style="background: #f0fdf4; color: #15803d; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 12px; display: inline-block;">
                                 <?php echo date('D, d M Y', strtotime($return_flight['departure_date'])); ?>
                             </span>
+                            <?php if (!empty($return_flight['fare_type'])): ?>
+                                <span style="background: <?php echo (stripos($return_flight['fare_type'], 'flex') !== false || stripos($return_flight['fare_type'], 'super') !== false || stripos($return_flight['fare_type'], 'upfront') !== false) ? '#fef3c7' : '#f1f5f9'; ?>; color: <?php echo (stripos($return_flight['fare_type'], 'flex') !== false || stripos($return_flight['fare_type'], 'super') !== false || stripos($return_flight['fare_type'], 'upfront') !== false) ? '#b45309' : '#334155'; ?>; padding: 5px 12px; border-radius: 12px; font-weight: 800; font-size: 11px; margin-left: 6px; border: 1px solid <?php echo (stripos($return_flight['fare_type'], 'flex') !== false || stripos($return_flight['fare_type'], 'super') !== false || stripos($return_flight['fare_type'], 'upfront') !== false) ? '#fcd34d' : '#e2e8f0'; ?>;">
+                                    <i class="<?php echo (stripos($return_flight['fare_type'], 'upfront') !== false || stripos($return_flight['fare_type'], 'super') !== false) ? 'fa-solid fa-crown' : 'fa-solid fa-tag'; ?>" style="font-size: 10px; margin-right: 2px;"></i> <?php echo htmlspecialchars($return_flight['fare_type']); ?> Fare
+                                </span>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -451,8 +461,11 @@
                     <input type="hidden" name="promo_code" id="form_promo_code" value="ATFLY">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
                     <input type="hidden" name="is_roundtrip" value="<?php echo !empty($is_roundtrip) ? '1' : '0'; ?>">
+                    <input type="hidden" name="fare_type" value="<?php echo htmlspecialchars($flight['fare_type'] ?? 'Retail'); ?>">
+                    <input type="hidden" name="onward_fare_type" value="<?php echo htmlspecialchars($flight['fare_type'] ?? 'Retail'); ?>">
 
                     <?php if (!empty($return_flight)): ?>
+                    <input type="hidden" name="return_fare_type" value="<?php echo htmlspecialchars($return_flight['fare_type'] ?? 'Retail'); ?>">
                     <input type="hidden" name="return_flight_number" value="<?php echo htmlspecialchars($return_flight['flight_number']); ?>">
                     <input type="hidden" name="return_airline_name" value="<?php echo htmlspecialchars($return_flight['airline_name']); ?>">
                     <input type="hidden" name="return_origin" value="<?php echo htmlspecialchars($return_flight['from_code']); ?>">

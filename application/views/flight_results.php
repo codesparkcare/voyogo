@@ -1770,6 +1770,184 @@
         overflow-y: auto;
         max-height: calc(90vh - 125px);
     }
+
+    /* ========================================================= */
+    /* AKBAR TRAVELS STYLE FARE OPTIONS (Round Trip Flow)        */
+    /* ========================================================= */
+    #fareOptionsSection {
+        animation: foFadeIn 0.25s ease-out;
+    }
+    @keyframes foFadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .fo-top-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #ffffff;
+        padding: 16px 24px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        margin-bottom: 20px;
+    }
+    .fo-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 18px;
+        font-size: 13.5px;
+        font-weight: 700;
+        color: #0284c7;
+        background: #f0f9ff;
+        border: 1.5px solid #0284c7;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .fo-back-btn:hover {
+        background: #0284c7;
+        color: #ffffff;
+        transform: translateX(-2px);
+    }
+    .fo-sector-tabs-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+    .fo-sector-tab {
+        cursor: pointer;
+        background: #ffffff;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px 20px;
+        position: relative;
+        transition: all 0.2s ease;
+    }
+    .fo-sector-tab:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    }
+    .fo-sector-tab.active {
+        border-color: #2563eb;
+        background: #f8faff;
+        box-shadow: 0 4px 18px rgba(37, 99, 235, 0.12);
+    }
+    .fo-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+        gap: 20px;
+        margin-top: 14px;
+    }
+    .fo-card {
+        background: #ffffff;
+        border: 2px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 24px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        position: relative;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .fo-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .fo-card.selected {
+        border-color: #ea580c;
+        background: #fffdfb;
+        box-shadow: 0 6px 24px rgba(234, 88, 12, 0.14);
+    }
+    .fo-badge {
+        position: absolute;
+        top: -12px;
+        right: 18px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .fo-tier-title {
+        font-size: 19px;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0 0 6px 0;
+    }
+    .fo-price-box {
+        margin-bottom: 16px;
+        padding-bottom: 14px;
+        border-bottom: 1px dashed #cbd5e1;
+    }
+    .fo-price-amount {
+        font-size: 24px;
+        font-weight: 900;
+        color: #0d3470;
+    }
+    .fo-price-sub {
+        font-size: 11.5px;
+        color: #64748b;
+        margin-left: 4px;
+    }
+    .fo-perks-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 22px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        font-size: 13px;
+        flex: 1;
+    }
+    .fo-perk-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        color: #334155;
+    }
+    .fo-perk-icon {
+        width: 18px;
+        text-align: center;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+    .fo-perk-item strong {
+        color: #0f172a;
+    }
+    .fo-select-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 14.5px;
+        font-weight: 800;
+        border-radius: 8px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+        border: 1.5px solid #ea580c;
+        background: #ffffff;
+        color: #ea580c;
+    }
+    .fo-select-btn:hover {
+        background: #fff7ed;
+    }
+    .fo-select-btn.selected {
+        background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+        color: #ffffff;
+        border-color: transparent;
+        box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3);
+    }
     </style>
     
     <!-- Top Search Header Box -->
@@ -3232,7 +3410,7 @@
             <!-- ========================================== -->
             <!-- ROUND TRIP DUAL COLUMN SELECTION VIEW     -->
             <!-- ========================================== -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+            <div id="rtDualColumnGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
                 
                 <!-- Left Sector: Onward Departure Flights -->
                 <div>
@@ -3376,16 +3554,118 @@
 
             </div>
 
-            <!-- Sticky Bottom Round Trip Action Bar -->
+            <!-- ========================================== -->
+            <!-- FARE OPTIONS SECTION (Akbar Travels Style) -->
+            <!-- ========================================== -->
+            <div id="fareOptionsSection" style="display: none; margin-bottom: 50px;">
+                <!-- Top Header Bar with Back to Search (Screenshot 2 & 3) -->
+                <div class="fo-top-header">
+                    <div>
+                        <h2 style="font-size: 22px; font-weight: 800; color: #0d3470; margin: 0 0 4px 0;">Fare Options</h2>
+                        <div style="font-size: 13px; color: #64748b; display: flex; align-items: center; gap: 8px;">
+                            <span>Select preferred fare option for each sector</span>
+                            <span style="display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: #cbd5e1;"></span>
+                            <span id="foHeaderRouteText"><?php echo htmlspecialchars($search_query['from_code']); ?> &#8646; <?php echo htmlspecialchars($search_query['to_code']); ?></span>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" class="fo-back-btn" onclick="hideFareOptionsView();" title="Return to flight search results">
+                            <i class="fa-solid fa-chevron-left" style="font-size: 11px;"></i> <span>Back to Search</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sector Navigation Tabs (Screenshot 2 & 3) -->
+                <div class="fo-sector-tabs-container">
+                    <!-- Sector Tab 1: Onward -->
+                    <div class="fo-sector-tab active" id="foTabOnward" onclick="switchFoSector('onward')">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="background: #eff6ff; color: #2563eb; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">DEPARTURE</span>
+                                <strong style="font-size: 15px; color: #0f172a;" id="foTabOnwardRoute"><?php echo htmlspecialchars($search_query['from_code']); ?> &#10230; <?php echo htmlspecialchars($search_query['to_code']); ?></strong>
+                            </div>
+                            <span style="font-size: 12px; font-weight: 700; color: #64748b;" id="foTabOnwardDate"><?php echo date('D, d M Y', strtotime($search_query['date'])); ?></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <img id="foTabOnwardLogo" src="https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png" alt="airline" style="height: 22px; width: 22px; object-fit: contain;">
+                                <div>
+                                    <strong style="font-size: 13px; color: #0f172a;" id="foTabOnwardFlight">IndiGo 6E-2134</strong>
+                                    <span style="font-size: 11px; color: #64748b; margin-left: 6px;" id="foTabOnwardTime">06:00 - 08:15</span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span id="foTabOnwardBadge" style="background: #eff6ff; color: #2563eb; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; display: inline-block;">Retail</span>
+                                <strong style="font-size: 16px; color: #0d3470; display: block;" id="foTabOnwardPrice">₹ 5,150</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sector Tab 2: Return -->
+                    <div class="fo-sector-tab" id="foTabReturn" onclick="switchFoSector('return')">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="background: #f0fdf4; color: #16a34a; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">RETURN</span>
+                                <strong style="font-size: 15px; color: #0f172a;" id="foTabReturnRoute"><?php echo htmlspecialchars($search_query['to_code']); ?> &#10230; <?php echo htmlspecialchars($search_query['from_code']); ?></strong>
+                            </div>
+                            <span style="font-size: 12px; font-weight: 700; color: #64748b;" id="foTabReturnDate"><?php echo !empty($search_query['return_date']) ? date('D, d M Y', strtotime($search_query['return_date'])) : ''; ?></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <img id="foTabReturnLogo" src="https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png" alt="airline" style="height: 22px; width: 22px; object-fit: contain;">
+                                <div>
+                                    <strong style="font-size: 13px; color: #0f172a;" id="foTabReturnFlight">IndiGo 6E-2135</strong>
+                                    <span style="font-size: 11px; color: #64748b; margin-left: 6px;" id="foTabReturnTime">07:30 - 09:45</span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span id="foTabReturnBadge" style="background: #f0fdf4; color: #16a34a; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; display: inline-block;">Retail</span>
+                                <strong style="font-size: 16px; color: #0d3470; display: block;" id="foTabReturnPrice">₹ 5,150</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Sector Subheader Pill (Screenshots 2 & 3) -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 4px; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 20px; padding: 6px 16px; font-size: 13px; font-weight: 700; color: #334155; display: inline-flex; align-items: center; gap: 7px;">
+                            <i class="fa-solid fa-couch" style="color: #64748b;"></i>
+                            <span id="foCabinStartingPill">Economy | Starting at ₹ 5,150</span>
+                        </div>
+                        <span id="foOptionsCountNotice" style="font-size: 13px;"></span>
+                    </div>
+                    <div style="font-size: 12.5px; color: #64748b; font-weight: 500;">
+                        <i class="fa-solid fa-circle-info" style="color: #0284c7;"></i> All prices are per adult passenger (taxes included)
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="foLoadingState" style="display: none; padding: 50px 20px; text-align: center; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0;">
+                    <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 32px; color: #0284c7; margin-bottom: 12px;"></i>
+                    <div style="font-size: 15px; font-weight: 700; color: #1e293b;">Loading fare family options...</div>
+                    <div style="font-size: 13px; color: #64748b; margin-top: 4px;">Checking available branded fare tiers</div>
+                </div>
+
+                <!-- Dynamic Cards Grid (Rendered by JS) -->
+                <div id="foCardsGrid" class="fo-cards-grid">
+                    <!-- Injected dynamically by JS -->
+                </div>
+            </div>
+
+            <!-- Sticky Bottom Round Trip Action Bar (Screenshot 1 & 2) -->
             <div id="roundTripStickyBar" style="position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 2px solid #2563eb; box-shadow: 0 -8px 30px rgba(0,0,0,0.12); z-index: 9999; padding: 14px 0;">
                 <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 15px;">
                     
-                    <div style="display: flex; gap: 30px; align-items: center;">
+                    <div style="display: flex; gap: 24px; align-items: center;">
                         <!-- Departure Summary -->
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <span style="background: #eff6ff; color: #2563eb; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 4px;">DEPART</span>
                             <div>
-                                <strong style="font-size: 14px; color: #0f172a;" id="barOnwardAirline">IndiGo 6E-2134</strong>
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <strong style="font-size: 14px; color: #0f172a;" id="barOnwardAirline">IndiGo 6E-2134</strong>
+                                    <span id="barOnwardFareBadge" style="background: #eff6ff; color: #2563eb; font-size: 10.5px; font-weight: 800; padding: 1px 6px; border-radius: 3px; display: none;">Retail</span>
+                                </div>
                                 <div style="font-size: 12px; color: #64748b;" id="barOnwardTime">06:00 - 08:15 (DEL &rarr; BOM)</div>
                             </div>
                         </div>
@@ -3396,13 +3676,16 @@
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <span style="background: #f0fdf4; color: #16a34a; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 4px;">RETURN</span>
                             <div>
-                                <strong style="font-size: 14px; color: #0f172a;" id="barReturnAirline">IndiGo 6E-2135</strong>
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <strong style="font-size: 14px; color: #0f172a;" id="barReturnAirline">IndiGo 6E-2135</strong>
+                                    <span id="barReturnFareBadge" style="background: #f0fdf4; color: #16a34a; font-size: 10.5px; font-weight: 800; padding: 1px 6px; border-radius: 3px; display: none;">Retail</span>
+                                </div>
                                 <div style="font-size: 12px; color: #64748b;" id="barReturnTime">07:30 - 09:45 (BOM &rarr; DEL)</div>
                             </div>
                         </div>
                     </div>
 
-                    <div style="display: flex; align-items: center; gap: 24px;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
                         <div style="text-align: right;">
                             <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Round Trip Fare</span>
                             <strong style="font-size: 24px; color: #0d3470; display: block; line-height: 1;" id="barTotalPrice">₹ 10,300</strong>
@@ -3444,15 +3727,26 @@
                             <input type="hidden" name="return_stops" id="rt_return_stops" value="">
                             <input type="hidden" name="return_via" id="rt_return_via" value="">
 
+                            <!-- Fare Types (Screenshots 2 & 3) -->
+                            <input type="hidden" name="onward_fare_type" id="rt_onward_fare_type" value="Retail">
+                            <input type="hidden" name="return_fare_type" id="rt_return_fare_type" value="Retail">
+                            <input type="hidden" name="onward_fare_desc" id="rt_onward_fare_desc" value="">
+                            <input type="hidden" name="return_fare_desc" id="rt_return_fare_desc" value="">
+
                             <!-- Pax info -->
                             <input type="hidden" name="adults" value="<?php echo htmlspecialchars($search_query['adults'] ?? 1); ?>">
                             <input type="hidden" name="children" value="<?php echo htmlspecialchars($search_query['children'] ?? 0); ?>">
                             <input type="hidden" name="infants" value="<?php echo htmlspecialchars($search_query['infants'] ?? 0); ?>">
                             <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
 
-                            <button type="submit" class="btn-search" style="background: linear-gradient(135deg, #ea580c 0%, #f97316 100%); padding: 12px 28px; font-size: 15px; font-weight: 800; border-radius: 8px; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(234, 88, 12, 0.35);">
-                                <span>BOOK ROUND TRIP</span> <i class="fa-solid fa-arrow-right"></i>
-                            </button>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <button type="button" id="btnRtStickyBack" onclick="hideFareOptionsView();" style="display: none; background: #f8fafc; border: 1.5px solid #cbd5e1; color: #334155; padding: 11px 18px; font-size: 13.5px; font-weight: 700; border-radius: 8px; cursor: pointer; align-items: center; gap: 6px; transition: all 0.2s;">
+                                    <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+                                </button>
+                                <button type="button" id="btnRtAction" class="btn-search" onclick="handleRtStickyAction();" style="background: linear-gradient(135deg, #ea580c 0%, #f97316 100%); padding: 12px 28px; font-size: 15px; font-weight: 800; border-radius: 8px; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(234, 88, 12, 0.35); transition: all 0.2s;">
+                                    <span id="btnRtActionText">VIEW FARE</span> <i class="fa-solid fa-arrow-right" id="btnRtActionIcon"></i>
+                                </button>
+                            </div>
                         </form>
                     </div>
 
@@ -3646,6 +3940,13 @@
             let activeRtSector = 'onward';
             const rtFareCache = {};
 
+            // Fare Options State (Akbar Travels Style Flow)
+            let isFareOptionsMode = false;
+            let activeFoSector = 'onward';
+            let selectedOnwardFare = { id: 'retail', fare_type: 'Retail', price: 0 };
+            let selectedReturnFare = { id: 'retail', fare_type: 'Retail', price: 0 };
+            const foOptionsCache = {};
+
             function updateRoundTripSelection() {
                 const onwardRadio = document.querySelector('input[name="selected_onward_idx"]:checked');
                 const returnRadio = document.querySelector('input[name="selected_return_idx"]:checked');
@@ -3682,6 +3983,10 @@
 
                 // Update Sticky Bar Text
                 if (o) {
+                    selectedOnwardFare = { id: 'retail', fare_type: 'Retail', price: parseFloat(o.Price) };
+                    const elTypeO = document.getElementById('rt_onward_fare_type');
+                    if (elTypeO) elTypeO.value = 'Retail';
+
                     document.getElementById('barOnwardAirline').textContent = o.AirlineName + ' ' + o.FlightNumber;
                     document.getElementById('barOnwardTime').textContent = o.DepartureTime + ' - ' + o.ArrivalTime + ' (' + o.FromCode + ' → ' + o.ToCode + ')';
                     
@@ -3699,6 +4004,10 @@
                 }
 
                 if (r) {
+                    selectedReturnFare = { id: 'retail', fare_type: 'Retail', price: parseFloat(r.Price) };
+                    const elTypeR = document.getElementById('rt_return_fare_type');
+                    if (elTypeR) elTypeR.value = 'Retail';
+
                     document.getElementById('barReturnAirline').textContent = r.AirlineName + ' ' + r.FlightNumber;
                     document.getElementById('barReturnTime').textContent = r.DepartureTime + ' - ' + r.ArrivalTime + ' (' + r.FromCode + ' → ' + r.ToCode + ')';
 
@@ -3714,8 +4023,7 @@
                     document.getElementById('rt_return_via').value = r.via || r.Via || (r.Stops > 0 ? 'HYD' : '');
                 }
 
-                const total = (o ? parseFloat(o.Price) : 0) + (r ? parseFloat(r.Price) : 0);
-                document.getElementById('barTotalPrice').textContent = '₹ ' + total.toLocaleString('en-IN');
+                updateStickyTotalPrice();
             }
 
             // Akbar Travels Style Modal Controls
@@ -4073,6 +4381,463 @@
                         renderRtRulesTable(data.rules.change_rows, data.rules.cancel_rows);
                     }
                 }
+            }
+
+            // =========================================================
+            // AKBAR TRAVELS STYLE FARE OPTIONS CONTROLLER
+            // =========================================================
+            function handleRtStickyAction() {
+                if (!isFareOptionsMode) {
+                    showFareOptionsView();
+                } else {
+                    document.getElementById('roundTripBookingForm').submit();
+                }
+            }
+
+            function showFareOptionsView() {
+                isFareOptionsMode = true;
+                const o = onwardData[currentRtOnwardIdx] || onwardData[0];
+                const r = returnData[currentRtReturnIdx] || returnData[0];
+
+                // Hide results grid & sidebar
+                const grid = document.getElementById('rtDualColumnGrid');
+                if (grid) grid.style.display = 'none';
+
+                const sidebar = document.querySelector('.filters-sidebar');
+                if (sidebar) sidebar.style.display = 'none';
+
+                const layoutGrid = document.querySelector('.layout-grid');
+                if (layoutGrid) layoutGrid.style.gridTemplateColumns = '1fr';
+
+                // Update Header Route Text
+                const foRoute = document.getElementById('foHeaderRouteText');
+                if (foRoute && o && r) {
+                    foRoute.textContent = (o.FromCode || rtSearchQuery.from_code) + ' ⇌ ' + (o.ToCode || rtSearchQuery.to_code);
+                }
+
+                // Update Sector Tab 1 (Onward)
+                if (o) {
+                    const rText = document.getElementById('foTabOnwardRoute');
+                    if (rText) rText.innerHTML = (o.FromCode || rtSearchQuery.from_code) + ' &#10230; ' + (o.ToCode || rtSearchQuery.to_code);
+                    const fltText = document.getElementById('foTabOnwardFlight');
+                    if (fltText) fltText.textContent = o.AirlineName + ' ' + o.FlightNumber;
+                    const timeText = document.getElementById('foTabOnwardTime');
+                    if (timeText) timeText.textContent = o.DepartureTime + ' - ' + o.ArrivalTime;
+                    const logo = document.getElementById('foTabOnwardLogo');
+                    if (logo) logo.src = o.AirlineLogo || 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png';
+                    const badge = document.getElementById('foTabOnwardBadge');
+                    if (badge) badge.textContent = selectedOnwardFare.fare_type || 'Retail';
+                    const pElem = document.getElementById('foTabOnwardPrice');
+                    if (pElem) pElem.textContent = '₹ ' + (selectedOnwardFare.price || parseFloat(o.Price)).toLocaleString('en-IN');
+                }
+
+                // Update Sector Tab 2 (Return)
+                if (r) {
+                    const rText = document.getElementById('foTabReturnRoute');
+                    if (rText) rText.innerHTML = (r.FromCode || rtSearchQuery.to_code) + ' &#10230; ' + (r.ToCode || rtSearchQuery.from_code);
+                    const fltText = document.getElementById('foTabReturnFlight');
+                    if (fltText) fltText.textContent = r.AirlineName + ' ' + r.FlightNumber;
+                    const timeText = document.getElementById('foTabReturnTime');
+                    if (timeText) timeText.textContent = r.DepartureTime + ' - ' + r.ArrivalTime;
+                    const logo = document.getElementById('foTabReturnLogo');
+                    if (logo) logo.src = r.AirlineLogo || 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png';
+                    const badge = document.getElementById('foTabReturnBadge');
+                    if (badge) badge.textContent = selectedReturnFare.fare_type || 'Retail';
+                    const pElem = document.getElementById('foTabReturnPrice');
+                    if (pElem) pElem.textContent = '₹ ' + (selectedReturnFare.price || parseFloat(r.Price)).toLocaleString('en-IN');
+                }
+
+                // Update Sticky Bar for Fare Options Mode
+                const btnText = document.getElementById('btnRtActionText');
+                if (btnText) btnText.textContent = 'CONTINUE';
+
+                const stickyBack = document.getElementById('btnRtStickyBack');
+                if (stickyBack) stickyBack.style.display = 'inline-flex';
+
+                const onwardBadge = document.getElementById('barOnwardFareBadge');
+                if (onwardBadge) {
+                    onwardBadge.textContent = selectedOnwardFare.fare_type || 'Retail';
+                    onwardBadge.style.display = 'inline-block';
+                }
+                const returnBadge = document.getElementById('barReturnFareBadge');
+                if (returnBadge) {
+                    returnBadge.textContent = selectedReturnFare.fare_type || 'Retail';
+                    returnBadge.style.display = 'inline-block';
+                }
+
+                // Show Fare Options Section
+                const foSection = document.getElementById('fareOptionsSection');
+                if (foSection) foSection.style.display = 'block';
+
+                // Load initial sector (onward)
+                switchFoSector('onward');
+
+                foSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function hideFareOptionsView() {
+                isFareOptionsMode = false;
+
+                const foSection = document.getElementById('fareOptionsSection');
+                if (foSection) foSection.style.display = 'none';
+
+                const grid = document.getElementById('rtDualColumnGrid');
+                if (grid) grid.style.display = 'grid';
+
+                const sidebar = document.querySelector('.filters-sidebar');
+                if (sidebar) sidebar.style.display = '';
+
+                const layoutGrid = document.querySelector('.layout-grid');
+                if (layoutGrid) layoutGrid.style.gridTemplateColumns = '240px 1fr';
+
+                // Restore Sticky Bar to View Fare mode
+                const btnText = document.getElementById('btnRtActionText');
+                if (btnText) btnText.textContent = 'VIEW FARE';
+
+                const stickyBack = document.getElementById('btnRtStickyBack');
+                if (stickyBack) stickyBack.style.display = 'none';
+
+                const onwardBadge = document.getElementById('barOnwardFareBadge');
+                if (onwardBadge) onwardBadge.style.display = 'none';
+                const returnBadge = document.getElementById('barReturnFareBadge');
+                if (returnBadge) returnBadge.style.display = 'none';
+
+                updateStickyTotalPrice();
+
+                if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function switchFoSector(sector) {
+                activeFoSector = sector;
+                const tabOnward = document.getElementById('foTabOnward');
+                const tabReturn = document.getElementById('foTabReturn');
+
+                if (sector === 'onward') {
+                    if (tabOnward) tabOnward.classList.add('active');
+                    if (tabReturn) tabReturn.classList.remove('active');
+                } else {
+                    if (tabReturn) tabReturn.classList.add('active');
+                    if (tabOnward) tabOnward.classList.remove('active');
+                }
+
+                loadFareOptions(sector);
+            }
+
+            function loadFareOptions(sector) {
+                const o = onwardData[currentRtOnwardIdx] || onwardData[0];
+                const r = returnData[currentRtReturnIdx] || returnData[0];
+                const flt = (sector === 'onward') ? o : r;
+                if (!flt) return;
+
+                const cacheKey = sector + '_' + (flt.FlightNumber || '') + '_' + flt.Price;
+                if (foOptionsCache[cacheKey]) {
+                    renderFareOptionCards(sector, foOptionsCache[cacheKey]);
+                    return;
+                }
+
+                const loader = document.getElementById('foLoadingState');
+                const cardsGrid = document.getElementById('foCardsGrid');
+                if (loader) loader.style.display = 'block';
+                if (cardsGrid) cardsGrid.innerHTML = '';
+
+                const fd = new FormData();
+                fd.append('sector', sector);
+                fd.append('airline', flt.AirlineCode || '6E');
+                fd.append('flight_number', flt.FlightNumber || '');
+                fd.append('price', flt.Price || 4999);
+                fd.append('from', flt.FromCode || (sector === 'onward' ? rtSearchQuery.from_code : rtSearchQuery.to_code));
+                fd.append('to', flt.ToCode || (sector === 'onward' ? rtSearchQuery.to_code : rtSearchQuery.from_code));
+                fd.append('date', sector === 'onward' ? rtSearchQuery.date : (rtSearchQuery.return_date || ''));
+                fd.append('cabin', rtSearchQuery.cabin_class || 'Economy');
+                // Sector onward has multiple fare families; Sector return has single Retail (Screenshot 3)
+                fd.append('has_fare_options', sector === 'onward' ? '1' : '0');
+
+                fetch('<?php echo site_url('flight/ajax_fare_options'); ?>', {
+                    method: 'POST',
+                    body: fd
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (loader) loader.style.display = 'none';
+                    if (data && data.status === 'success') {
+                        foOptionsCache[cacheKey] = data;
+                        renderFareOptionCards(sector, data);
+                    } else {
+                        fallbackFareOptions(sector, flt);
+                    }
+                })
+                .catch(err => {
+                    console.error('Error fetching fare options:', err);
+                    if (loader) loader.style.display = 'none';
+                    fallbackFareOptions(sector, flt);
+                });
+            }
+
+            function renderFareOptionCards(sector, data) {
+                const grid = document.getElementById('foCardsGrid');
+                if (!grid) return;
+
+                const options = data.options || [];
+                const flt = (sector === 'onward') ? (onwardData[currentRtOnwardIdx] || onwardData[0]) : (returnData[currentRtReturnIdx] || returnData[0]);
+                const currentSelected = (sector === 'onward') ? selectedOnwardFare : selectedReturnFare;
+
+                // Update Cabin / Starting pill (Screenshot 2 & 3: "Economy | Starting at ₹ 7,028")
+                const pill = document.getElementById('foCabinStartingPill');
+                if (pill) {
+                    pill.textContent = (rtSearchQuery.cabin_class || 'Economy') + ' | Starting at ₹ ' + (parseFloat(data.starting_price || flt.Price)).toLocaleString('en-IN');
+                }
+
+                const notice = document.getElementById('foOptionsCountNotice');
+                if (notice) {
+                    if (!data.has_multiple_fares || options.length <= 1) {
+                        notice.innerHTML = '<span style="color:#0284c7; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Standard Retail fare is available for this sector</span>';
+                    } else {
+                        notice.innerHTML = '<span style="color:#16a34a; font-weight:700;"><i class="fa-solid fa-sparkles"></i> ' + options.length + ' Fare Families available</span>';
+                    }
+                }
+
+                // If only 1 option (Screenshot 3), style grid with max-width: 440px
+                if (options.length === 1) {
+                    grid.style.gridTemplateColumns = 'minmax(320px, 440px)';
+                } else {
+                    grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(290px, 1fr))';
+                }
+
+                let html = '';
+                options.forEach(opt => {
+                    const isSelected = (currentSelected.id === opt.id || (!currentSelected.id && opt.is_default));
+                    const priceNum = parseFloat(opt.price);
+
+                    html += `
+                    <div class="fo-card ${isSelected ? 'selected' : ''}" id="fo_card_${sector}_${opt.id}">
+                        ${opt.badge ? `
+                            <div class="fo-badge" style="background: ${opt.badge_color || '#16a34a'}; color: #fff;">
+                                ${opt.badge_icon ? `<i class="${opt.badge_icon}"></i>` : ''} ${opt.badge}
+                            </div>
+                        ` : ''}
+
+                        <div>
+                            <div class="fo-tier-title">${opt.title}</div>
+                            <div class="fo-price-box">
+                                <span class="fo-price-amount">₹ ${priceNum.toLocaleString('en-IN')}</span>
+                                <span class="fo-price-sub">/ adult</span>
+                                ${opt.price_diff > 0 ? `<div style="font-size: 11px; color: #16a34a; font-weight: 700; margin-top: 2px;">+ ₹ ${opt.price_diff.toLocaleString('en-IN')} difference</div>` : `<div style="font-size: 11px; color: #64748b; margin-top: 2px;">Base economy fare</div>`}
+                            </div>
+
+                            <ul class="fo-perks-list">
+                                <li class="fo-perk-item">
+                                    <span class="fo-perk-icon" style="color: #2563eb;"><i class="fa-solid fa-suitcase-rolling"></i></span>
+                                    <div>
+                                        <strong>Check-in Baggage:</strong>
+                                        <span style="${(opt.baggage && opt.baggage.checkin.includes('20')) ? 'color:#16a34a; font-weight:700;' : ''}">${opt.baggage ? opt.baggage.checkin : '15 Kg (1 piece)'}</span>
+                                    </div>
+                                </li>
+                                <li class="fo-perk-item">
+                                    <span class="fo-perk-icon" style="color: #64748b;"><i class="fa-solid fa-briefcase"></i></span>
+                                    <div>
+                                        <strong>Hand Baggage:</strong>
+                                        <span>${opt.baggage ? opt.baggage.cabin : '7 Kg (1 piece)'}</span>
+                                    </div>
+                                </li>
+
+                                <li class="fo-perk-item">
+                                    <span class="fo-perk-icon" style="color: ${opt.seat.included ? '#16a34a' : '#94a3b8'};">
+                                        <i class="fa-solid fa-chair"></i>
+                                    </span>
+                                    <div>
+                                        <strong>Seat Selection:</strong>
+                                        <span style="${opt.seat.included ? 'color: #16a34a; font-weight: 700;' : 'color: #64748b;'}">
+                                            ${opt.seat.included ? `<i class="fa-solid fa-check" style="color:#16a34a; margin-right:2px;"></i> ` + opt.seat.desc : opt.seat.desc}
+                                        </span>
+                                    </div>
+                                </li>
+
+                                <li class="fo-perk-item">
+                                    <span class="fo-perk-icon" style="color: ${opt.meal.included ? '#16a34a' : '#94a3b8'};">
+                                        <i class="fa-solid fa-utensils"></i>
+                                    </span>
+                                    <div>
+                                        <strong>Inflight Meal:</strong>
+                                        <span style="${opt.meal.included ? 'color: #16a34a; font-weight: 700;' : 'color: #64748b;'}">
+                                            ${opt.meal.included ? `<i class="fa-solid fa-check" style="color:#16a34a; margin-right:2px;"></i> ` + opt.meal.desc : opt.meal.desc}
+                                        </span>
+                                    </div>
+                                </li>
+
+                                <li class="fo-perk-item">
+                                    <span class="fo-perk-icon" style="color: ${(opt.date_change && opt.date_change.fee && opt.date_change.fee.includes('NIL')) ? '#16a34a' : '#d97706'};">
+                                        <i class="fa-solid fa-calendar-days"></i>
+                                    </span>
+                                    <div>
+                                        <strong>Date Change:</strong>
+                                        <span style="${(opt.date_change && opt.date_change.fee && opt.date_change.fee.includes('NIL')) ? 'color: #16a34a; font-weight: 700;' : ''}">
+                                            ${opt.date_change ? opt.date_change.desc : 'Standard fee applies'}
+                                        </span>
+                                    </div>
+                                </li>
+
+                                <li class="fo-perk-item">
+                                    <span class="fo-perk-icon" style="color: #ef4444;"><i class="fa-solid fa-ban"></i></span>
+                                    <div>
+                                        <strong>Cancellation:</strong>
+                                        <span style="color: #475569;">${opt.cancellation ? opt.cancellation.desc : 'Cancellation fee applies'}</span>
+                                    </div>
+                                </li>
+
+                                ${opt.priority ? `
+                                <li class="fo-perk-item">
+                                    <span class="fo-perk-icon" style="color: #4f46e5;"><i class="fa-solid fa-award"></i></span>
+                                    <div>
+                                        <strong style="color: #4f46e5;">Priority Perks:</strong>
+                                        <span style="color: #4f46e5; font-weight: 700;">${opt.priority}</span>
+                                    </div>
+                                </li>
+                                ` : ''}
+                            </ul>
+                        </div>
+
+                        <div>
+                            <button type="button" class="fo-select-btn ${isSelected ? 'selected' : ''}" onclick="selectFareOption('${sector}', '${opt.id}', '${opt.fare_type}', ${priceNum}, event)">
+                                ${isSelected ? '<i class="fa-solid fa-check"></i> Selected' : 'Select'}
+                            </button>
+                        </div>
+                    </div>
+                    `;
+                });
+
+                grid.innerHTML = html;
+            }
+
+            function selectFareOption(sector, cardId, fareType, price, event) {
+                if (event) event.stopPropagation();
+
+                const priceNum = parseFloat(price);
+
+                if (sector === 'onward') {
+                    selectedOnwardFare = { id: cardId, fare_type: fareType, price: priceNum };
+                    const elPrice = document.getElementById('rt_onward_price');
+                    if (elPrice) elPrice.value = priceNum;
+                    const elType = document.getElementById('rt_onward_fare_type');
+                    if (elType) elType.value = fareType;
+
+                    const badge = document.getElementById('foTabOnwardBadge');
+                    if (badge) badge.textContent = fareType;
+                    const pElem = document.getElementById('foTabOnwardPrice');
+                    if (pElem) pElem.textContent = '₹ ' + priceNum.toLocaleString('en-IN');
+
+                    const barBadge = document.getElementById('barOnwardFareBadge');
+                    if (barBadge) barBadge.textContent = fareType;
+                } else {
+                    selectedReturnFare = { id: cardId, fare_type: fareType, price: priceNum };
+                    const elPrice = document.getElementById('rt_return_price');
+                    if (elPrice) elPrice.value = priceNum;
+                    const elType = document.getElementById('rt_return_fare_type');
+                    if (elType) elType.value = fareType;
+
+                    const badge = document.getElementById('foTabReturnBadge');
+                    if (badge) badge.textContent = fareType;
+                    const pElem = document.getElementById('foTabReturnPrice');
+                    if (pElem) pElem.textContent = '₹ ' + priceNum.toLocaleString('en-IN');
+
+                    const barBadge = document.getElementById('barReturnFareBadge');
+                    if (barBadge) barBadge.textContent = fareType;
+                }
+
+                // Update active cards UI
+                document.querySelectorAll('.fo-card').forEach(card => {
+                    card.classList.remove('selected');
+                    const btn = card.querySelector('.fo-select-btn');
+                    if (btn) {
+                        btn.classList.remove('selected');
+                        btn.innerHTML = 'Select';
+                    }
+                });
+
+                const activeCard = document.getElementById('fo_card_' + sector + '_' + cardId);
+                if (activeCard) {
+                    activeCard.classList.add('selected');
+                    const btn = activeCard.querySelector('.fo-select-btn');
+                    if (btn) {
+                        btn.classList.add('selected');
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i> Selected';
+                    }
+                }
+
+                // Update Sticky Total Fare
+                updateStickyTotalPrice();
+            }
+
+            function updateStickyTotalPrice() {
+                const oPrice = selectedOnwardFare.price || (onwardData[currentRtOnwardIdx] ? parseFloat(onwardData[currentRtOnwardIdx].Price) : 0);
+                const rPrice = selectedReturnFare.price || (returnData[currentRtReturnIdx] ? parseFloat(returnData[currentRtReturnIdx].Price) : 0);
+                const total = oPrice + rPrice;
+                const totalElem = document.getElementById('barTotalPrice');
+                if (totalElem) totalElem.textContent = '₹ ' + total.toLocaleString('en-IN');
+            }
+
+            function fallbackFareOptions(sector, flt) {
+                const price = parseFloat(flt.Price || 4999);
+                const hasMultiple = (sector === 'onward');
+                const mock = {
+                    status: 'success',
+                    sector: sector,
+                    starting_price: price,
+                    has_multiple_fares: hasMultiple,
+                    options: [
+                        {
+                            id: 'retail',
+                            fare_type: 'Retail',
+                            title: 'Retail',
+                            badge: null,
+                            price: price,
+                            price_diff: 0,
+                            is_default: true,
+                            baggage: { checkin: '15 Kg (1 piece)', cabin: '7 Kg (1 piece)' },
+                            seat: { included: false, desc: 'Chargeable seat selection' },
+                            meal: { included: false, desc: 'Chargeable snacks & drinks' },
+                            date_change: { fee: '₹ 3,000 + Diff', desc: 'Fee starts from ₹ 3,000 + Fare Difference' },
+                            cancellation: { fee: '₹ 3,500', desc: 'Fee starts from ₹ 3,500 per pax' }
+                        }
+                    ]
+                };
+
+                if (hasMultiple) {
+                    mock.options.push({
+                        id: 'flexi',
+                        fare_type: 'Flexi',
+                        title: 'Flexi',
+                        badge: 'Most Popular',
+                        badge_color: '#16a34a',
+                        badge_icon: 'fa-solid fa-fire',
+                        price: price + 314,
+                        price_diff: 314,
+                        is_default: false,
+                        baggage: { checkin: '15 Kg (1 piece)', cabin: '7 Kg (1 piece)' },
+                        seat: { included: true, desc: 'Free Standard Seat Selection Included' },
+                        meal: { included: true, desc: 'Complimentary Snack & Beverage Included' },
+                        date_change: { fee: 'NIL FEE', desc: 'Free Date Change up to 3 days before flight' },
+                        cancellation: { fee: 'Lower Penalty', desc: 'Reduced cancellation fee applicable' }
+                    });
+                    mock.options.push({
+                        id: 'upfront',
+                        fare_type: 'Indigo upfront',
+                        title: 'Indigo upfront',
+                        badge: 'Indigo upfront',
+                        badge_color: '#4f46e5',
+                        badge_icon: 'fa-solid fa-crown',
+                        price: price + 2615,
+                        price_diff: 2615,
+                        is_default: false,
+                        baggage: { checkin: '20 Kg (1 piece)', cabin: '7 Kg (1 piece)' },
+                        seat: { included: true, desc: 'Complimentary XL / Front Row Seat' },
+                        meal: { included: true, desc: 'Complimentary Gourmet Hot Meal & Beverage' },
+                        date_change: { fee: 'FREE CHANGE', desc: 'Free Date Change up to 2 hours before flight' },
+                        cancellation: { fee: 'Lower Penalty', desc: 'Free or lower cancellation penalty' },
+                        priority: 'Priority Check-in & Priority Baggage Delivery'
+                    });
+                }
+
+                renderFareOptionCards(sector, mock);
             }
 
             document.addEventListener('DOMContentLoaded', updateRoundTripSelection);
