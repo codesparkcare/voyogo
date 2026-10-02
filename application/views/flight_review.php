@@ -386,9 +386,14 @@
                                 <span style="border: 1.5px solid #16a34a; color: #16a34a; background: #f0fdf4; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
                                     <i class="fa-solid fa-rotate-left"></i> <?php echo !empty($flight['refundable']) ? 'Refundable' : 'Partially Refundable'; ?>
                                 </span>
+                                <!-- Maximize / Minimize Icon (Screenshot 2 Match) -->
+                                <button type="button" id="btnToggle_onward" onclick="toggleFlightBox('onward')" title="Minimize" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #334155; margin-left: 6px; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                                    <i id="iconToggle_onward" class="fa-solid fa-chevron-up" style="font-size: 13px;"></i>
+                                </button>
                             </div>
                         </div>
 
+                        <div id="flightBoxBody_onward">
                         <!-- Segment 1 (Origin -> Layover) -->
                         <div style="padding-top: 18px;">
                             <div class="seg-header-row" style="display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;">
@@ -559,9 +564,15 @@
                                         <i class="fa-solid fa-rotate-left"></i> Refundable
                                     </span>
                                 <?php endif; ?>
+
+                                <!-- Maximize / Minimize Icon (Screenshot 2 Match) -->
+                                <button type="button" id="btnToggle_onward" onclick="toggleFlightBox('onward')" title="Minimize" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #334155; margin-left: 8px; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                                    <i id="iconToggle_onward" class="fa-solid fa-chevron-up" style="font-size: 13px;"></i>
+                                </button>
                             </div>
                         </div>
 
+                        <div id="flightBoxBody_onward">
                         <!-- Flight Timing & Sector Grid -->
                         <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 18px 22px; border-radius: 10px; border: 1px solid #edf2f7; margin-bottom: 20px;">
                             <div style="text-align: left; max-width: 32%;">
@@ -658,6 +669,7 @@
                                 <i class="fa-solid fa-circle-info" style="color: #2563eb;"></i> Convenience fee & addon service charges are non-refundable.
                             </p>
                         </div>
+                        </div> <!-- Closes #flightBoxBody_onward -->
                     </div>
 
                 <?php if (!empty($return_flight)): ?>
@@ -702,9 +714,14 @@
                                 <span style="border: 1.5px solid #16a34a; color: #16a34a; background: #f0fdf4; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
                                     <i class="fa-solid fa-rotate-left"></i> <?php echo !empty($return_flight['refundable']) ? 'Refundable' : 'Partially Refundable'; ?>
                                 </span>
+                                <!-- Maximize / Minimize Icon (Screenshot 3 Match) -->
+                                <button type="button" id="btnToggle_return" onclick="toggleFlightBox('return')" title="Minimize" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #334155; margin-left: 6px; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                                    <i id="iconToggle_return" class="fa-solid fa-chevron-up" style="font-size: 13px;"></i>
+                                </button>
                             </div>
                         </div>
 
+                        <div id="flightBoxBody_return">
                         <!-- Return Segment 1 (Origin -> Layover) -->
                         <div style="padding-top: 18px;">
                             <div class="seg-header-row" style="display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;">
@@ -872,9 +889,15 @@
                                         <i class="<?php echo (stripos($return_flight['fare_type'], 'upfront') !== false || stripos($return_flight['fare_type'], 'super') !== false) ? 'fa-solid fa-crown' : 'fa-solid fa-tag'; ?>" style="font-size: 10px; margin-right: 2px;"></i> <?php echo htmlspecialchars($return_flight['fare_type']); ?> Fare
                                     </span>
                                 <?php endif; ?>
+
+                                <!-- Maximize / Minimize Icon (Screenshot 3 Match) -->
+                                <button type="button" id="btnToggle_return" onclick="toggleFlightBox('return')" title="Minimize" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #334155; margin-left: 6px; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                                    <i id="iconToggle_return" class="fa-solid fa-chevron-up" style="font-size: 13px;"></i>
+                                </button>
                             </div>
                         </div>
 
+                        <div id="flightBoxBody_return">
                         <!-- Return Flight Timing & Sector Grid -->
                         <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 18px 22px; border-radius: 10px; border: 1px solid #edf2f7;">
                             <div style="text-align: left; max-width: 32%;">
@@ -974,6 +997,7 @@
                             <i class="fa-solid fa-circle-info" style="color: #2563eb;"></i> Convenience fee & addon service charges are non-refundable.
                         </p>
                     </div>
+                    </div> <!-- Closes #flightBoxBody_return -->
                 </div>
                 <?php endif; ?>
 
@@ -1892,6 +1916,32 @@ function goBackToSearch() {
     }
     var fallbackUrl = <?php echo json_encode(!empty($back_search_url) ? $back_search_url : site_url('flight')); ?>;
     window.location.href = fallbackUrl;
+}
+
+function toggleFlightBox(type) {
+    var body = document.getElementById('flightBoxBody_' + type);
+    var icon = document.getElementById('iconToggle_' + type);
+    var btn = document.getElementById('btnToggle_' + type);
+    if (!body) return;
+    
+    var isHidden = (body.style.display === 'none');
+    if (isHidden) {
+        body.style.display = 'block';
+        if (icon) {
+            icon.className = 'fa-solid fa-chevron-up';
+        }
+        if (btn) {
+            btn.title = 'Minimize';
+        }
+    } else {
+        body.style.display = 'none';
+        if (icon) {
+            icon.className = 'fa-solid fa-chevron-down';
+        }
+        if (btn) {
+            btn.title = 'Maximize';
+        }
+    }
 }
 
 function toggleFareBreakdown(triggerEl) {
