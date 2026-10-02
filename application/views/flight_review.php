@@ -688,7 +688,7 @@
                             </div>
 
                             <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                                <a href="javascript:void(0);" onclick="document.getElementById('cancellationPolicyTable').scrollIntoView({behavior:'smooth'});" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                                <a href="javascript:void(0);" onclick="document.getElementById('returnCancellationPolicyTable').scrollIntoView({behavior:'smooth'});" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
                                     <i class="fa-solid fa-circle-info"></i> Fare Rules
                                 </a>
                                 <?php if (!empty($return_flight['fare_type'])): ?>
@@ -857,7 +857,10 @@
                                     </span>
                                 </div>
                             </div>
-                            <div style="text-align: right;">
+                            <div style="text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
+                                <a href="javascript:void(0);" onclick="document.getElementById('returnCancellationPolicyTable').scrollIntoView({behavior:'smooth'});" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa-solid fa-circle-info"></i> Fare Rules
+                                </a>
                                 <span style="background: #f0fdf4; color: #15803d; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 12px; display: inline-block;">
                                     <?php echo date('D, d M Y', strtotime($return_flight['departure_date'])); ?>
                                 </span>
@@ -919,6 +922,55 @@
                             </div>
                         </div>
                     <?php endif; ?>
+
+                    <!-- Cancellation & Date Change Policy for Return Flight (Per Pax) -->
+                    <div id="returnCancellationPolicyTable" style="background: #f8fafc; padding: 16px 20px; border-radius: 8px; border: 1px solid #edf2f7; margin-top: 18px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                            <h4 style="font-size: 13.5px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-file-contract" style="color: #2563eb;"></i> Cancellation & Date Change Policy (Per Pax)
+                            </h4>
+                            <span style="font-size: 11px; font-weight: 700; color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 4px;">
+                                <?php echo !empty($return_flight['refundable']) ? 'Refundable' : 'Partially Refundable'; ?>
+                            </span>
+                        </div>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 10px; background: #ffffff; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0;">
+                            <thead>
+                                <tr style="background: #f1f5f9; color: #334155; text-align: left; border-bottom: 1px solid #e2e8f0;">
+                                    <th style="padding: 8px 12px; font-weight: 700;">Timeframe Before Departure</th>
+                                    <th style="padding: 8px 12px; font-weight: 700;">Cancellation Charge</th>
+                                    <th style="padding: 8px 12px; font-weight: 700;">Date Change Charge</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
+                                $retRules = !empty($return_fare_rules['cancellation']) ? $return_fare_rules : (!empty($fare_rules['cancellation']) ? $fare_rules : null);
+                                ?>
+                                <?php if (!empty($retRules['cancellation'])): ?>
+                                    <?php foreach ($retRules['cancellation'] as $idx => $rule): ?>
+                                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                                            <td style="padding: 8px 12px; font-weight: 600; color: #475569;"><?php echo htmlspecialchars($rule['time']); ?></td>
+                                            <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;"><?php echo htmlspecialchars($rule['fee']); ?></td>
+                                            <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;"><?php echo htmlspecialchars($retRules['date_change'][$idx]['fee'] ?? '₹ 2,500 + Diff'); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                                        <td style="padding: 8px 12px; font-weight: 600; color: #475569;">2 hours to 24 hours</td>
+                                        <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;">₹ 3,500 per pax</td>
+                                        <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;">₹ 3,000 + Fare Diff</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 12px; font-weight: 600; color: #475569;">More than 24 hours</td>
+                                        <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;">₹ 3,000 per pax</td>
+                                        <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;">₹ 2,500 + Fare Diff</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                        <p style="font-size: 11px; color: #64748b; margin: 0; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-circle-info" style="color: #2563eb;"></i> Convenience fee & addon service charges are non-refundable.
+                        </p>
+                    </div>
                 </div>
                 <?php endif; ?>
 
