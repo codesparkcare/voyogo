@@ -20,23 +20,23 @@ class BenzyFlightApi {
 
     protected $CI;
     
-    // API Endpoints
-    protected $signatureUrl       = 'https://b2bapiutils.benzyinfotech.com/Utils/Signature';
-    protected $webSettingsUrl     = 'https://b2bapiutils.benzyinfotech.com/Utils/WebSettings';
-    protected $expressSearchUrl   = 'https://b2bapiflights.benzyinfotech.com/flights/ExpressSearch';
-    protected $getExpSearchUrl    = 'https://b2bapiflights.benzyinfotech.com/flights/GetExpSearch';
-    protected $smartPricerUrl     = 'https://b2bapiflights.benzyinfotech.com/flights/SmartPricer';
-    protected $getSPricerUrl      = 'https://b2bapiflights.benzyinfotech.com/Flights/GetSPricer';
-    protected $flightInfoUrl      = 'https://b2bapiflights.benzyinfotech.com/Flights/FlightInfo';
-    protected $fareRuleUrl        = 'https://b2bapiflights.benzyinfotech.com/flights/FareRule';
-    protected $ssrUrl             = 'https://b2bapiflights.benzyinfotech.com/Flights/SSR';
-    protected $seatLayoutUrl      = 'https://b2bapiflights.benzyinfotech.com/Flights/SeatLayout';
-    protected $travelChecklistUrl = 'https://b2bapiflights.benzyinfotech.com/Utils/GetTravelCheckList';
-    protected $createItineraryUrl = 'https://b2bapiflights.benzyinfotech.com/Flights/CreateItinerary';
-    protected $startPayUrl        = 'https://b2bapiflights.benzyinfotech.com/Payment/StartPay';
-    protected $itineraryStatusUrl = 'https://b2bapiflights.benzyinfotech.com/Payment/GetItineraryStatus';
-    protected $retrieveBookingUrl = 'https://b2bapiflights.benzyinfotech.com/Utils/RetrieveBooking';
-    protected $cancelUrl          = 'https://b2bapiflights.benzyinfotech.com/Flights/Cancel';
+    // API Endpoints (Defaults, overridden dynamically in loadSettings())
+    protected $signatureUrl       = 'https://apiutilsagents.akbartravelsonline.com/Utils/Signature';
+    protected $webSettingsUrl     = 'https://apiutilsagents.akbartravelsonline.com/Utils/WebSettings';
+    protected $expressSearchUrl   = 'https://apiagents.akbartravelsonline.com/flights/ExpressSearch';
+    protected $getExpSearchUrl    = 'https://apiagents.akbartravelsonline.com/flights/GetExpSearch';
+    protected $smartPricerUrl     = 'https://apiagents.akbartravelsonline.com/flights/SmartPricer';
+    protected $getSPricerUrl      = 'https://apiagents.akbartravelsonline.com/flights/GetSPricer';
+    protected $flightInfoUrl      = 'https://apiagents.akbartravelsonline.com/Flights/FlightInfo';
+    protected $fareRuleUrl        = 'https://apiagents.akbartravelsonline.com/flights/FareRule';
+    protected $ssrUrl             = 'https://apiagents.akbartravelsonline.com/flights/ssr';
+    protected $seatLayoutUrl      = 'https://apiagents.akbartravelsonline.com/flights/SeatLayout';
+    protected $travelChecklistUrl = 'https://apiagents.akbartravelsonline.com/Utils/GetTravelCheckList';
+    protected $createItineraryUrl = 'https://apiagents.akbartravelsonline.com/flights/CreateItinerary';
+    protected $startPayUrl        = 'https://apiagents.akbartravelsonline.com/Payment/StartPay';
+    protected $itineraryStatusUrl = 'https://apiagents.akbartravelsonline.com/Payment/GetItineraryStatus';
+    protected $retrieveBookingUrl = 'https://apiagents.akbartravelsonline.com/Utils/RetrieveBooking';
+    protected $cancelUrl          = 'https://apiagents.akbartravelsonline.com/flights/cancel';
 
     // API Credentials (Defaults, dynamically overridden by database settings)
     protected $credentials = array(
@@ -48,6 +48,7 @@ class BenzyFlightApi {
         "BrowserKey" => "069ab7973ac12116ccc1802546ad52bf"
     );
 
+    protected $currentEnv = 'live';
     protected $channelId = "b2bIndiaDeals";
     protected $lastLog = null;
     protected $isOffline = false;
@@ -70,6 +71,7 @@ class BenzyFlightApi {
                     $settings = $this->CI->Admin_model->get_flight_api_settings();
                     if (!empty($settings)) {
                         $env = $settings['environment'] ?? 'live';
+                        $this->currentEnv = $env;
                         if ($env === 'live') {
                             $this->credentials = array(
                                 "MerchantID" => $settings['live_merchant_id'] ?? '200',
@@ -96,21 +98,21 @@ class BenzyFlightApi {
 
                         $this->signatureUrl       = $utilsBase . '/Utils/Signature';
                         $this->webSettingsUrl     = $utilsBase . '/Utils/WebSettings';
-                        $this->retrieveBookingUrl = $utilsBase . '/Utils/RetrieveBooking';
+                        $this->retrieveBookingUrl = $flightBase . '/Utils/RetrieveBooking';
                         
                         $this->expressSearchUrl   = $flightBase . '/flights/ExpressSearch';
                         $this->getExpSearchUrl    = $flightBase . '/flights/GetExpSearch';
                         $this->smartPricerUrl     = $flightBase . '/flights/SmartPricer';
-                        $this->getSPricerUrl      = $flightBase . '/Flights/GetSPricer';
+                        $this->getSPricerUrl      = $flightBase . '/flights/GetSPricer';
                         $this->flightInfoUrl      = $flightBase . '/Flights/FlightInfo';
                         $this->fareRuleUrl        = $flightBase . '/flights/FareRule';
-                        $this->ssrUrl             = $flightBase . '/Flights/SSR';
-                        $this->seatLayoutUrl      = $flightBase . '/Flights/SeatLayout';
+                        $this->ssrUrl             = $flightBase . '/flights/ssr';
+                        $this->seatLayoutUrl      = $flightBase . '/flights/SeatLayout';
                         $this->travelChecklistUrl = $flightBase . '/Utils/GetTravelCheckList';
-                        $this->createItineraryUrl = $flightBase . '/Flights/CreateItinerary';
+                        $this->createItineraryUrl = $flightBase . '/flights/CreateItinerary';
                         $this->startPayUrl        = $flightBase . '/Payment/StartPay';
                         $this->itineraryStatusUrl = $flightBase . '/Payment/GetItineraryStatus';
-                        $this->cancelUrl          = $flightBase . '/Flights/Cancel';
+                        $this->cancelUrl          = $flightBase . '/flights/cancel';
 
                         if (!empty($settings['channel_id'])) {
                             $this->channelId = $settings['channel_id'];
@@ -124,6 +126,7 @@ class BenzyFlightApi {
     }
 
     protected static $cachedBearerToken = null;
+    protected static $cachedEncryptedClientId = null;
 
     /**
      * 1. Signature / Bearer Token Generation
@@ -134,12 +137,25 @@ class BenzyFlightApi {
             return self::$cachedBearerToken;
         }
 
-        $cacheFile = APPPATH . 'cache/benzy_token.txt';
+        $cacheFile = APPPATH . 'cache/benzy_token_' . $this->currentEnv . '.json';
         if (!$forceFresh && file_exists($cacheFile) && (time() - filemtime($cacheFile) < 1800)) {
-            $cachedToken = @file_get_contents($cacheFile);
+            $raw = @file_get_contents($cacheFile);
+            if (!empty($raw)) {
+                $cachedData = json_decode($raw, true);
+                if (!empty($cachedData['token'])) {
+                    self::$cachedBearerToken = $cachedData['token'];
+                    self::$cachedEncryptedClientId = $cachedData['client_id'] ?? null;
+                    return self::$cachedBearerToken;
+                }
+            }
+        }
+
+        // Also check legacy token cache if present
+        $legacyCache = APPPATH . 'cache/benzy_token.txt';
+        if (!$forceFresh && file_exists($legacyCache) && (time() - filemtime($legacyCache) < 1800)) {
+            $cachedToken = @file_get_contents($legacyCache);
             if (!empty($cachedToken)) {
-                self::$cachedBearerToken = $cachedToken;
-                return $cachedToken;
+                self::$cachedBearerToken = trim($cachedToken);
             }
         }
 
@@ -147,21 +163,34 @@ class BenzyFlightApi {
         
         if (!empty($res['data']['Token'])) {
             $token = $res['data']['Token'];
+            $encryptedClientId = !empty($res['data']['ClientID']) ? $res['data']['ClientID'] : ($this->credentials['ClientID'] ?? '');
+
             self::$cachedBearerToken = $token;
+            self::$cachedEncryptedClientId = $encryptedClientId;
+
             if (!is_dir(APPPATH . 'cache')) {
                 @mkdir(APPPATH . 'cache', 0777, true);
             }
-            @file_put_contents($cacheFile, $token);
+            $saveData = array(
+                'token'     => $token,
+                'client_id' => $encryptedClientId,
+                'time'      => time(),
+                'env'       => $this->currentEnv
+            );
+            @file_put_contents($cacheFile, json_encode($saveData));
+            @file_put_contents($legacyCache, $token);
             return $token;
         }
 
         // Realistic Simulated Token for Certification compliance
         $simToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjMwMCIsIkFnZW50SW5mbyI6Ii9MRldjVENVQ3lkWVBjVGNuaFdLaWo0UXhhcXN2eFBIcWV0a0psY3NGZklxWmVCUkZIUlNTOFFRWE1ybk8vVDhFcmt6UnMyYzk3cnloS01sWXc3NitRPT0iLCJwd2QiOiJMMkV0NEcvWHE0bExYQUd4Q3M2REh3PT0iLCJhZ2VudENvZGUiOiIvS2ZkWXdlc3FQdz0iLCJjbGllbnRJZCI6IjJmelhFa014VkRVPSIsIm5iZiI6" . time() . "LCJleHAiOiI" . (time() + 864000) . "\"}." . md5(uniqid());
+        $simEncryptedClientId = ($this->currentEnv === 'live') ? ($this->credentials['ClientID'] ?? "APISKYPLANETN") : "FVI6V120g22Ei5ztGK0FIQ==";
         self::$cachedBearerToken = $simToken;
+        self::$cachedEncryptedClientId = $simEncryptedClientId;
         $simResponse = array(
             "TUI"           => "af80de34-fccb-4c28-9365-" . substr(md5(uniqid()), 0, 12) . "|" . date('YmdHis'),
             "Token"         => $simToken,
-            "ClientID"      => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ClientID"      => $simEncryptedClientId,
             "LastLoginDate" => date('n/j/Y g:i:s A'),
             "Password"      => "L2Et4G/Xq4lLXAGxCs6DHw==",
             "loginAttempts" => "0",
@@ -174,13 +203,39 @@ class BenzyFlightApi {
     }
 
     /**
+     * Get dynamic encrypted ClientID returned by Signature endpoint (or account ClientID)
+     */
+    public function getEncryptedClientId() {
+        if (!empty(self::$cachedEncryptedClientId)) {
+            return self::$cachedEncryptedClientId;
+        }
+        $cacheFile = APPPATH . 'cache/benzy_token_' . $this->currentEnv . '.json';
+        if (file_exists($cacheFile)) {
+            $raw = @file_get_contents($cacheFile);
+            if (!empty($raw)) {
+                $cached = json_decode($raw, true);
+                if (!empty($cached['client_id'])) {
+                    self::$cachedEncryptedClientId = $cached['client_id'];
+                    return self::$cachedEncryptedClientId;
+                }
+            }
+        }
+        // Fallback: if token exists, generateToken to load it
+        $this->generateToken();
+        if (!empty(self::$cachedEncryptedClientId)) {
+            return self::$cachedEncryptedClientId;
+        }
+        return ($this->currentEnv === 'live') ? ($this->credentials['ClientID'] ?? 'APISKYPLANETN') : "FVI6V120g22Ei5ztGK0FIQ==";
+    }
+
+    /**
      * 2. Web Settings
      * Endpoint: /Utils/WebSettings
      */
     public function getWebSettings($tui = '') {
         $token = $this->generateToken();
         $payload = array(
-            "ClientID" => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ClientID" => $this->getEncryptedClientId(),
             "TUI"      => $tui
         );
         $res = $this->callApi($this->webSettingsUrl, $payload, $token, 'POST', '/Utils/WebSettings');
@@ -285,7 +340,7 @@ class BenzyFlightApi {
             "Cabin"      => strtoupper(substr($cabin, 0, 1)),
             "Source"     => "CF",
             "Mode"       => "AS",
-            "ClientID"   => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ClientID"   => $this->getEncryptedClientId(),
             "TUI"        => "",
             "FareType"   => !empty($returnDate) ? "RT" : "ON",
             "Trips"      => $trips,
@@ -324,7 +379,7 @@ class BenzyFlightApi {
         $token = $this->generateToken();
         $payload = array(
             "TUI"      => $tui,
-            "ClientID" => "FVI6V120g22Ei5ztGK0FIQ=="
+            "ClientID" => $this->getEncryptedClientId()
         );
 
         $res = $this->callApi($this->getExpSearchUrl, $payload, $token, 'POST', '/flights/GetExpSearch', 45);
@@ -572,7 +627,7 @@ class BenzyFlightApi {
 
         $payload = array(
             "Trips"    => $trips,
-            "ClientID" => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ClientID" => $this->getEncryptedClientId(),
             "Mode"     => "SS",
             "Options"  => "A",
             "Source"   => "SF",
@@ -742,10 +797,10 @@ class BenzyFlightApi {
         $token = $this->generateToken();
         $payload = array(
             "TUI"      => $tui,
-            "ClientID" => "FVI6V120g22Ei5ztGK0FIQ=="
+            "ClientID" => $this->getEncryptedClientId()
         );
 
-        $res = $this->callApi($this->getSPricerUrl, $payload, $token, 'POST', '/Flights/GetSPricer');
+        $res = $this->callApi($this->getSPricerUrl, $payload, $token, 'POST', '/flights/GetSPricer');
 
         if (!empty($res['data']['Trips'])) {
             return $this->parseSingleFlightReview($res['data'], $tui);
@@ -988,7 +1043,7 @@ class BenzyFlightApi {
     public function getSSR($tui, $from = 'DEL', $to = 'BOM') {
         $token = $this->generateToken();
         $payload = array(
-            "ClientID" => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ClientID" => $this->getEncryptedClientId(),
             "PaidSSR"  => true,
             "Source"   => "LV",
             "Trips"    => array(
@@ -1164,7 +1219,7 @@ class BenzyFlightApi {
         $token = $this->generateToken();
         $payload = array(
             "TUI"      => $tui,
-            "ClientID" => "FVI6V120g22Ei5ztGK0FIQ=="
+            "ClientID" => $this->getEncryptedClientId()
         );
         $res = $this->callApi($this->travelChecklistUrl, $payload, $token, 'POST', '/Utils/GetTravelCheckList');
         if (!empty($res['data'])) return $res['data'];
@@ -1207,7 +1262,7 @@ class BenzyFlightApi {
     public function getSeatLayout($tui, $airline = '6E', $flightNo = '2134') {
         $token = $this->generateToken();
         $payload = array(
-            "ClientID" => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ClientID" => $this->getEncryptedClientId(),
             "Source"   => "LV",
             "Trips"    => array(
                 array(
@@ -1613,7 +1668,7 @@ class BenzyFlightApi {
             "CrossSellAmount"       => 0,
             "EnableFareMasking"     => false,
             "SSRAmount"             => (float)$totalSsrAmount,
-            "ClientID"              => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ClientID"              => $this->getEncryptedClientId(),
             "DeviceID"              => "",
             "AppVersion"            => "",
             "AgentTourCode"         => "",
@@ -1822,7 +1877,7 @@ class BenzyFlightApi {
             "PaymentAmount"   => (float)$amount,
             "NetAmount"       => (float)($amount ?: 5350),
             "BrowserKey"      => "ef20-925c-4489-bfeb-236c8b406f7e",
-            "ClientID"        => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ClientID"        => $this->getEncryptedClientId(),
             "TUI"             => $tui,
             "Hold"            => $isHold,
             "Promo"           => null,
@@ -1931,7 +1986,7 @@ class BenzyFlightApi {
         $token = $this->generateToken();
         $payload = array(
             "TUI"             => $tui,
-            "ClientID"        => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ClientID"        => $this->getEncryptedClientId(),
             "ReferenceNumber" => (string)$transactionId,
             "ReferenceType"   => "T",
             "ServiceType"     => "FLT"
@@ -2148,7 +2203,7 @@ class BenzyFlightApi {
     public function getFlightInfo($tui, $amount = 10522, $index = '6E|1', $isRoundTrip = false, $from = 'BOM', $to = 'DEL') {
         $token = $this->generateToken();
         $payload = array(
-            "ClientID" => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ClientID" => $this->getEncryptedClientId(),
             "TripType" => $isRoundTrip ? "RT" : "ON",
             "Trips"    => array(
                 array(
@@ -2291,7 +2346,7 @@ class BenzyFlightApi {
     public function getFareRule($tui, $amount = 5150, $index = '6E|1', $from = 'DEL', $to = 'BOM') {
         $token = $this->generateToken();
         $payload = array(
-            "ClientID" => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ClientID" => $this->getEncryptedClientId(),
             "Source"   => "SF",
             "Trips"    => array(
                 array(
@@ -2376,7 +2431,7 @@ class BenzyFlightApi {
     public function cancelBooking($transactionId, $tui = '', $pnr = 'TLGS8K', $paxId = 1226, $remarks = 'Test Cancel Remarks') {
         $token = $this->generateToken();
         $payload = array(
-            "ClientID"      => "FVI6V120g22Ei5ztGK0FIQ==",
+            "ClientID"      => $this->getEncryptedClientId(),
             "ClientIP"      => "",
             "Remarks"       => $remarks ?: "Test Cancel Remarks",
             "TUI"           => $tui,
