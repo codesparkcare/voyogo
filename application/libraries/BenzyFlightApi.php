@@ -630,12 +630,23 @@ class BenzyFlightApi {
             "ClientID" => $this->getEncryptedClientId(),
             "Mode"     => "SS",
             "Options"  => "A",
-            "Source"   => "SF",
+            "Source"   => "CF",
             "TripType" => $isRoundTrip ? "RT" : "ON"
         );
         
-        $res = $this->callApi($this->smartPricerUrl, $payload, $token, 'POST', '/flights/SmartPricer');
-        if (!empty($res['data'])) return $res['data'];
+        // Step 1: Call SmartPricer with Cache First (CF) and 8s timeout
+        $res = $this->callApi($this->smartPricerUrl, $payload, $token, 'POST', '/flights/SmartPricer', 8);
+
+        // Step 2: If CF returned 1601 (No Record found) or empty trips, attempt Store First (SF)
+        if (empty($res['data']['Trips']) || (isset($res['data']['Code']) && (string)$res['data']['Code'] !== '200')) {
+            $payload['Source'] = "SF";
+            $res = $this->callApi($this->smartPricerUrl, $payload, $token, 'POST', '/flights/SmartPricer', 8);
+        }
+
+        // Step 3: Only return live data if Code is 200 AND Trips is not empty
+        if (!empty($res['data']['Trips']) && (empty($res['data']['Code']) || (string)$res['data']['Code'] === '200')) {
+            return $res['data'];
+        }
 
         $simResponse = array(
             "TUI"         => $tui,
@@ -800,9 +811,10 @@ class BenzyFlightApi {
             "ClientID" => $this->getEncryptedClientId()
         );
 
-        $res = $this->callApi($this->getSPricerUrl, $payload, $token, 'POST', '/flights/GetSPricer');
+        // Pass strict 8s timeout so that curl never hangs for 30s
+        $res = $this->callApi($this->getSPricerUrl, $payload, $token, 'POST', '/flights/GetSPricer', 8);
 
-        if (!empty($res['data']['Trips'])) {
+        if (!empty($res['data']['Trips']) && (empty($res['data']['Code']) || (string)$res['data']['Code'] === '200')) {
             return $this->parseSingleFlightReview($res['data'], $tui);
         }
 
@@ -1100,8 +1112,8 @@ class BenzyFlightApi {
             )
         );
 
-        $res = $this->callApi($this->ssrUrl, $payload, $token, 'POST', '/Flights/SSR');
-        if (!empty($res['data']['Trips'][0]['Journey'][0]['Segments'][0]['SSR'])) {
+        $res = $this->callApi($this->ssrUrl, $payload, $token, 'POST', '/Flights/SSR', 6);
+        if (!empty($res['data']['Trips'][0]['Journey'][0]['Segments'][0]['SSR']) && (empty($res['data']['Code']) || (string)$res['data']['Code'] === '200')) {
             return $res['data'];
         }
 
@@ -2534,7 +2546,7 @@ class BenzyFlightApi {
         $token = $this->generateToken();
         $payload = array(
             "ClientID" => $this->getEncryptedClientId(),
-            "Source"   => "SF",
+            "Source"   => "CF",
             "Trips"    => array(
                 array(
                     "Amount"  => (float)($amount ?: 5150),
@@ -2545,8 +2557,14 @@ class BenzyFlightApi {
             )
         );
 
-        $res = $this->callApi($this->fareRuleUrl, $payload, $token, 'POST', '/flights/FareRule');
-        if (!empty($res['data'])) return $res['data'];
+        $res = $this->callApi($this->fareRuleUrl, $payload, $token, 'POST', '/flights/FareRule', 6);
+        if (empty($res['data']['Trips']) || (isset($res['data']['Code']) && (string)$res['data']['Code'] !== '200')) {
+            $payload['Source'] = "SF";
+            $res = $this->callApi($this->fareRuleUrl, $payload, $token, 'POST', '/flights/FareRule', 6);
+        }
+        if (!empty($res['data']['Trips']) && (empty($res['data']['Code']) || (string)$res['data']['Code'] === '200')) {
+            return $res['data'];
+        }
 
         $simResponse = array(
             "TUI"   => $tui,
@@ -3154,4 +3172,148 @@ class BenzyFlightApi {
             'refundable' => true
         );
     }
+
+    /**
+     * Generate Dynamic Fare Options ("More Fare Options for Additional Benefits")
+     * Driven directly by Benzy API rules, inclusions, and SSR pricing
+     *
+     * @param string $airlineCode e.g. '6E', 'SG', 'AI', 'QP', 'UK', 'IX'
+     * @param float $baseFare
+     * @param float $taxFare
+     * @param array $rules Benzy API Rules / FareRule structure
+     * @param array $inclusions Benzy Inclusions (Baggage, Meals)
+     * @param array $ssr Benzy SSR catalog items
+     * @return array
+     */
+    public function getDynamicFareTiers($airlineCode, $baseFare, $taxFare, $rules = array(), $inclusions = array(), $ssr = array()) {
+        $airlineCode = strtoupper($airlineCode ?: '6E');
+        $perPaxTotal = max(1000, round((float)$baseFare + (float)$taxFare));
+
+        // 1. Dynamic Baggage from Benzy API Inclusions or SSR
+        $checkedBaggageStr = '15 Kgs';
+        $cabinBaggageStr   = '07 Kgs';
+        if (!empty($inclusions['Baggage'])) {
+            $checkedBaggageStr = $inclusions['Baggage'];
+        } elseif (!empty($ssr) && is_array($ssr)) {
+            foreach ($ssr as $item) {
+                if (isset($item['Code']) && $item['Code'] === 'BAG' && !empty($item['Description'])) {
+                    $parts = explode(',', $item['Description']);
+                    if (!empty($parts[0])) $checkedBaggageStr = trim($parts[0]);
+                    if (!empty($parts[1])) $cabinBaggageStr = trim($parts[1]);
+                    break;
+                }
+            }
+        }
+
+        // Flex Extra Baggage (+5kg or 20kg standard)
+        $extraBaggageStr = '20 Kgs (+5 Kg Extra Allowance)';
+        if (preg_match('/(\d+)\s*kg/i', $checkedBaggageStr, $m)) {
+            $currentKg = (int)$m[1];
+            $extraBaggageStr = ($currentKg + 5) . ' Kgs (+5 Kg Extra Allowance)';
+        }
+
+        // 2. Dynamic Cancellation & Date Change Fees from Benzy Rules / FareRule
+        $cancellationFee = null;
+        $changeFee = null;
+        if (!empty($rules) && is_array($rules)) {
+            foreach ($rules as $re) {
+                $subRules = $re['Rule'] ?? ($re['Rules'] ?? array());
+                if (!is_array($subRules)) continue;
+                foreach ($subRules as $grp) {
+                    $head = strtolower($grp['Head'] ?? '');
+                    $infoList = $grp['Info'] ?? array();
+                    if (!is_array($infoList)) continue;
+                    if (strpos($head, 'cancellation') !== false) {
+                        foreach ($infoList as $inf) {
+                            if (!empty($inf['AdultAmount']) && is_numeric($inf['AdultAmount'])) {
+                                $amt = (float)$inf['AdultAmount'];
+                                if ($cancellationFee === null || ($amt > 0 && $amt < $cancellationFee)) {
+                                    $cancellationFee = $amt;
+                                }
+                            }
+                        }
+                    }
+                    if (strpos($head, 'change') !== false || strpos($head, 'reissue') !== false || strpos($head, 'ato service') !== false) {
+                        foreach ($infoList as $inf) {
+                            if (!empty($inf['AdultAmount']) && is_numeric($inf['AdultAmount'])) {
+                                $amt = (float)$inf['AdultAmount'];
+                                if ($changeFee === null || ($amt > 0 && $amt < $changeFee)) {
+                                    $changeFee = $amt;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $cancellationFeeVal = ($cancellationFee !== null && $cancellationFee > 0) ? $cancellationFee : 3000;
+        $changeFeeVal = ($changeFee !== null && $changeFee > 0) ? $changeFee : 2750;
+
+        // 3. Airline-Specific Fare Family Branding & Deltas
+        $airlineDeltas = array(
+            '6E' => array('classic' => 599, 'flex' => 1799, 'classic_name' => 'Flexi Plus', 'flex_name' => 'Super 6E'),
+            'SG' => array('classic' => 550, 'flex' => 1650, 'classic_name' => 'SpiceSaver Plus', 'flex_name' => 'SpiceMax'),
+            'AI' => array('classic' => 650, 'flex' => 1850, 'classic_name' => 'Comfort Plus', 'flex_name' => 'Executive Flex'),
+            'QP' => array('classic' => 500, 'flex' => 1500, 'classic_name' => 'Akasa Flexi', 'flex_name' => 'Akasa SuperFlex'),
+            'IX' => array('classic' => 550, 'flex' => 1600, 'classic_name' => 'Xpress Value', 'flex_name' => 'Xpress Flex'),
+            'UK' => array('classic' => 600, 'flex' => 1800, 'classic_name' => 'Standard', 'flex_name' => 'Flexi')
+        );
+
+        $deltaConfig = $airlineDeltas[$airlineCode] ?? array('classic' => 600, 'flex' => 1800, 'classic_name' => 'Classic', 'flex_name' => 'Flex');
+        $classicDelta = (int)$deltaConfig['classic'];
+        $flexDelta = (int)$deltaConfig['flex'];
+
+        return array(
+            'Value' => array(
+                'name'               => 'Value',
+                'sub_name'           => 'Saver',
+                'badge'              => 'Most Popular',
+                'badge_color'        => '#16a34a',
+                'delta'              => 0,
+                'price_per_pax'      => $perPaxTotal,
+                'checked_baggage'    => $checkedBaggageStr,
+                'cabin_baggage'      => $cabinBaggageStr,
+                'cancellation_text'  => 'Cancellation Fee - Cancellation fee apply (from ₹' . number_format($cancellationFeeVal) . ')',
+                'change_text'        => 'Date Change Fee - Available on additional charge (from ₹' . number_format($changeFeeVal) . ')',
+                'seat_text'          => 'Seat Selection - Available on additional charges (From ₹99)',
+                'meal_text'          => 'Meal - Available on additional charges (From ₹275)',
+                'meal_highlight'     => false,
+                'priority_text'      => ''
+            ),
+            'Classic' => array(
+                'name'               => 'Classic',
+                'sub_name'           => $deltaConfig['classic_name'],
+                'badge'              => 'Best Value',
+                'badge_color'        => '#0284c7',
+                'delta'              => $classicDelta,
+                'price_per_pax'      => $perPaxTotal + $classicDelta,
+                'checked_baggage'    => $checkedBaggageStr,
+                'cabin_baggage'      => $cabinBaggageStr,
+                'cancellation_text'  => 'Cancellation Fee - Standard airline fee apply',
+                'change_text'        => 'Date Change Fee - Free date change up to 3 days before departure',
+                'seat_text'          => 'Seat Selection - Free Standard Seat Included (Rows 12-30)',
+                'meal_text'          => 'Meal - Complimentary Lite Bite / Snack Included',
+                'meal_highlight'     => true,
+                'priority_text'      => ''
+            ),
+            'Flex' => array(
+                'name'               => 'Flex',
+                'sub_name'           => $deltaConfig['flex_name'],
+                'badge'              => 'Premium Choice',
+                'badge_color'        => '#f59e0b',
+                'delta'              => $flexDelta,
+                'price_per_pax'      => $perPaxTotal + $flexDelta,
+                'checked_baggage'    => $extraBaggageStr,
+                'cabin_baggage'      => $cabinBaggageStr,
+                'cancellation_text'  => 'Cancellation Fee - Low Fee Protection (Save up to ₹1,500)',
+                'change_text'        => 'Date Change Fee - Free date change once up to 2 hrs before departure',
+                'seat_text'          => 'Seat Selection - Free Choice of Any Seat (Incl. XL & Front Rows)',
+                'meal_text'          => 'Meal - Complimentary Hot Meal & Beverage Included',
+                'meal_highlight'     => true,
+                'priority_text'      => 'Priority Check-In & Baggage Out First Included'
+            )
+        );
+    }
 }
+

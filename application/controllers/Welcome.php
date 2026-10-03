@@ -296,10 +296,19 @@ class Welcome extends CI_Controller {
 
         // Fetch revalidated flight data using Benzy API (SmartPricer & GetSPricer)
         $spRes = @$this->benzyflightapi->smartPricer($tui, $price, $onward_index, $is_roundtrip, $from_code_post, $to_code_post, $return_price, $return_index);
-        if (!empty($spRes['TUI'])) {
-            $tui = $spRes['TUI'];
+        
+        $flightDetails = null;
+        // Only call getSPricer if smartPricer returned a valid 200 response with Trips
+        if (!empty($spRes) && (empty($spRes['Code']) || (string)$spRes['Code'] === '200') && !empty($spRes['Trips'])) {
+            if (!empty($spRes['TUI'])) {
+                $tui = $spRes['TUI'];
+            }
+            $flightDetails = $this->benzyflightapi->getSPricer($tui, $price, $from_code_post, $to_code_post, $is_roundtrip);
         }
-        $flightDetails = $this->benzyflightapi->getSPricer($tui, $price, $from_code_post, $to_code_post, $is_roundtrip);
+
+        if (empty($flightDetails) || empty($flightDetails['from_code'])) {
+            $flightDetails = $this->benzyflightapi->parseSingleFlightReview($spRes, $tui);
+        }
         if (!empty($flightDetails['tui'])) {
             $tui = $flightDetails['tui'];
         } elseif (!empty($flightDetails['TUI'])) {
@@ -488,21 +497,57 @@ class Welcome extends CI_Controller {
         $flightDetails['is_roundtrip']    = $is_roundtrip;
 
         // Fetch Fare Rules (Cancellation & Date change policy)
-        $fareRules = $this->benzyflightapi->getFareRule($tui);
+        $fareRules = $this->benzyflightapi->getFareRule($tui, $price, $onward_index, $fromCode, $toCode);
 
         // Fetch SSR options (Baggage, Meals, Seats)
-        $ssrOptions = $this->benzyflightapi->getSSR($tui);
+        $ssrOptions = $this->benzyflightapi->getSSR($tui, $fromCode, $toCode, $airline_code, $flight_number);
 
-        $data['flight']          = $flightDetails;
-        $data['return_flight']   = $returnFlight;
-        $data['is_roundtrip']    = $is_roundtrip;
-        $data['fare_rules']      = $fareRules;
-        $data['ssr']             = $ssrOptions;
-        $data['fare_updated']    = $fare_updated;
-        $data['old_fare']        = $old_fare;
-        $data['new_fare']        = $new_fare;
-        $data['fare_change_msg'] = $fare_change_msg;
-        $data['total_travelers'] = $total_travelers;
+        // Build dynamic Fare Tiers ("More Fare Options for Additional Benefits") from Benzy API
+        $onwardAirlineCode = $flightDetails['airline_code'] ?? $airline_code;
+        $onwardBasePrice   = (float)($flightDetails['base_fare'] ?? round($price * 0.788));
+        $onwardTaxPrice    = (float)($flightDetails['taxes'] ?? max(0, $price - $onwardBasePrice));
+        $onwardRules       = !empty($fareRules['Trips'][0]['Journey'][0]['Segments'][0]['Rules']) ? $fareRules['Trips'][0]['Journey'][0]['Segments'][0]['Rules'] : ($flightDetails['rules'] ?? array());
+        $onwardInclusions  = $flightDetails['inclusions'] ?? array();
+        $onwardSsrItems    = !empty($ssrOptions['Trips'][0]['Journey'][0]['Segments'][0]['SSR']) ? $ssrOptions['Trips'][0]['Journey'][0]['Segments'][0]['SSR'] : ($flightDetails['ssr'] ?? array());
+
+        $onwardFareTiers = $this->benzyflightapi->getDynamicFareTiers(
+            $onwardAirlineCode,
+            $onwardBasePrice,
+            $onwardTaxPrice,
+            $onwardRules,
+            $onwardInclusions,
+            $onwardSsrItems
+        );
+
+        $returnFareTiers = array();
+        if ($is_roundtrip && !empty($returnFlight)) {
+            $returnAirlineCode = $returnFlight['airline_code'] ?? (!empty($returnFlight['flight_number']) ? explode('-', $returnFlight['flight_number'])[0] : '6E');
+            $returnPriceVal    = (float)($returnFlight['price'] ?? 5150);
+            $returnBasePrice   = round($returnPriceVal * 0.788);
+            $returnTaxPrice    = max(0, $returnPriceVal - $returnBasePrice);
+
+            $returnFareTiers = $this->benzyflightapi->getDynamicFareTiers(
+                $returnAirlineCode,
+                $returnBasePrice,
+                $returnTaxPrice,
+                $onwardRules,
+                $onwardInclusions,
+                $onwardSsrItems
+            );
+        }
+
+        $data['flight']            = $flightDetails;
+        $data['return_flight']     = $returnFlight;
+        $data['is_roundtrip']      = $is_roundtrip;
+        $data['fare_rules']        = $fareRules;
+        $data['ssr']               = $ssrOptions;
+        $data['onward_fare_tiers'] = $onwardFareTiers;
+        $data['return_fare_tiers'] = $returnFareTiers;
+        $data['fare_updated']      = $fare_updated;
+        $data['old_fare']          = $old_fare;
+        $data['new_fare']          = $new_fare;
+        $data['fare_change_msg']   = $fare_change_msg;
+        $data['total_travelers']   = $total_travelers;
         $airportDisplayNames = array(
             'DEL' => 'Delhi (DEL)', 'BOM' => 'Mumbai (BOM)', 'BLR' => 'Bengaluru (BLR)',
             'MAA' => 'Chennai (MAA)', 'HYD' => 'Hyderabad (HYD)', 'CCU' => 'Kolkata (CCU)',

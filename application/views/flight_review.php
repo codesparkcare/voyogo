@@ -1134,138 +1134,86 @@
                             <?php endif; ?>
                         </div>
 
+                        <?php 
+                        $onwardTiers = !empty($onward_fare_tiers) ? $onward_fare_tiers : array();
+                        if (empty($onwardTiers) && isset($this->benzyflightapi)) {
+                            $onwardTiers = $this->benzyflightapi->getDynamicFareTiers($flight['airline_code'] ?? '6E', $fBaseFare, $fTaxes, $fare_rules ?? array(), $flight['inclusions'] ?? array(), $ssr ?? array());
+                        }
+                        $returnTiers = !empty($return_fare_tiers) ? $return_fare_tiers : array();
+                        if (empty($returnTiers) && !empty($return_flight) && isset($this->benzyflightapi)) {
+                            $retBaseVal = round($retReviewPrice * 0.788);
+                            $retTaxVal  = max(0, $retReviewPrice - $retBaseVal);
+                            $returnTiers = $this->benzyflightapi->getDynamicFareTiers($return_flight['airline_code'] ?? '6E', $retBaseVal, $retTaxVal, $fare_rules ?? array(), array(), $ssr ?? array());
+                        }
+                        ?>
+
                         <!-- ONWARD SECTOR CONTAINER -->
                         <div id="sectorContainer_onward" style="display: block;">
                             <!-- Economy Starting Pill -->
                             <div style="margin-bottom: 20px;">
                                 <span style="background: #e0f2fe; color: #0369a1; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
-                                    Economy <span style="font-weight: 500; color: #475569;">Starting at ₹ <?php echo number_format($fBaseFare + $fTaxes); ?></span>
+                                    Economy <span style="font-weight: 500; color: #475569;">Starting at ₹ <?php echo number_format($onwardTiers['Value']['price_per_pax'] ?? ($fBaseFare + $fTaxes)); ?></span>
                                 </span>
                             </div>
 
                             <!-- 3 Comparison Cards Grid (Onward) -->
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
-                                
-                                <!-- Tier 1: Value (Most Popular) -->
-                                <div id="fareTierCard_onward_Value" class="fare-tier-card" style="border: 2px solid #0284c7; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-shadow: 0 4px 15px rgba(2,132,199,0.08); transition: all 0.2s ease;">
-                                    <div style="position: absolute; top: -12px; right: 14px; background: #16a34a; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(22,163,74,0.3);">
-                                        Most Popular
+                                <?php foreach ($onwardTiers as $tKey => $tier): 
+                                    $isDefaultSelected = ($tKey === 'Value');
+                                ?>
+                                <div id="fareTierCard_onward_<?php echo $tKey; ?>" class="fare-tier-card" style="border: <?php echo $isDefaultSelected ? '2px solid #0284c7' : '1px solid #e2e8f0'; ?>; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; <?php echo $isDefaultSelected ? 'box-shadow: 0 4px 15px rgba(2,132,199,0.08);' : ''; ?> transition: all 0.2s ease;">
+                                    <?php if (!empty($tier['badge'])): ?>
+                                    <div style="position: absolute; top: -12px; right: 14px; background: <?php echo htmlspecialchars($tier['badge_color'] ?? '#16a34a'); ?>; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">
+                                        <?php if ($tKey === 'Flex'): ?><i class="fa-solid fa-crown" style="font-size: 10px;"></i> <?php endif; ?>
+                                        <?php echo htmlspecialchars($tier['badge']); ?>
                                     </div>
+                                    <?php endif; ?>
                                     <div>
-                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Value</div>
+                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">
+                                            <?php echo htmlspecialchars($tier['name']); ?>
+                                            <?php if (!empty($tier['sub_name']) && $tier['sub_name'] !== $tier['name']): ?>
+                                                <span style="font-size: 12px; font-weight: 600; color: #64748b;">(<?php echo htmlspecialchars($tier['sub_name']); ?>)</span>
+                                            <?php endif; ?>
+                                        </div>
                                         <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
-                                            ₹ <?php echo number_format($fBaseFare + $fTaxes); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
+                                            ₹ <?php echo number_format($tier['price_per_pax']); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
                                         </div>
 
                                         <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
                                             <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
                                                 <i class="fa-solid fa-suitcase"></i> Baggage
                                             </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong>15 Kgs</strong></div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>07 Kgs</strong></div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong style="<?php echo ($tKey === 'Flex') ? 'color:#16a34a;' : ''; ?>"><?php echo htmlspecialchars($tier['checked_baggage']); ?></strong></div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong><?php echo htmlspecialchars($tier['cabin_baggage']); ?></strong></div>
                                         </div>
 
                                         <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
                                             <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
                                                 <i class="fa-solid fa-rotate-left"></i> Flexibility
                                             </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Cancellation fee apply</div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Available on additional charge</div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;"><?php echo htmlspecialchars($tier['cancellation_text']); ?></div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;"><?php echo htmlspecialchars($tier['change_text']); ?></div>
                                         </div>
 
                                         <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
                                             <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
                                                 <i class="fa-solid fa-utensils"></i> Seat & meal
                                             </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Seat Selection - Available on additional charges</div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Meal - Available on additional charges</div>
+                                            <div style="font-size: 12px; color: <?php echo ($tKey !== 'Value') ? '#16a34a; font-weight: 700;' : '#475569;'; ?> line-height: 1.5;"><?php echo htmlspecialchars($tier['seat_text']); ?></div>
+                                            <div style="font-size: 12px; color: <?php echo !empty($tier['meal_highlight']) ? '#16a34a; font-weight: 700;' : '#475569;'; ?> line-height: 1.5;"><?php echo htmlspecialchars($tier['meal_text']); ?></div>
+                                            <?php if (!empty($tier['priority_text'])): ?>
+                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5; margin-top: 4px;">
+                                                <i class="fa-solid fa-bolt"></i> <?php echo htmlspecialchars($tier['priority_text']); ?>
+                                            </div>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
 
-                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('onward', 'Value', 0, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #0284c7; color: #ffffff; border: none;">
-                                        Selected
+                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('onward', '<?php echo $tKey; ?>', <?php echo (float)$tier['delta']; ?>, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: <?php echo $isDefaultSelected ? '#0284c7' : '#ffffff'; ?>; color: <?php echo $isDefaultSelected ? '#ffffff' : '#0f172a'; ?>; border: <?php echo $isDefaultSelected ? 'none' : '1.5px solid #cbd5e1'; ?>;">
+                                        <?php echo $isDefaultSelected ? 'Selected' : 'Select'; ?>
                                     </button>
                                 </div>
-
-                                <!-- Tier 2: Classic -->
-                                <div id="fareTierCard_onward_Classic" class="fare-tier-card" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; transition: all 0.2s ease;">
-                                    <div>
-                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Classic</div>
-                                        <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
-                                            ₹ <?php echo number_format($fBaseFare + $fTaxes + 600); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
-                                        </div>
-
-                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
-                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <i class="fa-solid fa-suitcase"></i> Baggage
-                                            </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong>15 Kgs</strong></div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>7 Kgs</strong></div>
-                                        </div>
-
-                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
-                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <i class="fa-solid fa-rotate-left"></i> Flexibility
-                                            </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Available on additional charge</div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Available on additional charge</div>
-                                        </div>
-
-                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
-                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <i class="fa-solid fa-utensils"></i> Seat & meal
-                                            </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Seat Selection - Available on additional charges</div>
-                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Meal - Lite Bite Included</div>
-                                        </div>
-                                    </div>
-
-                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('onward', 'Classic', 600, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;">
-                                        Select
-                                    </button>
-                                </div>
-
-                                <!-- Tier 3: Flex -->
-                                <div id="fareTierCard_onward_Flex" class="fare-tier-card" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; transition: all 0.2s ease;">
-                                    <div style="position: absolute; top: -12px; right: 14px; background: #f59e0b; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(245,158,11,0.3);">
-                                        <i class="fa-solid fa-crown" style="font-size: 10px;"></i> Premium
-                                    </div>
-                                    <div>
-                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Flex</div>
-                                        <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
-                                            ₹ <?php echo number_format($fBaseFare + $fTaxes + 1800); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
-                                        </div>
-
-                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
-                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <i class="fa-solid fa-suitcase"></i> Baggage
-                                            </div>
-                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Checked Baggage : <strong>20 Kgs (+5 Kg Extra)</strong></div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>7 Kgs</strong></div>
-                                        </div>
-
-                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
-                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <i class="fa-solid fa-rotate-left"></i> Flexibility
-                                            </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Low Fee Protection</div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Free date change once</div>
-                                        </div>
-
-                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
-                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <i class="fa-solid fa-utensils"></i> Seat & meal
-                                            </div>
-                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Seat Selection - Free Standard Seat Included</div>
-                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Meal - Lite Bite Included</div>
-                                        </div>
-                                    </div>
-
-                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('onward', 'Flex', 1800, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;">
-                                        Select
-                                    </button>
-                                </div>
-
+                                <?php endforeach; ?>
                             </div>
                         </div>
 
@@ -1275,133 +1223,68 @@
                             <!-- Economy Starting Pill (Return) -->
                             <div style="margin-bottom: 20px;">
                                 <span style="background: #e0f2fe; color: #0369a1; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
-                                    Economy <span style="font-weight: 500; color: #475569;">Starting at ₹ <?php echo number_format($retReviewPrice); ?></span>
+                                    Economy <span style="font-weight: 500; color: #475569;">Starting at ₹ <?php echo number_format($returnTiers['Value']['price_per_pax'] ?? $retReviewPrice); ?></span>
                                 </span>
                             </div>
 
                             <!-- 3 Comparison Cards Grid (Return) -->
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
-                                
-                                <!-- Return Tier 1: Value -->
-                                <div id="fareTierCard_return_Value" class="fare-tier-card" style="border: 2px solid #0284c7; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-shadow: 0 4px 15px rgba(2,132,199,0.08); transition: all 0.2s ease;">
-                                    <div style="position: absolute; top: -12px; right: 14px; background: #16a34a; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(22,163,74,0.3);">
-                                        Most Popular
+                                <?php foreach ($returnTiers as $tKey => $tier): 
+                                    $isDefaultSelected = ($tKey === 'Value');
+                                ?>
+                                <div id="fareTierCard_return_<?php echo $tKey; ?>" class="fare-tier-card" style="border: <?php echo $isDefaultSelected ? '2px solid #0284c7' : '1px solid #e2e8f0'; ?>; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; <?php echo $isDefaultSelected ? 'box-shadow: 0 4px 15px rgba(2,132,199,0.08);' : ''; ?> transition: all 0.2s ease;">
+                                    <?php if (!empty($tier['badge'])): ?>
+                                    <div style="position: absolute; top: -12px; right: 14px; background: <?php echo htmlspecialchars($tier['badge_color'] ?? '#16a34a'); ?>; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">
+                                        <?php if ($tKey === 'Flex'): ?><i class="fa-solid fa-crown" style="font-size: 10px;"></i> <?php endif; ?>
+                                        <?php echo htmlspecialchars($tier['badge']); ?>
                                     </div>
+                                    <?php endif; ?>
                                     <div>
-                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Value</div>
+                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">
+                                            <?php echo htmlspecialchars($tier['name']); ?>
+                                            <?php if (!empty($tier['sub_name']) && $tier['sub_name'] !== $tier['name']): ?>
+                                                <span style="font-size: 12px; font-weight: 600; color: #64748b;">(<?php echo htmlspecialchars($tier['sub_name']); ?>)</span>
+                                            <?php endif; ?>
+                                        </div>
                                         <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
-                                            ₹ <?php echo number_format($retReviewPrice); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
+                                            ₹ <?php echo number_format($tier['price_per_pax']); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
                                         </div>
 
                                         <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
                                             <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
                                                 <i class="fa-solid fa-suitcase"></i> Baggage
                                             </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong>15 Kgs</strong></div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>07 Kgs</strong></div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong style="<?php echo ($tKey === 'Flex') ? 'color:#16a34a;' : ''; ?>"><?php echo htmlspecialchars($tier['checked_baggage']); ?></strong></div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong><?php echo htmlspecialchars($tier['cabin_baggage']); ?></strong></div>
                                         </div>
 
                                         <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
                                             <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
                                                 <i class="fa-solid fa-rotate-left"></i> Flexibility
                                             </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Cancellation fee apply</div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Available on additional charge</div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;"><?php echo htmlspecialchars($tier['cancellation_text']); ?></div>
+                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;"><?php echo htmlspecialchars($tier['change_text']); ?></div>
                                         </div>
 
                                         <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
                                             <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
                                                 <i class="fa-solid fa-utensils"></i> Seat & meal
                                             </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Seat Selection - Available on additional charges</div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Meal - Available on additional charges</div>
+                                            <div style="font-size: 12px; color: <?php echo ($tKey !== 'Value') ? '#16a34a; font-weight: 700;' : '#475569;'; ?> line-height: 1.5;"><?php echo htmlspecialchars($tier['seat_text']); ?></div>
+                                            <div style="font-size: 12px; color: <?php echo !empty($tier['meal_highlight']) ? '#16a34a; font-weight: 700;' : '#475569;'; ?> line-height: 1.5;"><?php echo htmlspecialchars($tier['meal_text']); ?></div>
+                                            <?php if (!empty($tier['priority_text'])): ?>
+                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5; margin-top: 4px;">
+                                                <i class="fa-solid fa-bolt"></i> <?php echo htmlspecialchars($tier['priority_text']); ?>
+                                            </div>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
 
-                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('return', 'Value', 0, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #0284c7; color: #ffffff; border: none;">
-                                        Selected
+                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('return', '<?php echo $tKey; ?>', <?php echo (float)$tier['delta']; ?>, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: <?php echo $isDefaultSelected ? '#0284c7' : '#ffffff'; ?>; color: <?php echo $isDefaultSelected ? '#ffffff' : '#0f172a'; ?>; border: <?php echo $isDefaultSelected ? 'none' : '1.5px solid #cbd5e1'; ?>;">
+                                        <?php echo $isDefaultSelected ? 'Selected' : 'Select'; ?>
                                     </button>
                                 </div>
-
-                                <!-- Return Tier 2: Classic -->
-                                <div id="fareTierCard_return_Classic" class="fare-tier-card" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; transition: all 0.2s ease;">
-                                    <div>
-                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Classic</div>
-                                        <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
-                                            ₹ <?php echo number_format($retReviewPrice + 600); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
-                                        </div>
-
-                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
-                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <i class="fa-solid fa-suitcase"></i> Baggage
-                                            </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Checked Baggage : <strong>15 Kgs</strong></div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>7 Kgs</strong></div>
-                                        </div>
-
-                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
-                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <i class="fa-solid fa-rotate-left"></i> Flexibility
-                                            </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Available on additional charge</div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Available on additional charge</div>
-                                        </div>
-
-                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
-                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <i class="fa-solid fa-utensils"></i> Seat & meal
-                                            </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Seat Selection - Available on additional charges</div>
-                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Meal - Lite Bite Included</div>
-                                        </div>
-                                    </div>
-
-                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('return', 'Classic', 600, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;">
-                                        Select
-                                    </button>
-                                </div>
-
-                                <!-- Return Tier 3: Flex -->
-                                <div id="fareTierCard_return_Flex" class="fare-tier-card" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; transition: all 0.2s ease;">
-                                    <div style="position: absolute; top: -12px; right: 14px; background: #f59e0b; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 2px 6px rgba(245,158,11,0.3);">
-                                        <i class="fa-solid fa-crown" style="font-size: 10px;"></i> Premium
-                                    </div>
-                                    <div>
-                                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Flex</div>
-                                        <div style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">
-                                            ₹ <?php echo number_format($retReviewPrice + 1800); ?> <span style="font-size: 12px; font-weight: 500; color: #64748b;">per person</span>
-                                        </div>
-
-                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-bottom: 12px;">
-                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <i class="fa-solid fa-suitcase"></i> Baggage
-                                            </div>
-                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Checked Baggage : <strong>20 Kgs (+5 Kg Extra)</strong></div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Carry-on Baggage : <strong>7 Kgs</strong></div>
-                                        </div>
-
-                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 12px;">
-                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <i class="fa-solid fa-rotate-left"></i> Flexibility
-                                            </div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Cancellation Fee - Low Fee Protection</div>
-                                            <div style="font-size: 12px; color: #475569; line-height: 1.5;">Date Change Fee - Free date change once</div>
-                                        </div>
-
-                                        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-bottom: 16px;">
-                                            <div style="font-size: 12px; font-weight: 800; color: #0369a1; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <i class="fa-solid fa-utensils"></i> Seat & meal
-                                            </div>
-                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Seat Selection - Free Standard Seat Included</div>
-                                            <div style="font-size: 12px; color: #16a34a; font-weight: 700; line-height: 1.5;">Meal - Lite Bite Included</div>
-                                        </div>
-                                    </div>
-
-                                    <button type="button" class="tier-select-btn" onclick="selectFareTier('return', 'Flex', 1800, this)" style="width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 13.5px; cursor: pointer; transition: all 0.2s ease; background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;">
-                                        Select
-                                    </button>
-                                </div>
-
+                                <?php endforeach; ?>
                             </div>
                         </div>
                         <?php endif; ?>
