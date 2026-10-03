@@ -108,7 +108,7 @@
     $infantBaseFare = ($infant_count > 0) ? max(0, $fBaseFare - $adultBaseFare - $childBaseFare) : 0;
 
     $insurancePerPax = 199;
-    $initialInsurance = $insurancePerPax * $total_travelers_review;
+    $initialInsurance = 0; // Default unselected
     $initialDiscount = 18; // Default ATFLY discount matching Screenshot 1
     $initialGrandTotal = $fBaseFare + $fTaxes + $initialInsurance - $initialDiscount;
     $retReviewPrice = !empty($return_flight['price']) ? (float)$return_flight['price'] : $reviewPrice;
@@ -1066,8 +1066,8 @@
                     <!-- Safety & Flexibility Fields -->
                     <input type="hidden" name="safety_cancellation_type" id="form_safety_cancellation_type" value="">
                     <input type="hidden" name="safety_cancellation_amount" id="form_safety_cancellation_amount" value="0">
-                    <input type="hidden" name="travel_insurance_selected" id="form_travel_insurance_selected" value="1">
-                    <input type="hidden" name="insurance_amount" id="form_insurance_amount" value="<?php echo htmlspecialchars($initialInsurance); ?>">
+                    <input type="hidden" name="travel_insurance_selected" id="form_travel_insurance_selected" value="0">
+                    <input type="hidden" name="insurance_amount" id="form_insurance_amount" value="0">
                     <input type="hidden" name="discount_amount" id="form_discount_amount" value="<?php echo htmlspecialchars($initialDiscount); ?>">
                     <input type="hidden" name="promo_code" id="form_promo_code" value="ATFLY">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
@@ -1460,9 +1460,9 @@
                         </div>
 
                         <!-- Option 3: Travel Insurance (Screenshot 1) -->
-                        <div id="cardInsurance" class="safety-card" style="background: #f8fafc; border: 1.5px solid #2563eb; border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; transition: all 0.2s ease;">
+                        <div id="cardInsurance" class="safety-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; transition: all 0.2s ease;">
                             <label style="display: flex; gap: 12px; cursor: pointer; flex: 1;">
-                                <input type="checkbox" id="travelInsuranceCheckbox" checked onchange="toggleTravelInsurance(this.checked)" style="accent-color: #2563eb; margin-top: 3px;">
+                                <input type="checkbox" id="travelInsuranceCheckbox" onchange="toggleTravelInsurance(this.checked)" style="accent-color: #2563eb; margin-top: 3px;">
                                 <div>
                                     <div style="font-size: 14px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 6px;">
                                         Travel Insurance <i class="fa-solid fa-shield-halved" style="color: #0284c7;"></i>
@@ -1482,7 +1482,7 @@
                                 </div>
                             </label>
                             <div style="text-align: right; min-width: 90px;">
-                                <a href="javascript:void(0);" id="insuranceToggleBtn" onclick="toggleInsuranceLink()" style="font-size: 12px; color: #0284c7; font-weight: 700; text-decoration: underline;">Remove</a>
+                                <a href="javascript:void(0);" id="insuranceToggleBtn" onclick="toggleInsuranceLink()" style="font-size: 12px; color: #0284c7; font-weight: 700; text-decoration: underline;">+ Add</a>
                                 <div style="font-size: 16px; font-weight: 900; color: #0f172a; margin-top: 2px;">₹ <?php echo number_format(199 * $total_travelers_review); ?></div>
                             </div>
                         </div>
@@ -1737,7 +1737,7 @@
                         </div>
 
                         <!-- Insurance Item with Subrows (Toggleable +/-) (Screenshot 3) -->
-                        <div class="f-fare-group" id="fareGroupInsurance" style="margin-bottom: 12px;">
+                        <div class="f-fare-group" id="fareGroupInsurance" style="display: none; margin-bottom: 12px;">
                             <div class="f-fare-row f-fare-parent" onclick="toggleFareBreakdown(this);" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; cursor: pointer;" title="Click to expand/collapse Insurance breakdown">
                                 <span class="f-fare-label" style="font-size: 13.5px; font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 8px;">
                                     <span class="f-fare-toggle-circle" style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #0284c7; color: #0284c7; font-size: 13px; font-weight: 700; line-height: 1; user-select: none;">+</span> Insurance
@@ -1939,7 +1939,7 @@ var baseFlightFare = <?php echo (float)$fBaseFare; ?>;
 var taxesFare = <?php echo (float)$fTaxes; ?>;
 var totalPax = <?php echo (int)$total_travelers_review; ?>;
 var insurancePerPax = 199;
-var isInsuranceIncluded = true;
+var isInsuranceIncluded = false;
 var appliedDiscount = <?php echo (float)$initialDiscount; ?>;
 var appliedPromoCodeName = 'ATFLY';
 

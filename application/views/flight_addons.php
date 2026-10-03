@@ -60,7 +60,7 @@ $retDestCity = $airportDb[$return_destination]['city'] ?? $return_destination;
 
 $base_fare = (float)($base_fare ?? ($post_data['base_fare'] ?? ($post_data['net_amount'] ?? 8739)));
 $taxes = (float)($taxes ?? ($post_data['taxes'] ?? 1531));
-$insurance_amount = (float)($insurance_amount ?? ($post_data['insurance_amount'] ?? 199));
+$insurance_amount = (float)($insurance_amount ?? ($post_data['insurance_amount'] ?? 0));
 $discount_amount = (float)($discount_amount ?? ($post_data['discount_amount'] ?? 18));
 $promo_code = $promo_code ?? ($post_data['promo_code'] ?? 'ATFLY');
 
