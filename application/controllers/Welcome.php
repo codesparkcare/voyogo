@@ -413,6 +413,7 @@ class Welcome extends CI_Controller {
         $flightDetails['to_terminal'] = $airportNames[$toCode]['terminal'] ?? 'Terminal 1';
 
         // Passenger count multiplier
+        $total_travelers = (int)$adults + (int)$children + (int)$infants;
         $pax_multiplier = $adults + $children + (0.5 * $infants);
         if ($pax_multiplier < 1) $pax_multiplier = 1;
 
@@ -501,6 +502,7 @@ class Welcome extends CI_Controller {
         $data['old_fare']        = $old_fare;
         $data['new_fare']        = $new_fare;
         $data['fare_change_msg'] = $fare_change_msg;
+        $data['total_travelers'] = $total_travelers;
         $airportDisplayNames = array(
             'DEL' => 'Delhi (DEL)', 'BOM' => 'Mumbai (BOM)', 'BLR' => 'Bengaluru (BLR)',
             'MAA' => 'Chennai (MAA)', 'HYD' => 'Hyderabad (HYD)', 'CCU' => 'Kolkata (CCU)',
