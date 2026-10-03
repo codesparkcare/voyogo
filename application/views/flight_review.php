@@ -95,6 +95,14 @@
             break;
     }
 
+    if (!empty($flight['total_base_fare']) && (float)$flight['total_base_fare'] > 0) {
+        $fBaseFare = (float)$flight['total_base_fare'];
+        $fTaxes = max(0, $reviewPrice - $fBaseFare);
+    }
+    if (!empty($flight['itemized_taxes']) && is_array($flight['itemized_taxes']) && count($flight['itemized_taxes']) > 0) {
+        $airlineTaxes = $flight['itemized_taxes'];
+    }
+
     $adultBaseFare = round($fBaseFare * ($adult_count / $total_travelers_review));
     $childBaseFare = ($child_count > 0) ? round($fBaseFare * ($child_count / $total_travelers_review)) : 0;
     $infantBaseFare = ($infant_count > 0) ? max(0, $fBaseFare - $adultBaseFare - $childBaseFare) : 0;
@@ -309,6 +317,33 @@
                 <i class="fa-solid fa-chevron-left" style="font-size: 11px;"></i> Back to Search
             </a>
         </div>
+
+        <?php if (!empty($fare_updated)): ?>
+        <!-- Real-Time Airline Fare Change Alert Banner -->
+        <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1.5px solid #f59e0b; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 14px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.12);">
+            <div style="background: #f59e0b; color: #ffffff; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; margin-top: 2px;">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 8px;">
+                    <strong style="color: #92400e; font-size: 14.5px; font-weight: 800; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-bolt" style="color: #d97706;"></i> Live Airline Fare Update
+                    </strong>
+                    <span style="background: #d97706; color: #ffffff; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 12px; letter-spacing: 0.3px;">
+                        REAL-TIME GDS FARE
+                    </span>
+                </div>
+                <p style="margin: 0; font-size: 13.5px; color: #78350f; line-height: 1.5;">
+                    <?php echo htmlspecialchars($fare_change_msg ?? 'The airline has updated the fare based on real-time seat availability.'); ?>
+                </p>
+                <div style="margin-top: 8px; font-size: 12.5px; color: #92400e; font-weight: 600; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                    <span>Previous Fare: <del style="color: #b45309;">₹ <?php echo number_format((float)($old_fare ?? 0)); ?></del></span>
+                    <span>Updated Live Fare: <strong style="color: #15803d; font-size: 14px;">₹ <?php echo number_format((float)($new_fare ?? $flight['price'])); ?></strong></span>
+                    <span style="font-weight: 500; color: #78350f;">(Guaranteed seat reservation at current inventory)</span>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
 
         <div class="flight-review-layout-grid" style="display: grid; grid-template-columns: 2.3fr 1fr; gap: 24px;">
             

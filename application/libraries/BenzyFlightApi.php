@@ -2711,20 +2711,76 @@ class BenzyFlightApi {
 
     protected function parseSingleFlightReview($data, $tui) {
         $actualTui = !empty($data['TUI']) ? $data['TUI'] : $tui;
+        $code = !empty($data['Code']) ? (string)$data['Code'] : '200';
+        $msgList = !empty($data['Msg']) ? (array)$data['Msg'] : array();
+        $fareChangeMsg = !empty($msgList) ? implode(' ', $msgList) : '';
+        $isFareChanged = ($code === '1500' || stripos($fareChangeMsg, 'Fare change') !== false);
 
         // 1. Live Benzy Structure (Trips -> Journey -> Segments -> Flight)
         if (!empty($data['Trips'][0]['Journey'][0]['Segments'][0]['Flight'])) {
             $journey = $data['Trips'][0]['Journey'][0];
             $seg     = $journey['Segments'][0];
             $flight  = $seg['Flight'];
-            $fares   = isset($seg['Fares']) ? $seg['Fares'] : array();
+            $fares   = isset($seg['Fares']) ? $seg['Fares'] : (isset($journey['Fares']) ? $journey['Fares'] : array());
 
             $airlineCode = !empty($flight['VAC']) ? $flight['VAC'] : (!empty($flight['MAC']) ? $flight['MAC'] : '6E');
             $airlineDetails = $this->getAirlineMeta($airlineCode);
 
+            // Live GDS Gross & Net Amounts
             $grossFare = isset($data['GrossAmount']) ? (float)$data['GrossAmount'] : (isset($journey['GrossFare']) ? (float)$journey['GrossFare'] : (isset($fares['GrossFare']) ? (float)$fares['GrossFare'] : 5421.0));
             $netFare   = isset($data['NetAmount']) ? (float)$data['NetAmount'] : (isset($journey['NetFare']) ? (float)$journey['NetFare'] : (isset($fares['NetFare']) ? (float)$fares['NetFare'] : 5150.0));
-            $taxes     = isset($fares['TotalTax']) ? (float)$fares['TotalTax'] : ($grossFare - $netFare);
+
+            // Customer Base Fare and Total Tax according to BenzFlightApis specification
+            $totalBaseFare = isset($fares['TotalBaseFare']) ? (float)$fares['TotalBaseFare'] : (isset($journey['TotalBaseFare']) ? (float)$journey['TotalBaseFare'] : (isset($fares['PTCFare'][0]['Fare']) ? (float)$fares['PTCFare'][0]['Fare'] : round($grossFare * 0.788)));
+            $totalTax      = isset($fares['TotalTax']) ? (float)$fares['TotalTax'] : (isset($journey['TotalTax']) ? (float)$journey['TotalTax'] : (isset($fares['PTCFare'][0]['Tax']) ? (float)$fares['PTCFare'][0]['Tax'] : max(0, $grossFare - $totalBaseFare)));
+            $totalMarkup   = isset($fares['TotalAgentMarkUp']) ? (float)$fares['TotalAgentMarkUp'] : 0.0;
+
+            // Extract live itemized taxes from PTCFare
+            $itemizedTaxes = array();
+            if (!empty($fares['PTCFare'][0])) {
+                $ptc  = $fares['PTCFare'][0];
+                $fuel = (float)($ptc['YQ'] ?? ($ptc['YR'] ?? 0));
+                $udf  = (float)($ptc['UD'] ?? 0);
+                $psf  = (float)($ptc['PSF'] ?? 0);
+                $k3   = (float)($ptc['K3'] ?? 0);
+                $st   = (float)($ptc['ST'] ?? 0);
+
+                $otherTaxes = 0;
+                if (!empty($ptc['OTT']) && !empty($ptc['OT'])) {
+                    $keys = explode(',', (string)$ptc['OTT']);
+                    $vals = explode(',', (string)$ptc['OT']);
+                    foreach ($keys as $kIdx => $kName) {
+                        $amt = isset($vals[$kIdx]) ? (float)$vals[$kIdx] : 0;
+                        if ($amt > 0) {
+                            $taxTitle = trim($kName);
+                            if (stripos($taxTitle, 'GST') !== false) {
+                                $taxTitle = 'GST (' . $taxTitle . ')';
+                            } elseif ($taxTitle === 'ASF') {
+                                $taxTitle = 'Aviation Security Fee';
+                            } elseif ($taxTitle === 'TTF') {
+                                $taxTitle = 'Terminal Fee';
+                            } elseif ($taxTitle === 'PHF') {
+                                $taxTitle = 'Passenger Handling Fee';
+                            } elseif ($taxTitle === 'CUTE') {
+                                $taxTitle = 'User Fee (CUTE)';
+                            }
+                            $itemizedTaxes[] = array('name' => $taxTitle, 'amount' => $amt);
+                            $otherTaxes += $amt;
+                        }
+                    }
+                }
+
+                if ($fuel > 0) array_unshift($itemizedTaxes, array('name' => 'Fuel Surcharge', 'amount' => $fuel));
+                if ($udf > 0)  $itemizedTaxes[] = array('name' => 'User Dev. Fee', 'amount' => $udf);
+                if ($psf > 0)  $itemizedTaxes[] = array('name' => 'Passenger Service Fee', 'amount' => $psf);
+                if ($k3 > 0)   $itemizedTaxes[] = array('name' => 'K3 Tax (GST)', 'amount' => $k3);
+                if ($st > 0)   $itemizedTaxes[] = array('name' => 'Service Tax', 'amount' => $st);
+
+                $accounted = $fuel + $udf + $psf + $k3 + $st + $otherTaxes;
+                if ($totalTax > $accounted) {
+                    $itemizedTaxes[] = array('name' => 'Airline Misc / Surcharges', 'amount' => max(0, $totalTax - $accounted));
+                }
+            }
 
             $flightNo = !empty($flight['FlightNo']) ? $flight['FlightNo'] : '1451';
             $flightNumber = (strpos($flightNo, $airlineCode) === 0) ? $flightNo : ($airlineCode . '-' . $flightNo);
@@ -2732,6 +2788,9 @@ class BenzyFlightApi {
             return array(
                 'TUI'             => $actualTui,
                 'tui'             => $actualTui,
+                'code'            => $code,
+                'is_fare_changed' => $isFareChanged,
+                'fare_change_msg' => $fareChangeMsg,
                 'airline_code'    => $airlineCode,
                 'airline_name'    => !empty($airlineDetails['name']) ? $airlineDetails['name'] : 'IndiGo',
                 'airline_logo'    => $airlineDetails['logo'],
@@ -2750,13 +2809,19 @@ class BenzyFlightApi {
                 'cabin_class'     => !empty($flight['Cabin']) ? ($flight['Cabin'] == 'B' ? 'Business' : 'Economy') : 'Economy',
                 'aircraft'        => !empty($flight['AirCraft']) ? $flight['AirCraft'] : (!empty($flight['Aircraft']) ? $flight['Aircraft'] : 'BOEING'),
                 'price'           => $grossFare,
-                'base_fare'       => $netFare,
+                'base_fare'       => $totalBaseFare,
+                'total_base_fare' => $totalBaseFare,
+                'taxes'           => $totalTax,
+                'total_tax'       => $totalTax,
+                'itemized_taxes'  => $itemizedTaxes,
                 'net_amount'      => $netFare,
                 'gross_amount'    => $grossFare,
-                'taxes'           => $taxes,
+                'agent_markup'    => $totalMarkup,
                 'checkin_baggage' => 'Adult - 15Kg',
                 'cabin_baggage'   => 'Adult - 7Kg',
                 'refundable'      => isset($flight['Refundable']) && $flight['Refundable'] === 'Y',
+                'rules'           => isset($data['Rules']) ? $data['Rules'] : array(),
+                'ssr'             => isset($data['SSR']) ? $data['SSR'] : array(),
                 'raw'             => $data
             );
         }
@@ -2772,10 +2837,14 @@ class BenzyFlightApi {
             $netFare = isset($journey['Price']['NetFare']) ? (float)$journey['Price']['NetFare'] : 4500;
             $taxes   = isset($journey['Price']['Tax']) ? (float)$journey['Price']['Tax'] : 850;
             $grossFare = isset($journey['Price']['GrossFare']) ? (float)$journey['Price']['GrossFare'] : ($netFare + $taxes);
+            $totalBaseFare = isset($journey['Price']['BaseFare']) ? (float)$journey['Price']['BaseFare'] : round($grossFare * 0.788);
 
             return array(
                 'TUI'             => $actualTui,
                 'tui'             => $actualTui,
+                'code'            => $code,
+                'is_fare_changed' => $isFareChanged,
+                'fare_change_msg' => $fareChangeMsg,
                 'airline_code'    => $airlineCode,
                 'airline_name'    => $airlineDetails['name'],
                 'airline_logo'    => $airlineDetails['logo'],
@@ -2794,11 +2863,18 @@ class BenzyFlightApi {
                 'cabin_class'     => 'Economy',
                 'aircraft'        => 'BOEING',
                 'price'           => $grossFare,
-                'base_fare'       => $netFare,
+                'base_fare'       => $totalBaseFare,
+                'total_base_fare' => $totalBaseFare,
                 'taxes'           => $taxes,
+                'total_tax'       => $taxes,
+                'itemized_taxes'  => array(),
+                'net_amount'      => $netFare,
+                'gross_amount'    => $grossFare,
                 'checkin_baggage' => 'Adult - 15Kg',
                 'cabin_baggage'   => 'Adult - 7Kg',
                 'refundable'      => true,
+                'rules'           => isset($data['Rules']) ? $data['Rules'] : array(),
+                'ssr'             => isset($data['SSR']) ? $data['SSR'] : array(),
                 'raw'             => $data
             );
         }

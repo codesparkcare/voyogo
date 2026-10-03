@@ -412,34 +412,79 @@ class Welcome extends CI_Controller {
         $flightDetails['to_airport'] = $airportNames[$toCode]['name'] ?? ($toCode . ' International Airport');
         $flightDetails['to_terminal'] = $airportNames[$toCode]['terminal'] ?? 'Terminal 1';
 
-        // Preserve exact live Net Amount from GetSPricer
-        $live_net_amount = isset($flightDetails['net_amount']) ? (float)$flightDetails['net_amount'] : (isset($flightDetails['base_fare']) ? (float)$flightDetails['base_fare'] : 0);
-
-        // Adjust display fares for total passenger count if not already live priced
+        // Passenger count multiplier
         $pax_multiplier = $adults + $children + (0.5 * $infants);
         if ($pax_multiplier < 1) $pax_multiplier = 1;
 
-        $unit_price = isset($flightDetails['price']) ? (float)$flightDetails['price'] : $price;
-        if ($is_roundtrip && !empty($returnFlight['price'])) {
-            $unit_price = (float)$flightDetails['price'] + (float)$returnFlight['price'];
-        }
-        $flightDetails['unit_price'] = $unit_price;
-        $unit_base = isset($flightDetails['base_fare']) ? (float)$flightDetails['base_fare'] : round($unit_price * 0.82);
-        $unit_taxes = isset($flightDetails['taxes']) ? (float)$flightDetails['taxes'] : round($unit_price * 0.18);
+        $search_onward_price = (float)$price;
+        $search_return_price = $is_roundtrip ? (float)($returnFlight['price'] ?? $return_price) : 0;
+        $search_total = ($search_onward_price + $search_return_price) * $pax_multiplier;
 
-        if ($live_net_amount > 0) {
-            $flightDetails['net_amount'] = $live_net_amount;
-            $flightDetails['base_fare']  = $live_net_amount;
-            $flightDetails['price']      = !empty($flightDetails['gross_amount']) ? (float)$flightDetails['gross_amount'] : ($live_net_amount + round($unit_taxes * $pax_multiplier));
-            $flightDetails['taxes']      = max(0, $flightDetails['price'] - $flightDetails['base_fare']);
+        // Determine if GetSPricer returned live revalidated data
+        $live_gross_amount = isset($flightDetails['gross_amount']) ? (float)$flightDetails['gross_amount'] : (float)($flightDetails['price'] ?? $search_onward_price);
+        $live_net_amount   = isset($flightDetails['net_amount']) ? (float)$flightDetails['net_amount'] : 0;
+        $live_base_fare    = isset($flightDetails['total_base_fare']) ? (float)$flightDetails['total_base_fare'] : (isset($flightDetails['base_fare']) ? (float)$flightDetails['base_fare'] : round($live_gross_amount * 0.788));
+        $live_taxes        = isset($flightDetails['total_tax']) ? (float)$flightDetails['total_tax'] : (isset($flightDetails['taxes']) ? (float)$flightDetails['taxes'] : max(0, $live_gross_amount - $live_base_fare));
+
+        // Round Trip Fare Composition
+        if ($is_roundtrip && !empty($returnFlight)) {
+            // Did GetSPricer return the combined round trip gross amount (>= 75% of search total), or only onward sector?
+            if ($live_gross_amount >= ($search_total * 0.75)) {
+                // Live API returned full round trip quote
+                $final_flight_price = $live_gross_amount;
+                $final_base_fare    = $live_base_fare;
+                $final_taxes        = $live_taxes;
+                $final_itemized_tax = !empty($flightDetails['itemized_taxes']) ? $flightDetails['itemized_taxes'] : array();
+            } else {
+                // Live API returned single sector quote, combine with return flight
+                $ret_gross = (float)$returnFlight['price'];
+                $ret_base  = round($ret_gross * 0.788);
+                $ret_tax   = max(0, $ret_gross - $ret_base);
+
+                $final_flight_price = $live_gross_amount + $ret_gross;
+                $final_base_fare    = $live_base_fare + $ret_base;
+                $final_taxes        = $live_taxes + $ret_tax;
+                $final_itemized_tax = !empty($flightDetails['itemized_taxes']) ? $flightDetails['itemized_taxes'] : array();
+            }
         } else {
-            $flightDetails['base_fare'] = round($unit_base * $pax_multiplier);
-            $flightDetails['taxes'] = round($unit_taxes * $pax_multiplier);
-            $flightDetails['price'] = $flightDetails['base_fare'] + $flightDetails['taxes'];
-            $flightDetails['net_amount'] = $flightDetails['base_fare'];
+            // One way flight
+            $final_flight_price = $live_gross_amount;
+            $final_base_fare    = $live_base_fare;
+            $final_taxes        = $live_taxes;
+            $final_itemized_tax = !empty($flightDetails['itemized_taxes']) ? $flightDetails['itemized_taxes'] : array();
         }
-        $flightDetails['cabin_class'] = $cabin_class;
-        $flightDetails['is_roundtrip'] = $is_roundtrip;
+
+        // Adjust for passenger count if the API quote was per single adult
+        if ($total_travelers > 1 && (!isset($flightDetails['raw']['ADT']) || (int)$flightDetails['raw']['ADT'] == 1)) {
+            $final_flight_price = round($final_flight_price * $pax_multiplier);
+            $final_base_fare    = round($final_base_fare * $pax_multiplier);
+            $final_taxes        = round($final_taxes * $pax_multiplier);
+        }
+
+        // Detect real-time Fare Change from Airline / GDS
+        $fare_updated = false;
+        $old_fare = round($search_total);
+        $new_fare = round($final_flight_price);
+
+        if (!empty($flightDetails['is_fare_changed']) || abs($new_fare - $old_fare) > 20) {
+            $fare_updated = true;
+        }
+
+        $airline_display_name = !empty($flightDetails['airline_name']) ? $flightDetails['airline_name'] : 'Airline';
+        $fare_change_msg = !empty($flightDetails['fare_change_msg']) 
+            ? $flightDetails['fare_change_msg'] 
+            : ("The airline (" . $airline_display_name . ") has updated the fare from ₹ " . number_format($old_fare) . " to ₹ " . number_format($new_fare) . " based on real-time availability. The updated fare is reflected below.");
+
+        $flightDetails['price']           = $final_flight_price;
+        $flightDetails['base_fare']       = $final_base_fare;
+        $flightDetails['total_base_fare'] = $final_base_fare;
+        $flightDetails['taxes']           = $final_taxes;
+        $flightDetails['total_tax']       = $final_taxes;
+        $flightDetails['itemized_taxes']  = $final_itemized_tax;
+        $flightDetails['net_amount']      = $live_net_amount;
+        $flightDetails['unit_price']      = $final_flight_price / max(1, $pax_multiplier);
+        $flightDetails['cabin_class']     = $cabin_class;
+        $flightDetails['is_roundtrip']    = $is_roundtrip;
 
         // Fetch Fare Rules (Cancellation & Date change policy)
         $fareRules = $this->benzyflightapi->getFareRule($tui);
@@ -447,11 +492,15 @@ class Welcome extends CI_Controller {
         // Fetch SSR options (Baggage, Meals, Seats)
         $ssrOptions = $this->benzyflightapi->getSSR($tui);
 
-        $data['flight'] = $flightDetails;
-        $data['return_flight'] = $returnFlight;
-        $data['is_roundtrip'] = $is_roundtrip;
-        $data['fare_rules'] = $fareRules;
-        $data['ssr'] = $ssrOptions;
+        $data['flight']          = $flightDetails;
+        $data['return_flight']   = $returnFlight;
+        $data['is_roundtrip']    = $is_roundtrip;
+        $data['fare_rules']      = $fareRules;
+        $data['ssr']             = $ssrOptions;
+        $data['fare_updated']    = $fare_updated;
+        $data['old_fare']        = $old_fare;
+        $data['new_fare']        = $new_fare;
+        $data['fare_change_msg'] = $fare_change_msg;
         $airportDisplayNames = array(
             'DEL' => 'Delhi (DEL)', 'BOM' => 'Mumbai (BOM)', 'BLR' => 'Bengaluru (BLR)',
             'MAA' => 'Chennai (MAA)', 'HYD' => 'Hyderabad (HYD)', 'CCU' => 'Kolkata (CCU)',
