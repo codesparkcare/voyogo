@@ -9,27 +9,27 @@ $post_data = $post_data ?? array();
 $flight = $flight ?? ($post_data['flight'] ?? null);
 $return_flight = $return_flight ?? ($post_data['return_flight'] ?? null);
 
-$flight_number = $flight_number ?? ($flight['flight_number'] ?? ($post_data['flight_number'] ?? '6E-2054'));
-$airline_name = $airline_name ?? ($flight['airline_name'] ?? ($post_data['airline_name'] ?? 'IndiGo'));
-$origin = strtoupper(trim($origin ?? ($flight['from_code'] ?? ($post_data['origin'] ?? 'BOM'))));
-$destination = strtoupper(trim($destination ?? ($flight['to_code'] ?? ($post_data['destination'] ?? 'DEL'))));
-$departure_date = $departure_date ?? ($flight['departure_date'] ?? ($post_data['departure_date'] ?? date('Y-m-d', strtotime('+3 days'))));
-$departure_time = $departure_time ?? ($flight['departure_time'] ?? ($post_data['departure_time'] ?? '06:00'));
-$arrival_time = $arrival_time ?? ($flight['arrival_time'] ?? ($post_data['arrival_time'] ?? '08:25'));
-$duration = $duration ?? ($flight['duration'] ?? ($post_data['duration'] ?? '02h 25m'));
-$stops = (int)($stops ?? ($flight['stops'] ?? ($post_data['stops'] ?? 0)));
+$flight_number = $flight_number ?? ($flight['flight_number'] ?? ($post_data['flight_number'] ?? 'SG-304'));
+$airline_name = $airline_name ?? ($flight['airline_name'] ?? ($post_data['airline_name'] ?? 'SpiceJet'));
+$origin = strtoupper(trim($origin ?? ($flight['from_code'] ?? ($post_data['origin'] ?? 'DEL'))));
+$destination = strtoupper(trim($destination ?? ($flight['to_code'] ?? ($post_data['destination'] ?? 'BOM'))));
+$departure_date = $departure_date ?? ($flight['departure_date'] ?? ($post_data['departure_date'] ?? '2026-10-28'));
+$departure_time = $departure_time ?? ($flight['departure_time'] ?? ($post_data['departure_time'] ?? '11:00'));
+$arrival_time = $arrival_time ?? ($flight['arrival_time'] ?? ($post_data['arrival_time'] ?? '15:45'));
+$duration = $duration ?? ($flight['duration'] ?? ($post_data['duration'] ?? '04h 45m'));
+$stops = (int)($stops ?? ($flight['stops'] ?? ($post_data['stops'] ?? 1)));
 $via = $via ?? ($flight['via'] ?? ($post_data['via'] ?? ''));
 
 $is_roundtrip = !empty($is_roundtrip) || !empty($post_data['is_roundtrip']) || !empty($post_data['return_flight_number']) || !empty($return_flight);
-$return_flight_number = $return_flight_number ?? ($return_flight['flight_number'] ?? ($post_data['return_flight_number'] ?? '6E-5021'));
-$return_airline_name = $return_airline_name ?? ($return_flight['airline_name'] ?? ($post_data['return_airline_name'] ?? $airline_name));
-$return_origin = strtoupper(trim($return_origin ?? ($return_flight['from_code'] ?? ($post_data['return_origin'] ?? $destination))));
-$return_destination = strtoupper(trim($return_destination ?? ($return_flight['to_code'] ?? ($post_data['return_destination'] ?? $origin))));
-$return_departure_date = $return_departure_date ?? ($return_flight['departure_date'] ?? ($post_data['return_departure_date'] ?? date('Y-m-d', strtotime('+12 days'))));
-$return_departure_time = $return_departure_time ?? ($return_flight['departure_time'] ?? ($post_data['return_departure_time'] ?? '18:30'));
-$return_arrival_time = $return_arrival_time ?? ($return_flight['arrival_time'] ?? ($post_data['return_arrival_time'] ?? '20:45'));
-$return_duration = $return_duration ?? ($return_flight['duration'] ?? ($post_data['return_duration'] ?? '13h 20m'));
-$return_stops = (int)($return_stops ?? ($return_flight['stops'] ?? ($post_data['return_stops'] ?? 0)));
+$return_flight_number = $return_flight_number ?? ($return_flight['flight_number'] ?? ($post_data['return_flight_number'] ?? 'AI-632'));
+$return_airline_name = $return_airline_name ?? ($return_flight['airline_name'] ?? ($post_data['return_airline_name'] ?? 'Air India'));
+$return_origin = strtoupper(trim($return_origin ?? ($return_flight['from_code'] ?? ($post_data['return_origin'] ?? 'BOM'))));
+$return_destination = strtoupper(trim($return_destination ?? ($return_flight['to_code'] ?? ($post_data['return_destination'] ?? 'DEL'))));
+$return_departure_date = $return_departure_date ?? ($return_flight['departure_date'] ?? ($post_data['return_departure_date'] ?? '2026-10-31'));
+$return_departure_time = $return_departure_time ?? ($return_flight['departure_time'] ?? ($post_data['return_departure_time'] ?? '19:45'));
+$return_arrival_time = $return_arrival_time ?? ($return_flight['arrival_time'] ?? ($post_data['return_arrival_time'] ?? '01:00'));
+$return_duration = $return_duration ?? ($return_flight['duration'] ?? ($post_data['return_duration'] ?? '05h 15m'));
+$return_stops = (int)($return_stops ?? ($return_flight['stops'] ?? ($post_data['return_stops'] ?? 1)));
 
 $airportDb = array(
     'BOM' => array('city' => 'Mumbai', 'name' => 'Chhatrapati Shivaji Maharaj Intl Airport'),
@@ -58,10 +58,10 @@ $destCity = $airportDb[$destination]['city'] ?? $destination;
 $retOriginCity = $airportDb[$return_origin]['city'] ?? $return_origin;
 $retDestCity = $airportDb[$return_destination]['city'] ?? $return_destination;
 
-$base_fare = (float)($base_fare ?? ($post_data['base_fare'] ?? ($post_data['net_amount'] ?? 10916)));
-$taxes = (float)($taxes ?? ($post_data['taxes'] ?? 2527));
+$base_fare = (float)($base_fare ?? ($post_data['base_fare'] ?? ($post_data['net_amount'] ?? 8739)));
+$taxes = (float)($taxes ?? ($post_data['taxes'] ?? 1531));
 $insurance_amount = (float)($insurance_amount ?? ($post_data['insurance_amount'] ?? 199));
-$discount_amount = (float)($discount_amount ?? ($post_data['discount_amount'] ?? 47));
+$discount_amount = (float)($discount_amount ?? ($post_data['discount_amount'] ?? 18));
 $promo_code = $promo_code ?? ($post_data['promo_code'] ?? 'ATFLY');
 
 $fare_tier = $fare_tier ?? ($post_data['fare_tier'] ?? 'Value');
@@ -72,16 +72,30 @@ $safety_cancellation_amount = (float)($safety_cancellation_amount ?? ($post_data
 $total_passengers = max(1, count($passengers ?? array()));
 $initialGrandTotal = max(0, $base_fare + $taxes + $insurance_amount + $safety_cancellation_amount - $discount_amount);
 
-$firstPaxName = 'Mrs DFGFDGDFG GFDGDG';
+$firstPaxName = 'Mr Rahul Sharma';
 if (!empty($passengers) && is_array($passengers)) {
     $firstPax = reset($passengers);
-    $firstPaxName = trim(($firstPax['title'] ?? 'Mr') . ' ' . ($firstPax['name'] ?? 'DFGFDGDFG GFDGDG'));
+    $firstPaxName = trim(($firstPax['title'] ?? 'Mr') . ' ' . ($firstPax['name'] ?? 'Rahul Sharma'));
 } elseif (!empty($post_data['passenger_name']) && is_array($post_data['passenger_name'])) {
     $title = $post_data['passenger_title'][0] ?? 'Mr';
-    $name = $post_data['passenger_name'][0] ?? 'DFGFDGDFG GFDGDG';
+    $name = $post_data['passenger_name'][0] ?? 'Rahul Sharma';
     $firstPaxName = trim($title . ' ' . $name);
 } elseif (!empty($post_data['contact_name'])) {
     $firstPaxName = 'Mr ' . trim($post_data['contact_name']);
+}
+
+// Enhance $addons_data with city labels for frontend JS consumption
+if (!empty($addons_data['onward'])) {
+    $addons_data['onward']['origin_city'] = $originCity;
+    $addons_data['onward']['destination_city'] = $destCity;
+    $addons_data['onward']['formatted_date'] = date('l, d M y', strtotime($departure_date));
+    $addons_data['onward']['pill_date'] = date('D, d M y', strtotime($departure_date));
+}
+if (!empty($addons_data['return'])) {
+    $addons_data['return']['origin_city'] = $retOriginCity;
+    $addons_data['return']['destination_city'] = $retDestCity;
+    $addons_data['return']['formatted_date'] = date('l, d M y', strtotime($return_departure_date));
+    $addons_data['return']['pill_date'] = date('D, d M y', strtotime($return_departure_date));
 }
 
 $razorpay_settings = $this->Admin_model->get_razorpay_settings();
@@ -101,13 +115,13 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         padding: 0 16px;
     }
 
-    /* Top Connected Flight Bar (Screenshots 1 & 4) */
+    /* Top Connected Flight Bar (Matches Screenshot 1) */
     .akbar-flight-summary-bar {
         background: #ffffff;
         border-radius: 12px;
         border: 1px solid #e2e8f0;
         box-shadow: 0 2px 10px rgba(0,32,90,0.03);
-        margin-bottom: 20px;
+        margin-bottom: 16px;
         overflow: hidden;
     }
     .flight-pill-grid {
@@ -181,7 +195,33 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         gap: 6px;
     }
 
-    /* Addon Main Card (Screenshots 1, 3, 4) */
+    /* Sub Flight Information Strip (Screenshot 1 Exact) */
+    .flight-sub-banner {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        padding: 0 4px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .flight-sub-banner-col {
+        display: flex;
+        flex-direction: column;
+    }
+    .flight-sub-banner-title {
+        font-size: 15.5px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+    .flight-sub-banner-desc {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 600;
+        margin-top: 3px;
+    }
+
+    /* Addon Main Card */
     .akbar-addon-card {
         background: #ffffff;
         border-radius: 12px;
@@ -197,7 +237,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         margin: 0 0 16px 0;
     }
 
-    /* Addon Navigation Tabs (Screenshots 1, 3, 4) */
+    /* Addon Navigation Tabs (Screenshots 1 & 2) */
     .akbar-tab-row {
         display: flex;
         gap: 12px;
@@ -228,13 +268,8 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         color: #dc2626;
         box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
     }
-    .akbar-tab-btn img, .akbar-tab-btn .tab-icon {
-        width: 24px;
-        height: 24px;
-        object-fit: contain;
-    }
 
-    /* Sector & Passenger Selectors (Screenshots 1, 3, 4) */
+    /* Sector & Passenger Selectors */
     .sector-selector-strip {
         border-top: 1px dashed #cbd5e1;
         padding-top: 18px;
@@ -360,7 +395,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
     }
 
     .card-img-wrapper {
-        min-height: 140px;
+        min-height: 130px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -370,7 +405,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         padding: 10px;
     }
 
-    /* Seat Selection Fuselage Styles (Screenshot 4) */
+    /* Seat Selection Fuselage Styles (Screenshot 2 Match) */
     .seat-cabin-container {
         display: grid;
         grid-template-columns: 240px 1fr;
@@ -411,18 +446,18 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
     }
 
     .airplane-fuselage {
-        max-width: 360px;
+        max-width: 380px;
         margin: 0 auto;
         border: 1.5px solid #cbd5e1;
         border-radius: 140px 140px 24px 24px;
         background: #ffffff;
-        padding: 24px 16px 30px;
+        padding: 24px 16px 24px;
         position: relative;
         box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     }
     .plane-nose-front {
         text-align: center;
-        margin-bottom: 22px;
+        margin-bottom: 20px;
     }
     .plane-nose-circle {
         width: 30px;
@@ -444,7 +479,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
     .exit-marker-left {
         position: absolute;
         left: -18px;
-        top: 155px;
+        top: 20px;
         font-size: 11px;
         font-weight: 800;
         color: #f97316;
@@ -453,7 +488,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
     .exit-marker-right {
         position: absolute;
         right: -18px;
-        top: 155px;
+        top: 20px;
         font-size: 11px;
         font-weight: 800;
         color: #f97316;
@@ -461,26 +496,51 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
     }
     .seat-grid-columns {
         display: flex;
+        align-items: center;
         justify-content: center;
         gap: 6px;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         font-size: 12px;
         font-weight: 800;
         color: #64748b;
     }
     .seat-col-header {
-        width: 30px;
+        width: 32px;
         text-align: center;
     }
     .seat-aisle-header {
-        width: 28px;
+        width: 24px;
     }
+
+    .fuselage-scroll-area {
+        max-height: 540px;
+        overflow-y: auto;
+        padding: 4px 4px;
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 #f8fafc;
+    }
+    .fuselage-scroll-area::-webkit-scrollbar {
+        width: 6px;
+    }
+    .fuselage-scroll-area::-webkit-scrollbar-track {
+        background: #f8fafc;
+        border-radius: 3px;
+    }
+    .fuselage-scroll-area::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+    }
+    .fuselage-scroll-area::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
     .plane-seat-row {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
         margin-bottom: 6px;
+        position: relative;
     }
     .plane-seat-num {
         width: 16px;
@@ -490,8 +550,8 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         color: #0f172a;
     }
     .fuselage-seat {
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
         border-radius: 5px;
         display: flex;
         align-items: center;
@@ -501,6 +561,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         font-weight: 700;
         transition: all 0.15s ease;
         user-select: none;
+        box-sizing: border-box;
     }
     .fuselage-seat.tier-orange {
         background: #fdba74;
@@ -528,11 +589,8 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         color: #94a3b8;
         cursor: not-allowed;
         position: relative;
-    }
-    .fuselage-seat.booked::after {
-        content: '\2573';
         font-size: 11px;
-        color: #94a3b8;
+        font-weight: 800;
     }
     .fuselage-seat.selected {
         background: #16a34a !important;
@@ -541,7 +599,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         box-shadow: 0 2px 8px rgba(22, 163, 74, 0.4);
     }
 
-    /* Bottom Action Bar (Screenshots 1, 3, 4) */
+    /* Bottom Action Bar */
     .akbar-bottom-bar {
         border-top: 1px solid #f1f5f9;
         padding-top: 20px;
@@ -580,13 +638,14 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
 <div class="akbar-addons-wrapper">
     <div class="akbar-addons-container">
 
-        <!-- Top Flight Summary Bar (Screenshots 1 & 4 Match) -->
+        <!-- Top Navigation -->
         <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
             <a href="javascript:history.back();" style="color: #0284c7; text-decoration: none; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
                 <i class="fa-solid fa-chevron-left" style="font-size: 11px;"></i> Back to Flight details
             </a>
         </div>
 
+        <!-- Top Flight Summary Bar (Screenshot 1 Exact) -->
         <div class="akbar-flight-summary-bar">
             <div class="flight-pill-grid">
                 
@@ -670,10 +729,33 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
             </div>
         </div>
 
+        <!-- Prominent Flight Sub-Banner (Screenshot 1 Exact) -->
+        <div class="flight-sub-banner">
+            <div class="flight-sub-banner-col" id="subBannerOnward">
+                <div class="flight-sub-banner-title">
+                    <?php echo htmlspecialchars($airline_name); ?> (<?php echo htmlspecialchars($flight_number); ?>)
+                </div>
+                <div class="flight-sub-banner-desc">
+                    <?php echo htmlspecialchars($origin); ?> &rarr; <?php echo htmlspecialchars($destination); ?> &bull; Dep: <?php echo htmlspecialchars($departure_time); ?> &bull; Arr: <?php echo htmlspecialchars($arrival_time); ?>
+                </div>
+            </div>
+
+            <?php if ($is_roundtrip): ?>
+            <div class="flight-sub-banner-col" id="subBannerReturn" style="text-align: right;">
+                <div class="flight-sub-banner-title">
+                    <?php echo htmlspecialchars($return_airline_name); ?> (<?php echo htmlspecialchars($return_flight_number); ?>)
+                </div>
+                <div class="flight-sub-banner-desc">
+                    <?php echo htmlspecialchars($return_origin); ?> &rarr; <?php echo htmlspecialchars($return_destination); ?> &bull; Dep: <?php echo htmlspecialchars($return_departure_time); ?> &bull; Arr: <?php echo htmlspecialchars($return_arrival_time); ?>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+
         <!-- Main 2-Column Grid -->
         <div style="display: grid; grid-template-columns: 2.3fr 1fr; gap: 24px;">
 
-            <!-- Left Column: Addon Services (Screenshots 1, 3, 4) -->
+            <!-- Left Column: Addon Services (Screenshots 1 & 2) -->
             <div>
                 <div class="akbar-addon-card">
                     <h2 class="akbar-addon-title">Addon Services</h2>
@@ -686,23 +768,23 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                             <span>Meals</span>
                         </button>
 
-                        <!-- Baggage Tab (Screenshot 3) -->
+                        <!-- Baggage Tab (Screenshot 1) -->
                         <button type="button" class="akbar-tab-btn" id="tabBtn_baggage" onclick="switchAddonTab('baggage', this)">
                             <span style="font-size: 18px;">🧳</span>
                             <span>Baggage</span>
                         </button>
 
-                        <!-- Seat Selection Tab (Screenshot 4) -->
+                        <!-- Seat Selection Tab (Screenshot 2) -->
                         <button type="button" class="akbar-tab-btn" id="tabBtn_seats" onclick="switchAddonTab('seats', this)">
                             <span style="font-size: 18px;">💺</span>
                             <span>Seat Selection</span>
                         </button>
                     </div>
 
-                    <!-- Sector & Passenger Selectors (Screenshots 1, 3, 4) -->
+                    <!-- Sector & Passenger Selectors (Screenshots 1 & 2) -->
                     <div class="sector-selector-strip">
                         <div class="sector-btn-group">
-                            <div class="sector-btn active" id="sectorBtn_1" onclick="switchSector('onward', this)">
+                            <div class="sector-btn active" id="sectorBtn_onward" onclick="switchSector('onward', this)">
                                 <span><?php echo htmlspecialchars($origin); ?> <i class="fa-solid fa-arrow-right" style="font-size: 11px;"></i> <?php echo htmlspecialchars($destination); ?></span>
                                 <span style="color: #cbd5e1;">|</span>
                                 <span><?php echo date('D, d M y', strtotime($departure_date)); ?></span>
@@ -711,7 +793,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                             </div>
 
                             <?php if ($is_roundtrip): ?>
-                            <div class="sector-btn inactive" id="sectorBtn_2" onclick="switchSector('return', this)">
+                            <div class="sector-btn inactive" id="sectorBtn_return" onclick="switchSector('return', this)">
                                 <span><?php echo htmlspecialchars($return_origin); ?> <i class="fa-solid fa-arrow-right" style="font-size: 11px;"></i> <?php echo htmlspecialchars($return_destination); ?></span>
                                 <span style="color: #cbd5e1;">|</span>
                                 <span><?php echo date('D, d M y', strtotime($return_departure_date)); ?></span>
@@ -732,279 +814,36 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
 
                     <!-- TAB CONTENT 1: MEALS (Screenshot 1 Exact Match) -->
                     <div id="tabContent_meals" class="addon-tab-content" style="display: block;">
-                        <div class="addon-items-grid">
-                            
-                            <!-- Meal 1: Amul Kool Cafe (Cold Coffee) -->
-                            <div class="akbar-service-card meal-item-card" onclick="selectMealItem('MEAL_AKC', 'Amul Kool Cafe (Cold Coffee)', 100, this)">
-                                <div class="card-radio-circle"></div>
-                                <div class="card-img-wrapper">
-                                    <div style="width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, #fb923c, #ea580c); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(234,88,12,0.25);">
-                                        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"></path>
-                                            <path d="M15 2v10"></path>
-                                            <path d="M12 2v6"></path>
-                                            <path d="M18 10v12"></path>
-                                            <path d="M6 2v20"></path>
-                                            <path d="M6 2a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 18px; font-weight: 800; color: #0f172a;">₹ 100</div>
-                                    <div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 4px; line-height: 1.35;">Amul Kool Cafe (Cold Coffee)</div>
-                                </div>
-                            </div>
-
-                            <!-- Meal 2: Rawcha Basil Shikanji -->
-                            <div class="akbar-service-card meal-item-card" onclick="selectMealItem('MEAL_RBS', 'Rawcha Basil Shikanji', 100, this)">
-                                <div class="card-radio-circle"></div>
-                                <div class="card-img-wrapper">
-                                    <div style="width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, #fb923c, #ea580c); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(234,88,12,0.25);">
-                                        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"></path>
-                                            <path d="M15 2v10"></path>
-                                            <path d="M12 2v6"></path>
-                                            <path d="M18 10v12"></path>
-                                            <path d="M6 2v20"></path>
-                                            <path d="M6 2a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 18px; font-weight: 800; color: #0f172a;">₹ 100</div>
-                                    <div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 4px; line-height: 1.35;">Rawcha Basil Shikanji</div>
-                                </div>
-                            </div>
-
-                            <!-- Meal 3: Black Coffee -->
-                            <div class="akbar-service-card meal-item-card" onclick="selectMealItem('MEAL_BCF', 'Black Coffee', 100, this)">
-                                <div class="card-radio-circle"></div>
-                                <div class="card-img-wrapper">
-                                    <div style="width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, #fb923c, #ea580c); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(234,88,12,0.25);">
-                                        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"></path>
-                                            <path d="M15 2v10"></path>
-                                            <path d="M12 2v6"></path>
-                                            <path d="M18 10v12"></path>
-                                            <path d="M6 2v20"></path>
-                                            <path d="M6 2a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 18px; font-weight: 800; color: #0f172a;">₹ 100</div>
-                                    <div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 4px; line-height: 1.35;">Black Coffee</div>
-                                </div>
-                            </div>
-
-                            <!-- Meal 4: Coconut Water -->
-                            <div class="akbar-service-card meal-item-card" onclick="selectMealItem('MEAL_CWT', 'Coconut Water', 100, this)">
-                                <div class="card-radio-circle"></div>
-                                <div class="card-img-wrapper">
-                                    <div style="width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, #fb923c, #ea580c); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(234,88,12,0.25);">
-                                        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"></path>
-                                            <path d="M15 2v10"></path>
-                                            <path d="M12 2v6"></path>
-                                            <path d="M18 10v12"></path>
-                                            <path d="M6 2v20"></path>
-                                            <path d="M6 2a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 18px; font-weight: 800; color: #0f172a;">₹ 100</div>
-                                    <div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 4px; line-height: 1.35;">Coconut Water</div>
-                                </div>
-                            </div>
-
+                        <div class="addon-items-grid" id="mealsGridContainer">
+                            <!-- Populated dynamically based on active sector airline from Benzy APIs -->
                         </div>
                     </div>
 
                     <!-- TAB CONTENT 2: BAGGAGE (Screenshot 3 Exact Match) -->
                     <div id="tabContent_baggage" class="addon-tab-content" style="display: none;">
-                        <div class="addon-items-grid">
-                            
-                            <!-- 3 Kgs - Cyan Suitcase -->
-                            <div class="akbar-service-card baggage-item-card" onclick="selectBaggageItem('XBPE', '3 Kgs', 2100, this)">
-                                <div class="card-radio-circle"></div>
-                                <div class="card-img-wrapper">
-                                    <!-- Cyan 3D Rolling Suitcase -->
-                                    <svg width="100" height="120" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <defs>
-                                            <linearGradient id="cyanBody" x1="0" y1="20" x2="80" y2="105" gradientUnits="userSpaceOnUse">
-                                                <stop offset="0%" stop-color="#38bdf8"/>
-                                                <stop offset="50%" stop-color="#0284c7"/>
-                                                <stop offset="100%" stop-color="#0369a1"/>
-                                            </linearGradient>
-                                        </defs>
-                                        <!-- Handle -->
-                                        <rect x="36" y="2" width="28" height="5" rx="2.5" fill="#475569"/>
-                                        <rect x="41" y="7" width="3" height="18" fill="#94a3b8"/>
-                                        <rect x="56" y="7" width="3" height="18" fill="#94a3b8"/>
-                                        <!-- Suitcase Body -->
-                                        <rect x="18" y="24" width="64" height="82" rx="12" fill="url(#cyanBody)"/>
-                                        <!-- Front Ridges -->
-                                        <line x1="32" y1="36" x2="32" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <line x1="44" y1="36" x2="44" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <line x1="56" y1="36" x2="56" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <line x1="68" y1="36" x2="68" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <!-- Carry Handle -->
-                                        <rect x="40" y="21" width="20" height="5" rx="2" fill="#1e293b"/>
-                                        <!-- Wheels -->
-                                        <circle cx="28" cy="110" r="4.5" fill="#1e293b"/>
-                                        <circle cx="28" cy="110" r="2" fill="#94a3b8"/>
-                                        <circle cx="72" cy="110" r="4.5" fill="#1e293b"/>
-                                        <circle cx="72" cy="110" r="2" fill="#94a3b8"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div style="font-size: 19px; font-weight: 800; color: #0f172a;">₹2100</div>
-                                    <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Prepaid excess baggage</div>
-                                    <div style="font-size: 13.5px; font-weight: 800; color: #0f172a; margin-top: 2px;">3 Kgs</div>
-                                </div>
-                            </div>
-
-                            <!-- 5 kgs - Red Suitcase -->
-                            <div class="akbar-service-card baggage-item-card" onclick="selectBaggageItem('XBPA', '5 kgs', 3750, this)">
-                                <div class="card-radio-circle"></div>
-                                <div class="card-img-wrapper">
-                                    <!-- Red 3D Rolling Suitcase -->
-                                    <svg width="100" height="120" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <defs>
-                                            <linearGradient id="redBody" x1="0" y1="20" x2="80" y2="105" gradientUnits="userSpaceOnUse">
-                                                <stop offset="0%" stop-color="#f87171"/>
-                                                <stop offset="50%" stop-color="#ef4444"/>
-                                                <stop offset="100%" stop-color="#b91c1c"/>
-                                            </linearGradient>
-                                        </defs>
-                                        <!-- Handle -->
-                                        <rect x="36" y="2" width="28" height="5" rx="2.5" fill="#475569"/>
-                                        <rect x="41" y="7" width="3" height="18" fill="#94a3b8"/>
-                                        <rect x="56" y="7" width="3" height="18" fill="#94a3b8"/>
-                                        <!-- Suitcase Body -->
-                                        <rect x="18" y="24" width="64" height="82" rx="12" fill="url(#redBody)"/>
-                                        <!-- Front Ridges -->
-                                        <line x1="32" y1="36" x2="32" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <line x1="44" y1="36" x2="44" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <line x1="56" y1="36" x2="56" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <line x1="68" y1="36" x2="68" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <!-- Carry Handle -->
-                                        <rect x="40" y="21" width="20" height="5" rx="2" fill="#1e293b"/>
-                                        <!-- Wheels -->
-                                        <circle cx="28" cy="110" r="4.5" fill="#1e293b"/>
-                                        <circle cx="28" cy="110" r="2" fill="#94a3b8"/>
-                                        <circle cx="72" cy="110" r="4.5" fill="#1e293b"/>
-                                        <circle cx="72" cy="110" r="2" fill="#94a3b8"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div style="font-size: 19px; font-weight: 800; color: #0f172a;">₹3750</div>
-                                    <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Prepaid excess baggage</div>
-                                    <div style="font-size: 13.5px; font-weight: 800; color: #0f172a; margin-top: 2px;">5 kgs</div>
-                                </div>
-                            </div>
-
-                            <!-- 10 kgs - Orange Suitcase -->
-                            <div class="akbar-service-card baggage-item-card" onclick="selectBaggageItem('XBPB', '10 kgs', 7250, this)">
-                                <div class="card-radio-circle"></div>
-                                <div class="card-img-wrapper">
-                                    <!-- Orange 3D Rolling Suitcase -->
-                                    <svg width="100" height="120" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <defs>
-                                            <linearGradient id="orangeBody" x1="0" y1="20" x2="80" y2="105" gradientUnits="userSpaceOnUse">
-                                                <stop offset="0%" stop-color="#fb923c"/>
-                                                <stop offset="50%" stop-color="#f97316"/>
-                                                <stop offset="100%" stop-color="#c2410c"/>
-                                            </linearGradient>
-                                        </defs>
-                                        <!-- Handle -->
-                                        <rect x="36" y="2" width="28" height="5" rx="2.5" fill="#475569"/>
-                                        <rect x="41" y="7" width="3" height="18" fill="#94a3b8"/>
-                                        <rect x="56" y="7" width="3" height="18" fill="#94a3b8"/>
-                                        <!-- Suitcase Body -->
-                                        <rect x="18" y="24" width="64" height="82" rx="12" fill="url(#orangeBody)"/>
-                                        <!-- Front Ridges -->
-                                        <line x1="32" y1="36" x2="32" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <line x1="44" y1="36" x2="44" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <line x1="56" y1="36" x2="56" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <line x1="68" y1="36" x2="68" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <!-- Carry Handle -->
-                                        <rect x="40" y="21" width="20" height="5" rx="2" fill="#1e293b"/>
-                                        <!-- Wheels -->
-                                        <circle cx="28" cy="110" r="4.5" fill="#1e293b"/>
-                                        <circle cx="28" cy="110" r="2" fill="#94a3b8"/>
-                                        <circle cx="72" cy="110" r="4.5" fill="#1e293b"/>
-                                        <circle cx="72" cy="110" r="2" fill="#94a3b8"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div style="font-size: 19px; font-weight: 800; color: #0f172a;">₹7250</div>
-                                    <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Prepaid excess baggage</div>
-                                    <div style="font-size: 13.5px; font-weight: 800; color: #0f172a; margin-top: 2px;">10 kgs</div>
-                                </div>
-                            </div>
-
-                            <!-- 15 kgs - Pink Suitcase -->
-                            <div class="akbar-service-card baggage-item-card" onclick="selectBaggageItem('XBPC', '15 kgs', 10500, this)">
-                                <div class="card-radio-circle"></div>
-                                <div class="card-img-wrapper">
-                                    <!-- Pink 3D Rolling Suitcase -->
-                                    <svg width="100" height="120" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <defs>
-                                            <linearGradient id="pinkBody" x1="0" y1="20" x2="80" y2="105" gradientUnits="userSpaceOnUse">
-                                                <stop offset="0%" stop-color="#f472b6"/>
-                                                <stop offset="50%" stop-color="#ec4899"/>
-                                                <stop offset="100%" stop-color="#be185d"/>
-                                            </linearGradient>
-                                        </defs>
-                                        <!-- Handle -->
-                                        <rect x="36" y="2" width="28" height="5" rx="2.5" fill="#475569"/>
-                                        <rect x="41" y="7" width="3" height="18" fill="#94a3b8"/>
-                                        <rect x="56" y="7" width="3" height="18" fill="#94a3b8"/>
-                                        <!-- Suitcase Body -->
-                                        <rect x="18" y="24" width="64" height="82" rx="12" fill="url(#pinkBody)"/>
-                                        <!-- Front Ridges -->
-                                        <line x1="32" y1="36" x2="32" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <line x1="44" y1="36" x2="44" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <line x1="56" y1="36" x2="56" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <line x1="68" y1="36" x2="68" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-                                        <!-- Carry Handle -->
-                                        <rect x="40" y="21" width="20" height="5" rx="2" fill="#1e293b"/>
-                                        <!-- Wheels -->
-                                        <circle cx="28" cy="110" r="4.5" fill="#1e293b"/>
-                                        <circle cx="28" cy="110" r="2" fill="#94a3b8"/>
-                                        <circle cx="72" cy="110" r="4.5" fill="#1e293b"/>
-                                        <circle cx="72" cy="110" r="2" fill="#94a3b8"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div style="font-size: 19px; font-weight: 800; color: #0f172a;">₹10500</div>
-                                    <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Prepaid excess baggage</div>
-                                    <div style="font-size: 13.5px; font-weight: 800; color: #0f172a; margin-top: 2px;">15 kgs</div>
-                                </div>
-                            </div>
-
+                        <div class="addon-items-grid" id="baggageGridContainer">
+                            <!-- Populated dynamically based on active sector airline from Benzy APIs -->
                         </div>
                     </div>
 
-                    <!-- TAB CONTENT 3: SEAT SELECTION (Screenshot 4 Exact Match) -->
+                    <!-- TAB CONTENT 3: SEAT SELECTION (Screenshot 2 Exact Match) -->
                     <div id="tabContent_seats" class="addon-tab-content" style="display: none;">
+                        
                         <div style="margin-top: 14px; margin-bottom: 8px;">
-                            <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0;">
+                            <h3 id="seatSectorTitle" style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0;">
                                 <?php echo htmlspecialchars($originCity); ?> &rarr; <?php echo htmlspecialchars($destCity); ?>
                             </h3>
-                            <div style="font-size: 13px; color: #475569; font-weight: 600; margin-top: 3px;">
+                            <div id="seatSectorDate" style="font-size: 13px; color: #475569; font-weight: 600; margin-top: 3px;">
                                 <?php echo date('l, d M y', strtotime($departure_date)); ?>
                             </div>
                         </div>
 
                         <div class="seat-cabin-container">
                             
-                            <!-- Left: Seat Legend (Screenshot 4) -->
+                            <!-- Left: Seat Legend (Screenshot 2) -->
                             <div class="seat-legend-box">
                                 <div class="legend-row">
-                                    <span class="legend-swatch" style="border: 1.5px solid #cbd5e1; background: #ffffff; color: #94a3b8;">&#x2573;</span>
+                                    <span class="legend-swatch" style="border: 1.5px solid #cbd5e1; background: #ffffff; color: #94a3b8; font-weight: 800;">&#x2573;</span>
                                     <span>Already booked</span>
                                 </div>
                                 <div class="legend-row">
@@ -1029,7 +868,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                                 </div>
                             </div>
 
-                            <!-- Center: Airplane Fuselage (Screenshot 4) -->
+                            <!-- Center: Airplane Fuselage (Screenshot 2 Exact) -->
                             <div class="airplane-fuselage">
                                 
                                 <span class="exit-marker-left">Exit</span>
@@ -1056,64 +895,16 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                                     <div class="plane-seat-num"></div>
                                 </div>
 
-                                <!-- Rows 1 to 9 (Screenshot 4 Exact Match) -->
-                                <?php
-                                $seatMapData = array(
-                                    1 => array('tier' => 'tier-orange', 'price' => 1650, 'booked' => array()),
-                                    2 => array('tier' => 'tier-blue', 'price' => 350, 'booked' => array('A', 'E', 'F')),
-                                    3 => array('tier' => 'tier-blue', 'price' => 350, 'booked' => array('A')),
-                                    4 => array('tier' => 'tier-blue', 'price' => 350, 'booked' => array()),
-                                    5 => array('tier' => 'tier-blue', 'price' => 350, 'booked' => array('F')),
-                                    6 => array('tier' => 'tier-blue', 'price' => 250, 'booked' => array()),
-                                    7 => array('tier' => 'tier-blue', 'price' => 250, 'booked' => array()),
-                                    8 => array('tier' => 'tier-blue', 'price' => 250, 'booked' => array()),
-                                    9 => array('tier' => 'tier-blue', 'price' => 250, 'booked' => array())
-                                );
-
-                                for ($r = 1; $r <= 9; $r++):
-                                    $rowInfo = $seatMapData[$r];
-                                ?>
-                                <div class="plane-seat-row">
-                                    <div class="plane-seat-num"><?php echo $r; ?></div>
-                                    
-                                    <!-- A, B, C -->
-                                    <?php foreach (array('A', 'B', 'C') as $col): 
-                                        $seatCode = $r . $col;
-                                        $isBooked = in_array($col, $rowInfo['booked']);
-                                    ?>
-                                        <div class="fuselage-seat <?php echo $isBooked ? 'booked' : $rowInfo['tier']; ?>"
-                                             data-seat="<?php echo $seatCode; ?>"
-                                             data-price="<?php echo $rowInfo['price']; ?>"
-                                             onclick="<?php echo $isBooked ? '' : "selectSeatItem('{$seatCode}', {$rowInfo['price']}, this)"; ?>"
-                                             title="Seat <?php echo $seatCode; ?> (₹<?php echo $rowInfo['price']; ?>)">
-                                        </div>
-                                    <?php endforeach; ?>
-
-                                    <!-- Aisle -->
-                                    <div class="seat-aisle-header"></div>
-
-                                    <!-- D, E, F -->
-                                    <?php foreach (array('D', 'E', 'F') as $col): 
-                                        $seatCode = $r . $col;
-                                        $isBooked = in_array($col, $rowInfo['booked']);
-                                    ?>
-                                        <div class="fuselage-seat <?php echo $isBooked ? 'booked' : $rowInfo['tier']; ?>"
-                                             data-seat="<?php echo $seatCode; ?>"
-                                             data-price="<?php echo $rowInfo['price']; ?>"
-                                             onclick="<?php echo $isBooked ? '' : "selectSeatItem('{$seatCode}', {$rowInfo['price']}, this)"; ?>"
-                                             title="Seat <?php echo $seatCode; ?> (₹<?php echo $rowInfo['price']; ?>)">
-                                        </div>
-                                    <?php endforeach; ?>
-
-                                    <div class="plane-seat-num"><?php echo $r; ?></div>
+                                <!-- Scrollable Container for All 30 Rows from Benzy API -->
+                                <div class="fuselage-scroll-area" id="seatRowsContainer">
+                                    <!-- Populated dynamically with live booking status and prices -->
                                 </div>
-                                <?php endfor; ?>
 
                             </div>
                         </div>
                     </div>
 
-                    <!-- Bottom Action Bar (Screenshots 1, 3, 4) -->
+                    <!-- Bottom Action Bar (Screenshots 1 & 2) -->
                     <div class="akbar-bottom-bar">
                         <div>
                             <div style="font-size: 13px; font-weight: 700; color: #64748b;">Total Amount</div>
@@ -1129,11 +920,11 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                 </div>
             </div>
 
-            <!-- Right Column: Sticky Fare Details & Promo Code Sidebar (Screenshots 1 & 4) -->
+            <!-- Right Column: Sticky Fare Details & Promo Code Sidebar (Screenshots 1 & 2) -->
             <div>
                 <div style="position: sticky; top: 90px; display: flex; flex-direction: column; gap: 18px;">
                     
-                    <!-- 1. Fare Details Card (Screenshots 1 & 4) -->
+                    <!-- 1. Fare Details Card (Screenshots 1 & 2) -->
                     <div style="background: #ffffff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
                             <strong style="font-size: 15px; color: #0f172a; font-weight: 700;">Fare Details</strong>
@@ -1217,7 +1008,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                         </div>
                     </div>
 
-                    <!-- 2. Promo Code Card (Screenshots 1 & 4 Exact Match) -->
+                    <!-- 2. Promo Code Card (Screenshots 1 & 2 Exact Match) -->
                     <div style="background: #ffffff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                         <strong style="font-size: 15px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 12px;">Promo Code</strong>
 
@@ -1286,22 +1077,22 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                                 </div>
                             </div>
 
-                            <!-- Offer 5: ATFLY (Save 47 - Default Checked) -->
-                            <div class="promo-item active-promo" onclick="applyPromoOption('ATFLY', 47, this)" style="display: flex; align-items: flex-start; gap: 10px; padding: 10px; border: 1.5px solid #22c55e; background: #f0fdf4; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
+                            <!-- Offer 5: ATFLY (Save 18 - Default Checked) -->
+                            <div class="promo-item active-promo" onclick="applyPromoOption('ATFLY', <?php echo $discount_amount; ?>, this)" style="display: flex; align-items: flex-start; gap: 10px; padding: 10px; border: 1.5px solid #22c55e; background: #f0fdf4; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
                                 <input type="radio" name="promo_radio" id="p_ATFLY" checked style="margin-top: 3px; accent-color: #ef4444;">
                                 <div style="flex: 1;">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <strong style="font-size: 12.5px; color: #0f172a;">ATFLY</strong>
-                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a;">Save 47</span>
+                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a;">Save <?php echo number_format($discount_amount); ?></span>
                                     </div>
-                                    <div style="font-size: 10.5px; color: #64748b; margin-top: 2px;">Flat ₹ 47 Instant Web Discount applied automatically!</div>
+                                    <div style="font-size: 10.5px; color: #64748b; margin-top: 2px;">Your Promocode has been applied you've saved ₹ <?php echo number_format($discount_amount); ?></div>
                                 </div>
                             </div>
 
                         </div>
                     </div>
 
-                    <!-- 3. Trust Badges (Screenshot 3 Match) -->
+                    <!-- 3. Trust Badges (Screenshot 2 Match) -->
                     <div style="background: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0; padding: 14px 16px; font-size: 12px; color: #475569; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <i class="fa-solid fa-shield-halved" style="color: #2563eb; font-size: 15px;"></i>
@@ -1335,6 +1126,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         <?php endforeach; ?>
     <?php endif; ?>
 
+    <!-- Onward Sector Addon Hidden Fields -->
     <input type="hidden" name="selected_baggage_code" id="form_baggage_code" value="">
     <input type="hidden" name="selected_baggage_desc" id="form_baggage_desc" value="">
     <input type="hidden" name="selected_baggage_amount" id="form_baggage_amount" value="0">
@@ -1345,6 +1137,20 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
 
     <input type="hidden" name="selected_seat_code" id="form_seat_code" value="">
     <input type="hidden" name="selected_seat_amount" id="form_seat_amount" value="0">
+    <input type="hidden" name="selected_seat_ssid" id="form_seat_ssid" value="0">
+
+    <!-- Return Sector Addon Hidden Fields -->
+    <input type="hidden" name="return_selected_baggage_code" id="form_ret_baggage_code" value="">
+    <input type="hidden" name="return_selected_baggage_desc" id="form_ret_baggage_desc" value="">
+    <input type="hidden" name="return_selected_baggage_amount" id="form_ret_baggage_amount" value="0">
+
+    <input type="hidden" name="return_selected_meal_code" id="form_ret_meal_code" value="">
+    <input type="hidden" name="return_selected_meal_desc" id="form_ret_meal_desc" value="">
+    <input type="hidden" name="return_selected_meal_amount" id="form_ret_meal_amount" value="0">
+
+    <input type="hidden" name="return_selected_seat_code" id="form_ret_seat_code" value="">
+    <input type="hidden" name="return_selected_seat_amount" id="form_ret_seat_amount" value="0">
+    <input type="hidden" name="return_selected_seat_ssid" id="form_ret_seat_ssid" value="0">
 
     <input type="hidden" name="total_amount" id="form_final_grand_total" value="<?php echo $initialGrandTotal; ?>">
     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
@@ -1352,14 +1158,286 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+// Live Benzy API Addons Data passed from Controller
+var addonsData = <?php echo json_encode($addons_data); ?>;
+var isRoundtrip = <?php echo !empty($is_roundtrip) ? 'true' : 'false'; ?>;
+var currentSector = 'onward'; // 'onward' or 'return'
+
 var baseFlightAmount = <?php echo (float)($base_fare + $taxes + $insurance_amount + $safety_cancellation_amount + $fare_tier_price_delta); ?>;
 var appliedDiscount = <?php echo (float)$discount_amount; ?>;
 var appliedPromoCode = "<?php echo htmlspecialchars($promo_code); ?>";
 
-var selectedBaggagePrice = 0;
-var selectedMealPrice = 0;
-var selectedSeatPrice = 0;
+// Separate user addon selections per flight sector
+var userSelections = {
+    onward: {
+        meal: null,    // { code, name, price, ssid }
+        baggage: null, // { code, desc, weight, price, ssid }
+        seat: null     // { code, price, ssid }
+    },
+    return: {
+        meal: null,
+        baggage: null,
+        seat: null
+    }
+};
 
+// 3D Suitcase SVGs per weight tier matching Akbar / Benzy UI
+function getSuitcaseSvg(weightTier) {
+    var gradId = 'suitGrad_' + Math.random().toString(36).substr(2, 6);
+    var c1 = '#38bdf8', c2 = '#0284c7', c3 = '#0369a1'; // Default Cyan
+    
+    var w = parseInt(weightTier) || 0;
+    if (w <= 3) {
+        c1 = '#38bdf8'; c2 = '#0284c7'; c3 = '#0369a1'; // Cyan (3 kg)
+    } else if (w <= 5) {
+        c1 = '#f87171'; c2 = '#ef4444'; c3 = '#b91c1c'; // Red (5 kg)
+    } else if (w <= 10) {
+        c1 = '#fb923c'; c2 = '#f97316'; c3 = '#c2410c'; // Orange (10 kg)
+    } else if (w <= 15) {
+        c1 = '#f472b6'; c2 = '#ec4899'; c3 = '#be185d'; // Pink (15 kg)
+    } else if (w <= 20) {
+        c1 = '#c084fc'; c2 = '#a855f7'; c3 = '#7e22ce'; // Purple (20 kg)
+    } else {
+        c1 = '#34d399'; c2 = '#10b981'; c3 = '#047857'; // Emerald (>20 kg)
+    }
+
+    return '<svg width="96" height="114" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<defs>' +
+            '<linearGradient id="' + gradId + '" x1="0" y1="20" x2="80" y2="105" gradientUnits="userSpaceOnUse">' +
+                '<stop offset="0%" stop-color="' + c1 + '"/>' +
+                '<stop offset="50%" stop-color="' + c2 + '"/>' +
+                '<stop offset="100%" stop-color="' + c3 + '"/>' +
+            '</linearGradient>' +
+        '</defs>' +
+        '<rect x="36" y="2" width="28" height="5" rx="2.5" fill="#475569"/>' +
+        '<rect x="41" y="7" width="3" height="18" fill="#94a3b8"/>' +
+        '<rect x="56" y="7" width="3" height="18" fill="#94a3b8"/>' +
+        '<rect x="18" y="24" width="64" height="82" rx="12" fill="url(#' + gradId + ')"/>' +
+        '<line x1="32" y1="36" x2="32" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>' +
+        '<line x1="44" y1="36" x2="44" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>' +
+        '<line x1="56" y1="36" x2="56" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>' +
+        '<line x1="68" y1="36" x2="68" y2="94" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>' +
+        '<rect x="40" y="21" width="20" height="5" rx="2" fill="#1e293b"/>' +
+        '<circle cx="28" cy="110" r="4.5" fill="#1e293b"/>' +
+        '<circle cx="28" cy="110" r="2" fill="#94a3b8"/>' +
+        '<circle cx="72" cy="110" r="4.5" fill="#1e293b"/>' +
+        '<circle cx="72" cy="110" r="2" fill="#94a3b8"/>' +
+    '</svg>';
+}
+
+// Render dynamic Meals grid from Benzy SSR
+function renderMeals(sector) {
+    var container = document.getElementById('mealsGridContainer');
+    if (!container) return;
+
+    var secData = addonsData && addonsData[sector] ? addonsData[sector] : null;
+    var meals = secData && secData.meals ? secData.meals : [];
+
+    if (!meals || meals.length === 0) {
+        container.innerHTML = '<div style="grid-column: 1/-1; padding: 24px; text-align: center; color: #64748b; background: #f8fafc; border-radius: 8px;">No meal options available for this sector from Benzy APIs.</div>';
+        return;
+    }
+
+    var selectedMeal = userSelections[sector].meal;
+    var html = '';
+
+    meals.forEach(function(item, idx) {
+        var isSelected = (selectedMeal && selectedMeal.code === item.code);
+        var isVeg = (item.category && item.category.toLowerCase().indexOf('non') === -1 && item.category.toLowerCase().indexOf('chicken') === -1 && item.category.toLowerCase().indexOf('mutton') === -1);
+        
+        var vegBadge = isVeg ? 
+            '<span style="display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; border: 1.5px solid #16a34a; border-radius: 2px; padding: 1px; margin-right: 5px; vertical-align: middle;"><span style="display: block; width: 5px; height: 5px; border-radius: 50%; background: #16a34a;"></span></span>' :
+            '<span style="display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; border: 1.5px solid #dc2626; border-radius: 2px; padding: 1px; margin-right: 5px; vertical-align: middle;"><span style="display: block; width: 0; height: 0; border-left: 3px solid transparent; border-right: 3px solid transparent; border-bottom: 5px solid #dc2626;"></span></span>';
+
+        var imgGraphic = '';
+        if (item.image && item.image.length > 5) {
+            imgGraphic = '<img src="' + item.image + '" alt="' + item.name + '" style="max-height: 100px; max-width: 100px; object-fit: contain; border-radius: 8px;">';
+        } else {
+            imgGraphic = '<div style="width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, #fb923c, #ea580c); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(234,88,12,0.25);">' +
+                '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                    '<path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"></path>' +
+                    '<path d="M15 2v10"></path>' +
+                    '<path d="M12 2v6"></path>' +
+                    '<path d="M18 10v12"></path>' +
+                    '<path d="M6 2v20"></path>' +
+                    '<path d="M6 2a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4"></path>' +
+                '</svg>' +
+            '</div>';
+        }
+
+        html += '<div class="akbar-service-card meal-item-card ' + (isSelected ? 'selected' : '') + '" onclick="selectMealItem(\'' + item.code + '\', \'' + item.name.replace(/'/g, "\\'") + '\', ' + item.price + ', ' + (item.ssid || 0) + ', this)">';
+        html += '<div class="card-radio-circle"></div>';
+        html += '<div class="card-img-wrapper">' + imgGraphic + '</div>';
+        html += '<div>';
+        html += '<div style="font-size: 18px; font-weight: 800; color: #0f172a;">₹ ' + item.price + '</div>';
+        html += '<div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 4px; line-height: 1.35;">' + vegBadge + item.name + '</div>';
+        html += '</div>';
+        html += '</div>';
+    });
+
+    container.innerHTML = html;
+}
+
+// Render dynamic Baggage grid from Benzy SSR
+function renderBaggage(sector) {
+    var container = document.getElementById('baggageGridContainer');
+    if (!container) return;
+
+    var secData = addonsData && addonsData[sector] ? addonsData[sector] : null;
+    var baggage = secData && secData.baggage ? secData.baggage : [];
+
+    if (!baggage || baggage.length === 0) {
+        container.innerHTML = '<div style="grid-column: 1/-1; padding: 24px; text-align: center; color: #64748b; background: #f8fafc; border-radius: 8px;">No extra baggage options available for this sector from Benzy APIs.</div>';
+        return;
+    }
+
+    var selectedBaggage = userSelections[sector].baggage;
+    var html = '';
+
+    baggage.forEach(function(item) {
+        var isSelected = (selectedBaggage && selectedBaggage.code === item.code);
+        var svgGraphic = getSuitcaseSvg(item.weight);
+
+        html += '<div class="akbar-service-card baggage-item-card ' + (isSelected ? 'selected' : '') + '" onclick="selectBaggageItem(\'' + item.code + '\', \'' + item.weight + '\', ' + item.price + ', ' + (item.ssid || 0) + ', this)">';
+        html += '<div class="card-radio-circle"></div>';
+        html += '<div class="card-img-wrapper">' + svgGraphic + '</div>';
+        html += '<div>';
+        html += '<div style="font-size: 19px; font-weight: 800; color: #0f172a;">₹' + item.price + '</div>';
+        html += '<div style="font-size: 12px; color: #64748b; margin-top: 2px;">Prepaid excess baggage</div>';
+        html += '<div style="font-size: 13.5px; font-weight: 800; color: #0f172a; margin-top: 2px;">' + item.weight + '</div>';
+        html += '</div>';
+        html += '</div>';
+    });
+
+    container.innerHTML = html;
+}
+
+// Render dynamic 30-row Seat Map from Benzy SeatLayout API
+function renderSeatMap(sector) {
+    var container = document.getElementById('seatRowsContainer');
+    if (!container) return;
+
+    var secData = addonsData && addonsData[sector] ? addonsData[sector] : null;
+    var rows = secData && secData.seat_rows ? secData.seat_rows : null;
+
+    if (!rows || Object.keys(rows).length === 0) {
+        container.innerHTML = '<div style="padding: 24px; text-align: center; color: #64748b;">Seat layout information currently unavailable for this flight sector from Benzy APIs.</div>';
+        return;
+    }
+
+    var selectedSeat = userSelections[sector].seat;
+    var html = '';
+
+    var colsLeft = ['A', 'B', 'C'];
+    var colsRight = ['D', 'E', 'F'];
+
+    // Render Rows 1 through 30
+    for (var r = 1; r <= 30; r++) {
+        var rowObj = rows[r] || {};
+
+        html += '<div class="plane-seat-row">';
+        html += '<div class="plane-seat-num">' + r + '</div>';
+
+        // Left Column Seats (A, B, C)
+        colsLeft.forEach(function(col) {
+            var seat = rowObj[col];
+            if (!seat) {
+                html += '<div class="fuselage-seat" style="visibility: hidden;"></div>';
+                return;
+            }
+            var seatCode = seat.seat;
+            var isBooked = seat.is_booked;
+            var isSelected = (selectedSeat && selectedSeat.code === seatCode);
+
+            if (isBooked) {
+                html += '<div class="fuselage-seat booked" title="Seat ' + seatCode + ' (Already booked)">&#x2573;</div>';
+            } else if (isSelected) {
+                html += '<div class="fuselage-seat ' + seat.tier + ' selected" data-seat="' + seatCode + '" data-price="' + seat.price + '" data-ssid="' + (seat.ssid || 0) + '" onclick="selectSeatItem(\'' + seatCode + '\', ' + seat.price + ', ' + (seat.ssid || 0) + ', this)" title="Seat ' + seatCode + ' (₹' + seat.price + ')"><i class="fa-solid fa-check" style="color: #fff; font-size: 11px;"></i></div>';
+            } else {
+                var tooltip = 'Seat ' + seatCode + (seat.info ? ' • ' + seat.info : '') + ' (₹' + seat.price + ')';
+                html += '<div class="fuselage-seat ' + seat.tier + '" data-seat="' + seatCode + '" data-price="' + seat.price + '" data-ssid="' + (seat.ssid || 0) + '" onclick="selectSeatItem(\'' + seatCode + '\', ' + seat.price + ', ' + (seat.ssid || 0) + ', this)" title="' + tooltip + '"></div>';
+            }
+        });
+
+        // Aisle Gap
+        html += '<div class="seat-aisle-header"></div>';
+
+        // Right Column Seats (D, E, F)
+        colsRight.forEach(function(col) {
+            var seat = rowObj[col];
+            if (!seat) {
+                html += '<div class="fuselage-seat" style="visibility: hidden;"></div>';
+                return;
+            }
+            var seatCode = seat.seat;
+            var isBooked = seat.is_booked;
+            var isSelected = (selectedSeat && selectedSeat.code === seatCode);
+
+            if (isBooked) {
+                html += '<div class="fuselage-seat booked" title="Seat ' + seatCode + ' (Already booked)">&#x2573;</div>';
+            } else if (isSelected) {
+                html += '<div class="fuselage-seat ' + seat.tier + ' selected" data-seat="' + seatCode + '" data-price="' + seat.price + '" data-ssid="' + (seat.ssid || 0) + '" onclick="selectSeatItem(\'' + seatCode + '\', ' + seat.price + ', ' + (seat.ssid || 0) + ', this)" title="Seat ' + seatCode + ' (₹' + seat.price + ')"><i class="fa-solid fa-check" style="color: #fff; font-size: 11px;"></i></div>';
+            } else {
+                var tooltip = 'Seat ' + seatCode + (seat.info ? ' • ' + seat.info : '') + ' (₹' + seat.price + ')';
+                html += '<div class="fuselage-seat ' + seat.tier + '" data-seat="' + seatCode + '" data-price="' + seat.price + '" data-ssid="' + (seat.ssid || 0) + '" onclick="selectSeatItem(\'' + seatCode + '\', ' + seat.price + ', ' + (seat.ssid || 0) + ', this)" title="' + tooltip + '"></div>';
+            }
+        });
+
+        html += '<div class="plane-seat-num">' + r + '</div>';
+        html += '</div>';
+    }
+
+    container.innerHTML = html;
+}
+
+// Update sector title and subtitle in Seat Selection Tab
+function renderSectorHeader(sector) {
+    var secData = addonsData && addonsData[sector] ? addonsData[sector] : null;
+    if (!secData) return;
+
+    var titleEl = document.getElementById('seatSectorTitle');
+    var dateEl = document.getElementById('seatSectorDate');
+
+    if (titleEl) {
+        titleEl.innerHTML = (secData.origin_city || secData.origin) + ' &rarr; ' + (secData.destination_city || secData.destination);
+    }
+    if (dateEl) {
+        dateEl.textContent = secData.formatted_date || secData.departure_date;
+    }
+}
+
+// Sector Switcher Handler (DEL -> BOM SpiceJet vs BOM -> DEL Air India)
+function switchSector(sectorType, btnEl) {
+    if (!addonsData || !addonsData[sectorType]) return;
+
+    currentSector = sectorType;
+
+    document.querySelectorAll('.sector-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+        btn.classList.add('inactive');
+    });
+    if (btnEl) {
+        btnEl.classList.remove('inactive');
+        btnEl.classList.add('active');
+    }
+
+    // Highlight corresponding column in top sub-banner
+    var onwardCol = document.getElementById('subBannerOnward');
+    var returnCol = document.getElementById('subBannerReturn');
+    if (onwardCol) {
+        onwardCol.style.opacity = (sectorType === 'onward') ? '1' : '0.65';
+    }
+    if (returnCol) {
+        returnCol.style.opacity = (sectorType === 'return') ? '1' : '0.65';
+    }
+
+    renderSectorHeader(sectorType);
+    renderMeals(sectorType);
+    renderBaggage(sectorType);
+    renderSeatMap(sectorType);
+}
+
+// Addon Tab Switcher (Meals / Baggage / Seat Selection)
 function switchAddonTab(tabId, tabEl) {
     document.querySelectorAll('.akbar-tab-btn').forEach(function(btn) {
         btn.classList.remove('active');
@@ -1373,109 +1451,116 @@ function switchAddonTab(tabId, tabEl) {
     if (target) target.style.display = 'block';
 }
 
-function switchSector(sectorType, btnEl) {
-    document.querySelectorAll('.sector-btn').forEach(function(btn) {
-        btn.classList.remove('active');
-        btn.classList.add('inactive');
-    });
-    if (btnEl) {
-        btnEl.classList.remove('inactive');
-        btnEl.classList.add('active');
-    }
-}
-
-function toggleDetailsBox() {
-    var box = document.getElementById('flightDetailsExpandBox');
-    var chevron = document.getElementById('detailsChevron');
-    if (!box) return;
-    if (box.style.display === 'none') {
-        box.style.display = 'block';
-        if (chevron) chevron.className = 'fa-solid fa-chevron-up';
-    } else {
-        box.style.display = 'none';
-        if (chevron) chevron.className = 'fa-solid fa-chevron-down';
-    }
-}
-
-function selectMealItem(code, name, price, cardEl) {
-    var isAlready = cardEl.classList.contains('selected');
-
-    document.querySelectorAll('.meal-item-card').forEach(function(c) {
-        c.classList.remove('selected');
-    });
+function selectMealItem(code, name, price, ssid, cardEl) {
+    var sec = currentSector;
+    var isAlready = (userSelections[sec].meal && userSelections[sec].meal.code === code);
 
     if (isAlready) {
-        selectedMealPrice = 0;
-        document.getElementById('form_meal_code').value = '';
-        document.getElementById('form_meal_desc').value = '';
-        document.getElementById('form_meal_amount').value = 0;
+        userSelections[sec].meal = null;
     } else {
-        cardEl.classList.add('selected');
-        selectedMealPrice = parseFloat(price);
-        document.getElementById('form_meal_code').value = code;
-        document.getElementById('form_meal_desc').value = name;
-        document.getElementById('form_meal_amount').value = selectedMealPrice;
+        userSelections[sec].meal = {
+            code: code,
+            name: name,
+            price: parseFloat(price) || 0,
+            ssid: ssid || 0
+        };
     }
+
+    renderMeals(sec);
     recalcTotal();
 }
 
-function selectBaggageItem(code, weight, price, cardEl) {
-    var isAlready = cardEl.classList.contains('selected');
-
-    document.querySelectorAll('.baggage-item-card').forEach(function(c) {
-        c.classList.remove('selected');
-    });
+function selectBaggageItem(code, weight, price, ssid, cardEl) {
+    var sec = currentSector;
+    var isAlready = (userSelections[sec].baggage && userSelections[sec].baggage.code === code);
 
     if (isAlready) {
-        selectedBaggagePrice = 0;
-        document.getElementById('form_baggage_code').value = '';
-        document.getElementById('form_baggage_desc').value = '';
-        document.getElementById('form_baggage_amount').value = 0;
+        userSelections[sec].baggage = null;
     } else {
-        cardEl.classList.add('selected');
-        selectedBaggagePrice = parseFloat(price);
-        document.getElementById('form_baggage_code').value = code;
-        document.getElementById('form_baggage_desc').value = 'Prepaid Excess Baggage - ' + weight;
-        document.getElementById('form_baggage_amount').value = selectedBaggagePrice;
+        userSelections[sec].baggage = {
+            code: code,
+            weight: weight,
+            desc: 'Prepaid Excess Baggage - ' + weight,
+            price: parseFloat(price) || 0,
+            ssid: ssid || 0
+        };
     }
+
+    renderBaggage(sec);
     recalcTotal();
 }
 
-function selectSeatItem(seatCode, price, seatEl) {
-    var isAlready = seatEl.classList.contains('selected');
-
-    document.querySelectorAll('.fuselage-seat').forEach(function(s) {
-        s.classList.remove('selected');
-    });
+function selectSeatItem(seatCode, price, ssid, seatEl) {
+    var sec = currentSector;
+    var isAlready = (userSelections[sec].seat && userSelections[sec].seat.code === seatCode);
 
     if (isAlready) {
-        selectedSeatPrice = 0;
-        document.getElementById('form_seat_code').value = '';
-        document.getElementById('form_seat_amount').value = 0;
+        userSelections[sec].seat = null;
     } else {
-        seatEl.classList.add('selected');
-        selectedSeatPrice = parseFloat(price);
-        document.getElementById('form_seat_code').value = seatCode;
-        document.getElementById('form_seat_amount').value = selectedSeatPrice;
+        userSelections[sec].seat = {
+            code: seatCode,
+            price: parseFloat(price) || 0,
+            ssid: ssid || 0
+        };
     }
+
+    renderSeatMap(sec);
     recalcTotal();
 }
 
+// Recalculate combined totals across both Onward and Return flight sectors
 function recalcTotal() {
-    var addonTotal = selectedBaggagePrice + selectedMealPrice + selectedSeatPrice;
-    document.getElementById('bottomAddonTotal').textContent = addonTotal.toLocaleString('en-IN');
+    var onwardMeal = userSelections.onward.meal ? userSelections.onward.meal.price : 0;
+    var onwardBaggage = userSelections.onward.baggage ? userSelections.onward.baggage.price : 0;
+    var onwardSeat = userSelections.onward.seat ? userSelections.onward.seat.price : 0;
+
+    var returnMeal = userSelections.return.meal ? userSelections.return.meal.price : 0;
+    var returnBaggage = userSelections.return.baggage ? userSelections.return.baggage.price : 0;
+    var returnSeat = userSelections.return.seat ? userSelections.return.seat.price : 0;
+
+    var totalAddons = onwardMeal + onwardBaggage + onwardSeat + returnMeal + returnBaggage + returnSeat;
+
+    document.getElementById('bottomAddonTotal').textContent = totalAddons.toLocaleString('en-IN');
 
     var addonsRow = document.getElementById('summaryAddonsRow');
-    if (addonTotal > 0) {
+    if (totalAddons > 0) {
         addonsRow.style.display = 'block';
-        document.getElementById('summaryAddonsAmount').textContent = addonTotal.toLocaleString('en-IN');
+        document.getElementById('summaryAddonsAmount').textContent = totalAddons.toLocaleString('en-IN');
     } else {
         addonsRow.style.display = 'none';
     }
 
-    var grandTotal = Math.max(0, (baseFlightAmount + addonTotal) - appliedDiscount);
+    var grandTotal = Math.max(0, (baseFlightAmount + totalAddons) - appliedDiscount);
     document.getElementById('summaryGrandTotal').textContent = grandTotal.toLocaleString('en-IN');
     document.getElementById('form_final_grand_total').value = grandTotal;
+
+    // Populate Onward Addons in Hidden Form
+    document.getElementById('form_meal_code').value = userSelections.onward.meal ? userSelections.onward.meal.code : '';
+    document.getElementById('form_meal_desc').value = userSelections.onward.meal ? userSelections.onward.meal.name : '';
+    document.getElementById('form_meal_amount').value = onwardMeal;
+
+    document.getElementById('form_baggage_code').value = userSelections.onward.baggage ? userSelections.onward.baggage.code : '';
+    document.getElementById('form_baggage_desc').value = userSelections.onward.baggage ? userSelections.onward.baggage.desc : '';
+    document.getElementById('form_baggage_amount').value = onwardBaggage;
+
+    document.getElementById('form_seat_code').value = userSelections.onward.seat ? userSelections.onward.seat.code : '';
+    document.getElementById('form_seat_amount').value = onwardSeat;
+    document.getElementById('form_seat_ssid').value = userSelections.onward.seat ? (userSelections.onward.seat.ssid || 0) : 0;
+
+    // Populate Return Addons in Hidden Form
+    if (document.getElementById('form_ret_meal_code')) {
+        document.getElementById('form_ret_meal_code').value = userSelections.return.meal ? userSelections.return.meal.code : '';
+        document.getElementById('form_ret_meal_desc').value = userSelections.return.meal ? userSelections.return.meal.name : '';
+        document.getElementById('form_ret_meal_amount').value = returnMeal;
+
+        document.getElementById('form_ret_baggage_code').value = userSelections.return.baggage ? userSelections.return.baggage.code : '';
+        document.getElementById('form_ret_baggage_desc').value = userSelections.return.baggage ? userSelections.return.baggage.desc : '';
+        document.getElementById('form_ret_baggage_amount').value = returnBaggage;
+
+        document.getElementById('form_ret_seat_code').value = userSelections.return.seat ? userSelections.return.seat.code : '';
+        document.getElementById('form_ret_seat_amount').value = returnSeat;
+        document.getElementById('form_ret_seat_ssid').value = userSelections.return.seat ? (userSelections.return.seat.ssid || 0) : 0;
+    }
 }
 
 function applyPromoOption(code, discount, el) {
@@ -1528,22 +1613,22 @@ function toggleFareBreakdown(triggerEl) {
     }
 }
 
+function toggleDetailsBox() {
+    var box = document.getElementById('flightDetailsExpandBox');
+    var chevron = document.getElementById('detailsChevron');
+    if (!box) return;
+    if (box.style.display === 'none') {
+        box.style.display = 'block';
+        if (chevron) chevron.className = 'fa-solid fa-chevron-up';
+    } else {
+        box.style.display = 'none';
+        if (chevron) chevron.className = 'fa-solid fa-chevron-down';
+    }
+}
+
 function skipAddonsAndProceed() {
-    selectedBaggagePrice = 0;
-    selectedMealPrice = 0;
-    selectedSeatPrice = 0;
-
-    document.getElementById('form_baggage_code').value = '';
-    document.getElementById('form_baggage_desc').value = '';
-    document.getElementById('form_baggage_amount').value = 0;
-
-    document.getElementById('form_meal_code').value = '';
-    document.getElementById('form_meal_desc').value = '';
-    document.getElementById('form_meal_amount').value = 0;
-
-    document.getElementById('form_seat_code').value = '';
-    document.getElementById('form_seat_amount').value = 0;
-
+    userSelections.onward = { meal: null, baggage: null, seat: null };
+    userSelections.return = { meal: null, baggage: null, seat: null };
     recalcTotal();
     triggerFinalPayment();
 }
@@ -1596,4 +1681,13 @@ function triggerFinalPayment() {
         document.getElementById('finalPaymentForm').submit();
     }
 }
+
+// Initial Render on Page Load
+document.addEventListener('DOMContentLoaded', function() {
+    renderSectorHeader(currentSector);
+    renderMeals(currentSector);
+    renderBaggage(currentSector);
+    renderSeatMap(currentSector);
+    recalcTotal();
+});
 </script>

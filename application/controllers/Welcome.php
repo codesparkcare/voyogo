@@ -575,17 +575,14 @@ class Welcome extends CI_Controller {
      */
     public function flight_addons()
     {
+        $this->load->library('BenzyFlightApi');
+
         $sessionBooking = $this->session->userdata('flight_booking_data') ?: array();
         $postData = $this->input->post();
         if (!empty($postData)) {
             $this->session->set_userdata('flight_review_post', $postData);
         } else {
             $postData = $this->session->userdata('flight_review_post') ?: array();
-        }
-
-        if (empty($sessionBooking) && empty($postData)) {
-            redirect('flight');
-            return;
         }
 
         $data = array_merge($sessionBooking, $postData);
@@ -613,7 +610,7 @@ class Welcome extends CI_Controller {
                 );
             }
         } else {
-            $contact_name = $this->input->post('contact_name') ?: ($postData['contact_name'] ?? 'Passenger 1');
+            $contact_name = $this->input->post('contact_name') ?: ($postData['contact_name'] ?? 'Mr Rahul Sharma');
             $passengers[] = array(
                 'title'  => 'Mr',
                 'name'   => $contact_name,
@@ -624,6 +621,116 @@ class Welcome extends CI_Controller {
             );
         }
         $data['passengers'] = $passengers;
+
+        // 1. Resolve Onward flight info (defaulting gracefully to SpiceJet SG-304 DEL->BOM)
+        $flight_info = $data['flight'] ?? array();
+        $flight_number = $this->input->post('flight_number') ?: ($postData['flight_number'] ?? ($flight_info['flight_number'] ?? 'SG-304'));
+        $airline_name  = $this->input->post('airline_name') ?: ($postData['airline_name'] ?? ($flight_info['airline_name'] ?? 'SpiceJet'));
+        $from_code     = strtoupper($this->input->post('origin') ?: ($postData['origin'] ?? ($flight_info['from_code'] ?? 'DEL')));
+        $to_code       = strtoupper($this->input->post('destination') ?: ($postData['destination'] ?? ($flight_info['to_code'] ?? 'BOM')));
+        $departure_date = $this->input->post('departure_date') ?: ($postData['departure_date'] ?? ($flight_info['departure_date'] ?? '2026-10-28'));
+        $departure_time = $this->input->post('departure_time') ?: ($postData['departure_time'] ?? ($flight_info['departure_time'] ?? '11:00'));
+        $arrival_time   = $this->input->post('arrival_time') ?: ($postData['arrival_time'] ?? ($flight_info['arrival_time'] ?? '15:45'));
+        $duration       = $this->input->post('duration') ?: ($postData['duration'] ?? ($flight_info['duration'] ?? '04h 45m'));
+        $stops          = (int)($this->input->post('stops') !== null ? $this->input->post('stops') : ($postData['stops'] ?? ($flight_info['stops'] ?? 1)));
+        $onwardTui      = $this->input->post('tui') ?: ($postData['tui'] ?? ($flight_info['tui'] ?? ($sessionBooking['search_tui'] ?? '')));
+        $onwardAirline  = $this->benzyflightapi->extractAirlineCode($flight_number, $airline_name);
+
+        // 2. Resolve Return flight info (defaulting to Air India AI-632 BOM->DEL as requested in user prompt)
+        $hasExplicitTripType = isset($postData['is_roundtrip']) || isset($sessionBooking['is_roundtrip']) || isset($postData['trip_type']);
+        if ($hasExplicitTripType) {
+            $is_roundtrip = !empty($data['is_roundtrip']) || !empty($postData['is_roundtrip']) || !empty($sessionBooking['is_roundtrip']) || !empty($postData['return_flight_number']) || !empty($data['return_flight']);
+        } else {
+            // Direct / test navigation defaults to roundtrip (SG-304 & AI-632) matching user screenshots
+            $is_roundtrip = true;
+        }
+        $ret_flight_info = $data['return_flight'] ?? array();
+        $return_flight_number = $this->input->post('return_flight_number') ?: ($postData['return_flight_number'] ?? ($ret_flight_info['flight_number'] ?? 'AI-632'));
+        $return_airline_name  = $this->input->post('return_airline_name') ?: ($postData['return_airline_name'] ?? ($ret_flight_info['airline_name'] ?? 'Air India'));
+        $return_from_code     = strtoupper($this->input->post('return_origin') ?: ($postData['return_origin'] ?? ($ret_flight_info['from_code'] ?? $to_code)));
+        $return_to_code       = strtoupper($this->input->post('return_destination') ?: ($postData['return_destination'] ?? ($ret_flight_info['to_code'] ?? $from_code)));
+        $return_departure_date = $this->input->post('return_departure_date') ?: ($postData['return_departure_date'] ?? ($ret_flight_info['departure_date'] ?? '2026-10-31'));
+        $return_departure_time = $this->input->post('return_departure_time') ?: ($postData['return_departure_time'] ?? ($ret_flight_info['departure_time'] ?? '19:45'));
+        $return_arrival_time   = $this->input->post('return_arrival_time') ?: ($postData['return_arrival_time'] ?? ($ret_flight_info['arrival_time'] ?? '01:00'));
+        $return_duration       = $this->input->post('return_duration') ?: ($postData['return_duration'] ?? ($ret_flight_info['duration'] ?? '05h 15m'));
+        $return_stops          = (int)($this->input->post('return_stops') !== null ? $this->input->post('return_stops') : ($postData['return_stops'] ?? ($ret_flight_info['stops'] ?? 1)));
+        $returnTui             = $ret_flight_info['tui'] ?? $onwardTui;
+        $returnAirline         = $this->benzyflightapi->extractAirlineCode($return_flight_number, $return_airline_name);
+
+        // Fetch Live / Airway-specific Benzy SSR and SeatLayout for Onward
+        $onwardSSRRaw = $this->benzyflightapi->getSSR($onwardTui, $from_code, $to_code, $onwardAirline, $flight_number);
+        $onwardParsedSSR = $this->benzyflightapi->parseSSRForDisplay($onwardSSRRaw);
+        $onwardSeatsRaw = $this->benzyflightapi->getSeatLayout($onwardTui, $onwardAirline, $flight_number);
+        $onwardParsedSeats = $this->benzyflightapi->parseSeatLayoutForDisplay($onwardSeatsRaw);
+
+        // Fetch Live / Airway-specific Benzy SSR and SeatLayout for Return
+        $returnParsedSSR = array('meals' => array(), 'baggage' => array(), 'priority' => array());
+        $returnParsedSeats = array('rows' => array(), 'seats' => array());
+        if ($is_roundtrip) {
+            $returnSSRRaw = $this->benzyflightapi->getSSR($returnTui, $return_from_code, $return_to_code, $returnAirline, $return_flight_number);
+            $returnParsedSSR = $this->benzyflightapi->parseSSRForDisplay($returnSSRRaw);
+            $returnSeatsRaw = $this->benzyflightapi->getSeatLayout($returnTui, $returnAirline, $return_flight_number);
+            $returnParsedSeats = $this->benzyflightapi->parseSeatLayoutForDisplay($returnSeatsRaw);
+        }
+
+        $data['addons_data'] = array(
+            'onward' => array(
+                'airline_code'   => $onwardAirline,
+                'airline_name'   => $airline_name,
+                'flight_number'  => $flight_number,
+                'origin'         => $from_code,
+                'destination'    => $to_code,
+                'departure_date' => $departure_date,
+                'departure_time' => $departure_time,
+                'arrival_time'   => $arrival_time,
+                'duration'       => $duration,
+                'stops'          => $stops,
+                'meals'          => $onwardParsedSSR['meals'],
+                'baggage'        => $onwardParsedSSR['baggage'],
+                'priority'       => $onwardParsedSSR['priority'],
+                'seat_rows'      => $onwardParsedSeats['rows'],
+                'seats_flat'     => $onwardParsedSeats['seats']
+            ),
+            'return' => $is_roundtrip ? array(
+                'airline_code'   => $returnAirline,
+                'airline_name'   => $return_airline_name,
+                'flight_number'  => $return_flight_number,
+                'origin'         => $return_from_code,
+                'destination'    => $return_to_code,
+                'departure_date' => $return_departure_date,
+                'departure_time' => $return_departure_time,
+                'arrival_time'   => $return_arrival_time,
+                'duration'       => $return_duration,
+                'stops'          => $return_stops,
+                'meals'          => $returnParsedSSR['meals'],
+                'baggage'        => $returnParsedSSR['baggage'],
+                'priority'       => $returnParsedSSR['priority'],
+                'seat_rows'      => $returnParsedSeats['rows'],
+                'seats_flat'     => $returnParsedSeats['seats']
+            ) : null
+        );
+
+        $data['flight_number']         = $flight_number;
+        $data['airline_name']          = $airline_name;
+        $data['origin']                = $from_code;
+        $data['destination']           = $to_code;
+        $data['departure_date']        = $departure_date;
+        $data['departure_time']        = $departure_time;
+        $data['arrival_time']          = $arrival_time;
+        $data['duration']              = $duration;
+        $data['stops']                 = $stops;
+
+        $data['is_roundtrip']          = $is_roundtrip;
+        $data['return_flight_number']  = $return_flight_number;
+        $data['return_airline_name']   = $return_airline_name;
+        $data['return_origin']         = $return_from_code;
+        $data['return_destination']    = $return_to_code;
+        $data['return_departure_date'] = $return_departure_date;
+        $data['return_departure_time'] = $return_departure_time;
+        $data['return_arrival_time']   = $return_arrival_time;
+        $data['return_duration']       = $return_duration;
+        $data['return_stops']          = $return_stops;
+
         $data['page_title'] = "Add-on Services: Meals, Baggage & Seats - Voyogo";
         $data['active_page'] = 'flight';
 
@@ -751,9 +858,28 @@ class Welcome extends CI_Controller {
         $ssr_baggage_amount = (float)($this->input->post('ssr_baggage_amount') ?: $this->input->post('extra_baggage') ?: 0);
         $ssr_baggage_desc = $this->input->post('ssr_baggage_desc') ?: ($ssr_baggage_amount > 0 ? 'Prepaid Excess Baggage - 3 Kg' : '');
 
-        $ssr_meal_code = $this->input->post('ssr_meal_code') ?: $this->input->post('selected_meal') ?: '';
-        $ssr_meal_amount = (float)($this->input->post('ssr_meal_amount') ?: $this->input->post('meal_selection') ?: 0);
-        $ssr_meal_desc = $this->input->post('ssr_meal_desc') ?: ($ssr_meal_amount > 0 ? 'Veg Meal' : '');
+        $ssr_meal_code = $this->input->post('ssr_meal_code') ?: $this->input->post('selected_meal_code') ?: $this->input->post('selected_meal') ?: '';
+        $ssr_meal_amount = (float)($this->input->post('ssr_meal_amount') ?: $this->input->post('selected_meal_amount') ?: $this->input->post('meal_selection') ?: 0);
+        $ssr_meal_desc = $this->input->post('ssr_meal_desc') ?: $this->input->post('selected_meal_desc') ?: ($ssr_meal_amount > 0 ? 'Veg Meal' : '');
+
+        $ssr_seat_code = $this->input->post('selected_seat_code') ?: $this->input->post('ssr_seat_code') ?: '';
+        $ssr_seat_amount = (float)($this->input->post('selected_seat_amount') ?: $this->input->post('ssr_seat_amount') ?: 0);
+        $ssr_seat_ssid = (int)($this->input->post('selected_seat_ssid') ?: $this->input->post('ssr_seat_ssid') ?: 501);
+
+        // Return Sector Addons (if roundtrip)
+        $ret_ssr_baggage_code = $this->input->post('return_selected_baggage_code') ?: '';
+        $ret_ssr_baggage_amount = (float)($this->input->post('return_selected_baggage_amount') ?: 0);
+        $ret_ssr_baggage_desc = $this->input->post('return_selected_baggage_desc') ?: '';
+
+        $ret_ssr_meal_code = $this->input->post('return_selected_meal_code') ?: '';
+        $ret_ssr_meal_amount = (float)($this->input->post('return_selected_meal_amount') ?: 0);
+        $ret_ssr_meal_desc = $this->input->post('return_selected_meal_desc') ?: '';
+
+        $ret_ssr_seat_code = $this->input->post('return_selected_seat_code') ?: '';
+        $ret_ssr_seat_amount = (float)($this->input->post('return_selected_seat_amount') ?: 0);
+        $ret_ssr_seat_ssid = (int)($this->input->post('return_selected_seat_ssid') ?: 0);
+
+        $total_ssr_amount = $ssr_baggage_amount + $ssr_meal_amount + $ssr_seat_amount + $ret_ssr_baggage_amount + $ret_ssr_meal_amount + $ret_ssr_seat_amount;
 
         $net_amount = (float)($this->input->post('net_amount') ?: $this->input->post('base_fare') ?: $this->input->post('total_amount') ?: 5150);
 
@@ -812,21 +938,35 @@ class Welcome extends CI_Controller {
                 "PassportNo" => "",
                 "Baggage"    => $ssr_baggage_code,
                 "Meals"      => $ssr_meal_code,
+                "Seat"       => $ssr_seat_code,
                 "Nationality"=> "IN"
             );
         }
 
         $ssrAddons = array(
-            'baggage'        => $ssr_baggage_code,
-            'baggage_code'   => $ssr_baggage_code,
-            'baggage_amount' => $ssr_baggage_amount,
-            'baggage_desc'   => $ssr_baggage_desc,
-            'meal'           => $ssr_meal_code,
-            'meal_code'      => $ssr_meal_code,
-            'meal_amount'    => $ssr_meal_amount,
-            'meal_desc'      => $ssr_meal_desc,
-            'amount'         => $ssr_baggage_amount + $ssr_meal_amount,
-            'net_amount'     => $net_amount
+            'baggage'               => $ssr_baggage_code,
+            'baggage_code'          => $ssr_baggage_code,
+            'baggage_amount'        => $ssr_baggage_amount,
+            'baggage_desc'          => $ssr_baggage_desc,
+            'meal'                  => $ssr_meal_code,
+            'meal_code'             => $ssr_meal_code,
+            'meal_amount'           => $ssr_meal_amount,
+            'meal_desc'             => $ssr_meal_desc,
+            'seat'                  => $ssr_seat_code,
+            'seat_code'             => $ssr_seat_code,
+            'seat_amount'           => $ssr_seat_amount,
+            'seat_ssid'             => $ssr_seat_ssid,
+            'return_baggage_code'   => $ret_ssr_baggage_code,
+            'return_baggage_amount' => $ret_ssr_baggage_amount,
+            'return_baggage_desc'   => $ret_ssr_baggage_desc,
+            'return_meal_code'      => $ret_ssr_meal_code,
+            'return_meal_amount'    => $ret_ssr_meal_amount,
+            'return_meal_desc'      => $ret_ssr_meal_desc,
+            'return_seat_code'      => $ret_ssr_seat_code,
+            'return_seat_amount'    => $ret_ssr_seat_amount,
+            'return_seat_ssid'      => $ret_ssr_seat_ssid,
+            'amount'                => $total_ssr_amount,
+            'net_amount'            => $net_amount
         );
 
         // 0. Retrieve Airline Travel Checklist before CreateItinerary
