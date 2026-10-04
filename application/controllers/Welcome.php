@@ -805,8 +805,16 @@ class Welcome extends CI_Controller {
         }
 
         $data = array_merge($sessionBooking, $reviewPost, $addonsPost);
+        $data['flight']        = $sessionBooking['flight'] ?? array();
+        $data['return_flight'] = $sessionBooking['return_flight'] ?? array();
+        $data['search_query']  = $sessionBooking['search_query'] ?? array();
+        $data['is_roundtrip']  = !empty($sessionBooking['is_roundtrip']) || !empty($data['return_flight']);
+        $data['fare_rules']    = $sessionBooking['fare_rules'] ?? array();
+        $data['pricing']       = $sessionBooking['pricing'] ?? array();
+
         $data['review_post'] = $reviewPost;
         $data['addons_post'] = $addonsPost;
+        $data['post_data']   = array_merge($reviewPost, $addonsPost);
 
         // Parse passengers
         $passengers = array();
@@ -841,8 +849,44 @@ class Welcome extends CI_Controller {
             );
         }
         $data['passengers'] = $passengers;
+        $data['total_pax'] = max(1, count($passengers));
+
+        // Calculate Pricing Breakdown
+        $fBaseFare = (float)($sessionBooking['fBaseFare'] ?? ($sessionBooking['pricing']['base_fare'] ?? (($data['flight']['price'] ?? 5350) * 0.788)));
+        $fTaxes    = (float)($sessionBooking['fTaxes'] ?? ($sessionBooking['pricing']['taxes'] ?? (($data['flight']['price'] ?? 5350) * 0.212)));
+        $fareTierDelta   = (float)($reviewPost['fare_tier_price_delta'] ?? 0);
+        $insuranceAmount = (float)($reviewPost['insurance_price'] ?? ($reviewPost['insurance_amount'] ?? 0));
+
+        $onwardBaggage = (float)($addonsPost['selected_baggage_amount'] ?? 0);
+        $onwardMeal    = (float)($addonsPost['selected_meal_amount'] ?? 0);
+        $onwardSeat    = (float)($addonsPost['selected_seat_amount'] ?? 0);
+
+        $returnBaggage = (float)($addonsPost['return_selected_baggage_amount'] ?? 0);
+        $returnMeal    = (float)($addonsPost['return_selected_meal_amount'] ?? 0);
+        $returnSeat    = (float)($addonsPost['return_selected_seat_amount'] ?? 0);
+
+        $addonTotal = $onwardBaggage + $onwardMeal + $onwardSeat + $returnBaggage + $returnMeal + $returnSeat;
+        if (isset($addonsPost['addon_total_amount']) && (float)$addonsPost['addon_total_amount'] > 0) {
+            $addonTotal = (float)$addonsPost['addon_total_amount'];
+        }
+
+        $promoDiscount = (float)($reviewPost['promo_discount'] ?? ($addonsPost['promo_discount'] ?? 0));
+        $grandTotal = max(0, ($fBaseFare + $fTaxes + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount);
+
+        if (isset($addonsPost['total_amount']) && (float)$addonsPost['total_amount'] > 0) {
+            $grandTotal = (float)$addonsPost['total_amount'];
+        }
+
+        $data['fBaseFare']        = $fBaseFare;
+        $data['fTaxes']           = $fTaxes;
+        $data['fareTierDelta']    = $fareTierDelta;
+        $data['insuranceAmount']  = $insuranceAmount;
+        $data['addonTotal']       = $addonTotal;
+        $data['promoDiscount']    = $promoDiscount;
+        $data['grandTotal']       = $grandTotal;
+
         $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
-        $data['page_title'] = "Make Payment - Flight Booking - Voyogo";
+        $data['page_title'] = "Review Your Flight Details & Payment - Voyogo";
         $data['active_page'] = 'flight';
 
         $this->load->view('includes/header', $data);

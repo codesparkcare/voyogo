@@ -1112,8 +1112,8 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
     </div>
 </div>
 
-<!-- Hidden POST form to process payment upon button click -->
-<form id="finalPaymentForm" action="<?php echo site_url('flight/process_payment'); ?>" method="POST" style="display: none;">
+<!-- Hidden POST form to proceed to flight review & payment upon button click -->
+<form id="finalPaymentForm" action="<?php echo site_url('flight/payment'); ?>" method="POST" style="display: none;">
     <?php if (!empty($post_data) && is_array($post_data)): ?>
         <?php foreach ($post_data as $k => $v): ?>
             <?php if (is_array($v)): ?>
@@ -1152,6 +1152,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
     <input type="hidden" name="return_selected_seat_amount" id="form_ret_seat_amount" value="0">
     <input type="hidden" name="return_selected_seat_ssid" id="form_ret_seat_ssid" value="0">
 
+    <input type="hidden" name="addon_total_amount" id="form_addon_total_amount" value="0">
     <input type="hidden" name="total_amount" id="form_final_grand_total" value="<?php echo $initialGrandTotal; ?>">
     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
 </form>
@@ -1533,6 +1534,9 @@ function recalcTotal() {
     var grandTotal = Math.max(0, (baseFlightAmount + totalAddons) - appliedDiscount);
     document.getElementById('summaryGrandTotal').textContent = grandTotal.toLocaleString('en-IN');
     document.getElementById('form_final_grand_total').value = grandTotal;
+    if (document.getElementById('form_addon_total_amount')) {
+        document.getElementById('form_addon_total_amount').value = totalAddons;
+    }
 
     // Populate Onward Addons in Hidden Form
     document.getElementById('form_meal_code').value = userSelections.onward.meal ? userSelections.onward.meal.code : '';
@@ -1630,11 +1634,19 @@ function skipAddonsAndProceed() {
     userSelections.onward = { meal: null, baggage: null, seat: null };
     userSelections.return = { meal: null, baggage: null, seat: null };
     recalcTotal();
-    triggerFinalPayment();
+    proceedToPaymentReview();
 }
 
 function continueToPayment() {
-    triggerFinalPayment();
+    proceedToPaymentReview();
+}
+
+function proceedToPaymentReview() {
+    var form = document.getElementById('finalPaymentForm');
+    if (form) {
+        form.action = "<?php echo site_url('flight/payment'); ?>";
+        form.submit();
+    }
 }
 
 function triggerFinalPayment() {
