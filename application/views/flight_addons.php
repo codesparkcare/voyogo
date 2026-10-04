@@ -640,7 +640,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
 
         <!-- Top Navigation -->
         <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
-            <a href="javascript:history.back();" style="color: #0284c7; text-decoration: none; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+            <a href="<?php echo site_url('flight/review'); ?>" style="color: #0284c7; text-decoration: none; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
                 <i class="fa-solid fa-chevron-left" style="font-size: 11px;"></i> Back to Flight details
             </a>
         </div>

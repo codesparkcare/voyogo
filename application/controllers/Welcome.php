@@ -262,6 +262,31 @@ class Welcome extends CI_Controller {
             }
         }
 
+        // Check if this is a GET request without new flight parameters
+        // and we already have existing booking data in session (e.g. user clicked Back from addons/payment or refreshed)
+        $hasPost = !empty($this->input->post('tui')) || !empty($this->input->post('flight_id')) || !empty($this->input->post('flight_number'));
+        $hasGet = !empty($this->input->get('tui')) || !empty($this->input->get('flight_id'));
+        $hasUriParams = !empty($tui);
+
+        if (!$hasPost && !$hasGet && !$hasUriParams) {
+            $sessionBooking = $this->session->userdata('flight_booking_data');
+            if (!empty($sessionBooking) && !empty($sessionBooking['flight'])) {
+                $data = $sessionBooking;
+                $savedReviewPost = $this->session->userdata('flight_review_post');
+                if (!empty($savedReviewPost)) {
+                    $data['saved_review_post'] = $savedReviewPost;
+                }
+                $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
+                $this->load->view('includes/header', $data);
+                $this->load->view('flight_review', $data);
+                $this->load->view('includes/footer', $data);
+                return;
+            } else {
+                redirect('flight');
+                return;
+            }
+        }
+
         // Fallback to GET or POST if URL params not present
         if (empty($tui)) {
             $tui = $this->input->post('tui') ?: $this->input->get('tui') ?: $this->input->post('flight_id') ?: $this->input->get('flight_id') ?: ('100e7378-' . md5(uniqid()) . '|' . date('YmdHis'));
@@ -609,6 +634,15 @@ class Welcome extends CI_Controller {
         $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
 
         $this->session->set_userdata('flight_booking_data', $data);
+        $this->session->unset_userdata('flight_review_post');
+        $this->session->unset_userdata('flight_addons_post');
+
+        // PRG: If reached via POST from flight search results, redirect to GET /flight/review so browser history holds GET.
+        // This eliminates ERR_CACHE_MISS / "Confirm Form Resubmission" on back navigation and page reloads.
+        if ($this->input->method(TRUE) === 'POST') {
+            redirect('flight/review');
+            return;
+        }
 
         $this->load->view('includes/header', $data);
         $this->load->view('flight_review', $data);
@@ -626,8 +660,15 @@ class Welcome extends CI_Controller {
         $postData = $this->input->post();
         if (!empty($postData)) {
             $this->session->set_userdata('flight_review_post', $postData);
+            redirect('flight/addons');
+            return;
         } else {
             $postData = $this->session->userdata('flight_review_post') ?: array();
+        }
+
+        if (empty($sessionBooking)) {
+            redirect('flight');
+            return;
         }
 
         $data = array_merge($sessionBooking, $postData);
@@ -795,6 +836,8 @@ class Welcome extends CI_Controller {
 
         if (!empty($addonsPost)) {
             $this->session->set_userdata('flight_addons_post', $addonsPost);
+            redirect('flight/payment');
+            return;
         } else {
             $addonsPost = $this->session->userdata('flight_addons_post') ?: array();
         }

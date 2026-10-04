@@ -4,6 +4,7 @@
     $sessionUserEmail = $isUserLoggedIn ? ($this->session->userdata('user_email') ?: '') : '';
     $sessionUserPhone = $isUserLoggedIn ? ($this->session->userdata('user_phone') ?: '') : '';
     $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
+    $savedReview      = !empty($saved_review_post) ? $saved_review_post : ($this->session->userdata('flight_review_post') ?: array());
 
     $total_travelers_review = max(1, ($search_query['adults'] ?? 1) + ($search_query['children'] ?? 0) + ($search_query['infants'] ?? 0));
     $adult_count  = max(1, (int)($search_query['adults'] ?? 1));
@@ -1382,6 +1383,12 @@
                     <?php 
                     $flight_dep_date = !empty($flightDetails['departure_date']) ? $flightDetails['departure_date'] : date('Y-m-d', strtotime('+7 days'));
                     for ($a = 1; $a <= $adult_count; $a++): $p_index++; 
+                        $p_arr_idx = $p_index - 1;
+                        $curTitle  = !empty($savedReview['passenger_title'][$p_arr_idx]) ? $savedReview['passenger_title'][$p_arr_idx] : 'Mr';
+                        $curName   = !empty($savedReview['passenger_name'][$p_arr_idx]) ? $savedReview['passenger_name'][$p_arr_idx] : (($p_index === 1 && empty($savedReview['passenger_name'])) ? 'Rahul Sharma' : '');
+                        $curDob    = !empty($savedReview['passenger_dob'][$p_arr_idx]) ? $savedReview['passenger_dob'][$p_arr_idx] : '1996-05-15';
+                        $curAge    = !empty($savedReview['passenger_age'][$p_arr_idx]) ? $savedReview['passenger_age'][$p_arr_idx] : '28';
+                        $curGender = !empty($savedReview['passenger_gender_' . $p_index]) ? $savedReview['passenger_gender_' . $p_index] : 'Male';
                     ?>
                     <div class="passenger-card" style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
@@ -1397,37 +1404,44 @@
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Title *</label>
                                 <select name="passenger_title[]" class="field-input" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #fff;">
-                                    <option value="Mr">Mr</option>
-                                    <option value="Ms">Ms</option>
-                                    <option value="Mrs">Mrs</option>
+                                    <option value="Mr" <?php echo ($curTitle === 'Mr') ? 'selected' : ''; ?>>Mr</option>
+                                    <option value="Ms" <?php echo ($curTitle === 'Ms') ? 'selected' : ''; ?>>Ms</option>
+                                    <option value="Mrs" <?php echo ($curTitle === 'Mrs') ? 'selected' : ''; ?>>Mrs</option>
                                 </select>
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Full Name *</label>
-                                <input type="text" name="passenger_name[]" class="field-input" required placeholder="Enter First & Last Name" value="<?php echo ($p_index === 1) ? 'Rahul Sharma' : ''; ?>" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="text" name="passenger_name[]" class="field-input" required placeholder="Enter First & Last Name" value="<?php echo htmlspecialchars($curName); ?>" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Date of Birth (DOB) *</label>
-                                <input type="date" name="passenger_dob[]" class="field-input dob-input" required value="1996-05-15" max="<?php echo date('Y-m-d', strtotime('-12 years', strtotime($flight_dep_date))); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="date" name="passenger_dob[]" class="field-input dob-input" required value="<?php echo htmlspecialchars($curDob); ?>" max="<?php echo date('Y-m-d', strtotime('-12 years', strtotime($flight_dep_date))); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Age *</label>
-                                <input type="number" name="passenger_age[]" class="field-input age-input" required value="28" min="12" max="99" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f8fafc;">
+                                <input type="number" name="passenger_age[]" class="field-input age-input" required value="<?php echo htmlspecialchars($curAge); ?>" min="12" max="99" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f8fafc;">
                             </div>
                         </div>
 
                         <div>
                             <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Gender *</label>
                             <div style="display: flex; gap: 24px; font-size: 14px; font-weight: 600; color: #334155;">
-                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Male" checked style="accent-color: #2563eb;"> Male</label>
-                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Female" style="accent-color: #2563eb;"> Female</label>
+                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Male" <?php echo ($curGender !== 'Female') ? 'checked' : ''; ?> style="accent-color: #2563eb;"> Male</label>
+                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Female" <?php echo ($curGender === 'Female') ? 'checked' : ''; ?> style="accent-color: #2563eb;"> Female</label>
                             </div>
                         </div>
                     </div>
                     <?php endfor; ?>
 
                     <!-- Child Passenger Cards -->
-                    <?php for ($c = 1; $c <= $child_count; $c++): $p_index++; ?>
+                    <?php for ($c = 1; $c <= $child_count; $c++): $p_index++; 
+                        $p_arr_idx = $p_index - 1;
+                        $curTitle  = !empty($savedReview['passenger_title'][$p_arr_idx]) ? $savedReview['passenger_title'][$p_arr_idx] : 'Mstr';
+                        $curName   = !empty($savedReview['passenger_name'][$p_arr_idx]) ? $savedReview['passenger_name'][$p_arr_idx] : '';
+                        $curDob    = !empty($savedReview['passenger_dob'][$p_arr_idx]) ? $savedReview['passenger_dob'][$p_arr_idx] : '2019-08-30';
+                        $curAge    = !empty($savedReview['passenger_age'][$p_arr_idx]) ? $savedReview['passenger_age'][$p_arr_idx] : '7';
+                        $curGender = !empty($savedReview['passenger_gender_' . $p_index]) ? $savedReview['passenger_gender_' . $p_index] : 'Male';
+                    ?>
                     <div class="passenger-card" style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
                             <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
@@ -1442,36 +1456,43 @@
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Title *</label>
                                 <select name="passenger_title[]" class="field-input" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #fff;">
-                                    <option value="Mstr">Master</option>
-                                    <option value="Miss">Miss</option>
+                                    <option value="Mstr" <?php echo ($curTitle === 'Mstr') ? 'selected' : ''; ?>>Master</option>
+                                    <option value="Miss" <?php echo ($curTitle === 'Miss') ? 'selected' : ''; ?>>Miss</option>
                                 </select>
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Full Name *</label>
-                                <input type="text" name="passenger_name[]" class="field-input" required placeholder="Enter Child's Name" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="text" name="passenger_name[]" class="field-input" required placeholder="Enter Child's Name" value="<?php echo htmlspecialchars($curName); ?>" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Date of Birth (DOB) *</label>
-                                <input type="date" name="passenger_dob[]" class="field-input dob-input" required value="2019-08-30" min="<?php echo date('Y-m-d', strtotime('-12 years', strtotime($flight_dep_date))); ?>" max="<?php echo date('Y-m-d', strtotime('-2 years', strtotime($flight_dep_date))); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="date" name="passenger_dob[]" class="field-input dob-input" required value="<?php echo htmlspecialchars($curDob); ?>" min="<?php echo date('Y-m-d', strtotime('-12 years', strtotime($flight_dep_date))); ?>" max="<?php echo date('Y-m-d', strtotime('-2 years', strtotime($flight_dep_date))); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Age *</label>
-                                <input type="number" name="passenger_age[]" class="field-input age-input" required value="7" min="2" max="11" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f8fafc;">
+                                <input type="number" name="passenger_age[]" class="field-input age-input" required value="<?php echo htmlspecialchars($curAge); ?>" min="2" max="11" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f8fafc;">
                             </div>
                         </div>
 
                         <div>
                             <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Gender *</label>
                             <div style="display: flex; gap: 24px; font-size: 14px; font-weight: 600; color: #334155;">
-                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Male" checked style="accent-color: #2563eb;"> Male</label>
-                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Female" style="accent-color: #2563eb;"> Female</label>
+                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Male" <?php echo ($curGender !== 'Female') ? 'checked' : ''; ?> style="accent-color: #2563eb;"> Male</label>
+                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Female" <?php echo ($curGender === 'Female') ? 'checked' : ''; ?> style="accent-color: #2563eb;"> Female</label>
                             </div>
                         </div>
                     </div>
                     <?php endfor; ?>
 
                     <!-- Infant Passenger Cards -->
-                    <?php for ($i_cnt = 1; $i_cnt <= $infant_count; $i_cnt++): $p_index++; ?>
+                    <?php for ($i_cnt = 1; $i_cnt <= $infant_count; $i_cnt++): $p_index++; 
+                        $p_arr_idx = $p_index - 1;
+                        $curTitle  = !empty($savedReview['passenger_title'][$p_arr_idx]) ? $savedReview['passenger_title'][$p_arr_idx] : 'Mstr';
+                        $curName   = !empty($savedReview['passenger_name'][$p_arr_idx]) ? $savedReview['passenger_name'][$p_arr_idx] : '';
+                        $curDob    = !empty($savedReview['passenger_dob'][$p_arr_idx]) ? $savedReview['passenger_dob'][$p_arr_idx] : '2025-08-30';
+                        $curAge    = !empty($savedReview['passenger_age'][$p_arr_idx]) ? $savedReview['passenger_age'][$p_arr_idx] : '1';
+                        $curGender = !empty($savedReview['passenger_gender_' . $p_index]) ? $savedReview['passenger_gender_' . $p_index] : 'Male';
+                    ?>
                     <div class="passenger-card" style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
                             <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
@@ -1486,35 +1507,42 @@
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Title *</label>
                                 <select name="passenger_title[]" class="field-input" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #fff;">
-                                    <option value="Mstr">Master</option>
-                                    <option value="Miss">Miss</option>
+                                    <option value="Mstr" <?php echo ($curTitle === 'Mstr') ? 'selected' : ''; ?>>Master</option>
+                                    <option value="Miss" <?php echo ($curTitle === 'Miss') ? 'selected' : ''; ?>>Miss</option>
                                 </select>
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Full Name *</label>
-                                <input type="text" name="passenger_name[]" class="field-input" required placeholder="Enter Infant's Name" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="text" name="passenger_name[]" class="field-input" required placeholder="Enter Infant's Name" value="<?php echo htmlspecialchars($curName); ?>" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Date of Birth (DOB) *</label>
-                                <input type="date" name="passenger_dob[]" class="field-input dob-input" required value="2025-08-30" min="<?php echo date('Y-m-d', strtotime('-2 years', strtotime($flight_dep_date))); ?>" max="<?php echo date('Y-m-d', strtotime($flight_dep_date)); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="date" name="passenger_dob[]" class="field-input dob-input" required value="<?php echo htmlspecialchars($curDob); ?>" min="<?php echo date('Y-m-d', strtotime('-2 years', strtotime($flight_dep_date))); ?>" max="<?php echo date('Y-m-d', strtotime($flight_dep_date)); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Age *</label>
-                                <input type="number" name="passenger_age[]" class="field-input age-input" required value="1" min="0" max="2" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f8fafc;">
+                                <input type="number" name="passenger_age[]" class="field-input age-input" required value="<?php echo htmlspecialchars($curAge); ?>" min="0" max="2" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f8fafc;">
                             </div>
                         </div>
 
                         <div>
                             <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Gender *</label>
                             <div style="display: flex; gap: 24px; font-size: 14px; font-weight: 600; color: #334155;">
-                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Male" checked style="accent-color: #2563eb;"> Male</label>
-                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Female" style="accent-color: #2563eb;"> Female</label>
+                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Male" <?php echo ($curGender !== 'Female') ? 'checked' : ''; ?> style="accent-color: #2563eb;"> Male</label>
+                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Female" <?php echo ($curGender === 'Female') ? 'checked' : ''; ?> style="accent-color: #2563eb;"> Female</label>
                             </div>
                         </div>
                     </div>
                     <?php endfor; ?>
 
                     <!-- Contact & GST Details Card -->
+                    <?php
+                        $curContactName  = !empty($savedReview['contact_name']) ? $savedReview['contact_name'] : ($sessionUserName ?: 'Rahul Sharma');
+                        $curContactEmail = !empty($savedReview['contact_email']) ? $savedReview['contact_email'] : ($sessionUserEmail ?: '');
+                        $curContactPhone = !empty($savedReview['contact_phone']) ? $savedReview['contact_phone'] : ($cleanPhone ?: $sessionUserPhone);
+                        $curGstNumber    = !empty($savedReview['gst_number']) ? $savedReview['gst_number'] : '';
+                        $curGstCompany   = !empty($savedReview['gst_company']) ? $savedReview['gst_company'] : '';
+                    ?>
                     <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                         <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                             <i class="fa-solid fa-address-book" style="color: #2563eb;"></i> Contact & E-Ticket Details
@@ -1523,33 +1551,33 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Contact Person *</label>
-                                <input type="text" name="contact_name" class="field-input" required value="<?php echo htmlspecialchars($sessionUserName ?: ''); ?>" placeholder="Full Name" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="text" name="contact_name" class="field-input" required value="<?php echo htmlspecialchars($curContactName); ?>" placeholder="Full Name" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Email Address *</label>
-                                <input type="email" name="contact_email" class="field-input" required value="<?php echo htmlspecialchars($sessionUserEmail ?: ''); ?>" placeholder="name@example.com" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="email" name="contact_email" class="field-input" required value="<?php echo htmlspecialchars($curContactEmail); ?>" placeholder="name@example.com" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                             <div>
                                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Mobile Number *</label>
-                                <input type="tel" name="contact_phone" class="field-input" required value="<?php echo htmlspecialchars($cleanPhone ?: $sessionUserPhone); ?>" placeholder="10-digit mobile" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                <input type="tel" name="contact_phone" class="field-input" required value="<?php echo htmlspecialchars($curContactPhone); ?>" placeholder="10-digit mobile" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
                             </div>
                         </div>
 
                         <!-- GST Checkbox Toggle -->
                         <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-top: 14px;">
                             <label style="font-size: 13px; font-weight: 700; color: #0d3470; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                                <input type="checkbox" id="gstToggle" onchange="toggleGstFields()" style="accent-color: #2563eb; width: 16px; height: 16px;">
+                                <input type="checkbox" id="gstToggle" onchange="toggleGstFields()" <?php echo !empty($curGstNumber) ? 'checked' : ''; ?> style="accent-color: #2563eb; width: 16px; height: 16px;">
                                 Use GSTIN for Business Travel & Tax Invoice Claim (Optional)
                             </label>
 
-                            <div id="gstFieldsSection" style="display: none; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; background: #f8fafc; padding: 14px; border-radius: 8px;">
+                            <div id="gstFieldsSection" style="display: <?php echo !empty($curGstNumber) ? 'grid' : 'none'; ?>; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; background: #f8fafc; padding: 14px; border-radius: 8px;">
                                 <div>
                                     <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">GSTIN Number</label>
-                                    <input type="text" name="gst_number" placeholder="27AAAAA0000A1Z5" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                    <input type="text" name="gst_number" value="<?php echo htmlspecialchars($curGstNumber); ?>" placeholder="27AAAAA0000A1Z5" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
                                 </div>
                                 <div>
                                     <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Registered Company Name</label>
-                                    <input type="text" name="gst_company" placeholder="Voyogo Solutions Pvt Ltd" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                    <input type="text" name="gst_company" value="<?php echo htmlspecialchars($curGstCompany); ?>" placeholder="Voyogo Solutions Pvt Ltd" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
                                 </div>
                             </div>
                         </div>
