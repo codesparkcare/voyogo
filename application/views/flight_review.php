@@ -410,7 +410,7 @@
                             </div>
 
                             <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                                <a href="javascript:void(0);" onclick="document.getElementById('cancellationPolicyTable').scrollIntoView({behavior:'smooth'});" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                                <a href="javascript:void(0);" onclick="scrollToFareOptions('onward');" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
                                     <i class="fa-solid fa-circle-info"></i> Fare Rules
                                 </a>
                                 <?php if (!empty($flight['fare_type'])): ?>
@@ -585,23 +585,26 @@
                                     </span>
                                 </div>
                             </div>
-                            <div style="text-align: right;">
+                            <div style="text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
+                                <a href="javascript:void(0);" onclick="scrollToFareOptions('onward');" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
+                                    <i class="fa-solid fa-circle-info"></i> Fare Rules
+                                </a>
                                 <span style="background: #eff6ff; color: #1d4ed8; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 12px; display: inline-block;">
                                     <?php echo date('D, d M Y', strtotime($flight['departure_date'])); ?>
                                 </span>
                                 <?php if (!empty($flight['fare_type'])): ?>
-                                    <span style="background: <?php echo (stripos($flight['fare_type'], 'flex') !== false || stripos($flight['fare_type'], 'super') !== false || stripos($flight['fare_type'], 'upfront') !== false) ? '#fef3c7' : '#f1f5f9'; ?>; color: <?php echo (stripos($flight['fare_type'], 'flex') !== false || stripos($flight['fare_type'], 'super') !== false || stripos($flight['fare_type'], 'upfront') !== false) ? '#b45309' : '#334155'; ?>; padding: 5px 12px; border-radius: 12px; font-weight: 800; font-size: 11px; margin-left: 6px; border: 1px solid <?php echo (stripos($flight['fare_type'], 'flex') !== false || stripos($flight['fare_type'], 'super') !== false || stripos($flight['fare_type'], 'upfront') !== false) ? '#fcd34d' : '#e2e8f0'; ?>;">
+                                    <span style="background: <?php echo (stripos($flight['fare_type'], 'flex') !== false || stripos($flight['fare_type'], 'super') !== false || stripos($flight['fare_type'], 'upfront') !== false) ? '#fef3c7' : '#f1f5f9'; ?>; color: <?php echo (stripos($flight['fare_type'], 'flex') !== false || stripos($flight['fare_type'], 'super') !== false || stripos($flight['fare_type'], 'upfront') !== false) ? '#b45309' : '#334155'; ?>; padding: 5px 12px; border-radius: 12px; font-weight: 800; font-size: 11px; border: 1px solid <?php echo (stripos($flight['fare_type'], 'flex') !== false || stripos($flight['fare_type'], 'super') !== false || stripos($flight['fare_type'], 'upfront') !== false) ? '#fcd34d' : '#e2e8f0'; ?>;">
                                         <i class="<?php echo (stripos($flight['fare_type'], 'upfront') !== false || stripos($flight['fare_type'], 'super') !== false) ? 'fa-solid fa-crown' : 'fa-solid fa-tag'; ?>" style="font-size: 10px; margin-right: 2px;"></i> <?php echo htmlspecialchars($flight['fare_type']); ?> Fare
                                     </span>
                                 <?php endif; ?>
                                 <?php if (!empty($flight['refundable'])): ?>
-                                    <span style="background: #f0fdf4; color: #15803d; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 11px; margin-left: 6px; border: 1px solid #bbf7d0;">
+                                    <span style="background: #f0fdf4; color: #15803d; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 11px; border: 1px solid #bbf7d0;">
                                         <i class="fa-solid fa-rotate-left"></i> Refundable
                                     </span>
                                 <?php endif; ?>
 
                                 <!-- Maximize / Minimize Icon (Screenshot 2 Match) -->
-                                <button type="button" id="btnToggle_onward" onclick="toggleFlightBox('onward')" title="Minimize" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #334155; margin-left: 8px; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                                <button type="button" id="btnToggle_onward" onclick="toggleFlightBox('onward')" title="Minimize" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #334155; margin-left: 6px; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
                                     <i id="iconToggle_onward" class="fa-solid fa-chevron-up" style="font-size: 13px;"></i>
                                 </button>
                             </div>
@@ -738,7 +741,7 @@
                             </div>
 
                             <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                                <a href="javascript:void(0);" onclick="document.getElementById('returnCancellationPolicyTable').scrollIntoView({behavior:'smooth'});" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                                <a href="javascript:void(0);" onclick="scrollToFareOptions('return');" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
                                     <i class="fa-solid fa-circle-info"></i> Fare Rules
                                 </a>
                                 <?php if (!empty($return_flight['fare_type'])): ?>
@@ -913,7 +916,7 @@
                                 </div>
                             </div>
                             <div style="text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
-                                <a href="javascript:void(0);" onclick="document.getElementById('returnCancellationPolicyTable').scrollIntoView({behavior:'smooth'});" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                                <a href="javascript:void(0);" onclick="scrollToFareOptions('return');" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
                                     <i class="fa-solid fa-circle-info"></i> Fare Rules
                                 </a>
                                 <span style="background: #f0fdf4; color: #15803d; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 12px; display: inline-block;">
@@ -1102,7 +1105,7 @@
                     <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
 
                     <!-- 1. More Fare Options for Additional Benefits (Screenshot 2) -->
-                    <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
+                    <div id="moreFareOptionsSection" style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0; scroll-margin-top: 85px;">
                         <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin: 0 0 16px 0;">
                             More Fare Options for Additional Benefits
                         </h3>
@@ -2034,6 +2037,25 @@ var onwardTierDelta = 0;
 var selectedReturnTier = 'Value';
 var returnTierDelta = 0;
 
+function scrollToFareOptions(sector) {
+    if (sector === 'return') {
+        switchFareRouteSector('return');
+    } else {
+        switchFareRouteSector('onward');
+    }
+    var target = document.getElementById('moreFareOptionsSection');
+    if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.style.transition = 'box-shadow 0.3s ease, border-color 0.3s ease';
+        target.style.boxShadow = '0 0 0 3px rgba(2, 132, 199, 0.4)';
+        target.style.borderColor = '#0284c7';
+        setTimeout(function() {
+            target.style.boxShadow = '0 4px 20px rgba(0,32,90,0.04)';
+            target.style.borderColor = '#e2e8f0';
+        }, 1500);
+    }
+}
+
 function switchFareRouteSector(sector) {
     var tabOnward = document.getElementById('fareTab_onward');
     var tabReturn = document.getElementById('fareTab_return');
@@ -2042,12 +2064,14 @@ function switchFareRouteSector(sector) {
 
     if (sector === 'onward') {
         if (tabOnward) {
+            tabOnward.classList.add('active');
             tabOnward.style.borderColor = '#0284c7';
             tabOnward.style.background = '#f0f9ff';
             var t1 = tabOnward.querySelector('.tab-title');
             if (t1) t1.style.color = '#0369a1';
         }
         if (tabReturn) {
+            tabReturn.classList.remove('active');
             tabReturn.style.borderColor = '#e2e8f0';
             tabReturn.style.background = '#f8fafc';
             var t2 = tabReturn.querySelector('.tab-title');
@@ -2057,12 +2081,14 @@ function switchFareRouteSector(sector) {
         if (secReturn) secReturn.style.display = 'none';
     } else {
         if (tabReturn) {
+            tabReturn.classList.add('active');
             tabReturn.style.borderColor = '#0284c7';
             tabReturn.style.background = '#f0f9ff';
             var t2 = tabReturn.querySelector('.tab-title');
             if (t2) t2.style.color = '#0369a1';
         }
         if (tabOnward) {
+            tabOnward.classList.remove('active');
             tabOnward.style.borderColor = '#e2e8f0';
             tabOnward.style.background = '#f8fafc';
             var t1 = tabOnward.querySelector('.tab-title');
