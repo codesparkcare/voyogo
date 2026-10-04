@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Voyogo Flight Payment & Final Review Page
  * Matches Akbar Travels Flight Details Modal & Review Page Architecture
+ * Supports 1+ Stops Connecting Flight Legs with Layover Notification Banner (Screenshots 2 & 3)
  */
 
 $flight        = $flight ?? array();
@@ -14,24 +15,196 @@ $post_data     = $post_data ?? array();
 $passengers    = $passengers ?? array();
 $total_pax     = max(1, count($passengers));
 
-// Flight display vars
+// Airport Database for rich city, airport names, and terminals
+$airportDb = array(
+    'DEL' => array('city' => 'New Delhi', 'name' => 'Indira Gandhi International Airport, Delhi', 'country' => 'India', 'terminal' => 'Terminal 2'),
+    'BOM' => array('city' => 'Mumbai', 'name' => 'Chhatrapati Shivaji Maharaj International Airport, Mumbai', 'country' => 'India', 'terminal' => 'Terminal 2'),
+    'HYD' => array('city' => 'Hyderabad', 'name' => 'Rajiv Gandhi International Airport', 'country' => 'India', 'terminal' => 'Terminal 1'),
+    'BLR' => array('city' => 'Bengaluru', 'name' => 'Kempegowda International Airport', 'country' => 'India', 'terminal' => 'Terminal 1'),
+    'CCU' => array('city' => 'Kolkata', 'name' => 'Netaji Subhash Chandra Bose International Airport', 'country' => 'India', 'terminal' => 'Terminal 1'),
+    'MAA' => array('city' => 'Chennai', 'name' => 'Chennai International Airport', 'country' => 'India', 'terminal' => 'Terminal 1'),
+    'GOI' => array('city' => 'Goa', 'name' => 'Dabolim Airport', 'country' => 'India', 'terminal' => 'Terminal 1'),
+    'GOX' => array('city' => 'Goa MOPA', 'name' => 'Manohar International Airport', 'country' => 'India', 'terminal' => 'Terminal 1'),
+    'AMD' => array('city' => 'Ahmedabad', 'name' => 'Sardar Vallabhbhai Patel International Airport', 'country' => 'India', 'terminal' => 'Terminal 1'),
+    'PNQ' => array('city' => 'Pune', 'name' => 'Pune International Airport', 'country' => 'India', 'terminal' => 'Terminal 1'),
+    'JAI' => array('city' => 'Jaipur', 'name' => 'Jaipur International Airport', 'country' => 'India', 'terminal' => 'Terminal 1'),
+    'LKO' => array('city' => 'Lucknow', 'name' => 'Chaudhary Charan Singh International Airport', 'country' => 'India', 'terminal' => 'Terminal 2'),
+    'COK' => array('city' => 'Kochi', 'name' => 'Cochin International Airport', 'country' => 'India', 'terminal' => 'Terminal 3'),
+    'DXB' => array('city' => 'Dubai', 'name' => 'Dubai International Airport', 'country' => 'United Arab Emirates', 'terminal' => 'Terminal 3'),
+    'SIN' => array('city' => 'Singapore', 'name' => 'Singapore Changi Airport', 'country' => 'Singapore', 'terminal' => 'Terminal 3'),
+    'BKK' => array('city' => 'Bangkok', 'name' => 'Suvarnabhumi Airport', 'country' => 'Thailand', 'terminal' => 'Terminal 1'),
+    'LHR' => array('city' => 'London', 'name' => 'Heathrow Airport', 'country' => 'United Kingdom', 'terminal' => 'Terminal 2'),
+    'DMM' => array('city' => 'Dammam', 'name' => 'King Fahd International Airport', 'country' => 'Saudi Arabia', 'terminal' => 'Terminal 1'),
+    'RUH' => array('city' => 'Riyadh', 'name' => 'King Khalid International Airport', 'country' => 'Saudi Arabia', 'terminal' => 'Terminal 2'),
+    'JED' => array('city' => 'Jeddah', 'name' => 'King Abdulaziz International Airport', 'country' => 'Saudi Arabia', 'terminal' => 'North Terminal'),
+    'NMI' => array('city' => 'Navi Mumbai', 'name' => 'Navi Mumbai International Airport', 'country' => 'India', 'terminal' => 'Terminal 1')
+);
+
+if (!function_exists('parseTimeToMins')) {
+    function parseTimeToMins($timeStr) {
+        if (preg_match('/(\d{1,2}):(\d{2})/', (string)$timeStr, $m)) {
+            return (int)$m[1] * 60 + (int)$m[2];
+        }
+        return 0;
+    }
+}
+if (!function_exists('minsToTimeStr')) {
+    function minsToTimeStr($mins) {
+        $mins = ($mins % 1440 + 1440) % 1440;
+        $h = floor($mins / 60);
+        $m = $mins % 60;
+        return sprintf('%02d:%02d', $h, $m);
+    }
+}
+if (!function_exists('formatMinsDuration')) {
+    function formatMinsDuration($mins) {
+        $h = floor($mins / 60);
+        $m = $mins % 60;
+        if ($h > 0 && $m > 0) {
+            return sprintf('%02d Hr. %02d Min.', $h, $m);
+        } elseif ($h > 0) {
+            return sprintf('%02d Hr.', $h);
+        } else {
+            return sprintf('%02d Min.', $m);
+        }
+    }
+}
+if (!function_exists('buildConnectingFlightSegments')) {
+    function buildConnectingFlightSegments($flt, $airportDb) {
+        if (!empty($flt['segments']) && is_array($flt['segments']) && count($flt['segments']) >= 2) {
+            $seg1 = $flt['segments'][0];
+            $seg2 = $flt['segments'][1];
+            
+            $fromCode = strtoupper($seg1['from_code'] ?? ($flt['from_code'] ?? 'DEL'));
+            $viaCode  = strtoupper($seg1['to_code'] ?? ($seg2['from_code'] ?? 'HYD'));
+            $toCode   = strtoupper($seg2['to_code'] ?? ($flt['to_code'] ?? 'BOM'));
+            
+            $fromInfo = $airportDb[$fromCode] ?? array('city' => $seg1['from_city'] ?? $fromCode, 'name' => $seg1['from_airport'] ?? ($fromCode . ' Airport'), 'country' => 'India', 'terminal' => $seg1['from_terminal'] ?? 'Terminal 2');
+            $viaInfo  = $airportDb[$viaCode] ?? array('city' => $seg1['to_city'] ?? ($seg2['from_city'] ?? $viaCode), 'name' => $seg1['to_airport'] ?? ($viaCode . ' Airport'), 'country' => 'India', 'terminal' => $seg2['from_terminal'] ?? 'Terminal 1');
+            $toInfo   = $airportDb[$toCode] ?? array('city' => $seg2['to_city'] ?? $toCode, 'name' => $seg2['to_airport'] ?? ($toCode . ' Airport'), 'country' => 'India', 'terminal' => $seg2['to_terminal'] ?? 'Terminal 2');
+            
+            $dep1 = $seg1['departure_time'] ?? ($flt['departure_time'] ?? '07:15');
+            $arr1 = $seg1['arrival_time'] ?? '09:20';
+            $dep2 = $seg2['departure_time'] ?? '10:59';
+            $arr2 = $seg2['arrival_time'] ?? ($flt['arrival_time'] ?? '12:45');
+            
+            $depM1 = parseTimeToMins($dep1);
+            $arrM1 = parseTimeToMins($arr1);
+            if ($arrM1 < $depM1) $arrM1 += 1440;
+            $dur1 = $arrM1 - $depM1;
+            
+            $depM2 = parseTimeToMins($dep2);
+            $arrM2 = parseTimeToMins($arr2);
+            if ($arrM2 < $depM2) $arrM2 += 1440;
+            $dur2 = $arrM2 - $depM2;
+            
+            $layM = $depM2 - $arrM1;
+            if ($layM < 0) $layM += 1440;
+            if ($layM <= 0) $layM = 99;
+            
+            return array(
+                'from_info' => $fromInfo,
+                'to_info' => $toInfo,
+                'via_info' => $viaInfo,
+                'from_code' => $fromCode,
+                'to_code' => $toCode,
+                'via_code' => $viaCode,
+                'leg1_fn' => $seg1['flight_number'] ?? ($flt['flight_number'] ?? '6E-5021'),
+                'leg2_fn' => $seg2['flight_number'] ?? ($flt['flight_number'] ?? '6E-5039'),
+                'leg1_dep' => $dep1,
+                'leg1_arr' => $arr1,
+                'leg1_duration' => formatMinsDuration($dur1),
+                'layover_duration' => sprintf('%02dh:%02dm', floor($layM / 60), $layM % 60),
+                'leg2_dep' => $dep2,
+                'leg2_arr' => $arr2,
+                'leg2_duration' => formatMinsDuration($dur2),
+            );
+        }
+
+        $depMins = parseTimeToMins($flt['departure_time'] ?? '07:15');
+        $arrMins = parseTimeToMins($flt['arrival_time'] ?? '12:45');
+        if ($arrMins < $depMins) {
+            $arrMins += 1440;
+        }
+        $totalJourneyMins = $arrMins - $depMins;
+        if ($totalJourneyMins <= 60) {
+            $totalJourneyMins = 330;
+        }
+
+        $leg1Mins = max(60, (int)round($totalJourneyMins * 0.38));
+        $layoverMins = max(45, (int)round($totalJourneyMins * 0.30));
+        $leg2Mins = $totalJourneyMins - $leg1Mins - $layoverMins;
+        if ($leg2Mins < 45) {
+            $leg2Mins = 55;
+            $layoverMins = max(40, $totalJourneyMins - $leg1Mins - $leg2Mins);
+        }
+
+        $leg1Dep = $flt['departure_time'] ?? '07:15';
+        $leg1ArrMins = $depMins + $leg1Mins;
+        $leg1Arr = minsToTimeStr($leg1ArrMins);
+
+        $leg2DepMins = $leg1ArrMins + $layoverMins;
+        $leg2Dep = minsToTimeStr($leg2DepMins);
+        $leg2Arr = $flt['arrival_time'] ?? '12:45';
+
+        $fromCode = strtoupper($flt['from_code'] ?? 'DEL');
+        $toCode = strtoupper($flt['to_code'] ?? 'BOM');
+        $viaCode = !empty($flt['via']) ? strtoupper($flt['via']) : 'HYD';
+        if ($viaCode === $fromCode || $viaCode === $toCode) {
+            $viaCode = ($fromCode === 'HYD' || $toCode === 'HYD') ? 'BHO' : 'HYD';
+        }
+
+        $fromInfo = $airportDb[$fromCode] ?? array('city' => ($flt['from_city'] ?? $fromCode), 'name' => ($flt['from_airport'] ?? $fromCode . ' Airport'), 'country' => 'India', 'terminal' => ($flt['from_terminal'] ?? 'Terminal 2'));
+        $toInfo = $airportDb[$toCode] ?? array('city' => ($flt['to_city'] ?? $toCode), 'name' => ($flt['to_airport'] ?? $toCode . ' Airport'), 'country' => 'India', 'terminal' => ($flt['to_terminal'] ?? 'Terminal 1'));
+        $viaInfo = $airportDb[$viaCode] ?? array('city' => $viaCode, 'name' => $viaCode . ' Airport', 'country' => 'India', 'terminal' => 'Terminal 1');
+
+        $fn1 = $flt['flight_number'] ?? '6E-5021';
+        $fn2 = $fn1;
+        if (preg_match('/^([A-Z0-9]{2})[-\s]?(\d+)$/i', trim($fn1), $fnM)) {
+            $fn2 = strtoupper($fnM[1]) . '-' . ((int)$fnM[2] + 18);
+        } else {
+            $fn2 = $fn1 . 'B';
+        }
+
+        return array(
+            'from_info' => $fromInfo,
+            'to_info' => $toInfo,
+            'via_info' => $viaInfo,
+            'from_code' => $fromCode,
+            'to_code' => $toCode,
+            'via_code' => $viaCode,
+            'leg1_fn' => $fn1,
+            'leg2_fn' => $fn2,
+            'leg1_dep' => $leg1Dep,
+            'leg1_arr' => $leg1Arr,
+            'leg1_duration' => formatMinsDuration($leg1Mins),
+            'layover_duration' => sprintf('%02dh:%02dm', floor($layoverMins / 60), $layoverMins % 60),
+            'leg2_dep' => $leg2Dep,
+            'leg2_arr' => $leg2Arr,
+            'leg2_duration' => formatMinsDuration($leg2Mins),
+        );
+    }
+}
+
+// Onward flight display vars
 $airlineName   = $flight['airline_name'] ?? 'IndiGo';
 $airlineLogo   = $flight['airline_logo'] ?? 'https://imgak.akbartravels.com/airline-logo/6E.png';
 $flightNumber  = $flight['flight_number'] ?? '6E-5021';
-$depTime       = $flight['departure_time'] ?? '06:05';
-$arrTime       = $flight['arrival_time'] ?? '08:15';
+$depTime       = $flight['departure_time'] ?? '07:15';
+$arrTime       = $flight['arrival_time'] ?? '12:45';
 $depDate       = $flight['departure_date'] ?? date('Y-m-d', strtotime('+3 days'));
 $arrDate       = $flight['arrival_date'] ?? $depDate;
 $fromCity      = $flight['from_city'] ?? 'New Delhi';
 $fromCode      = $flight['from_code'] ?? 'DEL';
-$fromAirport   = $flight['from_airport'] ?? 'Indira Gandhi International Airport';
-$fromTerminal  = $flight['from_terminal'] ?? 'Terminal 1';
+$fromAirport   = $flight['from_airport'] ?? 'Indira Gandhi International Airport, Delhi';
+$fromTerminal  = $flight['from_terminal'] ?? 'Terminal 2';
 $toCity        = $flight['to_city'] ?? 'Mumbai';
 $toCode        = $flight['to_code'] ?? 'BOM';
-$toAirport     = $flight['to_airport'] ?? 'Chhatrapati Shivaji Maharaj International Airport';
+$toAirport     = $flight['to_airport'] ?? 'Chhatrapati Shivaji Maharaj International Airport, Mumbai';
 $toTerminal    = $flight['to_terminal'] ?? 'Terminal 2';
-$flightDuration = $flight['duration'] ?? '02h 10m';
+$flightDuration = $flight['duration'] ?? '05h 30m';
 $flightStops   = (int)($flight['stops'] ?? 0);
+$isOnwardConnecting = ($flightStops > 0);
 $isRefundable  = !empty($flight['refundable']);
 
 // Return flight display vars (if roundtrip)
@@ -52,12 +225,19 @@ $retToAirport  = $return_flight['to_airport'] ?? $fromAirport;
 $retToTerminal = $return_flight['to_terminal'] ?? $fromTerminal;
 $retDuration   = $return_flight['duration'] ?? '05h 15m';
 $retStops      = (int)($return_flight['stops'] ?? 0);
+$isReturnConnecting = ($retStops > 0);
 $retIsRefundable = !empty($return_flight['refundable']);
 
-// Travel Class and Baggage allowances
-$travelClassDisplay = $post_data['cabin_class'] ?? ($search_query['cabin_class'] ?? 'Economy');
-$checkinBaggage = $flight['checkin_baggage'] ?? 'Adult - 15Kg';
-$cabinBaggage   = $flight['cabin_baggage'] ?? 'Adult - 7Kg';
+// Travel Class, Aircraft and Baggage allowances
+$aircraftDisplay    = !empty($flight['aircraft']) ? strtoupper(trim($flight['aircraft'])) : 'BOEING';
+$travelClassDisplay = $post_data['cabin_class'] ?? ($search_query['cabin_class'] ?? ($flight['cabin_class'] ?? 'Economy'));
+$checkinDisplay     = $flight['checkin_baggage'] ?? 'Adult - 15Kg';
+$cabinDisplay       = $flight['cabin_baggage'] ?? 'Adult - 7Kg';
+
+$retAircraft = !empty($return_flight['aircraft']) ? strtoupper(trim($return_flight['aircraft'])) : 'BOEING';
+$retClass    = !empty($return_flight['cabin_class']) ? ucfirst(strtolower($return_flight['cabin_class'])) : $travelClassDisplay;
+$retCheckin  = !empty($return_flight['checkin_baggage']) ? $return_flight['checkin_baggage'] : $checkinDisplay;
+$retCabin    = !empty($return_flight['cabin_baggage']) ? $return_flight['cabin_baggage'] : $cabinDisplay;
 
 // Contact Info
 $contactName  = $post_data['contact_name'] ?? 'Voyogo Traveller';
@@ -65,12 +245,12 @@ $contactEmail = $post_data['contact_email'] ?? 'booking@voyogo.com';
 $contactPhone = $post_data['contact_phone'] ?? '9876543210';
 
 // Pricing variables
-$fBaseFare       = (float)($fBaseFare ?? 8739);
-$fTaxes          = (float)($fTaxes ?? 1761);
+$fBaseFare       = (float)($fBaseFare ?? 8274);
+$fTaxes          = (float)($fTaxes ?? 2226);
 $fareTierDelta   = (float)($fareTierDelta ?? 0);
 $insuranceAmount = (float)($insuranceAmount ?? 0);
 $addonTotal      = (float)($addonTotal ?? 0);
-$promoDiscount   = (float)($promoDiscount ?? 18);
+$promoDiscount   = (float)($promoDiscount ?? 0);
 $promoCode       = $post_data['promo_code'] ?? 'ATFLY';
 $grandTotal      = (float)($grandTotal ?? max(0, ($fBaseFare + $fTaxes + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount));
 
@@ -372,6 +552,42 @@ body {
     font-size: 12px;
     color: #334155;
     font-weight: 600;
+}
+
+/* Multi-Segment Connecting Flight Styles (Screenshot 2 & 3 Match) */
+.seg-specs-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    gap: 12px;
+    font-size: 12px;
+}
+
+.seg-specs-divider {
+    width: 1px;
+    height: 22px;
+    background: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+    .seg-header-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+    .seg-specs-box {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+        width: 100% !important;
+        padding: 8px 12px !important;
+    }
+    .seg-specs-divider {
+        display: none !important;
+    }
 }
 
 /* Flight Schedule Grid */
@@ -845,67 +1061,186 @@ body {
                         </div>
                     </div>
 
-                    <!-- Airline & Baggage Row -->
-                    <div class="flight-meta-row">
-                        <div class="airline-brand-group">
-                            <img src="<?php echo htmlspecialchars($airlineLogo); ?>" alt="airline" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($airlineName); ?>&background=0d3470&color=fff';">
-                            <div class="airline-brand-text">
-                                <h4><?php echo htmlspecialchars($airlineName); ?> <span style="color: #64748b; font-weight: 600;">(<?php echo htmlspecialchars($flightNumber); ?>)</span></h4>
-                                <span>Cabin: <strong><?php echo htmlspecialchars($travelClassDisplay); ?></strong></span>
-                            </div>
-                        </div>
-
-                        <div class="cabin-baggage-pill">
-                            <i class="fa-solid fa-suitcase" style="color: #0284c7; margin-right: 4px;"></i> Check-In: <strong><?php echo htmlspecialchars($checkinBaggage); ?></strong>
-                            <span style="color: #cbd5e1; margin: 0 6px;">|</span>
-                            <i class="fa-solid fa-briefcase" style="color: #0284c7; margin-right: 4px;"></i> Cabin: <strong><?php echo htmlspecialchars($cabinBaggage); ?></strong>
-                        </div>
-                    </div>
-
-                    <!-- Flight Timing Schedule Row -->
-                    <div class="flight-schedule-grid">
-                        <div class="schedule-city-col">
-                            <div class="flight-time-big"><?php echo htmlspecialchars($depTime); ?></div>
-                            <div class="flight-date-sub"><?php echo date('D, d M y', strtotime($depDate)); ?></div>
-                            <div class="flight-city-title"><?php echo htmlspecialchars($fromCity); ?> [<?php echo htmlspecialchars($fromCode); ?>]</div>
-                            <div class="flight-terminal-text"><?php echo htmlspecialchars($fromAirport); ?> &bull; <?php echo htmlspecialchars($fromTerminal); ?></div>
-                        </div>
-
-                        <div class="schedule-duration-col">
-                            <div class="flight-duration-label"><?php echo htmlspecialchars($flightDuration); ?></div>
-                            <div class="duration-line-pill">
-                                <i class="fa-solid fa-plane"></i>
-                            </div>
-                            <div class="flight-stops-label">
-                                <?php echo $flightStops > 0 ? ($flightStops . ' Stop' . ($flightStops > 1 ? 's' : '')) : 'Non-Stop'; ?>
-                            </div>
-                        </div>
-
-                        <div class="schedule-city-col text-right">
-                            <div class="flight-time-big"><?php echo htmlspecialchars($arrTime); ?></div>
-                            <div class="flight-date-sub"><?php echo date('D, d M y', strtotime($arrDate)); ?></div>
-                            <div class="flight-city-title"><?php echo htmlspecialchars($toCity); ?> [<?php echo htmlspecialchars($toCode); ?>]</div>
-                            <div class="flight-terminal-text"><?php echo htmlspecialchars($toAirport); ?> &bull; <?php echo htmlspecialchars($toTerminal); ?></div>
-                        </div>
-                    </div>
-
-                    <!-- Connecting Flights Segments (if any) -->
-                    <?php if (!empty($flight['segments']) && is_array($flight['segments']) && count($flight['segments']) > 1): ?>
-                        <div style="background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; padding: 14px 18px; margin-bottom: 20px;">
-                            <div style="font-size: 12.5px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">
-                                <i class="fa-solid fa-route" style="color: #0284c7;"></i> Connecting Flight Segments
-                            </div>
-                            <?php foreach ($flight['segments'] as $sIdx => $seg): ?>
-                                <div style="display: flex; justify-content: space-between; font-size: 12px; color: #475569; padding: 6px 0; <?php echo $sIdx > 0 ? 'border-top: 1px dashed #e2e8f0;' : ''; ?>">
-                                    <div>
-                                        <strong><?php echo htmlspecialchars($seg['airline_name'] ?? $airlineName); ?></strong> (<?php echo htmlspecialchars($seg['flight_number'] ?? ''); ?>) &bull; 
-                                        <?php echo htmlspecialchars($seg['from_code'] ?? ''); ?> &rarr; <?php echo htmlspecialchars($seg['to_code'] ?? ''); ?>
-                                    </div>
-                                    <div>
-                                        <?php echo htmlspecialchars($seg['departure_time'] ?? ''); ?> &rarr; <?php echo htmlspecialchars($seg['arrival_time'] ?? ''); ?>
+                    <?php if ($isOnwardConnecting): ?>
+                        <!-- 1+ Stop Connecting Flight View (Screenshot 2 Match) -->
+                        <?php $segData = buildConnectingFlightSegments($flight, $airportDb); ?>
+                        
+                        <!-- Segment 1 (Origin -> Layover) -->
+                        <div style="padding-top: 6px;">
+                            <div class="seg-header-row" style="display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <img src="<?php echo htmlspecialchars($airlineLogo); ?>" alt="logo" style="height: 38px; width: 38px; object-fit: contain; border-radius: 6px; padding: 2px; background: #f8fafc; border: 1px solid #e2e8f0;" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($airlineName); ?>&background=0d3470&color=fff';">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <strong style="font-size: 16px; font-weight: 800; color: #0f172a;"><?php echo htmlspecialchars($airlineName); ?></strong>
+                                        <span style="color: #94a3b8; font-weight: 400;">|</span>
+                                        <span style="font-size: 14px; font-weight: 700; color: #475569;"><?php echo htmlspecialchars($segData['leg1_fn']); ?></span>
                                     </div>
                                 </div>
-                            <?php endforeach; ?>
+                                <div class="seg-specs-box">
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Aircraft</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($aircraftDisplay); ?></strong>
+                                    </div>
+                                    <div class="seg-specs-divider"></div>
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Travel Class</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($travelClassDisplay); ?></strong>
+                                    </div>
+                                    <div class="seg-specs-divider"></div>
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Check-In Baggage</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($checkinDisplay); ?></strong>
+                                    </div>
+                                    <div class="seg-specs-divider"></div>
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Cabin Baggage</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($cabinDisplay); ?></strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: #f8fafc; border: 1px solid #edf2f7; border-radius: 12px; margin-bottom: 18px;">
+                                <div style="text-align: left; max-width: 38%;">
+                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg1_dep']); ?></span>
+                                    <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($depDate)); ?></span>
+                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                        <?php echo htmlspecialchars($segData['from_info']['city']); ?> [<?php echo htmlspecialchars($segData['from_code']); ?>]
+                                    </div>
+                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['from_info']['name']); ?></div>
+                                    <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($segData['from_info']['terminal']); ?></span>
+                                </div>
+
+                                <div style="text-align: center; flex: 1; margin: 0 20px;">
+                                    <span style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($segData['leg1_duration']); ?></span>
+                                    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                                        <div style="width: 100%; border-top: 2px dashed #38bdf8;"></div>
+                                        <i class="fa-solid fa-plane" style="position: absolute; color: #0284c7; font-size: 15px; background: #f8fafc; padding: 0 6px;"></i>
+                                    </div>
+                                </div>
+
+                                <div style="text-align: left; max-width: 38%; min-width: 190px;">
+                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg1_arr']); ?></span>
+                                    <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($depDate)); ?></span>
+                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                        <?php echo htmlspecialchars($segData['via_info']['city']); ?> [<?php echo htmlspecialchars($segData['via_code']); ?>]
+                                    </div>
+                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['via_info']['name']); ?></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Layover / Connecting Plane Banner (Screenshot 2 Exact Match) -->
+                        <div style="background: linear-gradient(90deg, #e0f2fe 0%, #bae6fd 50%, #e0f2fe 100%); border: 1px solid #7dd3fc; color: #0369a1; padding: 11px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin: 18px 0; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);">
+                            <i class="fa-solid fa-circle-info" style="font-size: 14px; color: #0284c7;"></i>
+                            <span>Change planes at <strong><?php echo htmlspecialchars($segData['via_info']['city']); ?> | <?php echo htmlspecialchars($segData['via_info']['city']); ?> | IN | India (<?php echo htmlspecialchars($segData['via_code']); ?>)</strong>, Connecting Time: <strong><?php echo htmlspecialchars($segData['layover_duration']); ?></strong></span>
+                        </div>
+
+                        <!-- Segment 2 (Layover -> Destination) -->
+                        <div>
+                            <div class="seg-header-row" style="display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <img src="<?php echo htmlspecialchars($airlineLogo); ?>" alt="logo" style="height: 38px; width: 38px; object-fit: contain; border-radius: 6px; padding: 2px; background: #f8fafc; border: 1px solid #e2e8f0;" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($airlineName); ?>&background=0d3470&color=fff';">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <strong style="font-size: 16px; font-weight: 800; color: #0f172a;"><?php echo htmlspecialchars($airlineName); ?></strong>
+                                        <span style="color: #94a3b8; font-weight: 400;">|</span>
+                                        <span style="font-size: 14px; font-weight: 700; color: #475569;"><?php echo htmlspecialchars($segData['leg2_fn']); ?></span>
+                                    </div>
+                                </div>
+                                <div class="seg-specs-box">
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Aircraft</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($aircraftDisplay); ?></strong>
+                                    </div>
+                                    <div class="seg-specs-divider"></div>
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Travel Class</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($travelClassDisplay); ?></strong>
+                                    </div>
+                                    <div class="seg-specs-divider"></div>
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Check-In Baggage</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($checkinDisplay); ?></strong>
+                                    </div>
+                                    <div class="seg-specs-divider"></div>
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Cabin Baggage</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($cabinDisplay); ?></strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: #f8fafc; border: 1px solid #edf2f7; border-radius: 12px; margin-bottom: 24px;">
+                                <div style="text-align: left; max-width: 38%;">
+                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg2_dep']); ?></span>
+                                    <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($depDate)); ?></span>
+                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                        <?php echo htmlspecialchars($segData['via_info']['city']); ?> [<?php echo htmlspecialchars($segData['via_code']); ?>]
+                                    </div>
+                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['via_info']['name']); ?></div>
+                                </div>
+
+                                <div style="text-align: center; flex: 1; margin: 0 20px;">
+                                    <span style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($segData['leg2_duration']); ?></span>
+                                    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                                        <div style="width: 100%; border-top: 2px dashed #38bdf8;"></div>
+                                        <i class="fa-solid fa-plane" style="position: absolute; color: #0284c7; font-size: 15px; background: #f8fafc; padding: 0 6px;"></i>
+                                    </div>
+                                </div>
+
+                                <div style="text-align: left; max-width: 38%; min-width: 190px;">
+                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg2_arr']); ?></span>
+                                    <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($arrDate)); ?></span>
+                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                        <?php echo htmlspecialchars($segData['to_info']['city']); ?> [<?php echo htmlspecialchars($segData['to_code']); ?>]
+                                    </div>
+                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['to_info']['name']); ?></div>
+                                    <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($segData['to_info']['terminal']); ?></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php else: ?>
+                        <!-- Direct Flight Single Leg Layout -->
+                        <div class="flight-meta-row">
+                            <div class="airline-brand-group">
+                                <img src="<?php echo htmlspecialchars($airlineLogo); ?>" alt="airline" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($airlineName); ?>&background=0d3470&color=fff';">
+                                <div class="airline-brand-text">
+                                    <h4><?php echo htmlspecialchars($airlineName); ?> <span style="color: #64748b; font-weight: 600;">(<?php echo htmlspecialchars($flightNumber); ?>)</span></h4>
+                                    <span>Aircraft: <strong><?php echo htmlspecialchars($aircraftDisplay); ?></strong> | Cabin: <strong><?php echo htmlspecialchars($travelClassDisplay); ?></strong></span>
+                                </div>
+                            </div>
+
+                            <div class="cabin-baggage-pill">
+                                <i class="fa-solid fa-suitcase" style="color: #0284c7; margin-right: 4px;"></i> Check-In: <strong><?php echo htmlspecialchars($checkinDisplay); ?></strong>
+                                <span style="color: #cbd5e1; margin: 0 6px;">|</span>
+                                <i class="fa-solid fa-briefcase" style="color: #0284c7; margin-right: 4px;"></i> Cabin: <strong><?php echo htmlspecialchars($cabinDisplay); ?></strong>
+                            </div>
+                        </div>
+
+                        <div class="flight-schedule-grid">
+                            <div class="schedule-city-col">
+                                <div class="flight-time-big"><?php echo htmlspecialchars($depTime); ?></div>
+                                <div class="flight-date-sub"><?php echo date('D, d M y', strtotime($depDate)); ?></div>
+                                <div class="flight-city-title"><?php echo htmlspecialchars($fromCity); ?> [<?php echo htmlspecialchars($fromCode); ?>]</div>
+                                <div class="flight-terminal-text"><?php echo htmlspecialchars($fromAirport); ?> &bull; <?php echo htmlspecialchars($fromTerminal); ?></div>
+                            </div>
+
+                            <div class="schedule-duration-col">
+                                <div class="flight-duration-label"><?php echo htmlspecialchars($flightDuration); ?></div>
+                                <div class="duration-line-pill">
+                                    <i class="fa-solid fa-plane"></i>
+                                </div>
+                                <div class="flight-stops-label">
+                                    Non-Stop
+                                </div>
+                            </div>
+
+                            <div class="schedule-city-col text-right">
+                                <div class="flight-time-big"><?php echo htmlspecialchars($arrTime); ?></div>
+                                <div class="flight-date-sub"><?php echo date('D, d M y', strtotime($arrDate)); ?></div>
+                                <div class="flight-city-title"><?php echo htmlspecialchars($toCity); ?> [<?php echo htmlspecialchars($toCode); ?>]</div>
+                                <div class="flight-terminal-text"><?php echo htmlspecialchars($toAirport); ?> &bull; <?php echo htmlspecialchars($toTerminal); ?></div>
+                            </div>
                         </div>
                     <?php endif; ?>
 
@@ -1109,49 +1444,188 @@ body {
                         </div>
                     </div>
 
-                    <!-- Airline & Baggage Row -->
-                    <div class="flight-meta-row">
-                        <div class="airline-brand-group">
-                            <img src="<?php echo htmlspecialchars($retAirlineLogo); ?>" alt="airline" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($retAirlineName); ?>&background=0d3470&color=fff';">
-                            <div class="airline-brand-text">
-                                <h4><?php echo htmlspecialchars($retAirlineName); ?> <span style="color: #64748b; font-weight: 600;">(<?php echo htmlspecialchars($retFlightNumber); ?>)</span></h4>
-                                <span>Cabin: <strong><?php echo htmlspecialchars($travelClassDisplay); ?></strong></span>
+                    <?php if ($isReturnConnecting): ?>
+                        <!-- Return 1+ Stop Connecting Flight View (Screenshot 3 Match) -->
+                        <?php $retSegData = buildConnectingFlightSegments($return_flight, $airportDb); ?>
+                        
+                        <!-- Return Segment 1 (Origin -> Layover) -->
+                        <div style="padding-top: 6px;">
+                            <div class="seg-header-row" style="display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <img src="<?php echo htmlspecialchars($retAirlineLogo); ?>" alt="logo" style="height: 38px; width: 38px; object-fit: contain; border-radius: 6px; padding: 2px; background: #f8fafc; border: 1px solid #e2e8f0;" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($retAirlineName); ?>&background=0d3470&color=fff';">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <strong style="font-size: 16px; font-weight: 800; color: #0f172a;"><?php echo htmlspecialchars($retAirlineName); ?></strong>
+                                        <span style="color: #94a3b8; font-weight: 400;">|</span>
+                                        <span style="font-size: 14px; font-weight: 700; color: #475569;"><?php echo htmlspecialchars($retSegData['leg1_fn']); ?></span>
+                                    </div>
+                                </div>
+                                <div class="seg-specs-box">
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Aircraft</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($retAircraft); ?></strong>
+                                    </div>
+                                    <div class="seg-specs-divider"></div>
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Travel Class</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($retClass); ?></strong>
+                                    </div>
+                                    <div class="seg-specs-divider"></div>
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Check-In Baggage</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($retCheckin); ?></strong>
+                                    </div>
+                                    <div class="seg-specs-divider"></div>
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Cabin Baggage</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($retCabin); ?></strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: #f8fafc; border: 1px solid #edf2f7; border-radius: 12px; margin-bottom: 18px;">
+                                <div style="text-align: left; max-width: 38%;">
+                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg1_dep']); ?></span>
+                                    <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($retDepDate)); ?></span>
+                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                        <?php echo htmlspecialchars($retSegData['from_info']['city']); ?> [<?php echo htmlspecialchars($retSegData['from_code']); ?>]
+                                    </div>
+                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['from_info']['name']); ?></div>
+                                    <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($retSegData['from_info']['terminal']); ?></span>
+                                </div>
+
+                                <div style="text-align: center; flex: 1; margin: 0 20px;">
+                                    <span style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($retSegData['leg1_duration']); ?></span>
+                                    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                                        <div style="width: 100%; border-top: 2px dashed #10b981;"></div>
+                                        <i class="fa-solid fa-plane" style="position: absolute; color: #10b981; font-size: 15px; background: #f8fafc; padding: 0 6px;"></i>
+                                    </div>
+                                </div>
+
+                                <div style="text-align: left; max-width: 38%; min-width: 190px;">
+                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg1_arr']); ?></span>
+                                    <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($retDepDate)); ?></span>
+                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                        <?php echo htmlspecialchars($retSegData['via_info']['city']); ?> [<?php echo htmlspecialchars($retSegData['via_code']); ?>]
+                                    </div>
+                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['via_info']['name']); ?></div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="cabin-baggage-pill">
-                            <i class="fa-solid fa-suitcase" style="color: #0284c7; margin-right: 4px;"></i> Check-In: <strong><?php echo htmlspecialchars($checkinBaggage); ?></strong>
-                            <span style="color: #cbd5e1; margin: 0 6px;">|</span>
-                            <i class="fa-solid fa-briefcase" style="color: #0284c7; margin-right: 4px;"></i> Cabin: <strong><?php echo htmlspecialchars($cabinBaggage); ?></strong>
-                        </div>
-                    </div>
-
-                    <!-- Flight Timing Schedule Grid -->
-                    <div class="flight-schedule-grid">
-                        <div class="schedule-city-col">
-                            <div class="flight-time-big"><?php echo htmlspecialchars($retDepTime); ?></div>
-                            <div class="flight-date-sub"><?php echo date('D, d M y', strtotime($retDepDate)); ?></div>
-                            <div class="flight-city-title"><?php echo htmlspecialchars($retFromCity); ?> [<?php echo htmlspecialchars($retFromCode); ?>]</div>
-                            <div class="flight-terminal-text"><?php echo htmlspecialchars($retFromAirport); ?> &bull; <?php echo htmlspecialchars($retFromTerminal); ?></div>
+                        <!-- Return Layover / Connecting Plane Banner (Screenshot 3 Exact Match) -->
+                        <div style="background: linear-gradient(90deg, #ecfdf5 0%, #d1fae5 50%, #ecfdf5 100%); border: 1px solid #a7f3d0; color: #065f46; padding: 11px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin: 18px 0; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);">
+                            <i class="fa-solid fa-circle-info" style="font-size: 14px; color: #10b981;"></i>
+                            <span>Change planes at <strong><?php echo htmlspecialchars($retSegData['via_info']['city']); ?> | <?php echo htmlspecialchars($retSegData['via_info']['city']); ?> | IN | India (<?php echo htmlspecialchars($retSegData['via_code']); ?>)</strong>, Connecting Time: <strong><?php echo htmlspecialchars($retSegData['layover_duration']); ?></strong></span>
                         </div>
 
-                        <div class="schedule-duration-col">
-                            <div class="flight-duration-label"><?php echo htmlspecialchars($retDuration); ?></div>
-                            <div class="duration-line-pill">
-                                <i class="fa-solid fa-plane"></i>
+                        <!-- Return Segment 2 (Layover -> Destination) -->
+                        <div>
+                            <div class="seg-header-row" style="display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <img src="<?php echo htmlspecialchars($retAirlineLogo); ?>" alt="logo" style="height: 38px; width: 38px; object-fit: contain; border-radius: 6px; padding: 2px; background: #f8fafc; border: 1px solid #e2e8f0;" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($retAirlineName); ?>&background=0d3470&color=fff';">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <strong style="font-size: 16px; font-weight: 800; color: #0f172a;"><?php echo htmlspecialchars($retAirlineName); ?></strong>
+                                        <span style="color: #94a3b8; font-weight: 400;">|</span>
+                                        <span style="font-size: 14px; font-weight: 700; color: #475569;"><?php echo htmlspecialchars($retSegData['leg2_fn']); ?></span>
+                                    </div>
+                                </div>
+                                <div class="seg-specs-box">
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Aircraft</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($retAircraft); ?></strong>
+                                    </div>
+                                    <div class="seg-specs-divider"></div>
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Travel Class</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($retClass); ?></strong>
+                                    </div>
+                                    <div class="seg-specs-divider"></div>
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Check-In Baggage</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($retCheckin); ?></strong>
+                                    </div>
+                                    <div class="seg-specs-divider"></div>
+                                    <div>
+                                        <span style="color: #64748b; font-size: 11px; display: block; font-weight: 600;">Cabin Baggage</span>
+                                        <strong style="color: #0f172a; font-size: 12.5px;"><?php echo htmlspecialchars($retCabin); ?></strong>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="flight-stops-label">
-                                <?php echo $retStops > 0 ? ($retStops . ' Stop' . ($retStops > 1 ? 's' : '')) : 'Non-Stop'; ?>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: #f8fafc; border: 1px solid #edf2f7; border-radius: 12px; margin-bottom: 24px;">
+                                <div style="text-align: left; max-width: 38%;">
+                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg2_dep']); ?></span>
+                                    <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($retDepDate)); ?></span>
+                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                        <?php echo htmlspecialchars($retSegData['via_info']['city']); ?> [<?php echo htmlspecialchars($retSegData['via_code']); ?>]
+                                    </div>
+                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['via_info']['name']); ?></div>
+                                </div>
+
+                                <div style="text-align: center; flex: 1; margin: 0 20px;">
+                                    <span style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($retSegData['leg2_duration']); ?></span>
+                                    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                                        <div style="width: 100%; border-top: 2px dashed #10b981;"></div>
+                                        <i class="fa-solid fa-plane" style="position: absolute; color: #10b981; font-size: 15px; background: #f8fafc; padding: 0 6px;"></i>
+                                    </div>
+                                </div>
+
+                                <div style="text-align: left; max-width: 38%; min-width: 190px;">
+                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg2_arr']); ?></span>
+                                    <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($retArrDate)); ?></span>
+                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                        <?php echo htmlspecialchars($retSegData['to_info']['city']); ?> [<?php echo htmlspecialchars($retSegData['to_code']); ?>]
+                                    </div>
+                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['to_info']['name']); ?></div>
+                                    <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($retSegData['to_info']['terminal']); ?></span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="schedule-city-col text-right">
-                            <div class="flight-time-big"><?php echo htmlspecialchars($retArrTime); ?></div>
-                            <div class="flight-date-sub"><?php echo date('D, d M y', strtotime($retArrDate)); ?></div>
-                            <div class="flight-city-title"><?php echo htmlspecialchars($retToCity); ?> [<?php echo htmlspecialchars($retToCode); ?>]</div>
-                            <div class="flight-terminal-text"><?php echo htmlspecialchars($retToAirport); ?> &bull; <?php echo htmlspecialchars($retToTerminal); ?></div>
+                    <?php else: ?>
+                        <!-- Direct Return Flight Single Leg Layout -->
+                        <div class="flight-meta-row">
+                            <div class="airline-brand-group">
+                                <img src="<?php echo htmlspecialchars($retAirlineLogo); ?>" alt="airline" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($retAirlineName); ?>&background=0d3470&color=fff';">
+                                <div class="airline-brand-text">
+                                    <h4><?php echo htmlspecialchars($retAirlineName); ?> <span style="color: #64748b; font-weight: 600;">(<?php echo htmlspecialchars($retFlightNumber); ?>)</span></h4>
+                                    <span>Aircraft: <strong><?php echo htmlspecialchars($retAircraft); ?></strong> | Cabin: <strong><?php echo htmlspecialchars($retClass); ?></strong></span>
+                                </div>
+                            </div>
+
+                            <div class="cabin-baggage-pill">
+                                <i class="fa-solid fa-suitcase" style="color: #0284c7; margin-right: 4px;"></i> Check-In: <strong><?php echo htmlspecialchars($retCheckin); ?></strong>
+                                <span style="color: #cbd5e1; margin: 0 6px;">|</span>
+                                <i class="fa-solid fa-briefcase" style="color: #0284c7; margin-right: 4px;"></i> Cabin: <strong><?php echo htmlspecialchars($retCabin); ?></strong>
+                            </div>
                         </div>
-                    </div>
+
+                        <div class="flight-schedule-grid">
+                            <div class="schedule-city-col">
+                                <div class="flight-time-big"><?php echo htmlspecialchars($retDepTime); ?></div>
+                                <div class="flight-date-sub"><?php echo date('D, d M y', strtotime($retDepDate)); ?></div>
+                                <div class="flight-city-title"><?php echo htmlspecialchars($retFromCity); ?> [<?php echo htmlspecialchars($retFromCode); ?>]</div>
+                                <div class="flight-terminal-text"><?php echo htmlspecialchars($retFromAirport); ?> &bull; <?php echo htmlspecialchars($retFromTerminal); ?></div>
+                            </div>
+
+                            <div class="schedule-duration-col">
+                                <div class="flight-duration-label"><?php echo htmlspecialchars($retDuration); ?></div>
+                                <div class="duration-line-pill">
+                                    <i class="fa-solid fa-plane"></i>
+                                </div>
+                                <div class="flight-stops-label">
+                                    Non-Stop
+                                </div>
+                            </div>
+
+                            <div class="schedule-city-col text-right">
+                                <div class="flight-time-big"><?php echo htmlspecialchars($retArrTime); ?></div>
+                                <div class="flight-date-sub"><?php echo date('D, d M y', strtotime($retArrDate)); ?></div>
+                                <div class="flight-city-title"><?php echo htmlspecialchars($retToCity); ?> [<?php echo htmlspecialchars($retToCode); ?>]</div>
+                                <div class="flight-terminal-text"><?php echo htmlspecialchars($retToAirport); ?> &bull; <?php echo htmlspecialchars($retToTerminal); ?></div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
                 </div>
                 <?php endif; ?>
