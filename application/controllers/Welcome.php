@@ -320,6 +320,7 @@ class Welcome extends CI_Controller {
         $return_index   = $this->input->post('return_flight_index') ?: ($return_airline_code . '|1');
 
         // Fetch revalidated flight data using Benzy API (SmartPricer & GetSPricer)
+        $search_tui = $tui; // Save original search TUI before SmartPricer creates new TUI
         $spRes = @$this->benzyflightapi->smartPricer($tui, $price, $onward_index, $is_roundtrip, $from_code_post, $to_code_post, $return_price, $return_index);
         
         $flightDetails = null;
@@ -522,10 +523,45 @@ class Welcome extends CI_Controller {
         $flightDetails['is_roundtrip']    = $is_roundtrip;
 
         // Fetch Fare Rules (Cancellation & Date change policy)
-        $fareRules = $this->benzyflightapi->getFareRule($tui, $price, $onward_index, $fromCode, $toCode);
+        $fareRules = $this->benzyflightapi->getFareRule($tui, $price, $onward_index, $fromCode, $toCode, $search_tui);
 
         // Fetch SSR options (Baggage, Meals, Seats)
-        $ssrOptions = $this->benzyflightapi->getSSR($tui, $fromCode, $toCode, $airline_code, $flight_number);
+        $ssrOptions = $this->benzyflightapi->getSSR($tui, $fromCode, $toCode, $airline_code, $flight_number, $search_tui, $onward_index);
+
+        // Parse cancellation & date change rules for view tables
+        $cancellationRules = array();
+        $dateChangeRules   = array();
+        if (!empty($fareRules['Trips'][0]['Journey'][0]['Segments'][0]['Rules'][0]['Rule'])) {
+            foreach ($fareRules['Trips'][0]['Journey'][0]['Segments'][0]['Rules'][0]['Rule'] as $rItem) {
+                $head = strtolower($rItem['Head'] ?? '');
+                $info = $rItem['Info'] ?? array();
+                if (strpos($head, 'cancel') !== false) {
+                    foreach ($info as $inf) {
+                        $amtStr = trim($inf['AdultAmount'] ?? '');
+                        if (is_numeric($amtStr)) $amtStr = '₹ ' . number_format($amtStr);
+                        $cancellationRules[] = array(
+                            'time'   => $inf['Description'] ?? 'Cancellation',
+                            'desc'   => $inf['Description'] ?? 'Cancellation',
+                            'fee'    => $amtStr ?: 'Non-Refundable',
+                            'amount' => $amtStr ?: 'Non-Refundable'
+                        );
+                    }
+                } elseif (strpos($head, 'change') !== false || strpos($head, 'reissue') !== false) {
+                    foreach ($info as $inf) {
+                        $amtStr = trim($inf['AdultAmount'] ?? '');
+                        if (is_numeric($amtStr)) $amtStr = '₹ ' . number_format($amtStr);
+                        $dateChangeRules[] = array(
+                            'time'   => $inf['Description'] ?? 'Date Change',
+                            'desc'   => $inf['Description'] ?? 'Date Change',
+                            'fee'    => $amtStr ? ($amtStr . ' + Diff') : '₹ 2,500 + Diff',
+                            'amount' => $amtStr ? ($amtStr . ' + Diff') : '₹ 2,500 + Diff'
+                        );
+                    }
+                }
+            }
+        }
+        $fareRules['cancellation'] = $cancellationRules;
+        $fareRules['date_change']   = $dateChangeRules;
 
         // Build dynamic Fare Tiers ("More Fare Options for Additional Benefits") from Benzy API
         $onwardAirlineCode = $flightDetails['airline_code'] ?? $airline_code;
@@ -545,11 +581,47 @@ class Welcome extends CI_Controller {
         );
 
         $returnFareTiers = array();
+        $returnFareRules = null;
         if ($is_roundtrip && !empty($returnFlight)) {
             $returnAirlineCode = $returnFlight['airline_code'] ?? (!empty($returnFlight['flight_number']) ? explode('-', $returnFlight['flight_number'])[0] : '6E');
             $returnPriceVal    = (float)($returnFlight['price'] ?? 5150);
             $returnBasePrice   = round($returnPriceVal * 0.788);
             $returnTaxPrice    = max(0, $returnPriceVal - $returnBasePrice);
+
+            $returnFareRules = $this->benzyflightapi->getFareRule($tui, $returnPriceVal, $return_index, $returnFlight['from_code'] ?? $toCode, $returnFlight['to_code'] ?? $fromCode, $search_tui);
+            $retCancelRules = array();
+            $retDateChangeRules = array();
+            if (!empty($returnFareRules['Trips'][0]['Journey'][0]['Segments'][0]['Rules'][0]['Rule'])) {
+                foreach ($returnFareRules['Trips'][0]['Journey'][0]['Segments'][0]['Rules'][0]['Rule'] as $rItem) {
+                    $head = strtolower($rItem['Head'] ?? '');
+                    $info = $rItem['Info'] ?? array();
+                    if (strpos($head, 'cancel') !== false) {
+                        foreach ($info as $inf) {
+                            $amtStr = trim($inf['AdultAmount'] ?? '');
+                            if (is_numeric($amtStr)) $amtStr = '₹ ' . number_format($amtStr);
+                            $retCancelRules[] = array(
+                                'time'   => $inf['Description'] ?? 'Cancellation',
+                                'desc'   => $inf['Description'] ?? 'Cancellation',
+                                'fee'    => $amtStr ?: 'Non-Refundable',
+                                'amount' => $amtStr ?: 'Non-Refundable'
+                            );
+                        }
+                    } elseif (strpos($head, 'change') !== false || strpos($head, 'reissue') !== false) {
+                        foreach ($info as $inf) {
+                            $amtStr = trim($inf['AdultAmount'] ?? '');
+                            if (is_numeric($amtStr)) $amtStr = '₹ ' . number_format($amtStr);
+                            $retDateChangeRules[] = array(
+                                'time'   => $inf['Description'] ?? 'Date Change',
+                                'desc'   => $inf['Description'] ?? 'Date Change',
+                                'fee'    => $amtStr ? ($amtStr . ' + Diff') : '₹ 2,500 + Diff',
+                                'amount' => $amtStr ? ($amtStr . ' + Diff') : '₹ 2,500 + Diff'
+                            );
+                        }
+                    }
+                }
+            }
+            $returnFareRules['cancellation'] = $retCancelRules;
+            $returnFareRules['date_change']   = $retDateChangeRules;
 
             $returnFareTiers = $this->benzyflightapi->getDynamicFareTiers(
                 $returnAirlineCode,
@@ -565,6 +637,7 @@ class Welcome extends CI_Controller {
         $data['return_flight']     = $returnFlight;
         $data['is_roundtrip']      = $is_roundtrip;
         $data['fare_rules']        = $fareRules;
+        $data['return_fare_rules'] = $returnFareRules;
         $data['ssr']               = $ssrOptions;
         $data['onward_fare_tiers'] = $onwardFareTiers;
         $data['return_fare_tiers'] = $returnFareTiers;
@@ -622,11 +695,13 @@ class Welcome extends CI_Controller {
             $backSearchParams['return_date'] = $actual_ret_date;
         }
         $data['back_search_url'] = site_url('flight/search') . '?' . http_build_query($backSearchParams);
+        $data['search_tui'] = $search_tui;
         $data['url_meta'] = array(
             'type' => $type,
             'fare_type' => $is_roundtrip ? 'RT' : $fare_type,
             'cabin' => $cabin,
-            'tui' => $tui
+            'tui' => $tui,
+            'search_tui' => $search_tui
         );
 
         $data['page_title'] = "Review Booking: $fromCode to $toCode - Voyogo";
@@ -743,8 +818,12 @@ class Welcome extends CI_Controller {
         $returnTui             = $ret_flight_info['tui'] ?? $onwardTui;
         $returnAirline         = $this->benzyflightapi->extractAirlineCode($return_flight_number, $return_airline_name);
 
+        $addonSearchTui = $sessionBooking['search_tui'] ?? ($sessionBooking['url_meta']['search_tui'] ?? ($sessionBooking['url_meta']['tui'] ?? null));
+        $onwardIndex = $flight_info['index'] ?? ($sessionBooking['post_data']['flight_index'] ?? ($onwardAirline . '|1'));
+        $returnIndex = $ret_flight_info['index'] ?? ($sessionBooking['post_data']['return_flight_index'] ?? ($returnAirline . '|1'));
+
         // Fetch Live / Airway-specific Benzy SSR and SeatLayout for Onward
-        $onwardSSRRaw = $this->benzyflightapi->getSSR($onwardTui, $from_code, $to_code, $onwardAirline, $flight_number);
+        $onwardSSRRaw = $this->benzyflightapi->getSSR($onwardTui, $from_code, $to_code, $onwardAirline, $flight_number, $addonSearchTui, $onwardIndex);
         $onwardParsedSSR = $this->benzyflightapi->parseSSRForDisplay($onwardSSRRaw);
         $onwardSeatsRaw = $this->benzyflightapi->getSeatLayout($onwardTui, $onwardAirline, $flight_number);
         $onwardParsedSeats = $this->benzyflightapi->parseSeatLayoutForDisplay($onwardSeatsRaw);
@@ -753,7 +832,7 @@ class Welcome extends CI_Controller {
         $returnParsedSSR = array('meals' => array(), 'baggage' => array(), 'priority' => array());
         $returnParsedSeats = array('rows' => array(), 'seats' => array());
         if ($is_roundtrip) {
-            $returnSSRRaw = $this->benzyflightapi->getSSR($returnTui, $return_from_code, $return_to_code, $returnAirline, $return_flight_number);
+            $returnSSRRaw = $this->benzyflightapi->getSSR($returnTui, $return_from_code, $return_to_code, $returnAirline, $return_flight_number, $addonSearchTui, $returnIndex);
             $returnParsedSSR = $this->benzyflightapi->parseSSRForDisplay($returnSSRRaw);
             $returnSeatsRaw = $this->benzyflightapi->getSeatLayout($returnTui, $returnAirline, $return_flight_number);
             $returnParsedSeats = $this->benzyflightapi->parseSeatLayoutForDisplay($returnSeatsRaw);
@@ -1741,6 +1820,7 @@ class Welcome extends CI_Controller {
         $this->output->set_content_type('application/json');
 
         $tui = trim((string)($this->input->post('tui') ?: $this->input->get('tui')));
+        $searchTui = trim((string)($this->input->post('search_tui') ?: $this->input->get('search_tui')));
         $price = (float)($this->input->post('price') ?: $this->input->get('price') ?: 5150);
         $airline = strtoupper(trim((string)($this->input->post('airline') ?: $this->input->get('airline') ?: '6E')));
         $flightNumber = trim((string)($this->input->post('flight_number') ?: $this->input->get('flight_number') ?: ''));
@@ -1753,7 +1833,7 @@ class Welcome extends CI_Controller {
         // 1. Fetch live Fare Rule from Benzy API
         $liveFareRule = null;
         if (!empty($tui)) {
-            $liveFareRule = $this->benzyflightapi->getFareRule($tui, $price, $index, $from, $to);
+            $liveFareRule = $this->benzyflightapi->getFareRule($tui, $price, $index, $from, $to, $searchTui);
         }
 
         // 2. Extract or structure the Rules
