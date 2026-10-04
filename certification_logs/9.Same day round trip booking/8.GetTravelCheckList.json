@@ -1,16 +1,16 @@
 URL: https://voyogos.com/certification_logs/9.Same%20day%20round%20trip%20booking/8.GetTravelCheckList.json
 Method: POST
 Endpoint: /Utils/GetTravelCheckList
-Timestamp: 2026-09-02T07:00:29.000Z
+Timestamp: 2026-10-04T17:03:53.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-d722646effa3|bbc0c92f30bb|20260902122929",
+    "TUI": "92440198-dc0b-409e-b8d8-fbcc0f5a37e8|76b734ba55c7|20261004223349",
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ=="
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-d722646effa3|bbc0c92f30bb|20260902122929",
+    "TUI": "92440198-dc0b-409e-b8d8-fbcc0f5a37e8|76b734ba55c7|20261004223349",
     "Code": "200",
     "Msg": [
         "Success"

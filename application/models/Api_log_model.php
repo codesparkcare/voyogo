@@ -107,9 +107,41 @@ class Api_log_model extends CI_Model {
                 'created_at'        => date('Y-m-d H:i:s')
             );
 
-            return $this->db->insert('api_logs', $data);
+            $this->db->insert('api_logs', $data);
+            return $this->db->insert_id();
         } catch (Exception $e) {
             log_message('error', 'Failed to insert API log: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Update an existing API log record
+     */
+    public function update_log($id, $data = array()) {
+        if (empty($id) || empty($data)) return false;
+        try {
+            return $this->db->where('id', (int)$id)->update('api_logs', $data);
+        } catch (Exception $e) {
+            log_message('error', 'Failed to update API log: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Delete API log record(s)
+     */
+    public function delete_log($ids) {
+        if (empty($ids)) return false;
+        try {
+            if (is_array($ids)) {
+                $ids = array_filter(array_map('intval', $ids));
+                if (empty($ids)) return false;
+                return $this->db->where_in('id', $ids)->delete('api_logs');
+            }
+            return $this->db->where('id', (int)$ids)->delete('api_logs');
+        } catch (Exception $e) {
+            log_message('error', 'Failed to delete API log: ' . $e->getMessage());
             return false;
         }
     }

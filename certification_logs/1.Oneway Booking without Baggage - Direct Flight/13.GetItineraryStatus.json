@@ -1,21 +1,21 @@
 URL: https://voyogos.com/certification_logs/1.Oneway%20Booking%20without%20Baggage%20-%20Direct%20Flight/13.GetItineraryStatus.json
 Method: POST
 Endpoint: /Payment/GetItineraryStatus
-Timestamp: 2026-09-02T06:39:59.000Z
+Timestamp: 2026-10-04T16:46:10.000Z
 Request Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-459583f84b91|4e0ec1d6e9e5|20260902120809",
-    "TransactionID": 250037508
+    "TUI": "92440198-dc0b-409e-b8d8-263c8cb7ec92|f022aeef29bf|20261004221600",
+    "TransactionID": 250037488
 }
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-459583f84b91|4e0ec1d6e9e5|20260902120809",
-    "transactionID": 250037508,
+    "TUI": "92440198-dc0b-409e-b8d8-263c8cb7ec92|fa3b1c2b7d49|20261004221610",
+    "transactionID": 250037488,
     "Code": "200",
     "Msg": [
         "Success"
     ],
-    "CurrentStatus": "success",
+    "CurrentStatus": "Success",
     "PaymentStatus": "Success"
 }

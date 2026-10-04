@@ -1190,7 +1190,8 @@ class Welcome extends CI_Controller {
 
         // 2. Start Pay Authorization
         $total_amount = (float)($this->input->post('total_amount') ?: 5350);
-        $startPayRes = $this->benzyflightapi->startPay($transaction_id, $bookingTui, $booking_type, $total_amount);
+        $payAmount = !empty($itineraryRes['NetAmount']) ? (float)$itineraryRes['NetAmount'] : $total_amount;
+        $startPayRes = $this->benzyflightapi->startPay($transaction_id, $bookingTui, $booking_type, $payAmount);
         $payTui = !empty($startPayRes['TUI']) ? $startPayRes['TUI'] : (!empty($startPayRes['tui']) ? $startPayRes['tui'] : $bookingTui);
 
         // 3. Verify Payment & Itinerary Status via GetItineraryStatus (poll until Success or Failed)
@@ -1212,7 +1213,7 @@ class Welcome extends CI_Controller {
         // 4. Retrieve Booking to confirm PNR and ticketed/held itinerary
         $originCode = strtoupper(substr($this->input->post('origin') ?: 'DEL', 0, 3));
         $destinationCode = strtoupper(substr($this->input->post('destination') ?: 'BOM', 0, 3));
-        $retrieveRes = $this->benzyflightapi->retrieveBooking($transaction_id, $statusTui, ($booking_type === 'HB'), false, $originCode, $destinationCode);
+        $retrieveRes = $this->benzyflightapi->retrieveBooking($transaction_id, $statusTui, ($booking_type === 'HB'), !empty($is_roundtrip), $originCode, $destinationCode);
 
         // Confirmation & PNR generation
         $pnr = !empty($retrieveRes['PNR']) ? $retrieveRes['PNR'] : (!empty($itineraryRes['PNR']) ? $itineraryRes['PNR'] : ('W' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 5))));

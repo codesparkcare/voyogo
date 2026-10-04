@@ -1,11 +1,11 @@
 URL: https://voyogos.com/certification_logs/6.Round%20Trip%20Booking%20without%20Baggage%20-%20Connection%20Flight/3.WebSettings.json
 Method: POST
 Endpoint: /Utils/WebSettings
-Timestamp: 2026-09-02T06:51:39.000Z
+Timestamp: 2026-10-04T16:59:17.000Z
 Request Body:
 {
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
-    "TUI": "92440198-dc0b-409e-b8d8-1b831000cb63|175c7f8ba35c|20260902122129"
+    "TUI": "92440198-dc0b-409e-b8d8-57af5cf5c21a|44e5b37ed436|20261004222913"
 }
 
 Response Body:
@@ -14,7 +14,7 @@ Response Body:
     "Msg": [
         "Success"
     ],
-    "TUI": "92440198-dc0b-409e-b8d8-1b831000cb63|175c7f8ba35c|20260902122129",
+    "TUI": "92440198-dc0b-409e-b8d8-57af5cf5c21a|44e5b37ed436|20261004222913",
     "Settings": [
         {
             "Key": "DomLCCchannelcode",

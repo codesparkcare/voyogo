@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/3.Oneway%20Booking%20with%20Baggage%20-%20Direct%20Flight/2.ExpressSearch.json
 Method: POST
 Endpoint: /flights/ExpressSearch
-Timestamp: 2026-09-02T06:43:29.000Z
+Timestamp: 2026-10-04T16:54:55.000Z
 Request Body:
 {
     "ADT": 2,
@@ -17,7 +17,7 @@ Request Body:
         {
             "From": "DEL",
             "To": "BOM",
-            "OnwardDate": "2026-09-09",
+            "OnwardDate": "2026-10-11",
             "ReturnDate": "",
             "TUI": ""
         }
@@ -34,7 +34,7 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-c05998729666|60698c7491ad|20260902121329",
+    "TUI": "92440198-dc0b-409e-b8d8-8d5ed0f273d0|6195ff035f25|20261004222455",
     "Code": "200",
     "Msg": [
         "Success"

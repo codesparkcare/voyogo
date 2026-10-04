@@ -1,7 +1,7 @@
 URL: https://voyogos.com/certification_logs/6.Round%20Trip%20Booking%20without%20Baggage%20-%20Connection%20Flight/6.SmartPricer.json
 Method: POST
 Endpoint: /flights/SmartPricer
-Timestamp: 2026-09-02T06:52:09.000Z
+Timestamp: 2026-10-04T16:59:37.000Z
 Request Body:
 {
     "Trips": [
@@ -9,13 +9,13 @@ Request Body:
             "Amount": 5350,
             "Index": "6E|1",
             "OrderID": 1,
-            "TUI": "92440198-dc0b-409e-b8d8-1b831000cb63|175c7f8ba35c|20260902122129"
+            "TUI": "92440198-dc0b-409e-b8d8-57af5cf5c21a|44e5b37ed436|20261004222913"
         },
         {
             "Amount": 5350,
             "Index": "6E|1",
             "OrderID": 2,
-            "TUI": "92440198-dc0b-409e-b8d8-1b831000cb63|175c7f8ba35c|20260902122129"
+            "TUI": "92440198-dc0b-409e-b8d8-57af5cf5c21a|44e5b37ed436|20261004222913"
         }
     ],
     "ClientID": "FVI6V120g22Ei5ztGK0FIQ==",
@@ -27,7 +27,7 @@ Request Body:
 
 Response Body:
 {
-    "TUI": "92440198-dc0b-409e-b8d8-1b831000cb63|175c7f8ba35c|20260902122129",
+    "TUI": "92440198-dc0b-409e-b8d8-57af5cf5c21a|a7561457af8f|20261004222937",
     "Code": "200",
     "Msg": [
         "Success"
@@ -36,8 +36,8 @@ Response Body:
     "To": "BLR",
     "FromName": "Indira Gandhi International |New Delhi",
     "ToName": "Chhatrapati Shivaji |Mumbai",
-    "OnwardDate": "2026-09-09",
-    "ReturnDate": "2026-09-14",
+    "OnwardDate": "2026-10-11",
+    "ReturnDate": "2026-10-16",
     "ADT": 2,
     "CHD": 2,
     "INF": 2,
@@ -67,8 +67,8 @@ Response Body:
                                 "FBC": "EOWIN",
                                 "Airline": "IndiGo|IndiGo|IndiGo",
                                 "FlightNo": "2134",
-                                "ArrivalTime": "2026-09-09T08:15:00",
-                                "DepartureTime": "2026-09-09T06:00:00",
+                                "ArrivalTime": "2026-10-11T08:15:00",
+                                "DepartureTime": "2026-10-11T06:00:00",
                                 "FareClass": "GS",
                                 "ArrivalCode": "BLR",
                                 "DepartureCode": "DEL",
