@@ -1286,7 +1286,21 @@ body {
                             </button>
                             <div class="accordion-body">
                                 
-                                <?php foreach ($passengers as $pIdx => $pax): ?>
+                                <?php foreach ($passengers as $pIdx => $pax): 
+                                    $paxBaggageDesc = $post_data['passenger_baggage'][$pIdx]['desc'] ?? $post_data['passenger_baggage'][$pIdx]['code'] ?? ($pIdx === 0 ? $onwardBaggageDesc : '');
+                                    $paxBaggageAmt  = (float)($post_data['passenger_baggage'][$pIdx]['amount'] ?? ($pIdx === 0 ? $onwardBaggageAmt : 0));
+                                    $paxMealDesc    = $post_data['passenger_meal'][$pIdx]['desc'] ?? $post_data['passenger_meal'][$pIdx]['code'] ?? ($pIdx === 0 ? $onwardMealDesc : '');
+                                    $paxMealAmt     = (float)($post_data['passenger_meal'][$pIdx]['amount'] ?? ($pIdx === 0 ? $onwardMealAmt : 0));
+                                    $paxSeatCode    = $post_data['passenger_seat'][$pIdx]['code'] ?? ($pIdx === 0 ? $onwardSeatCode : '');
+                                    $paxSeatAmt     = (float)($post_data['passenger_seat'][$pIdx]['amount'] ?? ($pIdx === 0 ? $onwardSeatAmt : 0));
+
+                                    $paxRetBaggageDesc = $post_data['return_passenger_baggage'][$pIdx]['desc'] ?? $post_data['return_passenger_baggage'][$pIdx]['code'] ?? ($pIdx === 0 ? $returnBaggageDesc : '');
+                                    $paxRetBaggageAmt  = (float)($post_data['return_passenger_baggage'][$pIdx]['amount'] ?? ($pIdx === 0 ? $returnBaggageAmt : 0));
+                                    $paxRetMealDesc    = $post_data['return_passenger_meal'][$pIdx]['desc'] ?? $post_data['return_passenger_meal'][$pIdx]['code'] ?? ($pIdx === 0 ? $returnMealDesc : '');
+                                    $paxRetMealAmt     = (float)($post_data['return_passenger_meal'][$pIdx]['amount'] ?? ($pIdx === 0 ? $returnMealAmt : 0));
+                                    $paxRetSeatCode    = $post_data['return_passenger_seat'][$pIdx]['code'] ?? ($pIdx === 0 ? $returnSeatCode : '');
+                                    $paxRetSeatAmt     = (float)($post_data['return_passenger_seat'][$pIdx]['amount'] ?? ($pIdx === 0 ? $returnSeatAmt : 0));
+                                ?>
                                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 12px;">
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                                         <div style="font-size: 14px; font-weight: 800; color: #0d3470; display: flex; align-items: center; gap: 8px;">
@@ -1317,7 +1331,7 @@ body {
                                             <span><?php echo htmlspecialchars($fromCity); ?> &rarr; <?php echo htmlspecialchars($toCity); ?></span>
                                             <span class="addon-status-pill">
                                                 <i class="fa-solid fa-check"></i>
-                                                <?php echo !empty($onwardBaggageDesc) ? htmlspecialchars($onwardBaggageDesc) . ' (₹ ' . number_format($onwardBaggageAmt) . ')' : 'Standard 15 Kg Included'; ?>
+                                                <?php echo !empty($paxBaggageDesc) ? htmlspecialchars($paxBaggageDesc) . ' (₹ ' . number_format($paxBaggageAmt) . ')' : 'Standard 15 Kg Included'; ?>
                                             </span>
                                         </div>
                                         <?php if ($is_roundtrip): ?>
@@ -1325,7 +1339,7 @@ body {
                                             <span><?php echo htmlspecialchars($retFromCity); ?> &rarr; <?php echo htmlspecialchars($retToCity); ?></span>
                                             <span class="addon-status-pill">
                                                 <i class="fa-solid fa-check"></i>
-                                                <?php echo !empty($returnBaggageDesc) ? htmlspecialchars($returnBaggageDesc) . ' (₹ ' . number_format($returnBaggageAmt) . ')' : 'Standard 15 Kg Included'; ?>
+                                                <?php echo !empty($paxRetBaggageDesc) ? htmlspecialchars($paxRetBaggageDesc) . ' (₹ ' . number_format($paxRetBaggageAmt) . ')' : 'Standard 15 Kg Included'; ?>
                                             </span>
                                         </div>
                                         <?php endif; ?>
@@ -1336,8 +1350,8 @@ body {
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
                                             <span><?php echo htmlspecialchars($fromCity); ?> &rarr; <?php echo htmlspecialchars($toCity); ?></span>
                                             <span class="addon-status-pill">
-                                                <?php if (!empty($onwardMealDesc)): ?>
-                                                    <i class="fa-solid fa-check"></i> <?php echo htmlspecialchars($onwardMealDesc); ?> (₹ <?php echo number_format($onwardMealAmt); ?>)
+                                                <?php if (!empty($paxMealDesc)): ?>
+                                                    <i class="fa-solid fa-check"></i> <?php echo htmlspecialchars($paxMealDesc); ?> (₹ <?php echo number_format($paxMealAmt); ?>)
                                                 <?php else: ?>
                                                     <span style="color: #64748b;">No meal pre-booked</span>
                                                 <?php endif; ?>
@@ -1347,8 +1361,8 @@ body {
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155;">
                                             <span><?php echo htmlspecialchars($retFromCity); ?> &rarr; <?php echo htmlspecialchars($retToCity); ?></span>
                                             <span class="addon-status-pill">
-                                                <?php if (!empty($returnMealDesc)): ?>
-                                                    <i class="fa-solid fa-check"></i> <?php echo htmlspecialchars($returnMealDesc); ?> (₹ <?php echo number_format($returnMealAmt); ?>)
+                                                <?php if (!empty($paxRetMealDesc)): ?>
+                                                    <i class="fa-solid fa-check"></i> <?php echo htmlspecialchars($paxRetMealDesc); ?> (₹ <?php echo number_format($paxRetMealAmt); ?>)
                                                 <?php else: ?>
                                                     <span style="color: #64748b;">No meal pre-booked</span>
                                                 <?php endif; ?>
@@ -1362,8 +1376,8 @@ body {
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
                                             <span><?php echo htmlspecialchars($fromCity); ?> &rarr; <?php echo htmlspecialchars($toCity); ?></span>
                                             <span class="addon-status-pill">
-                                                <?php if (!empty($onwardSeatCode)): ?>
-                                                    <i class="fa-solid fa-check"></i> Seat <?php echo htmlspecialchars($onwardSeatCode); ?> (₹ <?php echo number_format($onwardSeatAmt); ?>)
+                                                <?php if (!empty($paxSeatCode)): ?>
+                                                    <i class="fa-solid fa-check"></i> Seat <?php echo htmlspecialchars($paxSeatCode); ?> (₹ <?php echo number_format($paxSeatAmt); ?>)
                                                 <?php else: ?>
                                                     <span style="color: #64748b;">Auto-assigned at check-in</span>
                                                 <?php endif; ?>
@@ -1373,8 +1387,8 @@ body {
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155;">
                                             <span><?php echo htmlspecialchars($retFromCity); ?> &rarr; <?php echo htmlspecialchars($retToCity); ?></span>
                                             <span class="addon-status-pill">
-                                                <?php if (!empty($returnSeatCode)): ?>
-                                                    <i class="fa-solid fa-check"></i> Seat <?php echo htmlspecialchars($returnSeatCode); ?> (₹ <?php echo number_format($returnSeatAmt); ?>)
+                                                <?php if (!empty($paxRetSeatCode)): ?>
+                                                    <i class="fa-solid fa-check"></i> Seat <?php echo htmlspecialchars($paxRetSeatCode); ?> (₹ <?php echo number_format($paxRetSeatAmt); ?>)
                                                 <?php else: ?>
                                                     <span style="color: #64748b;">Auto-assigned at check-in</span>
                                                 <?php endif; ?>

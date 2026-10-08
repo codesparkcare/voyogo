@@ -908,7 +908,7 @@ class Welcome extends CI_Controller {
 
         // Fetch Live / Airway-specific Benzy SSR and SeatLayout for Onward
         $onwardSSRRaw = $this->benzyflightapi->getSSR($onwardTui, $from_code, $to_code, $onwardAirline, $flight_number, $addonSearchTui, $onwardIndex);
-        $onwardParsedSSR = $this->benzyflightapi->parseSSRForDisplay($onwardSSRRaw);
+        $onwardParsedSSR = $this->benzyflightapi->parseSSRForDisplay($onwardSSRRaw, $onwardAirline);
         $onwardSeatsRaw = $this->benzyflightapi->getSeatLayout($onwardTui, $onwardAirline, $flight_number);
         $onwardParsedSeats = $this->benzyflightapi->parseSeatLayoutForDisplay($onwardSeatsRaw);
 
@@ -917,7 +917,7 @@ class Welcome extends CI_Controller {
         $returnParsedSeats = array('rows' => array(), 'seats' => array());
         if ($is_roundtrip) {
             $returnSSRRaw = $this->benzyflightapi->getSSR($returnTui, $return_from_code, $return_to_code, $returnAirline, $return_flight_number, $addonSearchTui, $returnIndex);
-            $returnParsedSSR = $this->benzyflightapi->parseSSRForDisplay($returnSSRRaw);
+            $returnParsedSSR = $this->benzyflightapi->parseSSRForDisplay($returnSSRRaw, $returnAirline);
             $returnSeatsRaw = $this->benzyflightapi->getSeatLayout($returnTui, $returnAirline, $return_flight_number);
             $returnParsedSeats = $this->benzyflightapi->parseSeatLayoutForDisplay($returnSeatsRaw);
         }
@@ -1296,8 +1296,14 @@ class Welcome extends CI_Controller {
             "NetAmount"          => $net_amount
         );
 
+        // Per-passenger add-on selections (Screenshot 3 & PDF pages 84-86)
+        $pax_seats    = $this->input->post('passenger_seat') ?: array();
+        $pax_meals    = $this->input->post('passenger_meal') ?: array();
+        $pax_baggages = $this->input->post('passenger_baggage') ?: array();
+        $selected_ssr_json = $this->input->post('selected_ssr_json');
+
         $pax_api_payload = array();
-        foreach ($passengers as $p) {
+        foreach ($passengers as $idx => $p) {
             $paxType = ($p['type'] === 'Child' || $p['type'] === 'CHD') ? 'CHD' : (($p['type'] === 'Infant' || $p['type'] === 'INF') ? 'INF' : 'ADT');
             $paxDob = !empty($p['dob']) ? $p['dob'] : '';
             
@@ -1330,6 +1336,10 @@ class Welcome extends CI_Controller {
             $passportNo = !empty($p['passport_no']) ? $p['passport_no'] : "";
             $paxNat = !empty($p['nationality']) ? (strtoupper($p['nationality']) === 'INDIAN' ? 'IN' : substr($p['nationality'], 0, 2)) : "IN";
 
+            $curPaxSeat    = !empty($pax_seats[$idx]) ? $pax_seats[$idx] : $ssr_seat_code;
+            $curPaxMeal    = !empty($pax_meals[$idx]) ? $pax_meals[$idx] : $ssr_meal_code;
+            $curPaxBaggage = !empty($pax_baggages[$idx]) ? $pax_baggages[$idx] : $ssr_baggage_code;
+
             $pax_api_payload[] = array(
                 "Title"             => $paxTitle,
                 "FName"             => $fName,
@@ -1351,9 +1361,9 @@ class Welcome extends CI_Controller {
                 "ff_airline"        => $p['ff_airline'] ?? '',
                 "ff_number"         => $p['ff_number'] ?? '',
                 "FFNo"              => $p['ff_number'] ?? '',
-                "Baggage"           => $ssr_baggage_code,
-                "Meals"             => $ssr_meal_code,
-                "Seat"              => $ssr_seat_code,
+                "Baggage"           => $curPaxBaggage,
+                "Meals"             => $curPaxMeal,
+                "Seat"              => $curPaxSeat,
                 "Nationality"       => $paxNat
             );
         }
@@ -1380,6 +1390,7 @@ class Welcome extends CI_Controller {
             'return_seat_code'      => $ret_ssr_seat_code,
             'return_seat_amount'    => $ret_ssr_seat_amount,
             'return_seat_ssid'      => $ret_ssr_seat_ssid,
+            'selected_ssr_json'     => $selected_ssr_json,
             'amount'                => $total_ssr_amount,
             'net_amount'            => $net_amount
         );

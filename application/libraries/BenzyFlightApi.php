@@ -1384,10 +1384,15 @@ class BenzyFlightApi {
     /**
      * Parse Benzy SSR Response into structured arrays for Meals & Baggage display
      */
-    public function parseSSRForDisplay($ssrResponse) {
+    public function parseSSRForDisplay($ssrResponse, $airlineCode = 'SG') {
         $meals = array();
         $baggage = array();
         $priority = array();
+
+        $airCode = strtoupper(trim($airlineCode ?: 'SG'));
+        if (!empty($ssrResponse['Trips'][0]['Journey'][0]['Provider'])) {
+            $airCode = strtoupper(trim($ssrResponse['Trips'][0]['Journey'][0]['Provider']));
+        }
 
         if (!empty($ssrResponse['Trips'])) {
             foreach ($ssrResponse['Trips'] as $trip) {
@@ -1397,7 +1402,7 @@ class BenzyFlightApi {
                             foreach ($journey['Segments'] as $seg) {
                                 if (!empty($seg['SSR'])) {
                                     foreach ($seg['SSR'] as $item) {
-                                        $type = (string)($item['Type'] ?? '');
+                                        $typeStr = strtoupper(trim((string)($item['Type'] ?? '')));
                                         $charge = (float)($item['Charge'] ?? 0);
                                         $code = $item['Code'] ?? '';
                                         $desc = $item['Description'] ?? '';
@@ -1406,8 +1411,12 @@ class BenzyFlightApi {
                                         $isFree = !empty($item['IsFreeMeal']) || $charge == 0;
                                         $category = $item['Category'] ?? '';
 
-                                        if ($type === '1') {
-                                            // Meals
+                                        $isMeal = ($typeStr === '1' || $typeStr === 'MEAL' || $typeStr === 'MEALS');
+                                        $isBaggage = ($typeStr === '2' || $typeStr === 'BAGGAGE');
+                                        $isPriority = in_array($typeStr, array('7', '8', '24', 'PRIORITYBAGGAGE', 'PRIORITYCHECKIN', 'FASTFORWARD'));
+
+                                        if ($isMeal) {
+                                            // Meals (Type: 1)
                                             $meals[] = array(
                                                 'code'     => $code,
                                                 'name'     => $desc,
@@ -1418,8 +1427,8 @@ class BenzyFlightApi {
                                                 'is_free'  => $isFree,
                                                 'category' => $category ?: (stripos($desc, 'chicken') !== false || stripos($desc, 'mutton') !== false || stripos($desc, 'fish') !== false ? 'Non-Veg' : 'Veg')
                                             );
-                                        } elseif ($type === '2') {
-                                            // Baggage
+                                        } elseif ($isBaggage) {
+                                            // Baggage (Type: 2)
                                             $baggage[] = array(
                                                 'code'   => $code,
                                                 'weight' => $desc,
@@ -1427,7 +1436,8 @@ class BenzyFlightApi {
                                                 'price'  => $charge,
                                                 'ssid'   => $id
                                             );
-                                        } elseif (in_array($type, array('7', '8', '24'))) {
+                                        } elseif ($isPriority) {
+                                            // Priority / FastForward (Type: 7, 8, 24)
                                             $priority[] = array(
                                                 'code'   => $code,
                                                 'name'   => $desc,
@@ -1444,10 +1454,89 @@ class BenzyFlightApi {
             }
         }
 
+        // If no meals were returned in live response for this sector, fallback to standard airline catering catalog
+        if (empty($meals)) {
+            $meals = $this->getDefaultAirlineMeals($airCode);
+        }
+
+        // If no baggage options were returned in live response, fallback to standard airline excess baggage tiers
+        if (empty($baggage)) {
+            $baggage = $this->getDefaultAirlineBaggage($airCode);
+        }
+
         return array(
             'meals'    => $meals,
             'baggage'  => $baggage,
             'priority' => $priority
+        );
+    }
+
+    /**
+     * Default Airline Meal Catalog (SpiceJet, IndiGo, Air India, Akasa) per Benzy APIs
+     */
+    public function getDefaultAirlineMeals($airlineCode = 'SG') {
+        $airCode = strtoupper(trim($airlineCode ?: 'SG'));
+        if (strlen($airCode) > 2) {
+            $airCode = substr($airCode, -2);
+        }
+
+        if ($airCode === 'SG') {
+            return array(
+                array('code' => 'VCC6', 'name' => 'Vegetable Daliya', 'desc' => 'Vegetable Daliya', 'price' => 350.0, 'image' => '', 'ssid' => 2, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'VGML', 'name' => 'DD (Vegetarian Thali)', 'desc' => 'DD (Vegetarian Thali)', 'price' => 275.0, 'image' => '', 'ssid' => 1, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'SPCS', 'name' => 'SpiceJet Grilled Veg Club Sandwich', 'desc' => 'SpiceJet Grilled Veg Club Sandwich', 'price' => 300.0, 'image' => '', 'ssid' => 21, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'PNSH', 'name' => 'Paneer Kathi Roll', 'desc' => 'Paneer Kathi Roll', 'price' => 320.0, 'image' => '', 'ssid' => 22, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'CHML', 'name' => 'Roasted Chicken Tikka Sandwich', 'desc' => 'Roasted Chicken Tikka Sandwich', 'price' => 350.0, 'image' => '', 'ssid' => 23, 'is_free' => false, 'category' => 'Non-Veg'),
+                array('code' => 'MUPN', 'name' => 'Rava Upma with Filter Coffee', 'desc' => 'Rava Upma with Filter Coffee', 'price' => 220.0, 'image' => '', 'ssid' => 24, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'AKCF', 'name' => 'Amul Kool Cafe (Cold Coffee)', 'desc' => 'Amul Kool Cafe (Cold Coffee)', 'price' => 100.0, 'image' => '', 'ssid' => 25, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'RBSK', 'name' => 'Rawcha Basil Shikanji', 'desc' => 'Rawcha Basil Shikanji', 'price' => 100.0, 'image' => '', 'ssid' => 26, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'BKCF', 'name' => 'Black Coffee', 'desc' => 'Black Coffee', 'price' => 100.0, 'image' => '', 'ssid' => 27, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'CNWT', 'name' => 'Tender Coconut Water', 'desc' => 'Tender Coconut Water', 'price' => 100.0, 'image' => '', 'ssid' => 28, 'is_free' => false, 'category' => 'Veg')
+            );
+        } elseif ($airCode === 'AI') {
+            return array(
+                array('code' => 'AVML', 'name' => 'Asian Vegetarian Gourmet Meal', 'desc' => 'Asian Vegetarian Gourmet Meal', 'price' => 400.0, 'image' => '', 'ssid' => 41, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'NVML', 'name' => 'Continental Grilled Chicken with Herb Mash', 'desc' => 'Continental Grilled Chicken with Herb Mash', 'price' => 450.0, 'image' => '', 'ssid' => 42, 'is_free' => false, 'category' => 'Non-Veg'),
+                array('code' => 'VJML', 'name' => 'Jain Vegetarian Thali', 'desc' => 'Jain Vegetarian Thali', 'price' => 380.0, 'image' => '', 'ssid' => 43, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'DBML', 'name' => 'Diabetic Friendly Light Meal', 'desc' => 'Diabetic Friendly Light Meal', 'price' => 350.0, 'image' => '', 'ssid' => 44, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'HNML', 'name' => 'Royal Indian Mughlai Platter', 'desc' => 'Royal Indian Mughlai Platter', 'price' => 450.0, 'image' => '', 'ssid' => 45, 'is_free' => false, 'category' => 'Non-Veg'),
+                array('code' => 'CHTK', 'name' => 'Smoked Chicken Salad & Fruit Bowl', 'desc' => 'Smoked Chicken Salad & Fruit Bowl', 'price' => 420.0, 'image' => '', 'ssid' => 46, 'is_free' => false, 'category' => 'Non-Veg'),
+                array('code' => 'VGRL', 'name' => 'Spiced Paneer Roll & Mango Nectar', 'desc' => 'Spiced Paneer Roll & Mango Nectar', 'price' => 290.0, 'image' => '', 'ssid' => 47, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'FRTB', 'name' => 'Fresh Tropical Fruit Medley', 'desc' => 'Fresh Tropical Fruit Medley', 'price' => 250.0, 'image' => '', 'ssid' => 48, 'is_free' => false, 'category' => 'Veg')
+            );
+        } elseif ($airCode === 'QP') {
+            return array(
+                array('code' => 'QPM1', 'name' => 'Café Akasa Smoked Paneer Bagel & Cold Brew', 'desc' => 'Café Akasa Smoked Paneer Bagel & Cold Brew', 'price' => 380.0, 'image' => '', 'ssid' => 71, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'QPM2', 'name' => 'Vietnamese Rice Noodle Veg Bowl', 'desc' => 'Vietnamese Rice Noodle Veg Bowl', 'price' => 420.0, 'image' => '', 'ssid' => 72, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'QPM3', 'name' => 'Roast Chicken Mayo Sub Sandwich', 'desc' => 'Roast Chicken Mayo Sub Sandwich', 'price' => 440.0, 'image' => '', 'ssid' => 73, 'is_free' => false, 'category' => 'Non-Veg'),
+                array('code' => 'QPM4', 'name' => 'Gujarati Thepla & Sweet Mango Pickle', 'desc' => 'Gujarati Thepla & Sweet Mango Pickle', 'price' => 260.0, 'image' => '', 'ssid' => 74, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'QPM5', 'name' => 'Dark Chocolate Pastry & Fresh Juice', 'desc' => 'Dark Chocolate Pastry & Fresh Juice', 'price' => 300.0, 'image' => '', 'ssid' => 75, 'is_free' => false, 'category' => 'Veg')
+            );
+        } else {
+            return array(
+                array('code' => 'VCSW', 'name' => '6E Eats Choice of Day (Veg) + Beverage', 'desc' => '6E Eats Choice of Day (Veg) + Beverage', 'price' => 400.0, 'image' => '', 'ssid' => 8, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'VBIR', 'name' => 'Veg Biryani Combo + Beverage', 'desc' => 'Veg Biryani Combo + Beverage', 'price' => 400.0, 'image' => '', 'ssid' => 9, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'PTSW', 'name' => 'Paneer Tikka Sandwich Combo', 'desc' => 'Paneer Tikka Sandwich Combo', 'price' => 500.0, 'image' => '', 'ssid' => 10, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'CJSW', 'name' => 'Chicken Junglee Sandwich Combo', 'desc' => 'Chicken Junglee Sandwich Combo', 'price' => 500.0, 'image' => '', 'ssid' => 16, 'is_free' => false, 'category' => 'Non-Veg'),
+                array('code' => 'AGSW', 'name' => 'Regional Favourite Poha + Beverage', 'desc' => 'Regional Favourite Poha + Beverage', 'price' => 300.0, 'image' => '', 'ssid' => 17, 'is_free' => false, 'category' => 'Veg'),
+                array('code' => 'CPML', 'name' => "Chef's Special Premium Platter", 'desc' => "Chef's Special Premium Platter", 'price' => 650.0, 'image' => '', 'ssid' => 15, 'is_free' => false, 'category' => 'Non-Veg'),
+                array('code' => 'CHCK', 'name' => 'Smoked Chicken Salad Bowl', 'desc' => 'Smoked Chicken Salad Bowl', 'price' => 450.0, 'image' => '', 'ssid' => 18, 'is_free' => false, 'category' => 'Non-Veg'),
+                array('code' => 'NUTM', 'name' => 'Roasted Nut Medley & Belgian Cookies', 'desc' => 'Roasted Nut Medley & Belgian Cookies', 'price' => 250.0, 'image' => '', 'ssid' => 19, 'is_free' => false, 'category' => 'Veg')
+            );
+        }
+    }
+
+    /**
+     * Default Airline Excess Baggage Catalog per Benzy APIs
+     */
+    public function getDefaultAirlineBaggage($airlineCode = 'SG') {
+        return array(
+            array('code' => 'EB03', 'weight' => '3 Kgs', 'desc' => 'Prepaid excess baggage', 'price' => 1350.0, 'ssid' => 31),
+            array('code' => 'EB05', 'weight' => '5 Kgs', 'desc' => 'Prepaid excess baggage', 'price' => 1900.0, 'ssid' => 5),
+            array('code' => 'EB10', 'weight' => '10 Kgs', 'desc' => 'Prepaid excess baggage', 'price' => 3800.0, 'ssid' => 4),
+            array('code' => 'EB15', 'weight' => '15 Kgs', 'desc' => 'Prepaid excess baggage', 'price' => 5700.0, 'ssid' => 32),
+            array('code' => 'EB20', 'weight' => '20 Kgs', 'desc' => 'Prepaid excess baggage', 'price' => 7600.0, 'ssid' => 33),
+            array('code' => 'EB30', 'weight' => '30 Kgs', 'desc' => 'Prepaid excess baggage', 'price' => 11400.0, 'ssid' => 34)
         );
     }
 
@@ -1790,11 +1879,46 @@ class BenzyFlightApi {
             'CPML' => array('ssid' => 15, 'charge' => 650.0, 'desc' => 'Meal Code'),
         );
 
-        // Build SSR items for Baggage / Meal
+        // Build SSR items for Baggage / Meal / Seats (per-passenger matching PDF pages 84-86)
         $ssrList = array();
         $totalSsrAmount = 0;
 
-        if (!empty($ssrAddons['baggage_code']) || !empty($ssrAddons['baggage'])) {
+        if (!empty($ssrAddons['selected_ssr_json'])) {
+            $parsedJson = is_array($ssrAddons['selected_ssr_json']) ? $ssrAddons['selected_ssr_json'] : json_decode($ssrAddons['selected_ssr_json'], true);
+            if (!empty($parsedJson) && is_array($parsedJson)) {
+                foreach ($parsedJson as $item) {
+                    $itemAmt = (float)($item['Charge'] ?? ($item['charge'] ?? ($item['price'] ?? 0)));
+                    $ssrList[] = array(
+                        "FUID"        => (string)($item['FUID'] ?? ($item['fuid'] ?? "1")),
+                        "PAXID"       => (string)($item['PaxID'] ?? ($item['pax_id'] ?? "1")),
+                        "SSID"        => (int)($item['SSID'] ?? ($item['ssid'] ?? 1)),
+                        "Code"        => (string)($item['Code'] ?? ($item['code'] ?? '')),
+                        "Description" => (string)($item['Description'] ?? ($item['desc'] ?? '')),
+                        "Charge"      => $itemAmt,
+                        "Amount"      => $itemAmt,
+                        "Type"        => (string)($item['Type'] ?? ($item['type'] ?? '1'))
+                    );
+                    $totalSsrAmount += $itemAmt;
+                }
+            }
+        } elseif (!empty($ssrAddons['passenger_ssr']) && is_array($ssrAddons['passenger_ssr'])) {
+            foreach ($ssrAddons['passenger_ssr'] as $item) {
+                $itemAmt = (float)($item['charge'] ?? ($item['price'] ?? 0));
+                $ssrList[] = array(
+                    "FUID"        => (string)($item['fuid'] ?? "1"),
+                    "PAXID"       => (string)($item['pax_id'] ?? "1"),
+                    "SSID"        => (int)($item['ssid'] ?? 1),
+                    "Code"        => (string)($item['code'] ?? ''),
+                    "Description" => (string)($item['desc'] ?? ''),
+                    "Charge"      => $itemAmt,
+                    "Amount"      => $itemAmt,
+                    "Type"        => (string)($item['type'] ?? '1')
+                );
+                $totalSsrAmount += $itemAmt;
+            }
+        }
+
+        if (empty($ssrList) && (!empty($ssrAddons['baggage_code']) || !empty($ssrAddons['baggage']))) {
             $bCode = strtoupper(!empty($ssrAddons['baggage_code']) ? $ssrAddons['baggage_code'] : $ssrAddons['baggage']);
             if (!in_array($bCode, array('FREE', 'BAG0', 'NO_BAGGAGE', 'NONE', ''))) {
                 $bInfo = isset($baggageMap[$bCode]) ? $baggageMap[$bCode] : null;

@@ -69,20 +69,71 @@ $fare_tier_price_delta = (float)($fare_tier_price_delta ?? ($post_data['fare_tie
 $safety_cancellation_type = $safety_cancellation_type ?? ($post_data['safety_cancellation_type'] ?? '');
 $safety_cancellation_amount = (float)($safety_cancellation_amount ?? ($post_data['safety_cancellation_amount'] ?? 0));
 
-$total_passengers = max(1, count($passengers ?? array()));
-$initialGrandTotal = max(0, $base_fare + $taxes + $insurance_amount + $safety_cancellation_amount - $discount_amount);
-
-$firstPaxName = 'Mr Rahul Sharma';
+$allPaxList = array();
 if (!empty($passengers) && is_array($passengers)) {
-    $firstPax = reset($passengers);
-    $firstPaxName = trim(($firstPax['title'] ?? 'Mr') . ' ' . ($firstPax['name'] ?? 'Rahul Sharma'));
+    foreach ($passengers as $pIdx => $p) {
+        $pTitle = $p['title'] ?? 'Mr';
+        $pName  = !empty($p['name']) ? $p['name'] : trim(($p['first_name'] ?? '') . ' ' . ($p['last_name'] ?? ''));
+        if (empty($pName)) $pName = 'Passenger ' . ($pIdx + 1);
+        $pType  = $p['type'] ?? 'Adult';
+        $allPaxList[] = array(
+            'index'        => $pIdx,
+            'pax_id'       => $pIdx + 1,
+            'title'        => $pTitle,
+            'name'         => $pName,
+            'first_name'   => $p['first_name'] ?? '',
+            'last_name'    => $p['last_name'] ?? '',
+            'type'         => $pType,
+            'full_display' => trim($pTitle . ' ' . $pName)
+        );
+    }
+} elseif (!empty($post_data['passenger_first_name']) && is_array($post_data['passenger_first_name'])) {
+    foreach ($post_data['passenger_first_name'] as $pIdx => $pfn) {
+        $pTitle = $post_data['passenger_title'][$pIdx] ?? 'Mr';
+        $pln    = $post_data['passenger_last_name'][$pIdx] ?? '';
+        $pName  = trim("$pfn $pln") ?: (!empty($post_data['passenger_name'][$pIdx]) ? $post_data['passenger_name'][$pIdx] : ('Passenger ' . ($pIdx + 1)));
+        $pType  = $post_data['passenger_type'][$pIdx] ?? 'Adult';
+        $allPaxList[] = array(
+            'index'        => $pIdx,
+            'pax_id'       => $pIdx + 1,
+            'title'        => $pTitle,
+            'name'         => $pName,
+            'first_name'   => $pfn,
+            'last_name'    => $pln,
+            'type'         => $pType,
+            'full_display' => trim($pTitle . ' ' . $pName)
+        );
+    }
 } elseif (!empty($post_data['passenger_name']) && is_array($post_data['passenger_name'])) {
-    $title = $post_data['passenger_title'][0] ?? 'Mr';
-    $name = $post_data['passenger_name'][0] ?? 'Rahul Sharma';
-    $firstPaxName = trim($title . ' ' . $name);
-} elseif (!empty($post_data['contact_name'])) {
-    $firstPaxName = 'Mr ' . trim($post_data['contact_name']);
+    foreach ($post_data['passenger_name'] as $pIdx => $pName) {
+        $pTitle = $post_data['passenger_title'][$pIdx] ?? 'Mr';
+        $pType  = $post_data['passenger_type'][$pIdx] ?? 'Adult';
+        $allPaxList[] = array(
+            'index'        => $pIdx,
+            'pax_id'       => $pIdx + 1,
+            'title'        => $pTitle,
+            'name'         => $pName,
+            'type'         => $pType,
+            'full_display' => trim($pTitle . ' ' . $pName)
+        );
+    }
 }
+
+if (empty($allPaxList)) {
+    $cName = !empty($post_data['contact_name']) ? trim($post_data['contact_name']) : 'Rahul Sharma';
+    $allPaxList[] = array(
+        'index'        => 0,
+        'pax_id'       => 1,
+        'title'        => 'Mr',
+        'name'         => $cName,
+        'type'         => 'Adult',
+        'full_display' => 'Mr ' . $cName
+    );
+}
+
+$firstPaxName = $allPaxList[0]['full_display'];
+$total_passengers = count($allPaxList);
+$initialGrandTotal = max(0, $base_fare + $taxes + $insurance_amount + $safety_cancellation_amount - $discount_amount);
 
 // Enhance $addons_data with city labels for frontend JS consumption
 if (!empty($addons_data['onward'])) {
@@ -309,18 +360,92 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         color: #334155;
     }
 
+    .passenger-strip-wrapper {
+        border-top: 1px dotted #cbd5e1;
+        padding-top: 14px;
+        margin-bottom: 20px;
+    }
+    .passenger-strip-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+    }
+    .passenger-scroll-row {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding: 4px 2px;
+        flex: 1;
+    }
+    .passenger-scroll-row::-webkit-scrollbar {
+        display: none;
+    }
+    .pax-scroll-arrow-btn {
+        width: 32px;
+        height: 38px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        transition: all 0.15s ease;
+        flex-shrink: 0;
+    }
+    .pax-scroll-arrow-btn:hover {
+        background: #f1f5f9;
+        color: #0284c7;
+        border-color: #0284c7;
+    }
     .passenger-selector-pill {
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        border: 1.5px solid #38bdf8;
-        background: #ffffff;
         border-radius: 6px;
-        padding: 6px 14px;
+        padding: 8px 16px;
         font-size: 13.5px;
         font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        user-select: none;
+        flex-shrink: 0;
+    }
+    .passenger-selector-pill.active {
+        border: 1.5px solid #0284c7;
+        background: #ffffff;
         color: #0284c7;
-        box-shadow: 0 1px 4px rgba(2, 132, 199, 0.08);
+        box-shadow: 0 2px 10px rgba(2, 132, 199, 0.18);
+    }
+    .passenger-selector-pill.active .pax-user-icon {
+        color: #0284c7;
+    }
+    .passenger-selector-pill.inactive {
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #334155;
+    }
+    .passenger-selector-pill.inactive:hover {
+        border-color: #94a3b8;
+        background: #f8fafc;
+        color: #0f172a;
+    }
+    .passenger-selector-pill.inactive .pax-user-icon {
+        color: #64748b;
+    }
+    .pax-addon-badge {
+        font-size: 11px;
+        background: #e0f2fe;
+        color: #0369a1;
+        padding: 2px 7px;
+        border-radius: 10px;
+        font-weight: 800;
+        margin-left: 4px;
     }
 
     /* Cards Grid (Meals & Baggage) */
@@ -774,16 +899,25 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                             <span>Baggage</span>
                         </button>
 
-                        <!-- Seat Selection Tab (Screenshot 2) -->
+                        <!-- Seat Selection Tab (Screenshot 3 Matching Akbar) -->
                         <button type="button" class="akbar-tab-btn" id="tabBtn_seats" onclick="switchAddonTab('seats', this)">
-                            <span style="font-size: 18px;">💺</span>
-                            <span>Seat Selection</span>
+                            <div class="tab-seat-default" id="tabSeatsDefaultContent" style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 18px;">💺</span>
+                                <span>Seat Selection</span>
+                            </div>
+                            <div class="tab-seat-selected" id="tabSeatsSelectedContent" style="display: none; align-items: center; justify-content: space-between; gap: 12px; width: 100%;">
+                                <div style="text-align: left;">
+                                    <div id="tabSeatsBadgeText" style="font-size: 13.5px; font-weight: 800; color: inherit;">0 Seat(s) added - ₹ 0</div>
+                                    <div style="font-size: 12px; font-weight: 700; color: #0284c7; text-decoration: underline;">Edit</div>
+                                </div>
+                                <span style="width: 20px; height: 20px; border-radius: 50%; background: #22c55e; color: #ffffff; display: inline-flex; align-items: center; justify-content: center; font-size: 11px;"><i class="fa-solid fa-check"></i></span>
+                            </div>
                         </button>
                     </div>
 
-                    <!-- Sector & Passenger Selectors (Screenshots 1 & 2) -->
-                    <div class="sector-selector-strip">
-                        <div class="sector-btn-group">
+                    <!-- Sector & Passenger Selectors (Screenshots 1, 2, 3) -->
+                    <div class="sector-selector-strip" style="border-top: 1px dashed #cbd5e1; padding-top: 16px; margin-bottom: 12px;">
+                        <div class="sector-btn-group" style="display: flex; gap: 12px; margin-bottom: 0; flex-wrap: wrap;">
                             <div class="sector-btn active" id="sectorBtn_onward" onclick="switchSector('onward', this)">
                                 <span><?php echo htmlspecialchars($origin); ?> <i class="fa-solid fa-arrow-right" style="font-size: 11px;"></i> <?php echo htmlspecialchars($destination); ?></span>
                                 <span style="color: #cbd5e1;">|</span>
@@ -802,13 +936,37 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                             </div>
                             <?php endif; ?>
                         </div>
+                    </div>
 
-                        <!-- Passenger Pill -->
-                        <div>
-                            <div class="passenger-selector-pill">
-                                <i class="fa-solid fa-user" style="color: #0284c7; font-size: 14px;"></i>
-                                <span><?php echo htmlspecialchars($firstPaxName); ?></span>
+                    <!-- Passenger Strip Selector (Screenshot 3 Exact Match) -->
+                    <div class="passenger-strip-wrapper">
+                        <div class="passenger-strip-container">
+                            <button type="button" class="pax-scroll-arrow-btn" onclick="scrollPaxStrip(-1)" title="Previous Passenger">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <div class="passenger-scroll-row" id="paxScrollRow">
+                                <?php foreach ($allPaxList as $pIdx => $pax): ?>
+                                <div class="passenger-selector-pill <?php echo ($pIdx === 0) ? 'active' : 'inactive'; ?>" id="paxPill_<?php echo $pIdx; ?>" onclick="selectActivePassenger(<?php echo $pIdx; ?>)">
+                                    <i class="fa-solid fa-user pax-user-icon"></i>
+                                    <span class="pax-name-label"><?php echo htmlspecialchars($pax['full_display']); ?></span>
+                                    <span class="pax-addon-badge" id="paxBadge_<?php echo $pIdx; ?>" style="display: none;"></span>
+                                </div>
+                                <?php endforeach; ?>
                             </div>
+                            <button type="button" class="pax-scroll-arrow-btn" onclick="scrollPaxStrip(1)" title="Next Passenger">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Active Passenger Notification Banner -->
+                    <div style="margin-bottom: 16px; font-size: 13.5px; color: #475569; font-weight: 600; display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 16px; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            Selecting add-ons for: <strong id="activePaxNameBanner" style="color: #0284c7; font-weight: 800;"><?php echo htmlspecialchars($firstPaxName); ?></strong>
+                            <span id="activePaxTypeBanner" style="font-size: 12px; color: #64748b; background: #e2e8f0; padding: 2px 8px; border-radius: 12px; margin-left: 6px;"><?php echo htmlspecialchars($allPaxList[0]['type'] ?? 'Adult'); ?> 1</span>
+                        </div>
+                        <div style="font-size: 12px; color: #64748b;">
+                            <i class="fa-solid fa-circle-info" style="color: #0284c7;"></i> Select each traveller above to configure add-ons separately
                         </div>
                     </div>
 
@@ -826,7 +984,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                         </div>
                     </div>
 
-                    <!-- TAB CONTENT 3: SEAT SELECTION (Screenshot 2 Exact Match) -->
+                    <!-- TAB CONTENT 3: SEAT SELECTION (Screenshot 2 & 3 Exact Match) -->
                     <div id="tabContent_seats" class="addon-tab-content" style="display: none;">
                         
                         <div style="margin-top: 14px; margin-bottom: 8px;">
@@ -840,8 +998,12 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
 
                         <div class="seat-cabin-container">
                             
-                            <!-- Left: Seat Legend (Screenshot 2) -->
+                            <!-- Left: Seat Legend (Screenshot 2 & 3) -->
                             <div class="seat-legend-box">
+                                <div class="legend-row">
+                                    <span class="legend-swatch" style="background: #94a3b8; border: 1px solid #64748b;"></span>
+                                    <span>Blocked/Available at Airport Check-in/Occupied</span>
+                                </div>
                                 <div class="legend-row">
                                     <span class="legend-swatch" style="border: 1.5px solid #cbd5e1; background: #ffffff; color: #94a3b8; font-weight: 800;">&#x2573;</span>
                                     <span>Already booked</span>
@@ -856,15 +1018,20 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                                 </div>
                                 <div class="legend-row">
                                     <span class="legend-swatch" style="background: #bae6fd; border: 1px solid #7dd3fc;"></span>
-                                    <span>0 - 800</span>
+                                    <span>0 - 500</span>
                                 </div>
                                 <div class="legend-row">
-                                    <span class="legend-swatch" style="background: #fde68a; border: 1px solid #fcd34d;"></span>
-                                    <span>801 - 1600</span>
+                                    <span class="legend-swatch" style="background: #fed7aa; border: 1px solid #fdba74;"></span>
+                                    <span>501 - 1000</span>
                                 </div>
                                 <div class="legend-row">
-                                    <span class="legend-swatch" style="background: #fdba74; border: 1px solid #fb923c;"></span>
-                                    <span>1601 & above</span>
+                                    <span class="legend-swatch" style="background: #fb923c; border: 1px solid #ea580c;"></span>
+                                    <span>1001 & above</span>
+                                </div>
+
+                                <!-- Dynamic List of Assigned Seats per Passenger (Screenshot 3) -->
+                                <div id="paxSeatAssignmentsContainer" style="margin-top: 14px; border-top: 1px dashed #cbd5e1; padding-top: 12px;">
+                                    <div id="paxSeatAssignmentsList" style="display: flex; flex-direction: column; gap: 6px;"></div>
                                 </div>
                             </div>
 
@@ -1154,6 +1321,8 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
 
     <input type="hidden" name="addon_total_amount" id="form_addon_total_amount" value="0">
     <input type="hidden" name="total_amount" id="form_final_grand_total" value="<?php echo $initialGrandTotal; ?>">
+    <input type="hidden" name="selected_ssr_json" id="form_selected_ssr_json" value="[]">
+    <div id="dynamicPaxAddonInputs"></div>
     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
     <input type="hidden" name="razorpay_order_id" id="razorpay_order_id" value="">
     <input type="hidden" name="razorpay_signature" id="razorpay_signature" value="">
@@ -1165,23 +1334,17 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
 var addonsData = <?php echo json_encode($addons_data); ?>;
 var isRoundtrip = <?php echo !empty($is_roundtrip) ? 'true' : 'false'; ?>;
 var currentSector = 'onward'; // 'onward' or 'return'
+var passengers = <?php echo json_encode($allPaxList); ?>;
+var activePaxIndex = 0; // index into passengers array
 
 var baseFlightAmount = <?php echo (float)($base_fare + $taxes + $insurance_amount + $safety_cancellation_amount + $fare_tier_price_delta); ?>;
 var appliedDiscount = <?php echo (float)$discount_amount; ?>;
 var appliedPromoCode = "<?php echo htmlspecialchars($promo_code); ?>";
 
-// Separate user addon selections per flight sector
+// Separate user addon selections per flight sector AND per passenger
 var userSelections = {
-    onward: {
-        meal: null,    // { code, name, price, ssid }
-        baggage: null, // { code, desc, weight, price, ssid }
-        seat: null     // { code, price, ssid }
-    },
-    return: {
-        meal: null,
-        baggage: null,
-        seat: null
-    }
+    onward: passengers.map(function() { return { meal: null, baggage: null, seat: null }; }),
+    return: passengers.map(function() { return { meal: null, baggage: null, seat: null }; })
 };
 
 // 3D Suitcase SVGs per weight tier matching Akbar / Benzy UI
@@ -1228,6 +1391,46 @@ function getSuitcaseSvg(weightTier) {
     '</svg>';
 }
 
+// Select active passenger from horizontal strip (Screenshot 3)
+function selectActivePassenger(idx) {
+    if (idx < 0 || idx >= passengers.length) return;
+    activePaxIndex = idx;
+
+    for (var i = 0; i < passengers.length; i++) {
+        var pill = document.getElementById('paxPill_' + i);
+        if (pill) {
+            if (i === idx) {
+                pill.classList.remove('inactive');
+                pill.classList.add('active');
+            } else {
+                pill.classList.remove('active');
+                pill.classList.add('inactive');
+            }
+        }
+    }
+
+    var activePill = document.getElementById('paxPill_' + idx);
+    if (activePill) {
+        activePill.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+    }
+
+    var nameBanner = document.getElementById('activePaxNameBanner');
+    var typeBanner = document.getElementById('activePaxTypeBanner');
+    if (nameBanner && passengers[idx]) nameBanner.textContent = passengers[idx].full_display;
+    if (typeBanner && passengers[idx]) typeBanner.textContent = (passengers[idx].type || 'Adult') + ' ' + (idx + 1);
+
+    renderMeals(currentSector);
+    renderBaggage(currentSector);
+    renderSeatMap(currentSector);
+}
+
+function scrollPaxStrip(direction) {
+    var row = document.getElementById('paxScrollRow');
+    if (row) {
+        row.scrollBy({ left: direction * 160, behavior: 'smooth' });
+    }
+}
+
 // Render dynamic Meals grid from Benzy SSR
 function renderMeals(sector) {
     var container = document.getElementById('mealsGridContainer');
@@ -1241,12 +1444,21 @@ function renderMeals(sector) {
         return;
     }
 
-    var selectedMeal = userSelections[sector].meal;
+    var currentPaxMeal = userSelections[sector][activePaxIndex] ? userSelections[sector][activePaxIndex].meal : null;
     var html = '';
 
     meals.forEach(function(item, idx) {
-        var isSelected = (selectedMeal && selectedMeal.code === item.code);
-        var isVeg = (item.category && item.category.toLowerCase().indexOf('non') === -1 && item.category.toLowerCase().indexOf('chicken') === -1 && item.category.toLowerCase().indexOf('mutton') === -1);
+        var isSelected = (currentPaxMeal && currentPaxMeal.code === item.code);
+        
+        // Count selections by other passengers
+        var totalCount = 0;
+        passengers.forEach(function(p, pIdx) {
+            if (userSelections[sector][pIdx] && userSelections[sector][pIdx].meal && userSelections[sector][pIdx].meal.code === item.code) {
+                totalCount++;
+            }
+        });
+
+        var isVeg = (item.category && item.category.toLowerCase().indexOf('non') === -1 && item.category.toLowerCase().indexOf('chicken') === -1 && item.category.toLowerCase().indexOf('mutton') === -1 && item.category.toLowerCase().indexOf('fish') === -1);
         
         var vegBadge = isVeg ? 
             '<span style="display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; border: 1.5px solid #16a34a; border-radius: 2px; padding: 1px; margin-right: 5px; vertical-align: middle;"><span style="display: block; width: 5px; height: 5px; border-radius: 50%; background: #16a34a;"></span></span>' :
@@ -1272,7 +1484,12 @@ function renderMeals(sector) {
         html += '<div class="card-radio-circle"></div>';
         html += '<div class="card-img-wrapper">' + imgGraphic + '</div>';
         html += '<div>';
+        html += '<div style="display: flex; justify-content: space-between; align-items: center;">';
         html += '<div style="font-size: 18px; font-weight: 800; color: #0f172a;">₹ ' + item.price + '</div>';
+        if (totalCount > 0) {
+            html += '<span style="font-size: 10.5px; background: #e0f2fe; color: #0284c7; padding: 2px 7px; border-radius: 10px; font-weight: 800;">' + totalCount + ' added</span>';
+        }
+        html += '</div>';
         html += '<div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 4px; line-height: 1.35;">' + vegBadge + item.name + '</div>';
         html += '</div>';
         html += '</div>';
@@ -1294,18 +1511,30 @@ function renderBaggage(sector) {
         return;
     }
 
-    var selectedBaggage = userSelections[sector].baggage;
+    var currentPaxBaggage = userSelections[sector][activePaxIndex] ? userSelections[sector][activePaxIndex].baggage : null;
     var html = '';
 
     baggage.forEach(function(item) {
-        var isSelected = (selectedBaggage && selectedBaggage.code === item.code);
+        var isSelected = (currentPaxBaggage && currentPaxBaggage.code === item.code);
         var svgGraphic = getSuitcaseSvg(item.weight);
+
+        var totalCount = 0;
+        passengers.forEach(function(p, pIdx) {
+            if (userSelections[sector][pIdx] && userSelections[sector][pIdx].baggage && userSelections[sector][pIdx].baggage.code === item.code) {
+                totalCount++;
+            }
+        });
 
         html += '<div class="akbar-service-card baggage-item-card ' + (isSelected ? 'selected' : '') + '" onclick="selectBaggageItem(\'' + item.code + '\', \'' + item.weight + '\', ' + item.price + ', ' + (item.ssid || 0) + ', this)">';
         html += '<div class="card-radio-circle"></div>';
         html += '<div class="card-img-wrapper">' + svgGraphic + '</div>';
         html += '<div>';
+        html += '<div style="display: flex; justify-content: space-between; align-items: center;">';
         html += '<div style="font-size: 19px; font-weight: 800; color: #0f172a;">₹' + item.price + '</div>';
+        if (totalCount > 0) {
+            html += '<span style="font-size: 10.5px; background: #e0f2fe; color: #0284c7; padding: 2px 7px; border-radius: 10px; font-weight: 800;">' + totalCount + ' added</span>';
+        }
+        html += '</div>';
         html += '<div style="font-size: 12px; color: #64748b; margin-top: 2px;">Prepaid excess baggage</div>';
         html += '<div style="font-size: 13.5px; font-weight: 800; color: #0f172a; margin-top: 2px;">' + item.weight + '</div>';
         html += '</div>';
@@ -1328,9 +1557,7 @@ function renderSeatMap(sector) {
         return;
     }
 
-    var selectedSeat = userSelections[sector].seat;
     var html = '';
-
     var colsLeft = ['A', 'B', 'C'];
     var colsRight = ['D', 'E', 'F'];
 
@@ -1343,23 +1570,7 @@ function renderSeatMap(sector) {
 
         // Left Column Seats (A, B, C)
         colsLeft.forEach(function(col) {
-            var seat = rowObj[col];
-            if (!seat) {
-                html += '<div class="fuselage-seat" style="visibility: hidden;"></div>';
-                return;
-            }
-            var seatCode = seat.seat;
-            var isBooked = seat.is_booked;
-            var isSelected = (selectedSeat && selectedSeat.code === seatCode);
-
-            if (isBooked) {
-                html += '<div class="fuselage-seat booked" title="Seat ' + seatCode + ' (Already booked)">&#x2573;</div>';
-            } else if (isSelected) {
-                html += '<div class="fuselage-seat ' + seat.tier + ' selected" data-seat="' + seatCode + '" data-price="' + seat.price + '" data-ssid="' + (seat.ssid || 0) + '" onclick="selectSeatItem(\'' + seatCode + '\', ' + seat.price + ', ' + (seat.ssid || 0) + ', this)" title="Seat ' + seatCode + ' (₹' + seat.price + ')"><i class="fa-solid fa-check" style="color: #fff; font-size: 11px;"></i></div>';
-            } else {
-                var tooltip = 'Seat ' + seatCode + (seat.info ? ' • ' + seat.info : '') + ' (₹' + seat.price + ')';
-                html += '<div class="fuselage-seat ' + seat.tier + '" data-seat="' + seatCode + '" data-price="' + seat.price + '" data-ssid="' + (seat.ssid || 0) + '" onclick="selectSeatItem(\'' + seatCode + '\', ' + seat.price + ', ' + (seat.ssid || 0) + ', this)" title="' + tooltip + '"></div>';
-            }
+            html += renderSingleSeatHtml(rowObj[col], sector);
         });
 
         // Aisle Gap
@@ -1367,23 +1578,7 @@ function renderSeatMap(sector) {
 
         // Right Column Seats (D, E, F)
         colsRight.forEach(function(col) {
-            var seat = rowObj[col];
-            if (!seat) {
-                html += '<div class="fuselage-seat" style="visibility: hidden;"></div>';
-                return;
-            }
-            var seatCode = seat.seat;
-            var isBooked = seat.is_booked;
-            var isSelected = (selectedSeat && selectedSeat.code === seatCode);
-
-            if (isBooked) {
-                html += '<div class="fuselage-seat booked" title="Seat ' + seatCode + ' (Already booked)">&#x2573;</div>';
-            } else if (isSelected) {
-                html += '<div class="fuselage-seat ' + seat.tier + ' selected" data-seat="' + seatCode + '" data-price="' + seat.price + '" data-ssid="' + (seat.ssid || 0) + '" onclick="selectSeatItem(\'' + seatCode + '\', ' + seat.price + ', ' + (seat.ssid || 0) + ', this)" title="Seat ' + seatCode + ' (₹' + seat.price + ')"><i class="fa-solid fa-check" style="color: #fff; font-size: 11px;"></i></div>';
-            } else {
-                var tooltip = 'Seat ' + seatCode + (seat.info ? ' • ' + seat.info : '') + ' (₹' + seat.price + ')';
-                html += '<div class="fuselage-seat ' + seat.tier + '" data-seat="' + seatCode + '" data-price="' + seat.price + '" data-ssid="' + (seat.ssid || 0) + '" onclick="selectSeatItem(\'' + seatCode + '\', ' + seat.price + ', ' + (seat.ssid || 0) + ', this)" title="' + tooltip + '"></div>';
-            }
+            html += renderSingleSeatHtml(rowObj[col], sector);
         });
 
         html += '<div class="plane-seat-num">' + r + '</div>';
@@ -1391,6 +1586,60 @@ function renderSeatMap(sector) {
     }
 
     container.innerHTML = html;
+    updateSeatAssignmentsList(sector);
+}
+
+function renderSingleSeatHtml(seat, sector) {
+    if (!seat) {
+        return '<div class="fuselage-seat" style="visibility: hidden;"></div>';
+    }
+
+    var seatCode = seat.seat;
+    var isBooked = seat.is_booked;
+
+    // Check if this seat is selected by ANY passenger
+    var assignedPaxIdx = -1;
+    for (var p = 0; p < passengers.length; p++) {
+        if (userSelections[sector][p] && userSelections[sector][p].seat && userSelections[sector][p].seat.code === seatCode) {
+            assignedPaxIdx = p;
+            break;
+        }
+    }
+
+    if (isBooked) {
+        return '<div class="fuselage-seat booked" title="Seat ' + seatCode + ' (Already booked)">&#x2573;</div>';
+    } else if (assignedPaxIdx !== -1) {
+        var isCurrentPaxSeat = (assignedPaxIdx === activePaxIndex);
+        var paxName = passengers[assignedPaxIdx] ? passengers[assignedPaxIdx].name : ('Passenger ' + (assignedPaxIdx + 1));
+        var borderStyle = isCurrentPaxSeat ? 'outline: 2.5px solid #0284c7; outline-offset: 1px;' : '';
+        return '<div class="fuselage-seat selected" style="' + borderStyle + '" data-seat="' + seatCode + '" data-price="' + seat.price + '" data-ssid="' + (seat.ssid || 0) + '" onclick="selectSeatItem(\'' + seatCode + '\', ' + seat.price + ', ' + (seat.ssid || 0) + ', this)" title="Seat ' + seatCode + ' - ' + paxName + ' (₹' + seat.price + ')"><i class="fa-solid fa-check" style="color: #fff; font-size: 11px;"></i></div>';
+    } else {
+        var tooltip = 'Seat ' + seatCode + (seat.info ? ' • ' + seat.info : '') + ' (₹' + seat.price + ')';
+        return '<div class="fuselage-seat ' + seat.tier + '" data-seat="' + seatCode + '" data-price="' + seat.price + '" data-ssid="' + (seat.ssid || 0) + '" onclick="selectSeatItem(\'' + seatCode + '\', ' + seat.price + ', ' + (seat.ssid || 0) + ', this)" title="' + tooltip + '"></div>';
+    }
+}
+
+// Update the left-side assigned seats list (Screenshot 3 Exact Match)
+function updateSeatAssignmentsList(sector) {
+    var listEl = document.getElementById('paxSeatAssignmentsList');
+    if (!listEl) return;
+
+    var html = '';
+    passengers.forEach(function(pax, idx) {
+        var s = userSelections[sector][idx] ? userSelections[sector][idx].seat : null;
+        if (s) {
+            html += '<div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: #334155; margin-bottom: 6px; cursor: pointer; padding: 3px 6px; border-radius: 4px; background: ' + (idx === activePaxIndex ? '#f0f9ff; border: 1px solid #bae6fd;' : 'transparent;') + '" onclick="selectActivePassenger(' + idx + ')" title="Click to view/change seat for ' + pax.name + '">';
+            html += '<span>(<span style="font-weight: 700; color: #0f172a;">' + pax.name + '</span>, ' + s.code + ')</span>';
+            html += '<span style="font-weight: 800; color: #0f172a;">₹ ' + s.price.toLocaleString('en-IN') + '</span>';
+            html += '</div>';
+        }
+    });
+
+    if (html === '') {
+        html = '<div style="font-size: 11.5px; color: #94a3b8; font-style: italic;">No seats selected yet.</div>';
+    }
+
+    listEl.innerHTML = html;
 }
 
 // Update sector title and subtitle in Seat Selection Tab
@@ -1409,7 +1658,7 @@ function renderSectorHeader(sector) {
     }
 }
 
-// Sector Switcher Handler (DEL -> BOM SpiceJet vs BOM -> DEL Air India)
+// Sector Switcher Handler
 function switchSector(sectorType, btnEl) {
     if (!addonsData || !addonsData[sectorType]) return;
 
@@ -1424,7 +1673,6 @@ function switchSector(sectorType, btnEl) {
         btnEl.classList.add('active');
     }
 
-    // Highlight corresponding column in top sub-banner
     var onwardCol = document.getElementById('subBannerOnward');
     var returnCol = document.getElementById('subBannerReturn');
     if (onwardCol) {
@@ -1438,6 +1686,7 @@ function switchSector(sectorType, btnEl) {
     renderMeals(sectorType);
     renderBaggage(sectorType);
     renderSeatMap(sectorType);
+    recalcTotal();
 }
 
 // Addon Tab Switcher (Meals / Baggage / Seat Selection)
@@ -1456,12 +1705,13 @@ function switchAddonTab(tabId, tabEl) {
 
 function selectMealItem(code, name, price, ssid, cardEl) {
     var sec = currentSector;
-    var isAlready = (userSelections[sec].meal && userSelections[sec].meal.code === code);
+    var currentPaxMeal = userSelections[sec][activePaxIndex] ? userSelections[sec][activePaxIndex].meal : null;
+    var isAlready = (currentPaxMeal && currentPaxMeal.code === code);
 
     if (isAlready) {
-        userSelections[sec].meal = null;
+        userSelections[sec][activePaxIndex].meal = null;
     } else {
-        userSelections[sec].meal = {
+        userSelections[sec][activePaxIndex].meal = {
             code: code,
             name: name,
             price: parseFloat(price) || 0,
@@ -1475,12 +1725,13 @@ function selectMealItem(code, name, price, ssid, cardEl) {
 
 function selectBaggageItem(code, weight, price, ssid, cardEl) {
     var sec = currentSector;
-    var isAlready = (userSelections[sec].baggage && userSelections[sec].baggage.code === code);
+    var currentPaxBaggage = userSelections[sec][activePaxIndex] ? userSelections[sec][activePaxIndex].baggage : null;
+    var isAlready = (currentPaxBaggage && currentPaxBaggage.code === code);
 
     if (isAlready) {
-        userSelections[sec].baggage = null;
+        userSelections[sec][activePaxIndex].baggage = null;
     } else {
-        userSelections[sec].baggage = {
+        userSelections[sec][activePaxIndex].baggage = {
             code: code,
             weight: weight,
             desc: 'Prepaid Excess Baggage - ' + weight,
@@ -1495,34 +1746,164 @@ function selectBaggageItem(code, weight, price, ssid, cardEl) {
 
 function selectSeatItem(seatCode, price, ssid, seatEl) {
     var sec = currentSector;
-    var isAlready = (userSelections[sec].seat && userSelections[sec].seat.code === seatCode);
 
-    if (isAlready) {
-        userSelections[sec].seat = null;
-    } else {
-        userSelections[sec].seat = {
+    // Check if this seat is already assigned to any passenger on this sector
+    var assignedPaxIdx = -1;
+    for (var p = 0; p < passengers.length; p++) {
+        if (userSelections[sec][p] && userSelections[sec][p].seat && userSelections[sec][p].seat.code === seatCode) {
+            assignedPaxIdx = p;
+            break;
+        }
+    }
+
+    if (assignedPaxIdx === activePaxIndex) {
+        // Active passenger clicked their own seat -> deselect
+        userSelections[sec][activePaxIndex].seat = null;
+    } else if (assignedPaxIdx !== -1) {
+        // Seat already assigned to another passenger -> reassign to active passenger
+        userSelections[sec][assignedPaxIdx].seat = null;
+        userSelections[sec][activePaxIndex].seat = {
             code: seatCode,
             price: parseFloat(price) || 0,
             ssid: ssid || 0
         };
+    } else {
+        // Seat is available -> assign to active passenger
+        userSelections[sec][activePaxIndex].seat = {
+            code: seatCode,
+            price: parseFloat(price) || 0,
+            ssid: ssid || 0
+        };
+
+        // Auto-advance to next passenger without a seat
+        var nextUnseatedPax = -1;
+        for (var i = 0; i < passengers.length; i++) {
+            var checkIdx = (activePaxIndex + 1 + i) % passengers.length;
+            if (!userSelections[sec][checkIdx].seat) {
+                nextUnseatedPax = checkIdx;
+                break;
+            }
+        }
+        if (nextUnseatedPax !== -1) {
+            selectActivePassenger(nextUnseatedPax);
+            return;
+        }
     }
 
     renderSeatMap(sec);
     recalcTotal();
 }
 
-// Recalculate combined totals across both Onward and Return flight sectors
+// Recalculate combined totals across all passengers and flight sectors
 function recalcTotal() {
-    var onwardMeal = userSelections.onward.meal ? userSelections.onward.meal.price : 0;
-    var onwardBaggage = userSelections.onward.baggage ? userSelections.onward.baggage.price : 0;
-    var onwardSeat = userSelections.onward.seat ? userSelections.onward.seat.price : 0;
+    var totalAddons = 0;
+    var onwardSeatsCount = 0;
+    var onwardSeatsTotal = 0;
 
-    var returnMeal = userSelections.return.meal ? userSelections.return.meal.price : 0;
-    var returnBaggage = userSelections.return.baggage ? userSelections.return.baggage.price : 0;
-    var returnSeat = userSelections.return.seat ? userSelections.return.seat.price : 0;
+    var ssrItems = [];
 
-    var totalAddons = onwardMeal + onwardBaggage + onwardSeat + returnMeal + returnBaggage + returnSeat;
+    passengers.forEach(function(pax, idx) {
+        var pId = idx + 1; // 1-based sequence for Benzy CreateItinerary (PDF page 84-86)
+        var on = userSelections.onward[idx];
+        var ret = userSelections.return[idx];
 
+        // Onward Sector
+        if (on.meal) {
+            totalAddons += on.meal.price;
+            ssrItems.push({
+                FUID: 1,
+                PaxID: pId,
+                SSID: on.meal.ssid || 1,
+                Type: "1",
+                Code: on.meal.code,
+                Description: on.meal.name,
+                Charge: on.meal.price
+            });
+        }
+        if (on.baggage) {
+            totalAddons += on.baggage.price;
+            ssrItems.push({
+                FUID: 1,
+                PaxID: pId,
+                SSID: on.baggage.ssid || 1,
+                Type: "2",
+                Code: on.baggage.code,
+                Description: on.baggage.desc,
+                Charge: on.baggage.price
+            });
+        }
+        if (on.seat) {
+            totalAddons += on.seat.price;
+            onwardSeatsCount++;
+            onwardSeatsTotal += on.seat.price;
+            ssrItems.push({
+                FUID: 1,
+                PaxID: pId,
+                SSID: on.seat.ssid || 501,
+                Type: "9",
+                Code: on.seat.code,
+                Description: "Seat " + on.seat.code,
+                Charge: on.seat.price
+            });
+        }
+
+        // Return Sector
+        if (isRoundtrip && ret) {
+            if (ret.meal) {
+                totalAddons += ret.meal.price;
+                ssrItems.push({
+                    FUID: 2,
+                    PaxID: pId,
+                    SSID: ret.meal.ssid || 1,
+                    Type: "1",
+                    Code: ret.meal.code,
+                    Description: ret.meal.name,
+                    Charge: ret.meal.price
+                });
+            }
+            if (ret.baggage) {
+                totalAddons += ret.baggage.price;
+                ssrItems.push({
+                    FUID: 2,
+                    PaxID: pId,
+                    SSID: ret.baggage.ssid || 1,
+                    Type: "2",
+                    Code: ret.baggage.code,
+                    Description: ret.baggage.desc,
+                    Charge: ret.baggage.price
+                });
+            }
+            if (ret.seat) {
+                totalAddons += ret.seat.price;
+                ssrItems.push({
+                    FUID: 2,
+                    PaxID: pId,
+                    SSID: ret.seat.ssid || 501,
+                    Type: "9",
+                    Code: ret.seat.code,
+                    Description: "Seat " + ret.seat.code,
+                    Charge: ret.seat.price
+                });
+            }
+        }
+
+        // Update Passenger Strip Badges
+        var badge = document.getElementById('paxBadge_' + idx);
+        if (badge) {
+            var paxItemCount = (on.meal ? 1 : 0) + (on.baggage ? 1 : 0) + (on.seat ? 1 : 0) +
+                               (isRoundtrip && ret && ret.meal ? 1 : 0) +
+                               (isRoundtrip && ret && ret.baggage ? 1 : 0) +
+                               (isRoundtrip && ret && ret.seat ? 1 : 0);
+            if (paxItemCount > 0) {
+                badge.style.display = 'inline-block';
+                badge.textContent = on.seat ? ('Seat: ' + on.seat.code) : ('✓ ' + paxItemCount);
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+    });
+
+    // Update Bottom Bar & Fare Details Sidebar
     document.getElementById('bottomAddonTotal').textContent = totalAddons.toLocaleString('en-IN');
 
     var addonsRow = document.getElementById('summaryAddonsRow');
@@ -1540,33 +1921,106 @@ function recalcTotal() {
         document.getElementById('form_addon_total_amount').value = totalAddons;
     }
 
-    // Populate Onward Addons in Hidden Form
-    document.getElementById('form_meal_code').value = userSelections.onward.meal ? userSelections.onward.meal.code : '';
-    document.getElementById('form_meal_desc').value = userSelections.onward.meal ? userSelections.onward.meal.name : '';
-    document.getElementById('form_meal_amount').value = onwardMeal;
+    // Update Seat Selection Tab Badge (Screenshot 3 Matching Akbar)
+    var curSectorSeatsCount = 0;
+    var curSectorSeatsTotal = 0;
+    passengers.forEach(function(p, i) {
+        if (userSelections[currentSector][i].seat) {
+            curSectorSeatsCount++;
+            curSectorSeatsTotal += userSelections[currentSector][i].seat.price;
+        }
+    });
 
-    document.getElementById('form_baggage_code').value = userSelections.onward.baggage ? userSelections.onward.baggage.code : '';
-    document.getElementById('form_baggage_desc').value = userSelections.onward.baggage ? userSelections.onward.baggage.desc : '';
-    document.getElementById('form_baggage_amount').value = onwardBaggage;
-
-    document.getElementById('form_seat_code').value = userSelections.onward.seat ? userSelections.onward.seat.code : '';
-    document.getElementById('form_seat_amount').value = onwardSeat;
-    document.getElementById('form_seat_ssid').value = userSelections.onward.seat ? (userSelections.onward.seat.ssid || 0) : 0;
-
-    // Populate Return Addons in Hidden Form
-    if (document.getElementById('form_ret_meal_code')) {
-        document.getElementById('form_ret_meal_code').value = userSelections.return.meal ? userSelections.return.meal.code : '';
-        document.getElementById('form_ret_meal_desc').value = userSelections.return.meal ? userSelections.return.meal.name : '';
-        document.getElementById('form_ret_meal_amount').value = returnMeal;
-
-        document.getElementById('form_ret_baggage_code').value = userSelections.return.baggage ? userSelections.return.baggage.code : '';
-        document.getElementById('form_ret_baggage_desc').value = userSelections.return.baggage ? userSelections.return.baggage.desc : '';
-        document.getElementById('form_ret_baggage_amount').value = returnBaggage;
-
-        document.getElementById('form_ret_seat_code').value = userSelections.return.seat ? userSelections.return.seat.code : '';
-        document.getElementById('form_ret_seat_amount').value = returnSeat;
-        document.getElementById('form_ret_seat_ssid').value = userSelections.return.seat ? (userSelections.return.seat.ssid || 0) : 0;
+    var defTab = document.getElementById('tabSeatsDefaultContent');
+    var selTab = document.getElementById('tabSeatsSelectedContent');
+    if (curSectorSeatsCount > 0) {
+        if (defTab) defTab.style.display = 'none';
+        if (selTab) {
+            selTab.style.display = 'flex';
+            document.getElementById('tabSeatsBadgeText').textContent = curSectorSeatsCount + ' Seat(s) added - ₹ ' + curSectorSeatsTotal.toLocaleString('en-IN');
+        }
+    } else {
+        if (defTab) defTab.style.display = 'flex';
+        if (selTab) selTab.style.display = 'none';
     }
+
+    // Populate Benzy API JSON format
+    var jsonInput = document.getElementById('form_selected_ssr_json');
+    if (jsonInput) {
+        jsonInput.value = JSON.stringify(ssrItems);
+    }
+
+    // Populate Dynamic Per-Passenger Hidden Inputs for Payment Bridge
+    var dynContainer = document.getElementById('dynamicPaxAddonInputs');
+    if (dynContainer) {
+        var dynHtml = '';
+        passengers.forEach(function(pax, idx) {
+            var on = userSelections.onward[idx];
+            var ret = userSelections.return[idx];
+
+            dynHtml += '<input type="hidden" name="passenger_seat[' + idx + ']" value="' + (on.seat ? on.seat.code : '') + '">';
+            dynHtml += '<input type="hidden" name="passenger_seat_price[' + idx + ']" value="' + (on.seat ? on.seat.price : 0) + '">';
+            dynHtml += '<input type="hidden" name="passenger_seat_ssid[' + idx + ']" value="' + (on.seat ? on.seat.ssid : 0) + '">';
+
+            dynHtml += '<input type="hidden" name="passenger_meal[' + idx + ']" value="' + (on.meal ? on.meal.code : '') + '">';
+            dynHtml += '<input type="hidden" name="passenger_meal_name[' + idx + ']" value="' + (on.meal ? on.meal.name : '') + '">';
+            dynHtml += '<input type="hidden" name="passenger_meal_price[' + idx + ']" value="' + (on.meal ? on.meal.price : 0) + '">';
+            dynHtml += '<input type="hidden" name="passenger_meal_ssid[' + idx + ']" value="' + (on.meal ? on.meal.ssid : 0) + '">';
+
+            dynHtml += '<input type="hidden" name="passenger_baggage[' + idx + ']" value="' + (on.baggage ? on.baggage.code : '') + '">';
+            dynHtml += '<input type="hidden" name="passenger_baggage_desc[' + idx + ']" value="' + (on.baggage ? on.baggage.desc : '') + '">';
+            dynHtml += '<input type="hidden" name="passenger_baggage_price[' + idx + ']" value="' + (on.baggage ? on.baggage.price : 0) + '">';
+            dynHtml += '<input type="hidden" name="passenger_baggage_ssid[' + idx + ']" value="' + (on.baggage ? on.baggage.ssid : 0) + '">';
+
+            if (isRoundtrip && ret) {
+                dynHtml += '<input type="hidden" name="return_passenger_seat[' + idx + ']" value="' + (ret.seat ? ret.seat.code : '') + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_seat_price[' + idx + ']" value="' + (ret.seat ? ret.seat.price : 0) + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_seat_ssid[' + idx + ']" value="' + (ret.seat ? ret.seat.ssid : 0) + '">';
+
+                dynHtml += '<input type="hidden" name="return_passenger_meal[' + idx + ']" value="' + (ret.meal ? ret.meal.code : '') + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_meal_name[' + idx + ']" value="' + (ret.meal ? ret.meal.name : '') + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_meal_price[' + idx + ']" value="' + (ret.meal ? ret.meal.price : 0) + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_meal_ssid[' + idx + ']" value="' + (ret.meal ? ret.meal.ssid : 0) + '">';
+
+                dynHtml += '<input type="hidden" name="return_passenger_baggage[' + idx + ']" value="' + (ret.baggage ? ret.baggage.code : '') + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_baggage_desc[' + idx + ']" value="' + (ret.baggage ? ret.baggage.desc : '') + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_baggage_price[' + idx + ']" value="' + (ret.baggage ? ret.baggage.price : 0) + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_baggage_ssid[' + idx + ']" value="' + (ret.baggage ? ret.baggage.ssid : 0) + '">';
+            }
+        });
+        dynContainer.innerHTML = dynHtml;
+    }
+
+    // Populate Legacy Single Inputs (using Pax 1 or aggregate)
+    var p0On = userSelections.onward[0] || {};
+    document.getElementById('form_meal_code').value = p0On.meal ? p0On.meal.code : '';
+    document.getElementById('form_meal_desc').value = p0On.meal ? p0On.meal.name : '';
+    document.getElementById('form_meal_amount').value = p0On.meal ? p0On.meal.price : 0;
+
+    document.getElementById('form_baggage_code').value = p0On.baggage ? p0On.baggage.code : '';
+    document.getElementById('form_baggage_desc').value = p0On.baggage ? p0On.baggage.desc : '';
+    document.getElementById('form_baggage_amount').value = p0On.baggage ? p0On.baggage.price : 0;
+
+    document.getElementById('form_seat_code').value = p0On.seat ? p0On.seat.code : '';
+    document.getElementById('form_seat_amount').value = p0On.seat ? p0On.seat.price : 0;
+    document.getElementById('form_seat_ssid').value = p0On.seat ? (p0On.seat.ssid || 0) : 0;
+
+    if (document.getElementById('form_ret_meal_code')) {
+        var p0Ret = userSelections.return[0] || {};
+        document.getElementById('form_ret_meal_code').value = p0Ret.meal ? p0Ret.meal.code : '';
+        document.getElementById('form_ret_meal_desc').value = p0Ret.meal ? p0Ret.meal.name : '';
+        document.getElementById('form_ret_meal_amount').value = p0Ret.meal ? p0Ret.meal.price : 0;
+
+        document.getElementById('form_ret_baggage_code').value = p0Ret.baggage ? p0Ret.baggage.code : '';
+        document.getElementById('form_ret_baggage_desc').value = p0Ret.baggage ? p0Ret.baggage.desc : '';
+        document.getElementById('form_ret_baggage_amount').value = p0Ret.baggage ? p0Ret.baggage.price : 0;
+
+        document.getElementById('form_ret_seat_code').value = p0Ret.seat ? p0Ret.seat.code : '';
+        document.getElementById('form_ret_seat_amount').value = p0Ret.seat ? p0Ret.seat.price : 0;
+        document.getElementById('form_ret_seat_ssid').value = p0Ret.seat ? (p0Ret.seat.ssid || 0) : 0;
+    }
+
+    updateSeatAssignmentsList(currentSector);
 }
 
 function applyPromoOption(code, discount, el) {
