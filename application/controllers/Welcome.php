@@ -188,6 +188,17 @@ class Welcome extends CI_Controller {
             $flightResults = $rawSearchResults;
         }
 
+        $domesticAirports = array(
+            'DEL', 'BOM', 'BLR', 'MAA', 'HYD', 'CCU', 'GOI', 'GOX', 'COK', 'AMD', 'PNQ', 'JAI', 
+            'TRV', 'ATQ', 'BBI', 'IXC', 'IXB', 'VTZ', 'PAT', 'GAU', 'LKO', 'NAG', 'IDR', 'SXR', 
+            'IXR', 'BDQ', 'IXE', 'TRZ', 'CJB', 'VNS', 'UDR', 'IXJ', 'IMF', 'RPR', 'DED', 'IXA', 
+            'IXZ', 'IXL', 'IXD', 'IXU', 'JGA', 'JDH', 'AJL', 'DMU', 'TEZ', 'IXS', 'SHL', 'IXV', 
+            'IXW', 'IXP', 'IXT', 'IXY', 'HJR', 'BHO', 'GWL', 'JLR', 'TIR', 'VGA'
+        );
+        $is_international = (!in_array(strtoupper($from), $domesticAirports) || !in_array(strtoupper($to), $domesticAirports));
+        $data['is_international'] = $is_international;
+        $data['flight_type']      = $is_international ? 'I' : 'D';
+
         $data['page_title'] = $is_multicity ? "Multi-City Flight Itinerary: $from to $to - Voyogo" : ($is_roundtrip ? "Round Trip Flights: $from to $to - Voyogo" : "Flight Search: $from to $to - Voyogo");
         $data['active_page'] = 'flight';
         $data['search_tui']  = $tui;
@@ -277,6 +288,15 @@ class Welcome extends CI_Controller {
                     $data['saved_review_post'] = $savedReviewPost;
                 }
                 $data['razorpay_settings'] = $this->Admin_model->get_razorpay_settings();
+
+                // Ensure international flag is consistent
+                $sFrom = strtoupper($data['search_query']['from_code'] ?? ($data['flight']['from_code'] ?? 'DEL'));
+                $sTo = strtoupper($data['search_query']['to_code'] ?? ($data['flight']['to_code'] ?? 'BOM'));
+                $domesticAirports = array('DEL','BOM','BLR','MAA','HYD','CCU','GOI','GOX','COK','AMD','PNQ','JAI','TRV','ATQ','BBI','IXC','IXB','VTZ','PAT','GAU','LKO','NAG','IDR','SXR','IXR','BDQ','IXE','TRZ','CJB','VNS','UDR','IXJ','IMF','RPR','DED','IXA','IXZ','IXL','IXD','IXU','JGA','JDH','AJL','DMU','TEZ','IXS','SHL','IXV','IXW','IXP','IXT','IXY','HJR','BHO','GWL','JLR','TIR','VGA');
+                if (!isset($data['is_international'])) {
+                    $data['is_international'] = (($data['url_meta']['type'] ?? '') === 'I') || (!in_array($sFrom, $domesticAirports) || !in_array($sTo, $domesticAirports));
+                }
+
                 $this->load->view('includes/header', $data);
                 $this->load->view('flight_review', $data);
                 $this->load->view('includes/footer', $data);
@@ -441,6 +461,25 @@ class Welcome extends CI_Controller {
         // Set airport names and terminals based on codes
         $fromCode = $flightDetails['from_code'] ?? 'DEL';
         $toCode = $flightDetails['to_code'] ?? 'BOM';
+
+        // Detect International vs Domestic route
+        $domesticAirports = array(
+            'DEL', 'BOM', 'BLR', 'MAA', 'HYD', 'CCU', 'GOI', 'GOX', 'COK', 'AMD', 'PNQ', 'JAI', 
+            'TRV', 'ATQ', 'BBI', 'IXC', 'IXB', 'VTZ', 'PAT', 'GAU', 'LKO', 'NAG', 'IDR', 'SXR', 
+            'IXR', 'BDQ', 'IXE', 'TRZ', 'CJB', 'VNS', 'UDR', 'IXJ', 'IMF', 'RPR', 'DED', 'IXA', 
+            'IXZ', 'IXL', 'IXD', 'IXU', 'JGA', 'JDH', 'AJL', 'DMU', 'TEZ', 'IXS', 'SHL', 'IXV', 
+            'IXW', 'IXP', 'IXT', 'IXY', 'HJR', 'BHO', 'GWL', 'JLR', 'TIR', 'VGA'
+        );
+        $is_international = ($type === 'I')
+            || (strtoupper($this->input->post('flight_type') ?: ($this->input->get('flight_type') ?: '')) === 'I')
+            || (strtoupper($this->input->post('trip_category') ?: ($this->input->get('trip_category') ?: '')) === 'INTERNATIONAL')
+            || (isset($_GET['intl']) && $_GET['intl'] == '1')
+            || (!in_array(strtoupper($fromCode), $domesticAirports) || !in_array(strtoupper($toCode), $domesticAirports));
+
+        if ($is_international) {
+            $type = 'I';
+        }
+        $data['is_international'] = $is_international;
 
         $flightDetails['from_airport'] = $airportNames[$fromCode]['name'] ?? ($fromCode . ' International Airport');
         $flightDetails['from_terminal'] = $airportNames[$fromCode]['terminal'] ?? 'Terminal 2';
@@ -749,36 +788,81 @@ class Welcome extends CI_Controller {
         $data = array_merge($sessionBooking, $postData);
         $data['post_data'] = $postData;
 
-        // Parse passenger names and details
-        $titles  = $this->input->post('passenger_title') ?: ($postData['passenger_title'] ?? array());
-        $names   = $this->input->post('passenger_name') ?: ($postData['passenger_name'] ?? array());
-        $dobs    = $this->input->post('passenger_dob') ?: ($postData['passenger_dob'] ?? array());
-        $ages    = $this->input->post('passenger_age') ?: ($postData['passenger_age'] ?? array());
-        $types   = $this->input->post('passenger_type') ?: ($postData['passenger_type'] ?? array());
+        // Parse passenger names and details (Domestic & International)
+        $titles        = $this->input->post('passenger_title') ?: ($postData['passenger_title'] ?? array());
+        $firstNames    = $this->input->post('passenger_first_name') ?: ($postData['passenger_first_name'] ?? array());
+        $lastNames     = $this->input->post('passenger_last_name') ?: ($postData['passenger_last_name'] ?? array());
+        $names         = $this->input->post('passenger_name') ?: ($postData['passenger_name'] ?? array());
+        $dobs          = $this->input->post('passenger_dob') ?: ($postData['passenger_dob'] ?? array());
+        $ages          = $this->input->post('passenger_age') ?: ($postData['passenger_age'] ?? array());
+        $types         = $this->input->post('passenger_type') ?: ($postData['passenger_type'] ?? array());
+
+        $nationalities = $this->input->post('passenger_nationality') ?: ($postData['passenger_nationality'] ?? array());
+        $passports     = $this->input->post('passenger_passport_no') ?: ($postData['passenger_passport_no'] ?? array());
+        $passportExps  = $this->input->post('passenger_passport_expiry') ?: ($postData['passenger_passport_expiry'] ?? array());
+        $issuingCnts   = $this->input->post('passenger_issuing_country') ?: ($postData['passenger_issuing_country'] ?? array());
+        $visaTypes     = $this->input->post('passenger_visa_type') ?: ($postData['passenger_visa_type'] ?? array());
+        $residenceCnts = $this->input->post('passenger_residence_country') ?: ($postData['passenger_residence_country'] ?? array());
+        $ffAirlines    = $this->input->post('passenger_ff_airline') ?: ($postData['passenger_ff_airline'] ?? array());
+        $ffNumbers     = $this->input->post('passenger_ff_number') ?: ($postData['passenger_ff_number'] ?? array());
 
         $passengers = array();
-        if (is_array($names) && count($names) > 0) {
-            for ($i = 0; $i < count($names); $i++) {
+        $count = max(count((array)$names), count((array)$firstNames));
+        if ($count > 0) {
+            for ($i = 0; $i < $count; $i++) {
                 $p_idx = $i + 1;
                 $gender = $this->input->post('passenger_gender_' . $p_idx) ?: ($postData['passenger_gender_' . $p_idx] ?? 'Male');
+
+                $fName = isset($firstNames[$i]) ? trim($firstNames[$i]) : '';
+                $lName = isset($lastNames[$i]) ? trim($lastNames[$i]) : '';
+                $rawName = isset($names[$i]) ? trim($names[$i]) : '';
+                if (empty($rawName) && (!empty($fName) || !empty($lName))) {
+                    $rawName = trim("$fName $lName");
+                }
+                if (empty($fName) && !empty($rawName)) {
+                    $parts = explode(' ', $rawName, 2);
+                    $fName = $parts[0] ?? '';
+                    $lName = $parts[1] ?? '';
+                }
+
                 $passengers[] = array(
-                    'title'  => isset($titles[$i]) ? $titles[$i] : 'Mr',
-                    'name'   => !empty($names[$i]) ? $names[$i] : 'Passenger ' . $p_idx,
-                    'dob'    => isset($dobs[$i]) ? $dobs[$i] : '',
-                    'age'    => isset($ages[$i]) ? $ages[$i] : '28',
-                    'gender' => $gender,
-                    'type'   => isset($types[$i]) ? $types[$i] : 'Adult'
+                    'title'             => isset($titles[$i]) ? $titles[$i] : 'Mr',
+                    'name'              => !empty($rawName) ? $rawName : 'Passenger ' . $p_idx,
+                    'first_name'        => $fName,
+                    'last_name'         => $lName,
+                    'dob'               => isset($dobs[$i]) ? $dobs[$i] : '',
+                    'age'               => isset($ages[$i]) ? $ages[$i] : '28',
+                    'gender'            => $gender,
+                    'type'              => isset($types[$i]) ? $types[$i] : 'Adult',
+                    'nationality'       => isset($nationalities[$i]) ? $nationalities[$i] : 'Indian',
+                    'passport_no'       => isset($passports[$i]) ? $passports[$i] : '',
+                    'passport_expiry'   => isset($passportExps[$i]) ? $passportExps[$i] : '',
+                    'issuing_country'   => isset($issuingCnts[$i]) ? $issuingCnts[$i] : 'India',
+                    'visa_type'         => isset($visaTypes[$i]) ? $visaTypes[$i] : 'Tourist Visa',
+                    'residence_country' => isset($residenceCnts[$i]) ? $residenceCnts[$i] : 'India',
+                    'ff_airline'        => isset($ffAirlines[$i]) ? $ffAirlines[$i] : '',
+                    'ff_number'         => isset($ffNumbers[$i]) ? $ffNumbers[$i] : ''
                 );
             }
         } else {
             $contact_name = $this->input->post('contact_name') ?: ($postData['contact_name'] ?? 'Mr Rahul Sharma');
             $passengers[] = array(
-                'title'  => 'Mr',
-                'name'   => $contact_name,
-                'dob'    => '1996-05-15',
-                'age'    => '28',
-                'gender' => 'Male',
-                'type'   => 'Adult'
+                'title'             => 'Mr',
+                'name'              => $contact_name,
+                'first_name'        => explode(' ', $contact_name)[0] ?? 'Rahul',
+                'last_name'         => explode(' ', $contact_name)[1] ?? 'Sharma',
+                'dob'               => '1996-05-15',
+                'age'               => '28',
+                'gender'            => 'Male',
+                'type'              => 'Adult',
+                'nationality'       => 'Indian',
+                'passport_no'       => '',
+                'passport_expiry'   => '',
+                'issuing_country'   => 'India',
+                'visa_type'         => 'Tourist Visa',
+                'residence_country' => 'India',
+                'ff_airline'        => '',
+                'ff_number'         => ''
             );
         }
         $data['passengers'] = $passengers;
@@ -939,35 +1023,79 @@ class Welcome extends CI_Controller {
         $data['post_data']   = array_merge($reviewPost, $addonsPost);
 
         // Parse passengers
-        $passengers = array();
-        $titles  = $reviewPost['passenger_title'] ?? array();
-        $names   = $reviewPost['passenger_name'] ?? array();
-        $dobs    = $reviewPost['passenger_dob'] ?? array();
-        $ages    = $reviewPost['passenger_age'] ?? array();
-        $types   = $reviewPost['passenger_type'] ?? array();
+        $passengers    = array();
+        $titles        = $reviewPost['passenger_title'] ?? array();
+        $firstNames    = $reviewPost['passenger_first_name'] ?? array();
+        $lastNames     = $reviewPost['passenger_last_name'] ?? array();
+        $names         = $reviewPost['passenger_name'] ?? array();
+        $dobs          = $reviewPost['passenger_dob'] ?? array();
+        $ages          = $reviewPost['passenger_age'] ?? array();
+        $types         = $reviewPost['passenger_type'] ?? array();
+        $nationalities = $reviewPost['passenger_nationality'] ?? array();
+        $passports     = $reviewPost['passenger_passport_no'] ?? array();
+        $passportExps  = $reviewPost['passenger_passport_expiry'] ?? array();
+        $issuingCnts   = $reviewPost['passenger_issuing_country'] ?? array();
+        $visaTypes     = $reviewPost['passenger_visa_type'] ?? array();
+        $residenceCnts = $reviewPost['passenger_residence_country'] ?? array();
+        $ffAirlines    = $reviewPost['passenger_ff_airline'] ?? array();
+        $ffNumbers     = $reviewPost['passenger_ff_number'] ?? array();
 
-        if (is_array($names) && count($names) > 0) {
-            for ($i = 0; $i < count($names); $i++) {
+        $count = max(count((array)$names), count((array)$firstNames));
+        if ($count > 0) {
+            for ($i = 0; $i < $count; $i++) {
                 $p_idx = $i + 1;
                 $gender = $reviewPost['passenger_gender_' . $p_idx] ?? 'Male';
+
+                $fName = isset($firstNames[$i]) ? trim($firstNames[$i]) : '';
+                $lName = isset($lastNames[$i]) ? trim($lastNames[$i]) : '';
+                $rawName = isset($names[$i]) ? trim($names[$i]) : '';
+                if (empty($rawName) && (!empty($fName) || !empty($lName))) {
+                    $rawName = trim("$fName $lName");
+                }
+                if (empty($fName) && !empty($rawName)) {
+                    $parts = explode(' ', $rawName, 2);
+                    $fName = $parts[0] ?? '';
+                    $lName = $parts[1] ?? '';
+                }
+
                 $passengers[] = array(
-                    'title'  => isset($titles[$i]) ? $titles[$i] : 'Mr',
-                    'name'   => !empty($names[$i]) ? $names[$i] : 'Passenger ' . $p_idx,
-                    'dob'    => isset($dobs[$i]) ? $dobs[$i] : '',
-                    'age'    => isset($ages[$i]) ? $ages[$i] : '28',
-                    'gender' => $gender,
-                    'type'   => isset($types[$i]) ? $types[$i] : 'Adult'
+                    'title'             => isset($titles[$i]) ? $titles[$i] : 'Mr',
+                    'name'              => !empty($rawName) ? $rawName : 'Passenger ' . $p_idx,
+                    'first_name'        => $fName,
+                    'last_name'         => $lName,
+                    'dob'               => isset($dobs[$i]) ? $dobs[$i] : '',
+                    'age'               => isset($ages[$i]) ? $ages[$i] : '28',
+                    'gender'            => $gender,
+                    'type'              => isset($types[$i]) ? $types[$i] : 'Adult',
+                    'nationality'       => isset($nationalities[$i]) ? $nationalities[$i] : 'Indian',
+                    'passport_no'       => isset($passports[$i]) ? $passports[$i] : '',
+                    'passport_expiry'   => isset($passportExps[$i]) ? $passportExps[$i] : '',
+                    'issuing_country'   => isset($issuingCnts[$i]) ? $issuingCnts[$i] : 'India',
+                    'visa_type'         => isset($visaTypes[$i]) ? $visaTypes[$i] : 'Tourist Visa',
+                    'residence_country' => isset($residenceCnts[$i]) ? $residenceCnts[$i] : 'India',
+                    'ff_airline'        => isset($ffAirlines[$i]) ? $ffAirlines[$i] : '',
+                    'ff_number'         => isset($ffNumbers[$i]) ? $ffNumbers[$i] : ''
                 );
             }
         } else {
             $contact_name = $reviewPost['contact_name'] ?? 'Passenger 1';
             $passengers[] = array(
-                'title'  => 'Mr',
-                'name'   => $contact_name,
-                'dob'    => '1996-05-15',
-                'age'    => '28',
-                'gender' => 'Male',
-                'type'   => 'Adult'
+                'title'             => 'Mr',
+                'name'              => $contact_name,
+                'first_name'        => explode(' ', $contact_name)[0] ?? 'Rahul',
+                'last_name'         => explode(' ', $contact_name)[1] ?? 'Sharma',
+                'dob'               => '1996-05-15',
+                'age'               => '28',
+                'gender'            => 'Male',
+                'type'              => 'Adult',
+                'nationality'       => 'Indian',
+                'passport_no'       => '',
+                'passport_expiry'   => '',
+                'issuing_country'   => 'India',
+                'visa_type'         => 'Tourist Visa',
+                'residence_country' => 'India',
+                'ff_airline'        => '',
+                'ff_number'         => ''
             );
         }
         $data['passengers'] = $passengers;
@@ -1025,37 +1153,80 @@ class Welcome extends CI_Controller {
         $contact_email = $this->input->post('contact_email') ?: 'customer@example.com';
         $contact_phone = $this->input->post('contact_phone') ?: '9876543210';
         
-        $titles  = $this->input->post('passenger_title');
-        $names   = $this->input->post('passenger_name');
-        $dobs    = $this->input->post('passenger_dob');
-        $ages    = $this->input->post('passenger_age');
-        $types   = $this->input->post('passenger_type');
-        $titles  = $this->input->post('passenger_title');
-        $flight_date = $this->input->post('flight_date') ?: date('Y-m-d', strtotime('+7 days'));
+        $titles        = $this->input->post('passenger_title');
+        $firstNames    = $this->input->post('passenger_first_name');
+        $lastNames     = $this->input->post('passenger_last_name');
+        $names         = $this->input->post('passenger_name');
+        $dobs          = $this->input->post('passenger_dob');
+        $ages          = $this->input->post('passenger_age');
+        $types         = $this->input->post('passenger_type');
+        $nationalities = $this->input->post('passenger_nationality');
+        $passports     = $this->input->post('passenger_passport_no');
+        $passportExps  = $this->input->post('passenger_passport_expiry');
+        $issuingCnts   = $this->input->post('passenger_issuing_country');
+        $visaTypes     = $this->input->post('passenger_visa_type');
+        $residenceCnts = $this->input->post('passenger_residence_country');
+        $ffAirlines    = $this->input->post('passenger_ff_airline');
+        $ffNumbers     = $this->input->post('passenger_ff_number');
+        $flight_date   = $this->input->post('flight_date') ?: date('Y-m-d', strtotime('+7 days'));
 
         $passengers = array();
-        if (is_array($names) && count($names) > 0) {
-            for ($i = 0; $i < count($names); $i++) {
+        $count = max(count((array)$names), count((array)$firstNames));
+        if ($count > 0) {
+            for ($i = 0; $i < $count; $i++) {
                 $p_idx = $i + 1;
                 $gender = $this->input->post('passenger_gender_' . $p_idx) ?: 'Male';
+
+                $fName = isset($firstNames[$i]) ? trim($firstNames[$i]) : '';
+                $lName = isset($lastNames[$i]) ? trim($lastNames[$i]) : '';
+                $rawName = isset($names[$i]) ? trim($names[$i]) : '';
+                if (empty($rawName) && (!empty($fName) || !empty($lName))) {
+                    $rawName = trim("$fName $lName");
+                }
+                if (empty($fName) && !empty($rawName)) {
+                    $parts = explode(' ', $rawName, 2);
+                    $fName = $parts[0] ?? '';
+                    $lName = $parts[1] ?? '';
+                }
+
                 $passengers[] = array(
-                    'title'  => isset($titles[$i]) ? $titles[$i] : 'Mr',
-                    'name'   => !empty($names[$i]) ? $names[$i] : 'Passenger ' . $p_idx,
-                    'dob'    => isset($dobs[$i]) ? $dobs[$i] : '',
-                    'age'    => isset($ages[$i]) ? $ages[$i] : '28',
-                    'gender' => $gender,
-                    'type'   => isset($types[$i]) ? $types[$i] : 'Adult'
+                    'title'             => isset($titles[$i]) ? $titles[$i] : 'Mr',
+                    'name'              => !empty($rawName) ? $rawName : 'Passenger ' . $p_idx,
+                    'first_name'        => $fName,
+                    'last_name'         => $lName,
+                    'dob'               => isset($dobs[$i]) ? $dobs[$i] : '',
+                    'age'               => isset($ages[$i]) ? $ages[$i] : '28',
+                    'gender'            => $gender,
+                    'type'              => isset($types[$i]) ? $types[$i] : 'Adult',
+                    'nationality'       => isset($nationalities[$i]) ? $nationalities[$i] : 'Indian',
+                    'passport_no'       => isset($passports[$i]) ? $passports[$i] : '',
+                    'passport_expiry'   => isset($passportExps[$i]) ? $passportExps[$i] : '',
+                    'issuing_country'   => isset($issuingCnts[$i]) ? $issuingCnts[$i] : 'India',
+                    'visa_type'         => isset($visaTypes[$i]) ? $visaTypes[$i] : 'Tourist Visa',
+                    'residence_country' => isset($residenceCnts[$i]) ? $residenceCnts[$i] : 'India',
+                    'ff_airline'        => isset($ffAirlines[$i]) ? $ffAirlines[$i] : '',
+                    'ff_number'         => isset($ffNumbers[$i]) ? $ffNumbers[$i] : ''
                 );
             }
         } else {
             $passengers = array(
                 array(
-                    'title'  => $this->input->post('passenger_title') ?: 'Mr',
-                    'name'   => $this->input->post('passenger_name') ?: $contact_name,
-                    'dob'    => $this->input->post('passenger_dob') ?: '1996-05-15',
-                    'age'    => $this->input->post('passenger_age') ?: '28',
-                    'gender' => $this->input->post('passenger_gender') ?: 'Male',
-                    'type'   => 'Adult'
+                    'title'             => $this->input->post('passenger_title') ?: 'Mr',
+                    'name'              => $this->input->post('passenger_name') ?: $contact_name,
+                    'first_name'        => explode(' ', $contact_name)[0] ?? 'Rahul',
+                    'last_name'         => explode(' ', $contact_name)[1] ?? 'Sharma',
+                    'dob'               => $this->input->post('passenger_dob') ?: '1996-05-15',
+                    'age'               => $this->input->post('passenger_age') ?: '28',
+                    'gender'            => $this->input->post('passenger_gender') ?: 'Male',
+                    'type'              => 'Adult',
+                    'nationality'       => 'Indian',
+                    'passport_no'       => '',
+                    'passport_expiry'   => '',
+                    'issuing_country'   => 'India',
+                    'visa_type'         => 'Tourist Visa',
+                    'residence_country' => 'India',
+                    'ff_airline'        => '',
+                    'ff_number'         => ''
                 )
             );
         }
@@ -1137,20 +1308,25 @@ class Welcome extends CI_Controller {
 
             $paxTitle = ($p['title'] === 'Master') ? 'Mstr' : $p['title'];
 
+            $fName = !empty($p['first_name']) ? $p['first_name'] : (explode(' ', $p['name'])[0] ?? 'Traveler');
+            $lName = !empty($p['last_name']) ? $p['last_name'] : (isset(explode(' ', $p['name'])[1]) ? explode(' ', $p['name'])[1] : $fName);
+            $passportNo = !empty($p['passport_no']) ? $p['passport_no'] : "";
+            $paxNat = !empty($p['nationality']) ? (strtoupper($p['nationality']) === 'INDIAN' ? 'IN' : substr($p['nationality'], 0, 2)) : "IN";
+
             $pax_api_payload[] = array(
                 "Title"      => $paxTitle,
-                "FName"      => explode(' ', $p['name'])[0],
-                "LName"      => isset(explode(' ', $p['name'])[1]) ? explode(' ', $p['name'])[1] : "Traveler",
+                "FName"      => $fName,
+                "LName"      => $lName,
                 "PaxType"    => $paxType,
                 "PTC"        => $paxType,
                 "Gender"     => ($p['gender'] === 'Female') ? 'F' : 'M',
                 "Age"        => $paxAge,
                 "DOB"        => $paxDob,
-                "PassportNo" => "",
+                "PassportNo" => $passportNo,
                 "Baggage"    => $ssr_baggage_code,
                 "Meals"      => $ssr_meal_code,
                 "Seat"       => $ssr_seat_code,
-                "Nationality"=> "IN"
+                "Nationality"=> $paxNat
             );
         }
 

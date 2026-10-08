@@ -685,8 +685,8 @@
                                     <?php if (!empty($fare_rules['cancellation'])): ?>
                                         <?php foreach ($fare_rules['cancellation'] as $idx => $rule): ?>
                                             <tr style="border-bottom: 1px solid #f1f5f9;">
-                                                <td style="padding: 8px 12px; font-weight: 600; color: #475569;"><?php echo htmlspecialchars($rule['time']); ?></td>
-                                                <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;"><?php echo htmlspecialchars($rule['fee']); ?></td>
+                                                <td style="padding: 8px 12px; font-weight: 600; color: #475569;"><?php echo htmlspecialchars($rule['time'] ?? ($rule['desc'] ?? 'Standard')); ?></td>
+                                                <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;"><?php echo htmlspecialchars($rule['fee'] ?? ''); ?></td>
                                                 <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;"><?php echo htmlspecialchars($fare_rules['date_change'][$idx]['fee'] ?? '₹ 2,500 + Diff'); ?></td>
                                             </tr>
                                         <?php endforeach; ?>
@@ -1376,59 +1376,239 @@
                     </div>
 
                     <?php 
+                    $domesticAirports = array(
+                        'DEL', 'BOM', 'BLR', 'MAA', 'HYD', 'CCU', 'GOI', 'GOX', 'COK', 'AMD', 'PNQ', 'JAI', 
+                        'TRV', 'ATQ', 'BBI', 'IXC', 'IXB', 'VTZ', 'PAT', 'GAU', 'LKO', 'NAG', 'IDR', 'SXR', 
+                        'IXR', 'BDQ', 'IXE', 'TRZ', 'CJB', 'VNS', 'UDR', 'IXJ', 'IMF', 'RPR', 'DED', 'IXA', 
+                        'IXZ', 'IXL', 'IXD', 'IXU', 'JGA', 'JDH', 'AJL', 'DMU', 'TEZ', 'IXS', 'SHL', 'IXV', 
+                        'IXW', 'IXP', 'IXT', 'IXY', 'HJR', 'BHO', 'GWL', 'JLR', 'TIR', 'VGA'
+                    );
+                    $revFromCode = strtoupper($flightDetails['from_code'] ?? ($search_query['from_code'] ?? 'DEL'));
+                    $revToCode   = strtoupper($flightDetails['to_code'] ?? ($search_query['to_code'] ?? 'BOM'));
+                    $is_intl = !empty($is_international) 
+                        || (isset($_GET['intl']) && $_GET['intl'] == '1')
+                        || (isset($_GET['flight_type']) && strtoupper($_GET['flight_type']) === 'I')
+                        || (($url_meta['type'] ?? '') === 'I')
+                        || (!empty($flightDetails['is_international']))
+                        || (!in_array($revFromCode, $domesticAirports) || !in_array($revToCode, $domesticAirports));
+
+                    $flight_dep_date = !empty($flightDetails['departure_date']) ? $flightDetails['departure_date'] : date('Y-m-d', strtotime('+7 days'));
+                    $flNumber = $flightDetails['flight_number'] ?? 'AI-101';
+                    $flightAirlineCode = strtoupper(explode('-', $flNumber)[0] ?: 'AI');
+                    $flightAirlineName = $flightDetails['airline_name'] ?? 'Air India Express';
+
                     $p_index = 0;
                     ?>
 
-                    <!-- Adult Passenger Cards -->
+                    <!-- Section Header: Traveller Details (Screenshot 1) -->
+                    <div style="margin-top: 28px; margin-bottom: 16px;">
+                        <h2 style="font-size: 20px; font-weight: 800; color: #1e293b; margin: 0 0 14px 0;">Traveller Details</h2>
+
+                        <?php if ($is_intl): ?>
+                        <!-- Blue Notice Box (Screenshot 1) -->
+                        <div style="background: #e0f2fe; border: 1px solid #bae6fd; border-radius: 8px; padding: 12px 16px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fa-solid fa-circle-info" style="color: #0284c7; font-size: 15px; margin-top: 2px;"></i>
+                            <span style="font-size: 12.5px; color: #0369a1; line-height: 1.45; font-weight: 500;">
+                                Please make sure that the name entered is exactly as per traveller's passport &amp; Your passport should be valid for 6 months from the date of travel.
+                            </span>
+                        </div>
+
+                        <!-- Amber Warning Banner 1 (Screenshot 1) -->
+                        <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fa-solid fa-circle-info" style="color: #d97706; font-size: 15px; margin-top: 2px;"></i>
+                            <span style="font-size: 12.5px; color: #92400e; line-height: 1.45; font-weight: 700;">
+                                If the first name is not available, enter your last name in both the first name and last name fields.
+                            </span>
+                        </div>
+
+                        <!-- Amber Warning Banner 2 (Screenshot 1) -->
+                        <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fa-solid fa-circle-info" style="color: #d97706; font-size: 15px; margin-top: 2px;"></i>
+                            <span style="font-size: 12.5px; color: #92400e; line-height: 1.45; font-weight: 700;">
+                                If the Last name is not available, enter your first name in both the first name and last name fields.
+                            </span>
+                        </div>
+                        <?php else: ?>
+                        <!-- Domestic Notice -->
+                        <div style="background: #e0f2fe; border: 1px solid #bae6fd; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fa-solid fa-circle-info" style="color: #0284c7; font-size: 15px; margin-top: 2px;"></i>
+                            <span style="font-size: 12.5px; color: #0369a1; line-height: 1.45; font-weight: 500;">
+                                Please make sure that the name entered matches your Govt. ID (Aadhaar / Voter ID / Passport) for airport security check-in.
+                            </span>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Adult Passenger Cards (Screenshots 1 & 2) -->
                     <?php 
-                    $flight_dep_date = !empty($flightDetails['departure_date']) ? $flightDetails['departure_date'] : date('Y-m-d', strtotime('+7 days'));
                     for ($a = 1; $a <= $adult_count; $a++): $p_index++; 
                         $p_arr_idx = $p_index - 1;
                         $curTitle  = !empty($savedReview['passenger_title'][$p_arr_idx]) ? $savedReview['passenger_title'][$p_arr_idx] : 'Mr';
-                        $curName   = !empty($savedReview['passenger_name'][$p_arr_idx]) ? $savedReview['passenger_name'][$p_arr_idx] : (($p_index === 1 && empty($savedReview['passenger_name'])) ? 'Rahul Sharma' : '');
-                        $curDob    = !empty($savedReview['passenger_dob'][$p_arr_idx]) ? $savedReview['passenger_dob'][$p_arr_idx] : '1996-05-15';
-                        $curAge    = !empty($savedReview['passenger_age'][$p_arr_idx]) ? $savedReview['passenger_age'][$p_arr_idx] : '28';
-                        $curGender = !empty($savedReview['passenger_gender_' . $p_index]) ? $savedReview['passenger_gender_' . $p_index] : 'Male';
+                        $curFName  = !empty($savedReview['passenger_first_name'][$p_arr_idx]) ? $savedReview['passenger_first_name'][$p_arr_idx] : '';
+                        $curLName  = !empty($savedReview['passenger_last_name'][$p_arr_idx]) ? $savedReview['passenger_last_name'][$p_arr_idx] : '';
+                        $curName   = !empty($savedReview['passenger_name'][$p_arr_idx]) ? $savedReview['passenger_name'][$p_arr_idx] : '';
+                        if (empty($curFName) && empty($curLName) && !empty($curName)) {
+                            $parts = explode(' ', $curName, 2);
+                            $curFName = $parts[0] ?? '';
+                            $curLName = $parts[1] ?? '';
+                        }
+                        if ($p_index === 1 && empty($curFName) && empty($curLName)) {
+                            $curFName = 'Rahul';
+                            $curLName = 'Sharma';
+                            $curName  = 'Rahul Sharma';
+                        }
+                        $curDob         = !empty($savedReview['passenger_dob'][$p_arr_idx]) ? $savedReview['passenger_dob'][$p_arr_idx] : '1996-05-15';
+                        $curAge         = !empty($savedReview['passenger_age'][$p_arr_idx]) ? $savedReview['passenger_age'][$p_arr_idx] : '28';
+                        $curGender      = !empty($savedReview['passenger_gender_' . $p_index]) ? $savedReview['passenger_gender_' . $p_index] : 'Male';
+                        $curNationality = !empty($savedReview['passenger_nationality'][$p_arr_idx]) ? $savedReview['passenger_nationality'][$p_arr_idx] : 'Indian';
+                        $curPassportNo  = !empty($savedReview['passenger_passport_no'][$p_arr_idx]) ? $savedReview['passenger_passport_no'][$p_arr_idx] : '';
+                        $curPassportExp = !empty($savedReview['passenger_passport_expiry'][$p_arr_idx]) ? $savedReview['passenger_passport_expiry'][$p_arr_idx] : '';
+                        $curIssuingCnt  = !empty($savedReview['passenger_issuing_country'][$p_arr_idx]) ? $savedReview['passenger_issuing_country'][$p_arr_idx] : 'India';
+                        $curVisaType    = !empty($savedReview['passenger_visa_type'][$p_arr_idx]) ? $savedReview['passenger_visa_type'][$p_arr_idx] : 'Tourist Visa';
+                        $curResidence   = !empty($savedReview['passenger_residence_country'][$p_arr_idx]) ? $savedReview['passenger_residence_country'][$p_arr_idx] : 'India';
+                        $curFfAirline   = !empty($savedReview['passenger_ff_airline'][$p_arr_idx]) ? $savedReview['passenger_ff_airline'][$p_arr_idx] : $flightAirlineCode;
+                        $curFfNumber    = !empty($savedReview['passenger_ff_number'][$p_arr_idx]) ? $savedReview['passenger_ff_number'][$p_arr_idx] : '';
                     ?>
-                    <div class="passenger-card" style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-                            <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid fa-users" style="color: #ef4444;"></i> Passenger Information (Adult <?php echo $a; ?>)
-                            </h3>
-                            <span style="font-size: 12px; color: #64748b; font-weight: 600;">Name must match Govt. ID (Aadhaar / Passport)</span>
+                    <div class="passenger-card pax-card-intl" style="background: #ffffff; border-radius: 10px; margin-bottom: 16px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);">
+                        <!-- Collapsible Header (Screenshot 1) -->
+                        <div class="pax-card-header" onclick="togglePaxCard(<?php echo $p_index; ?>)" style="background: #f1f5f9; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; border-bottom: 1px solid #e2e8f0;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-solid fa-chevron-up" id="paxIcon_<?php echo $p_index; ?>" style="color: #64748b; font-size: 12px; transition: transform 0.2s ease;"></i>
+                                <strong style="font-size: 14.5px; color: #1e293b; font-weight: 800;">Adult x <?php echo $a; ?></strong>
+                            </div>
+                            <div style="width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid #0284c7; display: flex; align-items: center; justify-content: center; color: #0284c7; font-size: 11px; background: #ffffff;">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
                         </div>
 
-                        <input type="hidden" name="passenger_type[]" value="Adult">
+                        <div id="paxBody_<?php echo $p_index; ?>" style="padding: 20px;">
+                            <input type="hidden" name="passenger_type[]" value="Adult">
+                            <input type="hidden" name="passenger_name[]" id="hidden_pax_name_<?php echo $p_index; ?>" value="<?php echo htmlspecialchars($curName); ?>">
+                            <input type="hidden" name="passenger_age[]" id="hidden_pax_age_<?php echo $p_index; ?>" value="<?php echo htmlspecialchars($curAge); ?>" class="age-input">
+                            <input type="hidden" name="passenger_gender_<?php echo $p_index; ?>" id="hidden_pax_gender_<?php echo $p_index; ?>" value="<?php echo htmlspecialchars($curGender); ?>">
 
-                        <div style="display: grid; grid-template-columns: 1fr 2fr 1.5fr 1fr; gap: 14px; margin-bottom: 16px;">
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Title *</label>
-                                <select name="passenger_title[]" class="field-input" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #fff;">
-                                    <option value="Mr" <?php echo ($curTitle === 'Mr') ? 'selected' : ''; ?>>Mr</option>
-                                    <option value="Ms" <?php echo ($curTitle === 'Ms') ? 'selected' : ''; ?>>Ms</option>
-                                    <option value="Mrs" <?php echo ($curTitle === 'Mrs') ? 'selected' : ''; ?>>Mrs</option>
+                            <!-- Row 1: Title, First Name, Last Name, DOB (Screenshot 1) -->
+                            <div class="pax-grid-4" style="display: grid; grid-template-columns: 1fr 2fr 2fr 1.5fr; gap: 12px; margin-bottom: 14px;">
+                                <div>
+                                    <select name="passenger_title[]" class="field-input pax-field-input" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff; color: #334155;">
+                                        <option value="Mr" <?php echo ($curTitle === 'Mr') ? 'selected' : ''; ?>>Mr</option>
+                                        <option value="Ms" <?php echo ($curTitle === 'Ms') ? 'selected' : ''; ?>>Ms</option>
+                                        <option value="Mrs" <?php echo ($curTitle === 'Mrs') ? 'selected' : ''; ?>>Mrs</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <input type="text" name="passenger_first_name[]" id="paxFirstName_<?php echo $p_index; ?>" class="field-input pax-field-input" required placeholder="First Name/Given Name" value="<?php echo htmlspecialchars($curFName); ?>" oninput="syncPaxFullName(<?php echo $p_index; ?>)" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <input type="text" name="passenger_last_name[]" id="paxLastName_<?php echo $p_index; ?>" class="field-input pax-field-input" required placeholder="Last Name/Surname" value="<?php echo htmlspecialchars($curLName); ?>" oninput="syncPaxFullName(<?php echo $p_index; ?>)" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <input type="date" name="passenger_dob[]" class="field-input dob-input pax-field-input" required placeholder="D.O.B" value="<?php echo htmlspecialchars($curDob); ?>" max="<?php echo date('Y-m-d', strtotime('-12 years', strtotime($flight_dep_date))); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box;">
+                                </div>
+                            </div>
+
+                            <?php if ($is_intl): ?>
+                            <!-- Passport Details Subtitle (Screenshot 1) -->
+                            <div style="font-size: 13.5px; font-weight: 700; color: #1e293b; margin: 16px 0 10px 0;">Passport Details</div>
+
+                            <!-- Row 2: Nationality, Passport No, Passport Expiry, Issuing Country (Screenshot 1) -->
+                            <div class="pax-grid-passport" style="display: grid; grid-template-columns: 1.5fr 1.8fr 1.8fr 1.5fr; gap: 12px; margin-bottom: 14px;">
+                                <div>
+                                    <select name="passenger_nationality[]" class="field-input pax-field-input" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
+                                        <option value="Indian" <?php echo ($curNationality === 'Indian') ? 'selected' : ''; ?>>Indian</option>
+                                        <option value="Emirati" <?php echo ($curNationality === 'Emirati') ? 'selected' : ''; ?>>Emirati</option>
+                                        <option value="Saudi" <?php echo ($curNationality === 'Saudi') ? 'selected' : ''; ?>>Saudi</option>
+                                        <option value="Qatari" <?php echo ($curNationality === 'Qatari') ? 'selected' : ''; ?>>Qatari</option>
+                                        <option value="Omani" <?php echo ($curNationality === 'Omani') ? 'selected' : ''; ?>>Omani</option>
+                                        <option value="Kuwaiti" <?php echo ($curNationality === 'Kuwaiti') ? 'selected' : ''; ?>>Kuwaiti</option>
+                                        <option value="Bahraini" <?php echo ($curNationality === 'Bahraini') ? 'selected' : ''; ?>>Bahraini</option>
+                                        <option value="American" <?php echo ($curNationality === 'American') ? 'selected' : ''; ?>>American</option>
+                                        <option value="British" <?php echo ($curNationality === 'British') ? 'selected' : ''; ?>>British</option>
+                                        <option value="Singaporean" <?php echo ($curNationality === 'Singaporean') ? 'selected' : ''; ?>>Singaporean</option>
+                                        <option value="Australian" <?php echo ($curNationality === 'Australian') ? 'selected' : ''; ?>>Australian</option>
+                                        <option value="Canadian" <?php echo ($curNationality === 'Canadian') ? 'selected' : ''; ?>>Canadian</option>
+                                        <option value="German" <?php echo ($curNationality === 'German') ? 'selected' : ''; ?>>German</option>
+                                        <option value="French" <?php echo ($curNationality === 'French') ? 'selected' : ''; ?>>French</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <input type="text" name="passenger_passport_no[]" class="field-input pax-field-input" required placeholder="Passport No." value="<?php echo htmlspecialchars($curPassportNo); ?>" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; text-transform: uppercase; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <input type="date" name="passenger_passport_expiry[]" class="field-input pax-field-input" required placeholder="Passport Expiry" value="<?php echo htmlspecialchars($curPassportExp); ?>" min="<?php echo date('Y-m-d', strtotime('+6 months', strtotime($flight_dep_date))); ?>" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <select name="passenger_issuing_country[]" class="field-input pax-field-input" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
+                                        <option value="India" <?php echo ($curIssuingCnt === 'India') ? 'selected' : ''; ?>>India</option>
+                                        <option value="United Arab Emirates" <?php echo ($curIssuingCnt === 'United Arab Emirates') ? 'selected' : ''; ?>>United Arab Emirates</option>
+                                        <option value="Saudi Arabia" <?php echo ($curIssuingCnt === 'Saudi Arabia') ? 'selected' : ''; ?>>Saudi Arabia</option>
+                                        <option value="Qatar" <?php echo ($curIssuingCnt === 'Qatar') ? 'selected' : ''; ?>>Qatar</option>
+                                        <option value="Oman" <?php echo ($curIssuingCnt === 'Oman') ? 'selected' : ''; ?>>Oman</option>
+                                        <option value="Kuwait" <?php echo ($curIssuingCnt === 'Kuwait') ? 'selected' : ''; ?>>Kuwait</option>
+                                        <option value="Bahrain" <?php echo ($curIssuingCnt === 'Bahrain') ? 'selected' : ''; ?>>Bahrain</option>
+                                        <option value="United States" <?php echo ($curIssuingCnt === 'United States') ? 'selected' : ''; ?>>United States</option>
+                                        <option value="United Kingdom" <?php echo ($curIssuingCnt === 'United Kingdom') ? 'selected' : ''; ?>>United Kingdom</option>
+                                        <option value="Singapore" <?php echo ($curIssuingCnt === 'Singapore') ? 'selected' : ''; ?>>Singapore</option>
+                                        <option value="Australia" <?php echo ($curIssuingCnt === 'Australia') ? 'selected' : ''; ?>>Australia</option>
+                                        <option value="Canada" <?php echo ($curIssuingCnt === 'Canada') ? 'selected' : ''; ?>>Canada</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Row 3: Visa Type (Screenshot 1) -->
+                            <div style="margin-bottom: 12px;">
+                                <select name="passenger_visa_type[]" class="field-input pax-field-input" style="max-width: 240px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
+                                    <option value="Tourist Visa" <?php echo ($curVisaType === 'Tourist Visa') ? 'selected' : ''; ?>>Tourist Visa</option>
+                                    <option value="Visit Visa" <?php echo ($curVisaType === 'Visit Visa') ? 'selected' : ''; ?>>Visit Visa</option>
+                                    <option value="Business Visa" <?php echo ($curVisaType === 'Business Visa') ? 'selected' : ''; ?>>Business Visa</option>
+                                    <option value="Employment Visa" <?php echo ($curVisaType === 'Employment Visa') ? 'selected' : ''; ?>>Employment Visa</option>
+                                    <option value="Student Visa" <?php echo ($curVisaType === 'Student Visa') ? 'selected' : ''; ?>>Student Visa</option>
+                                    <option value="Residence Visa" <?php echo ($curVisaType === 'Residence Visa') ? 'selected' : ''; ?>>Residence Visa</option>
+                                    <option value="Transit Visa" <?php echo ($curVisaType === 'Transit Visa') ? 'selected' : ''; ?>>Transit Visa</option>
                                 </select>
                             </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Full Name *</label>
-                                <input type="text" name="passenger_name[]" class="field-input" required placeholder="Enter First & Last Name" value="<?php echo htmlspecialchars($curName); ?>" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
-                            </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Date of Birth (DOB) *</label>
-                                <input type="date" name="passenger_dob[]" class="field-input dob-input" required value="<?php echo htmlspecialchars($curDob); ?>" max="<?php echo date('Y-m-d', strtotime('-12 years', strtotime($flight_dep_date))); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
-                            </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Age *</label>
-                                <input type="number" name="passenger_age[]" class="field-input age-input" required value="<?php echo htmlspecialchars($curAge); ?>" min="12" max="99" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f8fafc;">
-                            </div>
-                        </div>
 
-                        <div>
-                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Gender *</label>
-                            <div style="display: flex; gap: 24px; font-size: 14px; font-weight: 600; color: #334155;">
-                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Male" <?php echo ($curGender !== 'Female') ? 'checked' : ''; ?> style="accent-color: #2563eb;"> Male</label>
-                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Female" <?php echo ($curGender === 'Female') ? 'checked' : ''; ?> style="accent-color: #2563eb;"> Female</label>
+                            <!-- Row 4: Optional Section Toggle (Screenshot 1) -->
+                            <div style="margin-top: 10px;">
+                                <a href="javascript:void(0);" onclick="toggleOptionalFields(<?php echo $p_index; ?>)" id="optToggleLink_<?php echo $p_index; ?>" style="color: #0284c7; font-size: 12.5px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">- Optional</a>
+                                
+                                <div id="optContainer_<?php echo $p_index; ?>" style="margin-top: 10px; display: block;">
+                                    <div style="margin-bottom: 12px;">
+                                        <select name="passenger_residence_country[]" class="field-input pax-field-input" style="max-width: 240px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
+                                            <option value="India" <?php echo ($curResidence === 'India') ? 'selected' : ''; ?>>India</option>
+                                            <option value="United Arab Emirates" <?php echo ($curResidence === 'United Arab Emirates') ? 'selected' : ''; ?>>United Arab Emirates</option>
+                                            <option value="Saudi Arabia" <?php echo ($curResidence === 'Saudi Arabia') ? 'selected' : ''; ?>>Saudi Arabia</option>
+                                            <option value="Qatar" <?php echo ($curResidence === 'Qatar') ? 'selected' : ''; ?>>Qatar</option>
+                                            <option value="Oman" <?php echo ($curResidence === 'Oman') ? 'selected' : ''; ?>>Oman</option>
+                                            <option value="Kuwait" <?php echo ($curResidence === 'Kuwait') ? 'selected' : ''; ?>>Kuwait</option>
+                                            <option value="United States" <?php echo ($curResidence === 'United States') ? 'selected' : ''; ?>>United States</option>
+                                            <option value="United Kingdom" <?php echo ($curResidence === 'United Kingdom') ? 'selected' : ''; ?>>United Kingdom</option>
+                                            <option value="Singapore" <?php echo ($curResidence === 'Singapore') ? 'selected' : ''; ?>>Singapore</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Add Frequent Flyer Number (Screenshot 1) -->
+                                    <div style="margin-top: 10px;">
+                                        <a href="javascript:void(0);" onclick="toggleFfFields(<?php echo $p_index; ?>)" id="ffToggleLink_<?php echo $p_index; ?>" style="color: #0284c7; font-size: 12.5px; font-weight: 700; text-decoration: none; display: inline-block;">+ Add Frequent flyer number</a>
+                                        
+                                        <div id="ffContainer_<?php echo $p_index; ?>" style="display: <?php echo !empty($curFfNumber) ? 'flex' : 'none'; ?>; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap;">
+                                            <span style="font-size: 13px; font-weight: 700; color: #334155; min-width: 110px;"><?php echo htmlspecialchars($flightAirlineName); ?></span>
+                                            <input type="text" name="passenger_ff_airline[]" value="<?php echo htmlspecialchars($curFfAirline); ?>" style="width: 50px; padding: 9px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; text-transform: uppercase; text-align: center; font-weight: 700; background: #f8fafc;" readonly>
+                                            <input type="text" name="passenger_ff_number[]" value="<?php echo htmlspecialchars($curFfNumber); ?>" placeholder="Frequent Flyer No." style="width: 180px; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                            <?php else: ?>
+                            <!-- Domestic Gender Row -->
+                            <div>
+                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Gender *</label>
+                                <div style="display: flex; gap: 24px; font-size: 14px; font-weight: 600; color: #334155;">
+                                    <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Male" <?php echo ($curGender !== 'Female') ? 'checked' : ''; ?> onchange="document.getElementById('hidden_pax_gender_<?php echo $p_index; ?>').value = 'Male';" style="accent-color: #2563eb;"> Male</label>
+                                    <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Female" <?php echo ($curGender === 'Female') ? 'checked' : ''; ?> onchange="document.getElementById('hidden_pax_gender_<?php echo $p_index; ?>').value = 'Female';" style="accent-color: #2563eb;"> Female</label>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?php endfor; ?>
@@ -1437,49 +1617,96 @@
                     <?php for ($c = 1; $c <= $child_count; $c++): $p_index++; 
                         $p_arr_idx = $p_index - 1;
                         $curTitle  = !empty($savedReview['passenger_title'][$p_arr_idx]) ? $savedReview['passenger_title'][$p_arr_idx] : 'Mstr';
+                        $curFName  = !empty($savedReview['passenger_first_name'][$p_arr_idx]) ? $savedReview['passenger_first_name'][$p_arr_idx] : '';
+                        $curLName  = !empty($savedReview['passenger_last_name'][$p_arr_idx]) ? $savedReview['passenger_last_name'][$p_arr_idx] : '';
                         $curName   = !empty($savedReview['passenger_name'][$p_arr_idx]) ? $savedReview['passenger_name'][$p_arr_idx] : '';
-                        $curDob    = !empty($savedReview['passenger_dob'][$p_arr_idx]) ? $savedReview['passenger_dob'][$p_arr_idx] : '2019-08-30';
-                        $curAge    = !empty($savedReview['passenger_age'][$p_arr_idx]) ? $savedReview['passenger_age'][$p_arr_idx] : '7';
-                        $curGender = !empty($savedReview['passenger_gender_' . $p_index]) ? $savedReview['passenger_gender_' . $p_index] : 'Male';
+                        if (empty($curFName) && empty($curLName) && !empty($curName)) {
+                            $parts = explode(' ', $curName, 2);
+                            $curFName = $parts[0] ?? '';
+                            $curLName = $parts[1] ?? '';
+                        }
+                        $curDob         = !empty($savedReview['passenger_dob'][$p_arr_idx]) ? $savedReview['passenger_dob'][$p_arr_idx] : '2019-08-30';
+                        $curAge         = !empty($savedReview['passenger_age'][$p_arr_idx]) ? $savedReview['passenger_age'][$p_arr_idx] : '7';
+                        $curGender      = !empty($savedReview['passenger_gender_' . $p_index]) ? $savedReview['passenger_gender_' . $p_index] : 'Male';
+                        $curNationality = !empty($savedReview['passenger_nationality'][$p_arr_idx]) ? $savedReview['passenger_nationality'][$p_arr_idx] : 'Indian';
+                        $curPassportNo  = !empty($savedReview['passenger_passport_no'][$p_arr_idx]) ? $savedReview['passenger_passport_no'][$p_arr_idx] : '';
+                        $curPassportExp = !empty($savedReview['passenger_passport_expiry'][$p_arr_idx]) ? $savedReview['passenger_passport_expiry'][$p_arr_idx] : '';
+                        $curIssuingCnt  = !empty($savedReview['passenger_issuing_country'][$p_arr_idx]) ? $savedReview['passenger_issuing_country'][$p_arr_idx] : 'India';
+                        $curVisaType    = !empty($savedReview['passenger_visa_type'][$p_arr_idx]) ? $savedReview['passenger_visa_type'][$p_arr_idx] : 'Tourist Visa';
                     ?>
-                    <div class="passenger-card" style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-                            <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid fa-child" style="color: #3b82f6;"></i> Passenger Information (Child <?php echo $c; ?> - Age 2-12 yrs)
-                            </h3>
-                            <span style="font-size: 12px; color: #64748b; font-weight: 600;">Name must match Govt. ID / Birth Cert.</span>
+                    <div class="passenger-card pax-card-intl" style="background: #ffffff; border-radius: 10px; margin-bottom: 16px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);">
+                        <div class="pax-card-header" onclick="togglePaxCard(<?php echo $p_index; ?>)" style="background: #f1f5f9; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; border-bottom: 1px solid #e2e8f0;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-solid fa-chevron-up" id="paxIcon_<?php echo $p_index; ?>" style="color: #64748b; font-size: 12px; transition: transform 0.2s ease;"></i>
+                                <strong style="font-size: 14.5px; color: #1e293b; font-weight: 800;">Child x <?php echo $c; ?> (Age 2-12 yrs)</strong>
+                            </div>
+                            <div style="width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid #0284c7; display: flex; align-items: center; justify-content: center; color: #0284c7; font-size: 11px; background: #ffffff;">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
                         </div>
 
-                        <input type="hidden" name="passenger_type[]" value="Child">
+                        <div id="paxBody_<?php echo $p_index; ?>" style="padding: 20px;">
+                            <input type="hidden" name="passenger_type[]" value="Child">
+                            <input type="hidden" name="passenger_name[]" id="hidden_pax_name_<?php echo $p_index; ?>" value="<?php echo htmlspecialchars($curName); ?>">
+                            <input type="hidden" name="passenger_age[]" id="hidden_pax_age_<?php echo $p_index; ?>" value="<?php echo htmlspecialchars($curAge); ?>" class="age-input">
+                            <input type="hidden" name="passenger_gender_<?php echo $p_index; ?>" id="hidden_pax_gender_<?php echo $p_index; ?>" value="<?php echo htmlspecialchars($curGender); ?>">
 
-                        <div style="display: grid; grid-template-columns: 1fr 2fr 1.5fr 1fr; gap: 14px; margin-bottom: 16px;">
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Title *</label>
-                                <select name="passenger_title[]" class="field-input" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #fff;">
-                                    <option value="Mstr" <?php echo ($curTitle === 'Mstr') ? 'selected' : ''; ?>>Master</option>
-                                    <option value="Miss" <?php echo ($curTitle === 'Miss') ? 'selected' : ''; ?>>Miss</option>
+                            <div class="pax-grid-4" style="display: grid; grid-template-columns: 1fr 2fr 2fr 1.5fr; gap: 12px; margin-bottom: 14px;">
+                                <div>
+                                    <select name="passenger_title[]" class="field-input pax-field-input" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff; color: #334155;">
+                                        <option value="Mstr" <?php echo ($curTitle === 'Mstr') ? 'selected' : ''; ?>>Master</option>
+                                        <option value="Miss" <?php echo ($curTitle === 'Miss') ? 'selected' : ''; ?>>Miss</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <input type="text" name="passenger_first_name[]" id="paxFirstName_<?php echo $p_index; ?>" class="field-input pax-field-input" required placeholder="First Name/Given Name" value="<?php echo htmlspecialchars($curFName); ?>" oninput="syncPaxFullName(<?php echo $p_index; ?>)" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <input type="text" name="passenger_last_name[]" id="paxLastName_<?php echo $p_index; ?>" class="field-input pax-field-input" required placeholder="Last Name/Surname" value="<?php echo htmlspecialchars($curLName); ?>" oninput="syncPaxFullName(<?php echo $p_index; ?>)" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <input type="date" name="passenger_dob[]" class="field-input dob-input pax-field-input" required placeholder="D.O.B" value="<?php echo htmlspecialchars($curDob); ?>" min="<?php echo date('Y-m-d', strtotime('-12 years', strtotime($flight_dep_date))); ?>" max="<?php echo date('Y-m-d', strtotime('-2 years', strtotime($flight_dep_date))); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box;">
+                                </div>
+                            </div>
+
+                            <?php if ($is_intl): ?>
+                            <div style="font-size: 13.5px; font-weight: 700; color: #1e293b; margin: 16px 0 10px 0;">Passport Details</div>
+                            <div class="pax-grid-passport" style="display: grid; grid-template-columns: 1.5fr 1.8fr 1.8fr 1.5fr; gap: 12px; margin-bottom: 14px;">
+                                <div>
+                                    <select name="passenger_nationality[]" class="field-input pax-field-input" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
+                                        <option value="Indian" <?php echo ($curNationality === 'Indian') ? 'selected' : ''; ?>>Indian</option>
+                                        <option value="Emirati" <?php echo ($curNationality === 'Emirati') ? 'selected' : ''; ?>>Emirati</option>
+                                        <option value="Saudi" <?php echo ($curNationality === 'Saudi') ? 'selected' : ''; ?>>Saudi</option>
+                                        <option value="American" <?php echo ($curNationality === 'American') ? 'selected' : ''; ?>>American</option>
+                                        <option value="British" <?php echo ($curNationality === 'British') ? 'selected' : ''; ?>>British</option>
+                                        <option value="Singaporean" <?php echo ($curNationality === 'Singaporean') ? 'selected' : ''; ?>>Singaporean</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <input type="text" name="passenger_passport_no[]" class="field-input pax-field-input" required placeholder="Passport No." value="<?php echo htmlspecialchars($curPassportNo); ?>" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; text-transform: uppercase; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <input type="date" name="passenger_passport_expiry[]" class="field-input pax-field-input" required placeholder="Passport Expiry" value="<?php echo htmlspecialchars($curPassportExp); ?>" min="<?php echo date('Y-m-d', strtotime('+6 months', strtotime($flight_dep_date))); ?>" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <select name="passenger_issuing_country[]" class="field-input pax-field-input" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
+                                        <option value="India" <?php echo ($curIssuingCnt === 'India') ? 'selected' : ''; ?>>India</option>
+                                        <option value="United Arab Emirates" <?php echo ($curIssuingCnt === 'United Arab Emirates') ? 'selected' : ''; ?>>United Arab Emirates</option>
+                                        <option value="Saudi Arabia" <?php echo ($curIssuingCnt === 'Saudi Arabia') ? 'selected' : ''; ?>>Saudi Arabia</option>
+                                        <option value="United States" <?php echo ($curIssuingCnt === 'United States') ? 'selected' : ''; ?>>United States</option>
+                                        <option value="United Kingdom" <?php echo ($curIssuingCnt === 'United Kingdom') ? 'selected' : ''; ?>>United Kingdom</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <select name="passenger_visa_type[]" class="field-input pax-field-input" style="max-width: 240px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
+                                    <option value="Tourist Visa" <?php echo ($curVisaType === 'Tourist Visa') ? 'selected' : ''; ?>>Tourist Visa</option>
+                                    <option value="Visit Visa" <?php echo ($curVisaType === 'Visit Visa') ? 'selected' : ''; ?>>Visit Visa</option>
+                                    <option value="Student Visa" <?php echo ($curVisaType === 'Student Visa') ? 'selected' : ''; ?>>Student Visa</option>
+                                    <option value="Residence Visa" <?php echo ($curVisaType === 'Residence Visa') ? 'selected' : ''; ?>>Residence Visa</option>
                                 </select>
                             </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Full Name *</label>
-                                <input type="text" name="passenger_name[]" class="field-input" required placeholder="Enter Child's Name" value="<?php echo htmlspecialchars($curName); ?>" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
-                            </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Date of Birth (DOB) *</label>
-                                <input type="date" name="passenger_dob[]" class="field-input dob-input" required value="<?php echo htmlspecialchars($curDob); ?>" min="<?php echo date('Y-m-d', strtotime('-12 years', strtotime($flight_dep_date))); ?>" max="<?php echo date('Y-m-d', strtotime('-2 years', strtotime($flight_dep_date))); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
-                            </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Age *</label>
-                                <input type="number" name="passenger_age[]" class="field-input age-input" required value="<?php echo htmlspecialchars($curAge); ?>" min="2" max="11" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f8fafc;">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Gender *</label>
-                            <div style="display: flex; gap: 24px; font-size: 14px; font-weight: 600; color: #334155;">
-                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Male" <?php echo ($curGender !== 'Female') ? 'checked' : ''; ?> style="accent-color: #2563eb;"> Male</label>
-                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Female" <?php echo ($curGender === 'Female') ? 'checked' : ''; ?> style="accent-color: #2563eb;"> Female</label>
-                            </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?php endfor; ?>
@@ -1488,96 +1715,174 @@
                     <?php for ($i_cnt = 1; $i_cnt <= $infant_count; $i_cnt++): $p_index++; 
                         $p_arr_idx = $p_index - 1;
                         $curTitle  = !empty($savedReview['passenger_title'][$p_arr_idx]) ? $savedReview['passenger_title'][$p_arr_idx] : 'Mstr';
+                        $curFName  = !empty($savedReview['passenger_first_name'][$p_arr_idx]) ? $savedReview['passenger_first_name'][$p_arr_idx] : '';
+                        $curLName  = !empty($savedReview['passenger_last_name'][$p_arr_idx]) ? $savedReview['passenger_last_name'][$p_arr_idx] : '';
                         $curName   = !empty($savedReview['passenger_name'][$p_arr_idx]) ? $savedReview['passenger_name'][$p_arr_idx] : '';
-                        $curDob    = !empty($savedReview['passenger_dob'][$p_arr_idx]) ? $savedReview['passenger_dob'][$p_arr_idx] : '2025-08-30';
-                        $curAge    = !empty($savedReview['passenger_age'][$p_arr_idx]) ? $savedReview['passenger_age'][$p_arr_idx] : '1';
-                        $curGender = !empty($savedReview['passenger_gender_' . $p_index]) ? $savedReview['passenger_gender_' . $p_index] : 'Male';
+                        if (empty($curFName) && empty($curLName) && !empty($curName)) {
+                            $parts = explode(' ', $curName, 2);
+                            $curFName = $parts[0] ?? '';
+                            $curLName = $parts[1] ?? '';
+                        }
+                        $curDob         = !empty($savedReview['passenger_dob'][$p_arr_idx]) ? $savedReview['passenger_dob'][$p_arr_idx] : '2025-08-30';
+                        $curAge         = !empty($savedReview['passenger_age'][$p_arr_idx]) ? $savedReview['passenger_age'][$p_arr_idx] : '1';
+                        $curGender      = !empty($savedReview['passenger_gender_' . $p_index]) ? $savedReview['passenger_gender_' . $p_index] : 'Male';
+                        $curNationality = !empty($savedReview['passenger_nationality'][$p_arr_idx]) ? $savedReview['passenger_nationality'][$p_arr_idx] : 'Indian';
+                        $curPassportNo  = !empty($savedReview['passenger_passport_no'][$p_arr_idx]) ? $savedReview['passenger_passport_no'][$p_arr_idx] : '';
+                        $curPassportExp = !empty($savedReview['passenger_passport_expiry'][$p_arr_idx]) ? $savedReview['passenger_passport_expiry'][$p_arr_idx] : '';
+                        $curIssuingCnt  = !empty($savedReview['passenger_issuing_country'][$p_arr_idx]) ? $savedReview['passenger_issuing_country'][$p_arr_idx] : 'India';
+                        $curVisaType    = !empty($savedReview['passenger_visa_type'][$p_arr_idx]) ? $savedReview['passenger_visa_type'][$p_arr_idx] : 'Tourist Visa';
                     ?>
-                    <div class="passenger-card" style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-                            <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid fa-baby" style="color: #10b981;"></i> Passenger Information (Infant <?php echo $i_cnt; ?> - Below 2 yrs)
-                            </h3>
-                            <span style="font-size: 12px; color: #64748b; font-weight: 600;">Name must match Birth Cert.</span>
-                        </div>
-
-                        <input type="hidden" name="passenger_type[]" value="Infant">
-
-                        <div style="display: grid; grid-template-columns: 1fr 2fr 1.5fr 1fr; gap: 14px; margin-bottom: 16px;">
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Title *</label>
-                                <select name="passenger_title[]" class="field-input" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #fff;">
-                                    <option value="Mstr" <?php echo ($curTitle === 'Mstr') ? 'selected' : ''; ?>>Master</option>
-                                    <option value="Miss" <?php echo ($curTitle === 'Miss') ? 'selected' : ''; ?>>Miss</option>
-                                </select>
+                    <div class="passenger-card pax-card-intl" style="background: #ffffff; border-radius: 10px; margin-bottom: 16px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);">
+                        <div class="pax-card-header" onclick="togglePaxCard(<?php echo $p_index; ?>)" style="background: #f1f5f9; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; border-bottom: 1px solid #e2e8f0;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-solid fa-chevron-up" id="paxIcon_<?php echo $p_index; ?>" style="color: #64748b; font-size: 12px; transition: transform 0.2s ease;"></i>
+                                <strong style="font-size: 14.5px; color: #1e293b; font-weight: 800;">Infant x <?php echo $i_cnt; ?> (Below 2 yrs)</strong>
                             </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Full Name *</label>
-                                <input type="text" name="passenger_name[]" class="field-input" required placeholder="Enter Infant's Name" value="<?php echo htmlspecialchars($curName); ?>" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
-                            </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Date of Birth (DOB) *</label>
-                                <input type="date" name="passenger_dob[]" class="field-input dob-input" required value="<?php echo htmlspecialchars($curDob); ?>" min="<?php echo date('Y-m-d', strtotime('-2 years', strtotime($flight_dep_date))); ?>" max="<?php echo date('Y-m-d', strtotime($flight_dep_date)); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
-                            </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Age *</label>
-                                <input type="number" name="passenger_age[]" class="field-input age-input" required value="<?php echo htmlspecialchars($curAge); ?>" min="0" max="2" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f8fafc;">
+                            <div style="width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid #0284c7; display: flex; align-items: center; justify-content: center; color: #0284c7; font-size: 11px; background: #ffffff;">
+                                <i class="fa-solid fa-chevron-down"></i>
                             </div>
                         </div>
 
-                        <div>
-                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Gender *</label>
-                            <div style="display: flex; gap: 24px; font-size: 14px; font-weight: 600; color: #334155;">
-                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Male" <?php echo ($curGender !== 'Female') ? 'checked' : ''; ?> style="accent-color: #2563eb;"> Male</label>
-                                <label style="cursor: pointer;"><input type="radio" name="passenger_gender_<?php echo $p_index; ?>" value="Female" <?php echo ($curGender === 'Female') ? 'checked' : ''; ?> style="accent-color: #2563eb;"> Female</label>
+                        <div id="paxBody_<?php echo $p_index; ?>" style="padding: 20px;">
+                            <input type="hidden" name="passenger_type[]" value="Infant">
+                            <input type="hidden" name="passenger_name[]" id="hidden_pax_name_<?php echo $p_index; ?>" value="<?php echo htmlspecialchars($curName); ?>">
+                            <input type="hidden" name="passenger_age[]" id="hidden_pax_age_<?php echo $p_index; ?>" value="<?php echo htmlspecialchars($curAge); ?>" class="age-input">
+                            <input type="hidden" name="passenger_gender_<?php echo $p_index; ?>" id="hidden_pax_gender_<?php echo $p_index; ?>" value="<?php echo htmlspecialchars($curGender); ?>">
+
+                            <div class="pax-grid-4" style="display: grid; grid-template-columns: 1fr 2fr 2fr 1.5fr; gap: 12px; margin-bottom: 14px;">
+                                <div>
+                                    <select name="passenger_title[]" class="field-input pax-field-input" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff; color: #334155;">
+                                        <option value="Mstr" <?php echo ($curTitle === 'Mstr') ? 'selected' : ''; ?>>Master</option>
+                                        <option value="Miss" <?php echo ($curTitle === 'Miss') ? 'selected' : ''; ?>>Miss</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <input type="text" name="passenger_first_name[]" id="paxFirstName_<?php echo $p_index; ?>" class="field-input pax-field-input" required placeholder="First Name/Given Name" value="<?php echo htmlspecialchars($curFName); ?>" oninput="syncPaxFullName(<?php echo $p_index; ?>)" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <input type="text" name="passenger_last_name[]" id="paxLastName_<?php echo $p_index; ?>" class="field-input pax-field-input" required placeholder="Last Name/Surname" value="<?php echo htmlspecialchars($curLName); ?>" oninput="syncPaxFullName(<?php echo $p_index; ?>)" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <input type="date" name="passenger_dob[]" class="field-input dob-input pax-field-input" required placeholder="D.O.B" value="<?php echo htmlspecialchars($curDob); ?>" min="<?php echo date('Y-m-d', strtotime('-2 years', strtotime($flight_dep_date))); ?>" max="<?php echo date('Y-m-d', strtotime($flight_dep_date)); ?>" data-travel-date="<?php echo htmlspecialchars($flight_dep_date); ?>" onchange="calculatePassengerAge(this)" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box;">
+                                </div>
                             </div>
+
+                            <?php if ($is_intl): ?>
+                            <div style="font-size: 13.5px; font-weight: 700; color: #1e293b; margin: 16px 0 10px 0;">Passport Details</div>
+                            <div class="pax-grid-passport" style="display: grid; grid-template-columns: 1.5fr 1.8fr 1.8fr 1.5fr; gap: 12px; margin-bottom: 14px;">
+                                <div>
+                                    <select name="passenger_nationality[]" class="field-input pax-field-input" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
+                                        <option value="Indian" <?php echo ($curNationality === 'Indian') ? 'selected' : ''; ?>>Indian</option>
+                                        <option value="Emirati" <?php echo ($curNationality === 'Emirati') ? 'selected' : ''; ?>>Emirati</option>
+                                        <option value="American" <?php echo ($curNationality === 'American') ? 'selected' : ''; ?>>American</option>
+                                        <option value="British" <?php echo ($curNationality === 'British') ? 'selected' : ''; ?>>British</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <input type="text" name="passenger_passport_no[]" class="field-input pax-field-input" required placeholder="Passport No." value="<?php echo htmlspecialchars($curPassportNo); ?>" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; text-transform: uppercase; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <input type="date" name="passenger_passport_expiry[]" class="field-input pax-field-input" required placeholder="Passport Expiry" value="<?php echo htmlspecialchars($curPassportExp); ?>" min="<?php echo date('Y-m-d', strtotime('+6 months', strtotime($flight_dep_date))); ?>" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <select name="passenger_issuing_country[]" class="field-input pax-field-input" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
+                                        <option value="India" <?php echo ($curIssuingCnt === 'India') ? 'selected' : ''; ?>>India</option>
+                                        <option value="United Arab Emirates" <?php echo ($curIssuingCnt === 'United Arab Emirates') ? 'selected' : ''; ?>>United Arab Emirates</option>
+                                        <option value="United States" <?php echo ($curIssuingCnt === 'United States') ? 'selected' : ''; ?>>United States</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?php endfor; ?>
 
-                    <!-- Contact & GST Details Card -->
+                    <?php if ($is_intl): ?>
+                    <!-- Mandatory Return Ticket Checkbox (Screenshot 1) -->
+                    <div style="margin: 18px 0 24px 0; display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="mandatoryReturnTicket" checked required style="accent-color: #0284c7; width: 16px; height: 16px; cursor: pointer;">
+                        <label for="mandatoryReturnTicket" style="font-size: 13px; color: #1e293b; font-weight: 600; cursor: pointer;">Return ticket is mandatory for Visit/ Tourism Visa</label>
+                    </div>
+                    <?php endif; ?>
+
+                    <!-- Section Header: Contact Information (Screenshot 1) -->
                     <?php
                         $curContactName  = !empty($savedReview['contact_name']) ? $savedReview['contact_name'] : ($sessionUserName ?: 'Rahul Sharma');
-                        $curContactEmail = !empty($savedReview['contact_email']) ? $savedReview['contact_email'] : ($sessionUserEmail ?: '');
-                        $curContactPhone = !empty($savedReview['contact_phone']) ? $savedReview['contact_phone'] : ($cleanPhone ?: $sessionUserPhone);
+                        $curContactEmail = !empty($savedReview['contact_email']) ? $savedReview['contact_email'] : ($sessionUserEmail ?: 'customer@example.com');
+                        $curContactPhone = !empty($savedReview['contact_phone']) ? $savedReview['contact_phone'] : ($cleanPhone ?: ($sessionUserPhone ?: '8123456789'));
+                        $curContactDial  = !empty($savedReview['contact_country_code']) ? $savedReview['contact_country_code'] : '+91';
                         $curGstNumber    = !empty($savedReview['gst_number']) ? $savedReview['gst_number'] : '';
                         $curGstCompany   = !empty($savedReview['gst_company']) ? $savedReview['gst_company'] : '';
                     ?>
-                    <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
-                        <h3 style="font-size: 18px; font-weight: 800; color: #0d3470; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-address-book" style="color: #2563eb;"></i> Contact & E-Ticket Details
-                        </h3>
+                    <div style="margin-top: 28px; margin-bottom: 24px;">
+                        <h2 style="font-size: 20px; font-weight: 800; color: #1e293b; margin: 0 0 14px 0;">Contact Information</h2>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Contact Person *</label>
-                                <input type="text" name="contact_name" class="field-input" required value="<?php echo htmlspecialchars($curContactName); ?>" placeholder="Full Name" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
-                            </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Email Address *</label>
-                                <input type="email" name="contact_email" class="field-input" required value="<?php echo htmlspecialchars($curContactEmail); ?>" placeholder="name@example.com" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
-                            </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Mobile Number *</label>
-                                <input type="tel" name="contact_phone" class="field-input" required value="<?php echo htmlspecialchars($curContactPhone); ?>" placeholder="10-digit mobile" style="width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
-                            </div>
-                        </div>
-
-                        <!-- GST Checkbox Toggle -->
-                        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-top: 14px;">
-                            <label style="font-size: 13px; font-weight: 700; color: #0d3470; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                                <input type="checkbox" id="gstToggle" onchange="toggleGstFields()" <?php echo !empty($curGstNumber) ? 'checked' : ''; ?> style="accent-color: #2563eb; width: 16px; height: 16px;">
-                                Use GSTIN for Business Travel & Tax Invoice Claim (Optional)
-                            </label>
-
-                            <div id="gstFieldsSection" style="display: <?php echo !empty($curGstNumber) ? 'grid' : 'none'; ?>; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; background: #f8fafc; padding: 14px; border-radius: 8px;">
-                                <div>
-                                    <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">GSTIN Number</label>
-                                    <input type="text" name="gst_number" value="<?php echo htmlspecialchars($curGstNumber); ?>" placeholder="27AAAAA0000A1Z5" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                        <!-- Contact Information Card (Screenshot 1) -->
+                        <div class="contact-info-card" style="background: #ffffff; border-radius: 10px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);">
+                            <!-- Top Banner: Your ticket and flights information will be sent here.. (Screenshot 1) -->
+                            <div style="background: #f1f5f9; padding: 12px 18px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #e2e8f0;">
+                                <div style="width: 24px; height: 24px; border-radius: 50%; background: #0f172a; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 11px;">
+                                    <i class="fa-solid fa-envelope"></i>
                                 </div>
-                                <div>
-                                    <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Registered Company Name</label>
-                                    <input type="text" name="gst_company" value="<?php echo htmlspecialchars($curGstCompany); ?>" placeholder="Voyogo Solutions Pvt Ltd" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                <span style="font-size: 13.5px; font-weight: 700; color: #1e293b;">Your ticket and flights information will be sent here..</span>
+                            </div>
+
+                            <div style="padding: 20px;">
+                                <input type="hidden" name="contact_name" id="hidden_contact_name" value="<?php echo htmlspecialchars($curContactName); ?>">
+
+                                <!-- Inputs: Country Code + Mobile Number & Email (Screenshot 1) -->
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+                                    <!-- Mobile with Calling Code Flag Dropdown -->
+                                    <div style="display: flex; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; background: #ffffff;">
+                                        <select name="contact_country_code" style="border: none; background: #f8fafc; padding: 10px 12px; font-size: 13px; font-weight: 600; color: #334155; border-right: 1px solid #cbd5e1; cursor: pointer; outline: none;">
+                                            <option value="+91" <?php echo ($curContactDial === '+91') ? 'selected' : ''; ?>>🇮🇳 +91</option>
+                                            <option value="+971" <?php echo ($curContactDial === '+971') ? 'selected' : ''; ?>>🇦🇪 +971</option>
+                                            <option value="+966" <?php echo ($curContactDial === '+966') ? 'selected' : ''; ?>>🇸🇦 +966</option>
+                                            <option value="+974" <?php echo ($curContactDial === '+974') ? 'selected' : ''; ?>>🇶🇦 +974</option>
+                                            <option value="+968" <?php echo ($curContactDial === '+968') ? 'selected' : ''; ?>>🇴🇲 +968</option>
+                                            <option value="+965" <?php echo ($curContactDial === '+965') ? 'selected' : ''; ?>>🇰🇼 +965</option>
+                                            <option value="+973" <?php echo ($curContactDial === '+973') ? 'selected' : ''; ?>>🇧🇭 +973</option>
+                                            <option value="+65" <?php echo ($curContactDial === '+65') ? 'selected' : ''; ?>>🇸🇬 +65</option>
+                                            <option value="+1" <?php echo ($curContactDial === '+1') ? 'selected' : ''; ?>>🇺🇸 +1</option>
+                                            <option value="+44" <?php echo ($curContactDial === '+44') ? 'selected' : ''; ?>>🇬🇧 +44</option>
+                                            <option value="+61" <?php echo ($curContactDial === '+61') ? 'selected' : ''; ?>>🇦🇺 +61</option>
+                                        </select>
+                                        <input type="tel" name="contact_phone" class="field-input" required value="<?php echo htmlspecialchars($curContactPhone); ?>" placeholder="81234 56789" style="flex: 1; border: none; padding: 10px 14px; font-size: 13.5px; outline: none;">
+                                    </div>
+
+                                    <!-- Email Address Input -->
+                                    <div style="border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; background: #ffffff;">
+                                        <input type="email" name="contact_email" class="field-input" required value="<?php echo htmlspecialchars($curContactEmail); ?>" placeholder="Email" style="width: 100%; border: none; padding: 10px 14px; font-size: 13.5px; outline: none; box-sizing: border-box;">
+                                    </div>
+                                </div>
+
+                                <!-- GST Subcard (Screenshot 1) -->
+                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 34px; height: 34px; border-radius: 6px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                                            <i class="fa-solid fa-receipt"></i>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 13px; font-weight: 700; color: #1e293b;">Use GSTIN for this booking <span style="font-size: 11.5px; color: #64748b; font-weight: 500;">(Optional)</span></div>
+                                            <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Claim credit of GST charges. Your taxes may get updated post submitting your GST details</div>
+                                        </div>
+                                    </div>
+                                    <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #334155; font-weight: 600; white-space: nowrap;">
+                                        <input type="checkbox" id="gstToggle" onchange="toggleGstSection(this.checked)" <?php echo !empty($curGstNumber) ? 'checked' : ''; ?> style="accent-color: #0284c7; width: 16px; height: 16px;">
+                                        Please include my GST number
+                                    </label>
+                                </div>
+
+                                <!-- Expandable GST Inputs -->
+                                <div id="gstFieldsSection" style="display: <?php echo !empty($curGstNumber) ? 'grid' : 'none'; ?>; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; background: #f8fafc; padding: 14px 18px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <div>
+                                        <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">GSTIN Number</label>
+                                        <input type="text" name="gst_number" value="<?php echo htmlspecialchars($curGstNumber); ?>" placeholder="27AAAAA0000A1Z5" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; box-sizing: border-box;">
+                                    </div>
+                                    <div>
+                                        <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Registered Company Name</label>
+                                        <input type="text" name="gst_company" value="<?php echo htmlspecialchars($curGstCompany); ?>" placeholder="Voyogo Solutions Pvt Ltd" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; box-sizing: border-box;">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2297,9 +2602,71 @@ function recalculateAllFares() {
     if (formPromo) formPromo.value = appliedPromoCodeName;
 }
 
+function toggleGstSection(isChecked) {
+    var s = document.getElementById('gstFieldsSection');
+    if (s) s.style.display = isChecked ? 'grid' : 'none';
+}
+
 function toggleGstFields() {
-    var isChecked = document.getElementById('gstToggle').checked;
-    document.getElementById('gstFieldsSection').style.display = isChecked ? 'grid' : 'none';
+    var elem = document.getElementById('gstToggle');
+    var isChecked = elem ? elem.checked : false;
+    toggleGstSection(isChecked);
+}
+
+function togglePaxCard(pIdx) {
+    var body = document.getElementById('paxBody_' + pIdx);
+    var icon = document.getElementById('paxIcon_' + pIdx);
+    if (!body) return;
+    if (body.style.display === 'none') {
+        body.style.display = 'block';
+        if (icon) icon.className = 'fa-solid fa-chevron-up';
+    } else {
+        body.style.display = 'none';
+        if (icon) icon.className = 'fa-solid fa-chevron-down';
+    }
+}
+
+function toggleOptionalFields(pIdx) {
+    var cont = document.getElementById('optContainer_' + pIdx);
+    var link = document.getElementById('optToggleLink_' + pIdx);
+    if (!cont) return;
+    if (cont.style.display === 'none') {
+        cont.style.display = 'block';
+        if (link) link.textContent = '- Optional';
+    } else {
+        cont.style.display = 'none';
+        if (link) link.textContent = '+ Optional';
+    }
+}
+
+function toggleFfFields(pIdx) {
+    var cont = document.getElementById('ffContainer_' + pIdx);
+    var link = document.getElementById('ffToggleLink_' + pIdx);
+    if (!cont) return;
+    if (cont.style.display === 'none') {
+        cont.style.display = 'flex';
+        if (link) link.textContent = '- Add Frequent flyer number';
+    } else {
+        cont.style.display = 'none';
+        if (link) link.textContent = '+ Add Frequent flyer number';
+    }
+}
+
+function syncPaxFullName(pIdx) {
+    var fInput = document.getElementById('paxFirstName_' + pIdx);
+    var lInput = document.getElementById('paxLastName_' + pIdx);
+    var hInput = document.getElementById('hidden_pax_name_' + pIdx);
+    if (fInput && lInput && hInput) {
+        var fVal = fInput.value.trim();
+        var lVal = lInput.value.trim();
+        hInput.value = (fVal + ' ' + lVal).trim();
+        if (pIdx === 1) {
+            var cInput = document.getElementById('hidden_contact_name');
+            if (cInput && hInput.value) {
+                cInput.value = hInput.value;
+            }
+        }
+    }
 }
 
 var isUserLoggedIn = <?php echo $isUserLoggedIn ? 'true' : 'false'; ?>;
@@ -2337,24 +2704,65 @@ window.onBookingReviewLoginSuccess = function(user) {
 
 // Form submission handler: Validates details and proceeds to Step 3: Add-on Services (Screenshot 4 & 5)
 document.getElementById('bookingForm').addEventListener('submit', function(e) {
-    var contactName = document.querySelector('input[name="contact_name"]').value.trim();
-    var contactEmail = document.querySelector('input[name="contact_email"]').value.trim();
-    var contactPhone = document.querySelector('input[name="contact_phone"]').value.trim();
+    var contactNameInput = document.querySelector('input[name="contact_name"]');
+    var contactName = contactNameInput ? contactNameInput.value.trim() : '';
+    var contactEmail = document.querySelector('input[name="contact_email"]') ? document.querySelector('input[name="contact_email"]').value.trim() : '';
+    var contactPhone = document.querySelector('input[name="contact_phone"]') ? document.querySelector('input[name="contact_phone"]').value.trim() : '';
 
-    if (!contactName || !contactEmail || !contactPhone) {
+    if (!contactName) {
+        var p1First = document.getElementById('paxFirstName_1');
+        var p1Last = document.getElementById('paxLastName_1');
+        if (p1First && p1First.value.trim()) {
+            contactName = (p1First.value.trim() + ' ' + (p1Last ? p1Last.value.trim() : '')).trim();
+            if (contactNameInput) contactNameInput.value = contactName;
+        } else {
+            contactName = 'Passenger 1';
+            if (contactNameInput) contactNameInput.value = contactName;
+        }
+    }
+
+    if (!contactEmail || !contactPhone) {
         e.preventDefault();
-        alert('Please fill in your Contact Person, Email Address, and Mobile Number.');
+        alert('Please fill in your Contact Email Address and Mobile Number.');
         return false;
     }
 
-    var paxNames = document.querySelectorAll('input[name="passenger_name[]"]');
-    for (var i = 0; i < paxNames.length; i++) {
-        if (!paxNames[i].value.trim()) {
-            e.preventDefault();
-            alert('Please enter the full name for Passenger ' + (i + 1) + '.');
-            paxNames[i].focus();
-            return false;
+    var fNames = document.querySelectorAll('input[name="passenger_first_name[]"]');
+    var lNames = document.querySelectorAll('input[name="passenger_last_name[]"]');
+    var pNames = document.querySelectorAll('input[name="passenger_name[]"]');
+
+    if (fNames.length > 0) {
+        for (var i = 0; i < fNames.length; i++) {
+            var fn = fNames[i].value.trim();
+            var ln = lNames[i] ? lNames[i].value.trim() : '';
+            if (!fn && !ln) {
+                e.preventDefault();
+                alert('Please enter First Name / Given Name for Passenger ' + (i + 1) + '.');
+                fNames[i].focus();
+                return false;
+            }
+            if (pNames[i]) {
+                pNames[i].value = (fn + ' ' + ln).trim();
+            }
         }
+    } else {
+        for (var i = 0; i < pNames.length; i++) {
+            if (!pNames[i].value.trim()) {
+                e.preventDefault();
+                alert('Please enter the full name for Passenger ' + (i + 1) + '.');
+                pNames[i].focus();
+                return false;
+            }
+        }
+    }
+
+    // Mandatory return ticket check for international
+    var retCheck = document.getElementById('mandatoryReturnTicket');
+    if (retCheck && !retCheck.checked) {
+        e.preventDefault();
+        alert('Please acknowledge that a return ticket is mandatory for Visit / Tourism Visa.');
+        retCheck.focus();
+        return false;
     }
 
     // Submit proceeds smoothly to flight/addons
@@ -2406,6 +2814,49 @@ function showProcessingModal(message) {
     </div>
 </div>
 <style>
+.pax-card-intl {
+    background: #ffffff;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #cbd5e1;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+.pax-card-header:hover {
+    background: #eef2f6 !important;
+}
+.pax-field-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 13.5px;
+    color: #1e293b;
+    background: #ffffff;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.pax-field-input:focus {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+}
+.pax-grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 1.5fr;
+    gap: 12px;
+}
+.pax-grid-passport {
+    display: grid;
+    grid-template-columns: 1.5fr 1.8fr 1.8fr 1.5fr;
+    gap: 12px;
+}
+@media (max-width: 768px) {
+    .pax-grid-4, .pax-grid-passport {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+}
 .flight-specs-strip {
     display: flex;
     align-items: center;

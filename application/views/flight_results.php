@@ -3123,6 +3123,8 @@
                                 <input type="hidden" name="children" value="<?php echo htmlspecialchars($search_query['children'] ?? 0); ?>">
                                 <input type="hidden" name="infants" value="<?php echo htmlspecialchars($search_query['infants'] ?? 0); ?>">
                                 <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
+                                <input type="hidden" name="flight_type" value="<?php echo (!empty($is_international) || ($flight_type ?? '') === 'I' || ($trip_category ?? '') === 'INTERNATIONAL') ? 'I' : 'D'; ?>">
+                                <input type="hidden" name="is_international" value="<?php echo (!empty($is_international) || ($flight_type ?? '') === 'I') ? '1' : '0'; ?>">
                                 <button type="submit" class="f-book-btn">Book Now</button>
                             </form>
                             <div style="display:flex; flex-direction:column; align-items:flex-end; gap:3px; margin-top:6px; width:100%;">
@@ -3809,6 +3811,8 @@
                             <input type="hidden" name="children" value="<?php echo htmlspecialchars($search_query['children'] ?? 0); ?>">
                             <input type="hidden" name="infants" value="<?php echo htmlspecialchars($search_query['infants'] ?? 0); ?>">
                             <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
+                            <input type="hidden" name="flight_type" value="<?php echo (!empty($is_international) || ($flight_type ?? '') === 'I' || ($trip_category ?? '') === 'INTERNATIONAL') ? 'I' : 'D'; ?>">
+                            <input type="hidden" name="is_international" value="<?php echo (!empty($is_international) || ($flight_type ?? '') === 'I') ? '1' : '0'; ?>">
 
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <button type="button" id="btnRtStickyBack" class="btn-rt-back" onclick="hideFareOptionsView();" style="display: none;">
