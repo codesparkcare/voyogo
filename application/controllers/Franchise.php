@@ -878,6 +878,7 @@ class Franchise extends CI_Controller {
             'tui' => $tui,
             'search_tui' => $search_tui
         );
+        $data['isUserLoggedIn'] = true;
 
         $this->session->set_userdata('franchise_flight_booking_data', $data);
         $this->session->unset_userdata('franchise_flight_review_post');
@@ -1736,6 +1737,7 @@ class Franchise extends CI_Controller {
         $data['store']           = $store;
         $data['title']           = "Review Booking: $hotel_name - Voyogo B2B";
         $data['active_menu']     = 'hotel';
+        $data['isUserLoggedIn']  = true;
 
         $this->load->view('franchise/layout/header', $data);
         $this->load->view('franchise/hotel_review', $data);

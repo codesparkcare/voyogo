@@ -1,4 +1,5 @@
 <?php
+$isUserLoggedIn = true;
 $bSummary = isset($booking_summary) ? $booking_summary : (isset($booking_data) ? $booking_data : array());
 $hotel_id = $bSummary['hotel_id'] ?? 'HTL_101';
 $hotel_name = $bSummary['hotel_name'] ?? 'Luxury Resort';

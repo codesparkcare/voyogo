@@ -1,5 +1,6 @@
 <?php
     $store            = $store ?? array();
+    $isUserLoggedIn   = true;
     $sessionUserName  = $store['store_name'] ?? 'Franchise Partner';
     $sessionUserEmail = $store['email'] ?? '';
     $sessionUserPhone = $store['phone'] ?? '';
@@ -258,39 +259,25 @@
             </div>
         </div>
 
-        <!-- Professional User Login Gate / Verified Status Banner -->
-        <?php if ($isUserLoggedIn): ?>
-            <div id="flightLoginBanner" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
-                <div style="display: flex; align-items: center; gap: 14px;">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #16a34a; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
-                        <i class="fa-solid fa-circle-check"></i>
+        <!-- Franchise Store Agent Verified Status Banner -->
+        <div id="flightLoginBanner" style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 42px; height: 42px; border-radius: 50%; background: #16a34a; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0;">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+                <div>
+                    <div style="font-size: 14.5px; font-weight: 800; color: #166534;">
+                        Franchise Store Partner: <?php echo htmlspecialchars($store['store_name'] ?? 'Voyogo Store'); ?> (Agent Code: <strong><?php echo htmlspecialchars($store['agent_code'] ?? ''); ?></strong>)
                     </div>
-                    <div>
-                        <div style="font-size: 14.5px; font-weight: 800; color: #166534;">Logged in as <?php echo htmlspecialchars($sessionUserName ?: $sessionUserPhone); ?></div>
-                        <div style="font-size: 12.5px; color: #15803d;">Your verified contact details have been pre-filled below for ticket issuance.</div>
+                    <div style="font-size: 12.5px; color: #15803d;">
+                        Booking directly through your authorized B2B terminal. Float deduction settles instantly upon confirmation.
                     </div>
                 </div>
-                <span style="font-size: 11.5px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 5px 12px; border-radius: 20px; border: 1px solid #86efac; display: inline-flex; align-items: center; gap: 6px;">
-                    <i class="fa-solid fa-shield-halved"></i> Phone Verified
-                </span>
             </div>
-        <?php else: ?>
-            <div id="flightLoginBanner" style="background: linear-gradient(135deg, #09204b 0%, #1e3a8a 100%); color: #ffffff; border-radius: 14px; padding: 18px 24px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; box-shadow: 0 10px 25px rgba(9,32,75,0.12); flex-wrap: wrap;">
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <div style="width: 46px; height: 46px; border-radius: 50%; background: rgba(120, 183, 34, 0.2); color: #78B722; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
-                        <i class="fa-solid fa-user-lock"></i>
-                    </div>
-                    <div>
-                        <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 800; color: #ffffff;">Please Sign In with Mobile OTP to Complete Booking</h4>
-                        <p style="margin: 0; font-size: 13px; color: #cbd5e1;">Sign in to lock your fare, auto-fill passenger contact details, and receive e-tickets instantly.</p>
-                    </div>
-                </div>
-                <button type="button" onclick="triggerBookingLogin('Please enter your mobile number to sign in and confirm this flight booking.')" style="background: #78B722; color: #ffffff; border: none; padding: 11px 24px; border-radius: 8px; font-size: 13.5px; font-weight: 800; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(120,183,34,0.4); transition: transform 0.15s ease;">
-                    <i class="fa-solid fa-mobile-screen"></i>
-                    <span>Sign In with OTP</span>
-                </button>
-            </div>
-        <?php endif; ?>
+            <span style="font-size: 12px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 6px 14px; border-radius: 20px; border: 1px solid #86efac; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-circle-check"></i> Agent Authenticated
+            </span>
+        </div>
 
         <!-- Dedicated Form to accurately return to search results with exact criteria -->
         <form id="backToSearchForm" action="<?php echo site_url('franchise/flight_search'); ?>" method="POST" style="display: none;">
