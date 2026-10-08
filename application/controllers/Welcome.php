@@ -1219,6 +1219,7 @@ class Welcome extends CI_Controller {
         $pnr = !empty($retrieveRes['PNR']) ? $retrieveRes['PNR'] : (!empty($itineraryRes['PNR']) ? $itineraryRes['PNR'] : ('W' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 5))));
         $booking_ref = 'VYG-FL-' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 8));
         $razorpay_payment_id = $this->input->post('razorpay_payment_id') ?: ('pay_txn_' . $transaction_id . '_' . time());
+        $razorpay_order_id   = $this->input->post('razorpay_order_id') ?: null;
 
         $flight_number = $this->input->post('flight_number') ?: '6E-2134';
         $airline_name  = $this->input->post('airline_name') ?: 'IndiGo';
@@ -1280,6 +1281,7 @@ class Welcome extends CI_Controller {
             'contact_phone'     => $contact_phone,
             'total_amount'      => $total_amount,
             'payment_id'        => $razorpay_payment_id,
+            'order_id'          => $razorpay_order_id,
             'payment_status'    => ($booking_type === 'HB') ? 'Hold (Unpaid)' : 'Paid',
             'booking_status'    => ($booking_type === 'HB') ? 'On Hold' : 'Confirmed',
             'created_at'        => date('Y-m-d H:i:s')
@@ -1434,6 +1436,7 @@ class Welcome extends CI_Controller {
         $booking_ref = 'VYG-HTL-' . strtoupper(substr(md5(uniqid()), 0, 8));
         $total_amount = (float)($this->input->post('total_amount') ?: 8499);
         $razorpay_payment_id = $this->input->post('razorpay_payment_id') ?: ('pay_mock_htl_' . rand(100000, 999999));
+        $razorpay_order_id   = $this->input->post('razorpay_order_id') ?: null;
 
         $booking_data = array(
             'booking_ref'       => $booking_ref,
@@ -1451,6 +1454,7 @@ class Welcome extends CI_Controller {
             'guest_phone'       => $guest_phone,
             'total_amount'      => $total_amount,
             'payment_id'        => $razorpay_payment_id,
+            'order_id'          => $razorpay_order_id,
             'payment_status'    => 'Paid',
             'booking_status'    => 'Confirmed',
             'created_at'        => date('Y-m-d H:i:s')

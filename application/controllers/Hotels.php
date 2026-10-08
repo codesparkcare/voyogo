@@ -473,6 +473,7 @@ class Hotels extends CI_Controller {
         $lead_phone     = $this->input->post('guest_phone') ?: '9876543210';
         $special_req    = $this->input->post('special_requests') ?: 'Non-smoking room';
         $razorpay_id    = $this->input->post('razorpay_payment_id') ?: ('pay_mock_' . rand(100000, 999999));
+        $razorpay_order_id = $this->input->post('razorpay_order_id') ?: null;
 
         // 1. Benzy Create Itinerary API Call (Exact WRC B2B Schema)
         $tui = $this->input->post('tui') ?: ('TUI-' . uniqid());
@@ -612,6 +613,7 @@ class Hotels extends CI_Controller {
             'tax_amount'          => $tax_amount,
             'currency'            => 'INR',
             'payment_id'          => $razorpay_id,
+            'order_id'            => $razorpay_order_id,
             'payment_status'      => 'paid',
             'booking_status'      => $systemStatus,
             'booking_status_code' => $statusCode,

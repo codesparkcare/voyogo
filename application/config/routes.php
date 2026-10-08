@@ -17,6 +17,12 @@ $route['flight/ajax_fare_options'] = 'welcome/ajax_fare_options';
 $route['flight/confirmation/(:any)'] = 'welcome/flight_confirmation/$1';
 $route['flight'] = 'welcome/index';
 
+/* Razorpay Standard Web Checkout API Routes */
+$route['api/create-order']   = 'payment/create_order';
+$route['api/verify-payment'] = 'payment/verify_payment';
+$route['payment/create_order']   = 'payment/create_order';
+$route['payment/verify_payment'] = 'payment/verify_payment';
+
 /* Voyogo Custom Hotel Routes (Isolated Controller) */
 $route['hotels'] = 'hotels/index';
 $route['hotels/search'] = 'hotels/search';

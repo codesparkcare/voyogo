@@ -1779,6 +1779,8 @@ body {
 
                     <input type="hidden" name="total_amount" id="payment_total_amount" value="<?php echo $grandTotal; ?>">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
+                    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id" value="">
+                    <input type="hidden" name="razorpay_signature" id="razorpay_signature" value="">
                 </form>
 
                 <button type="button" class="btn-proceed-pay" onclick="triggerRazorpayPayment();">
@@ -1966,49 +1968,130 @@ function selectPayOption(el) {
     if (el) el.classList.add('selected');
 }
 
-// Trigger Razorpay Payment & Form Submission
+// Trigger Razorpay Standard Web Checkout
 function triggerRazorpayPayment() {
+    var payBtn = document.querySelector('.btn-proceed-pay');
+    var originalBtnHtml = payBtn ? payBtn.innerHTML : '';
+    
+    function setBtnLoading(isLoading) {
+        if (!payBtn) return;
+        if (isLoading) {
+            payBtn.disabled = true;
+            payBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Initializing Secure Checkout...';
+        } else {
+            payBtn.disabled = false;
+            payBtn.innerHTML = originalBtnHtml;
+        }
+    }
+
     var finalAmount = <?php echo (float)$grandTotal; ?>;
     var amountInPaise = Math.round(finalAmount * 100);
     var contactName = "<?php echo htmlspecialchars($contactName); ?>";
     var contactEmail = "<?php echo htmlspecialchars($contactEmail); ?>";
     var contactPhone = "<?php echo htmlspecialchars($contactPhone); ?>";
 
-    var options = {
-        "key": "<?php echo !empty($razorpay_settings['razorpay_key_id']) ? htmlspecialchars($razorpay_settings['razorpay_key_id']) : 'rzp_test_TTVGSNKy0V1o7B'; ?>",
-        "amount": amountInPaise,
-        "currency": "INR",
-        "name": "Voyogo Travels",
-        "description": "Flight Ticket Booking - <?php echo htmlspecialchars($flightNumber); ?>",
-        "image": "<?php echo base_url('assets/images/logo.png'); ?>",
-        "handler": function (response){
-            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
-            document.getElementById('flightPaymentForm').submit();
+    setBtnLoading(true);
+
+    // STEP 1: Call Backend to Create Order
+    fetch("<?php echo site_url('api/create-order'); ?>", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
         },
-        "prefill": {
-            "name": contactName,
-            "email": contactEmail,
-            "contact": contactPhone
-        },
-        "theme": {
-            "color": "#0d3470"
-        },
-        "modal": {
-            "ondismiss": function() {
-                if (confirm("Razorpay Payment Gateway Closed. Complete booking in test mode?")) {
-                    document.getElementById('razorpay_payment_id').value = "pay_mock_" + Math.floor(Math.random() * 1000000);
-                    document.getElementById('flightPaymentForm').submit();
+        body: JSON.stringify({
+            amount: amountInPaise,
+            currency: "INR",
+            receipt: "rcpt_flt_" + Date.now(),
+            service: "Flight Booking"
+        })
+    })
+    .then(function(res) {
+        if (!res.ok) {
+            return res.json().then(function(errData) {
+                throw new Error(errData.message || "Failed to initialize Razorpay order (HTTP " + res.status + ")");
+            });
+        }
+        return res.json();
+    })
+    .then(function(orderData) {
+        if (orderData.status !== 'success' || !orderData.order_id) {
+            throw new Error(orderData.message || "Order creation failed.");
+        }
+
+        // STEP 2: Configure & Open Razorpay Standard Checkout Modal
+        var options = {
+            "key": orderData.key_id,
+            "amount": orderData.amount,
+            "currency": orderData.currency || "INR",
+            "name": orderData.merchant_name || "Voyogo Travels",
+            "description": "Flight Ticket Booking - <?php echo htmlspecialchars($flightNumber); ?>",
+            "image": "<?php echo base_url('assets/images/logo.png'); ?>",
+            "order_id": orderData.order_id,
+            "handler": function (response) {
+                if (payBtn) payBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verifying Payment Signature...';
+
+                // STEP 3: Verify Payment Signature via Backend
+                fetch("<?php echo site_url('api/verify-payment'); ?>", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: JSON.stringify({
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature
+                    })
+                })
+                .then(function(vRes) {
+                    return vRes.json();
+                })
+                .then(function(vData) {
+                    if (vData.status === 'success' && vData.verified) {
+                        // Signature valid -> Mark inputs and submit booking confirmation
+                        document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                        document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                        document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                        if (payBtn) payBtn.innerHTML = '<i class="fa-solid fa-check-circle"></i> Payment Verified! Booking Flight...';
+                        document.getElementById('flightPaymentForm').submit();
+                    } else {
+                        alert("Payment Verification Error: " + (vData.message || "Signature mismatch. Transaction cannot be validated."));
+                        setBtnLoading(false);
+                    }
+                })
+                .catch(function(vErr) {
+                    alert("Error verifying payment signature: " + vErr.message);
+                    setBtnLoading(false);
+                });
+            },
+            "prefill": {
+                "name": contactName,
+                "email": contactEmail,
+                "contact": contactPhone
+            },
+            "theme": {
+                "color": "<?php echo !empty($razorpay_settings['theme_color']) ? htmlspecialchars($razorpay_settings['theme_color']) : '#0d3470'; ?>"
+            },
+            "modal": {
+                "ondismiss": function() {
+                    console.log("Razorpay checkout modal closed by customer.");
+                    setBtnLoading(false);
                 }
             }
-        }
-    };
+        };
 
-    try {
         var rzp = new Razorpay(options);
+        rzp.on('payment.failed', function (resp) {
+            var errMsg = resp.error ? (resp.error.description || resp.error.reason) : "Payment failed.";
+            alert("Payment Failed: " + errMsg);
+            setBtnLoading(false);
+        });
         rzp.open();
-    } catch(e) {
-        document.getElementById('razorpay_payment_id').value = "pay_mock_" + Math.floor(Math.random() * 1000000);
-        document.getElementById('flightPaymentForm').submit();
-    }
+    })
+    .catch(function(err) {
+        alert("Payment Gateway Error: " + err.message);
+        setBtnLoading(false);
+    });
 }
 </script>

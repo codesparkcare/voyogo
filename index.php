@@ -58,6 +58,25 @@
 // Set Application Default Timezone to Indian Standard Time (IST)
 date_default_timezone_set('Asia/Kolkata');
 
+// Load .env environment variables
+if (file_exists(__DIR__ . '/.env')) {
+	$envFileLines = file(__DIR__ . '/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+	if ($envFileLines !== false) {
+		foreach ($envFileLines as $envLine) {
+			$envLine = trim($envLine);
+			if ($envLine === '' || strpos($envLine, '#') === 0) continue;
+			if (strpos($envLine, '=') !== false) {
+				list($envKey, $envVal) = explode('=', $envLine, 2);
+				$envKey = trim($envKey);
+				$envVal = trim($envVal, " \t\n\r\0\x0B\"'");
+				putenv("{$envKey}={$envVal}");
+				$_ENV[$envKey] = $envVal;
+				$_SERVER[$envKey] = $envVal;
+			}
+		}
+	}
+}
+
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

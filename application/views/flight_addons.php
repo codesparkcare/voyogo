@@ -1155,6 +1155,8 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
     <input type="hidden" name="addon_total_amount" id="form_addon_total_amount" value="0">
     <input type="hidden" name="total_amount" id="form_final_grand_total" value="<?php echo $initialGrandTotal; ?>">
     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
+    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id" value="">
+    <input type="hidden" name="razorpay_signature" id="razorpay_signature" value="">
 </form>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -1656,42 +1658,98 @@ function triggerFinalPayment() {
     var contactEmail = "<?php echo htmlspecialchars($post_data['contact_email'] ?? 'booking@voyogo.com'); ?>";
     var contactPhone = "<?php echo htmlspecialchars($post_data['contact_phone'] ?? '9876543210'); ?>";
 
-    var options = {
-        "key": "<?php echo !empty($razorpay_settings['razorpay_key_id']) ? htmlspecialchars($razorpay_settings['razorpay_key_id']) : 'rzp_test_TTVGSNKy0V1o7B'; ?>",
-        "amount": amountInPaise,
-        "currency": "INR",
-        "name": "Voyogo Travels",
-        "description": "Flight Ticket Booking - <?php echo htmlspecialchars($flight_number); ?>",
-        "image": "<?php echo base_url('assets/images/logo.png'); ?>",
-        "handler": function (response){
-            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
-            document.getElementById('finalPaymentForm').submit();
+    // STEP 1: Call Backend to Create Order
+    fetch("<?php echo site_url('api/create-order'); ?>", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
         },
-        "prefill": {
-            "name": contactName,
-            "email": contactEmail,
-            "contact": contactPhone
-        },
-        "theme": {
-            "color": "#0d3470"
-        },
-        "modal": {
-            "ondismiss": function() {
-                if (confirm("Razorpay Payment Gateway Closed. Complete booking in test mode?")) {
-                    document.getElementById('razorpay_payment_id').value = "pay_mock_" + Math.floor(Math.random() * 1000000);
-                    document.getElementById('finalPaymentForm').submit();
+        body: JSON.stringify({
+            amount: amountInPaise,
+            currency: "INR",
+            receipt: "rcpt_flt_" + Date.now(),
+            service: "Flight Booking"
+        })
+    })
+    .then(function(res) {
+        if (!res.ok) {
+            return res.json().then(function(errData) {
+                throw new Error(errData.message || "Failed to initialize Razorpay order (HTTP " + res.status + ")");
+            });
+        }
+        return res.json();
+    })
+    .then(function(orderData) {
+        if (orderData.status !== 'success' || !orderData.order_id) {
+            throw new Error(orderData.message || "Order creation failed.");
+        }
+
+        // STEP 2: Configure & Open Razorpay Standard Checkout Modal
+        var options = {
+            "key": orderData.key_id,
+            "amount": orderData.amount,
+            "currency": orderData.currency || "INR",
+            "name": orderData.merchant_name || "Voyogo Travels",
+            "description": "Flight Ticket Booking - <?php echo htmlspecialchars($flight_number); ?>",
+            "image": "<?php echo base_url('assets/images/logo.png'); ?>",
+            "order_id": orderData.order_id,
+            "handler": function (response) {
+                // STEP 3: Verify Payment Signature via Backend
+                fetch("<?php echo site_url('api/verify-payment'); ?>", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: JSON.stringify({
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature
+                    })
+                })
+                .then(function(vRes) {
+                    return vRes.json();
+                })
+                .then(function(vData) {
+                    if (vData.status === 'success' && vData.verified) {
+                        document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                        document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                        document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                        document.getElementById('finalPaymentForm').submit();
+                    } else {
+                        alert("Payment Verification Error: " + (vData.message || "Signature mismatch. Transaction cannot be validated."));
+                    }
+                })
+                .catch(function(vErr) {
+                    alert("Error verifying payment signature: " + vErr.message);
+                });
+            },
+            "prefill": {
+                "name": contactName,
+                "email": contactEmail,
+                "contact": contactPhone
+            },
+            "theme": {
+                "color": "#0d3470"
+            },
+            "modal": {
+                "ondismiss": function() {
+                    console.log("Razorpay checkout modal closed by customer.");
                 }
             }
-        }
-    };
+        };
 
-    try {
         var rzp = new Razorpay(options);
+        rzp.on('payment.failed', function (resp) {
+            var errMsg = resp.error ? (resp.error.description || resp.error.reason) : "Payment failed.";
+            alert("Payment Failed: " + errMsg);
+        });
         rzp.open();
-    } catch(e) {
-        document.getElementById('razorpay_payment_id').value = "pay_mock_" + Math.floor(Math.random() * 1000000);
-        document.getElementById('finalPaymentForm').submit();
-    }
+    })
+    .catch(function(err) {
+        alert("Payment Gateway Error: " + err.message);
+    });
 }
 
 // Initial Render on Page Load

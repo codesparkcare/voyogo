@@ -1231,8 +1231,9 @@ body {
     <input type="hidden" name="total_amount" id="formTotalAmount" value="<?php echo htmlspecialchars($total_amount); ?>">
     <input type="hidden" name="primary_guest_name" value="<?php echo htmlspecialchars($primary_name); ?>">
     <input type="hidden" name="guest_email" value="<?php echo htmlspecialchars($guest_email); ?>">
-    <input type="hidden" name="guest_phone" value="<?php echo htmlspecialchars($guest_phone); ?>">
     <input type="hidden" name="razorpay_payment_id" id="formRazorpayPaymentId" value="">
+    <input type="hidden" name="razorpay_order_id" id="formRazorpayOrderId" value="">
+    <input type="hidden" name="razorpay_signature" id="formRazorpaySignature" value="">
     <?php
     // Serialize pax data
     if (!empty($pax) && is_array($pax)) {
@@ -1552,52 +1553,116 @@ function applyDiscountValue(code, discount) {
     if (formTotal) formTotal.value = currentPayableTotal;
 }
 
-// Razorpay Trigger & Booking Execution
+// Razorpay Standard Checkout Trigger & Verification
 function triggerRazorpayHotelPayment() {
     var amountInPaise = Math.round(currentPayableTotal * 100);
     var guestName = "<?php echo addslashes($primary_name); ?>";
     var guestEmail = "<?php echo addslashes($guest_email); ?>";
     var guestPhone = "<?php echo addslashes($guest_phone); ?>";
 
-    var options = {
-        "key": "<?php echo !empty($razorpay_settings['razorpay_key_id']) ? htmlspecialchars($razorpay_settings['razorpay_key_id']) : 'rzp_test_TTVGSNKy0V1o7B'; ?>",
-        "amount": amountInPaise,
-        "currency": "<?php echo !empty($razorpay_settings['currency']) ? htmlspecialchars($razorpay_settings['currency']) : 'INR'; ?>",
-        "name": "<?php echo !empty($razorpay_settings['merchant_name']) ? htmlspecialchars($razorpay_settings['merchant_name']) : 'Voyogo Hotel Booking'; ?>",
-        "description": "Hotel Voucher - <?php echo addslashes($hotel_name); ?>",
-        "image": "<?php echo base_url('assets/images/logo.png'); ?>",
-        "handler": function (response) {
-            showHotelPaymentProcessing("Payment Verified (HTTP 200 OK)! Generating your Official Hotel Voucher...");
-            document.getElementById('formRazorpayPaymentId').value = response.razorpay_payment_id;
-            document.getElementById('hotelFinalBookingForm').submit();
+    showHotelPaymentProcessing("Initializing Secure Razorpay Checkout...");
+
+    // STEP 1: Backend creates Razorpay order
+    fetch("<?php echo site_url('api/create-order'); ?>", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
         },
-        "prefill": {
-            "name": guestName,
-            "email": guestEmail,
-            "contact": guestPhone
-        },
-        "theme": {
-            "color": "<?php echo !empty($razorpay_settings['theme_color']) ? htmlspecialchars($razorpay_settings['theme_color']) : '#ef4444'; ?>"
-        },
-        "modal": {
-            "ondismiss": function() {
-                if (confirm("Razorpay Payment Gateway window closed. Would you like to confirm hotel voucher in Test Payment Mode?")) {
-                    showHotelPaymentProcessing("Confirming Test Booking & Generating Hotel Voucher...");
-                    document.getElementById('formRazorpayPaymentId').value = "pay_test_htl_" + Math.floor(Math.random() * 1000000);
-                    document.getElementById('hotelFinalBookingForm').submit();
+        body: JSON.stringify({
+            amount: amountInPaise,
+            currency: "INR",
+            receipt: "rcpt_htl_" + Date.now(),
+            service: "Hotel Booking"
+        })
+    })
+    .then(function(res) {
+        if (!res.ok) {
+            return res.json().then(function(errData) {
+                throw new Error(errData.message || "Failed to initialize Razorpay order (HTTP " + res.status + ")");
+            });
+        }
+        return res.json();
+    })
+    .then(function(orderData) {
+        hideHotelPaymentProcessing();
+        if (orderData.status !== 'success' || !orderData.order_id) {
+            throw new Error(orderData.message || "Order creation failed.");
+        }
+
+        // STEP 2: Open Razorpay modal with server-generated order_id
+        var options = {
+            "key": orderData.key_id,
+            "amount": orderData.amount,
+            "currency": orderData.currency || "INR",
+            "name": orderData.merchant_name || "Voyogo Hotel Booking",
+            "description": "Hotel Voucher - <?php echo addslashes($hotel_name); ?>",
+            "image": "<?php echo base_url('assets/images/logo.png'); ?>",
+            "order_id": orderData.order_id,
+            "handler": function (response) {
+                showHotelPaymentProcessing("Payment received! Verifying digital signature...");
+
+                // STEP 3: Verify Payment Signature via Backend
+                fetch("<?php echo site_url('api/verify-payment'); ?>", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: JSON.stringify({
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature
+                    })
+                })
+                .then(function(vRes) {
+                    return vRes.json();
+                })
+                .then(function(vData) {
+                    if (vData.status === 'success' && vData.verified) {
+                        showHotelPaymentProcessing("Payment Verified (HTTP 200 OK)! Generating your Official Hotel Voucher...");
+                        document.getElementById('formRazorpayPaymentId').value = response.razorpay_payment_id;
+                        document.getElementById('formRazorpayOrderId').value = response.razorpay_order_id;
+                        document.getElementById('formRazorpaySignature').value = response.razorpay_signature;
+                        document.getElementById('hotelFinalBookingForm').submit();
+                    } else {
+                        hideHotelPaymentProcessing();
+                        alert("Payment Verification Error: " + (vData.message || "Signature mismatch. Transaction cannot be validated."));
+                    }
+                })
+                .catch(function(vErr) {
+                    hideHotelPaymentProcessing();
+                    alert("Error verifying payment signature: " + vErr.message);
+                });
+            },
+            "prefill": {
+                "name": guestName,
+                "email": guestEmail,
+                "contact": guestPhone
+            },
+            "theme": {
+                "color": "<?php echo !empty($razorpay_settings['theme_color']) ? htmlspecialchars($razorpay_settings['theme_color']) : '#ef4444'; ?>"
+            },
+            "modal": {
+                "ondismiss": function() {
+                    console.log("Razorpay checkout modal closed by customer.");
+                    hideHotelPaymentProcessing();
                 }
             }
-        }
-    };
+        };
 
-    try {
         var rzp = new Razorpay(options);
+        rzp.on('payment.failed', function (resp) {
+            var errMsg = resp.error ? (resp.error.description || resp.error.reason) : "Payment failed.";
+            hideHotelPaymentProcessing();
+            alert("Payment Failed: " + errMsg);
+        });
         rzp.open();
-    } catch(err) {
-        showHotelPaymentProcessing("Processing Hotel Booking Confirmation...");
-        document.getElementById('formRazorpayPaymentId').value = "pay_test_htl_" + Math.floor(Math.random() * 1000000);
-        document.getElementById('hotelFinalBookingForm').submit();
-    }
+    })
+    .catch(function(err) {
+        hideHotelPaymentProcessing();
+        alert("Payment Gateway Error: " + err.message);
+    });
 }
 
 function showHotelPaymentProcessing(message) {
@@ -1606,6 +1671,13 @@ function showHotelPaymentProcessing(message) {
         var msgEl = document.getElementById('hotelProcessingModalMsg');
         if (msgEl) msgEl.innerText = message || "Payment Verified! Generating Hotel Voucher...";
         overlay.style.display = 'flex';
+    }
+}
+
+function hideHotelPaymentProcessing() {
+    var overlay = document.getElementById('hotelPaymentProcessingOverlay');
+    if (overlay) {
+        overlay.style.display = 'none';
     }
 }
 </script>

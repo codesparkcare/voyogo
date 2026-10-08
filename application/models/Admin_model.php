@@ -66,10 +66,13 @@ class Admin_model extends CI_Model {
     }
 
     public function get_razorpay_settings() {
+        $envKeyId     = getenv('RAZORPAY_KEY_ID') ?: ($_ENV['RAZORPAY_KEY_ID'] ?? '');
+        $envKeySecret = getenv('RAZORPAY_KEY_SECRET') ?: ($_ENV['RAZORPAY_KEY_SECRET'] ?? '');
+
         $default = array(
             'id'                  => 1,
-            'razorpay_key_id'     => 'rzp_test_TTVGSNKy0V1o7B',
-            'razorpay_key_secret' => 'na1MTEQwpH6CFfHOVghZn2GO',
+            'razorpay_key_id'     => $envKeyId ?: 'rzp_test_TlI3NkfGJYg33P',
+            'razorpay_key_secret' => $envKeySecret ?: 'AXq2YdEmH8spM551Bo81621z',
             'merchant_name'       => 'Voyogo Travels',
             'theme_color'         => '#0d3470',
             'currency'            => 'INR',
@@ -81,8 +84,8 @@ class Admin_model extends CI_Model {
             $this->load->dbforge();
             $fields = array(
                 'id' => array('type' => 'INT', 'constraint' => 11, 'default' => 1),
-                'razorpay_key_id' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'rzp_test_TTVGSNKy0V1o7B'),
-                'razorpay_key_secret' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => 'na1MTEQwpH6CFfHOVghZn2GO'),
+                'razorpay_key_id' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => $envKeyId ?: 'rzp_test_TlI3NkfGJYg33P'),
+                'razorpay_key_secret' => array('type' => 'VARCHAR', 'constraint' => 255, 'default' => $envKeySecret ?: 'AXq2YdEmH8spM551Bo81621z'),
                 'merchant_name' => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => 'Voyogo Travels'),
                 'theme_color' => array('type' => 'VARCHAR', 'constraint' => 20, 'default' => '#0d3470'),
                 'currency' => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'INR'),
@@ -100,8 +103,17 @@ class Admin_model extends CI_Model {
         $row = $this->db->get_where('razorpay_settings', array('id' => 1))->row_array();
         if (!$row) {
             $this->db->insert('razorpay_settings', $default);
-            return $default;
+            $row = $default;
         }
+
+        // Environment variables override database if configured in .env
+        if (!empty($envKeyId)) {
+            $row['razorpay_key_id'] = $envKeyId;
+        }
+        if (!empty($envKeySecret)) {
+            $row['razorpay_key_secret'] = $envKeySecret;
+        }
+
         return $row;
     }
 
