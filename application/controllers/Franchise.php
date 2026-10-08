@@ -717,9 +717,48 @@ class Franchise extends CI_Controller {
             'itemized_taxes'  => $final_itemized_tax
         );
 
-        $storeRes = $this->benzyflightapi->getFareRuleSsrStore($tui);
-        $fareRules  = $storeRes['fare_rules'];
-        $ssrOptions = $storeRes['ssr'];
+        // Fetch Fare Rules (Cancellation & Date change policy)
+        $fareRules = $this->benzyflightapi->getFareRule($tui, $price, $onward_index, $fromCode, $toCode, $search_tui);
+
+        // Fetch SSR options (Baggage, Meals, Seats)
+        $ssrOptions = $this->benzyflightapi->getSSR($tui, $fromCode, $toCode, $airline_code, $flight_number, $search_tui, $onward_index);
+
+        // Parse cancellation & date change rules for view tables
+        $cancellationRules = array();
+        $dateChangeRules   = array();
+        if (!empty($fareRules['Trips'][0]['Journey'][0]['Segments'][0]['Rules'][0]['Rule'])) {
+            foreach ($fareRules['Trips'][0]['Journey'][0]['Segments'][0]['Rules'][0]['Rule'] as $rItem) {
+                $head = strtolower($rItem['Head'] ?? '');
+                $info = $rItem['Info'] ?? array();
+                if (strpos($head, 'cancel') !== false) {
+                    foreach ($info as $inf) {
+                        $amtStr = trim($inf['AdultAmount'] ?? '');
+                        if (is_numeric($amtStr)) $amtStr = '₹ ' . number_format($amtStr);
+                        $cancellationRules[] = array(
+                            'time'   => $inf['Description'] ?? 'Cancellation',
+                            'desc'   => $inf['Description'] ?? 'Cancellation',
+                            'fee'    => $amtStr ?: 'Non-Refundable',
+                            'amount' => $amtStr ?: 'Non-Refundable'
+                        );
+                    }
+                } elseif (strpos($head, 'change') !== false || strpos($head, 'reissue') !== false) {
+                    foreach ($info as $inf) {
+                        $amtStr = trim($inf['AdultAmount'] ?? '');
+                        if (is_numeric($amtStr)) $amtStr = '₹ ' . number_format($amtStr);
+                        $dateChangeRules[] = array(
+                            'time'   => $inf['Description'] ?? 'Date Change',
+                            'desc'   => $inf['Description'] ?? 'Date Change',
+                            'fee'    => $amtStr ? ($amtStr . ' + Diff') : '₹ 2,500 + Diff',
+                            'amount' => $amtStr ? ($amtStr . ' + Diff') : '₹ 2,500 + Diff'
+                        );
+                    }
+                }
+            }
+        }
+        if (is_array($fareRules)) {
+            $fareRules['cancellation'] = $cancellationRules;
+            $fareRules['date_change']   = $dateChangeRules;
+        }
 
         $onwardAirlineCode = $flightDetails['airline_code'] ?? $airline_code;
         $onwardBasePrice   = (float)($flightDetails['base_fare'] ?? round($price * 0.788));
@@ -739,6 +778,41 @@ class Franchise extends CI_Controller {
             $returnTaxPrice    = max(0, $returnPriceVal - $returnBasePrice);
 
             $returnFareRules = $this->benzyflightapi->getFareRule($tui, $returnPriceVal, $return_index, $returnFlight['from_code'] ?? $toCode, $returnFlight['to_code'] ?? $fromCode, $search_tui);
+            $retCancelRules = array();
+            $retDateChangeRules = array();
+            if (!empty($returnFareRules['Trips'][0]['Journey'][0]['Segments'][0]['Rules'][0]['Rule'])) {
+                foreach ($returnFareRules['Trips'][0]['Journey'][0]['Segments'][0]['Rules'][0]['Rule'] as $rItem) {
+                    $head = strtolower($rItem['Head'] ?? '');
+                    $info = $rItem['Info'] ?? array();
+                    if (strpos($head, 'cancel') !== false) {
+                        foreach ($info as $inf) {
+                            $amtStr = trim($inf['AdultAmount'] ?? '');
+                            if (is_numeric($amtStr)) $amtStr = '₹ ' . number_format($amtStr);
+                            $retCancelRules[] = array(
+                                'time'   => $inf['Description'] ?? 'Cancellation',
+                                'desc'   => $inf['Description'] ?? 'Cancellation',
+                                'fee'    => $amtStr ?: 'Non-Refundable',
+                                'amount' => $amtStr ?: 'Non-Refundable'
+                            );
+                        }
+                    } elseif (strpos($head, 'change') !== false || strpos($head, 'reissue') !== false) {
+                        foreach ($info as $inf) {
+                            $amtStr = trim($inf['AdultAmount'] ?? '');
+                            if (is_numeric($amtStr)) $amtStr = '₹ ' . number_format($amtStr);
+                            $retDateChangeRules[] = array(
+                                'time'   => $inf['Description'] ?? 'Date Change',
+                                'desc'   => $inf['Description'] ?? 'Date Change',
+                                'fee'    => $amtStr ? ($amtStr . ' + Diff') : '₹ 2,500 + Diff',
+                                'amount' => $amtStr ? ($amtStr . ' + Diff') : '₹ 2,500 + Diff'
+                            );
+                        }
+                    }
+                }
+            }
+            if (is_array($returnFareRules)) {
+                $returnFareRules['cancellation'] = $retCancelRules;
+                $returnFareRules['date_change']   = $retDateChangeRules;
+            }
             $returnFareTiers = $this->benzyflightapi->getDynamicFareTiers($returnAirlineCode, $returnBasePrice, $returnTaxPrice, $onwardRules, $onwardInclusions, $onwardSsrItems);
         }
 
