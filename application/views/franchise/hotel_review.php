@@ -26,10 +26,13 @@ $inclusions = !empty($bSummary['inclusions']) && is_array($bSummary['inclusions'
 $cancellation_text = !empty($bSummary['cancellation_text']) ? $bSummary['cancellation_text'] : ($is_refundable ? 'Free cancellation up to 48 hours before check-in.' : 'Non-refundable booking.');
 $changeRoomUrl = site_url('franchise/hotel_detail/' . $hotel_id . '?city=' . urlencode($bSummary['city'] ?? 'Goa') . '&checkin=' . urlencode($checkin_date) . '&checkout=' . urlencode($checkout_date) . '&rooms=' . $rooms . '&adults=' . $adults . '&children=' . $children . (!empty($bSummary['roomData']) ? '&roomData=' . urlencode($bSummary['roomData']) : '') . (!empty($bSummary['search_id']) ? '&search_id=' . urlencode($bSummary['search_id']) : '') . (!empty($bSummary['tui']) ? '&search_tracing_key=' . urlencode($bSummary['tui']) : ''));
 
-$defaultFname = '';
-$defaultLname = '';
-$cleanPhone       = $store['phone'] ?? '9876543210';
+$defaultFname     = '';
+$defaultLname     = '';
+$store            = $store ?? array();
+$sessionUserName  = $store['store_name'] ?? 'Franchise Partner';
+$sessionUserPhone = $store['phone'] ?? '9876543210';
 $sessionUserEmail = $store['email'] ?? 'booking@voyogo.com';
+$cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
 ?>
 <div style="background-color: #f5f7fa; padding: 30px 0 60px 0;">
     <div class="container">
