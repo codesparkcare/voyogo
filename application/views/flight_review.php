@@ -1555,16 +1555,19 @@
                                 </div>
                             </div>
 
-                            <!-- Row 3: Visa Type (Screenshot 1) -->
+                            <!-- Row 3: Visa Type (Matching Benz API Doc) -->
                             <div style="margin-bottom: 12px;">
-                                <select name="passenger_visa_type[]" class="field-input pax-field-input" style="max-width: 240px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
-                                    <option value="Tourist Visa" <?php echo ($curVisaType === 'Tourist Visa') ? 'selected' : ''; ?>>Tourist Visa</option>
-                                    <option value="Visit Visa" <?php echo ($curVisaType === 'Visit Visa') ? 'selected' : ''; ?>>Visit Visa</option>
-                                    <option value="Business Visa" <?php echo ($curVisaType === 'Business Visa') ? 'selected' : ''; ?>>Business Visa</option>
-                                    <option value="Employment Visa" <?php echo ($curVisaType === 'Employment Visa') ? 'selected' : ''; ?>>Employment Visa</option>
-                                    <option value="Student Visa" <?php echo ($curVisaType === 'Student Visa') ? 'selected' : ''; ?>>Student Visa</option>
-                                    <option value="Residence Visa" <?php echo ($curVisaType === 'Residence Visa') ? 'selected' : ''; ?>>Residence Visa</option>
-                                    <option value="Transit Visa" <?php echo ($curVisaType === 'Transit Visa') ? 'selected' : ''; ?>>Transit Visa</option>
+                                <select name="passenger_visa_type[]" class="field-input pax-field-input" style="max-width: 260px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
+                                    <option value="TOURIST / VISIT VISA" <?php echo ($curVisaType === 'TOURIST / VISIT VISA' || $curVisaType === 'Tourist Visa' || $curVisaType === 'Visit Visa') ? 'selected' : ''; ?>>Tourist Visa</option>
+                                    <option value="BUSINESS VISA" <?php echo ($curVisaType === 'BUSINESS VISA' || $curVisaType === 'Business Visa') ? 'selected' : ''; ?>>Business Visa</option>
+                                    <option value="EMPLOYMENT / WORK VISA" <?php echo ($curVisaType === 'EMPLOYMENT / WORK VISA' || $curVisaType === 'Employment Visa') ? 'selected' : ''; ?>>Employment / Work Visa</option>
+                                    <option value="STUDENT VISA" <?php echo ($curVisaType === 'STUDENT VISA' || $curVisaType === 'Student Visa') ? 'selected' : ''; ?>>Student Visa</option>
+                                    <option value="PERMANENT RESIDENT VISA" <?php echo ($curVisaType === 'PERMANENT RESIDENT VISA' || $curVisaType === 'Residence Visa') ? 'selected' : ''; ?>>Residence / PR Visa</option>
+                                    <option value="IMMIGRANT VISA" <?php echo ($curVisaType === 'IMMIGRANT VISA' || $curVisaType === 'Immigrant Visa') ? 'selected' : ''; ?>>Immigrant Visa</option>
+                                    <option value="JOINING FAMILY VISA" <?php echo ($curVisaType === 'JOINING FAMILY VISA' || $curVisaType === 'Family Visa') ? 'selected' : ''; ?>>Joining Family Visa</option>
+                                    <option value="HAJJ VISA" <?php echo ($curVisaType === 'HAJJ VISA' || $curVisaType === 'Hajj Visa') ? 'selected' : ''; ?>>Hajj Visa</option>
+                                    <option value="UM RAH VISA" <?php echo ($curVisaType === 'UM RAH VISA' || $curVisaType === 'Umrah Visa') ? 'selected' : ''; ?>>Umrah Visa</option>
+                                    <option value="OTHERS (SPECIFY)" <?php echo ($curVisaType === 'OTHERS (SPECIFY)' || $curVisaType === 'Transit Visa') ? 'selected' : ''; ?>>Transit / Other Visa</option>
                                 </select>
                             </div>
 
@@ -1699,11 +1702,12 @@
                                 </div>
                             </div>
                             <div style="margin-bottom: 12px;">
-                                <select name="passenger_visa_type[]" class="field-input pax-field-input" style="max-width: 240px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
-                                    <option value="Tourist Visa" <?php echo ($curVisaType === 'Tourist Visa') ? 'selected' : ''; ?>>Tourist Visa</option>
-                                    <option value="Visit Visa" <?php echo ($curVisaType === 'Visit Visa') ? 'selected' : ''; ?>>Visit Visa</option>
-                                    <option value="Student Visa" <?php echo ($curVisaType === 'Student Visa') ? 'selected' : ''; ?>>Student Visa</option>
-                                    <option value="Residence Visa" <?php echo ($curVisaType === 'Residence Visa') ? 'selected' : ''; ?>>Residence Visa</option>
+                                <select name="passenger_visa_type[]" class="field-input pax-field-input" style="max-width: 260px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
+                                    <option value="TOURIST / VISIT VISA" <?php echo ($curVisaType === 'TOURIST / VISIT VISA' || $curVisaType === 'Tourist Visa' || $curVisaType === 'Visit Visa') ? 'selected' : ''; ?>>Tourist / Visit Visa</option>
+                                    <option value="STUDENT VISA" <?php echo ($curVisaType === 'STUDENT VISA' || $curVisaType === 'Student Visa') ? 'selected' : ''; ?>>Student Visa</option>
+                                    <option value="PERMANENT RESIDENT VISA" <?php echo ($curVisaType === 'PERMANENT RESIDENT VISA' || $curVisaType === 'Residence Visa') ? 'selected' : ''; ?>>Residence / PR Visa</option>
+                                    <option value="JOINING FAMILY VISA" <?php echo ($curVisaType === 'JOINING FAMILY VISA' || $curVisaType === 'Family Visa') ? 'selected' : ''; ?>>Joining Family Visa</option>
+                                    <option value="OTHERS (SPECIFY)" <?php echo ($curVisaType === 'OTHERS (SPECIFY)') ? 'selected' : ''; ?>>Others (Specify)</option>
                                 </select>
                             </div>
                             <?php endif; ?>
@@ -1730,7 +1734,7 @@
                         $curPassportNo  = !empty($savedReview['passenger_passport_no'][$p_arr_idx]) ? $savedReview['passenger_passport_no'][$p_arr_idx] : '';
                         $curPassportExp = !empty($savedReview['passenger_passport_expiry'][$p_arr_idx]) ? $savedReview['passenger_passport_expiry'][$p_arr_idx] : '';
                         $curIssuingCnt  = !empty($savedReview['passenger_issuing_country'][$p_arr_idx]) ? $savedReview['passenger_issuing_country'][$p_arr_idx] : 'India';
-                        $curVisaType    = !empty($savedReview['passenger_visa_type'][$p_arr_idx]) ? $savedReview['passenger_visa_type'][$p_arr_idx] : 'Tourist Visa';
+                        $curVisaType    = !empty($savedReview['passenger_visa_type'][$p_arr_idx]) ? $savedReview['passenger_visa_type'][$p_arr_idx] : 'TOURIST / VISIT VISA';
                     ?>
                     <div class="passenger-card pax-card-intl" style="background: #ffffff; border-radius: 10px; margin-bottom: 16px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);">
                         <div class="pax-card-header" onclick="togglePaxCard(<?php echo $p_index; ?>)" style="background: #f1f5f9; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; border-bottom: 1px solid #e2e8f0;">
@@ -1791,6 +1795,14 @@
                                         <option value="United States" <?php echo ($curIssuingCnt === 'United States') ? 'selected' : ''; ?>>United States</option>
                                     </select>
                                 </div>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <select name="passenger_visa_type[]" class="field-input pax-field-input" style="max-width: 260px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; background: #fff;">
+                                    <option value="TOURIST / VISIT VISA" <?php echo ($curVisaType === 'TOURIST / VISIT VISA' || $curVisaType === 'Tourist Visa' || $curVisaType === 'Visit Visa') ? 'selected' : ''; ?>>Tourist / Visit Visa</option>
+                                    <option value="PERMANENT RESIDENT VISA" <?php echo ($curVisaType === 'PERMANENT RESIDENT VISA' || $curVisaType === 'Residence Visa') ? 'selected' : ''; ?>>Residence / PR Visa</option>
+                                    <option value="JOINING FAMILY VISA" <?php echo ($curVisaType === 'JOINING FAMILY VISA' || $curVisaType === 'Family Visa') ? 'selected' : ''; ?>>Joining Family Visa</option>
+                                    <option value="OTHERS (SPECIFY)" <?php echo ($curVisaType === 'OTHERS (SPECIFY)') ? 'selected' : ''; ?>>Others (Specify)</option>
+                                </select>
                             </div>
                             <?php endif; ?>
                         </div>

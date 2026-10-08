@@ -1538,31 +1538,46 @@ class BenzyFlightApi {
         $token = $this->generateToken();
 
         $countryCode = (!empty($contact['CountryCode']) && !is_numeric($contact['CountryCode']) && strlen($contact['CountryCode']) <= 3) ? strtoupper($contact['CountryCode']) : "IN";
+        $contactMobileCode  = !empty($contact['MobileCountryCode']) ? $contact['MobileCountryCode'] : "+91";
+        $contactDestMobCode = !empty($contact['DestMobCountryCode']) ? $contact['DestMobCountryCode'] : $contactMobileCode;
+        $contactMobile      = !empty($contact['Mobile']) ? $contact['Mobile'] : "8590055610";
+        $contactDestMob     = !empty($contact['DestMob']) ? $contact['DestMob'] : $contactMobile;
+        $contactEmail       = !empty($contact['Email']) ? $contact['Email'] : "robin@benzyinfotech.com";
+        $contactTitle       = !empty($contact['Title']) ? $contact['Title'] : "Mr";
+        $contactFName       = !empty($contact['FName']) ? substr($contact['FName'], 0, 40) : "TESTA";
+        $contactLName       = !empty($contact['LName']) ? substr($contact['LName'], 0, 40) : "TESTAB";
 
-        // Standard ContactInfo matching WRC doc
+        // GST Fields (Page 81)
+        $gstCompany = !empty($contact['GSTCompanyName']) ? $contact['GSTCompanyName'] : "";
+        $gstTin     = !empty($contact['GSTTIN']) ? $contact['GSTTIN'] : "";
+        $gstMobile  = !empty($contact['GstMobile']) ? $contact['GstMobile'] : (!empty($gstTin) ? $contactMobile : "");
+        $gstEmail   = !empty($contact['GSTEmail']) ? $contact['GSTEmail'] : (!empty($gstTin) ? $contactEmail : "");
+        $saveGst    = isset($contact['SaveGST']) ? (bool)$contact['SaveGST'] : false;
+
+        // Standard ContactInfo matching Benz API doc
         $contactInfo = array(
-            "Title"              => isset($contact['Title']) ? $contact['Title'] : "",
-            "FName"              => isset($contact['FName']) ? $contact['FName'] : "",
-            "LName"              => isset($contact['LName']) ? $contact['LName'] : "",
-            "Mobile"             => isset($contact['Mobile']) ? $contact['Mobile'] : "8590055610",
-            "DestMob"            => isset($contact['DestMob']) ? $contact['DestMob'] : (isset($contact['Mobile']) ? $contact['Mobile'] : "8590055610"),
+            "Title"              => $contactTitle,
+            "FName"              => $contactFName,
+            "LName"              => $contactLName,
+            "Mobile"             => $contactMobile,
+            "DestMob"            => $contactDestMob,
             "Phone"              => isset($contact['Phone']) ? $contact['Phone'] : "",
-            "Email"              => isset($contact['Email']) ? $contact['Email'] : "robin@benzyinfotech.com",
+            "Email"              => $contactEmail,
             "Language"           => "",
             "Address"            => isset($contact['Address']) ? $contact['Address'] : "MRRA 4  EDAPPALLY  Edappally , EDAPPALLY , Edappally",
             "CountryCode"        => $countryCode,
-            "MobileCountryCode"  => "+91",
-            "DestMobCountryCode" => "+91",
+            "MobileCountryCode"  => $contactMobileCode,
+            "DestMobCountryCode" => $contactDestMobCode,
             "State"              => isset($contact['State']) ? $contact['State'] : "Kerala",
             "City"               => isset($contact['City']) ? $contact['City'] : "Cochin",
             "PIN"                => isset($contact['PIN']) ? $contact['PIN'] : "6865245",
-            "GSTCompanyName"     => isset($contact['GSTCompanyName']) ? $contact['GSTCompanyName'] : "",
-            "GSTTIN"             => isset($contact['GSTTIN']) ? $contact['GSTTIN'] : "",
-            "GstMobile"          => isset($contact['GstMobile']) ? $contact['GstMobile'] : "",
-            "GSTEmail"           => isset($contact['GSTEmail']) ? $contact['GSTEmail'] : "",
+            "GSTCompanyName"     => $gstCompany,
+            "GSTTIN"             => $gstTin,
+            "GstMobile"          => $gstMobile,
+            "GSTEmail"           => $gstEmail,
             "UpdateProfile"      => false,
             "IsGuest"            => false,
-            "SaveGST"            => false
+            "SaveGST"            => $saveGst
         );
 
         $destContactInfo = array(
@@ -1573,15 +1588,37 @@ class BenzyFlightApi {
             "Phone"             => "",
             "Email"             => "",
             "CountryCode"       => "",
-            "MobileCountryCode" => "+91",
+            "MobileCountryCode" => $contactMobileCode,
             "State"             => "",
             "PIN"               => ""
         );
 
-        // Format Travellers matching WRC schema
+        // Format Travellers matching Benz API doc schema
         $travellers = array();
         $idx = 1;
         $defaultPaxIDs = array('YWdr', 'YmFj', 'YmFh', 'YWJh', 'YmFi', 'YWJj');
+
+        $natMap = array(
+            'INDIAN' => 'IN', 'INDIA' => 'IN', 'IN' => 'IN',
+            'EMIRATI' => 'AE', 'UNITED ARAB EMIRATES' => 'AE', 'UAE' => 'AE', 'AE' => 'AE',
+            'SAUDI' => 'SA', 'SAUDI ARABIA' => 'SA', 'SA' => 'SA',
+            'QATARI' => 'QA', 'QATAR' => 'QA', 'QA' => 'QA',
+            'OMANI' => 'OM', 'OMAN' => 'OM', 'OM' => 'OM',
+            'KUWAITI' => 'KW', 'KUWAIT' => 'KW', 'KW' => 'KW',
+            'BAHRAINI' => 'BH', 'BAHRAIN' => 'BH', 'BH' => 'BH',
+            'AMERICAN' => 'US', 'UNITED STATES' => 'US', 'USA' => 'US', 'US' => 'US',
+            'BRITISH' => 'GB', 'UNITED KINGDOM' => 'GB', 'UK' => 'GB', 'GB' => 'GB',
+            'SINGAPOREAN' => 'SG', 'SINGAPORE' => 'SG', 'SG' => 'SG',
+            'AUSTRALIAN' => 'AU', 'AUSTRALIA' => 'AU', 'AU' => 'AU',
+            'CANADIAN' => 'CA', 'CANADA' => 'CA', 'CA' => 'CA',
+            'GERMAN' => 'DE', 'GERMANY' => 'DE', 'DE' => 'DE',
+            'FRENCH' => 'FR', 'FRANCE' => 'FR', 'FR' => 'FR',
+            'MALAYSIAN' => 'MY', 'MALAYSIA' => 'MY', 'MY' => 'MY',
+            'THAI' => 'TH', 'THAILAND' => 'TH', 'TH' => 'TH',
+            'SRI LANKAN' => 'LK', 'SRI LANKA' => 'LK', 'LK' => 'LK',
+            'BANGLADESHI' => 'BD', 'BANGLADESH' => 'BD', 'BD' => 'BD',
+            'NEPALI' => 'NP', 'NEPAL' => 'NP', 'NP' => 'NP'
+        );
 
         if (empty($passengers)) {
             $passengers = array(
@@ -1618,20 +1655,71 @@ class BenzyFlightApi {
                 $age = 28;
             }
 
-            $dobDay = $dobTime ? date('d', $dobTime) : "15";
-            $dobMonth = $dobTime ? date('m', $dobTime) : "05";
-            $dobYear = $dobTime ? date('Y', $dobTime) : "1992";
+            $dobDay = $dobTime ? (string)(int)date('d', $dobTime) : "0";
+            $dobMonth = $dobTime ? (string)(int)date('m', $dobTime) : "0";
+            $dobYear = $dobTime ? (string)(int)date('Y', $dobTime) : "0";
 
-            $gender = isset($p['Gender']) ? $p['Gender'] : 'M';
+            $gender = isset($p['Gender']) ? $p['Gender'] : (isset($p['gender']) && (stripos($p['gender'], 'f') === 0) ? 'F' : 'M');
             $title = !empty($p['Title']) ? $p['Title'] : ($gender === 'F' ? ($ptc === 'CHD' ? 'Miss' : 'Ms') : ($ptc === 'INF' ? 'Mstr' : 'Mr'));
             if ($title === 'Master') $title = 'Mstr';
-            $fname = isset($p['FName']) ? $p['FName'] : (isset($p['first_name']) ? $p['first_name'] : 'TESTA');
-            $lname = isset($p['LName']) ? $p['LName'] : (isset($p['last_name']) ? $p['last_name'] : 'TESTAB');
+
+            $rawFname = isset($p['FName']) ? $p['FName'] : (isset($p['first_name']) ? $p['first_name'] : 'TESTA');
+            $rawLname = isset($p['LName']) ? $p['LName'] : (isset($p['last_name']) ? $p['last_name'] : '');
+            if (empty($rawLname)) {
+                $rawLname = $rawFname; // FnuLnu rule: if last name not available, repeat first name
+            }
+            $fname = substr(trim($rawFname), 0, 40);
+            $lname = substr(trim($rawLname), 0, 40);
+
             $email = isset($p['Email']) ? $p['Email'] : ($idx === 1 ? 'mails@mail.com' : 'soumya.s@benzyinfotech.com');
             $mobile = isset($p['PMobileNo']) ? $p['PMobileNo'] : ($idx === 1 ? '' : '8921614723');
-            $passport = isset($p['PassportNo']) && !empty($p['PassportNo']) ? $p['PassportNo'] : ($idx === 1 ? 'HM8888HJJ6K' : ($ptc === 'INF' ? '5351321' : '54533221'));
+            $passport = isset($p['PassportNo']) && !empty($p['PassportNo']) ? $p['PassportNo'] : (isset($p['passport_no']) && !empty($p['passport_no']) ? $p['passport_no'] : ($idx === 1 ? 'HM8888HJJ6K' : ($ptc === 'INF' ? '5351321' : '54533221')));
             $paxId = isset($p['PaxID']) ? $p['PaxID'] : (isset($defaultPaxIDs[$idx - 1]) ? $defaultPaxIDs[$idx - 1] : base64_encode(chr(96 + $idx) . chr(100 + $idx)));
-            $nationality = !empty($p['Nationality']) ? $p['Nationality'] : 'IN';
+
+            // Nationality & Country mapping to 2-letter ISO (PDF p. 86/88)
+            $rawNat = strtoupper(trim(isset($p['Nationality']) ? $p['Nationality'] : (isset($p['nationality']) ? $p['nationality'] : 'IN')));
+            $nationality = isset($natMap[$rawNat]) ? $natMap[$rawNat] : (strlen($rawNat) === 2 ? $rawNat : 'IN');
+
+            $rawCountry = strtoupper(trim(isset($p['Country']) ? $p['Country'] : (isset($p['residence_country']) ? $p['residence_country'] : 'IN')));
+            $country = isset($natMap[$rawCountry]) ? $natMap[$rawCountry] : (strlen($rawCountry) === 2 ? $rawCountry : 'IN');
+
+            // Passport Place of Issue (PLI)
+            $rawPli = trim(isset($p['PLI']) ? $p['PLI'] : (isset($p['issuing_country']) ? $p['issuing_country'] : 'India'));
+            $pli = !empty($rawPli) ? $rawPli : 'India';
+
+            // Passport Expiry (PDOE) & Date of Issue (PDOI)
+            $pdoi = isset($p['PDOI']) ? $p['PDOI'] : '';
+            $pdoe = isset($p['PDOE']) ? $p['PDOE'] : (isset($p['passport_expiry']) ? $p['passport_expiry'] : '');
+            $pdoeTime = !empty($pdoe) ? strtotime($pdoe) : false;
+            $pdoeDay = $pdoeTime ? (string)(int)date('d', $pdoeTime) : "0";
+            $pdoeMonth = $pdoeTime ? (string)(int)date('m', $pdoeTime) : "0";
+            $pdoeYear = $pdoeTime ? (string)(int)date('Y', $pdoeTime) : "0";
+
+            // Visa Type - Exact match to Benz Flight API enum (PDF p. 86/88)
+            $rawVisa = strtoupper(trim(isset($p['VisaType']) ? $p['VisaType'] : (isset($p['visa_type']) ? $p['visa_type'] : '')));
+            if (strpos($rawVisa, 'TOURIST') !== false || strpos($rawVisa, 'VISIT') !== false) {
+                $visaType = 'TOURIST / VISIT VISA';
+            } elseif (strpos($rawVisa, 'BUSI') !== false) {
+                $visaType = 'BUSINESS VISA';
+            } elseif (strpos($rawVisa, 'EMPLOY') !== false || strpos($rawVisa, 'WORK') !== false) {
+                $visaType = 'EMPLOYMENT / WORK VISA';
+            } elseif (strpos($rawVisa, 'STUDENT') !== false) {
+                $visaType = 'STUDENT VISA';
+            } elseif (strpos($rawVisa, 'PERMANENT') !== false || strpos($rawVisa, 'RESID') !== false || strpos($rawVisa, 'PR') !== false) {
+                $visaType = 'PERMANENT RESIDENT VISA';
+            } elseif (strpos($rawVisa, 'IMMIGRANT') !== false) {
+                $visaType = 'IMMIGRANT VISA';
+            } elseif (strpos($rawVisa, 'FAMILY') !== false || strpos($rawVisa, 'JOIN') !== false) {
+                $visaType = 'JOINING FAMILY VISA';
+            } elseif (strpos($rawVisa, 'HAJJ') !== false) {
+                $visaType = 'HAJJ VISA';
+            } elseif (strpos($rawVisa, 'UM') !== false || strpos($rawVisa, 'RAH') !== false) {
+                $visaType = 'UM RAH VISA';
+            } elseif (!empty($rawVisa) && $rawVisa !== '0') {
+                $visaType = 'OTHERS (SPECIFY)';
+            } else {
+                $visaType = ($ptc === 'ADT' ? 'TOURIST / VISIT VISA' : '');
+            }
 
             $travellers[] = array(
                 "ID"               => $idx,
@@ -1644,18 +1732,18 @@ class BenzyFlightApi {
                 "PMobileNo"        => $mobile,
                 "Age"              => $age,
                 "DOB"              => $dob,
-                "DOBDay"           => (string)(int)$dobDay,
-                "DOBMonth"         => (string)(int)$dobMonth,
-                "DOBYear"          => (string)(int)$dobYear,
-                "Country"          => "",
+                "DOBDay"           => "0",
+                "DOBMonth"         => "0",
+                "DOBYear"          => "0",
+                "Country"          => $country,
                 "Gender"           => $gender,
                 "PTC"              => $ptc,
                 "Nationality"      => $nationality,
                 "PassportNo"       => $passport,
-                "PLI"              => "",
-                "PDOI"             => "",
-                "PDOE"             => "",
-                "VisaType"         => ($ptc === 'ADT' ? "VISITING VISA" : ""),
+                "PLI"              => $pli,
+                "PDOI"             => $pdoi,
+                "PDOE"             => $pdoe,
+                "VisaType"         => $visaType,
                 "EmigrationCheck"  => false,
                 "isOptionSelected" => false,
                 "ApproverManagers" => array(
@@ -1663,16 +1751,13 @@ class BenzyFlightApi {
                     "Type"     => ""
                 ),
                 "DocumentType"     => "",
-                "NationalityName"  => "INDIA",
-                "DOBDay"           => "0",
-                "DOBMonth"         => "0",
-                "DOBYear"          => "0",
+                "NationalityName"  => ($nationality === 'IN' ? 'INDIA' : $nationality),
                 "PDOIDay"          => "0",
                 "PDOIMonth"        => "0",
                 "PDOIBYear"        => "0",
-                "PDOEDay"          => "0",
-                "PDOEMonth"        => "0",
-                "PDOEBYear"        => "0"
+                "PDOEDay"          => $pdoeDay,
+                "PDOEMonth"        => $pdoeMonth,
+                "PDOEBYear"        => $pdoeYear
             );
             $idx++;
         }
@@ -1806,20 +1891,36 @@ class BenzyFlightApi {
             }
         }
 
-        // Exact WRC CreateItinerary payload
+        // Build PLP (Frequent Flyer) matching Benz API doc (Page 84 & 86/89)
+        $plpList = array();
+        foreach ($passengers as $pIdx => $p) {
+            $ffNo = !empty($p['ff_number']) ? trim($p['ff_number']) : (!empty($p['FFNo']) ? trim($p['FFNo']) : '');
+            if (!empty($ffNo)) {
+                $plpList[] = array(
+                    "FUID"  => 1,
+                    "PaxID" => $pIdx + 1,
+                    "FFNo"  => $ffNo
+                );
+            }
+        }
+        if (empty($plpList)) {
+            $plpList = array(
+                array(
+                    "FUID"  => 1,
+                    "PaxID" => 1,
+                    "FFNo"  => "ABCD1234"
+                )
+            );
+        }
+
+        // Exact Benz API CreateItinerary payload (Page 81-86)
         $payload = array(
             "TUI"                   => $tui,
             "ServiceEnquiry"        => "",
             "ContactInfo"           => $contactInfo,
             "DestinationContactInfo"=> $destContactInfo,
             "Travellers"            => $travellers,
-            "PLP"                   => array(
-                array(
-                    "FUID"  => 1,
-                    "PaxID" => 1,
-                    "FFNo"  => "ABCD1234"
-                )
-            ),
+            "PLP"                   => $plpList,
             "SSR"                   => $ssrList,
             "CrossSell"             => array(),
             "CrossSellAmount"       => 0,
@@ -2077,6 +2178,7 @@ class BenzyFlightApi {
             "RMSSignature"    => "",
             "TargetCurrency"  => "",
             "TargetAmount"    => 0,
+            "BookingType"     => $isHold ? "HB" : "",
             "ServiceType"     => "ITI"
         );
 

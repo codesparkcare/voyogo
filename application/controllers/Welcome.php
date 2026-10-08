@@ -1265,17 +1265,34 @@ class Welcome extends CI_Controller {
 
         $net_amount = (float)($this->input->post('net_amount') ?: $this->input->post('base_fare') ?: $this->input->post('total_amount') ?: 5150);
 
+        $contact_dial = $this->input->post('contact_country_code') ?: '+91';
+        $gst_number   = $this->input->post('gst_number') ?: '';
+        $gst_company  = $this->input->post('gst_company') ?: '';
+
+        $contactParts = explode(' ', trim($contact_name), 2);
+        $contactFName = !empty($contactParts[0]) ? $contactParts[0] : 'Customer';
+        $contactLName = !empty($contactParts[1]) ? $contactParts[1] : $contactFName;
+
         $contact_payload = array(
             "Title"              => "Mr",
-            "FName"              => explode(' ', $contact_name)[0],
-            "LName"              => isset(explode(' ', $contact_name)[1]) ? explode(' ', $contact_name)[1] : "Customer",
+            "FName"              => substr($contactFName, 0, 40),
+            "LName"              => substr($contactLName, 0, 40),
             "Mobile"             => $contact_phone,
             "DestMob"            => $contact_phone,
+            "Phone"              => $contact_phone,
             "Email"              => $contact_email,
-            "City"               => "Delhi",
+            "Address"            => "MRRA 4 EDAPPALLY Edappally , EDAPPALLY , Edappally",
             "CountryCode"        => "IN",
-            "MobileCountryCode"  => "+91",
-            "DestMobCountryCode" => "+91",
+            "MobileCountryCode"  => $contact_dial,
+            "DestMobCountryCode" => $contact_dial,
+            "State"              => "Kerala",
+            "City"               => "Cochin",
+            "PIN"                => "6865245",
+            "GSTCompanyName"     => $gst_company,
+            "GSTTIN"             => $gst_number,
+            "GstMobile"          => !empty($gst_number) ? $contact_phone : "",
+            "GSTEmail"           => !empty($gst_number) ? $contact_email : "",
+            "SaveGST"            => false,
             "NetAmount"          => $net_amount
         );
 
@@ -1314,19 +1331,30 @@ class Welcome extends CI_Controller {
             $paxNat = !empty($p['nationality']) ? (strtoupper($p['nationality']) === 'INDIAN' ? 'IN' : substr($p['nationality'], 0, 2)) : "IN";
 
             $pax_api_payload[] = array(
-                "Title"      => $paxTitle,
-                "FName"      => $fName,
-                "LName"      => $lName,
-                "PaxType"    => $paxType,
-                "PTC"        => $paxType,
-                "Gender"     => ($p['gender'] === 'Female') ? 'F' : 'M',
-                "Age"        => $paxAge,
-                "DOB"        => $paxDob,
-                "PassportNo" => $passportNo,
-                "Baggage"    => $ssr_baggage_code,
-                "Meals"      => $ssr_meal_code,
-                "Seat"       => $ssr_seat_code,
-                "Nationality"=> $paxNat
+                "Title"             => $paxTitle,
+                "FName"             => $fName,
+                "LName"             => $lName,
+                "PaxType"           => $paxType,
+                "PTC"               => $paxType,
+                "Gender"            => ($p['gender'] === 'Female' || $p['gender'] === 'F') ? 'F' : 'M',
+                "Age"               => $paxAge,
+                "DOB"               => $paxDob,
+                "PassportNo"        => $passportNo,
+                "passport_expiry"   => $p['passport_expiry'] ?? '',
+                "PDOE"              => $p['passport_expiry'] ?? '',
+                "issuing_country"   => $p['issuing_country'] ?? 'India',
+                "PLI"               => $p['issuing_country'] ?? 'India',
+                "visa_type"         => $p['visa_type'] ?? 'TOURIST / VISIT VISA',
+                "VisaType"          => $p['visa_type'] ?? 'TOURIST / VISIT VISA',
+                "residence_country" => $p['residence_country'] ?? 'India',
+                "Country"           => $p['residence_country'] ?? 'India',
+                "ff_airline"        => $p['ff_airline'] ?? '',
+                "ff_number"         => $p['ff_number'] ?? '',
+                "FFNo"              => $p['ff_number'] ?? '',
+                "Baggage"           => $ssr_baggage_code,
+                "Meals"             => $ssr_meal_code,
+                "Seat"              => $ssr_seat_code,
+                "Nationality"       => $paxNat
             );
         }
 
