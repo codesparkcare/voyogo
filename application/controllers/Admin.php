@@ -1050,10 +1050,53 @@ class Admin extends CI_Controller {
             $this->Hotel_model->ensure_tables_exist();
         }
 
+        // Ensure flight_bookings has order_id column
+        if ($this->db->table_exists('flight_bookings')) {
+            $f_fields = $this->db->list_fields('flight_bookings');
+            if (!in_array('order_id', $f_fields)) {
+                $this->db->query("ALTER TABLE flight_bookings ADD COLUMN order_id VARCHAR(100) NULL AFTER payment_id");
+            }
+        }
+
+        // Ensure hotel_bookings has order_id column
+        if ($this->db->table_exists('hotel_bookings')) {
+            $h_fields = $this->db->list_fields('hotel_bookings');
+            if (!in_array('order_id', $h_fields)) {
+                $this->db->query("ALTER TABLE hotel_bookings ADD COLUMN order_id VARCHAR(100) NULL AFTER payment_id");
+            }
+        }
+
+        // Synchronize Razorpay settings table & test credentials
+        if ($this->db->table_exists('razorpay_settings')) {
+            $rzp_key = getenv('RAZORPAY_KEY_ID') ?: 'rzp_test_TlI3NkfGJYg33P';
+            $rzp_secret = getenv('RAZORPAY_KEY_SECRET') ?: 'AXq2YdEmH8spM551Bo81621z';
+            $rzp_count = $this->db->count_all('razorpay_settings');
+            if ($rzp_count == 0) {
+                $this->db->insert('razorpay_settings', array(
+                    'id'                  => 1,
+                    'razorpay_key_id'     => $rzp_key,
+                    'razorpay_key_secret' => $rzp_secret,
+                    'merchant_name'       => 'Voyogo Travels Hub',
+                    'theme_color'         => '#1e40af',
+                    'currency'            => 'INR',
+                    'environment'         => 'test',
+                    'is_enabled'          => 1,
+                    'updated_at'          => date('Y-m-d H:i:s')
+                ));
+            } else {
+                $this->db->where('id', 1)->update('razorpay_settings', array(
+                    'razorpay_key_id'     => $rzp_key,
+                    'razorpay_key_secret' => $rzp_secret,
+                    'merchant_name'       => 'Voyogo Travels Hub',
+                    'updated_at'          => date('Y-m-d H:i:s')
+                ));
+            }
+        }
+
         // Restore original database debug setting
         $this->db->db_debug = $saved_debug;
 
-        $this->session->set_flashdata('success', 'All database tables including Hotel API Settings, Service Leads, and Franchise Module have been synchronized successfully!');
+        $this->session->set_flashdata('success', 'All database tables including Razorpay Checkout (order_id), Flight/Hotel Bookings, and Settings have been synchronized successfully!');
         redirect('admin');
     }
 

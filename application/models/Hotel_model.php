@@ -158,6 +158,7 @@ class Hotel_model extends CI_Model {
             'tax_amount'           => array('type' => 'DECIMAL', 'constraint' => '10,2', 'default' => '0.00'),
             'currency'             => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'INR'),
             'payment_id'           => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
+            'order_id'             => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE),
             'payment_status'       => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => 'paid'),
             'booking_status'       => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => 'confirmed'),
             'booking_status_code'  => array('type' => 'VARCHAR', 'constraint' => 10, 'default' => 'B0'),

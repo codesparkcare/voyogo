@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `flight_bookings` (
   `contact_phone` VARCHAR(20) DEFAULT NULL,
   `total_amount` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
   `payment_id` VARCHAR(100) DEFAULT NULL,
+  `order_id` VARCHAR(100) DEFAULT NULL,
   `payment_status` VARCHAR(20) DEFAULT 'Pending',
   `booking_status` VARCHAR(20) DEFAULT 'Confirmed',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -49,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `hotel_bookings` (
   `guest_phone` VARCHAR(20) DEFAULT NULL,
   `total_amount` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
   `payment_id` VARCHAR(100) DEFAULT NULL,
+  `order_id` VARCHAR(100) DEFAULT NULL,
   `payment_status` VARCHAR(20) DEFAULT 'Pending',
   `booking_status` VARCHAR(20) DEFAULT 'Confirmed',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -77,10 +79,10 @@ CREATE TABLE IF NOT EXISTS `email_settings` (
 
 CREATE TABLE IF NOT EXISTS `razorpay_settings` (
   `id` INT PRIMARY KEY DEFAULT 1,
-  `razorpay_key_id` VARCHAR(255) DEFAULT 'rzp_test_TTVGSNKy0V1o7B',
-  `razorpay_key_secret` VARCHAR(255) DEFAULT 'na1MTEQwpH6CFfHOVghZn2GO',
-  `merchant_name` VARCHAR(100) DEFAULT 'Voyogo Travels',
-  `theme_color` VARCHAR(20) DEFAULT '#0d3470',
+  `razorpay_key_id` VARCHAR(255) DEFAULT 'rzp_test_TlI3NkfGJYg33P',
+  `razorpay_key_secret` VARCHAR(255) DEFAULT 'AXq2YdEmH8spM551Bo81621z',
+  `merchant_name` VARCHAR(100) DEFAULT 'Voyogo Travels Hub',
+  `theme_color` VARCHAR(20) DEFAULT '#1e40af',
   `currency` VARCHAR(10) DEFAULT 'INR',
   `environment` VARCHAR(20) DEFAULT 'test',
   `is_enabled` TINYINT(1) DEFAULT 1,
