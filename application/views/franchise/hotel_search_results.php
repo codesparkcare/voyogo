@@ -252,7 +252,7 @@ if ($minHotelPrice > $maxHotelPrice) {
                             </div>
 
                             <!-- View Rooms Button -->
-                            <a href="<?php echo site_url('franchise/hotel_detail/' . urlencode($hid) . '?city=' . urlencode($qCity) . '&checkin=' . $qCheckin . '&checkout=' . $qCheckout . '&rooms=' . $qRooms . '&adults=' . $qAdults . '&children=' . $qChildren . (!empty($qSearchId) ? '&search_id=' . urlencode($qSearchId) : '')); ?>" class="h-view-rooms-btn">
+                            <a href="<?php echo site_url('franchise/hotel_detail/' . urlencode($hid) . '?city=' . urlencode($qCity) . '&checkin=' . $qCheckin . '&checkout=' . $qCheckout . '&rooms=' . $qRooms . '&adults=' . $qAdults . '&children=' . $qChildren . (!empty($qSearchId) ? '&search_id=' . urlencode($qSearchId) : '') . (!empty($qTracingKey) ? '&search_tracing_key=' . urlencode($qTracingKey) : '') . (!empty($roomDataJson) ? '&roomData=' . urlencode($roomDataJson) : '')); ?>" class="h-view-rooms-btn">
                                 <span>VIEW ROOMS</span> <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>
