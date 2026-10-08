@@ -11,6 +11,19 @@ class Booking_model extends CI_Model {
     // --- FLIGHT BOOKINGS ---
 
     public function insert_flight_booking($data) {
+        if ($this->db->table_exists('flight_bookings')) {
+            $existing_fields = $this->db->list_fields('flight_bookings');
+            // Dynamically self-heal order_id column if present in payload
+            if (isset($data['order_id']) && !in_array('order_id', $existing_fields)) {
+                $this->load->dbforge();
+                @$this->dbforge->add_column('flight_bookings', array(
+                    'order_id' => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE, 'after' => 'payment_id')
+                ));
+                $existing_fields = $this->db->list_fields('flight_bookings');
+            }
+            // Only insert columns that actually exist in the table to prevent MySQL 1054 error
+            $data = array_intersect_key($data, array_flip($existing_fields));
+        }
         $this->db->insert('flight_bookings', $data);
         return $this->db->insert_id();
     }
@@ -36,6 +49,19 @@ class Booking_model extends CI_Model {
     // --- HOTEL BOOKINGS ---
 
     public function insert_hotel_booking($data) {
+        if ($this->db->table_exists('hotel_bookings')) {
+            $existing_fields = $this->db->list_fields('hotel_bookings');
+            // Dynamically self-heal order_id column if present in payload
+            if (isset($data['order_id']) && !in_array('order_id', $existing_fields)) {
+                $this->load->dbforge();
+                @$this->dbforge->add_column('hotel_bookings', array(
+                    'order_id' => array('type' => 'VARCHAR', 'constraint' => 100, 'null' => TRUE, 'after' => 'payment_id')
+                ));
+                $existing_fields = $this->db->list_fields('hotel_bookings');
+            }
+            // Only insert columns that actually exist in the table to prevent MySQL 1054 error
+            $data = array_intersect_key($data, array_flip($existing_fields));
+        }
         $this->db->insert('hotel_bookings', $data);
         return $this->db->insert_id();
     }
