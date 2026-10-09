@@ -153,7 +153,7 @@ $defaultNights   = 4;
                             </div>
                         </div>
 
-                        <!-- 4. Rooms & Guests Column matching Screenshot 3 -->
+                        <!-- 4. Rooms & Guests Column matching Screenshot 1 -->
                         <div class="ak-search-col" id="colGuests" onclick="openHotelGuestDropdown(event)" style="flex: 1.6;">
                             <div class="ak-col-label">
                                 <span>ROOMS & GUESTS</span> <i class="fa-solid fa-chevron-down ak-chevron"></i>
@@ -169,44 +169,23 @@ $defaultNights   = 4;
                             <input type="hidden" name="rooms" id="hotelHiddenRooms" value="2">
                             <input type="hidden" name="adults" id="hotelHiddenAdults" value="4">
                             <input type="hidden" name="children" id="hotelHiddenChildren" value="0">
+                            <input type="hidden" name="roomData" id="hotelHiddenRoomData" value="">
 
-                            <!-- Guests Counter Popover -->
-                            <div class="ak-guests-popup" id="hotelGuestsPopup" onclick="event.stopPropagation()">
-                                <div class="ak-counter-item">
-                                    <div>
-                                        <div style="font-weight: 700; font-size: 14px; color: #0f172a;">Rooms</div>
-                                        <div style="font-size: 11px; color: #64748b;">Max 4 rooms</div>
-                                    </div>
-                                    <div class="ak-counter-btn-group">
-                                        <button type="button" onclick="adjustHotelRooms(-1)">-</button>
-                                        <span id="hotelRoomsCount">2</span>
-                                        <button type="button" onclick="adjustHotelRooms(1)">+</button>
-                                    </div>
+                            <!-- Multi-Room & Guests Configuration Popover (Screenshot 1 Exact Match) -->
+                            <div class="akbar-dropdown-panel akbar-guests-panel ak-guests-popup" id="hotelGuestsPopup" onclick="event.stopPropagation();">
+                                <!-- Scrollable Room Cards List Container -->
+                                <div class="akbar-rooms-list-container" id="hotelRoomsListContainer">
+                                    <!-- Populated dynamically by JS -->
                                 </div>
-                                <div class="ak-counter-item">
-                                    <div>
-                                        <div style="font-weight: 700; font-size: 14px; color: #0f172a;">Adults</div>
-                                        <div style="font-size: 11px; color: #64748b;">12+ years</div>
-                                    </div>
-                                    <div class="ak-counter-btn-group">
-                                        <button type="button" onclick="adjustHotelAdults(-1)">-</button>
-                                        <span id="hotelAdultsCount">4</span>
-                                        <button type="button" onclick="adjustHotelAdults(1)">+</button>
-                                    </div>
-                                </div>
-                                <div class="ak-counter-item">
-                                    <div>
-                                        <div style="font-weight: 700; font-size: 14px; color: #0f172a;">Children</div>
-                                        <div style="font-size: 11px; color: #64748b;">0 - 11 years</div>
-                                    </div>
-                                    <div class="ak-counter-btn-group">
-                                        <button type="button" onclick="adjustHotelChildren(-1)">-</button>
-                                        <span id="hotelChildrenCount">0</span>
-                                        <button type="button" onclick="adjustHotelChildren(1)">+</button>
-                                    </div>
-                                </div>
-                                <div style="text-align: right; margin-top: 14px; border-top: 1px solid #f1f5f9; padding-top: 10px;">
-                                    <button type="button" onclick="closeAllHotelDropdowns()" style="background: #eb2027; color: #ffffff; border: none; padding: 7px 20px; border-radius: 6px; font-size: 12.5px; font-weight: 800; cursor: pointer;">Done</button>
+
+                                <!-- Footer: Add Room + Done -->
+                                <div class="akbar-guests-footer">
+                                    <button type="button" class="akbar-add-room-btn" id="hotelAddRoomBtn" onclick="addHotelRoom()">
+                                        <i class="fa-solid fa-plus"></i> Add Another Room
+                                    </button>
+                                    <button type="button" class="akbar-done-btn" onclick="closeAllHotelDropdowns()">
+                                        DONE
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -529,27 +508,106 @@ $defaultNights   = 4;
     color: #0284c7;
 }
 
-/* Guests Popup */
-.ak-guests-popup {
-    width: 280px;
-    padding: 18px;
-    right: 0;
+/* Akbar Multi-Room Guest Popover (Screenshot 1 Exact Match) */
+.ak-guests-popup.akbar-guests-panel {
+    width: 380px;
+    max-width: 95vw;
+    padding: 0;
+    border-radius: 8px;
+    overflow: hidden;
     left: auto;
+    right: 0;
+    top: calc(100% + 10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.22);
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    z-index: 999999;
 }
-.ak-counter-item {
+@media (max-width: 768px) {
+    .ak-guests-popup.akbar-guests-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        max-height: 90vh;
+        overflow-y: auto;
+        width: 92vw;
+    }
+}
+.akbar-rooms-list-container {
+    max-height: 380px;
+    overflow-y: auto;
+}
+.akbar-room-card {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 16px 20px;
+    transition: background 0.15s ease;
+    background: #ffffff;
+}
+.akbar-room-card.collapsed {
+    background: #f8fafc;
+    padding: 12px 20px;
+    cursor: pointer;
+}
+.akbar-room-card.collapsed:hover {
+    background: #f1f5f9;
+}
+.akbar-room-head {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
 }
-.ak-counter-btn-group {
+.akbar-room-card.collapsed .akbar-room-head {
+    margin-bottom: 0;
+}
+.akbar-room-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+}
+.akbar-room-summary-text {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 600;
+    margin-top: 2px;
+}
+.akbar-room-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.akbar-room-row-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+}
+.akbar-room-row-sub {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+}
+.akbar-counter-wrap {
     display: flex;
     align-items: center;
+    gap: 12px;
+}
+.akbar-counter-val {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    min-width: 16px;
+    text-align: center;
+}
+.akbar-counter-btn-group {
+    display: flex;
     border: 1px solid #cbd5e1;
     border-radius: 6px;
     overflow: hidden;
 }
-.ak-counter-btn-group button {
+.akbar-counter-btn {
     background: #ffffff;
     border: none;
     width: 32px;
@@ -561,16 +619,101 @@ $defaultNights   = 4;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background 0.1s;
 }
-.ak-counter-btn-group button:hover {
+.akbar-counter-btn:hover:not(:disabled) {
     background: #f1f5f9;
+    color: #0d3470;
 }
-.ak-counter-btn-group span {
-    font-size: 14px;
+.akbar-counter-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: #f8fafc;
+}
+.akbar-counter-btn:first-child {
+    border-right: 1px solid #cbd5e1;
+}
+.akbar-child-age-box {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #e2e8f0;
+}
+.akbar-child-age-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+.akbar-child-age-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+.akbar-child-select-wrap {
+    position: relative;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 3px 8px 3px 8px;
+    background: #ffffff;
+}
+.akbar-child-select-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    display: block;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+.akbar-child-select {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13px;
     font-weight: 700;
     color: #0f172a;
-    min-width: 28px;
-    text-align: center;
+    cursor: pointer;
+}
+.akbar-guests-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+}
+.akbar-add-room-btn {
+    background: none;
+    border: none;
+    color: #eb2027;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+}
+.akbar-add-room-btn:hover {
+    text-decoration: underline;
+}
+.akbar-done-btn {
+    background: #eb2027;
+    color: #ffffff;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.akbar-done-btn:hover {
+    background: #d01c22;
 }
 
 /* Akbar Dual-Month Calendar Dropdown matching Screenshot 3 */
@@ -1104,51 +1247,204 @@ function renderHotelCalendarMonths() {
     if (grid2) renderHotelMonthGrid(m2Year, m2Month, grid2);
 }
 
-// Rooms & Guests Handlers
-let hotelRooms = 2;
-let hotelAdults = 4;
-let hotelChildren = 0;
+// Akbar Multi-Room & Guests Engine (Screenshot 1 Exact Match)
+var hotelRoomsData = [
+    { adults: 2, children: 0, childAges: [] },
+    { adults: 2, children: 0, childAges: [] }
+];
+var activeEditRoomIndex = 0;
+
+var hotelRoomsListContainer = document.getElementById('hotelRoomsListContainer');
+var hotelAddRoomBtn = document.getElementById('hotelAddRoomBtn');
 
 function openHotelGuestDropdown(e) {
     e.stopPropagation();
     closeAllHotelDropdowns();
-    document.getElementById('hotelGuestsPopup').classList.add('open');
-}
-
-function adjustHotelRooms(delta) {
-    hotelRooms = Math.max(1, Math.min(4, hotelRooms + delta));
-    if (hotelAdults < hotelRooms) {
-        hotelAdults = hotelRooms;
-        document.getElementById('hotelAdultsCount').innerText = hotelAdults;
+    renderHotelRooms();
+    var popup = document.getElementById('hotelGuestsPopup');
+    if (popup) {
+        popup.classList.add('open', 'show');
     }
-    document.getElementById('hotelRoomsCount').innerText = hotelRooms;
-    updateHotelGuestSummary();
 }
 
-function adjustHotelAdults(delta) {
-    hotelAdults = Math.max(hotelRooms, Math.min(12, hotelAdults + delta));
-    document.getElementById('hotelAdultsCount').innerText = hotelAdults;
-    updateHotelGuestSummary();
+function renderHotelRooms() {
+    if (!hotelRoomsListContainer) return;
+    hotelRoomsListContainer.innerHTML = '';
+
+    var totalAdults = 0;
+    var totalChildren = 0;
+    var totalRooms = hotelRoomsData.length;
+
+    hotelRoomsData.forEach(function(room, idx) {
+        totalAdults += room.adults;
+        totalChildren += room.children;
+
+        var isExpanded = (idx === activeEditRoomIndex || totalRooms === 1);
+        var card = document.createElement('div');
+        card.className = 'akbar-room-card' + (isExpanded ? '' : ' collapsed');
+
+        if (isExpanded) {
+            var html = '';
+            html += '<div class="akbar-room-head">';
+            html += '  <div class="akbar-room-title">Room ' + (idx + 1) + '</div>';
+            if (totalRooms > 1) {
+                html += '  <i class="fa-solid fa-xmark" onclick="event.stopPropagation(); removeHotelRoom(' + idx + ');" style="font-size: 16px; color: #94a3b8; cursor: pointer;" title="Remove Room"></i>';
+            }
+            html += '</div>';
+
+            // Adults Row
+            html += '<div class="akbar-room-row">';
+            html += '  <div><div class="akbar-room-row-label">Adults</div><div class="akbar-room-row-sub">12+ yrs</div></div>';
+            html += '  <div class="akbar-counter-wrap">';
+            html += '    <span class="akbar-counter-val">' + room.adults + '</span>';
+            html += '    <div class="akbar-counter-btn-group">';
+            html += '      <button type="button" class="akbar-counter-btn" onclick="updateHotelRoomAdults(' + idx + ', -1)" ' + (room.adults <= 1 ? 'disabled' : '') + '>-</button>';
+            html += '      <button type="button" class="akbar-counter-btn" onclick="updateHotelRoomAdults(' + idx + ', 1)" ' + (room.adults >= 8 ? 'disabled' : '') + '>+</button>';
+            html += '    </div>';
+            html += '  </div>';
+            html += '</div>';
+
+            // Children Row
+            html += '<div class="akbar-room-row">';
+            html += '  <div><div class="akbar-room-row-label">Children</div><div class="akbar-room-row-sub">0- 12 Years</div></div>';
+            html += '  <div class="akbar-counter-wrap">';
+            html += '    <span class="akbar-counter-val">' + room.children + '</span>';
+            html += '    <div class="akbar-counter-btn-group">';
+            html += '      <button type="button" class="akbar-counter-btn" onclick="updateHotelRoomChildren(' + idx + ', -1)" ' + (room.children <= 0 ? 'disabled' : '') + '>-</button>';
+            html += '      <button type="button" class="akbar-counter-btn" onclick="updateHotelRoomChildren(' + idx + ', 1)" ' + (room.children >= 4 ? 'disabled' : '') + '>+</button>';
+            html += '    </div>';
+            html += '  </div>';
+            html += '</div>';
+
+            // Children Ages Box
+            if (room.children > 0) {
+                html += '<div class="akbar-child-age-box">';
+                html += '  <div class="akbar-child-age-title">CHILDREN\'S AGE</div>';
+                html += '  <div class="akbar-child-age-grid">';
+                for (var c = 0; c < room.children; c++) {
+                    var childAge = room.childAges[c] !== undefined ? room.childAges[c] : 0;
+                    html += '    <div class="akbar-child-select-wrap">';
+                    html += '      <label class="akbar-child-select-label">Child ' + (c + 1) + '</label>';
+                    html += '      <select class="akbar-child-select" onchange="updateHotelChildAge(' + idx + ', ' + c + ', this.value)">';
+                    html += '        <option value="0"' + (childAge === 0 ? ' selected' : '') + '>Under 1</option>';
+                    for (var a = 1; a <= 12; a++) {
+                        html += '        <option value="' + a + '"' + (childAge === a ? ' selected' : '') + '>' + a + ' ' + (a === 1 ? 'yr' : 'yrs') + '</option>';
+                    }
+                    html += '      </select>';
+                    html += '    </div>';
+                }
+                html += '  </div>';
+                html += '</div>';
+            }
+
+            card.innerHTML = html;
+        } else {
+            // Collapsed View
+            var html = '';
+            html += '<div class="akbar-room-head">';
+            html += '  <div>';
+            html += '    <div class="akbar-room-title">Room ' + (idx + 1) + '</div>';
+            html += '    <div class="akbar-room-summary-text"><strong>' + room.adults + '</strong> Adults <strong>' + room.children + '</strong> Children</div>';
+            html += '  </div>';
+            html += '  <div style="display: flex; gap: 12px; align-items: center;">';
+            html += '    <i class="fa-solid fa-pen" onclick="event.stopPropagation(); editHotelRoom(' + idx + ');" style="font-size: 13px; color: #64748b; cursor: pointer;" title="Edit Room"></i>';
+            if (totalRooms > 1) {
+                html += '    <i class="fa-solid fa-xmark" onclick="event.stopPropagation(); removeHotelRoom(' + idx + ');" style="font-size: 16px; color: #94a3b8; cursor: pointer;" title="Remove Room"></i>';
+            }
+            html += '  </div>';
+            html += '</div>';
+
+            card.innerHTML = html;
+            card.onclick = function() {
+                editHotelRoom(idx);
+            };
+        }
+
+        hotelRoomsListContainer.appendChild(card);
+    });
+
+    if (hotelAddRoomBtn) {
+        hotelAddRoomBtn.style.display = (totalRooms >= 8) ? 'none' : 'inline-flex';
+    }
+
+    var totalGuests = totalAdults + totalChildren;
+    var roomsDisplay = document.getElementById('hotelRoomsDisplay');
+    var guestsDisplay = document.getElementById('hotelGuestsDisplay');
+    var guestSubtitle = document.getElementById('hotelGuestSub');
+
+    if (roomsDisplay) roomsDisplay.textContent = totalRooms;
+    if (guestsDisplay) guestsDisplay.textContent = totalGuests;
+    if (guestSubtitle) {
+        var childStr = totalChildren === 1 ? '1 Child' : totalChildren + ' Children';
+        guestSubtitle.textContent = totalAdults + ' Adults, ' + childStr;
+    }
+
+    var hiddenRooms = document.getElementById('hotelHiddenRooms');
+    var hiddenAdults = document.getElementById('hotelHiddenAdults');
+    var hiddenChildren = document.getElementById('hotelHiddenChildren');
+    var hiddenRoomData = document.getElementById('hotelHiddenRoomData');
+
+    if (hiddenRooms) hiddenRooms.value = totalRooms;
+    if (hiddenAdults) hiddenAdults.value = totalAdults;
+    if (hiddenChildren) hiddenChildren.value = totalChildren;
+    if (hiddenRoomData) hiddenRoomData.value = JSON.stringify(hotelRoomsData);
 }
 
-function adjustHotelChildren(delta) {
-    hotelChildren = Math.max(0, Math.min(6, hotelChildren + delta));
-    document.getElementById('hotelChildrenCount').innerText = hotelChildren;
-    updateHotelGuestSummary();
+function addHotelRoom() {
+    if (hotelRoomsData.length < 8) {
+        hotelRoomsData.push({ adults: 1, children: 0, childAges: [] });
+        activeEditRoomIndex = hotelRoomsData.length - 1;
+        renderHotelRooms();
+    }
 }
 
-function updateHotelGuestSummary() {
-    const totalGuests = hotelAdults + hotelChildren;
-    document.getElementById('hotelRoomsDisplay').innerText = hotelRooms;
-    document.getElementById('hotelGuestsDisplay').innerText = totalGuests;
-    document.getElementById('hotelGuestSub').innerText = `${hotelAdults} Adults, ${hotelChildren} Children`;
-
-    document.getElementById('hotelHiddenRooms').value = hotelRooms;
-    document.getElementById('hotelHiddenAdults').value = hotelAdults;
-    document.getElementById('hotelHiddenChildren').value = hotelChildren;
+function removeHotelRoom(idx) {
+    if (hotelRoomsData.length > 1) {
+        hotelRoomsData.splice(idx, 1);
+        if (activeEditRoomIndex >= hotelRoomsData.length) {
+            activeEditRoomIndex = hotelRoomsData.length - 1;
+        }
+        renderHotelRooms();
+    }
 }
 
-// Initial calendar setup
+function editHotelRoom(idx) {
+    activeEditRoomIndex = idx;
+    renderHotelRooms();
+}
+
+function updateHotelRoomAdults(idx, delta) {
+    if (hotelRoomsData[idx]) {
+        hotelRoomsData[idx].adults = Math.max(1, Math.min(8, hotelRoomsData[idx].adults + delta));
+        renderHotelRooms();
+    }
+}
+
+function updateHotelRoomChildren(idx, delta) {
+    if (hotelRoomsData[idx]) {
+        var newCount = Math.max(0, Math.min(4, hotelRoomsData[idx].children + delta));
+        hotelRoomsData[idx].children = newCount;
+        while (hotelRoomsData[idx].childAges.length < newCount) {
+            var defaultAge = hotelRoomsData[idx].childAges.length === 0 ? 7 : 3;
+            hotelRoomsData[idx].childAges.push(defaultAge);
+        }
+        if (hotelRoomsData[idx].childAges.length > newCount) {
+            hotelRoomsData[idx].childAges.length = newCount;
+        }
+        renderHotelRooms();
+    }
+}
+
+function updateHotelChildAge(roomIdx, childIdx, age) {
+    if (hotelRoomsData[roomIdx] && hotelRoomsData[roomIdx].childAges) {
+        hotelRoomsData[roomIdx].childAges[childIdx] = parseInt(age) || 0;
+        var hiddenRoomData = document.getElementById('hotelHiddenRoomData');
+        if (hiddenRoomData) hiddenRoomData.value = JSON.stringify(hotelRoomsData);
+    }
+}
+
+// Initial setup
+renderHotelRooms();
 updateHotelDateDisplays();
 renderHotelCalendarMonths();
 </script>
