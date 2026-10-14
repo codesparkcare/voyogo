@@ -730,7 +730,7 @@
                             <!-- 2. DATE -->
                             <td style="color: #334155; font-weight: 500;">
                                 <i class="fa-regular fa-calendar" style="color: #0284c7; margin-right: 4px; font-size: 11px;"></i>
-                                <?php echo htmlspecialchars($t['tour_date'] ? date('d.m.Y', strtotime($t['tour_date'])) : '-'); ?>
+                                <?php echo htmlspecialchars($t['tour_date'] ?: '-'); ?>
                             </td>
 
                             <!-- 3. TOUR CODE -->
@@ -762,12 +762,13 @@
 
                             <!-- 6. CONFIRMED -->
                             <td>
-                                <?php if (!empty($t['confirmed_breakdown'])): ?>
+                                <?php 
+                                $confVal = trim((string)($t['confirmed'] ?? ''));
+                                if (!empty($confVal) && $confVal !== '-'): 
+                                ?>
                                     <span style="font-family: monospace; font-weight: 700; color: #0284c7; background: #f0f9ff; padding: 2px 6px; border-radius: 4px; border: 1px solid #bae6fd;">
-                                        <?php echo htmlspecialchars($t['confirmed_breakdown']); ?>
+                                        <?php echo htmlspecialchars($confVal); ?>
                                     </span>
-                                <?php elseif ($t['confirmed_pax'] > 0): ?>
-                                    <strong style="color: #0284c7;"><?php echo $t['confirmed_pax']; ?></strong>
                                 <?php else: ?>
                                     <span style="color: #94a3b8;">-</span>
                                 <?php endif; ?>
@@ -775,24 +776,26 @@
 
                             <!-- 7. GRP. TKN -->
                             <td style="font-weight: 600; color: #334155;">
-                                <?php echo $t['group_taken'] > 0 ? $t['group_taken'] : '-'; ?>
+                                <?php echo htmlspecialchars($t['grp_tkn'] ?: '-'); ?>
                             </td>
 
                             <!-- 8. NEED -->
                             <td>
-                                <?php if ($t['need_seats'] > 0): ?>
-                                    <span class="badge-need has-need"><?php echo $t['need_seats']; ?></span>
-                                <?php else: ?>
-                                    <span class="badge-need no-need">-</span>
-                                <?php endif; ?>
+                                <?php 
+                                $needVal = trim((string)($t['need'] ?? ''));
+                                $hasNeed = (!empty($needVal) && $needVal !== '-' && (int)$needVal > 0);
+                                ?>
+                                <span class="badge-need <?php echo $hasNeed ? 'has-need' : 'no-need'; ?>">
+                                    <?php echo htmlspecialchars($needVal ?: '-'); ?>
+                                </span>
                             </td>
 
                             <!-- 9. 45 DAYS REMINDER -->
                             <td>
-                                <?php if (!empty($t['reminder_45_days'])): ?>
+                                <?php if (!empty($t['reminder_45']) && $t['reminder_45'] !== '-'): ?>
                                     <span style="background: #fef9c3; color: #854d0e; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
                                         <i class="fa-regular fa-bell" style="font-size: 10px;"></i>
-                                        <?php echo htmlspecialchars(date('d.m.Y', strtotime($t['reminder_45_days']))); ?>
+                                        <?php echo htmlspecialchars($t['reminder_45']); ?>
                                     </span>
                                 <?php else: ?>
                                     <span style="color: #cbd5e1;">-</span>
@@ -801,10 +804,10 @@
 
                             <!-- 10. 30 DAYS REMINDER -->
                             <td>
-                                <?php if (!empty($t['reminder_30_days'])): ?>
+                                <?php if (!empty($t['reminder_30']) && $t['reminder_30'] !== '-'): ?>
                                     <span style="background: #fee2e2; color: #991b1b; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
                                         <i class="fa-solid fa-triangle-exclamation" style="font-size: 10px;"></i>
-                                        <?php echo htmlspecialchars(date('d.m.Y', strtotime($t['reminder_30_days']))); ?>
+                                        <?php echo htmlspecialchars($t['reminder_30']); ?>
                                     </span>
                                 <?php else: ?>
                                     <span style="color: #cbd5e1;">-</span>
@@ -813,7 +816,7 @@
 
                             <!-- 11. TICKET STATUS -->
                             <td>
-                                <?php if (!empty($t['ticket_status'])): ?>
+                                <?php if (!empty($t['ticket_status']) && $t['ticket_status'] !== '-'): ?>
                                     <span class="badge-status ticket-taken">
                                         <i class="fa-solid fa-check" style="margin-right: 3px;"></i>
                                         <?php echo htmlspecialchars($t['ticket_status']); ?>
@@ -825,7 +828,7 @@
 
                             <!-- 12. VISA STATUS -->
                             <td>
-                                <?php if (!empty($t['visa_status'])): ?>
+                                <?php if (!empty($t['visa_status']) && $t['visa_status'] !== '-'): ?>
                                     <span class="badge-status visa-include">
                                         <i class="fa-solid fa-passport" style="margin-right: 3px;"></i>
                                         <?php echo htmlspecialchars($t['visa_status']); ?>
@@ -837,7 +840,7 @@
 
                             <!-- 13. HANDLING PERSON -->
                             <td>
-                                <?php if (!empty($t['handling_person'])): ?>
+                                <?php if (!empty($t['handling_person']) && $t['handling_person'] !== '-'): ?>
                                     <span class="badge-person">
                                         <i class="fa-regular fa-user" style="margin-right: 4px; font-size: 10px; color: #64748b;"></i>
                                         <?php echo htmlspecialchars($t['handling_person']); ?>
@@ -854,7 +857,7 @@
 
                             <!-- 15. TOUR MANAGER -->
                             <td>
-                                <?php if (!empty($t['tour_manager'])): ?>
+                                <?php if (!empty($t['tour_manager']) && $t['tour_manager'] !== '-'): ?>
                                     <span class="badge-manager">
                                         <i class="fa-solid fa-user-tie" style="margin-right: 4px; font-size: 10px;"></i>
                                         <?php echo htmlspecialchars($t['tour_manager']); ?>
