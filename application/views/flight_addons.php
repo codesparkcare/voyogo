@@ -859,6 +859,17 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
             <div class="flight-sub-banner-col" id="subBannerOnward">
                 <div class="flight-sub-banner-title">
                     <?php echo htmlspecialchars($airline_name); ?> (<?php echo htmlspecialchars($flight_number); ?>)
+                    <?php 
+                    $isOnwardRefundable = !empty($flight['refundable']) || (!empty($post_data['refundable']) && $post_data['refundable'] != '0');
+                    if ($isOnwardRefundable): ?>
+                        <span style="border: 1px solid #bbf7d0; color: #16a34a; background: #f0fdf4; border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 700; margin-left: 8px; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fa-solid fa-rotate-left"></i> Refundable
+                        </span>
+                    <?php else: ?>
+                        <span style="border: 1px solid #fed7aa; color: #ea580c; background: #fff7ed; border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 700; margin-left: 8px; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fa-solid fa-ban"></i> Non-Refundable
+                        </span>
+                    <?php endif; ?>
                 </div>
                 <div class="flight-sub-banner-desc">
                     <?php echo htmlspecialchars($origin); ?> &rarr; <?php echo htmlspecialchars($destination); ?> &bull; Dep: <?php echo htmlspecialchars($departure_time); ?> &bull; Arr: <?php echo htmlspecialchars($arrival_time); ?>
@@ -869,6 +880,17 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
             <div class="flight-sub-banner-col" id="subBannerReturn" style="text-align: right;">
                 <div class="flight-sub-banner-title">
                     <?php echo htmlspecialchars($return_airline_name); ?> (<?php echo htmlspecialchars($return_flight_number); ?>)
+                    <?php 
+                    $isReturnRefundable = !empty($return_flight['refundable']) || (!empty($post_data['return_refundable']) && $post_data['return_refundable'] != '0');
+                    if ($isReturnRefundable): ?>
+                        <span style="border: 1px solid #bbf7d0; color: #16a34a; background: #f0fdf4; border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 700; margin-left: 8px; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fa-solid fa-rotate-left"></i> Refundable
+                        </span>
+                    <?php else: ?>
+                        <span style="border: 1px solid #fed7aa; color: #ea580c; background: #fff7ed; border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 700; margin-left: 8px; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fa-solid fa-ban"></i> Non-Refundable
+                        </span>
+                    <?php endif; ?>
                 </div>
                 <div class="flight-sub-banner-desc">
                     <?php echo htmlspecialchars($return_origin); ?> &rarr; <?php echo htmlspecialchars($return_destination); ?> &bull; Dep: <?php echo htmlspecialchars($return_departure_time); ?> &bull; Arr: <?php echo htmlspecialchars($return_arrival_time); ?>
@@ -1291,6 +1313,14 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                 <input type="hidden" name="<?php echo htmlspecialchars($k); ?>" value="<?php echo htmlspecialchars($v); ?>">
             <?php endIf; ?>
         <?php endforeach; ?>
+    <?php endif; ?>
+
+    <?php if (!isset($post_data['refundable'])): ?>
+    <input type="hidden" name="refundable" value="<?php echo !empty($flight['refundable']) ? '1' : '0'; ?>">
+    <input type="hidden" name="is_refundable" value="<?php echo !empty($flight['refundable']) ? '1' : '0'; ?>">
+    <?php endif; ?>
+    <?php if ($is_roundtrip && !isset($post_data['return_refundable'])): ?>
+    <input type="hidden" name="return_refundable" value="<?php echo !empty($return_flight['refundable']) ? '1' : '0'; ?>">
     <?php endif; ?>
 
     <!-- Onward Sector Addon Hidden Fields -->

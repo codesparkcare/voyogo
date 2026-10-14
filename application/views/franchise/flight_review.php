@@ -411,9 +411,15 @@
                                         <i class="<?php echo (stripos($flight['fare_type'], 'upfront') !== false || stripos($flight['fare_type'], 'super') !== false) ? 'fa-solid fa-crown' : 'fa-solid fa-tag'; ?>" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($flight['fare_type']); ?> Fare
                                     </span>
                                 <?php endif; ?>
+                                <?php if (!empty($flight['refundable'])): ?>
                                 <span style="border: 1.5px solid #16a34a; color: #16a34a; background: #f0fdf4; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
-                                    <i class="fa-solid fa-rotate-left"></i> <?php echo !empty($flight['refundable']) ? 'Refundable' : 'Partially Refundable'; ?>
+                                    <i class="fa-solid fa-rotate-left"></i> Refundable
                                 </span>
+                                <?php else: ?>
+                                <span style="border: 1.5px solid #fed7aa; color: #ea580c; background: #fff7ed; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa-solid fa-ban"></i> Non-Refundable
+                                </span>
+                                <?php endif; ?>
                                 <!-- Maximize / Minimize Icon (Screenshot 2 Match) -->
                                 <button type="button" id="btnToggle_onward" onclick="toggleFlightBox('onward')" title="Minimize" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #334155; margin-left: 6px; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
                                     <i id="iconToggle_onward" class="fa-solid fa-chevron-up" style="font-size: 13px;"></i>
@@ -594,6 +600,10 @@
                                     <span style="background: #f0fdf4; color: #15803d; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 11px; border: 1px solid #bbf7d0;">
                                         <i class="fa-solid fa-rotate-left"></i> Refundable
                                     </span>
+                                <?php else: ?>
+                                    <span style="background: #fff7ed; color: #c2410c; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 11px; border: 1px solid #fed7aa;">
+                                        <i class="fa-solid fa-ban"></i> Non-Refundable
+                                    </span>
                                 <?php endif; ?>
 
                                 <!-- Maximize / Minimize Icon (Screenshot 2 Match) -->
@@ -661,9 +671,15 @@
                                 <h4 style="font-size: 13.5px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
                                     <i class="fa-solid fa-file-contract" style="color: #2563eb;"></i> Cancellation & Date Change Policy (Per Pax)
                                 </h4>
+                                <?php if (!empty($flight['refundable'])): ?>
                                 <span style="font-size: 11px; font-weight: 700; color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 4px;">
-                                    <?php echo !empty($flight['refundable']) ? 'Refundable' : 'Standard Rules'; ?>
+                                    Refundable
                                 </span>
+                                <?php else: ?>
+                                <span style="font-size: 11px; font-weight: 700; color: #c2410c; background: #fff7ed; border: 1px solid #fed7aa; padding: 2px 8px; border-radius: 4px;">
+                                    Non-Refundable
+                                </span>
+                                <?php endif; ?>
                             </div>
                             <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 10px; background: #ffffff; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0;">
                                 <thead>
@@ -682,7 +698,7 @@
                                                 <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;"><?php echo htmlspecialchars($fare_rules['date_change'][$idx]['fee'] ?? '₹ 2,500 + Diff'); ?></td>
                                             </tr>
                                         <?php endforeach; ?>
-                                    <?php else: ?>
+                                    <?php elseif (!empty($flight['refundable'])): ?>
                                         <tr style="border-bottom: 1px solid #f1f5f9;">
                                             <td style="padding: 8px 12px; font-weight: 600; color: #475569;">2 hours to 24 hours</td>
                                             <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;">₹ 3,500 per pax</td>
@@ -692,6 +708,12 @@
                                             <td style="padding: 8px 12px; font-weight: 600; color: #475569;">More than 24 hours</td>
                                             <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;">₹ 3,000 per pax</td>
                                             <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;">₹ 2,500 + Fare Diff</td>
+                                        </tr>
+                                    <?php else: ?>
+                                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                                            <td style="padding: 8px 12px; font-weight: 600; color: #475569;">Anytime before departure</td>
+                                            <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;">Non-Refundable (100% Fare)</td>
+                                            <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;">As per Airline Policy</td>
                                         </tr>
                                     <?php endif; ?>
                                 </tbody>
@@ -742,9 +764,15 @@
                                         <i class="<?php echo (stripos($return_flight['fare_type'], 'upfront') !== false || stripos($return_flight['fare_type'], 'super') !== false) ? 'fa-solid fa-crown' : 'fa-solid fa-tag'; ?>" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($return_flight['fare_type']); ?> Fare
                                     </span>
                                 <?php endif; ?>
+                                <?php if (!empty($return_flight['refundable'])): ?>
                                 <span style="border: 1.5px solid #16a34a; color: #16a34a; background: #f0fdf4; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
-                                    <i class="fa-solid fa-rotate-left"></i> <?php echo !empty($return_flight['refundable']) ? 'Refundable' : 'Partially Refundable'; ?>
+                                    <i class="fa-solid fa-rotate-left"></i> Refundable
                                 </span>
+                                <?php else: ?>
+                                <span style="border: 1.5px solid #fed7aa; color: #ea580c; background: #fff7ed; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa-solid fa-ban"></i> Non-Refundable
+                                </span>
+                                <?php endif; ?>
                                 <!-- Maximize / Minimize Icon (Screenshot 3 Match) -->
                                 <button type="button" id="btnToggle_return" onclick="toggleFlightBox('return')" title="Minimize" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #334155; margin-left: 6px; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
                                     <i id="iconToggle_return" class="fa-solid fa-chevron-up" style="font-size: 13px;"></i>
@@ -986,9 +1014,15 @@
                             <h4 style="font-size: 13.5px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-file-contract" style="color: #2563eb;"></i> Cancellation & Date Change Policy (Per Pax)
                             </h4>
+                            <?php if (!empty($return_flight['refundable'])): ?>
                             <span style="font-size: 11px; font-weight: 700; color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 4px;">
-                                <?php echo !empty($return_flight['refundable']) ? 'Refundable' : 'Partially Refundable'; ?>
+                                Refundable
                             </span>
+                            <?php else: ?>
+                            <span style="font-size: 11px; font-weight: 700; color: #c2410c; background: #fff7ed; border: 1px solid #fed7aa; padding: 2px 8px; border-radius: 4px;">
+                                Non-Refundable
+                            </span>
+                            <?php endif; ?>
                         </div>
                         <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 10px; background: #ffffff; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0;">
                             <thead>
@@ -1010,7 +1044,7 @@
                                             <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;"><?php echo htmlspecialchars($retRules['date_change'][$idx]['fee'] ?? '₹ 2,500 + Diff'); ?></td>
                                         </tr>
                                     <?php endforeach; ?>
-                                <?php else: ?>
+                                <?php elseif (!empty($return_flight['refundable'])): ?>
                                     <tr style="border-bottom: 1px solid #f1f5f9;">
                                         <td style="padding: 8px 12px; font-weight: 600; color: #475569;">2 hours to 24 hours</td>
                                         <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;">₹ 3,500 per pax</td>
@@ -1020,6 +1054,12 @@
                                         <td style="padding: 8px 12px; font-weight: 600; color: #475569;">More than 24 hours</td>
                                         <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;">₹ 3,000 per pax</td>
                                         <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;">₹ 2,500 + Fare Diff</td>
+                                    </tr>
+                                <?php else: ?>
+                                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                                        <td style="padding: 8px 12px; font-weight: 600; color: #475569;">Anytime before departure</td>
+                                        <td style="padding: 8px 12px; font-weight: 700; color: #dc2626;">Non-Refundable (100% Fare)</td>
+                                        <td style="padding: 8px 12px; font-weight: 700; color: #2563eb;">As per Airline Policy</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -1070,9 +1110,14 @@
                     <input type="hidden" name="is_roundtrip" value="<?php echo !empty($is_roundtrip) ? '1' : '0'; ?>">
                     <input type="hidden" name="fare_type" value="<?php echo htmlspecialchars($flight['fare_type'] ?? 'Retail'); ?>">
                     <input type="hidden" name="onward_fare_type" value="<?php echo htmlspecialchars($flight['fare_type'] ?? 'Retail'); ?>">
+                    <input type="hidden" name="refundable" value="<?php echo !empty($flight['refundable']) ? '1' : '0'; ?>">
+                    <input type="hidden" name="is_refundable" value="<?php echo !empty($flight['refundable']) ? '1' : '0'; ?>">
+                    <input type="hidden" name="fare_class" value="<?php echo htmlspecialchars($flight['fare_class'] ?? ''); ?>">
+                    <input type="hidden" name="fbc" value="<?php echo htmlspecialchars($flight['fbc'] ?? ''); ?>">
 
                     <?php if (!empty($return_flight)): ?>
                     <input type="hidden" name="return_fare_type" value="<?php echo htmlspecialchars($return_flight['fare_type'] ?? 'Retail'); ?>">
+                    <input type="hidden" name="return_refundable" value="<?php echo !empty($return_flight['refundable']) ? '1' : '0'; ?>">
                     <input type="hidden" name="return_flight_number" value="<?php echo htmlspecialchars($return_flight['flight_number']); ?>">
                     <input type="hidden" name="return_airline_name" value="<?php echo htmlspecialchars($return_flight['airline_name']); ?>">
                     <input type="hidden" name="return_origin" value="<?php echo htmlspecialchars($return_flight['from_code']); ?>">

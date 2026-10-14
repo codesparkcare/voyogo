@@ -3287,6 +3287,10 @@
                                 <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
                                 <input type="hidden" name="flight_type" value="<?php echo (!empty($is_international) || ($flight_type ?? '') === 'I' || ($trip_category ?? '') === 'INTERNATIONAL') ? 'I' : 'D'; ?>">
                                 <input type="hidden" name="is_international" value="<?php echo (!empty($is_international) || ($flight_type ?? '') === 'I') ? '1' : '0'; ?>">
+                                <input type="hidden" name="refundable" value="<?php echo !empty($f['Refundable']) ? '1' : '0'; ?>">
+                                <input type="hidden" name="is_refundable" value="<?php echo !empty($f['Refundable']) ? '1' : '0'; ?>">
+                                <input type="hidden" name="fare_class" value="<?php echo htmlspecialchars($f['FareClass'] ?? ($f['fare_class'] ?? '')); ?>">
+                                <input type="hidden" name="fbc" value="<?php echo htmlspecialchars($f['FBC'] ?? ($f['fbc'] ?? '')); ?>">
                                 <button type="submit" class="f-book-btn">Book Now</button>
                             </form>
                             <div style="display:flex; flex-direction:column; align-items:flex-end; gap:3px; margin-top:6px; width:100%;">
@@ -3999,6 +4003,10 @@
                             <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
                             <input type="hidden" name="flight_type" value="<?php echo (!empty($is_international) || ($flight_type ?? '') === 'I' || ($trip_category ?? '') === 'INTERNATIONAL') ? 'I' : 'D'; ?>">
                             <input type="hidden" name="is_international" value="<?php echo (!empty($is_international) || ($flight_type ?? '') === 'I') ? '1' : '0'; ?>">
+                            <input type="hidden" name="refundable" id="rt_refundable" value="1">
+                            <input type="hidden" name="is_refundable" id="rt_is_refundable" value="1">
+                            <input type="hidden" name="onward_refundable" id="rt_onward_refundable" value="1">
+                            <input type="hidden" name="return_refundable" id="rt_return_refundable" value="1">
 
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <button type="button" id="btnRtStickyBack" class="btn-rt-back" onclick="hideFareOptionsView();" style="display: none;">
@@ -4265,6 +4273,12 @@
                     document.getElementById('rt_duration').value = o.Duration || '02h 15m';
                     document.getElementById('rt_stops').value = (o.Stops !== undefined) ? o.Stops : 0;
                     document.getElementById('rt_via').value = o.via || o.Via || (o.Stops > 0 ? 'HYD' : '');
+                    const elRefO = document.getElementById('rt_onward_refundable');
+                    if (elRefO) elRefO.value = (o && o.Refundable) ? '1' : '0';
+                    const elRef = document.getElementById('rt_refundable');
+                    if (elRef) elRef.value = (o && o.Refundable) ? '1' : '0';
+                    const elIsRef = document.getElementById('rt_is_refundable');
+                    if (elIsRef) elIsRef.value = (o && o.Refundable) ? '1' : '0';
                 }
 
                 if (r) {
@@ -4285,6 +4299,8 @@
                     document.getElementById('rt_return_duration').value = r.Duration || '02h 15m';
                     document.getElementById('rt_return_stops').value = (r.Stops !== undefined) ? r.Stops : 0;
                     document.getElementById('rt_return_via').value = r.via || r.Via || (r.Stops > 0 ? 'HYD' : '');
+                    const elRefR = document.getElementById('rt_return_refundable');
+                    if (elRefR) elRefR.value = (r && r.Refundable) ? '1' : '0';
                 }
 
                 updateStickyTotalPrice();

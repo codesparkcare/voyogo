@@ -182,9 +182,17 @@ $status = strtoupper($booking['status'] ?? 'CONFIRMED');
             <img src="<?php echo base_url('assets/images/logo.png'); ?>" alt="Voyogo Logo">
             <div>Electronic Travel Document &bull; Confirmed</div>
         </div>
-        <div class="pnr-box">
-            <div class="pnr-title">Airline PNR</div>
-            <div class="pnr-code"><?php echo htmlspecialchars($booking['pnr']); ?></div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <div style="text-align: right; background: rgba(255,255,255,0.12); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25);">
+                <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #93c5fd; font-weight: 600;">Fare Type</div>
+                <div style="font-size: 14px; font-weight: 800; color: <?php echo (!empty($meta['refundable']) || !empty($meta['is_refundable'])) ? '#86efac' : '#fdba74'; ?>; margin-top: 4px;">
+                    <?php echo (!empty($meta['refundable']) || !empty($meta['is_refundable'])) ? 'Refundable' : 'Non-Refundable'; ?>
+                </div>
+            </div>
+            <div class="pnr-box">
+                <div class="pnr-title">Airline PNR</div>
+                <div class="pnr-code"><?php echo htmlspecialchars($booking['pnr']); ?></div>
+            </div>
         </div>
     </div>
 
@@ -203,10 +211,17 @@ $status = strtoupper($booking['status'] ?? 'CONFIRMED');
         <!-- Onward Flight Segment -->
         <div class="flight-card">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-                <div style="font-size: 15.5px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                <div style="font-size: 15.5px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                     <i class="fa-solid fa-plane-departure" style="color: #2563eb;"></i>
                     <span><?php echo htmlspecialchars($booking['airline_name'] ?: 'Airline'); ?> (<?php echo htmlspecialchars($booking['flight_number']); ?>)</span>
                     <span style="font-size: 12px; font-weight: 600; color: #64748b;">&bull; Economy Class</span>
+                    <?php 
+                    $isTicketRefundable = !empty($meta['refundable']) || !empty($meta['is_refundable']);
+                    if ($isTicketRefundable): ?>
+                        <span style="font-size: 11px; font-weight: 700; color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 4px; margin-left: 6px;"><i class="fa-solid fa-rotate-left"></i> Refundable</span>
+                    <?php else: ?>
+                        <span style="font-size: 11px; font-weight: 700; color: #ea580c; background: #fff7ed; border: 1px solid #fed7aa; padding: 2px 8px; border-radius: 4px; margin-left: 6px;"><i class="fa-solid fa-ban"></i> Non-Refundable</span>
+                    <?php endif; ?>
                 </div>
                 <span style="background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 12px; text-transform: uppercase;">
                     <i class="fa-solid fa-circle-check"></i> <?php echo $status; ?>
@@ -249,10 +264,17 @@ $status = strtoupper($booking['status'] ?? 'CONFIRMED');
         ?>
         <div class="flight-card" style="background: #f8fafc;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
-                <div style="font-size: 15.5px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                <div style="font-size: 15.5px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                     <i class="fa-solid fa-plane-arrival" style="color: #10b981;"></i>
                     <span><?php echo htmlspecialchars($returnFlight['airline_name'] ?: 'Airline'); ?> (<?php echo htmlspecialchars($returnFlight['flight_number']); ?>)</span>
                     <span style="font-size: 12px; font-weight: 600; color: #64748b;">&bull; Return Sector</span>
+                    <?php 
+                    $isRetTicketRefundable = !empty($returnFlight['refundable']) || !empty($returnFlight['is_refundable']);
+                    if ($isRetTicketRefundable): ?>
+                        <span style="font-size: 11px; font-weight: 700; color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 4px; margin-left: 6px;"><i class="fa-solid fa-rotate-left"></i> Refundable</span>
+                    <?php else: ?>
+                        <span style="font-size: 11px; font-weight: 700; color: #ea580c; background: #fff7ed; border: 1px solid #fed7aa; padding: 2px 8px; border-radius: 4px; margin-left: 6px;"><i class="fa-solid fa-ban"></i> Non-Refundable</span>
+                    <?php endif; ?>
                 </div>
                 <span style="background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 12px; text-transform: uppercase;">
                     <i class="fa-solid fa-circle-check"></i> <?php echo $status; ?>

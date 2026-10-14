@@ -433,6 +433,19 @@ class Welcome extends CI_Controller {
         }
         $flightDetails['via'] = $this->input->post('via') ?: ($flightDetails['stops'] > 0 ? 'HYD' : '');
 
+        // Refundable / Non-Refundable selection (preserve choice from flight search card)
+        if ($this->input->post('refundable') !== null && $this->input->post('refundable') !== '') {
+            $rawP = $this->input->post('refundable');
+            $flightDetails['refundable'] = ($rawP === '1' || $rawP === 1 || $rawP === true || $rawP === 'true' || strtolower((string)$rawP) === 'yes');
+        } elseif ($this->input->post('is_refundable') !== null && $this->input->post('is_refundable') !== '') {
+            $rawP = $this->input->post('is_refundable');
+            $flightDetails['refundable'] = ($rawP === '1' || $rawP === 1 || $rawP === true || $rawP === 'true' || strtolower((string)$rawP) === 'yes');
+        }
+        if (!isset($flightDetails['refundable'])) {
+            $flightDetails['refundable'] = true;
+        }
+        $flightDetails['is_refundable'] = !empty($flightDetails['refundable']);
+
         // Selected Fare Family Types (Akbar Travels Style)
         $onward_fare_type = $this->input->post('onward_fare_type') ?: ($this->input->post('fare_type') ?: 'Retail');
         $return_fare_type = $this->input->post('return_fare_type') ?: 'Retail';
@@ -460,6 +473,14 @@ class Welcome extends CI_Controller {
                 'price'          => (float)($this->input->post('return_price') ?: 5150),
                 'fare_type'      => $return_fare_type
             );
+            $retRef = $this->input->post('return_refundable');
+            if ($retRef !== null && $retRef !== '') {
+                $returnFlight['refundable'] = ($retRef === '1' || $retRef === 1 || $retRef === true || $retRef === 'true' || strtolower((string)$retRef) === 'yes');
+            } else {
+                $returnFlight['refundable'] = $flightDetails['refundable'];
+            }
+            $returnFlight['is_refundable'] = !empty($returnFlight['refundable']);
+
             if (stripos($return_fare_type, 'upfront') !== false || stripos($return_fare_type, 'super') !== false) {
                 $returnFlight['checkin_baggage'] = 'Adult - 20Kg';
             }
@@ -610,6 +631,14 @@ class Welcome extends CI_Controller {
                 }
             }
         }
+        if (empty($flightDetails['refundable'])) {
+            if (empty($cancellationRules)) {
+                $cancellationRules = array(
+                    array('time' => '0 HRS - 24 HRS To Departure', 'desc' => '0 HRS - 24 HRS To Departure', 'fee' => 'Non-Refundable', 'amount' => 'Non-Refundable'),
+                    array('time' => 'More than 24 hours', 'desc' => 'More than 24 hours', 'fee' => 'Non-Refundable', 'amount' => 'Non-Refundable')
+                );
+            }
+        }
         $fareRules['cancellation'] = $cancellationRules;
         $fareRules['date_change']   = $dateChangeRules;
 
@@ -670,6 +699,12 @@ class Welcome extends CI_Controller {
                     }
                 }
             }
+            if (empty($returnFlight['refundable']) && empty($retCancelRules)) {
+                $retCancelRules = array(
+                    array('time' => '0 HRS - 24 HRS To Departure', 'desc' => '0 HRS - 24 HRS To Departure', 'fee' => 'Non-Refundable', 'amount' => 'Non-Refundable'),
+                    array('time' => 'More than 24 hours', 'desc' => 'More than 24 hours', 'fee' => 'Non-Refundable', 'amount' => 'Non-Refundable')
+                );
+            }
             $returnFareRules['cancellation'] = $retCancelRules;
             $returnFareRules['date_change']   = $retDateChangeRules;
 
@@ -685,6 +720,7 @@ class Welcome extends CI_Controller {
 
         $data['flight']            = $flightDetails;
         $data['return_flight']     = $returnFlight;
+        $data['is_refundable']     = !empty($flightDetails['refundable']);
         $data['is_roundtrip']      = $is_roundtrip;
         $data['fare_rules']        = $fareRules;
         $data['return_fare_rules'] = $returnFareRules;
@@ -798,6 +834,20 @@ class Welcome extends CI_Controller {
 
         $data = array_merge($sessionBooking, $postData);
         $data['post_data'] = $postData;
+
+        if (isset($postData['refundable'])) {
+            $rVal = ($postData['refundable'] === '1' || $postData['refundable'] === 1 || $postData['refundable'] === true || $postData['refundable'] === 'true');
+            if (isset($data['flight'])) {
+                $data['flight']['refundable'] = $rVal;
+                $data['flight']['is_refundable'] = $rVal;
+            }
+            $data['is_refundable'] = $rVal;
+        }
+        if (isset($postData['return_refundable']) && isset($data['return_flight'])) {
+            $rrVal = ($postData['return_refundable'] === '1' || $postData['return_refundable'] === 1 || $postData['return_refundable'] === true || $postData['return_refundable'] === 'true');
+            $data['return_flight']['refundable'] = $rrVal;
+            $data['return_flight']['is_refundable'] = $rrVal;
+        }
 
         // Parse passenger names and details (Domestic & International)
         $titles        = $this->input->post('passenger_title') ?: ($postData['passenger_title'] ?? array());
@@ -1024,6 +1074,19 @@ class Welcome extends CI_Controller {
         $data = array_merge($sessionBooking, $reviewPost, $addonsPost);
         $data['flight']        = $sessionBooking['flight'] ?? array();
         $data['return_flight'] = $sessionBooking['return_flight'] ?? array();
+        if (isset($reviewPost['refundable'])) {
+            $rVal = ($reviewPost['refundable'] === '1' || $reviewPost['refundable'] === 1 || $reviewPost['refundable'] === true || $reviewPost['refundable'] === 'true');
+            $data['flight']['refundable'] = $rVal;
+            $data['flight']['is_refundable'] = $rVal;
+            $data['is_refundable'] = $rVal;
+        } elseif (isset($sessionBooking['flight']['refundable'])) {
+            $data['is_refundable'] = !empty($sessionBooking['flight']['refundable']);
+        }
+        if (isset($reviewPost['return_refundable']) && !empty($data['return_flight'])) {
+            $rrVal = ($reviewPost['return_refundable'] === '1' || $reviewPost['return_refundable'] === 1 || $reviewPost['return_refundable'] === true || $reviewPost['return_refundable'] === 'true');
+            $data['return_flight']['refundable'] = $rrVal;
+            $data['return_flight']['is_refundable'] = $rrVal;
+        }
         $data['search_query']  = $sessionBooking['search_query'] ?? array();
         $data['is_roundtrip']  = !empty($sessionBooking['is_roundtrip']) || !empty($data['return_flight']);
         $data['fare_rules']    = $sessionBooking['fare_rules'] ?? array();
@@ -1462,9 +1525,28 @@ class Welcome extends CI_Controller {
         $dep_datetime  = date('Y-m-d H:i:s', strtotime("$dep_date $dep_time"));
         $arr_datetime  = date('Y-m-d H:i:s', strtotime("$dep_date $arr_time"));
 
+        $sessionBooking = $this->session->userdata('flight_booking_data') ?: array();
+        $is_ref_booked = false;
+        if ($this->input->post('refundable') !== null && $this->input->post('refundable') !== '') {
+            $rawRef = $this->input->post('refundable');
+            $is_ref_booked = ($rawRef === '1' || $rawRef === 1 || $rawRef === true || $rawRef === 'true');
+        } elseif (isset($sessionBooking['flight']['refundable'])) {
+            $is_ref_booked = !empty($sessionBooking['flight']['refundable']);
+        }
+
         $return_flight_meta = null;
         if (!empty($this->input->post('return_flight_number'))) {
             $rStops = (int)($this->input->post('return_stops') ?: 0);
+            $ret_ref_booked = false;
+            if ($this->input->post('return_refundable') !== null && $this->input->post('return_refundable') !== '') {
+                $rawRetRef = $this->input->post('return_refundable');
+                $ret_ref_booked = ($rawRetRef === '1' || $rawRetRef === 1 || $rawRetRef === true || $rawRetRef === 'true');
+            } elseif (isset($sessionBooking['return_flight']['refundable'])) {
+                $ret_ref_booked = !empty($sessionBooking['return_flight']['refundable']);
+            } else {
+                $ret_ref_booked = $is_ref_booked;
+            }
+
             $return_flight_meta = array(
                 'flight_number'  => $this->input->post('return_flight_number'),
                 'airline_name'   => $this->input->post('return_airline_name') ?: 'IndiGo',
@@ -1475,7 +1557,9 @@ class Welcome extends CI_Controller {
                 'arrival_time'   => $this->input->post('return_arrival_time') ?: '07:55',
                 'duration'       => $this->input->post('return_duration') ?: '02h 15m',
                 'stops'          => $rStops,
-                'via'            => $this->input->post('return_via') ?: ($rStops > 0 ? 'HYD' : '')
+                'via'            => $this->input->post('return_via') ?: ($rStops > 0 ? 'HYD' : ''),
+                'refundable'     => $ret_ref_booked,
+                'is_refundable'  => $ret_ref_booked
             );
         }
 
@@ -1485,6 +1569,8 @@ class Welcome extends CI_Controller {
             'stops'          => $stops,
             'via'            => $via,
             'arrival_time'   => $arr_time,
+            'refundable'     => $is_ref_booked,
+            'is_refundable'  => $is_ref_booked,
             'return_flight'  => $return_flight_meta,
             'ssr_addons'     => $ssrAddons,
             'passengers'     => $passengers

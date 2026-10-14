@@ -206,6 +206,9 @@ $flightDuration = $flight['duration'] ?? '05h 30m';
 $flightStops   = (int)($flight['stops'] ?? 0);
 $isOnwardConnecting = ($flightStops > 0);
 $isRefundable  = !empty($flight['refundable']);
+if (isset($post_data['refundable'])) {
+    $isRefundable = ($post_data['refundable'] === '1' || $post_data['refundable'] === 1 || $post_data['refundable'] === true || $post_data['refundable'] === 'true');
+}
 
 // Return flight display vars (if roundtrip)
 $retAirlineName = $return_flight['airline_name'] ?? 'Air India';
@@ -227,6 +230,9 @@ $retDuration   = $return_flight['duration'] ?? '05h 15m';
 $retStops      = (int)($return_flight['stops'] ?? 0);
 $isReturnConnecting = ($retStops > 0);
 $retIsRefundable = !empty($return_flight['refundable']);
+if (isset($post_data['return_refundable'])) {
+    $retIsRefundable = ($post_data['return_refundable'] === '1' || $post_data['return_refundable'] === 1 || $post_data['return_refundable'] === true || $post_data['return_refundable'] === 'true');
+}
 
 // Travel Class, Aircraft and Baggage allowances
 $aircraftDisplay    = !empty($flight['aircraft']) ? strtoupper(trim($flight['aircraft'])) : 'BOEING';
@@ -488,6 +494,12 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 5px;
+}
+
+.refund-pill.non-ref {
+    background: #fff7ed;
+    color: #ea580c;
+    border: 1px solid #fed7aa;
 }
 
 .fare-rules-link {
@@ -1052,9 +1064,15 @@ body {
                             <?php echo strtoupper(htmlspecialchars($fromCity)); ?> &rarr; <?php echo strtoupper(htmlspecialchars($toCity)); ?> , <?php echo date('d M', strtotime($depDate)); ?>
                         </div>
                         <div class="sector-banner-meta">
+                            <?php if ($isRefundable): ?>
                             <span class="refund-pill">
-                                <i class="fa-solid fa-rotate-left"></i> <?php echo $isRefundable ? 'Refundable' : 'Partially Refundable'; ?>
+                                <i class="fa-solid fa-rotate-left"></i> Refundable
                             </span>
+                            <?php else: ?>
+                            <span class="refund-pill non-ref">
+                                <i class="fa-solid fa-ban"></i> Non-Refundable
+                            </span>
+                            <?php endif; ?>
                             <a href="javascript:void(0);" onclick="switchReviewTab('farerules');" class="fare-rules-link">
                                 <i class="fa-solid fa-circle-info"></i> Fare Rules
                             </a>
@@ -1449,9 +1467,15 @@ body {
                             <?php echo strtoupper(htmlspecialchars($retFromCity)); ?> &rarr; <?php echo strtoupper(htmlspecialchars($retToCity)); ?> , <?php echo date('d M', strtotime($retDepDate)); ?>
                         </div>
                         <div class="sector-banner-meta">
+                            <?php if ($retIsRefundable): ?>
                             <span class="refund-pill">
-                                <i class="fa-solid fa-rotate-left"></i> <?php echo $retIsRefundable ? 'Refundable' : 'Partially Refundable'; ?>
+                                <i class="fa-solid fa-rotate-left"></i> Refundable
                             </span>
+                            <?php else: ?>
+                            <span class="refund-pill non-ref">
+                                <i class="fa-solid fa-ban"></i> Non-Refundable
+                            </span>
+                            <?php endif; ?>
                             <a href="javascript:void(0);" onclick="switchReviewTab('farerules');" class="fare-rules-link">
                                 <i class="fa-solid fa-circle-info"></i> Fare Rules
                             </a>
@@ -1780,6 +1804,14 @@ body {
                                 <input type="hidden" name="<?php echo htmlspecialchars($k); ?>" value="<?php echo htmlspecialchars($v); ?>">
                             <?php endIf; ?>
                         <?php endforeach; ?>
+                    <?php endif; ?>
+
+                    <?php if (!isset($post_data['refundable'])): ?>
+                    <input type="hidden" name="refundable" value="<?php echo $isRefundable ? '1' : '0'; ?>">
+                    <input type="hidden" name="is_refundable" value="<?php echo $isRefundable ? '1' : '0'; ?>">
+                    <?php endif; ?>
+                    <?php if ($is_roundtrip && !isset($post_data['return_refundable'])): ?>
+                    <input type="hidden" name="return_refundable" value="<?php echo $retIsRefundable ? '1' : '0'; ?>">
                     <?php endif; ?>
 
                     <input type="hidden" name="total_amount" id="payment_total_amount" value="<?php echo $grandTotal; ?>">

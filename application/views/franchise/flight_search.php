@@ -823,6 +823,9 @@ uasort($connectingAirportsList, function($a, $b) {
                         <input type="hidden" name="return_departure_time" id="rt_ret_dep_time" value="">
                         <input type="hidden" name="return_arrival_time" id="rt_ret_arr_time" value="">
                         <input type="hidden" name="return_price" id="rt_ret_price" value="">
+                        <input type="hidden" name="refundable" id="rt_refundable" value="1">
+                        <input type="hidden" name="is_refundable" id="rt_is_refundable" value="1">
+                        <input type="hidden" name="return_refundable" id="rt_return_refundable" value="1">
 
                         <!-- Pax -->
                         <input type="hidden" name="adults" value="<?php echo (int)($search_query['adults'] ?? 1); ?>">
@@ -965,6 +968,8 @@ uasort($connectingAirportsList, function($a, $b) {
                             <input type="hidden" name="adults" value="<?php echo (int)($search_query['adults'] ?? 1); ?>">
                             <input type="hidden" name="children" value="<?php echo (int)($search_query['children'] ?? 0); ?>">
                             <input type="hidden" name="infants" value="<?php echo (int)($search_query['infants'] ?? 0); ?>">
+                            <input type="hidden" name="refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
+                            <input type="hidden" name="is_refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
 
                             <button type="submit" class="f-book-btn">
                                 <span>BOOK NOW</span> <i class="fa-solid fa-arrow-right"></i>
@@ -1359,6 +1364,8 @@ function updateRoundTripSelection() {
         const depTime = document.getElementById('rt_dep_time'); if (depTime) depTime.value = o.departure_time || '';
         const arrTime = document.getElementById('rt_arr_time'); if (arrTime) arrTime.value = o.arrival_time || '';
         const onPrice = document.getElementById('rt_onward_price'); if (onPrice) onPrice.value = o.price || '';
+        const elRefO = document.getElementById('rt_refundable'); if (elRefO) elRefO.value = (o && o.refundable) ? '1' : '0';
+        const elIsRefO = document.getElementById('rt_is_refundable'); if (elIsRefO) elIsRefO.value = (o && o.refundable) ? '1' : '0';
     }
 
     if (r) {
@@ -1372,6 +1379,7 @@ function updateRoundTripSelection() {
         const retDep = document.getElementById('rt_ret_dep_time'); if (retDep) retDep.value = r.departure_time || '';
         const retArr = document.getElementById('rt_ret_arr_time'); if (retArr) retArr.value = r.arrival_time || '';
         const retPrice = document.getElementById('rt_ret_price'); if (retPrice) retPrice.value = r.price || '';
+        const elRefR = document.getElementById('rt_return_refundable'); if (elRefR) elRefR.value = (r && r.refundable) ? '1' : '0';
     }
 
     const total = (o ? parseFloat(o.price || 0) : 0) + (r ? parseFloat(r.price || 0) : 0);

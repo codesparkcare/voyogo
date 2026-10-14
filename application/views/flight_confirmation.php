@@ -28,8 +28,27 @@
 
             <div style="padding: 32px;">
                 
+                <?php 
+                $meta = json_decode($booking['passenger_details'], true);
+                if (!is_array($meta)) $meta = array();
+                $passengers = isset($meta['passengers']) ? $meta['passengers'] : $meta;
+                $isRoundtrip = !empty($meta['is_roundtrip']) || !empty($meta['return_flight']);
+                $onwardDuration = !empty($meta['duration']) ? $meta['duration'] : '02h 15m';
+                $onwardStops = isset($meta['stops']) ? (int)$meta['stops'] : 0;
+                $onwardVia = !empty($meta['via']) ? $meta['via'] : 'HYD';
+                $returnFlight = $meta['return_flight'] ?? null;
+                $isTicketRefundable = !empty($meta['refundable']) || !empty($meta['is_refundable']);
+
+                $baggageAllowance = 'Check-in: 15kg | Cabin: 7kg';
+                if (!empty($meta['ssr_addons']['baggage_desc'])) {
+                    $baggageAllowance = 'Check-in: 15kg + ' . htmlspecialchars($meta['ssr_addons']['baggage_desc']) . ' | Cabin: 7kg';
+                } elseif (!empty($meta['ssr_addons']['baggage_amount']) && $meta['ssr_addons']['baggage_amount'] > 0) {
+                    $baggageAllowance = 'Check-in: 15kg + 3kg Extra | Cabin: 7kg';
+                }
+                ?>
+
                 <!-- PNR & Airline Summary Grid -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-bottom: 24px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-bottom: 24px;">
                     <div>
                         <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Airline PNR / Booking Code</div>
                         <div style="font-size: 24px; font-weight: 900; color: #09204b; letter-spacing: 1px;"><?php echo htmlspecialchars($booking['pnr']); ?></div>
@@ -42,30 +61,32 @@
                         <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Cabin Class</div>
                         <div style="font-size: 18px; font-weight: 700; color: #16a34a;"><?php echo htmlspecialchars($booking['cabin_class']); ?></div>
                     </div>
+                    <div>
+                        <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Fare Type</div>
+                        <?php if ($isTicketRefundable): ?>
+                            <div style="font-size: 15px; font-weight: 800; color: #16a34a; margin-top: 4px;">
+                                <i class="fa-solid fa-rotate-left"></i> Refundable
+                            </div>
+                        <?php else: ?>
+                            <div style="font-size: 15px; font-weight: 800; color: #ea580c; margin-top: 4px;">
+                                <i class="fa-solid fa-ban"></i> Non-Refundable
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
-
-                <?php 
-                $meta = json_decode($booking['passenger_details'], true);
-                $passengers = isset($meta['passengers']) ? $meta['passengers'] : $meta;
-                $isRoundtrip = !empty($meta['is_roundtrip']) || !empty($meta['return_flight']);
-                $onwardDuration = !empty($meta['duration']) ? $meta['duration'] : '02h 15m';
-                $onwardStops = isset($meta['stops']) ? (int)$meta['stops'] : 0;
-                $onwardVia = !empty($meta['via']) ? $meta['via'] : 'HYD';
-                $returnFlight = $meta['return_flight'] ?? null;
-
-                $baggageAllowance = 'Check-in: 15kg | Cabin: 7kg';
-                if (!empty($meta['ssr_addons']['baggage_desc'])) {
-                    $baggageAllowance = 'Check-in: 15kg + ' . htmlspecialchars($meta['ssr_addons']['baggage_desc']) . ' | Cabin: 7kg';
-                } elseif (!empty($meta['ssr_addons']['baggage_amount']) && $meta['ssr_addons']['baggage_amount'] > 0) {
-                    $baggageAllowance = 'Check-in: 15kg + 3kg Extra | Cabin: 7kg';
-                }
-                ?>
 
                 <!-- Route & Timing Box (Departure Sector) -->
                 <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 24px;">
                     <h3 style="font-family: var(--font-heading); font-size: 16px; color: #0d3470; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
                         <span><i class="fa-solid fa-plane-departure" style="color: #2563eb;"></i> Departure Flight Itinerary</span>
-                        <span style="font-size: 13px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($booking['airline_name'] . ' ' . $booking['flight_number']); ?></span>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 13px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($booking['airline_name'] . ' ' . $booking['flight_number']); ?></span>
+                            <?php if ($isTicketRefundable): ?>
+                                <span style="font-size: 11px; font-weight: 700; color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 4px;">Refundable</span>
+                            <?php else: ?>
+                                <span style="font-size: 11px; font-weight: 700; color: #ea580c; background: #fff7ed; border: 1px solid #fed7aa; padding: 2px 8px; border-radius: 4px;">Non-Refundable</span>
+                            <?php endif; ?>
+                        </div>
                     </h3>
 
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -100,7 +121,16 @@
                 <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 24px; background: #f8fafc;">
                     <h3 style="font-family: var(--font-heading); font-size: 16px; color: #0d3470; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
                         <span><i class="fa-solid fa-plane-arrival" style="color: #10b981;"></i> Return Flight Itinerary</span>
-                        <span style="font-size: 13px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($returnFlight['airline_name'] . ' ' . $returnFlight['flight_number']); ?></span>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 13px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($returnFlight['airline_name'] . ' ' . $returnFlight['flight_number']); ?></span>
+                            <?php 
+                            $isRetTicketRefundable = !empty($returnFlight['refundable']) || !empty($returnFlight['is_refundable']);
+                            if ($isRetTicketRefundable): ?>
+                                <span style="font-size: 11px; font-weight: 700; color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 4px;">Refundable</span>
+                            <?php else: ?>
+                                <span style="font-size: 11px; font-weight: 700; color: #ea580c; background: #fff7ed; border: 1px solid #fed7aa; padding: 2px 8px; border-radius: 4px;">Non-Refundable</span>
+                            <?php endif; ?>
+                        </div>
                     </h3>
 
                     <div style="display: flex; justify-content: space-between; align-items: center;">
