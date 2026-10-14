@@ -612,7 +612,7 @@
                 </div>
                 <div>
                     <div class="gt-stat-label">Total Group Tours</div>
-                    <div class="gt-stat-val"><?php echo number_format($stats['total_tours'] ?? count($tours)); ?></div>
+                    <div class="gt-stat-val"><?php echo number_format((float)($stats['total_tours'] ?? count($tours))); ?></div>
                 </div>
             </div>
 
@@ -622,7 +622,7 @@
                 </div>
                 <div>
                     <div class="gt-stat-label">Block Capacity (Grp. Tkn)</div>
-                    <div class="gt-stat-val"><?php echo number_format($stats['total_grp_tkn'] ?? 0); ?></div>
+                    <div class="gt-stat-val"><?php echo number_format((float)($stats['total_grp_tkn'] ?? 0)); ?></div>
                 </div>
             </div>
 
@@ -632,7 +632,7 @@
                 </div>
                 <div>
                     <div class="gt-stat-label">Total Seats Needed</div>
-                    <div class="gt-stat-val" style="color: #ea580c;"><?php echo number_format($stats['total_needed'] ?? 0); ?></div>
+                    <div class="gt-stat-val" style="color: #ea580c;"><?php echo number_format((float)($stats['total_needed'] ?? 0)); ?></div>
                 </div>
             </div>
 
@@ -642,7 +642,7 @@
                 </div>
                 <div>
                     <div class="gt-stat-label">Visa Processing Pending</div>
-                    <div class="gt-stat-val" style="color: #db2777;"><?php echo number_format($stats['visa_pending_count'] ?? 0); ?></div>
+                    <div class="gt-stat-val" style="color: #db2777;"><?php echo number_format((float)($stats['visa_pending_count'] ?? 0)); ?></div>
                 </div>
             </div>
         </div>
@@ -745,7 +745,19 @@
 
                             <!-- 5. TOUR AMOUNT -->
                             <td class="badge-amount">
-                                <?php echo $t['tour_amount'] > 0 ? number_format($t['tour_amount']) : '-'; ?>
+                                <?php 
+                                $amtStr = trim((string)($t['tour_amount'] ?? ''));
+                                if ($amtStr === '' || $amtStr === '-' || $amtStr === '0') {
+                                    echo '-';
+                                } else {
+                                    $cleanAmt = str_replace([',', ' ', '₹', 'INR'], '', $amtStr);
+                                    if (is_numeric($cleanAmt) && (float)$cleanAmt > 0) {
+                                        echo number_format((float)$cleanAmt);
+                                    } else {
+                                        echo htmlspecialchars($amtStr);
+                                    }
+                                }
+                                ?>
                             </td>
 
                             <!-- 6. CONFIRMED -->
