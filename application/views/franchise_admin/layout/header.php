@@ -252,6 +252,12 @@
                 <span>All Bookings</span>
             </a>
         </li>
+        <li class="nav-item <?php echo ($active_menu == 'group_tours') ? 'active' : ''; ?>">
+            <a href="<?php echo site_url('franchise-admin/group-tour-follow-up'); ?>">
+                <i class="fa-solid fa-users-rectangle"></i>
+                <span>GROUP TOUR FOLLOW UP</span>
+            </a>
+        </li>
     </ul>
 
     <div class="sidebar-footer">

@@ -127,6 +127,13 @@ $route['franchise-admin/wallets']                 = 'Franchise_admin/wallets';
 $route['franchise-admin/wallet_update']           = 'Franchise_admin/wallet_update';
 $route['franchise-admin/wallet-update']           = 'Franchise_admin/wallet_update';
 $route['franchise-admin/bookings']                = 'Franchise_admin/bookings';
+$route['franchise-admin/group-tour-follow-up']     = 'Franchise_admin/group_tour_follow_up';
+$route['franchise-admin/group-tours']              = 'Franchise_admin/group_tour_follow_up';
+$route['franchise-admin/group-tour-import']        = 'Franchise_admin/group_tour_import';
+$route['franchise-admin/group-tour-save-row']      = 'Franchise_admin/group_tour_save_row';
+$route['franchise-admin/group-tour-delete-row/(:num)'] = 'Franchise_admin/group_tour_delete_row/$1';
+$route['franchise-admin/group-tour-clear-all']     = 'Franchise_admin/group_tour_clear_all';
+$route['franchise-admin/group-tour-export-template'] = 'Franchise_admin/group_tour_export_template';
 
 // Franchise Store Owner (B2B Portal) & Landing Page
 $route['franchise']                               = 'Franchise/index';

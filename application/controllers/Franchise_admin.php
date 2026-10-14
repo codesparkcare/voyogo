@@ -280,4 +280,212 @@ class Franchise_admin extends CI_Controller {
         $this->load->view('franchise_admin/bookings', $data);
         $this->load->view('franchise_admin/layout/footer');
     }
+
+    // =========================================================================
+    // 6. GROUP TOUR FOLLOW UP
+    // =========================================================================
+    public function group_tour_follow_up() {
+        $this->_check_auth();
+
+        $month = $this->input->get('month') ?: 'all';
+        $search = $this->input->get('search');
+
+        $data['title']        = 'Group Tour Follow Up';
+        $data['active_menu']  = 'group_tours';
+        $data['selected_month'] = $month;
+        $data['search_query'] = $search;
+        $data['tours']        = $this->Franchise_model->get_group_tours($month, $search);
+        $data['months']       = $this->Franchise_model->get_group_tour_months();
+        $data['stats']        = $this->Franchise_model->get_group_tours_stats();
+
+        $this->load->view('franchise_admin/layout/header', $data);
+        $this->load->view('franchise_admin/group_tours', $data);
+        $this->load->view('franchise_admin/layout/footer');
+    }
+
+    public function group_tour_import() {
+        $this->_check_auth();
+
+        // 1. Check if JSON data posted via SheetJS client importer
+        $raw_json = $this->input->raw_input_stream;
+        $payload = json_decode($raw_json, true);
+
+        if (!$payload && $this->input->post('rows_json')) {
+            $payload = array(
+                'rows'    => json_decode($this->input->post('rows_json'), true),
+                'replace' => $this->input->post('replace') === '1'
+            );
+        }
+
+        if (!empty($payload['rows']) && is_array($payload['rows'])) {
+            $replace = !empty($payload['replace']);
+            $count = $this->Franchise_model->insert_group_tours_batch($payload['rows'], $replace);
+
+            header('Content-Type: application/json');
+            echo json_encode(array(
+                'status'  => true,
+                'count'   => $count,
+                'message' => "Successfully imported {$count} group tour records into database!"
+            ));
+            return;
+        }
+
+        // 2. Fallback: Standard CSV file upload
+        if (!empty($_FILES['excel_file']['tmp_name'])) {
+            $replace = $this->input->post('replace') === '1';
+            $file = $_FILES['excel_file']['tmp_name'];
+            $handle = fopen($file, 'r');
+            $rows = array();
+            $headers = array();
+            $active_month = 'SEPTEMBER:2026';
+
+            if ($handle !== FALSE) {
+                while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+                    if (empty($headers)) {
+                        // Check if first row is headers
+                        if (stripos(implode(' ', $data), 'TOUR') !== false || stripos(implode(' ', $data), 'DATE') !== false) {
+                            $headers = array_map('trim', $data);
+                            continue;
+                        }
+                    }
+
+                    // Check for month section header row
+                    $first_cell = trim($data[0] ?? '');
+                    if (preg_match('/(JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER)\s*:\s*\d{4}/i', $first_cell, $matches)) {
+                        $active_month = strtoupper($matches[0]);
+                        continue;
+                    }
+
+                    if (!empty($data[1]) || !empty($data[2]) || !empty($data[3])) {
+                        $rows[] = array(
+                            's_no'            => $data[0] ?? '',
+                            'tour_date'       => $data[1] ?? '',
+                            'tour_code'       => $data[2] ?? '',
+                            'country_name'    => $data[3] ?? '',
+                            'tour_amount'     => $data[4] ?? '',
+                            'confirmed'       => $data[5] ?? '',
+                            'grp_tkn'         => $data[6] ?? '',
+                            'need'            => $data[7] ?? '',
+                            'reminder_45'     => $data[8] ?? '',
+                            'reminder_30'     => $data[9] ?? '',
+                            'ticket_status'   => $data[10] ?? '',
+                            'visa_status'     => $data[11] ?? '',
+                            'handling_person' => $data[12] ?? '',
+                            'travel_bag'      => $data[13] ?? '',
+                            'tour_manager'    => $data[14] ?? '',
+                            'month_group'     => $active_month
+                        );
+                    }
+                }
+                fclose($handle);
+
+                $count = $this->Franchise_model->insert_group_tours_batch($rows, $replace);
+                $this->session->set_flashdata('success', "Imported {$count} records successfully!");
+                redirect('franchise-admin/group-tour-follow-up');
+                return;
+            }
+        }
+
+        if ($this->input->is_ajax_request()) {
+            header('Content-Type: application/json');
+            echo json_encode(array('status' => false, 'error' => 'No valid tour rows found in import file.'));
+            return;
+        }
+
+        $this->session->set_flashdata('error', 'Please select a valid Excel or CSV file to import.');
+        redirect('franchise-admin/group-tour-follow-up');
+    }
+
+    public function group_tour_save_row() {
+        $this->_check_auth();
+
+        $id = $this->input->post('id') ? (int)$this->input->post('id') : null;
+        $data = array(
+            's_no'            => trim($this->input->post('s_no')),
+            'tour_date'       => trim($this->input->post('tour_date')),
+            'tour_code'       => trim($this->input->post('tour_code')),
+            'country_name'    => trim($this->input->post('country_name')),
+            'tour_amount'     => trim($this->input->post('tour_amount')),
+            'confirmed'       => trim($this->input->post('confirmed')),
+            'grp_tkn'         => trim($this->input->post('grp_tkn')),
+            'need'            => trim($this->input->post('need')),
+            'reminder_45'     => trim($this->input->post('reminder_45')),
+            'reminder_30'     => trim($this->input->post('reminder_30')),
+            'ticket_status'   => trim($this->input->post('ticket_status')),
+            'visa_status'     => trim($this->input->post('visa_status')),
+            'handling_person' => trim($this->input->post('handling_person')),
+            'travel_bag'      => trim($this->input->post('travel_bag')),
+            'tour_manager'    => trim($this->input->post('tour_manager')),
+            'month_group'     => trim($this->input->post('month_group')) ?: 'SEPTEMBER:2026',
+            'notes'           => trim($this->input->post('notes'))
+        );
+
+        $saved_id = $this->Franchise_model->save_group_tour($data, $id);
+
+        if ($this->input->is_ajax_request()) {
+            header('Content-Type: application/json');
+            echo json_encode(array('status' => true, 'id' => $saved_id, 'message' => 'Tour row saved successfully!'));
+            return;
+        }
+
+        $this->session->set_flashdata('success', 'Tour record saved successfully.');
+        redirect('franchise-admin/group-tour-follow-up');
+    }
+
+    public function group_tour_delete_row($id) {
+        $this->_check_auth();
+        $this->Franchise_model->delete_group_tour($id);
+
+        if ($this->input->is_ajax_request()) {
+            header('Content-Type: application/json');
+            echo json_encode(array('status' => true, 'message' => 'Row deleted successfully.'));
+            return;
+        }
+
+        $this->session->set_flashdata('success', 'Tour record deleted.');
+        redirect('franchise-admin/group-tour-follow-up');
+    }
+
+    public function group_tour_clear_all() {
+        $this->_check_auth();
+        $this->Franchise_model->clear_all_group_tours();
+        $this->session->set_flashdata('success', 'All group tour records cleared. You can upload a new Excel file anytime.');
+        redirect('franchise-admin/group-tour-follow-up');
+    }
+
+    public function group_tour_export_template() {
+        $this->_check_auth();
+
+        $filename = 'Group_Tour_Follow_Up_Template.csv';
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+
+        $output = fopen('php://output', 'w');
+        // Exact 15 headers matching workbook1.pdf
+        fputcsv($output, array(
+            'S. NO',
+            'DATE',
+            'TOUR CODE',
+            'COUNTRY NAME',
+            'TOUR AMOUNT',
+            'CONFIRMED',
+            'GRP. TKN',
+            'NEED',
+            '45 DAYS REMINDER',
+            '30 DAYS REMINDER',
+            'TICKET STATUS',
+            'VISA STATUS',
+            'HANDLING PERSON',
+            'TRAVEL BAG',
+            'TOUR MANAGER',
+            'MONTH'
+        ));
+
+        // Sample rows from PDF
+        fputcsv($output, array('1', '16.09.2026', 'NBO160926', 'KENYA (5N/6D)', '259,000', '21+1+1+2+2', '22', '-', '02.08.2026', '17.08.2026', 'GROUP TAKEN', 'WE APPLY (INCLUDE)', 'KEERTHANA DEVI', '-', 'YOGESH', 'SEPTEMBER:2026'));
+        fputcsv($output, array('2', '17.09.2026', 'NRT170926', 'JAPAN (7N/8D)', '259,000', '35+1', '36', '-', '03.08.2026', '18.08.2026', 'GROUP TAKEN', 'WE APPLY (INCLUDE)', 'NAVEENA', '-', 'SARATHKUMAR', 'SEPTEMBER:2026'));
+        fputcsv($output, array('3', '20.09.2025', 'CDG200926', 'AMAZING EUROPE (9N/10)', '274,000', '31+1+1+2', '32', '-', '06.08.2026', '21.08.2026', 'GROUP TAKEN', 'WE APPLY (INCLUDE)', 'MUKESH', '-', 'RAJA MITHUN', 'SEPTEMBER:2026'));
+        fclose($output);
+        exit;
+    }
 }
