@@ -1,8 +1,7 @@
 <!-- Main Container with B2B Left Sidebar -->
 <div style="display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: start;">
 
-    <!-- Left Vertical Nav matching user interface -->
-    <div style="background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.03); overflow: hidden; min-height: 480px;">
+    <div style="background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.03); overflow: hidden; height: fit-content;">
         <a href="<?php echo site_url('franchise/flight'); ?>" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; text-decoration: none; color: #ea580c; font-weight: 700; font-size: 14px; border-left: 4px solid #f97316; background: #fff7ed; white-space: nowrap;">
             <i class="fa-solid fa-plane-departure" style="font-size: 16px; color: #ea580c; width: 20px; text-align: center;"></i>
             <span>Flight</span>

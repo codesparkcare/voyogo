@@ -11,108 +11,10 @@
     padding: 0 10px !important;
 }
 
-/* Animations */
+/* Pulse Animation */
 @keyframes pulseLive {
     0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.15); }
-}
-
-/* Top Quick Service Nav Bar */
-.gt-top-service-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 10px 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    flex-wrap: wrap;
-    gap: 12px;
-}
-.gt-service-tabs {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-.gt-tab-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 13.5px;
-    font-weight: 600;
-    text-decoration: none;
-    color: #475569;
-    transition: all 0.15s;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-}
-.gt-tab-link:hover {
-    background: #f1f5f9;
-    color: #0f172a;
-    border-color: #cbd5e1;
-}
-.gt-tab-link.active {
-    background: #fff7ed;
-    color: #ea580c;
-    border-color: #fdba74;
-    font-weight: 700;
-}
-.gt-live-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #dcfce7;
-    color: #15803d;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 10px;
-    margin-left: 4px;
-}
-.gt-pulse-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #16a34a;
-    display: inline-block;
-    animation: pulseLive 1.5s infinite;
-}
-
-.gt-action-buttons {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-.btn-action-tool {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    border: 1px solid #cbd5e1;
-    background: #ffffff;
-    color: #334155;
-    transition: all 0.15s;
-}
-.btn-action-tool:hover {
-    background: #f8fafc;
-    border-color: #94a3b8;
-    color: #0f172a;
-}
-.btn-action-excel:hover {
-    background: #f0fdf4;
-    border-color: #86efac;
-    color: #15803d;
+    50% { opacity: 0.4; transform: scale(1.15); }
 }
 
 /* Page Layout with Toggleable Left Sidebar */
@@ -124,13 +26,13 @@
     transition: all 0.25s ease;
 }
 .gt-b2b-layout.full-width {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
 }
 .gt-b2b-layout.full-width .gt-b2b-sidebar {
     display: none !important;
 }
 
-/* Left Sidebar Menu */
+/* Left Sidebar Menu (Matching Flight & Hotel Pages) */
 .gt-b2b-sidebar {
     background: #ffffff;
     border-radius: 12px;
@@ -141,27 +43,15 @@
     top: 20px;
     z-index: 10;
     width: 240px;
-}
-.gt-sidebar-header {
-    padding: 12px 18px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.6px;
-    color: #94a3b8;
-    text-transform: uppercase;
-    background: #f8fafc;
-    border-bottom: 1px solid #f1f5f9;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    height: fit-content;
 }
 .gt-nav-link {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 15px 18px;
+    padding: 16px 20px;
     text-decoration: none;
-    font-size: 13.5px;
+    font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
     transition: all 0.15s;
@@ -185,54 +75,6 @@
     flex-shrink: 0;
 }
 
-.gt-sidebar-footer {
-    padding: 14px 18px;
-    background: #f8fafc;
-    border-top: 1px solid #f1f5f9;
-    font-size: 12px;
-}
-.gt-store-badge-top {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #16a34a;
-    font-weight: 700;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    margin-bottom: 4px;
-}
-.gt-store-badge-name {
-    font-weight: 700;
-    color: #0f172a;
-    font-size: 13px;
-    line-height: 1.3;
-    margin-bottom: 3px;
-}
-.gt-store-badge-meta {
-    color: #64748b;
-    font-size: 11.5px;
-    margin-bottom: 8px;
-}
-.gt-store-badge-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    color: #0284c7;
-    background: #e0f2fe;
-    padding: 3px 8px;
-    border-radius: 12px;
-}
-.gt-pulse-dot-green {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #16a34a;
-    display: inline-block;
-}
-
 /* Header & Title Bar */
 .gt-header-bar {
     display: flex;
@@ -251,10 +93,64 @@
     gap: 10px;
     margin: 0;
 }
+.gt-live-tag {
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.5px;
+}
+.gt-pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #16a34a;
+    display: inline-block;
+    animation: pulseLive 1.5s infinite;
+}
 .gt-subtitle {
     font-size: 13px;
     color: #64748b;
     margin: 4px 0 0 0;
+}
+
+/* Action Buttons */
+.gt-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #334155;
+    transition: all 0.15s;
+}
+.btn-action:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+.btn-action-excel:hover {
+    background: #f0fdf4;
+    border-color: #86efac;
+    color: #15803d;
 }
 
 /* Stat Cards (4 Cards Balanced) */
@@ -288,13 +184,13 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 .gt-stat-icon {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 20px;
     flex-shrink: 0;
 }
 .gt-stat-label {
@@ -308,7 +204,7 @@
     text-overflow: ellipsis;
 }
 .gt-stat-val {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 800;
     color: #0f172a;
     line-height: 1.2;
@@ -521,46 +417,11 @@
 }
 </style>
 
-<!-- Top Quick Service Switcher Bar -->
-<div class="gt-top-service-bar">
-    <div class="gt-service-tabs">
-        <a href="<?php echo site_url('franchise/flight'); ?>" class="gt-tab-link">
-            <i class="fa-solid fa-plane-departure"></i> <span>Flight Search</span>
-        </a>
-        <a href="<?php echo site_url('franchise/hotel'); ?>" class="gt-tab-link">
-            <i class="fa-solid fa-hotel"></i> <span>Hotel Search</span>
-        </a>
-        <a href="<?php echo site_url('franchise/group-tours'); ?>" class="gt-tab-link active">
-            <i class="fa-solid fa-users-rectangle"></i> <span>Group Tour Follow Up</span>
-            <span class="gt-live-badge"><span class="gt-pulse-dot"></span> Live</span>
-        </a>
-    </div>
-
-    <div class="gt-action-buttons">
-        <button type="button" class="btn-action-tool" id="btnToggleSidebar" onclick="toggleSidebarLayout()" title="Toggle Left Sidebar">
-            <i class="fa-solid fa-table-columns" id="toggleIcon"></i>
-            <span id="toggleSidebarText">Hide Left Sidebar</span>
-        </button>
-        <button type="button" class="btn-action-tool btn-action-excel" onclick="exportTableToExcel()" title="Export sheet to Excel (.xlsx)">
-            <i class="fa-solid fa-file-excel" style="color: #16a34a;"></i>
-            <span>Export Excel</span>
-        </button>
-        <button type="button" class="btn-action-tool" onclick="window.print()" title="Print departures">
-            <i class="fa-solid fa-print"></i>
-            <span>Print</span>
-        </button>
-    </div>
-</div>
-
 <!-- Main Container with B2B Left Sidebar & Full-Width Toggle -->
 <div class="gt-b2b-layout" id="gtMainLayout">
 
     <!-- Left Vertical Nav matching user interface properly -->
     <aside class="gt-b2b-sidebar" id="gtSidebar">
-        <div class="gt-sidebar-header">
-            <i class="fa-solid fa-bars-staggered"></i>
-            <span>STORE SERVICES</span>
-        </div>
         <a href="<?php echo site_url('franchise/flight'); ?>" class="gt-nav-link">
             <i class="fa-solid fa-plane-departure" style="color: #64748b;"></i>
             <span>Flight</span>
@@ -573,23 +434,6 @@
             <i class="fa-solid fa-users-rectangle" style="color: #ea580c;"></i>
             <span>Group Tour Follow Up</span>
         </a>
-
-        <!-- Quick Store Info Badge -->
-        <div class="gt-sidebar-footer">
-            <div class="gt-store-badge-top">
-                <i class="fa-solid fa-circle-check" style="color: #16a34a;"></i>
-                <span>Verified Franchisee</span>
-            </div>
-            <div class="gt-store-badge-name">
-                <?php echo htmlspecialchars($store['store_name'] ?? 'Franchise Partner'); ?>
-            </div>
-            <div class="gt-store-badge-meta">
-                CODE: <strong><?php echo htmlspecialchars($store['agent_code'] ?? 'AGENT'); ?></strong>
-            </div>
-            <div class="gt-store-badge-pill">
-                <span class="gt-pulse-dot-green"></span> Live Departures Feed
-            </div>
-        </div>
     </aside>
 
     <!-- Right Content Area: Read-Only Master Board -->
@@ -603,13 +447,29 @@
                         <i class="fa-solid fa-users-rectangle" style="color: #78B722;"></i>
                         Group Tour Follow Up
                     </h1>
-                    <span style="background: #e0f2fe; color: #0284c7; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; text-transform: uppercase;">
-                        Live Departure Board
+                    <span class="gt-live-tag">
+                        <span class="gt-pulse-dot"></span> Live Departure Board
                     </span>
                 </div>
                 <p class="gt-subtitle">
                     <strong>SKY PLANET HOLIDAYS</strong> &bull; Group Tour Board Follow-Up Sheet &bull; Live Departures &bull; Passenger Counts &bull; Visa &amp; Milestone Tracking
                 </p>
+            </div>
+
+            <!-- Action Buttons in Header Row -->
+            <div class="gt-actions">
+                <button type="button" class="btn-action" id="btnToggleSidebar" onclick="toggleSidebarLayout()" title="Toggle Left Menu / Full Width Table">
+                    <i class="fa-solid fa-table-columns" id="toggleIcon"></i>
+                    <span id="toggleSidebarText">Hide Left Menu</span>
+                </button>
+                <button type="button" class="btn-action btn-action-excel" onclick="exportTableToExcel()" title="Export current sheet to Excel (.xlsx)">
+                    <i class="fa-solid fa-file-excel" style="color: #16a34a;"></i>
+                    <span>Export Excel</span>
+                </button>
+                <button type="button" class="btn-action" onclick="window.print()" title="Print departures">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Print</span>
+                </button>
             </div>
         </div>
 
@@ -617,7 +477,7 @@
         <div class="gt-stats-grid">
             <div class="gt-stat-card">
                 <div class="gt-stat-icon" style="background: #eff6ff; color: #2563eb;">
-                    <i class="fa-solid fa-route"></i>
+                    <i class="fa-solid fa-map-location-dot"></i>
                 </div>
                 <div>
                     <div class="gt-stat-label">Total Group Tours</div>
@@ -627,7 +487,7 @@
 
             <div class="gt-stat-card">
                 <div class="gt-stat-icon" style="background: #f0fdf4; color: #16a34a;">
-                    <i class="fa-solid fa-user-group"></i>
+                    <i class="fa-solid fa-users"></i>
                 </div>
                 <div>
                     <div class="gt-stat-label">Block Capacity (Grp. Tkn)</div>
@@ -730,8 +590,8 @@
                         <?php endif; ?>
 
                         <tr class="tour-data-row" 
-                            data-month="<?php echo htmlspecialchars($t['month_group']); ?>"
-                            data-search="<?php echo htmlspecialchars(strtolower($t['tour_code'] . ' ' . $t['country_name'] . ' ' . $t['handling_person'] . ' ' . $t['tour_manager'] . ' ' . $t['tour_date'] . ' ' . $t['visa_status'])); ?>">
+                            data-month="<?php echo htmlspecialchars($t['month_group'] ?? ''); ?>"
+                            data-search="<?php echo htmlspecialchars(strtolower(($t['tour_code'] ?? '') . ' ' . ($t['country_name'] ?? '') . ' ' . ($t['handling_person'] ?? '') . ' ' . ($t['tour_manager'] ?? '') . ' ' . ($t['tour_date'] ?? '') . ' ' . ($t['visa_status'] ?? ''))); ?>">
                             
                             <!-- 1. S. NO (Sticky on Horizontal Scroll) -->
                             <td class="col-sno" style="font-weight: 700; color: #64748b;"><?php echo htmlspecialchars($t['s_no'] ?: $rowSeq); ?></td>
@@ -744,12 +604,12 @@
 
                             <!-- 3. TOUR CODE -->
                             <td>
-                                <span class="badge-code"><?php echo htmlspecialchars($t['tour_code']); ?></span>
+                                <span class="badge-code"><?php echo htmlspecialchars($t['tour_code'] ?: '-'); ?></span>
                             </td>
 
                             <!-- 4. COUNTRY NAME -->
                             <td style="font-weight: 700; color: #0f172a;">
-                                <?php echo htmlspecialchars($t['country_name']); ?>
+                                <?php echo htmlspecialchars($t['country_name'] ?: '-'); ?>
                             </td>
 
                             <!-- 5. TOUR AMOUNT -->
@@ -899,11 +759,11 @@ function toggleSidebarLayout() {
     const isFull = layout.classList.toggle('full-width');
     
     if (isFull) {
-        btnText.textContent = 'Show Left Sidebar';
+        btnText.textContent = 'Show Left Menu';
         icon.className = 'fa-solid fa-bars';
         localStorage.setItem('voyogo_gt_sidebar', 'collapsed');
     } else {
-        btnText.textContent = 'Hide Left Sidebar';
+        btnText.textContent = 'Hide Left Menu';
         icon.className = 'fa-solid fa-table-columns';
         localStorage.setItem('voyogo_gt_sidebar', 'expanded');
     }
@@ -918,7 +778,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const icon = document.getElementById('toggleIcon');
         if (layout && btnText && icon) {
             layout.classList.add('full-width');
-            btnText.textContent = 'Show Left Sidebar';
+            btnText.textContent = 'Show Left Menu';
             icon.className = 'fa-solid fa-bars';
         }
     }
