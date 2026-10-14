@@ -2,12 +2,234 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
-/* Page Specific Styling */
+/* Animations */
+@keyframes pulseLive {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.15); }
+}
+
+/* Top Quick Service Nav Bar */
+.gt-top-service-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.gt-service-tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.gt-tab-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #475569;
+    transition: all 0.15s;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+.gt-tab-link:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+.gt-tab-link.active {
+    background: #fff7ed;
+    color: #ea580c;
+    border-color: #fdba74;
+    font-weight: 700;
+}
+.gt-live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-left: 4px;
+}
+.gt-pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #16a34a;
+    display: inline-block;
+    animation: pulseLive 1.5s infinite;
+}
+
+.gt-action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.btn-action-tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #334155;
+    transition: all 0.15s;
+}
+.btn-action-tool:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+.btn-action-excel:hover {
+    background: #f0fdf4;
+    border-color: #86efac;
+    color: #15803d;
+}
+
+/* Page Layout with Toggleable Left Sidebar */
+.gt-b2b-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 20px;
+    align-items: start;
+    transition: all 0.25s ease;
+}
+.gt-b2b-layout.full-width {
+    grid-template-columns: 1fr;
+}
+.gt-b2b-layout.full-width .gt-b2b-sidebar {
+    display: none !important;
+}
+
+/* Left Sidebar Menu */
+.gt-b2b-sidebar {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    overflow: hidden;
+    position: sticky;
+    top: 20px;
+    z-index: 10;
+    width: 240px;
+}
+.gt-sidebar-header {
+    padding: 12px 18px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    background: #f8fafc;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.gt-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 18px;
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.15s;
+    border-left: 4px solid transparent;
+    color: #475569;
+}
+.gt-nav-link:hover {
+    background: #f8fafc;
+    color: #0f172a;
+}
+.gt-nav-link.active {
+    color: #ea580c;
+    font-weight: 700;
+    border-left-color: #f97316;
+    background: #fff7ed;
+}
+.gt-nav-link i {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.gt-sidebar-footer {
+    padding: 14px 18px;
+    background: #f8fafc;
+    border-top: 1px solid #f1f5f9;
+    font-size: 12px;
+}
+.gt-store-badge-top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #16a34a;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+}
+.gt-store-badge-name {
+    font-weight: 700;
+    color: #0f172a;
+    font-size: 13px;
+    line-height: 1.3;
+    margin-bottom: 3px;
+}
+.gt-store-badge-meta {
+    color: #64748b;
+    font-size: 11.5px;
+    margin-bottom: 8px;
+}
+.gt-store-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #0284c7;
+    background: #e0f2fe;
+    padding: 3px 8px;
+    border-radius: 12px;
+}
+.gt-pulse-dot-green {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #16a34a;
+    display: inline-block;
+}
+
+/* Header & Title Bar */
 .gt-header-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
     flex-wrap: wrap;
     gap: 16px;
 }
@@ -25,29 +247,31 @@
     color: #64748b;
     margin: 4px 0 0 0;
 }
-.gt-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
 
-/* Stat Cards */
+/* Stat Cards (4 Cards Balanced) */
 .gt-stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
 }
+@media (max-width: 1280px) {
+    .gt-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+    .gt-stats-grid { grid-template-columns: 1fr; }
+}
+
 .gt-stat-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
-    padding: 18px 20px;
+    padding: 16px 18px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
+    min-width: 0;
     transition: transform 0.15s, box-shadow 0.15s;
 }
 .gt-stat-card:hover {
@@ -55,30 +279,33 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 .gt-stat-icon {
-    width: 46px;
-    height: 46px;
+    width: 44px;
+    height: 44px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 18px;
     flex-shrink: 0;
 }
 .gt-stat-label {
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 700;
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .gt-stat-val {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 800;
     color: #0f172a;
     line-height: 1.2;
 }
 
-/* Month Filter Tabs */
+/* Month Filter Tabs & Instant Search */
 .gt-filter-panel {
     background: #ffffff;
     border: 1px solid #e2e8f0;
@@ -101,7 +328,7 @@
 .gt-month-pill {
     padding: 6px 14px;
     border-radius: 20px;
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 600;
     text-decoration: none;
     color: #475569;
@@ -120,7 +347,7 @@
     border-color: #09204b;
 }
 
-/* Search Bar */
+/* Search Input */
 .gt-search-wrapper {
     position: relative;
     display: flex;
@@ -137,7 +364,7 @@
     padding: 10px 16px 10px 38px;
     border: 1px solid #cbd5e1;
     border-radius: 8px;
-    font-size: 13.5px;
+    font-size: 13px;
     outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
     background: #f8fafc;
@@ -148,7 +375,7 @@
     box-shadow: 0 0 0 3px rgba(120, 183, 34, 0.15);
 }
 
-/* Main Follow-up Table */
+/* Master Table */
 .gt-table-container {
     background: #ffffff;
     border: 1px solid #e2e8f0;
@@ -162,7 +389,8 @@
 }
 .gt-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     font-size: 12.5px;
     text-align: left;
     white-space: nowrap;
@@ -186,9 +414,25 @@
     border-right: 1px solid #f8fafc;
     color: #1e293b;
     vertical-align: middle;
+    background: #ffffff;
 }
 .gt-table tr:hover td {
-    background: #f8fafc;
+    background: #f8fafc !important;
+}
+
+/* Sticky S.NO column on horizontal scroll */
+.gt-table th.col-sno-head {
+    position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 15;
+    background: #09204b;
+}
+.gt-table td.col-sno {
+    position: sticky;
+    left: 0;
+    z-index: 5;
+    background: #ffffff;
 }
 
 /* Month Divider Header Row in Table */
@@ -203,7 +447,7 @@
     border-bottom: 2px solid #f43f5e !important;
 }
 
-/* Status Badges */
+/* Badges */
 .badge-code {
     font-weight: 700;
     color: #0284c7;
@@ -268,48 +512,99 @@
 }
 </style>
 
-<!-- Main Container with B2B Left Sidebar -->
-<div style="display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: start;">
-
-    <!-- Left Vertical Nav matching user interface -->
-    <div style="background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.03); overflow: hidden; min-height: 480px;">
-        <a href="<?php echo site_url('franchise/flight'); ?>" style="display: flex; align-items: center; gap: 14px; padding: 18px 20px; text-decoration: none; color: #475569; font-weight: 600; font-size: 15px; border-left: 5px solid transparent; transition: background 0.15s;">
-            <i class="fa-solid fa-plane-departure" style="font-size: 18px; color: #64748b;"></i>
-            <span>Flight</span>
+<!-- Top Quick Service Switcher Bar -->
+<div class="gt-top-service-bar">
+    <div class="gt-service-tabs">
+        <a href="<?php echo site_url('franchise/flight'); ?>" class="gt-tab-link">
+            <i class="fa-solid fa-plane-departure"></i> <span>Flight Search</span>
         </a>
-        <a href="<?php echo site_url('franchise/hotel'); ?>" style="display: flex; align-items: center; gap: 14px; padding: 18px 20px; text-decoration: none; color: #475569; font-weight: 600; font-size: 15px; border-left: 5px solid transparent; transition: background 0.15s;">
-            <i class="fa-solid fa-hotel" style="font-size: 18px; color: #64748b;"></i>
-            <span>Hotel</span>
+        <a href="<?php echo site_url('franchise/hotel'); ?>" class="gt-tab-link">
+            <i class="fa-solid fa-hotel"></i> <span>Hotel Search</span>
         </a>
-        <a href="<?php echo site_url('franchise/group-tours'); ?>" style="display: flex; align-items: center; gap: 14px; padding: 18px 20px; text-decoration: none; color: #ea580c; font-weight: 700; font-size: 15px; border-left: 5px solid #f97316; background: #fff7ed;">
-            <i class="fa-solid fa-users-rectangle" style="font-size: 18px; color: #ea580c;"></i>
-            <span>Group Tour Follow Up</span>
+        <a href="<?php echo site_url('franchise/group-tours'); ?>" class="gt-tab-link active">
+            <i class="fa-solid fa-users-rectangle"></i> <span>Group Tour Follow Up</span>
+            <span class="gt-live-badge"><span class="gt-pulse-dot"></span> Live</span>
         </a>
     </div>
 
-    <!-- Right Content Area: Read-Only Master Board Matching Screenshot 2 -->
-    <div>
+    <div class="gt-action-buttons">
+        <button type="button" class="btn-action-tool" id="btnToggleSidebar" onclick="toggleSidebarLayout()" title="Toggle Left Sidebar">
+            <i class="fa-solid fa-table-columns" id="toggleIcon"></i>
+            <span id="toggleSidebarText">Hide Left Sidebar</span>
+        </button>
+        <button type="button" class="btn-action-tool btn-action-excel" onclick="exportTableToExcel()" title="Export sheet to Excel (.xlsx)">
+            <i class="fa-solid fa-file-excel" style="color: #16a34a;"></i>
+            <span>Export Excel</span>
+        </button>
+        <button type="button" class="btn-action-tool" onclick="window.print()" title="Print departures">
+            <i class="fa-solid fa-print"></i>
+            <span>Print</span>
+        </button>
+    </div>
+</div>
+
+<!-- Main Container with B2B Left Sidebar & Full-Width Toggle -->
+<div class="gt-b2b-layout" id="gtMainLayout">
+
+    <!-- Left Vertical Nav matching user interface properly -->
+    <aside class="gt-b2b-sidebar" id="gtSidebar">
+        <div class="gt-sidebar-header">
+            <i class="fa-solid fa-bars-staggered"></i>
+            <span>STORE SERVICES</span>
+        </div>
+        <a href="<?php echo site_url('franchise/flight'); ?>" class="gt-nav-link">
+            <i class="fa-solid fa-plane-departure" style="color: #64748b;"></i>
+            <span>Flight</span>
+        </a>
+        <a href="<?php echo site_url('franchise/hotel'); ?>" class="gt-nav-link">
+            <i class="fa-solid fa-hotel" style="color: #64748b;"></i>
+            <span>Hotel</span>
+        </a>
+        <a href="<?php echo site_url('franchise/group-tours'); ?>" class="gt-nav-link active">
+            <i class="fa-solid fa-users-rectangle" style="color: #ea580c;"></i>
+            <span>Group Tour Follow Up</span>
+        </a>
+
+        <!-- Quick Store Info Badge -->
+        <div class="gt-sidebar-footer">
+            <div class="gt-store-badge-top">
+                <i class="fa-solid fa-circle-check" style="color: #16a34a;"></i>
+                <span>Verified Franchisee</span>
+            </div>
+            <div class="gt-store-badge-name">
+                <?php echo htmlspecialchars($store['store_name'] ?? 'Franchise Partner'); ?>
+            </div>
+            <div class="gt-store-badge-meta">
+                CODE: <strong><?php echo htmlspecialchars($store['agent_code'] ?? 'AGENT'); ?></strong>
+            </div>
+            <div class="gt-store-badge-pill">
+                <span class="gt-pulse-dot-green"></span> Live Departures Feed
+            </div>
+        </div>
+    </aside>
+
+    <!-- Right Content Area: Read-Only Master Board -->
+    <main style="min-width: 0;">
         
         <!-- Header Bar -->
         <div class="gt-header-bar">
             <div>
-                <h1 class="gt-title">
-                    <i class="fa-solid fa-users-rectangle" style="color: #78B722;"></i>
-                    Group Tour Follow Up
-                </h1>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap;">
+                    <h1 class="gt-title">
+                        <i class="fa-solid fa-users-rectangle" style="color: #78B722;"></i>
+                        Group Tour Follow Up
+                    </h1>
+                    <span style="background: #e0f2fe; color: #0284c7; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; text-transform: uppercase;">
+                        Live Departure Board
+                    </span>
+                </div>
                 <p class="gt-subtitle">
                     <strong>SKY PLANET HOLIDAYS</strong> &bull; Group Tour Board Follow-Up Sheet &bull; Live Departures &bull; Passenger Counts &bull; Visa &amp; Milestone Tracking
                 </p>
             </div>
-
-            <div class="gt-actions">
-                <button type="button" class="btn btn-secondary" onclick="exportTableToExcel()" title="Export current sheet to Excel" style="background: #ffffff; border: 1px solid #cbd5e1; color: #1e293b; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-file-excel" style="color: #16a34a;"></i> Export to Excel
-                </button>
-            </div>
         </div>
 
-        <!-- KPI Summary Stat Cards (Exact match to Screenshot 2) -->
+        <!-- KPI Summary Stat Cards (All 4 Cards Fully Visible in Row) -->
         <div class="gt-stats-grid">
             <div class="gt-stat-card">
                 <div class="gt-stat-icon" style="background: #eff6ff; color: #2563eb;">
@@ -382,7 +677,7 @@
                 <table class="gt-table" id="groupTourMasterTable">
                     <thead>
                         <tr>
-                            <th style="width: 50px;">S. NO</th>
+                            <th class="col-sno-head" style="width: 50px;">S. NO</th>
                             <th>DATE</th>
                             <th>TOUR CODE</th>
                             <th>COUNTRY NAME</th>
@@ -419,7 +714,7 @@
                         <!-- Month Divider Row Matching PDF -->
                         <tr class="month-header-row" data-month-header="<?php echo htmlspecialchars($currentMonth); ?>">
                             <td colspan="15">
-                                <i class="fa-regular fa-calendar-days" style="margin-right: 8px;"></i>
+                                <i class="fa-regular fa-calendar-days" style="margin-right: 6px;"></i>
                                 <?php echo htmlspecialchars($currentMonth); ?>
                             </td>
                         </tr>
@@ -429,135 +724,183 @@
                             data-month="<?php echo htmlspecialchars($t['month_group']); ?>"
                             data-search="<?php echo htmlspecialchars(strtolower($t['tour_code'] . ' ' . $t['country_name'] . ' ' . $t['handling_person'] . ' ' . $t['tour_manager'] . ' ' . $t['tour_date'] . ' ' . $t['visa_status'])); ?>">
                             
-                            <!-- 1. S. NO -->
+                            <!-- 1. S. NO (Sticky on Horizontal Scroll) -->
                             <td class="col-sno" style="font-weight: 700; color: #64748b;"><?php echo htmlspecialchars($t['s_no'] ?: $rowSeq); ?></td>
 
                             <!-- 2. DATE -->
-                            <td style="font-weight: 600;">
+                            <td style="color: #334155; font-weight: 500;">
                                 <i class="fa-regular fa-calendar" style="color: #0284c7; margin-right: 4px; font-size: 11px;"></i>
-                                <?php echo htmlspecialchars($t['tour_date'] ?: '-'); ?>
+                                <?php echo htmlspecialchars($t['tour_date'] ? date('d.m.Y', strtotime($t['tour_date'])) : '-'); ?>
                             </td>
 
                             <!-- 3. TOUR CODE -->
                             <td>
-                                <span class="badge-code"><?php echo htmlspecialchars($t['tour_code'] ?: '-'); ?></span>
+                                <span class="badge-code"><?php echo htmlspecialchars($t['tour_code']); ?></span>
                             </td>
 
                             <!-- 4. COUNTRY NAME -->
-                            <td>
-                                <strong style="color: #0f172a;"><?php echo htmlspecialchars($t['country_name'] ?: '-'); ?></strong>
+                            <td style="font-weight: 700; color: #0f172a;">
+                                <?php echo htmlspecialchars($t['country_name']); ?>
                             </td>
 
                             <!-- 5. TOUR AMOUNT -->
-                            <td>
-                                <span class="badge-amount"><?php echo htmlspecialchars($t['tour_amount'] ?: '-'); ?></span>
+                            <td class="badge-amount">
+                                <?php echo $t['tour_amount'] > 0 ? number_format($t['tour_amount']) : '-'; ?>
                             </td>
 
                             <!-- 6. CONFIRMED -->
                             <td>
-                                <span style="font-weight: 700; color: #0284c7;"><?php echo htmlspecialchars($t['confirmed'] ?: '-'); ?></span>
+                                <?php if (!empty($t['confirmed_breakdown'])): ?>
+                                    <span style="font-family: monospace; font-weight: 700; color: #0284c7; background: #f0f9ff; padding: 2px 6px; border-radius: 4px; border: 1px solid #bae6fd;">
+                                        <?php echo htmlspecialchars($t['confirmed_breakdown']); ?>
+                                    </span>
+                                <?php elseif ($t['confirmed_pax'] > 0): ?>
+                                    <strong style="color: #0284c7;"><?php echo $t['confirmed_pax']; ?></strong>
+                                <?php else: ?>
+                                    <span style="color: #94a3b8;">-</span>
+                                <?php endif; ?>
                             </td>
 
                             <!-- 7. GRP. TKN -->
-                            <td>
-                                <span style="font-weight: 700;"><?php echo htmlspecialchars($t['grp_tkn'] ?: '-'); ?></span>
+                            <td style="font-weight: 600; color: #334155;">
+                                <?php echo $t['group_taken'] > 0 ? $t['group_taken'] : '-'; ?>
                             </td>
 
                             <!-- 8. NEED -->
                             <td>
-                                <?php 
-                                $needVal = trim($t['need'] ?? '');
-                                $hasNeed = (!empty($needVal) && $needVal !== '-' && (int)$needVal > 0);
-                                ?>
-                                <span class="badge-need <?php echo $hasNeed ? 'has-need' : 'no-need'; ?>">
-                                    <?php echo htmlspecialchars($needVal ?: '-'); ?>
-                                </span>
+                                <?php if ($t['need_seats'] > 0): ?>
+                                    <span class="badge-need has-need"><?php echo $t['need_seats']; ?></span>
+                                <?php else: ?>
+                                    <span class="badge-need no-need">-</span>
+                                <?php endif; ?>
                             </td>
 
                             <!-- 9. 45 DAYS REMINDER -->
                             <td>
-                                <?php if (!empty($t['reminder_45']) && $t['reminder_45'] !== '-'): ?>
-                                <span style="color: #b45309; font-weight: 600; font-size: 12px; background: #fef3c7; padding: 2px 7px; border-radius: 4px;">
-                                    <i class="fa-regular fa-bell" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($t['reminder_45']); ?>
-                                </span>
+                                <?php if (!empty($t['reminder_45_days'])): ?>
+                                    <span style="background: #fef9c3; color: #854d0e; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                                        <i class="fa-regular fa-bell" style="font-size: 10px;"></i>
+                                        <?php echo htmlspecialchars(date('d.m.Y', strtotime($t['reminder_45_days']))); ?>
+                                    </span>
                                 <?php else: ?>
-                                <span style="color: #94a3b8;">-</span>
+                                    <span style="color: #cbd5e1;">-</span>
                                 <?php endif; ?>
                             </td>
 
                             <!-- 10. 30 DAYS REMINDER -->
                             <td>
-                                <?php if (!empty($t['reminder_30']) && $t['reminder_30'] !== '-'): ?>
-                                <span style="color: #b91c1c; font-weight: 600; font-size: 12px; background: #fee2e2; padding: 2px 7px; border-radius: 4px;">
-                                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($t['reminder_30']); ?>
-                                </span>
+                                <?php if (!empty($t['reminder_30_days'])): ?>
+                                    <span style="background: #fee2e2; color: #991b1b; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 10px;"></i>
+                                        <?php echo htmlspecialchars(date('d.m.Y', strtotime($t['reminder_30_days']))); ?>
+                                    </span>
                                 <?php else: ?>
-                                <span style="color: #94a3b8;">-</span>
+                                    <span style="color: #cbd5e1;">-</span>
                                 <?php endif; ?>
                             </td>
 
                             <!-- 11. TICKET STATUS -->
                             <td>
-                                <?php if (!empty($t['ticket_status']) && $t['ticket_status'] !== '-'): ?>
-                                <span class="badge-status ticket-taken">
-                                    <i class="fa-solid fa-check" style="font-size: 9px; margin-right: 2px;"></i> <?php echo htmlspecialchars($t['ticket_status']); ?>
-                                </span>
+                                <?php if (!empty($t['ticket_status'])): ?>
+                                    <span class="badge-status ticket-taken">
+                                        <i class="fa-solid fa-check" style="margin-right: 3px;"></i>
+                                        <?php echo htmlspecialchars($t['ticket_status']); ?>
+                                    </span>
                                 <?php else: ?>
-                                <span style="color: #94a3b8;">-</span>
+                                    <span style="color: #cbd5e1;">-</span>
                                 <?php endif; ?>
                             </td>
 
                             <!-- 12. VISA STATUS -->
                             <td>
-                                <?php if (!empty($t['visa_status']) && $t['visa_status'] !== '-'): ?>
-                                <span class="badge-status visa-include">
-                                    <i class="fa-solid fa-passport" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($t['visa_status']); ?>
-                                </span>
+                                <?php if (!empty($t['visa_status'])): ?>
+                                    <span class="badge-status visa-include">
+                                        <i class="fa-solid fa-passport" style="margin-right: 3px;"></i>
+                                        <?php echo htmlspecialchars($t['visa_status']); ?>
+                                    </span>
                                 <?php else: ?>
-                                <span style="color: #94a3b8;">-</span>
+                                    <span style="color: #cbd5e1;">-</span>
                                 <?php endif; ?>
                             </td>
 
                             <!-- 13. HANDLING PERSON -->
                             <td>
-                                <?php if (!empty($t['handling_person']) && $t['handling_person'] !== '-'): ?>
-                                <span class="badge-person">
-                                    <i class="fa-regular fa-user" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($t['handling_person']); ?>
-                                </span>
+                                <?php if (!empty($t['handling_person'])): ?>
+                                    <span class="badge-person">
+                                        <i class="fa-regular fa-user" style="margin-right: 4px; font-size: 10px; color: #64748b;"></i>
+                                        <?php echo htmlspecialchars($t['handling_person']); ?>
+                                    </span>
                                 <?php else: ?>
-                                <span style="color: #94a3b8;">-</span>
+                                    <span style="color: #cbd5e1;">-</span>
                                 <?php endif; ?>
                             </td>
 
                             <!-- 14. TRAVEL BAG -->
-                            <td>
-                                <span style="color: #64748b;"><?php echo htmlspecialchars($t['travel_bag'] ?: '-'); ?></span>
+                            <td style="color: #64748b;">
+                                <?php echo htmlspecialchars($t['travel_bag'] ?: '-'); ?>
                             </td>
 
                             <!-- 15. TOUR MANAGER -->
                             <td>
-                                <?php if (!empty($t['tour_manager']) && $t['tour_manager'] !== '-' && strtoupper($t['tour_manager']) !== 'NO TOUR MANAGER'): ?>
-                                <span class="badge-manager">
-                                    <i class="fa-solid fa-user-tie" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($t['tour_manager']); ?>
-                                </span>
+                                <?php if (!empty($t['tour_manager'])): ?>
+                                    <span class="badge-manager">
+                                        <i class="fa-solid fa-user-tie" style="margin-right: 4px; font-size: 10px;"></i>
+                                        <?php echo htmlspecialchars($t['tour_manager']); ?>
+                                    </span>
                                 <?php else: ?>
-                                <span style="color: #94a3b8; font-size: 11.5px;"><?php echo htmlspecialchars($t['tour_manager'] ?: '-'); ?></span>
+                                    <span style="color: #cbd5e1;">-</span>
                                 <?php endif; ?>
                             </td>
 
                         </tr>
-                        <?php $rowSeq++; endforeach; ?>
+                        <?php 
+                            $rowSeq++;
+                            endforeach; 
+                        ?>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div>
 
-    </div>
+    </main>
 </div>
 
 <script>
-// 1. Real-time Search Filter Across Table
+// 1. Toggle Full Screen Table View (Hides/Shows Sidebar) with LocalStorage
+function toggleSidebarLayout() {
+    const layout = document.getElementById('gtMainLayout');
+    const btnText = document.getElementById('toggleSidebarText');
+    const icon = document.getElementById('toggleIcon');
+    const isFull = layout.classList.toggle('full-width');
+    
+    if (isFull) {
+        btnText.textContent = 'Show Left Sidebar';
+        icon.className = 'fa-solid fa-bars';
+        localStorage.setItem('voyogo_gt_sidebar', 'collapsed');
+    } else {
+        btnText.textContent = 'Hide Left Sidebar';
+        icon.className = 'fa-solid fa-table-columns';
+        localStorage.setItem('voyogo_gt_sidebar', 'expanded');
+    }
+}
+
+// Check saved preference on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const pref = localStorage.getItem('voyogo_gt_sidebar');
+    if (pref === 'collapsed') {
+        const layout = document.getElementById('gtMainLayout');
+        const btnText = document.getElementById('toggleSidebarText');
+        const icon = document.getElementById('toggleIcon');
+        if (layout && btnText && icon) {
+            layout.classList.add('full-width');
+            btnText.textContent = 'Show Left Sidebar';
+            icon.className = 'fa-solid fa-bars';
+        }
+    }
+});
+
+// 2. Real-time Search Filter Across Table
 function filterTableRealtime(query) {
     const q = query.trim().toLowerCase();
     const rows = document.querySelectorAll('.tour-data-row');
@@ -574,7 +917,6 @@ function filterTableRealtime(query) {
         }
     });
 
-    // Check which month headers have at least one visible tour row
     monthHeaders.forEach(mh => {
         const monthName = mh.getAttribute('data-month-header');
         const hasVisible = Array.from(rows).some(r => r.getAttribute('data-month') === monthName && r.style.display !== 'none');
@@ -585,7 +927,7 @@ function filterTableRealtime(query) {
     if (countElem) countElem.textContent = visibleCount;
 }
 
-// 2. Export Table to Excel (.xlsx)
+// 3. Export Table to Excel (.xlsx)
 function exportTableToExcel() {
     const table = document.getElementById('groupTourMasterTable');
     if (!table) return;

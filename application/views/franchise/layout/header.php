@@ -223,6 +223,11 @@
             padding: 0 20px;
             flex: 1;
             width: 100%;
+        .store-container.wide-container {
+            max-width: 1680px;
+            width: calc(100% - 32px);
+            margin: 20px auto;
+            padding: 0 16px;
         }
 
         /* Alerts */
@@ -322,7 +327,7 @@
     </div>
 </header>
 
-<div class="store-container">
+<div class="store-container <?php echo ($active_menu ?? '') === 'group_tours' ? 'wide-container' : ''; ?>">
 
     <!-- Flash Alerts -->
     <?php if ($this->session->flashdata('success')): ?>
