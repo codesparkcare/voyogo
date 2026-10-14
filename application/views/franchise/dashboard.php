@@ -11,6 +11,10 @@
             <i class="fa-solid fa-hotel" style="font-size: 18px; color: #64748b;"></i>
             <span>Hotel</span>
         </a>
+        <a href="<?php echo site_url('franchise/group-tours'); ?>" style="display: flex; align-items: center; gap: 14px; padding: 18px 20px; text-decoration: none; color: #475569; font-weight: 600; font-size: 15px; border-left: 5px solid transparent; transition: background 0.15s;">
+            <i class="fa-solid fa-users-rectangle" style="font-size: 18px; color: #64748b;"></i>
+            <span>Group Tour Follow Up</span>
+        </a>
     </div>
 
     <!-- Right Side: Flight Search Box (Faithfully Matching 1st Screenshot) -->

@@ -275,6 +275,11 @@
                 </a>
             </li>
             <li>
+                <a href="<?php echo site_url('franchise/group-tours'); ?>" class="<?php echo ($active_menu ?? '') === 'group_tours' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-users-rectangle"></i> Group Tour Follow Up
+                </a>
+            </li>
+            <li>
                 <a href="<?php echo site_url('franchise/bookings'); ?>" class="<?php echo ($active_menu ?? '') === 'bookings' ? 'active' : ''; ?>">
                     <i class="fa-solid fa-clipboard-list"></i> My Bookings
                 </a>

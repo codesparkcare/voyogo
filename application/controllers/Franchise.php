@@ -2127,4 +2127,27 @@ class Franchise extends CI_Controller {
         $this->load->view('franchise/wallet_ledger', $data);
         $this->load->view('franchise/layout/footer');
     }
+
+    // =========================================================================
+    // 5. GROUP TOUR FOLLOW UP (READ-ONLY FOR FRANCHISE STORE OWNERS)
+    // =========================================================================
+    public function group_tours() {
+        $store = $this->_check_auth();
+
+        $selected_month = $this->input->get('month') ?: 'all';
+        $search         = $this->input->get('q') ?: '';
+
+        $data['title']          = 'Group Tour Follow Up - Voyogo B2B';
+        $data['active_menu']    = 'group_tours';
+        $data['store']          = $store;
+        $data['selected_month'] = $selected_month;
+        $data['search']         = $search;
+        $data['tours']          = $this->Franchise_model->get_group_tours($selected_month, $search);
+        $data['months']         = $this->Franchise_model->get_group_tour_months();
+        $data['stats']          = $this->Franchise_model->get_group_tours_stats();
+
+        $this->load->view('franchise/layout/header', $data);
+        $this->load->view('franchise/group_tours', $data);
+        $this->load->view('franchise/layout/footer');
+    }
 }
