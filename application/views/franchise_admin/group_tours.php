@@ -385,7 +385,10 @@
         <button type="button" class="btn btn-secondary" onclick="exportTableToExcel()" title="Export current sheet to Excel">
             <i class="fa-solid fa-file-export"></i> Export Excel
         </button>
-        <a href="<?php echo site_url('franchise-admin/group-tour-clear-all'); ?>" class="btn btn-secondary" style="color: #ef4444; border-color: #fecaca;" onclick="return confirm('Are you sure you want to clear all group tour records? You can upload a new Excel file anytime.');" title="Clear all tours">
+        <a href="<?php echo site_url('franchise-admin/group-tour-seed-sample'); ?>" class="btn btn-secondary" onclick="return confirm('Restore default sample tours from workbook1.pdf? This will replace your current records.');" title="Restore workbook1.pdf sample rows">
+            <i class="fa-solid fa-rotate-left"></i> Restore Sample Data
+        </a>
+        <a href="<?php echo site_url('franchise-admin/group-tour-clear-all'); ?>" class="btn btn-secondary" style="color: #ef4444; border-color: #fecaca;" onclick="return confirm('Are you sure you want to permanently clear all group tour records? You can upload a new Excel file anytime.');" title="Clear all tours">
             <i class="fa-solid fa-trash-can"></i> Clear All
         </a>
     </div>
@@ -500,6 +503,7 @@
                 <?php else: ?>
                 <?php 
                 $currentMonth = '';
+                $rowSeq = 1;
                 foreach ($tours as $t): 
                     $tourMonth = $t['month_group'] ?: 'General';
                     if ($tourMonth !== $currentMonth):
@@ -515,12 +519,13 @@
                 <?php endif; ?>
 
                 <tr class="tour-data-row" 
+                    id="tour-row-<?php echo $t['id']; ?>"
                     data-id="<?php echo $t['id']; ?>"
                     data-month="<?php echo htmlspecialchars($t['month_group']); ?>"
                     data-search="<?php echo htmlspecialchars(strtolower($t['tour_code'] . ' ' . $t['country_name'] . ' ' . $t['handling_person'] . ' ' . $t['tour_manager'] . ' ' . $t['tour_date'] . ' ' . $t['visa_status'])); ?>">
                     
                     <!-- 1. S. NO -->
-                    <td style="font-weight: 700; color: #64748b;"><?php echo htmlspecialchars($t['s_no'] ?: '-'); ?></td>
+                    <td class="col-sno" style="font-weight: 700; color: #64748b;"><?php echo htmlspecialchars($t['s_no'] ?: $rowSeq); ?></td>
 
                     <!-- 2. DATE -->
                     <td style="font-weight: 600;">
@@ -640,13 +645,13 @@
                         <button type="button" class="btn btn-secondary btn-sm" onclick='editTourRow(<?php echo json_encode($t); ?>)' title="Edit Row" style="padding: 4px 8px;">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
-                        <a href="<?php echo site_url('franchise-admin/group-tour-delete-row/' . $t['id']); ?>" class="btn btn-secondary btn-sm" onclick="return confirm('Delete this tour record?');" title="Delete Row" style="padding: 4px 8px; color: #ef4444;">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="deleteTourRow(event, <?php echo (int)$t['id']; ?>, '<?php echo htmlspecialchars(addslashes($t['tour_code'])); ?>')" title="Delete Row" style="padding: 4px 8px; color: #ef4444;">
                             <i class="fa-solid fa-trash"></i>
-                        </a>
+                        </button>
                     </td>
 
                 </tr>
-                <?php endforeach; ?>
+                <?php $rowSeq++; endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>
@@ -679,14 +684,14 @@
                 <label style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; display: block; margin-bottom: 8px;">
                     Import Method:
                 </label>
-                <div style="display: flex; gap: 24px;">
+                <div style="display: flex; gap: 24px; flex-wrap: wrap;">
                     <label style="display: flex; align-items: center; gap: 8px; font-size: 13.5px; cursor: pointer;">
-                        <input type="radio" name="importMode" value="append" checked style="accent-color: #78B722;">
-                        <span><strong>Append</strong> (Add new rows to existing sheet)</span>
+                        <input type="radio" name="importMode" value="replace" checked style="accent-color: #78B722;">
+                        <span><strong>Sync &amp; Overwrite (Recommended)</strong> — Replaces entire board so all changes and newly added rows in your Excel file are properly updated</span>
                     </label>
                     <label style="display: flex; align-items: center; gap: 8px; font-size: 13.5px; cursor: pointer;">
-                        <input type="radio" name="importMode" value="replace" style="accent-color: #78B722;">
-                        <span><strong>Replace All</strong> (Overwrite existing sheet)</span>
+                        <input type="radio" name="importMode" value="append" style="accent-color: #78B722;">
+                        <span><strong>Append</strong> — Add to the bottom of existing rows</span>
                     </label>
                 </div>
             </div>
@@ -1007,7 +1012,7 @@ function processExcelSheetRows(rows) {
         if (!tourCode && !country && !tourDate) continue;
 
         parsedImportRows.push({
-            s_no: String(r[colMap.s_no !== undefined ? colMap.s_no : 0] || '').trim(),
+            s_no: String(parsedImportRows.length + 1),
             tour_date: tourDate,
             tour_code: tourCode,
             country_name: country,
@@ -1153,6 +1158,58 @@ function saveTourRow(e) {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-save"></i> Save Tour Record';
     });
+}
+
+// 5.1 Delete Tour Row with immediate AJAX DOM removal and re-sequencing
+function deleteTourRow(e, id, tourCode) {
+    if (e) e.preventDefault();
+    if (!confirm('Are you sure you want to permanently delete tour "' + (tourCode || id) + '"?')) {
+        return;
+    }
+
+    const tr = document.getElementById('tour-row-' + id) || (e ? e.target.closest('tr') : null);
+    if (tr) tr.style.opacity = '0.3';
+
+    fetch('<?php echo site_url("franchise-admin/group-tour-delete-row/"); ?>' + id + '?ajax=1', {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status) {
+            if (tr) {
+                tr.remove();
+                resequenceTableDOM();
+            } else {
+                window.location.reload();
+            }
+        } else {
+            alert('Failed to delete row: ' + (data.message || 'Server error'));
+            if (tr) tr.style.opacity = '1';
+        }
+    })
+    .catch(err => {
+        // Fallback to normal HTTP redirect
+        window.location.href = '<?php echo site_url("franchise-admin/group-tour-delete-row/"); ?>' + id;
+    });
+}
+
+function resequenceTableDOM() {
+    const snoCells = document.querySelectorAll('.tour-data-row .col-sno');
+    snoCells.forEach((cell, idx) => {
+        cell.textContent = (idx + 1);
+    });
+
+    const rows = document.querySelectorAll('.tour-data-row');
+    const countElem = document.getElementById('visibleRowCount');
+    if (countElem) countElem.textContent = rows.length;
+
+    // Check if table is empty
+    if (rows.length === 0) {
+        window.location.reload();
+    }
 }
 
 // 6. Real-time Search Filter Across Table

@@ -133,6 +133,7 @@ $route['franchise-admin/group-tour-import']        = 'Franchise_admin/group_tour
 $route['franchise-admin/group-tour-save-row']      = 'Franchise_admin/group_tour_save_row';
 $route['franchise-admin/group-tour-delete-row/(:num)'] = 'Franchise_admin/group_tour_delete_row/$1';
 $route['franchise-admin/group-tour-clear-all']     = 'Franchise_admin/group_tour_clear_all';
+$route['franchise-admin/group-tour-seed-sample']   = 'Franchise_admin/group_tour_seed_sample';
 $route['franchise-admin/group-tour-export-template'] = 'Franchise_admin/group_tour_export_template';
 
 // Franchise Store Owner (B2B Portal) & Landing Page

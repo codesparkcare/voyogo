@@ -436,20 +436,32 @@ class Franchise_admin extends CI_Controller {
         $this->_check_auth();
         $this->Franchise_model->delete_group_tour($id);
 
-        if ($this->input->is_ajax_request()) {
+        if ($this->input->is_ajax_request() || $this->input->get('ajax') == 1) {
             header('Content-Type: application/json');
-            echo json_encode(array('status' => true, 'message' => 'Row deleted successfully.'));
+            echo json_encode(array(
+                'status'  => true,
+                'message' => 'Row deleted successfully.',
+                'stats'   => $this->Franchise_model->get_group_tours_stats()
+            ));
             return;
         }
 
+        $ref = $this->input->server('HTTP_REFERER');
         $this->session->set_flashdata('success', 'Tour record deleted.');
-        redirect('franchise-admin/group-tour-follow-up');
+        redirect($ref ? $ref : 'franchise-admin/group-tour-follow-up');
     }
 
     public function group_tour_clear_all() {
         $this->_check_auth();
         $this->Franchise_model->clear_all_group_tours();
-        $this->session->set_flashdata('success', 'All group tour records cleared. You can upload a new Excel file anytime.');
+        $this->session->set_flashdata('success', 'All group tour records have been permanently cleared. You can upload a new Excel file anytime.');
+        redirect('franchise-admin/group-tour-follow-up');
+    }
+
+    public function group_tour_seed_sample() {
+        $this->_check_auth();
+        $count = $this->Franchise_model->seed_default_group_tours();
+        $this->session->set_flashdata('success', "Loaded {$count} sample tour records from workbook1.pdf.");
         redirect('franchise-admin/group-tour-follow-up');
     }
 

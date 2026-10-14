@@ -328,12 +328,6 @@ class Franchise_model extends CI_Model {
             KEY `month_group_idx` (`month_group`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
         $this->db->query($sql);
-
-        // Auto-seed sample rows from workbook1.pdf if empty
-        $count = $this->db->count_all('franchise_group_tours');
-        if ($count === 0) {
-            $this->seed_default_group_tours();
-        }
     }
 
     public function get_group_tours($month_group = null, $search = null) {
@@ -405,6 +399,17 @@ class Franchise_model extends CI_Model {
         );
     }
 
+    public function resequence_s_no() {
+        $rows = $this->db->order_by('id', 'ASC')->get('franchise_group_tours')->result_array();
+        if (!empty($rows)) {
+            $num = 1;
+            foreach ($rows as $r) {
+                $this->db->where('id', $r['id'])->update('franchise_group_tours', array('s_no' => (string)$num));
+                $num++;
+            }
+        }
+    }
+
     public function insert_group_tours_batch($rows, $replace = false) {
         $this->ensure_group_tours_table();
         if ($replace) {
@@ -417,9 +422,14 @@ class Franchise_model extends CI_Model {
 
         $inserted = 0;
         $batch = array();
+        $s_no_counter = 1;
+        if (!$replace) {
+            $s_no_counter = ($this->db->count_all('franchise_group_tours')) + 1;
+        }
+
         foreach ($rows as $r) {
             $batch[] = array(
-                's_no'            => isset($r['s_no']) ? trim($r['s_no']) : null,
+                's_no'            => (string)($s_no_counter++),
                 'tour_date'       => isset($r['tour_date']) ? trim($r['tour_date']) : null,
                 'tour_code'       => isset($r['tour_code']) ? trim($r['tour_code']) : null,
                 'country_name'    => isset($r['country_name']) ? trim($r['country_name']) : null,
@@ -449,6 +459,7 @@ class Franchise_model extends CI_Model {
             $this->db->insert_batch('franchise_group_tours', $batch);
         }
 
+        $this->resequence_s_no();
         return $inserted;
     }
 
@@ -479,13 +490,17 @@ class Franchise_model extends CI_Model {
             return $id;
         } else {
             $this->db->insert('franchise_group_tours', $record);
-            return $this->db->insert_id();
+            $new_id = $this->db->insert_id();
+            $this->resequence_s_no();
+            return $new_id;
         }
     }
 
     public function delete_group_tour($id) {
         $this->ensure_group_tours_table();
-        return $this->db->where('id', (int)$id)->delete('franchise_group_tours');
+        $deleted = $this->db->where('id', (int)$id)->delete('franchise_group_tours');
+        $this->resequence_s_no();
+        return $deleted;
     }
 
     public function clear_all_group_tours() {
@@ -494,6 +509,8 @@ class Franchise_model extends CI_Model {
     }
 
     public function seed_default_group_tours() {
+        $this->ensure_group_tours_table();
+        $this->db->truncate('franchise_group_tours');
         $samples = array(
             // SEPTEMBER:2026
             array('s_no'=>'1', 'tour_date'=>'16.09.2026', 'tour_code'=>'NBO160926', 'country_name'=>'KENYA (5N/6D)', 'tour_amount'=>'259,000', 'confirmed'=>'21+1+1+2+2', 'grp_tkn'=>'22', 'need'=>'-', 'reminder_45'=>'02.08.2026', 'reminder_30'=>'17.08.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'WE APPLY (INCLUDE)', 'handling_person'=>'KEERTHANA DEVI', 'travel_bag'=>'-', 'tour_manager'=>'YOGESH', 'month_group'=>'SEPTEMBER:2026'),
@@ -536,5 +553,7 @@ class Franchise_model extends CI_Model {
         );
 
         $this->db->insert_batch('franchise_group_tours', $samples);
+        $this->resequence_s_no();
+        return count($samples);
     }
 }
