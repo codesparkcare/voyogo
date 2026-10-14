@@ -223,11 +223,12 @@
             padding: 0 20px;
             flex: 1;
             width: 100%;
+        }
         .store-container.wide-container {
-            max-width: 1680px;
-            width: calc(100% - 32px);
-            margin: 20px auto;
-            padding: 0 16px;
+            max-width: 98% !important;
+            width: 98% !important;
+            margin: 16px auto !important;
+            padding: 0 10px !important;
         }
 
         /* Alerts */

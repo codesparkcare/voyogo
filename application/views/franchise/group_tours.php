@@ -2,6 +2,15 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
+/* Full Screen Width Expansion */
+.store-container,
+.store-container.wide-container {
+    max-width: 98% !important;
+    width: 98% !important;
+    margin: 14px auto !important;
+    padding: 0 10px !important;
+}
+
 /* Animations */
 @keyframes pulseLive {
     0%, 100% { opacity: 1; transform: scale(1); }
