@@ -18,6 +18,7 @@
             --border: #e2e8f0;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        ul, ol, li { list-style: none; }
         body { background-color: var(--body-bg); color: var(--text-dark); display: flex; min-height: 100vh; }
         
         /* Sidebar */
@@ -54,22 +55,30 @@
             letter-spacing: 0.5px;
         }
         .sidebar-nav {
+            list-style: none;
+            margin: 0;
             padding: 20px 12px;
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
+        .nav-item {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
         .nav-item a {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 16px;
+            padding: 11px 14px;
             color: #cbd5e1;
             text-decoration: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 500;
+            white-space: nowrap;
             transition: all 0.2s;
         }
         .nav-item a:hover {
@@ -79,9 +88,18 @@
         .nav-item.active a {
             background: var(--accent-green);
             color: #ffffff;
-            font-weight: 700;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(120, 183, 34, 0.25);
         }
-        .nav-item a i { width: 20px; text-align: center; }
+        .nav-item a i {
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+            font-size: 15px;
+        }
+        .nav-item a span {
+            white-space: nowrap;
+        }
         .sidebar-footer {
             padding: 16px 20px;
             border-top: 1px solid rgba(255,255,255,0.1);
@@ -255,7 +273,7 @@
         <li class="nav-item <?php echo ($active_menu == 'group_tours') ? 'active' : ''; ?>">
             <a href="<?php echo site_url('franchise-admin/group-tour-follow-up'); ?>">
                 <i class="fa-solid fa-users-rectangle"></i>
-                <span>GROUP TOUR FOLLOW UP</span>
+                <span>Group Tour Follow Up</span>
             </a>
         </li>
     </ul>
