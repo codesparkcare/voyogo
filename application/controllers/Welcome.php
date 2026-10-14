@@ -147,11 +147,11 @@ class Welcome extends CI_Controller {
             // If return flights were empty, synthesize reverse sector return flights with realistic afternoon/evening timings
             if (empty($returnFlights)) {
                 $returnFlightTemplates = array(
-                    array('vac' => '6E', 'fn' => '2135', 'name' => 'IndiGo', 'dep' => '15:30', 'arr' => '17:45', 'gross' => 5150.00, 'net' => 4300.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => '6E|1'),
-                    array('vac' => 'SG', 'fn' => '163',  'name' => 'SpiceJet', 'dep' => '17:45', 'arr' => '20:00', 'gross' => 4999.00, 'net' => 4150.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'SG|1'),
-                    array('vac' => 'AI', 'fn' => '806',  'name' => 'Air India', 'dep' => '19:15', 'arr' => '21:30', 'gross' => 5450.00, 'net' => 4600.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'AI|1'),
-                    array('vac' => 'QP', 'fn' => '1312', 'name' => 'Akasa Air', 'dep' => '21:30', 'arr' => '23:45', 'gross' => 4850.00, 'net' => 4000.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'QP|1'),
-                    array('vac' => 'UK', 'fn' => '946',  'name' => 'Vistara', 'dep' => '22:45', 'arr' => '01:00', 'gross' => 5800.00, 'net' => 4950.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'UK|1')
+                    array('vac' => '6E', 'fn' => '2135', 'name' => 'IndiGo', 'dep' => '15:30', 'arr' => '17:45', 'gross' => 5150.00, 'net' => 4300.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => '6E|1', 'ref' => false),
+                    array('vac' => 'SG', 'fn' => '163',  'name' => 'SpiceJet', 'dep' => '17:45', 'arr' => '20:00', 'gross' => 4999.00, 'net' => 4150.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'SG|1', 'ref' => false),
+                    array('vac' => 'AI', 'fn' => '806',  'name' => 'Air India', 'dep' => '19:15', 'arr' => '21:30', 'gross' => 5450.00, 'net' => 4600.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'AI|1', 'ref' => true),
+                    array('vac' => 'QP', 'fn' => '1312', 'name' => 'Akasa Air', 'dep' => '21:30', 'arr' => '23:45', 'gross' => 4850.00, 'net' => 4000.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'QP|1', 'ref' => false),
+                    array('vac' => 'UK', 'fn' => '946',  'name' => 'Vistara', 'dep' => '22:45', 'arr' => '01:00', 'gross' => 5800.00, 'net' => 4950.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'UK|1', 'ref' => true)
                 );
                 foreach ($returnFlightTemplates as $rft) {
                     $airlineMeta = $this->benzyflightapi->getAirlineMeta($rft['vac']);
@@ -173,7 +173,8 @@ class Welcome extends CI_Controller {
                         'price' => $rft['gross'],
                         'base_fare' => $rft['net'],
                         'taxes' => max(0, $rft['gross'] - $rft['net']),
-                        'refundable' => true,
+                        'refundable' => $rft['ref'],
+                        'Refundable' => $rft['ref'],
                         'hold' => true,
                         'hold_info' => 'E|01:00|1.00|SE|EE',
                         'baggage' => '15 Kg',

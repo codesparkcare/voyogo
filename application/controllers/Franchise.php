@@ -303,6 +303,21 @@ class Franchise extends CI_Controller {
             $netPrice   = (float)($item['base_fare'] ?? ($item['net_fare'] ?? round($grossPrice * 0.88, 2)));
             $taxPrice   = max(0, $grossPrice - $netPrice);
 
+            $refRaw = strtoupper(trim((string)($item['refundable'] ?? ($item['Refundable'] ?? ''))));
+            $fbc = strtoupper(trim((string)($item['fbc'] ?? ($item['FareBasisCode'] ?? ''))));
+            $fc = strtoupper(trim((string)($item['fare_class'] ?? ($item['FareClass'] ?? ''))));
+            $isLcc = in_array($code, ['6E', 'SG', 'QP', 'IX', 'I5', 'G9', 'FZ', 'J9', 'F3', 'XY', 'AK', 'FD', 'TR']);
+            $isItemRef = true;
+            if ($refRaw === 'Y' || $refRaw === '1' || $refRaw === 'R' || $refRaw === 'TRUE') {
+                $isItemRef = true;
+            } elseif ($refRaw === 'N' || $refRaw === '0' || $refRaw === 'NR' || $refRaw === 'FALSE') {
+                $isItemRef = false;
+            } elseif ($fc === 'GS' || strpos($fbc, 'SAVER') !== false || strpos($fbc, 'EOWIN') !== false) {
+                $isItemRef = false;
+            } elseif ($isLcc) {
+                $isItemRef = false;
+            }
+
             $flightObj = array(
                 'id'            => $item['id'] ?? ('FL_' . $code . '_' . ($idx + 101)),
                 'ResultID'      => !empty($item['tui']) ? $item['tui'] : (!empty($tui) ? $tui : ('FL_' . ($idx + 101))),
@@ -328,7 +343,8 @@ class Franchise extends CI_Controller {
                 'total_fare'    => $grossPrice,
                 'baggage'       => $item['baggage'] ?? '15 Kg',
                 'cabin_baggage' => '7 Kg',
-                'refundable'    => true,
+                'refundable'    => $isItemRef,
+                'Refundable'    => $isItemRef,
                 'return_identifier' => isset($item['return_identifier']) ? (int)$item['return_identifier'] : 0
             );
 
@@ -342,11 +358,11 @@ class Franchise extends CI_Controller {
         // Resilient Fallback for smooth presentation if Benzy returns empty in test mode
         if (empty($onwardFlights)) {
             $mockDefaults = array(
-                array('code' => '6E', 'fn' => '2041', 'dep' => '06:00', 'arr' => '08:15', 'dur' => '02h 15m', 'gross' => 5050, 'net' => 4200, 'stops' => 0),
-                array('code' => 'AI', 'fn' => '805',  'dep' => '09:30', 'arr' => '11:45', 'dur' => '02h 15m', 'gross' => 5600, 'net' => 4700, 'stops' => 0),
-                array('code' => 'SG', 'fn' => '162',  'dep' => '13:15', 'arr' => '15:30', 'dur' => '02h 15m', 'gross' => 4950, 'net' => 4100, 'stops' => 0),
-                array('code' => 'QP', 'fn' => '1120', 'dep' => '18:40', 'arr' => '20:55', 'dur' => '02h 15m', 'gross' => 4800, 'net' => 3950, 'stops' => 0),
-                array('code' => 'UK', 'fn' => '945',  'dep' => '21:15', 'arr' => '23:30', 'dur' => '02h 15m', 'gross' => 5850, 'net' => 4900, 'stops' => 0)
+                array('code' => '6E', 'fn' => '2041', 'dep' => '06:00', 'arr' => '08:15', 'dur' => '02h 15m', 'gross' => 5050, 'net' => 4200, 'stops' => 0, 'ref' => false),
+                array('code' => 'AI', 'fn' => '805',  'dep' => '09:30', 'arr' => '11:45', 'dur' => '02h 15m', 'gross' => 5600, 'net' => 4700, 'stops' => 0, 'ref' => true),
+                array('code' => 'SG', 'fn' => '162',  'dep' => '13:15', 'arr' => '15:30', 'dur' => '02h 15m', 'gross' => 4950, 'net' => 4100, 'stops' => 0, 'ref' => false),
+                array('code' => 'QP', 'fn' => '1120', 'dep' => '18:40', 'arr' => '20:55', 'dur' => '02h 15m', 'gross' => 4800, 'net' => 3950, 'stops' => 0, 'ref' => false),
+                array('code' => 'UK', 'fn' => '945',  'dep' => '21:15', 'arr' => '23:30', 'dur' => '02h 15m', 'gross' => 5850, 'net' => 4900, 'stops' => 0, 'ref' => true)
             );
             foreach ($mockDefaults as $mIdx => $m) {
                 $c = $m['code'];
@@ -375,7 +391,8 @@ class Franchise extends CI_Controller {
                     'total_fare'    => $m['gross'],
                     'baggage'       => '15 Kg',
                     'cabin_baggage' => '7 Kg',
-                    'refundable'    => true,
+                    'refundable'    => !empty($m['ref']),
+                    'Refundable'    => !empty($m['ref']),
                     'return_identifier' => 0
                 );
             }
@@ -383,11 +400,11 @@ class Franchise extends CI_Controller {
 
         if ($is_roundtrip && empty($inboundFlights)) {
             $mockRetDefaults = array(
-                array('code' => '6E', 'fn' => '2135', 'dep' => '15:30', 'arr' => '17:45', 'dur' => '02h 15m', 'gross' => 5150, 'net' => 4300, 'stops' => 0),
-                array('code' => 'SG', 'fn' => '163',  'dep' => '17:45', 'arr' => '20:00', 'dur' => '02h 15m', 'gross' => 4999, 'net' => 4150, 'stops' => 0),
-                array('code' => 'AI', 'fn' => '806',  'dep' => '19:15', 'arr' => '21:30', 'dur' => '02h 15m', 'gross' => 5450, 'net' => 4600, 'stops' => 0),
-                array('code' => 'QP', 'fn' => '1312', 'dep' => '21:30', 'arr' => '23:45', 'dur' => '02h 15m', 'gross' => 4850, 'net' => 4000, 'stops' => 0),
-                array('code' => 'UK', 'fn' => '946',  'dep' => '22:45', 'arr' => '01:00', 'dur' => '02h 15m', 'gross' => 5800, 'net' => 4950, 'stops' => 0)
+                array('code' => '6E', 'fn' => '2135', 'dep' => '15:30', 'arr' => '17:45', 'dur' => '02h 15m', 'gross' => 5150, 'net' => 4300, 'stops' => 0, 'ref' => false),
+                array('code' => 'SG', 'fn' => '163',  'dep' => '17:45', 'arr' => '20:00', 'dur' => '02h 15m', 'gross' => 4999, 'net' => 4150, 'stops' => 0, 'ref' => false),
+                array('code' => 'AI', 'fn' => '806',  'dep' => '19:15', 'arr' => '21:30', 'dur' => '02h 15m', 'gross' => 5450, 'net' => 4600, 'stops' => 0, 'ref' => true),
+                array('code' => 'QP', 'fn' => '1312', 'dep' => '21:30', 'arr' => '23:45', 'dur' => '02h 15m', 'gross' => 4850, 'net' => 4000, 'stops' => 0, 'ref' => false),
+                array('code' => 'UK', 'fn' => '946',  'dep' => '22:45', 'arr' => '01:00', 'dur' => '02h 15m', 'gross' => 5800, 'net' => 4950, 'stops' => 0, 'ref' => true)
             );
             foreach ($mockRetDefaults as $rIdx => $rm) {
                 $rc = $rm['code'];
@@ -416,7 +433,8 @@ class Franchise extends CI_Controller {
                     'total_fare'    => $rm['gross'],
                     'baggage'       => '15 Kg',
                     'cabin_baggage' => '7 Kg',
-                    'refundable'    => true,
+                    'refundable'    => !empty($rm['ref']),
+                    'Refundable'    => !empty($rm['ref']),
                     'return_identifier' => 1
                 );
             }

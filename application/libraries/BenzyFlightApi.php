@@ -3157,10 +3157,28 @@ class BenzyFlightApi {
                         'price' => $grossFare,
                         'base_fare' => $netFare,
                         'taxes' => $taxes,
-                        'refundable' => (isset($j['Refundable']) && $j['Refundable'] === 'Y'),
+                        'refundable' => (function() use ($j, $airlineCode) {
+                            $refVal = isset($j['Refundable']) ? strtoupper(trim((string)$j['Refundable'])) : '';
+                            $fcVal = isset($j['FareClass']) ? strtoupper(trim((string)$j['FareClass'])) : '';
+                            $fbcVal = isset($j['FBC']) ? strtoupper(trim((string)$j['FBC'])) : '';
+                            $noticeVal = isset($j['Notice']) ? strtoupper(trim((string)$j['Notice'])) : '';
+                            $lccList = array('QP', 'SG', 'F3', 'G9', 'IX');
+                            if (in_array($refVal, array('N', 'NO', 'FALSE', '0', 'NON-REFUNDABLE')) || strpos($noticeVal, 'NON-REFUNDABLE') !== false || strpos($fbcVal, 'NONREF') !== false || strpos($fbcVal, 'SAVER') !== false) {
+                                return false;
+                            }
+                            if (in_array($refVal, array('Y', 'R', 'TRUE', '1', 'REFUNDABLE'))) {
+                                if (in_array($airlineCode, $lccList) && ($fcVal === 'GS' || strpos($fbcVal, 'EOWIN') !== false)) {
+                                    return false;
+                                }
+                                return true;
+                            }
+                            return !in_array($airlineCode, array_merge($lccList, array('6E')));
+                        })(),
                         'hold' => !empty($j['Hold']),
                         'hold_info' => !empty($j['HoldInfo']) ? $j['HoldInfo'] : '',
                         'baggage' => !empty($j['Inclusions']['Baggage']) ? $j['Inclusions']['Baggage'] : '15 Kg',
+                        'FareClass' => !empty($j['FareClass']) ? $j['FareClass'] : '',
+                        'FBC' => !empty($j['FBC']) ? $j['FBC'] : '',
                         'flight_index' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1'),
                         'Index' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1'),
                         'FlightIndex' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1'),

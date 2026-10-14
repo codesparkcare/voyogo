@@ -2320,6 +2320,65 @@
         'IXR' => array('city' => 'Ranchi', 'name' => 'Birsa Munda Airport |IN', 'terminal' => 'Terminal 1')
     );
 
+    // Helper function to reliably determine flight refundability
+    $isFlightRefundable = function($item) {
+        $rawRef = null;
+        if (isset($item['Refundable'])) {
+            $rawRef = $item['Refundable'];
+        } elseif (isset($item['refundable'])) {
+            $rawRef = $item['refundable'];
+        } elseif (isset($item['is_refundable'])) {
+            $rawRef = $item['is_refundable'];
+        }
+
+        // 1. Explicit negative checks
+        if ($rawRef === false || $rawRef === 0 || $rawRef === '0') {
+            return false;
+        }
+        if (is_string($rawRef)) {
+            $upper = strtoupper(trim($rawRef));
+            if (in_array($upper, array('N', 'NO', 'FALSE', 'NON-REFUNDABLE', 'NON REFUNDABLE', 'NONREFUNDABLE', 'N/A'))) {
+                return false;
+            }
+        }
+
+        // 2. Check textual hints in FareClass, FBC, or Notice
+        $code = strtoupper(trim((string)($item['airline_code'] ?? ($item['AirlineCode'] ?? ''))));
+        $fareClass = strtoupper(trim((string)($item['FareClass'] ?? ($item['fare_class'] ?? ''))));
+        $fbc = strtoupper(trim((string)($item['FBC'] ?? ($item['fbc'] ?? ''))));
+        $notice = strtoupper(trim((string)($item['Notice'] ?? ($item['notice'] ?? ''))));
+
+        if (strpos($notice, 'NON-REFUNDABLE') !== false || strpos($notice, 'NON REFUNDABLE') !== false) {
+            return false;
+        }
+        if (strpos($fbc, 'NONREF') !== false || strpos($fbc, 'SAVER') !== false || strpos($fbc, 'LITE') !== false) {
+            return false;
+        }
+
+        $lccAirlines = array('QP', 'SG', 'F3', 'G9', 'IX');
+        if (in_array($code, $lccAirlines) && ($fareClass === 'GS' || strpos($fbc, 'EOWIN') !== false)) {
+            return false;
+        }
+
+        // 3. Explicit positive checks
+        if ($rawRef === true || $rawRef === 1 || $rawRef === '1') {
+            return true;
+        }
+        if (is_string($rawRef)) {
+            $upper = strtoupper(trim($rawRef));
+            if (in_array($upper, array('Y', 'R', 'YES', 'TRUE', 'REFUNDABLE'))) {
+                return true;
+            }
+        }
+
+        // 4. Default: Low-cost budget carriers are non-refundable by default, full-service carriers are refundable
+        if (in_array($code, array_merge($lccAirlines, array('6E')))) {
+            return false;
+        }
+
+        return true;
+    };
+
     // Normalize Onward Flights
     $onwardFlights = array();
     $activeSearchTui = !empty($search_tui) ? $search_tui : ($search_query['tui'] ?? '');
@@ -2367,7 +2426,7 @@
                     'base_fare' => $itemBase,
                     'taxes' => $itemTax,
                     'Baggage' => $item['checkin_baggage'] ?? $item['baggage'] ?? '15 Kgs',
-                    'Refundable' => isset($item['refundable']) ? $item['refundable'] : true,
+                    'Refundable' => $isFlightRefundable($item),
                     'SeatsLeft' => $item['seats_left'] ?? rand(1, 9),
                     'FlightIndex' => $item['flight_index'] ?? $item['Index'] ?? ($code . '|' . ($idx + 1)),
                     'Aircraft' => !empty($item['AirCraft']) ? $item['AirCraft'] : (!empty($item['aircraft']) ? $item['aircraft'] : ($code === 'SG' ? 'BOEING' : 'AIRBUS A320')),
@@ -2400,7 +2459,7 @@
                     'base_fare' => $itemBase,
                     'taxes' => $itemTax,
                     'Baggage' => $item['Baggage'] ?? '15 Kgs',
-                    'Refundable' => isset($item['Refundable']) ? $item['Refundable'] : true,
+                    'Refundable' => $isFlightRefundable($item),
                     'SeatsLeft' => $item['SeatsLeft'] ?? rand(1, 9),
                     'FlightIndex' => $item['Index'] ?? ($code . '|' . ($idx + 1)),
                     'Aircraft' => !empty($item['AirCraft']) ? $item['AirCraft'] : ($code === 'SG' ? 'BOEING' : 'AIRBUS A320'),
@@ -2414,27 +2473,27 @@
     if (empty($onwardFlights)) {
         $mockAirlines = array(
             // Non-Stop Flights (Matching Akbar Travels Screenshot 1 & 2)
-            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 164', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '23:25', 'arr' => '01:50', 'dur' => '2 Hr  25 Min', 'stops' => 0, 'price' => 6034, 'base_fare' => 4500, 'taxes' => 1534, 'via' => '', 'seats' => 1, 'aircraft' => 'BOEING'),
-            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 164', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '23:25', 'arr' => '01:50', 'dur' => '2 Hr  25 Min', 'stops' => 0, 'price' => 6392, 'base_fare' => 4800, 'taxes' => 1592, 'via' => '', 'seats' => 1, 'aircraft' => 'BOEING'),
-            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 164', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '23:25', 'arr' => '01:50', 'dur' => '2 Hr  25 Min', 'stops' => 0, 'price' => 6443, 'base_fare' => 4850, 'taxes' => 1593, 'via' => '', 'seats' => 9, 'aircraft' => 'BOEING'),
-            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 6049', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '19:45', 'arr' => '21:55', 'dur' => '2 Hr 10 Min', 'stops' => 0, 'price' => 6502, 'base_fare' => 4900, 'taxes' => 1602, 'via' => '', 'seats' => 9, 'aircraft' => 'AIRBUS A320'),
-            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 317', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '19:00', 'arr' => '21:15', 'dur' => '2 Hr 15 Min', 'stops' => 0, 'price' => 6502, 'base_fare' => 4900, 'taxes' => 1602, 'via' => '', 'seats' => 9, 'aircraft' => 'AIRBUS A320'),
-            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI - 805', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '14:15', 'arr' => '16:30', 'dur' => '2 Hr 15 Min', 'stops' => 0, 'price' => 6536, 'base_fare' => 4950, 'taxes' => 1586, 'via' => '', 'seats' => 6, 'aircraft' => 'BOEING 787'),
-            array('code' => 'IX', 'name' => 'Air India Express', 'flight_no' => 'IX - 1102', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/IX.png', 'dep' => '11:30', 'arr' => '13:45', 'dur' => '2 Hr 15 Min', 'stops' => 0, 'price' => 6539, 'base_fare' => 4950, 'taxes' => 1589, 'via' => '', 'seats' => 17, 'aircraft' => 'BOEING 737'),
-            array('code' => 'QP', 'name' => 'Akasa Air', 'flight_no' => 'QP - 1311', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '18:20', 'arr' => '20:35', 'dur' => '2 Hr 15 Min', 'stops' => 0, 'price' => 7643, 'base_fare' => 5800, 'taxes' => 1843, 'via' => '', 'seats' => 6, 'aircraft' => 'BOEING 737 MAX'),
+            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 164', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '23:25', 'arr' => '01:50', 'dur' => '2 Hr  25 Min', 'stops' => 0, 'price' => 6034, 'base_fare' => 4500, 'taxes' => 1534, 'via' => '', 'seats' => 1, 'aircraft' => 'BOEING', 'refundable' => false),
+            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 164', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '23:25', 'arr' => '01:50', 'dur' => '2 Hr  25 Min', 'stops' => 0, 'price' => 6392, 'base_fare' => 4800, 'taxes' => 1592, 'via' => '', 'seats' => 1, 'aircraft' => 'BOEING', 'refundable' => false),
+            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 164', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '23:25', 'arr' => '01:50', 'dur' => '2 Hr  25 Min', 'stops' => 0, 'price' => 6443, 'base_fare' => 4850, 'taxes' => 1593, 'via' => '', 'seats' => 9, 'aircraft' => 'BOEING', 'refundable' => false),
+            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 6049', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '19:45', 'arr' => '21:55', 'dur' => '2 Hr 10 Min', 'stops' => 0, 'price' => 6502, 'base_fare' => 4900, 'taxes' => 1602, 'via' => '', 'seats' => 9, 'aircraft' => 'AIRBUS A320', 'refundable' => false),
+            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 317', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '19:00', 'arr' => '21:15', 'dur' => '2 Hr 15 Min', 'stops' => 0, 'price' => 6502, 'base_fare' => 4900, 'taxes' => 1602, 'via' => '', 'seats' => 9, 'aircraft' => 'AIRBUS A320', 'refundable' => false),
+            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI - 805', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '14:15', 'arr' => '16:30', 'dur' => '2 Hr 15 Min', 'stops' => 0, 'price' => 6536, 'base_fare' => 4950, 'taxes' => 1586, 'via' => '', 'seats' => 6, 'aircraft' => 'BOEING 787', 'refundable' => true),
+            array('code' => 'IX', 'name' => 'Air India Express', 'flight_no' => 'IX - 1102', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/IX.png', 'dep' => '11:30', 'arr' => '13:45', 'dur' => '2 Hr 15 Min', 'stops' => 0, 'price' => 6539, 'base_fare' => 4950, 'taxes' => 1589, 'via' => '', 'seats' => 17, 'aircraft' => 'BOEING 737', 'refundable' => false),
+            array('code' => 'QP', 'name' => 'Akasa Air', 'flight_no' => 'QP - 1311', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '18:20', 'arr' => '20:35', 'dur' => '2 Hr 15 Min', 'stops' => 0, 'price' => 7643, 'base_fare' => 5800, 'taxes' => 1843, 'via' => '', 'seats' => 6, 'aircraft' => 'BOEING 737 MAX', 'refundable' => false),
             
             // 1-Stop Connecting Flights (Matching Lowest 1-Stop Price ₹ 8,316)
-            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 304', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '08:30', 'arr' => '13:45', 'dur' => '5 Hr 15 Min', 'stops' => 1, 'price' => 8316, 'base_fare' => 6400, 'taxes' => 1916, 'via' => 'AMD', 'seats' => 5, 'aircraft' => 'BOEING'),
-            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 5021', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '07:15', 'arr' => '12:45', 'dur' => '5 Hr 30 Min', 'stops' => 1, 'price' => 8650, 'base_fare' => 6700, 'taxes' => 1950, 'via' => 'BLR', 'seats' => 4, 'aircraft' => 'AIRBUS A320'),
-            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI - 631', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '10:00', 'arr' => '15:30', 'dur' => '5 Hr 30 Min', 'stops' => 1, 'price' => 8920, 'base_fare' => 6900, 'taxes' => 2020, 'via' => 'HYD', 'seats' => 6, 'aircraft' => 'AIRBUS A320'),
-            array('code' => 'QP', 'name' => 'Akasa Air', 'flight_no' => 'QP - 1405', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '12:15', 'arr' => '18:00', 'dur' => '5 Hr 45 Min', 'stops' => 1, 'price' => 9100, 'base_fare' => 7050, 'taxes' => 2050, 'via' => 'GOX', 'seats' => 3, 'aircraft' => 'BOEING 737 MAX'),
-            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 782', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '06:45', 'arr' => '12:30', 'dur' => '5 Hr 45 Min', 'stops' => 1, 'price' => 9450, 'base_fare' => 7300, 'taxes' => 2150, 'via' => 'BHO', 'seats' => 5, 'aircraft' => 'AIRBUS A320'),
-            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 812', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '13:00', 'arr' => '19:15', 'dur' => '6 Hr 15 Min', 'stops' => 1, 'price' => 9800, 'base_fare' => 7600, 'taxes' => 2200, 'via' => 'ATQ', 'seats' => 4, 'aircraft' => 'BOEING'),
-            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI - 442', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '09:30', 'arr' => '16:15', 'dur' => '6 Hr 45 Min', 'stops' => 1, 'price' => 10250, 'base_fare' => 7950, 'taxes' => 2300, 'via' => 'BBI', 'seats' => 4, 'aircraft' => 'AIRBUS A320'),
+            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 304', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '08:30', 'arr' => '13:45', 'dur' => '5 Hr 15 Min', 'stops' => 1, 'price' => 8316, 'base_fare' => 6400, 'taxes' => 1916, 'via' => 'AMD', 'seats' => 5, 'aircraft' => 'BOEING', 'refundable' => false),
+            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 5021', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '07:15', 'arr' => '12:45', 'dur' => '5 Hr 30 Min', 'stops' => 1, 'price' => 8650, 'base_fare' => 6700, 'taxes' => 1950, 'via' => 'BLR', 'seats' => 4, 'aircraft' => 'AIRBUS A320', 'refundable' => false),
+            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI - 631', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '10:00', 'arr' => '15:30', 'dur' => '5 Hr 30 Min', 'stops' => 1, 'price' => 8920, 'base_fare' => 6900, 'taxes' => 2020, 'via' => 'HYD', 'seats' => 6, 'aircraft' => 'AIRBUS A320', 'refundable' => true),
+            array('code' => 'QP', 'name' => 'Akasa Air', 'flight_no' => 'QP - 1405', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '12:15', 'arr' => '18:00', 'dur' => '5 Hr 45 Min', 'stops' => 1, 'price' => 9100, 'base_fare' => 7050, 'taxes' => 2050, 'via' => 'GOX', 'seats' => 3, 'aircraft' => 'BOEING 737 MAX', 'refundable' => false),
+            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 782', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '06:45', 'arr' => '12:30', 'dur' => '5 Hr 45 Min', 'stops' => 1, 'price' => 9450, 'base_fare' => 7300, 'taxes' => 2150, 'via' => 'BHO', 'seats' => 5, 'aircraft' => 'AIRBUS A320', 'refundable' => false),
+            array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 812', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '13:00', 'arr' => '19:15', 'dur' => '6 Hr 15 Min', 'stops' => 1, 'price' => 9800, 'base_fare' => 7600, 'taxes' => 2200, 'via' => 'ATQ', 'seats' => 4, 'aircraft' => 'BOEING', 'refundable' => false),
+            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI - 442', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '09:30', 'arr' => '16:15', 'dur' => '6 Hr 45 Min', 'stops' => 1, 'price' => 10250, 'base_fare' => 7950, 'taxes' => 2300, 'via' => 'BBI', 'seats' => 4, 'aircraft' => 'AIRBUS A320', 'refundable' => true),
 
             // 1+ / 2-Stop Flights (Matching Lowest 1+ Price ₹ 18,603)
-            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 901', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '06:00', 'arr' => '14:30', 'dur' => '8 Hr 30 Min', 'stops' => 2, 'price' => 18603, 'base_fare' => 14800, 'taxes' => 3803, 'via' => 'JAI', 'seats' => 2, 'aircraft' => 'AIRBUS A320'),
-            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI - 204', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '07:30', 'arr' => '17:00', 'dur' => '9 Hr 30 Min', 'stops' => 2, 'price' => 19450, 'base_fare' => 15500, 'taxes' => 3950, 'via' => 'NAG', 'seats' => 3, 'aircraft' => 'AIRBUS A320')
+            array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E - 901', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '06:00', 'arr' => '14:30', 'dur' => '8 Hr 30 Min', 'stops' => 2, 'price' => 18603, 'base_fare' => 14800, 'taxes' => 3803, 'via' => 'JAI', 'seats' => 2, 'aircraft' => 'AIRBUS A320', 'refundable' => false),
+            array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI - 204', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '07:30', 'arr' => '17:00', 'dur' => '9 Hr 30 Min', 'stops' => 2, 'price' => 19450, 'base_fare' => 15500, 'taxes' => 3950, 'via' => 'NAG', 'seats' => 3, 'aircraft' => 'AIRBUS A320', 'refundable' => true)
         );
         foreach ($mockAirlines as $mIdx => $m) {
             $onwardFlights[] = array(
@@ -2455,7 +2514,7 @@
                 'base_fare' => $m['base_fare'],
                 'taxes' => $m['taxes'],
                 'Baggage' => '15 Kgs',
-                'Refundable' => true,
+                'Refundable' => !empty($m['refundable']),
                 'SeatsLeft' => $m['seats'],
                 'FlightIndex' => $m['code'] . '|' . ($mIdx + 1),
                 'Aircraft' => $m['aircraft'],
@@ -2487,18 +2546,18 @@
                     'Stops' => isset($rItem['stops']) ? (int)$rItem['stops'] : 0,
                     'Price' => (float)($rItem['price'] ?? 5150),
                     'Baggage' => $rItem['checkin_baggage'] ?? $rItem['baggage'] ?? '15 Kgs',
-                    'Refundable' => true,
+                    'Refundable' => $isFlightRefundable($rItem),
                     'SeatsLeft' => rand(3, 9)
                 );
             }
         }
         if (empty($inboundFlights)) {
             $mockRetAirlines = array(
-                array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E-2135', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '15:30', 'arr' => '17:45', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5150),
-                array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG-163', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '17:45', 'arr' => '20:00', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4999),
-                array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI-806', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '19:15', 'arr' => '21:30', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5450),
-                array('code' => 'QP', 'name' => 'Akasa Air', 'flight_no' => 'QP-1312', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '21:30', 'arr' => '23:45', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4850),
-                array('code' => 'UK', 'name' => 'Vistara', 'flight_no' => 'UK-946', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/UK.png', 'dep' => '22:45', 'arr' => '01:00', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5800)
+                array('code' => '6E', 'name' => 'IndiGo', 'flight_no' => '6E-2135', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'dep' => '15:30', 'arr' => '17:45', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5150, 'refundable' => false),
+                array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG-163', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '17:45', 'arr' => '20:00', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4999, 'refundable' => false),
+                array('code' => 'AI', 'name' => 'Air India', 'flight_no' => 'AI-806', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/AI.png', 'dep' => '19:15', 'arr' => '21:30', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5450, 'refundable' => true),
+                array('code' => 'QP', 'name' => 'Akasa Air', 'flight_no' => 'QP-1312', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/QP.png', 'dep' => '21:30', 'arr' => '23:45', 'dur' => '2h 15m', 'stops' => 0, 'price' => 4850, 'refundable' => false),
+                array('code' => 'UK', 'name' => 'Vistara', 'flight_no' => 'UK-946', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/UK.png', 'dep' => '22:45', 'arr' => '01:00', 'dur' => '2h 15m', 'stops' => 0, 'price' => 5800, 'refundable' => true)
             );
             foreach ($mockRetAirlines as $rIdx => $m) {
                 $inboundFlights[] = array(
@@ -2515,7 +2574,7 @@
                     'Stops' => $m['stops'],
                     'Price' => $m['price'],
                     'Baggage' => '15 Kgs',
-                    'Refundable' => true,
+                    'Refundable' => !empty($m['refundable']),
                     'SeatsLeft' => rand(3, 9)
                 );
             }
@@ -2541,6 +2600,7 @@
             $pricesAll = array();
             $connectingAirports = array();
             $refundableCount = 0;
+            $nonRefundableCount = 0;
 
             foreach ($onwardFlights as $flt) {
                 $p = (float)$flt['Price'];
@@ -2558,7 +2618,11 @@
                 $airlineData[$code]['count']++;
                 $airlineData[$code]['min'] = min($airlineData[$code]['min'], $p);
                 
-                if (!empty($flt['Refundable'])) $refundableCount++;
+                if (!empty($flt['Refundable'])) {
+                    $refundableCount++;
+                } else {
+                    $nonRefundableCount++;
+                }
                 
                 $via = !empty($flt['via']) ? strtoupper($flt['via']) : (!empty($flt['Via']) ? strtoupper($flt['Via']) : '');
                 if ($s > 0 && !empty($via)) {
@@ -2632,10 +2696,18 @@
             <!-- Fare Type -->
             <div class="filter-section">
                 <h4 class="filter-title">Fare Type</h4>
-                <label class="custom-checkbox" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-                    <input type="checkbox" id="filterRefundable" onchange="applyFilters();" style="width:17px; height:17px; accent-color:#0d3470; cursor:pointer;">
-                    <span style="font-size:13.5px; font-weight:700; color:#000000;">Refundable</span>
-                </label>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label class="custom-checkbox" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                        <input type="checkbox" id="filterRefundable" onchange="applyFilters();" style="width:17px; height:17px; accent-color:#0d3470; cursor:pointer;">
+                        <span style="font-size:13.5px; font-weight:700; color:#000000;">Refundable</span>
+                        <span id="refCountBadge" style="margin-left: auto; font-size: 11px; color: #64748b; font-weight: 600;">(<?php echo $refundableCount; ?>)</span>
+                    </label>
+                    <label class="custom-checkbox" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                        <input type="checkbox" id="filterNonRefundable" onchange="applyFilters();" style="width:17px; height:17px; accent-color:#0d3470; cursor:pointer;">
+                        <span style="font-size:13.5px; font-weight:700; color:#000000;">Non-Refundable</span>
+                        <span id="nonRefCountBadge" style="margin-left: auto; font-size: 11px; color: #64748b; font-weight: 600;">(<?php echo $nonRefundableCount; ?>)</span>
+                    </label>
+                </div>
             </div>
 
             <!-- Departure Times -->
@@ -3130,7 +3202,11 @@
                             <div style="display:flex; flex-direction:column; align-items:flex-end; gap:3px; margin-top:6px; width:100%;">
                                 <button type="button" class="btn-details-toggle" id="btn_toggle_<?php echo $idx; ?>" onclick="toggleFlightDetails('details_drawer_<?php echo $idx; ?>', this);">+ Details</button>
                                 <div style="display:flex; align-items:center; gap:6px;">
-                                    <span class="badge-refundable-r" title="Refundable">R</span>
+                                    <?php if (!empty($f['Refundable'])): ?>
+                                        <span class="badge-refundable-r" title="Refundable" style="color:#16a34a; font-weight:800; font-size:12px;">R</span>
+                                    <?php else: ?>
+                                        <span class="badge-refundable-r" title="Non-Refundable" style="color:#ea580c; font-weight:800; font-size:12px;">NR</span>
+                                    <?php endif; ?>
                                     <i class="fa-solid fa-moon" style="font-size:12px; color:#1e293b;" title="Night Flight"></i>
                                 </div>
                             </div>
@@ -3448,7 +3524,11 @@
                         <div>
                             <i class="fa-solid fa-suitcase" style="color: #0d3470;"></i> Check-in Baggage: <strong><?php echo htmlspecialchars($f['Baggage']); ?></strong> Included
                             &nbsp;|&nbsp;
-                            <i class="fa-solid fa-shield-halved" style="color: #16a34a;"></i> <?php echo !empty($f['Refundable']) ? '<span style="color:#16a34a; font-weight:bold;">Refundable Fare</span>' : 'Standard Fare'; ?>
+                            <?php if (!empty($f['Refundable'])): ?>
+                                <span style="color:#16a34a; font-weight:700;"><i class="fa-solid fa-shield-halved"></i> Refundable Fare</span>
+                            <?php else: ?>
+                                <span style="color:#ea580c; font-weight:700;"><i class="fa-solid fa-ban"></i> Non-Refundable Fare</span>
+                            <?php endif; ?>
                         </div>
                         <div style="font-size:12px; color:#2563eb; font-weight:600;">
                             Get ₹500 Instant Discount with Code: <strong>VOYOGO500</strong>
@@ -3497,7 +3577,7 @@
                         <?php foreach ($onwardFlights as $idx => $f): 
                             $fSeats = $f['SeatsLeft'] ?? rand(3, 9);
                         ?>
-                        <label class="rt-card onward-card <?php echo ($idx === 0) ? 'selected-rt-card' : ''; ?>" data-stops="<?php echo (int)($f['Stops'] ?? 0); ?>" data-airline="<?php echo htmlspecialchars($f['AirlineCode'] ?? '6E'); ?>" data-price="<?php echo (float)$f['Price']; ?>" style="display: block; cursor: pointer; border: 2px solid <?php echo ($idx === 0) ? '#2563eb' : '#e2e8f0'; ?>; border-radius: 8px; padding: 12px; transition: all 0.2s; background: <?php echo ($idx === 0) ? '#eff6ff' : '#fff'; ?>;">
+                        <label class="rt-card onward-card <?php echo ($idx === 0) ? 'selected-rt-card' : ''; ?>" data-stops="<?php echo (int)($f['Stops'] ?? 0); ?>" data-airline="<?php echo htmlspecialchars($f['AirlineCode'] ?? '6E'); ?>" data-price="<?php echo (float)$f['Price']; ?>" data-refundable="<?php echo !empty($f['Refundable']) ? '1' : '0'; ?>" style="display: block; cursor: pointer; border: 2px solid <?php echo ($idx === 0) ? '#2563eb' : '#e2e8f0'; ?>; border-radius: 8px; padding: 12px; transition: all 0.2s; background: <?php echo ($idx === 0) ? '#eff6ff' : '#fff'; ?>;">
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <input type="radio" name="selected_onward_idx" value="<?php echo $idx; ?>" <?php echo ($idx === 0) ? 'checked' : ''; ?> style="accent-color: #2563eb;" onchange="updateRoundTripSelection()">
@@ -3539,10 +3619,18 @@
 
                             <!-- Notice & Details Link Row (Matching Akbar Travels Screenshot 1) -->
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 6px; border-top: 1px dashed #e2e8f0; font-size: 11.5px;">
-                                <div style="color: #64748b; display: flex; align-items: center; gap: 4px;">
-                                    <i class="fa-solid fa-circle-info" style="color: #2563eb; font-size: 11px;"></i>
-                                    <span>Meal, Seat are c...</span>
-                                    <a href="javascript:void(0);" onclick="openRtModal('onward', <?php echo $idx; ?>, event);" style="color: #0284c7; text-decoration: none; font-weight: 700;">(More)</a>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <?php if (!empty($f['Refundable'])): ?>
+                                        <span style="color: #16a34a; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-shield-halved"></i> Refundable</span>
+                                    <?php else: ?>
+                                        <span style="color: #ea580c; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-ban"></i> Non-Refundable</span>
+                                    <?php endif; ?>
+                                    <span style="color: #cbd5e1;">|</span>
+                                    <div style="color: #64748b; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-circle-info" style="color: #2563eb; font-size: 11px;"></i>
+                                        <span>Meal, Seat are c...</span>
+                                        <a href="javascript:void(0);" onclick="openRtModal('onward', <?php echo $idx; ?>, event);" style="color: #0284c7; text-decoration: none; font-weight: 700;">(More)</a>
+                                    </div>
                                 </div>
                                 <a href="javascript:void(0);" onclick="openRtModal('onward', <?php echo $idx; ?>, event);" style="color: #0284c7; font-weight: 700; text-decoration: none; font-size: 12px; display: inline-flex; align-items: center; gap: 3px;">+ Details</a>
                             </div>
@@ -3567,7 +3655,7 @@
                         <?php foreach ($inboundFlights as $rIdx => $rf): 
                             $rfSeats = $rf['SeatsLeft'] ?? rand(3, 9);
                         ?>
-                        <label class="rt-card return-card <?php echo ($rIdx === 0) ? 'selected-rt-card' : ''; ?>" data-stops="<?php echo (int)($rf['Stops'] ?? 0); ?>" data-airline="<?php echo htmlspecialchars($rf['AirlineCode'] ?? '6E'); ?>" data-price="<?php echo (float)$rf['Price']; ?>" style="display: block; cursor: pointer; border: 2px solid <?php echo ($rIdx === 0) ? '#2563eb' : '#e2e8f0'; ?>; border-radius: 8px; padding: 12px; transition: all 0.2s; background: <?php echo ($rIdx === 0) ? '#eff6ff' : '#fff'; ?>;">
+                        <label class="rt-card return-card <?php echo ($rIdx === 0) ? 'selected-rt-card' : ''; ?>" data-stops="<?php echo (int)($rf['Stops'] ?? 0); ?>" data-airline="<?php echo htmlspecialchars($rf['AirlineCode'] ?? '6E'); ?>" data-price="<?php echo (float)$rf['Price']; ?>" data-refundable="<?php echo !empty($rf['Refundable']) ? '1' : '0'; ?>" style="display: block; cursor: pointer; border: 2px solid <?php echo ($rIdx === 0) ? '#2563eb' : '#e2e8f0'; ?>; border-radius: 8px; padding: 12px; transition: all 0.2s; background: <?php echo ($rIdx === 0) ? '#eff6ff' : '#fff'; ?>;">
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <input type="radio" name="selected_return_idx" value="<?php echo $rIdx; ?>" <?php echo ($rIdx === 0) ? 'checked' : ''; ?> style="accent-color: #2563eb;" onchange="updateRoundTripSelection()">
@@ -3609,10 +3697,18 @@
 
                             <!-- Notice & Details Link Row (Matching Akbar Travels Screenshot 1) -->
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 6px; border-top: 1px dashed #e2e8f0; font-size: 11.5px;">
-                                <div style="color: #64748b; display: flex; align-items: center; gap: 4px;">
-                                    <i class="fa-solid fa-circle-info" style="color: #2563eb; font-size: 11px;"></i>
-                                    <span>Meal, Seat are c...</span>
-                                    <a href="javascript:void(0);" onclick="openRtModal('return', <?php echo $rIdx; ?>, event);" style="color: #0284c7; text-decoration: none; font-weight: 700;">(More)</a>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <?php if (!empty($rf['Refundable'])): ?>
+                                        <span style="color: #16a34a; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-shield-halved"></i> Refundable</span>
+                                    <?php else: ?>
+                                        <span style="color: #ea580c; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-ban"></i> Non-Refundable</span>
+                                    <?php endif; ?>
+                                    <span style="color: #cbd5e1;">|</span>
+                                    <div style="color: #64748b; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fa-solid fa-circle-info" style="color: #2563eb; font-size: 11px;"></i>
+                                        <span>Meal, Seat are c...</span>
+                                        <a href="javascript:void(0);" onclick="openRtModal('return', <?php echo $rIdx; ?>, event);" style="color: #0284c7; text-decoration: none; font-weight: 700;">(More)</a>
+                                    </div>
                                 </div>
                                 <a href="javascript:void(0);" onclick="openRtModal('return', <?php echo $rIdx; ?>, event);" style="color: #0284c7; font-weight: 700; text-decoration: none; font-size: 12px; display: inline-flex; align-items: center; gap: 3px;">+ Details</a>
                             </div>
@@ -6114,6 +6210,8 @@ function resetAllFilters() {
     // 2. Reset Fare Type
     const refCb = document.getElementById('filterRefundable');
     if (refCb) refCb.checked = false;
+    const nonRefCb = document.getElementById('filterNonRefundable');
+    if (nonRefCb) nonRefCb.checked = false;
 
     // 3. Reset Departure & Arrival Times
     document.querySelectorAll('.time-box').forEach(b => b.classList.remove('active'));
@@ -6138,9 +6236,17 @@ function resetAllFilters() {
 
 // Master Filter Function
 function applyFilters() {
-    const refOnly = document.getElementById('filterRefundable') ? document.getElementById('filterRefundable').checked : false;
+    const filterRef = document.getElementById('filterRefundable') ? document.getElementById('filterRefundable').checked : false;
+    const filterNonRef = document.getElementById('filterNonRefundable') ? document.getElementById('filterNonRefundable').checked : false;
     const slider = document.getElementById('priceRangeSlider');
     const maxPrice = slider ? parseFloat(slider.value) : Infinity;
+
+    // Helper to evaluate refundability match
+    const checkRefMatch = function(isRef) {
+        if (filterRef && !filterNonRef) return isRef === true;
+        if (filterNonRef && !filterRef) return isRef === false;
+        return true;
+    };
 
     // Selected Airlines (If none selected, show all airlines!)
     const selectedAirlines = Array.from(document.querySelectorAll('.airline-checkbox:checked')).map(cb => cb.value.toUpperCase());
@@ -6172,8 +6278,7 @@ function applyFilters() {
         }
 
         // 2. Fare Type check
-        let matchRef = true;
-        if (refOnly && !isRef) matchRef = false;
+        let matchRef = checkRefMatch(isRef);
 
         // 3. Departure Slot check
         let matchDep = true;
@@ -6218,13 +6323,15 @@ function applyFilters() {
             const price = parseFloat(card.getAttribute('data-price') || 0);
             const airline = (card.getAttribute('data-airline') || '').toUpperCase();
             const depSlot = card.getAttribute('data-depslot') || 'morning';
+            const isRef = card.getAttribute('data-refundable') === '1';
 
             let matchStops = (selectedStopFilter === 'all') || (selectedStopFilter === '0' && stops === 0) || (selectedStopFilter === '1' && stops === 1) || (selectedStopFilter === '1+' && stops >= 1) || (selectedStopFilter === '2+' && stops >= 2);
             let matchDep = (selectedDepSlots.length === 0) || selectedDepSlots.includes(depSlot);
             let matchAirline = (selectedAirlines.length === 0) || selectedAirlines.includes(airline);
             let matchPrice = (price <= maxPrice);
+            let matchRef = checkRefMatch(isRef);
 
-            const isMatch = matchStops && matchDep && matchAirline && matchPrice;
+            const isMatch = matchStops && matchDep && matchAirline && matchPrice && matchRef;
             card.style.display = isMatch ? 'block' : 'none';
             if (isMatch && !firstVisibleOnward) {
                 firstVisibleOnward = card.querySelector('input[type="radio"]');
@@ -6236,13 +6343,15 @@ function applyFilters() {
             const price = parseFloat(card.getAttribute('data-price') || 0);
             const airline = (card.getAttribute('data-airline') || '').toUpperCase();
             const depSlot = card.getAttribute('data-depslot') || 'morning';
+            const isRef = card.getAttribute('data-refundable') === '1';
 
             let matchStops = (selectedStopFilter === 'all') || (selectedStopFilter === '0' && stops === 0) || (selectedStopFilter === '1' && stops === 1) || (selectedStopFilter === '1+' && stops >= 1) || (selectedStopFilter === '2+' && stops >= 2);
             let matchDep = (selectedDepSlots.length === 0) || selectedDepSlots.includes(depSlot);
             let matchAirline = (selectedAirlines.length === 0) || selectedAirlines.includes(airline);
             let matchPrice = (price <= maxPrice);
+            let matchRef = checkRefMatch(isRef);
 
-            const isMatch = matchStops && matchDep && matchAirline && matchPrice;
+            const isMatch = matchStops && matchDep && matchAirline && matchPrice && matchRef;
             card.style.display = isMatch ? 'block' : 'none';
             if (isMatch && !firstVisibleReturn) {
                 firstVisibleReturn = card.querySelector('input[type="radio"]');

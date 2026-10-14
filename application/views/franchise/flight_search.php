@@ -13,6 +13,42 @@ $onwardList = !empty($onwardFlights) ? $onwardFlights : (!empty($flights) ? $fli
 $returnList = !empty($returnFlights) ? $returnFlights : array();
 $activeTui  = $search_tui ?? ($search_query['tui'] ?? '');
 
+$isFlightRefundable = function($row) {
+    if (isset($row['refundable']) && is_bool($row['refundable'])) {
+        return $row['refundable'];
+    }
+    if (isset($row['refundable'])) {
+        $val = strtoupper(trim((string)$row['refundable']));
+        if ($val === '1' || $val === 'Y' || $val === 'TRUE' || $val === 'R') return true;
+        if ($val === '0' || $val === 'N' || $val === 'FALSE' || $val === 'NR') return false;
+    }
+    if (isset($row['Refundable'])) {
+        $val = strtoupper(trim((string)$row['Refundable']));
+        if ($val === '1' || $val === 'Y' || $val === 'TRUE' || $val === 'R') return true;
+        if ($val === '0' || $val === 'N' || $val === 'FALSE' || $val === 'NR') return false;
+    }
+    $fbc = strtoupper(trim((string)($row['fbc'] ?? $row['FareBasisCode'] ?? '')));
+    $fc  = strtoupper(trim((string)($row['fare_class'] ?? $row['FareClass'] ?? '')));
+    if ($fc === 'GS' || strpos($fbc, 'SAVER') !== false || strpos($fbc, 'EOWIN') !== false) {
+        return false;
+    }
+    $code = strtoupper(trim((string)($row['airline_code'] ?? $row['AirlineCode'] ?? '')));
+    if (in_array($code, ['6E', 'SG', 'QP', 'IX', 'I5', 'G9', 'FZ', 'J9', 'F3', 'XY', 'AK', 'FD', 'TR'])) {
+        return false;
+    }
+    return true;
+};
+
+foreach ($onwardList as &$ofItem) {
+    $ofItem['refundable'] = $isFlightRefundable($ofItem);
+}
+unset($ofItem);
+
+foreach ($returnList as &$rfItem) {
+    $rfItem['refundable'] = $isFlightRefundable($rfItem);
+}
+unset($rfItem);
+
 // Calculate stats for Akbar Travels style sidebar filters (Parity with customer flight results)
 $pricesAll = array();
 $nonStopCount = 0; $nonStopMin = PHP_INT_MAX;
@@ -21,6 +57,7 @@ $twoPlusCount = 0; $twoPlusMin = PHP_INT_MAX;
 $airlineData = array();
 $connectingAirports = array();
 $refundableCount = 0;
+$nonRefundableCount = 0;
 
 foreach ($onwardList as $flt) {
     $p = (float)($flt['price'] ?? 4999);
@@ -47,7 +84,11 @@ foreach ($onwardList as $flt) {
     $airlineData[$code]['count']++;
     $airlineData[$code]['min'] = min($airlineData[$code]['min'], $p);
 
-    if (!empty($flt['refundable'])) $refundableCount++;
+    if (!empty($flt['refundable'])) {
+        $refundableCount++;
+    } else {
+        $nonRefundableCount++;
+    }
 
     $via = !empty($flt['via']) ? strtoupper($flt['via']) : (!empty($flt['Via']) ? strtoupper($flt['Via']) : '');
     if ($s > 0 && !empty($via)) {
@@ -426,10 +467,18 @@ uasort($connectingAirportsList, function($a, $b) {
         <!-- 2. Fare Type -->
         <div class="filter-section">
             <h4 class="filter-title">Fare Type</h4>
-            <label class="custom-checkbox" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-                <input type="checkbox" id="filterRefundable" onchange="applyFilters();" style="width:17px; height:17px; accent-color:#0d3470; cursor:pointer;">
-                <span style="font-size:13.5px; font-weight:700; color:#000000;">Refundable</span>
-            </label>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label class="custom-checkbox" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                    <input type="checkbox" id="filterRefundable" onchange="applyFilters();" style="width:17px; height:17px; accent-color:#0d3470; cursor:pointer;">
+                    <span style="font-size:13.5px; font-weight:700; color:#000000;">Refundable</span>
+                    <span id="refCountBadge" style="margin-left: auto; font-size: 11px; color: #64748b; font-weight: 600;">(<?php echo $refundableCount; ?>)</span>
+                </label>
+                <label class="custom-checkbox" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                    <input type="checkbox" id="filterNonRefundable" onchange="applyFilters();" style="width:17px; height:17px; accent-color:#0d3470; cursor:pointer;">
+                    <span style="font-size:13.5px; font-weight:700; color:#000000;">Non-Refundable</span>
+                    <span id="nonRefCountBadge" style="margin-left: auto; font-size: 11px; color: #64748b; font-weight: 600;">(<?php echo $nonRefundableCount; ?>)</span>
+                </label>
+            </div>
         </div>
 
         <!-- 3. Departure Times -->
@@ -590,7 +639,7 @@ uasort($connectingAirportsList, function($a, $b) {
                            data-time="<?php echo htmlspecialchars($depTime); ?>"
                            data-depslot="<?php echo $depSlot; ?>"
                            data-arrslot="<?php echo $arrSlot; ?>"
-                           data-refundable="<?php echo !empty($f['refundable']) ? '1' : '1'; ?>"
+                           data-refundable="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>"
                            data-via="<?php echo htmlspecialchars($viaAirport); ?>">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div style="display: flex; align-items: center; gap: 10px;">
@@ -623,6 +672,15 @@ uasort($connectingAirportsList, function($a, $b) {
                                 <strong style="font-size: 15px; color: #0f172a;"><?php echo htmlspecialchars($arrTime); ?></strong>
                                 <span style="color: #64748b; font-size: 11px; display: block;"><?php echo htmlspecialchars($destCode); ?></span>
                             </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding-top: 4px; font-size: 11px;">
+                            <?php if (!empty($f['refundable'])): ?>
+                                <span style="color: #16a34a; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-shield-halved"></i> Refundable</span>
+                            <?php else: ?>
+                                <span style="color: #ea580c; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-ban"></i> Non-Refundable</span>
+                            <?php endif; ?>
+                            <span style="color: #64748b;"><?php echo htmlspecialchars($f['baggage'] ?? '15 Kg'); ?></span>
                         </div>
                     </label>
                     <?php endforeach; ?>
@@ -668,7 +726,7 @@ uasort($connectingAirportsList, function($a, $b) {
                            data-time="<?php echo htmlspecialchars($rDepTime); ?>"
                            data-depslot="<?php echo $rDepSlot; ?>"
                            data-arrslot="<?php echo $rArrSlot; ?>"
-                           data-refundable="<?php echo !empty($rf['refundable']) ? '1' : '1'; ?>"
+                           data-refundable="<?php echo !empty($rf['refundable']) ? '1' : '0'; ?>"
                            data-via="<?php echo htmlspecialchars($rViaAirport); ?>">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div style="display: flex; align-items: center; gap: 10px;">
@@ -701,6 +759,15 @@ uasort($connectingAirportsList, function($a, $b) {
                                 <strong style="font-size: 15px; color: #0f172a;"><?php echo htmlspecialchars($rArrTime); ?></strong>
                                 <span style="color: #64748b; font-size: 11px; display: block;"><?php echo htmlspecialchars($origCode); ?></span>
                             </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding-top: 4px; font-size: 11px;">
+                            <?php if (!empty($rf['refundable'])): ?>
+                                <span style="color: #16a34a; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-shield-halved"></i> Refundable</span>
+                            <?php else: ?>
+                                <span style="color: #ea580c; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-ban"></i> Non-Refundable</span>
+                            <?php endif; ?>
+                            <span style="color: #64748b;"><?php echo htmlspecialchars($rf['baggage'] ?? '15 Kg'); ?></span>
                         </div>
                     </label>
                     <?php endforeach; ?>
@@ -808,7 +875,7 @@ uasort($connectingAirportsList, function($a, $b) {
                  data-time="<?php echo htmlspecialchars($depTime); ?>"
                  data-depslot="<?php echo $depSlot; ?>"
                  data-arrslot="<?php echo $arrSlot; ?>"
-                 data-refundable="<?php echo !empty($f['refundable']) ? '1' : '1'; ?>"
+                 data-refundable="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>"
                  data-via="<?php echo htmlspecialchars($viaAirport); ?>">
                 
                 <!-- Main Flight Row -->
@@ -820,9 +887,20 @@ uasort($connectingAirportsList, function($a, $b) {
                         <div>
                             <strong style="font-size: 15px; color: #0f172a; display: block;"><?php echo htmlspecialchars($alName); ?></strong>
                             <span style="font-size: 12px; color: #64748b;"><?php echo htmlspecialchars($flNumber); ?> &bull; <?php echo htmlspecialchars($cabinClass); ?></span>
-                            <span style="display: inline-block; background: #e0f2fe; color: #0284c7; font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-top: 4px;">
-                                B2B Net Fare
-                            </span>
+                            <div style="margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap;">
+                                <span style="display: inline-block; background: #e0f2fe; color: #0284c7; font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">
+                                    B2B Net Fare
+                                </span>
+                                <?php if (!empty($f['refundable'])): ?>
+                                    <span style="display: inline-block; background: #dcfce7; color: #166534; font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">
+                                        Refundable
+                                    </span>
+                                <?php else: ?>
+                                    <span style="display: inline-block; background: #ffedd5; color: #c2410c; font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">
+                                        Non-Refundable
+                                    </span>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
 
@@ -897,7 +975,11 @@ uasort($connectingAirportsList, function($a, $b) {
                     <div style="display: flex; gap: 20px; align-items: center;">
                         <span><i class="fa-solid fa-suitcase" style="color: #78B722; margin-right: 5px;"></i> <strong>Check-in:</strong> <?php echo htmlspecialchars($baggage); ?></span>
                         <span><i class="fa-solid fa-briefcase" style="color: #0284c7; margin-right: 5px;"></i> <strong>Cabin:</strong> 7 Kg</span>
-                        <span><i class="fa-solid fa-circle-check" style="color: #16a34a; margin-right: 5px;"></i> Refundable Fare</span>
+                        <?php if (!empty($f['refundable'])): ?>
+                            <span style="color: #16a34a; font-weight: 700;"><i class="fa-solid fa-circle-check" style="color: #16a34a; margin-right: 5px;"></i> Refundable Fare</span>
+                        <?php else: ?>
+                            <span style="color: #ea580c; font-weight: 700;"><i class="fa-solid fa-ban" style="color: #ea580c; margin-right: 5px;"></i> Non-Refundable Fare</span>
+                        <?php endif; ?>
                     </div>
 
                     <div style="color: #2563eb; font-weight: 700; cursor: pointer;" onclick="toggleDetailsDrawer('details_<?php echo $fId; ?>')">
@@ -1019,6 +1101,8 @@ function resetAllFilters() {
     // 2. Reset Fare Type
     const refCb = document.getElementById('filterRefundable');
     if (refCb) refCb.checked = false;
+    const nonRefCb = document.getElementById('filterNonRefundable');
+    if (nonRefCb) nonRefCb.checked = false;
 
     // 3. Reset Departure & Arrival Times
     document.querySelectorAll('.time-box').forEach(b => b.classList.remove('active'));
@@ -1043,9 +1127,16 @@ function resetAllFilters() {
 
 // Master Client-side Filter Function
 function applyFilters() {
-    const refOnly = document.getElementById('filterRefundable') ? document.getElementById('filterRefundable').checked : false;
+    const filterRef = document.getElementById('filterRefundable') ? document.getElementById('filterRefundable').checked : false;
+    const filterNonRef = document.getElementById('filterNonRefundable') ? document.getElementById('filterNonRefundable').checked : false;
     const slider = document.getElementById('priceRangeSlider');
     const maxPrice = slider ? parseFloat(slider.value) : Infinity;
+
+    const checkRefMatch = function(isRef) {
+        if (filterRef && !filterNonRef) return isRef === true;
+        if (filterNonRef && !filterRef) return isRef === false;
+        return true;
+    };
 
     // Selected Airlines (If none selected, show all airlines!)
     const selectedAirlines = Array.from(document.querySelectorAll('.airline-checkbox:checked')).map(cb => cb.value.toUpperCase());
@@ -1077,8 +1168,7 @@ function applyFilters() {
         }
 
         // 2. Fare Type check
-        let matchRef = true;
-        if (refOnly && !isRef) matchRef = false;
+        let matchRef = checkRefMatch(isRef);
 
         // 3. Departure Slot check
         let matchDep = true;
@@ -1118,19 +1208,27 @@ function applyFilters() {
     const returnCards = document.querySelectorAll('.return-card');
 
     if (onwardCards.length > 0 || returnCards.length > 0) {
+        let firstVisibleOnward = null;
+        let firstVisibleReturn = null;
+
         onwardCards.forEach(card => {
             const stops   = parseInt(card.getAttribute('data-stops') || 0);
             const price   = parseFloat(card.getAttribute('data-price') || 0);
             const airline = (card.getAttribute('data-airline') || '').toUpperCase();
             const depSlot = card.getAttribute('data-depslot') || 'morning';
+            const isRef   = card.getAttribute('data-refundable') === '1';
 
             let matchStops = (selectedStopFilter === 'all') || (selectedStopFilter === '0' && stops === 0) || (selectedStopFilter === '1' && stops === 1) || (selectedStopFilter === '1+' && stops >= 1);
             let matchDep = (selectedDepSlots.length === 0) || selectedDepSlots.includes(depSlot);
             let matchAirline = (selectedAirlines.length === 0) || selectedAirlines.includes(airline);
             let matchPrice = (price <= maxPrice);
+            let matchRef = checkRefMatch(isRef);
 
-            const isMatch = matchStops && matchDep && matchAirline && matchPrice;
+            const isMatch = matchStops && matchDep && matchAirline && matchPrice && matchRef;
             card.style.display = isMatch ? 'block' : 'none';
+            if (isMatch && !firstVisibleOnward) {
+                firstVisibleOnward = card.querySelector('input[type="radio"]');
+            }
         });
 
         returnCards.forEach(card => {
@@ -1138,15 +1236,35 @@ function applyFilters() {
             const price   = parseFloat(card.getAttribute('data-price') || 0);
             const airline = (card.getAttribute('data-airline') || '').toUpperCase();
             const depSlot = card.getAttribute('data-depslot') || 'morning';
+            const isRef   = card.getAttribute('data-refundable') === '1';
 
             let matchStops = (selectedStopFilter === 'all') || (selectedStopFilter === '0' && stops === 0) || (selectedStopFilter === '1' && stops === 1) || (selectedStopFilter === '1+' && stops >= 1);
             let matchDep = (selectedDepSlots.length === 0) || selectedDepSlots.includes(depSlot);
             let matchAirline = (selectedAirlines.length === 0) || selectedAirlines.includes(airline);
             let matchPrice = (price <= maxPrice);
+            let matchRef = checkRefMatch(isRef);
 
-            const isMatch = matchStops && matchDep && matchAirline && matchPrice;
+            const isMatch = matchStops && matchDep && matchAirline && matchPrice && matchRef;
             card.style.display = isMatch ? 'block' : 'none';
+            if (isMatch && !firstVisibleReturn) {
+                firstVisibleReturn = card.querySelector('input[type="radio"]');
+            }
         });
+
+        // If currently selected radio button is hidden by filters, pick first visible
+        const currentCheckedOnward = document.querySelector('input[name="selected_onward_idx"]:checked');
+        if (currentCheckedOnward && currentCheckedOnward.closest('.onward-card') && currentCheckedOnward.closest('.onward-card').style.display === 'none' && firstVisibleOnward) {
+            firstVisibleOnward.checked = true;
+        }
+
+        const currentCheckedReturn = document.querySelector('input[name="selected_return_idx"]:checked');
+        if (currentCheckedReturn && currentCheckedReturn.closest('.return-card') && currentCheckedReturn.closest('.return-card').style.display === 'none' && firstVisibleReturn) {
+            firstVisibleReturn.checked = true;
+        }
+
+        if (typeof updateRoundTripSelection === 'function') {
+            updateRoundTripSelection();
+        }
     }
 }
 
