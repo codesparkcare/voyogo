@@ -299,9 +299,44 @@ class Franchise extends CI_Controller {
 
             $depTime = $item['departure_time'] ?? ($item['DepartureTime'] ?? '06:00');
             $arrTime = $item['arrival_time'] ?? ($item['ArrivalTime'] ?? '08:15');
-            $grossPrice = (float)($item['price'] ?? ($item['total_fare'] ?? ($item['gross_fare'] ?? 4999)));
-            $netPrice   = (float)($item['base_fare'] ?? ($item['net_fare'] ?? round($grossPrice * 0.88, 2)));
-            $taxPrice   = max(0, $grossPrice - $netPrice);
+            $grossPrice = 0.0;
+            if (!empty($item['price']) && (float)$item['price'] > 0) {
+                $grossPrice = (float)$item['price'];
+            } elseif (!empty($item['Price']) && (float)$item['Price'] > 0) {
+                $grossPrice = (float)$item['Price'];
+            } elseif (!empty($item['gross_fare']) && (float)$item['gross_fare'] > 0) {
+                $grossPrice = (float)$item['gross_fare'];
+            } elseif (!empty($item['GrossFare']) && (float)$item['GrossFare'] > 0) {
+                $grossPrice = (float)$item['GrossFare'];
+            } elseif (!empty($item['TotalFare']) && (float)$item['TotalFare'] > 0) {
+                $grossPrice = (float)$item['TotalFare'];
+            } elseif (!empty($item['TrendFare']) && (float)$item['TrendFare'] > 0) {
+                $grossPrice = (float)$item['TrendFare'];
+            } elseif (!empty($item['total_fare']) && (float)$item['total_fare'] > 0) {
+                $grossPrice = (float)$item['total_fare'];
+            } elseif (!empty($item['base_fare']) && (float)$item['base_fare'] > 0) {
+                $grossPrice = (float)$item['base_fare'];
+            } elseif (!empty($item['net_fare']) && (float)$item['net_fare'] > 0) {
+                $grossPrice = (float)$item['net_fare'];
+            } elseif (!empty($item['NetFare']) && (float)$item['NetFare'] > 0) {
+                $grossPrice = (float)$item['NetFare'];
+            }
+
+            if ($grossPrice <= 0) {
+                continue;
+            }
+
+            $netPrice = 0.0;
+            if (!empty($item['base_fare']) && (float)$item['base_fare'] > 0) {
+                $netPrice = (float)$item['base_fare'];
+            } elseif (!empty($item['net_fare']) && (float)$item['net_fare'] > 0) {
+                $netPrice = (float)$item['net_fare'];
+            } elseif (!empty($item['NetFare']) && (float)$item['NetFare'] > 0) {
+                $netPrice = (float)$item['NetFare'];
+            } else {
+                $netPrice = round($grossPrice * 0.88, 2);
+            }
+            $taxPrice = max(0, $grossPrice - $netPrice);
 
             $refRaw = strtoupper(trim((string)($item['refundable'] ?? ($item['Refundable'] ?? ''))));
             $fbc = strtoupper(trim((string)($item['fbc'] ?? ($item['FareBasisCode'] ?? ''))));

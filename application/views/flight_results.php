@@ -2403,8 +2403,39 @@
                 $defaultLogo = isset($airlineMap[$code]) ? $airlineMap[$code]['logo'] : 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png';
                 $defaultName = isset($airlineMap[$code]) ? $airlineMap[$code]['name'] : ($code . ' Airlines');
                 $itemStops = isset($item['stops']) ? (int)$item['stops'] : 0;
-                $itemPrice = (float)($item['price'] ?? 4999);
-                $itemBase = (float)($item['base_fare'] ?? round($itemPrice * 0.745));
+                
+                $itemPrice = 0.0;
+                if (!empty($item['price']) && (float)$item['price'] > 0) {
+                    $itemPrice = (float)$item['price'];
+                } elseif (!empty($item['Price']) && (float)$item['Price'] > 0) {
+                    $itemPrice = (float)$item['Price'];
+                } elseif (!empty($item['gross_fare']) && (float)$item['gross_fare'] > 0) {
+                    $itemPrice = (float)$item['gross_fare'];
+                } elseif (!empty($item['GrossFare']) && (float)$item['GrossFare'] > 0) {
+                    $itemPrice = (float)$item['GrossFare'];
+                } elseif (!empty($item['TotalFare']) && (float)$item['TotalFare'] > 0) {
+                    $itemPrice = (float)$item['TotalFare'];
+                } elseif (!empty($item['TrendFare']) && (float)$item['TrendFare'] > 0) {
+                    $itemPrice = (float)$item['TrendFare'];
+                } elseif (!empty($item['base_fare']) && (float)$item['base_fare'] > 0) {
+                    $itemPrice = (float)$item['base_fare'];
+                } elseif (!empty($item['NetFare']) && (float)$item['NetFare'] > 0) {
+                    $itemPrice = (float)$item['NetFare'];
+                }
+
+                // Skip unpriced flights so 0-fare tickets are never displayed
+                if ($itemPrice <= 0) {
+                    continue;
+                }
+
+                $itemBase = 0.0;
+                if (!empty($item['base_fare']) && (float)$item['base_fare'] > 0) {
+                    $itemBase = (float)$item['base_fare'];
+                } elseif (!empty($item['NetFare']) && (float)$item['NetFare'] > 0) {
+                    $itemBase = (float)$item['NetFare'];
+                } else {
+                    $itemBase = round($itemPrice * 0.745);
+                }
                 $itemTax = (float)($item['taxes'] ?? max(0, $itemPrice - $itemBase));
                 $itemVia = !empty($item['via']) ? $item['via'] : (!empty($item['Via']) ? $item['Via'] : ($itemStops > 0 ? 'HYD' : ''));
 
@@ -2433,38 +2464,72 @@
                     'cabin_class' => $item['cabin_class'] ?? ($search_query['cabin_class'] ?? 'Economy'),
                     'DepartureDate' => !empty($item['departure_date']) ? $item['departure_date'] : $search_query['date']
                 );
-            } elseif (isset($item['AirlineName']) || isset($item['FlightNumber']) || isset($item['Price'])) {
-                $code = isset($item['AirlineCode']) ? strtoupper($item['AirlineCode']) : '6E';
+            } elseif (isset($item['AirlineName']) || isset($item['FlightNumber']) || isset($item['Price']) || isset($item['GrossFare']) || isset($item['NetFare'])) {
+                $code = isset($item['AirlineCode']) ? strtoupper($item['AirlineCode']) : (isset($item['VAC']) ? strtoupper($item['VAC']) : (isset($item['Provider']) ? strtoupper($item['Provider']) : '6E'));
                 $itemStops = isset($item['Stops']) ? (int)$item['Stops'] : 0;
-                $itemPrice = (float)($item['Price'] ?? 4999);
-                $itemBase = (float)($item['NetFare'] ?? round($itemPrice * 0.745));
-                $itemTax = (float)($item['TotalTransactionFee'] ?? max(0, $itemPrice - $itemBase));
+                
+                $itemPrice = 0.0;
+                if (!empty($item['Price']) && (float)$item['Price'] > 0) {
+                    $itemPrice = (float)$item['Price'];
+                } elseif (!empty($item['price']) && (float)$item['price'] > 0) {
+                    $itemPrice = (float)$item['price'];
+                } elseif (!empty($item['GrossFare']) && (float)$item['GrossFare'] > 0) {
+                    $itemPrice = (float)$item['GrossFare'];
+                } elseif (!empty($item['gross_fare']) && (float)$item['gross_fare'] > 0) {
+                    $itemPrice = (float)$item['gross_fare'];
+                } elseif (!empty($item['TotalFare']) && (float)$item['TotalFare'] > 0) {
+                    $itemPrice = (float)$item['TotalFare'];
+                } elseif (!empty($item['TrendFare']) && (float)$item['TrendFare'] > 0) {
+                    $itemPrice = (float)$item['TrendFare'];
+                } elseif (!empty($item['NetFare']) && (float)$item['NetFare'] > 0) {
+                    $itemPrice = (float)$item['NetFare'];
+                } elseif (!empty($item['base_fare']) && (float)$item['base_fare'] > 0) {
+                    $itemPrice = (float)$item['base_fare'];
+                }
+
+                // Skip unpriced flights
+                if ($itemPrice <= 0) {
+                    continue;
+                }
+
+                $itemBase = 0.0;
+                if (!empty($item['NetFare']) && (float)$item['NetFare'] > 0) {
+                    $itemBase = (float)$item['NetFare'];
+                } elseif (!empty($item['base_fare']) && (float)$item['base_fare'] > 0) {
+                    $itemBase = (float)$item['base_fare'];
+                } else {
+                    $itemBase = round($itemPrice * 0.745);
+                }
+                $itemTax = (float)($item['TotalTransactionFee'] ?? ($item['taxes'] ?? max(0, $itemPrice - $itemBase)));
                 $itemVia = !empty($item['via']) ? $item['via'] : (!empty($item['Via']) ? $item['Via'] : ($itemStops > 0 ? 'HYD' : ''));
+
+                $defaultLogo = isset($airlineMap[$code]) ? $airlineMap[$code]['logo'] : 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png';
+                $defaultName = isset($airlineMap[$code]) ? $airlineMap[$code]['name'] : ($code . ' Airlines');
 
                 $onwardFlights[] = array(
                     'ResultID' => (!empty($item['ResultID']) && strpos($item['ResultID'], 'FL_') !== 0) ? $item['ResultID'] : (!empty($item['tui']) && strpos($item['tui'], 'FL_') !== 0 ? $item['tui'] : (!empty($activeSearchTui) ? $activeSearchTui : ('FL_' . ($idx + 100)))),
                     'AirlineCode' => $code,
-                    'AirlineName' => $item['AirlineName'] ?? 'IndiGo',
-                    'AirlineLogo' => $item['AirlineLogo'] ?? 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png',
-                    'FlightNumber' => $item['FlightNumber'] ?? ($code . '-' . (2000 + $idx)),
-                    'FromCode' => $item['FromCode'] ?? $search_query['from_code'],
-                    'ToCode' => $item['ToCode'] ?? $search_query['to_code'],
-                    'DepartureTime' => $item['DepartureTime'] ?? '06:00',
-                    'ArrivalTime' => $item['ArrivalTime'] ?? '08:15',
-                    'Duration' => $item['Duration'] ?? '2h 15m',
+                    'AirlineName' => $item['AirlineName'] ?? ($item['airline_name'] ?? $defaultName),
+                    'AirlineLogo' => $item['AirlineLogo'] ?? ($item['airline_logo'] ?? $defaultLogo),
+                    'FlightNumber' => $item['FlightNumber'] ?? ($item['flight_number'] ?? (!empty($item['FlightNo']) ? ($code . '-' . trim($item['FlightNo'])) : ($code . '-' . (2000 + $idx)))),
+                    'FromCode' => $item['FromCode'] ?? ($item['from_code'] ?? ($item['From'] ?? $search_query['from_code'])),
+                    'ToCode' => $item['ToCode'] ?? ($item['to_code'] ?? ($item['To'] ?? $search_query['to_code'])),
+                    'DepartureTime' => !empty($item['DepartureTime']) ? date('H:i', strtotime($item['DepartureTime'])) : ($item['departure_time'] ?? '06:00'),
+                    'ArrivalTime' => !empty($item['ArrivalTime']) ? date('H:i', strtotime($item['ArrivalTime'])) : ($item['arrival_time'] ?? '08:15'),
+                    'Duration' => $item['Duration'] ?? ($item['duration'] ?? '2h 15m'),
                     'Stops' => $itemStops,
                     'via' => $itemVia,
                     'Via' => $itemVia,
                     'Price' => $itemPrice,
                     'base_fare' => $itemBase,
                     'taxes' => $itemTax,
-                    'Baggage' => $item['Baggage'] ?? '15 Kgs',
+                    'Baggage' => $item['Baggage'] ?? ($item['baggage'] ?? '15 Kgs'),
                     'Refundable' => $isFlightRefundable($item),
-                    'SeatsLeft' => $item['SeatsLeft'] ?? rand(1, 9),
-                    'FlightIndex' => $item['Index'] ?? ($code . '|' . ($idx + 1)),
-                    'Aircraft' => !empty($item['AirCraft']) ? $item['AirCraft'] : ($code === 'SG' ? 'BOEING' : 'AIRBUS A320'),
-                    'cabin_class' => $item['Cabin'] ?? ($search_query['cabin_class'] ?? 'Economy'),
-                    'DepartureDate' => !empty($item['DepartureTime']) ? date('Y-m-d', strtotime($item['DepartureTime'])) : $search_query['date']
+                    'SeatsLeft' => $item['SeatsLeft'] ?? ($item['Seats'] ?? rand(1, 9)),
+                    'FlightIndex' => $item['Index'] ?? ($item['flight_index'] ?? ($code . '|' . ($idx + 1))),
+                    'Aircraft' => !empty($item['AirCraft']) ? $item['AirCraft'] : (!empty($item['aircraft']) ? $item['aircraft'] : ($code === 'SG' ? 'BOEING' : 'AIRBUS A320')),
+                    'cabin_class' => $item['Cabin'] ?? ($item['cabin_class'] ?? ($search_query['cabin_class'] ?? 'Economy')),
+                    'DepartureDate' => !empty($item['DepartureTime']) ? date('Y-m-d', strtotime($item['DepartureTime'])) : ($item['departure_date'] ?? $search_query['date'])
                 );
             }
         }
@@ -2531,6 +2596,29 @@
             $rawRetList = (isset($returnFlights['Flights'])) ? $returnFlights['Flights'] : (isset($returnFlights[0]) ? $returnFlights : array($returnFlights));
             foreach ($rawRetList as $rIdx => $rItem) {
                 if (!is_array($rItem)) continue;
+                $rPrice = 0.0;
+                if (!empty($rItem['price']) && (float)$rItem['price'] > 0) {
+                    $rPrice = (float)$rItem['price'];
+                } elseif (!empty($rItem['Price']) && (float)$rItem['Price'] > 0) {
+                    $rPrice = (float)$rItem['Price'];
+                } elseif (!empty($rItem['gross_fare']) && (float)$rItem['gross_fare'] > 0) {
+                    $rPrice = (float)$rItem['gross_fare'];
+                } elseif (!empty($rItem['GrossFare']) && (float)$rItem['GrossFare'] > 0) {
+                    $rPrice = (float)$rItem['GrossFare'];
+                } elseif (!empty($rItem['TotalFare']) && (float)$rItem['TotalFare'] > 0) {
+                    $rPrice = (float)$rItem['TotalFare'];
+                } elseif (!empty($rItem['TrendFare']) && (float)$rItem['TrendFare'] > 0) {
+                    $rPrice = (float)$rItem['TrendFare'];
+                } elseif (!empty($rItem['base_fare']) && (float)$rItem['base_fare'] > 0) {
+                    $rPrice = (float)$rItem['base_fare'];
+                } elseif (!empty($rItem['NetFare']) && (float)$rItem['NetFare'] > 0) {
+                    $rPrice = (float)$rItem['NetFare'];
+                }
+
+                if ($rPrice <= 0) {
+                    continue;
+                }
+
                 $rCode = isset($rItem['airline_code']) ? strtoupper($rItem['airline_code']) : (isset($rItem['AirlineCode']) ? strtoupper($rItem['AirlineCode']) : '6E');
                 $inboundFlights[] = array(
                     'ResultID' => (!empty($rItem['tui']) && strpos($rItem['tui'], 'FL_') !== 0) ? $rItem['tui'] : (!empty($activeSearchTui) ? $activeSearchTui : ('FL_RET_' . ($rIdx + 100))),
@@ -2544,7 +2632,7 @@
                     'ArrivalTime' => $rItem['arrival_time'] ?? '20:15',
                     'Duration' => $rItem['duration'] ?? '2h 15m',
                     'Stops' => isset($rItem['stops']) ? (int)$rItem['stops'] : 0,
-                    'Price' => (float)($rItem['price'] ?? 5150),
+                    'Price' => $rPrice,
                     'Baggage' => $rItem['checkin_baggage'] ?? $rItem['baggage'] ?? '15 Kgs',
                     'Refundable' => $isFlightRefundable($rItem),
                     'SeatsLeft' => rand(3, 9)
@@ -2604,6 +2692,7 @@
 
             foreach ($onwardFlights as $flt) {
                 $p = (float)$flt['Price'];
+                if ($p <= 0) continue;
                 $pricesAll[] = $p;
                 $s = (int)$flt['Stops'];
                 $code = $flt['AirlineCode'];
@@ -2634,7 +2723,7 @@
             if ($nonStopMin === PHP_INT_MAX) $nonStopMin = 0;
             if ($oneStopMin === PHP_INT_MAX) $oneStopMin = 0;
             if ($twoPlusMin === PHP_INT_MAX) $twoPlusMin = 0;
-            $onePlusMin = $twoPlusMin > 0 ? $twoPlusMin : ($oneStopMin > 0 ? $oneStopMin : 18603);
+            $onePlusMin = $twoPlusMin > 0 ? $twoPlusMin : ($oneStopMin > 0 ? $oneStopMin : ($nonStopMin > 0 ? $nonStopMin : 18603));
             $onePlusCount = $twoPlusCount > 0 ? $twoPlusCount : $oneStopCount;
 
             // Prepare Connecting Airports dictionary
@@ -2928,6 +3017,7 @@
 
                         $owStops = (int)$f['Stops'];
                         $owPrice = (float)$f['Price'];
+                        if ($owPrice <= 0) continue;
                         $owVia = !empty($f['via']) ? strtoupper($f['via']) : (!empty($f['Via']) ? strtoupper($f['Via']) : ($owStops > 0 ? 'HYD' : ''));
                         $owRefundable = !empty($f['Refundable']) ? '1' : '0';
                         $airlineCode = strtoupper($f['AirlineCode'] ?? '6E');
@@ -5945,6 +6035,10 @@ function setSortTab(sortType, element) {
         const scoreA = parseFloat(a.getAttribute('data-score') || (priceA + durA * 8));
         const scoreB = parseFloat(b.getAttribute('data-score') || (priceB + durB * 8));
 
+        // Always push any <= 0 price to the bottom
+        if (priceA <= 0 && priceB > 0) return 1;
+        if (priceB <= 0 && priceA > 0) return -1;
+
         if (sortType === 'cheapest') {
             return priceA - priceB || durA - durB;
         } else if (sortType === 'fastest') {
@@ -6263,6 +6357,10 @@ function applyFilters() {
     oneWayCards.forEach(card => {
         const stops = parseInt(card.getAttribute('data-stops') || 0);
         const price = parseFloat(card.getAttribute('data-price') || 0);
+        if (price <= 0) {
+            card.style.display = 'none';
+            return;
+        }
         const airline = (card.getAttribute('data-airline') || '').toUpperCase();
         const depSlot = card.getAttribute('data-depslot') || 'morning';
         const arrSlot = card.getAttribute('data-arrslot') || 'morning';
@@ -6321,6 +6419,10 @@ function applyFilters() {
         onwardCards.forEach(card => {
             const stops = parseInt(card.getAttribute('data-stops') || 0);
             const price = parseFloat(card.getAttribute('data-price') || 0);
+            if (price <= 0) {
+                card.style.display = 'none';
+                return;
+            }
             const airline = (card.getAttribute('data-airline') || '').toUpperCase();
             const depSlot = card.getAttribute('data-depslot') || 'morning';
             const isRef = card.getAttribute('data-refundable') === '1';
@@ -6341,6 +6443,10 @@ function applyFilters() {
         returnCards.forEach(card => {
             const stops = parseInt(card.getAttribute('data-stops') || 0);
             const price = parseFloat(card.getAttribute('data-price') || 0);
+            if (price <= 0) {
+                card.style.display = 'none';
+                return;
+            }
             const airline = (card.getAttribute('data-airline') || '').toUpperCase();
             const depSlot = card.getAttribute('data-depslot') || 'morning';
             const isRef = card.getAttribute('data-refundable') === '1';

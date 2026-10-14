@@ -3135,9 +3135,98 @@ class BenzyFlightApi {
                     }
                     $depTime = !empty($j['DepartureTime']) ? date('H:i', strtotime($j['DepartureTime'])) : '06:00';
                     $arrTime = !empty($j['ArrivalTime']) ? date('H:i', strtotime($j['ArrivalTime'])) : '08:30';
-                    $netFare = isset($j['NetFare']) ? (float)$j['NetFare'] : 4300;
-                    $grossFare = isset($j['GrossFare']) ? (float)$j['GrossFare'] : 5150;
-                    $taxes = max(0, $grossFare - $netFare);
+                    // Multi-tier fare resolution according to Akbar / Benz Flight API specification
+                    $grossFare = 0.0;
+                    $netFare = 0.0;
+
+                    // 1. Check direct GrossFare (PDF p. 22 & 25)
+                    if (isset($j['GrossFare']) && (float)$j['GrossFare'] > 0) {
+                        $grossFare = (float)$j['GrossFare'];
+                    }
+                    // 2. Check direct NetFare
+                    if (isset($j['NetFare']) && (float)$j['NetFare'] > 0) {
+                        $netFare = (float)$j['NetFare'];
+                    }
+                    // 3. Check TotalFare (PDF p. 22 & 25)
+                    if ($grossFare <= 0 && isset($j['TotalFare']) && (float)$j['TotalFare'] > 0) {
+                        $grossFare = (float)$j['TotalFare'];
+                    }
+                    // 4. Check TrendFare (PDF p. 23 & 25)
+                    if ($grossFare <= 0 && isset($j['TrendFare']) && (float)$j['TrendFare'] > 0) {
+                        $grossFare = (float)$j['TrendFare'];
+                    }
+                    // 5. Check TotalBaseFare + TotalTax (PDF p. 33)
+                    if ($grossFare <= 0 && isset($j['TotalBaseFare']) && (float)$j['TotalBaseFare'] > 0) {
+                        $bFare = (float)$j['TotalBaseFare'];
+                        $tFare = isset($j['TotalTax']) && (float)$j['TotalTax'] > 0 ? (float)$j['TotalTax'] : 0.0;
+                        $grossFare = $bFare + $tFare;
+                    }
+                    // 6. Check Journey-level Fares container (PDF p. 33 & 35)
+                    if (!empty($j['Fares']) && is_array($j['Fares'])) {
+                        if ($grossFare <= 0 && isset($j['Fares']['GrossFare']) && (float)$j['Fares']['GrossFare'] > 0) {
+                            $grossFare = (float)$j['Fares']['GrossFare'];
+                        }
+                        if ($netFare <= 0 && isset($j['Fares']['NetFare']) && (float)$j['Fares']['NetFare'] > 0) {
+                            $netFare = (float)$j['Fares']['NetFare'];
+                        }
+                        if ($grossFare <= 0 && isset($j['Fares']['TotalBaseFare']) && (float)$j['Fares']['TotalBaseFare'] > 0) {
+                            $bFare = (float)$j['Fares']['TotalBaseFare'];
+                            $tFare = isset($j['Fares']['TotalTax']) && (float)$j['Fares']['TotalTax'] > 0 ? (float)$j['Fares']['TotalTax'] : 0.0;
+                            $grossFare = $bFare + $tFare;
+                        }
+                    }
+                    // 7. Check Segments array for segment-level Fares and PTCFare (PDF p. 32-33, 43, 61-62)
+                    if ($grossFare <= 0 && !empty($j['Segments']) && is_array($j['Segments'])) {
+                        $segGrossSum = 0.0;
+                        $segNetSum = 0.0;
+                        foreach ($j['Segments'] as $seg) {
+                            if (!empty($seg['Fares']) && is_array($seg['Fares'])) {
+                                if (isset($seg['Fares']['GrossFare']) && (float)$seg['Fares']['GrossFare'] > 0) {
+                                    $segGrossSum += (float)$seg['Fares']['GrossFare'];
+                                } elseif (isset($seg['Fares']['NetFare']) && (float)$seg['Fares']['NetFare'] > 0) {
+                                    $segGrossSum += (float)$seg['Fares']['NetFare'];
+                                } elseif (!empty($seg['Fares']['PTCFare'][0]['GrossFare']) && (float)$seg['Fares']['PTCFare'][0]['GrossFare'] > 0) {
+                                    $segGrossSum += (float)$seg['Fares']['PTCFare'][0]['GrossFare'];
+                                } elseif (!empty($seg['Fares']['PTCFare'][0]['Fare']) && (float)$seg['Fares']['PTCFare'][0]['Fare'] > 0) {
+                                    $pFare = (float)$seg['Fares']['PTCFare'][0]['Fare'];
+                                    $pTax = isset($seg['Fares']['PTCFare'][0]['Tax']) && (float)$seg['Fares']['PTCFare'][0]['Tax'] > 0 ? (float)$seg['Fares']['PTCFare'][0]['Tax'] : 0.0;
+                                    $segGrossSum += ($pFare + $pTax);
+                                }
+                                if (isset($seg['Fares']['NetFare']) && (float)$seg['Fares']['NetFare'] > 0) {
+                                    $segNetSum += (float)$seg['Fares']['NetFare'];
+                                }
+                            }
+                        }
+                        if ($segGrossSum > 0) {
+                            $grossFare = $segGrossSum;
+                        }
+                        if ($netFare <= 0 && $segNetSum > 0) {
+                            $netFare = $segNetSum;
+                        }
+                    }
+                    // 8. Cross-calculate if one is present and the other is 0
+                    if ($grossFare <= 0 && $netFare > 0) {
+                        $comm = isset($j['TotalCommission']) && (float)$j['TotalCommission'] > 0 ? (float)$j['TotalCommission'] : 0.0;
+                        $grossFare = $netFare + $comm;
+                    }
+                    if ($netFare <= 0 && $grossFare > 0) {
+                        $comm = isset($j['TotalCommission']) && (float)$j['TotalCommission'] > 0 ? (float)$j['TotalCommission'] : 0.0;
+                        $netFare = max(0, $grossFare - $comm);
+                    }
+
+                    // 9. CRITICAL SAFETY GUARD: Skip completely unpriced / 0-fare journey records!
+                    // Flights with <= 0 fare are unpriced/invalid schedule feeds that must NEVER display as ₹ 0 to users.
+                    if ($grossFare <= 0) {
+                        continue;
+                    }
+
+                    $taxes = isset($j['TotalTax']) && (float)$j['TotalTax'] > 0 ? (float)$j['TotalTax'] : max(0, $grossFare - $netFare);
+                    if ($taxes <= 0) {
+                        $taxes = round($grossFare * 0.15);
+                        if ($netFare >= $grossFare) {
+                            $netFare = max(0, $grossFare - $taxes);
+                        }
+                    }
 
                     $results[] = array(
                         'tui' => !empty($j['TUI']) ? $j['TUI'] : $tui,
@@ -3212,9 +3301,27 @@ class BenzyFlightApi {
                     $depTime = isset($firstFlight['DepartureTime']) ? date('H:i', strtotime($firstFlight['DepartureTime'])) : '06:00';
                     $arrTime = isset($lastFlight['ArrivalTime']) ? date('H:i', strtotime($lastFlight['ArrivalTime'])) : '08:30';
 
-                    $netFare = isset($journey['Price']['NetFare']) ? (float)$journey['Price']['NetFare'] : 4500;
-                    $taxes   = isset($journey['Price']['Tax']) ? (float)$journey['Price']['Tax'] : 850;
-                    $grossFare = isset($journey['Price']['GrossFare']) ? (float)$journey['Price']['GrossFare'] : ($netFare + $taxes);
+                    $netFare = 0.0;
+                    $grossFare = 0.0;
+                    if (isset($journey['Price']['GrossFare']) && (float)$journey['Price']['GrossFare'] > 0) {
+                        $grossFare = (float)$journey['Price']['GrossFare'];
+                    }
+                    if (isset($journey['Price']['NetFare']) && (float)$journey['Price']['NetFare'] > 0) {
+                        $netFare = (float)$journey['Price']['NetFare'];
+                    }
+                    if (isset($journey['Price']['TotalFare']) && (float)$journey['Price']['TotalFare'] > 0 && $grossFare <= 0) {
+                        $grossFare = (float)$journey['Price']['TotalFare'];
+                    }
+                    if ($grossFare <= 0 && $netFare > 0) {
+                        $grossFare = $netFare;
+                    }
+                    if ($netFare <= 0 && $grossFare > 0) {
+                        $netFare = round($grossFare * 0.85);
+                    }
+                    if ($grossFare <= 0) {
+                        continue;
+                    }
+                    $taxes = isset($journey['Price']['Tax']) && (float)$journey['Price']['Tax'] > 0 ? (float)$journey['Price']['Tax'] : max(0, $grossFare - $netFare);
 
                     $results[] = array(
                         'tui' => !empty($journey['TUI']) ? $journey['TUI'] : $tui,
@@ -3259,9 +3366,37 @@ class BenzyFlightApi {
             $airlineCode = !empty($flight['VAC']) ? $flight['VAC'] : (!empty($flight['MAC']) ? $flight['MAC'] : '6E');
             $airlineDetails = $this->getAirlineMeta($airlineCode);
 
-            // Live GDS Gross & Net Amounts
-            $grossFare = isset($data['GrossAmount']) ? (float)$data['GrossAmount'] : (isset($journey['GrossFare']) ? (float)$journey['GrossFare'] : (isset($fares['GrossFare']) ? (float)$fares['GrossFare'] : 5421.0));
-            $netFare   = isset($data['NetAmount']) ? (float)$data['NetAmount'] : (isset($journey['NetFare']) ? (float)$journey['NetFare'] : (isset($fares['NetFare']) ? (float)$fares['NetFare'] : 5150.0));
+            // Live GDS Gross & Net Amounts with multi-tier fallbacks
+            $grossFare = 0.0;
+            if (!empty($data['GrossAmount']) && (float)$data['GrossAmount'] > 0) {
+                $grossFare = (float)$data['GrossAmount'];
+            } elseif (!empty($journey['GrossFare']) && (float)$journey['GrossFare'] > 0) {
+                $grossFare = (float)$journey['GrossFare'];
+            } elseif (!empty($fares['GrossFare']) && (float)$fares['GrossFare'] > 0) {
+                $grossFare = (float)$fares['GrossFare'];
+            } elseif (!empty($journey['TotalFare']) && (float)$journey['TotalFare'] > 0) {
+                $grossFare = (float)$journey['TotalFare'];
+            } elseif (!empty($journey['TrendFare']) && (float)$journey['TrendFare'] > 0) {
+                $grossFare = (float)$journey['TrendFare'];
+            }
+
+            $netFare = 0.0;
+            if (!empty($data['NetAmount']) && (float)$data['NetAmount'] > 0) {
+                $netFare = (float)$data['NetAmount'];
+            } elseif (!empty($journey['NetFare']) && (float)$journey['NetFare'] > 0) {
+                $netFare = (float)$journey['NetFare'];
+            } elseif (!empty($fares['NetFare']) && (float)$fares['NetFare'] > 0) {
+                $netFare = (float)$fares['NetFare'];
+            }
+
+            if ($grossFare <= 0 && $netFare > 0) {
+                $grossFare = $netFare;
+            } elseif ($netFare <= 0 && $grossFare > 0) {
+                $netFare = round($grossFare * 0.85);
+            } elseif ($grossFare <= 0) {
+                $grossFare = 5421.0;
+                $netFare = 5150.0;
+            }
 
             // Customer Base Fare and Total Tax according to BenzFlightApis specification
             $totalBaseFare = isset($fares['TotalBaseFare']) ? (float)$fares['TotalBaseFare'] : (isset($journey['TotalBaseFare']) ? (float)$journey['TotalBaseFare'] : (isset($fares['PTCFare'][0]['Fare']) ? (float)$fares['PTCFare'][0]['Fare'] : round($grossFare * 0.788)));

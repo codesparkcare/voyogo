@@ -132,8 +132,18 @@ class Welcome extends CI_Controller {
         $flightResults = array();
         $returnFlights = array();
 
-        if ($is_roundtrip && !empty($rawSearchResults) && is_array($rawSearchResults)) {
-            foreach ($rawSearchResults as $flightItem) {
+        $cleanedSearchResults = array();
+        if (!empty($rawSearchResults) && is_array($rawSearchResults)) {
+            foreach ($rawSearchResults as $item) {
+                $p = (float)($item['price'] ?? ($item['gross_fare'] ?? ($item['Price'] ?? ($item['GrossFare'] ?? ($item['NetFare'] ?? ($item['base_fare'] ?? 0))))));
+                if ($p > 0) {
+                    $cleanedSearchResults[] = $item;
+                }
+            }
+        }
+
+        if ($is_roundtrip && !empty($cleanedSearchResults)) {
+            foreach ($cleanedSearchResults as $flightItem) {
                 $retId = isset($flightItem['return_identifier']) ? (int)$flightItem['return_identifier'] : 0;
                 $fCode = isset($flightItem['from_code']) ? strtoupper($flightItem['from_code']) : '';
 
@@ -186,7 +196,7 @@ class Welcome extends CI_Controller {
                 }
             }
         } else {
-            $flightResults = $rawSearchResults;
+            $flightResults = $cleanedSearchResults;
         }
 
         $domesticAirports = array(

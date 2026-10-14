@@ -60,7 +60,8 @@ $refundableCount = 0;
 $nonRefundableCount = 0;
 
 foreach ($onwardList as $flt) {
-    $p = (float)($flt['price'] ?? 4999);
+    $p = (float)($flt['price'] ?? 0);
+    if ($p <= 0) continue;
     $pricesAll[] = $p;
     $s = (int)($flt['stops'] ?? 0);
     $code = strtoupper($flt['airline_code'] ?? '6E');
@@ -630,12 +631,14 @@ uasort($connectingAirportsList, function($a, $b) {
 
                         $stops = (int)($f['stops'] ?? 0);
                         $viaAirport = !empty($f['via']) ? strtoupper($f['via']) : (!empty($f['Via']) ? strtoupper($f['Via']) : ($stops > 0 ? 'HYD' : ''));
+                        $fPrice = (float)($f['price'] ?? 0);
+                        if ($fPrice <= 0) continue;
                     ?>
                     <label class="rt-card onward-card <?php echo ($idx === 0) ? 'selected-rt-card' : ''; ?>" 
                            data-idx="<?php echo $idx; ?>" 
                            data-stops="<?php echo $stops; ?>" 
                            data-airline="<?php echo htmlspecialchars(strtoupper($f['airline_code'] ?? '6E')); ?>" 
-                           data-price="<?php echo (float)$f['price']; ?>" 
+                           data-price="<?php echo $fPrice; ?>" 
                            data-time="<?php echo htmlspecialchars($depTime); ?>"
                            data-depslot="<?php echo $depSlot; ?>"
                            data-arrslot="<?php echo $arrSlot; ?>"
@@ -849,7 +852,8 @@ uasort($connectingAirportsList, function($a, $b) {
                 $arrTime    = $f['arrival_time'] ?? '08:15';
                 $duration   = $f['duration'] ?? '2h 15m';
                 $stops      = (int)($f['stops'] ?? 0);
-                $grossPrice = (float)($f['price'] ?? 5050.00);
+                $grossPrice = (float)($f['price'] ?? 0);
+                if ($grossPrice <= 0) continue;
                 $netPrice   = (float)($f['base_fare'] ?? ($grossPrice * 0.88));
                 $taxPrice   = max(0, $grossPrice - $netPrice);
                 $baggage    = $f['baggage'] ?? '15 Kg';
@@ -1153,6 +1157,10 @@ function applyFilters() {
     oneWayCards.forEach(card => {
         const stops   = parseInt(card.getAttribute('data-stops') || 0);
         const price   = parseFloat(card.getAttribute('data-price') || 0);
+        if (price <= 0) {
+            card.style.display = 'none';
+            return;
+        }
         const airline = (card.getAttribute('data-airline') || '').toUpperCase();
         const depSlot = card.getAttribute('data-depslot') || 'morning';
         const arrSlot = card.getAttribute('data-arrslot') || 'morning';
@@ -1214,6 +1222,10 @@ function applyFilters() {
         onwardCards.forEach(card => {
             const stops   = parseInt(card.getAttribute('data-stops') || 0);
             const price   = parseFloat(card.getAttribute('data-price') || 0);
+            if (price <= 0) {
+                card.style.display = 'none';
+                return;
+            }
             const airline = (card.getAttribute('data-airline') || '').toUpperCase();
             const depSlot = card.getAttribute('data-depslot') || 'morning';
             const isRef   = card.getAttribute('data-refundable') === '1';
@@ -1234,6 +1246,10 @@ function applyFilters() {
         returnCards.forEach(card => {
             const stops   = parseInt(card.getAttribute('data-stops') || 0);
             const price   = parseFloat(card.getAttribute('data-price') || 0);
+            if (price <= 0) {
+                card.style.display = 'none';
+                return;
+            }
             const airline = (card.getAttribute('data-airline') || '').toUpperCase();
             const depSlot = card.getAttribute('data-depslot') || 'morning';
             const isRef   = card.getAttribute('data-refundable') === '1';
@@ -1284,6 +1300,9 @@ function sortFlights(type, elem) {
         const stopsB = parseInt(b.getAttribute('data-stops') || 0);
         const timeA  = a.getAttribute('data-time') || '00:00';
         const timeB  = b.getAttribute('data-time') || '00:00';
+
+        if (priceA <= 0 && priceB > 0) return 1;
+        if (priceB <= 0 && priceA > 0) return -1;
 
         if (type === 'cheapest') {
             return priceA - priceB;
