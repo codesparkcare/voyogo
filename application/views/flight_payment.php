@@ -1020,6 +1020,93 @@ body {
         <!-- Left Column: Flight Details Review & Payment Modes -->
         <div>
 
+            <!-- Flight Details & Addons Interactive UI Functions -->
+            <script>
+            // Tab Switching: Onward | Return | Fare Rules
+            function switchReviewTab(tabName) {
+                document.querySelectorAll('.route-tab-btn').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-pane-content').forEach(function(p) {
+                    p.classList.remove('active');
+                });
+
+                var targetBtn = document.getElementById('tabBtn_' + tabName);
+                var targetPane = document.getElementById('tabPane_' + tabName);
+
+                if (targetBtn) targetBtn.classList.add('active');
+                if (targetPane) targetPane.classList.add('active');
+            }
+            window.switchReviewTab = switchReviewTab;
+
+            // Accordion Toggle
+            function toggleReviewAcc(accId) {
+                var card = document.getElementById(accId);
+                if (card) {
+                    card.classList.toggle('open');
+                }
+            }
+            window.toggleReviewAcc = toggleReviewAcc;
+
+            // Traveller Addons Sub-tab Switcher (Baggage / Meal / Seats)
+            function switchPaxAddonSubtab(pIdx, subtab) {
+                pIdx = String(pIdx);
+                var subtabs = ['baggage', 'meal', 'seats'];
+                for (var i = 0; i < subtabs.length; i++) {
+                    var s = subtabs[i];
+                    var btn = document.getElementById('subtabBtn_' + s + '_' + pIdx);
+                    var pane = document.getElementById('paxSubtab_' + s + '_' + pIdx);
+                    if (btn) btn.classList.remove('active');
+                    if (pane) pane.style.display = 'none';
+                }
+
+                var activeBtn = document.getElementById('subtabBtn_' + subtab + '_' + pIdx);
+                var activePane = document.getElementById('paxSubtab_' + subtab + '_' + pIdx);
+                if (activeBtn) activeBtn.classList.add('active');
+                if (activePane) activePane.style.display = 'block';
+            }
+            window.switchPaxAddonSubtab = switchPaxAddonSubtab;
+
+            // Policy Subtab Switcher
+            function switchPolicySubtab(pol) {
+                document.querySelectorAll('.policy-subtab-btn').forEach(function(btn) {
+                    btn.classList.remove('active');
+                });
+                var pols = ['change', 'cancel', 'ato'];
+                for (var i = 0; i < pols.length; i++) {
+                    var box = document.getElementById('policyBox_' + pols[i]);
+                    if (box) box.style.display = 'none';
+                }
+
+                var b = document.getElementById('btnPolicy' + pol.charAt(0).toUpperCase() + pol.slice(1));
+                if (b) b.classList.add('active');
+                var activeBox = document.getElementById('policyBox_' + pol);
+                if (activeBox) activeBox.style.display = 'block';
+            }
+            window.switchPolicySubtab = switchPolicySubtab;
+
+            // Payment Option Selection Visual
+            function selectPayOption(el) {
+                document.querySelectorAll('.payment-option-item').forEach(function(item) {
+                    item.classList.remove('selected');
+                });
+                if (el) el.classList.add('selected');
+            }
+            window.selectPayOption = selectPayOption;
+
+            // Global delegated event listener so clicks on sub-tab buttons or their child icons/labels always work
+            document.addEventListener('click', function(e) {
+                var btn = (e.target && e.target.closest) ? e.target.closest('.traveller-subtab-btn') : null;
+                if (btn) {
+                    var pIdx = btn.getAttribute('data-pax-idx');
+                    var subtab = btn.getAttribute('data-subtab');
+                    if (pIdx !== null && subtab) {
+                        switchPaxAddonSubtab(pIdx, subtab);
+                    }
+                }
+            });
+            </script>
+
             <!-- A. Review Your Flight Details Card (Akbar Travels Pattern) -->
             <div class="flight-details-card">
                 
@@ -1452,13 +1539,13 @@ body {
 
                                     <!-- Sub-tabs: Baggage | Meal | Seats (Screenshot 3) -->
                                     <div class="traveller-subtabs-row">
-                                        <button type="button" class="traveller-subtab-btn active" id="subtabBtn_baggage_<?php echo $pIdx; ?>" onclick="switchPaxAddonSubtab(<?php echo $pIdx; ?>, 'baggage');">
+                                        <button type="button" class="traveller-subtab-btn active" id="subtabBtn_baggage_<?php echo $pIdx; ?>" data-pax-idx="<?php echo $pIdx; ?>" data-subtab="baggage" onclick="switchPaxAddonSubtab('<?php echo $pIdx; ?>', 'baggage');">
                                             <i class="fa-solid fa-suitcase"></i> Baggage
                                         </button>
-                                        <button type="button" class="traveller-subtab-btn" id="subtabBtn_meal_<?php echo $pIdx; ?>" onclick="switchPaxAddonSubtab(<?php echo $pIdx; ?>, 'meal');">
+                                        <button type="button" class="traveller-subtab-btn" id="subtabBtn_meal_<?php echo $pIdx; ?>" data-pax-idx="<?php echo $pIdx; ?>" data-subtab="meal" onclick="switchPaxAddonSubtab('<?php echo $pIdx; ?>', 'meal');">
                                             <i class="fa-solid fa-utensils"></i> Meal
                                         </button>
-                                        <button type="button" class="traveller-subtab-btn" id="subtabBtn_seats_<?php echo $pIdx; ?>" onclick="switchPaxAddonSubtab(<?php echo $pIdx; ?>, 'seats');">
+                                        <button type="button" class="traveller-subtab-btn" id="subtabBtn_seats_<?php echo $pIdx; ?>" data-pax-idx="<?php echo $pIdx; ?>" data-subtab="seats" onclick="switchPaxAddonSubtab('<?php echo $pIdx; ?>', 'seats');">
                                             <i class="fa-solid fa-chair"></i> Seats
                                         </button>
                                     </div>
@@ -2077,81 +2164,6 @@ body {
 <!-- Razorpay Checkout Integration -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-// Tab Switching: Onward | Return | Fare Rules
-function switchReviewTab(tabName) {
-    document.querySelectorAll('.route-tab-btn').forEach(function(b) {
-        b.classList.remove('active');
-    });
-    document.querySelectorAll('.tab-pane-content').forEach(function(p) {
-        p.classList.remove('active');
-    });
-
-    var targetBtn = document.getElementById('tabBtn_' + tabName);
-    var targetPane = document.getElementById('tabPane_' + tabName);
-
-    if (targetBtn) targetBtn.classList.add('active');
-    if (targetPane) targetPane.classList.add('active');
-}
-
-// Accordion Toggle
-function toggleReviewAcc(accId) {
-    var card = document.getElementById(accId);
-    if (card) {
-        card.classList.toggle('open');
-    }
-}
-
-// Traveller Addons Sub-tab Switcher (Baggage / Meal / Seats)
-function switchPaxAddonSubtab(pIdx, subtab) {
-    ['baggage', 'meal', 'seats'].forEach(function(s) {
-        var btn = document.getElementById('subtabBtn_' + s + '_' + pIdx);
-        var pane = document.getElementById('paxSubtab_' + s + '_' + pIdx);
-        if (btn) btn.classList.remove('active');
-        if (pane) pane.style.display = 'none';
-    });
-
-    var activeBtn = document.getElementById('subtabBtn_' + subtab + '_' + pIdx);
-    var activePane = document.getElementById('paxSubtab_' + subtab + '_' + pIdx);
-    if (activeBtn) activeBtn.classList.add('active');
-    if (activePane) activePane.style.display = 'block';
-}
-
-// Policy Subtab Switcher
-function switchPolicySubtab(pol) {
-    document.querySelectorAll('.policy-subtab-btn').forEach(function(btn) {
-        btn.classList.remove('active');
-    });
-    ['change', 'cancel', 'ato'].forEach(function(k) {
-        var box = document.getElementById('policyBox_' + k);
-        if (box) box.style.display = 'none';
-    });
-
-    if (pol === 'change') {
-        var b = document.getElementById('btnPolicyChange');
-        if (b) b.classList.add('active');
-        var box = document.getElementById('policyBox_change');
-        if (box) box.style.display = 'block';
-    } else if (pol === 'cancel') {
-        var b = document.getElementById('btnPolicyCancel');
-        if (b) b.classList.add('active');
-        var box = document.getElementById('policyBox_cancel');
-        if (box) box.style.display = 'block';
-    } else if (pol === 'ato') {
-        var b = document.getElementById('btnPolicyAto');
-        if (b) b.classList.add('active');
-        var box = document.getElementById('policyBox_ato');
-        if (box) box.style.display = 'block';
-    }
-}
-
-// Payment Option Selection Visual
-function selectPayOption(el) {
-    document.querySelectorAll('.payment-option-item').forEach(function(item) {
-        item.classList.remove('selected');
-    });
-    if (el) el.classList.add('selected');
-}
-
 // Trigger Razorpay Standard Web Checkout
 function triggerRazorpayPayment() {
     var payBtn = document.querySelector('.btn-proceed-pay');
@@ -2170,9 +2182,9 @@ function triggerRazorpayPayment() {
 
     var finalAmount = <?php echo (float)$grandTotal; ?>;
     var amountInPaise = Math.round(finalAmount * 100);
-    var contactName = "<?php echo htmlspecialchars($contactName); ?>";
-    var contactEmail = "<?php echo htmlspecialchars($contactEmail); ?>";
-    var contactPhone = "<?php echo htmlspecialchars($contactPhone); ?>";
+    var contactName = <?php echo json_encode((string)$contactName); ?>;
+    var contactEmail = <?php echo json_encode((string)$contactEmail); ?>;
+    var contactPhone = <?php echo json_encode((string)$contactPhone); ?>;
 
     setBtnLoading(true);
 
@@ -2209,7 +2221,7 @@ function triggerRazorpayPayment() {
             "amount": orderData.amount,
             "currency": orderData.currency || "INR",
             "name": orderData.merchant_name || "Voyogo Travels",
-            "description": "Flight Ticket Booking - <?php echo htmlspecialchars($flightNumber); ?>",
+            "description": <?php echo json_encode("Flight Ticket Booking - " . $flightNumber); ?>,
             "image": "<?php echo base_url('assets/images/logo.png'); ?>",
             "order_id": orderData.order_id,
             "handler": function (response) {
@@ -2255,7 +2267,7 @@ function triggerRazorpayPayment() {
                 "contact": contactPhone
             },
             "theme": {
-                "color": "<?php echo !empty($razorpay_settings['theme_color']) ? htmlspecialchars($razorpay_settings['theme_color']) : '#0d3470'; ?>"
+                "color": <?php echo json_encode(!empty($razorpay_settings['theme_color']) ? $razorpay_settings['theme_color'] : '#0d3470'); ?>
             },
             "modal": {
                 "ondismiss": function() {
@@ -2278,4 +2290,5 @@ function triggerRazorpayPayment() {
         setBtnLoading(false);
     });
 }
+window.triggerRazorpayPayment = triggerRazorpayPayment;
 </script>
