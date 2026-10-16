@@ -2015,6 +2015,46 @@ class BenzyFlightApi {
             }
         }
 
+        // Strictly filter out any SSR items for Infant passengers (PTC: INF).
+        // Per Benzy API spec (EnableInfantBaggage: false, Pages 9, 78-79, 84-86),
+        // infants travel on lap and cannot have Seat, Meal, or Baggage SSRs.
+        $infantPaxIds = array();
+        foreach ($travellers as $t) {
+            $tPtc = strtoupper($t['PTC'] ?? '');
+            if ($tPtc === 'INF' || $tPtc === 'INFANT') {
+                $infantPaxIds[(string)$t['ID']] = true;
+                if (!empty($t['PaxID'])) {
+                    $infantPaxIds[(string)$t['PaxID']] = true;
+                }
+            }
+        }
+        foreach ($passengers as $pIdx => $p) {
+            $pPtc = strtoupper($p['PTC'] ?? ($p['PaxType'] ?? ($p['type'] ?? '')));
+            if ($pPtc === 'INF' || $pPtc === 'INFANT') {
+                $infantPaxIds[(string)($pIdx + 1)] = true;
+                $infantPaxIds[(string)$pIdx] = true;
+                if (!empty($p['PaxID'])) {
+                    $infantPaxIds[(string)$p['PaxID']] = true;
+                }
+            }
+        }
+
+        if (!empty($ssrList) && !empty($infantPaxIds)) {
+            $filteredSsr = array();
+            $filteredTotalAmt = 0;
+            foreach ($ssrList as $sItem) {
+                $itemPax = (string)($sItem['PAXID'] ?? ($sItem['PaxID'] ?? ''));
+                if (isset($infantPaxIds[$itemPax])) {
+                    // Exclude infant SSR to prevent Benzy booking failure
+                    continue;
+                }
+                $filteredSsr[] = $sItem;
+                $filteredTotalAmt += (float)($sItem['Charge'] ?? ($sItem['Amount'] ?? 0));
+            }
+            $ssrList = $filteredSsr;
+            $totalSsrAmount = $filteredTotalAmt;
+        }
+
         // Build PLP (Frequent Flyer) matching Benz API doc (Page 84 & 86/89)
         $plpList = array();
         foreach ($passengers as $pIdx => $p) {

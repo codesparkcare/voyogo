@@ -1410,9 +1410,15 @@ class Welcome extends CI_Controller {
             $passportNo = !empty($p['passport_no']) ? $p['passport_no'] : "";
             $paxNat = !empty($p['nationality']) ? (strtoupper($p['nationality']) === 'INDIAN' ? 'IN' : substr($p['nationality'], 0, 2)) : "IN";
 
-            $curPaxSeat    = !empty($pax_seats[$idx]) ? $pax_seats[$idx] : $ssr_seat_code;
-            $curPaxMeal    = !empty($pax_meals[$idx]) ? $pax_meals[$idx] : $ssr_meal_code;
-            $curPaxBaggage = !empty($pax_baggages[$idx]) ? $pax_baggages[$idx] : $ssr_baggage_code;
+            if ($paxType === 'INF') {
+                $curPaxSeat    = '';
+                $curPaxMeal    = '';
+                $curPaxBaggage = '';
+            } else {
+                $curPaxSeat    = !empty($pax_seats[$idx]) ? $pax_seats[$idx] : $ssr_seat_code;
+                $curPaxMeal    = !empty($pax_meals[$idx]) ? $pax_meals[$idx] : $ssr_meal_code;
+                $curPaxBaggage = !empty($pax_baggages[$idx]) ? $pax_baggages[$idx] : $ssr_baggage_code;
+            }
 
             $pax_api_payload[] = array(
                 "Title"             => $paxTitle,

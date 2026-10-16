@@ -133,6 +133,17 @@ if (empty($allPaxList)) {
 
 $firstPaxName = $allPaxList[0]['full_display'];
 $total_passengers = count($allPaxList);
+
+$adultCount = 0;
+$childCount = 0;
+$infantCount = 0;
+foreach ($allPaxList as $p) {
+    $t = strtolower($p['type'] ?? 'adult');
+    if ($t === 'child') $childCount++;
+    elseif ($t === 'infant') $infantCount++;
+    else $adultCount++;
+}
+
 $initialGrandTotal = max(0, $base_fare + $taxes + $insurance_amount + $safety_cancellation_amount - $discount_amount);
 
 // Enhance $addons_data with city labels for frontend JS consumption
@@ -967,11 +978,13 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                                 <i class="fa-solid fa-chevron-left"></i>
                             </button>
                             <div class="passenger-scroll-row" id="paxScrollRow">
-                                <?php foreach ($allPaxList as $pIdx => $pax): ?>
+                                <?php foreach ($allPaxList as $pIdx => $pax): 
+                                    $paxIsInfant = (strtolower($pax['type'] ?? '') === 'infant');
+                                ?>
                                 <div class="passenger-selector-pill <?php echo ($pIdx === 0) ? 'active' : 'inactive'; ?>" id="paxPill_<?php echo $pIdx; ?>" onclick="selectActivePassenger(<?php echo $pIdx; ?>)">
-                                    <i class="fa-solid fa-user pax-user-icon"></i>
+                                    <i class="fa-solid <?php echo $paxIsInfant ? 'fa-baby' : 'fa-user'; ?> pax-user-icon"></i>
                                     <span class="pax-name-label"><?php echo htmlspecialchars($pax['full_display']); ?></span>
-                                    <span class="pax-addon-badge" id="paxBadge_<?php echo $pIdx; ?>" style="display: none;"></span>
+                                    <span class="pax-addon-badge" id="paxBadge_<?php echo $pIdx; ?>" style="<?php echo $paxIsInfant ? 'display: inline-block; background: #fef3c7; color: #92400e;' : 'display: none;'; ?>"><?php echo $paxIsInfant ? 'Lap' : ''; ?></span>
                                 </div>
                                 <?php endforeach; ?>
                             </div>
@@ -1015,6 +1028,14 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                             </h3>
                             <div id="seatSectorDate" style="font-size: 13px; color: #475569; font-weight: 600; margin-top: 3px;">
                                 <?php echo date('l, d M y', strtotime($departure_date)); ?>
+                            </div>
+                        </div>
+
+                        <!-- Infant Seat Notice Banner (Benzy / Aviation Lap Infant Regulation) -->
+                        <div id="infantSeatNotice" style="display: none; background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 8px; padding: 12px 16px; margin-bottom: 14px; align-items: center; gap: 12px; color: #92400e; font-size: 13px;">
+                            <i class="fa-solid fa-baby" style="font-size: 20px; color: #f59e0b;"></i>
+                            <div>
+                                <strong>Lap Infant Policy:</strong> <span id="infantSeatNoticeName"></span> travels on an adult's lap. Under aviation regulations and Benzy API guidelines, separate seat selection is not applicable for infants. Please select an adult or child passenger above to choose seats.
                             </div>
                         </div>
 
@@ -1129,10 +1150,24 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                                 <strong style="color: #0f172a; font-size: 13.5px;">₹ <span id="summaryBaseFare"><?php echo number_format($base_fare + $fare_tier_price_delta); ?></span></strong>
                             </div>
                             <div class="f-fare-subitems" style="display: none; flex-direction: column; gap: 6px; padding: 8px 12px; background: #f8fafc; border-radius: 6px; margin-top: 6px; border-left: 2px solid #cbd5e1;">
+                                <?php if ($adultCount > 0): ?>
                                 <div style="display: flex; justify-content: space-between; font-size: 12px; color: #475569;">
-                                    <span>Adult (<?php echo $total_passengers; ?>)</span>
-                                    <span style="font-weight: 600; color: #334155;">₹ <?php echo number_format($base_fare + $fare_tier_price_delta); ?></span>
+                                    <span>Adult (<?php echo $adultCount; ?>)</span>
+                                    <span style="font-weight: 600; color: #334155;">₹ <?php echo number_format($adultBaseFare ?? round(($base_fare + $fare_tier_price_delta) * ($adultCount / max(1, $total_passengers)))); ?></span>
                                 </div>
+                                <?php endif; ?>
+                                <?php if ($childCount > 0): ?>
+                                <div style="display: flex; justify-content: space-between; font-size: 12px; color: #475569;">
+                                    <span>Child (<?php echo $childCount; ?>)</span>
+                                    <span style="font-weight: 600; color: #334155;">₹ <?php echo number_format($childBaseFare ?? round(($base_fare + $fare_tier_price_delta) * ($childCount / max(1, $total_passengers)))); ?></span>
+                                </div>
+                                <?php endif; ?>
+                                <?php if ($infantCount > 0): ?>
+                                <div style="display: flex; justify-content: space-between; font-size: 12px; color: #475569;">
+                                    <span>Infant (<?php echo $infantCount; ?>)</span>
+                                    <span style="font-weight: 600; color: #334155;">₹ <?php echo number_format($infantBaseFare ?? round(($base_fare + $fare_tier_price_delta) * ($infantCount / max(1, $total_passengers)))); ?></span>
+                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
 
@@ -1417,6 +1452,13 @@ function getSuitcaseSvg(weightTier) {
     '</svg>';
 }
 
+// Helper: Check if passenger is an Infant (travels on lap)
+function isInfantPax(idx) {
+    if (!passengers || !passengers[idx]) return false;
+    var t = (passengers[idx].type || '').toLowerCase();
+    return t === 'infant' || t === 'inf';
+}
+
 // Select active passenger from horizontal strip (Screenshot 3)
 function selectActivePassenger(idx) {
     if (idx < 0 || idx >= passengers.length) return;
@@ -1443,7 +1485,18 @@ function selectActivePassenger(idx) {
     var nameBanner = document.getElementById('activePaxNameBanner');
     var typeBanner = document.getElementById('activePaxTypeBanner');
     if (nameBanner && passengers[idx]) nameBanner.textContent = passengers[idx].full_display;
-    if (typeBanner && passengers[idx]) typeBanner.textContent = (passengers[idx].type || 'Adult') + ' ' + (idx + 1);
+    if (typeBanner && passengers[idx]) {
+        var pType = passengers[idx].type || 'Adult';
+        if (isInfantPax(idx)) {
+            typeBanner.textContent = 'Infant (On Lap)';
+            typeBanner.style.background = '#fef3c7';
+            typeBanner.style.color = '#92400e';
+        } else {
+            typeBanner.textContent = pType + ' ' + (idx + 1);
+            typeBanner.style.background = '#e2e8f0';
+            typeBanner.style.color = '#64748b';
+        }
+    }
 
     renderMeals(currentSector);
     renderBaggage(currentSector);
@@ -1461,6 +1514,16 @@ function scrollPaxStrip(direction) {
 function renderMeals(sector) {
     var container = document.getElementById('mealsGridContainer');
     if (!container) return;
+
+    if (isInfantPax(activePaxIndex)) {
+        var paxName = passengers[activePaxIndex] ? passengers[activePaxIndex].full_display : 'Infant';
+        container.innerHTML = '<div style="grid-column: 1/-1; padding: 36px 20px; text-align: center; background: #fffbeb; border: 1.5px dashed #fcd34d; border-radius: 12px;">' +
+            '<div style="font-size: 32px; margin-bottom: 8px;">🍼</div>' +
+            '<div style="font-size: 15px; font-weight: 800; color: #92400e; margin-bottom: 4px;">Pre-booked Meals Not Applicable for Lap Infant (' + paxName + ')</div>' +
+            '<div style="font-size: 13px; color: #78350f; max-width: 520px; margin: 0 auto; line-height: 1.5;">Infants under 2 years travel on an adult\'s lap. Standard airline pre-booked meals cannot be added for infants. Baby food/milk can be requested on board directly from the flight crew.</div>' +
+        '</div>';
+        return;
+    }
 
     var secData = addonsData && addonsData[sector] ? addonsData[sector] : null;
     var meals = secData && secData.meals ? secData.meals : [];
@@ -1529,6 +1592,16 @@ function renderBaggage(sector) {
     var container = document.getElementById('baggageGridContainer');
     if (!container) return;
 
+    if (isInfantPax(activePaxIndex)) {
+        var paxName = passengers[activePaxIndex] ? passengers[activePaxIndex].full_display : 'Infant';
+        container.innerHTML = '<div style="grid-column: 1/-1; padding: 36px 20px; text-align: center; background: #fffbeb; border: 1.5px dashed #fcd34d; border-radius: 12px;">' +
+            '<div style="font-size: 32px; margin-bottom: 8px;">🧳</div>' +
+            '<div style="font-size: 15px; font-weight: 800; color: #92400e; margin-bottom: 4px;">Prepaid Excess Baggage Not Applicable for Lap Infant (' + paxName + ')</div>' +
+            '<div style="font-size: 13px; color: #78350f; max-width: 540px; margin: 0 auto; line-height: 1.5;">As per airline rules and Benzy Flight API specifications (<code>EnableInfantBaggage: false</code>), prepaid excess baggage cannot be purchased for infants. Standard infant baggage allowance (e.g. 1 baby pram/stroller) is accepted free of charge at airport check-in.</div>' +
+        '</div>';
+        return;
+    }
+
     var secData = addonsData && addonsData[sector] ? addonsData[sector] : null;
     var baggage = secData && secData.baggage ? secData.baggage : [];
 
@@ -1574,6 +1647,19 @@ function renderBaggage(sector) {
 function renderSeatMap(sector) {
     var container = document.getElementById('seatRowsContainer');
     if (!container) return;
+
+    var infantNotice = document.getElementById('infantSeatNotice');
+    var infantNoticeName = document.getElementById('infantSeatNoticeName');
+    if (isInfantPax(activePaxIndex)) {
+        if (infantNotice) {
+            infantNotice.style.display = 'flex';
+            if (infantNoticeName && passengers[activePaxIndex]) {
+                infantNoticeName.textContent = passengers[activePaxIndex].full_display;
+            }
+        }
+    } else {
+        if (infantNotice) infantNotice.style.display = 'none';
+    }
 
     var secData = addonsData && addonsData[sector] ? addonsData[sector] : null;
     var rows = secData && secData.seat_rows ? secData.seat_rows : null;
@@ -1626,7 +1712,7 @@ function renderSingleSeatHtml(seat, sector) {
     // Check if this seat is selected by ANY passenger
     var assignedPaxIdx = -1;
     for (var p = 0; p < passengers.length; p++) {
-        if (userSelections[sector][p] && userSelections[sector][p].seat && userSelections[sector][p].seat.code === seatCode) {
+        if (!isInfantPax(p) && userSelections[sector][p] && userSelections[sector][p].seat && userSelections[sector][p].seat.code === seatCode) {
             assignedPaxIdx = p;
             break;
         }
@@ -1652,6 +1738,7 @@ function updateSeatAssignmentsList(sector) {
 
     var html = '';
     passengers.forEach(function(pax, idx) {
+        if (isInfantPax(idx)) return; // Skip infant from assigned seats list
         var s = userSelections[sector][idx] ? userSelections[sector][idx].seat : null;
         if (s) {
             html += '<div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: #334155; margin-bottom: 6px; cursor: pointer; padding: 3px 6px; border-radius: 4px; background: ' + (idx === activePaxIndex ? '#f0f9ff; border: 1px solid #bae6fd;' : 'transparent;') + '" onclick="selectActivePassenger(' + idx + ')" title="Click to view/change seat for ' + pax.name + '">';
@@ -1730,6 +1817,11 @@ function switchAddonTab(tabId, tabEl) {
 }
 
 function selectMealItem(code, name, price, ssid, cardEl) {
+    if (isInfantPax(activePaxIndex)) {
+        alert("Pre-booked meals are not available for infants traveling on lap.");
+        return;
+    }
+
     var sec = currentSector;
     var currentPaxMeal = userSelections[sec][activePaxIndex] ? userSelections[sec][activePaxIndex].meal : null;
     var isAlready = (currentPaxMeal && currentPaxMeal.code === code);
@@ -1750,6 +1842,11 @@ function selectMealItem(code, name, price, ssid, cardEl) {
 }
 
 function selectBaggageItem(code, weight, price, ssid, cardEl) {
+    if (isInfantPax(activePaxIndex)) {
+        alert("Prepaid excess baggage is not permitted for infants as per Benzy API policy.");
+        return;
+    }
+
     var sec = currentSector;
     var currentPaxBaggage = userSelections[sec][activePaxIndex] ? userSelections[sec][activePaxIndex].baggage : null;
     var isAlready = (currentPaxBaggage && currentPaxBaggage.code === code);
@@ -1771,12 +1868,17 @@ function selectBaggageItem(code, weight, price, ssid, cardEl) {
 }
 
 function selectSeatItem(seatCode, price, ssid, seatEl) {
+    if (isInfantPax(activePaxIndex)) {
+        alert("Infants under 2 years travel on an adult's lap and cannot be assigned a separate seat. Please click an Adult or Child passenger above to select seats.");
+        return;
+    }
+
     var sec = currentSector;
 
     // Check if this seat is already assigned to any passenger on this sector
     var assignedPaxIdx = -1;
     for (var p = 0; p < passengers.length; p++) {
-        if (userSelections[sec][p] && userSelections[sec][p].seat && userSelections[sec][p].seat.code === seatCode) {
+        if (!isInfantPax(p) && userSelections[sec][p] && userSelections[sec][p].seat && userSelections[sec][p].seat.code === seatCode) {
             assignedPaxIdx = p;
             break;
         }
@@ -1801,11 +1903,11 @@ function selectSeatItem(seatCode, price, ssid, seatEl) {
             ssid: ssid || 0
         };
 
-        // Auto-advance to next passenger without a seat
+        // Auto-advance to next eligible seated passenger without a seat
         var nextUnseatedPax = -1;
         for (var i = 0; i < passengers.length; i++) {
             var checkIdx = (activePaxIndex + 1 + i) % passengers.length;
-            if (!userSelections[sec][checkIdx].seat) {
+            if (!isInfantPax(checkIdx) && !userSelections[sec][checkIdx].seat) {
                 nextUnseatedPax = checkIdx;
                 break;
             }
@@ -1829,102 +1931,121 @@ function recalcTotal() {
     var ssrItems = [];
 
     passengers.forEach(function(pax, idx) {
+        if (isInfantPax(idx)) {
+            // Infants strictly have no seat, meal, or baggage SSRs
+            userSelections.onward[idx] = { meal: null, baggage: null, seat: null };
+            if (userSelections.return && userSelections.return[idx]) {
+                userSelections.return[idx] = { meal: null, baggage: null, seat: null };
+            }
+        }
+
         var pId = idx + 1; // 1-based sequence for Benzy CreateItinerary (PDF page 84-86)
         var on = userSelections.onward[idx];
         var ret = userSelections.return[idx];
 
-        // Onward Sector
-        if (on.meal) {
-            totalAddons += on.meal.price;
-            ssrItems.push({
-                FUID: 1,
-                PaxID: pId,
-                SSID: on.meal.ssid || 1,
-                Type: "1",
-                Code: on.meal.code,
-                Description: on.meal.name,
-                Charge: on.meal.price
-            });
-        }
-        if (on.baggage) {
-            totalAddons += on.baggage.price;
-            ssrItems.push({
-                FUID: 1,
-                PaxID: pId,
-                SSID: on.baggage.ssid || 1,
-                Type: "2",
-                Code: on.baggage.code,
-                Description: on.baggage.desc,
-                Charge: on.baggage.price
-            });
-        }
-        if (on.seat) {
-            totalAddons += on.seat.price;
-            onwardSeatsCount++;
-            onwardSeatsTotal += on.seat.price;
-            ssrItems.push({
-                FUID: 1,
-                PaxID: pId,
-                SSID: on.seat.ssid || 501,
-                Type: "9",
-                Code: on.seat.code,
-                Description: "Seat " + on.seat.code,
-                Charge: on.seat.price
-            });
-        }
-
-        // Return Sector
-        if (isRoundtrip && ret) {
-            if (ret.meal) {
-                totalAddons += ret.meal.price;
+        // Onward Sector (Only for non-infants)
+        if (!isInfantPax(idx)) {
+            if (on.meal) {
+                totalAddons += on.meal.price;
                 ssrItems.push({
-                    FUID: 2,
+                    FUID: 1,
                     PaxID: pId,
-                    SSID: ret.meal.ssid || 1,
+                    SSID: on.meal.ssid || 1,
                     Type: "1",
-                    Code: ret.meal.code,
-                    Description: ret.meal.name,
-                    Charge: ret.meal.price
+                    Code: on.meal.code,
+                    Description: on.meal.name,
+                    Charge: on.meal.price
                 });
             }
-            if (ret.baggage) {
-                totalAddons += ret.baggage.price;
+            if (on.baggage) {
+                totalAddons += on.baggage.price;
                 ssrItems.push({
-                    FUID: 2,
+                    FUID: 1,
                     PaxID: pId,
-                    SSID: ret.baggage.ssid || 1,
+                    SSID: on.baggage.ssid || 1,
                     Type: "2",
-                    Code: ret.baggage.code,
-                    Description: ret.baggage.desc,
-                    Charge: ret.baggage.price
+                    Code: on.baggage.code,
+                    Description: on.baggage.desc,
+                    Charge: on.baggage.price
                 });
             }
-            if (ret.seat) {
-                totalAddons += ret.seat.price;
+            if (on.seat) {
+                totalAddons += on.seat.price;
+                onwardSeatsCount++;
+                onwardSeatsTotal += on.seat.price;
                 ssrItems.push({
-                    FUID: 2,
+                    FUID: 1,
                     PaxID: pId,
-                    SSID: ret.seat.ssid || 501,
+                    SSID: on.seat.ssid || 501,
                     Type: "9",
-                    Code: ret.seat.code,
-                    Description: "Seat " + ret.seat.code,
-                    Charge: ret.seat.price
+                    Code: on.seat.code,
+                    Description: "Seat " + on.seat.code,
+                    Charge: on.seat.price
                 });
+            }
+
+            // Return Sector (Only for non-infants)
+            if (isRoundtrip && ret) {
+                if (ret.meal) {
+                    totalAddons += ret.meal.price;
+                    ssrItems.push({
+                        FUID: 2,
+                        PaxID: pId,
+                        SSID: ret.meal.ssid || 1,
+                        Type: "1",
+                        Code: ret.meal.code,
+                        Description: ret.meal.name,
+                        Charge: ret.meal.price
+                    });
+                }
+                if (ret.baggage) {
+                    totalAddons += ret.baggage.price;
+                    ssrItems.push({
+                        FUID: 2,
+                        PaxID: pId,
+                        SSID: ret.baggage.ssid || 1,
+                        Type: "2",
+                        Code: ret.baggage.code,
+                        Description: ret.baggage.desc,
+                        Charge: ret.baggage.price
+                    });
+                }
+                if (ret.seat) {
+                    totalAddons += ret.seat.price;
+                    ssrItems.push({
+                        FUID: 2,
+                        PaxID: pId,
+                        SSID: ret.seat.ssid || 501,
+                        Type: "9",
+                        Code: ret.seat.code,
+                        Description: "Seat " + ret.seat.code,
+                        Charge: ret.seat.price
+                    });
+                }
             }
         }
 
         // Update Passenger Strip Badges
         var badge = document.getElementById('paxBadge_' + idx);
         if (badge) {
-            var paxItemCount = (on.meal ? 1 : 0) + (on.baggage ? 1 : 0) + (on.seat ? 1 : 0) +
-                               (isRoundtrip && ret && ret.meal ? 1 : 0) +
-                               (isRoundtrip && ret && ret.baggage ? 1 : 0) +
-                               (isRoundtrip && ret && ret.seat ? 1 : 0);
-            if (paxItemCount > 0) {
+            if (isInfantPax(idx)) {
                 badge.style.display = 'inline-block';
-                badge.textContent = on.seat ? ('Seat: ' + on.seat.code) : ('✓ ' + paxItemCount);
+                badge.textContent = 'Lap';
+                badge.style.background = '#fef3c7';
+                badge.style.color = '#92400e';
             } else {
-                badge.style.display = 'none';
+                var paxItemCount = (on.meal ? 1 : 0) + (on.baggage ? 1 : 0) + (on.seat ? 1 : 0) +
+                                   (isRoundtrip && ret && ret.meal ? 1 : 0) +
+                                   (isRoundtrip && ret && ret.baggage ? 1 : 0) +
+                                   (isRoundtrip && ret && ret.seat ? 1 : 0);
+                if (paxItemCount > 0) {
+                    badge.style.display = 'inline-block';
+                    badge.textContent = on.seat ? ('Seat: ' + on.seat.code) : ('✓ ' + paxItemCount);
+                    badge.style.background = '#e0f2fe';
+                    badge.style.color = '#0369a1';
+                } else {
+                    badge.style.display = 'none';
+                }
             }
         }
     });
@@ -1951,7 +2072,7 @@ function recalcTotal() {
     var curSectorSeatsCount = 0;
     var curSectorSeatsTotal = 0;
     passengers.forEach(function(p, i) {
-        if (userSelections[currentSector][i].seat) {
+        if (!isInfantPax(i) && userSelections[currentSector][i].seat) {
             curSectorSeatsCount++;
             curSectorSeatsTotal += userSelections[currentSector][i].seat.price;
         }
@@ -1976,7 +2097,7 @@ function recalcTotal() {
         jsonInput.value = JSON.stringify(ssrItems);
     }
 
-    // Populate Dynamic Per-Passenger Hidden Inputs for Payment Bridge
+    // Populate Dynamic Per-Passenger Hidden Inputs for Payment Bridge (both flat and structured)
     var dynContainer = document.getElementById('dynamicPaxAddonInputs');
     if (dynContainer) {
         var dynHtml = '';
@@ -1987,31 +2108,47 @@ function recalcTotal() {
             dynHtml += '<input type="hidden" name="passenger_seat[' + idx + ']" value="' + (on.seat ? on.seat.code : '') + '">';
             dynHtml += '<input type="hidden" name="passenger_seat_price[' + idx + ']" value="' + (on.seat ? on.seat.price : 0) + '">';
             dynHtml += '<input type="hidden" name="passenger_seat_ssid[' + idx + ']" value="' + (on.seat ? on.seat.ssid : 0) + '">';
+            dynHtml += '<input type="hidden" name="passenger_seat_data[' + idx + '][code]" value="' + (on.seat ? on.seat.code : '') + '">';
+            dynHtml += '<input type="hidden" name="passenger_seat_data[' + idx + '][amount]" value="' + (on.seat ? on.seat.price : 0) + '">';
 
             dynHtml += '<input type="hidden" name="passenger_meal[' + idx + ']" value="' + (on.meal ? on.meal.code : '') + '">';
             dynHtml += '<input type="hidden" name="passenger_meal_name[' + idx + ']" value="' + (on.meal ? on.meal.name : '') + '">';
             dynHtml += '<input type="hidden" name="passenger_meal_price[' + idx + ']" value="' + (on.meal ? on.meal.price : 0) + '">';
             dynHtml += '<input type="hidden" name="passenger_meal_ssid[' + idx + ']" value="' + (on.meal ? on.meal.ssid : 0) + '">';
+            dynHtml += '<input type="hidden" name="passenger_meal_data[' + idx + '][code]" value="' + (on.meal ? on.meal.code : '') + '">';
+            dynHtml += '<input type="hidden" name="passenger_meal_data[' + idx + '][desc]" value="' + (on.meal ? on.meal.name : '') + '">';
+            dynHtml += '<input type="hidden" name="passenger_meal_data[' + idx + '][amount]" value="' + (on.meal ? on.meal.price : 0) + '">';
 
             dynHtml += '<input type="hidden" name="passenger_baggage[' + idx + ']" value="' + (on.baggage ? on.baggage.code : '') + '">';
             dynHtml += '<input type="hidden" name="passenger_baggage_desc[' + idx + ']" value="' + (on.baggage ? on.baggage.desc : '') + '">';
             dynHtml += '<input type="hidden" name="passenger_baggage_price[' + idx + ']" value="' + (on.baggage ? on.baggage.price : 0) + '">';
             dynHtml += '<input type="hidden" name="passenger_baggage_ssid[' + idx + ']" value="' + (on.baggage ? on.baggage.ssid : 0) + '">';
+            dynHtml += '<input type="hidden" name="passenger_baggage_data[' + idx + '][code]" value="' + (on.baggage ? on.baggage.code : '') + '">';
+            dynHtml += '<input type="hidden" name="passenger_baggage_data[' + idx + '][desc]" value="' + (on.baggage ? on.baggage.desc : '') + '">';
+            dynHtml += '<input type="hidden" name="passenger_baggage_data[' + idx + '][amount]" value="' + (on.baggage ? on.baggage.price : 0) + '">';
 
             if (isRoundtrip && ret) {
                 dynHtml += '<input type="hidden" name="return_passenger_seat[' + idx + ']" value="' + (ret.seat ? ret.seat.code : '') + '">';
                 dynHtml += '<input type="hidden" name="return_passenger_seat_price[' + idx + ']" value="' + (ret.seat ? ret.seat.price : 0) + '">';
                 dynHtml += '<input type="hidden" name="return_passenger_seat_ssid[' + idx + ']" value="' + (ret.seat ? ret.seat.ssid : 0) + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_seat_data[' + idx + '][code]" value="' + (ret.seat ? ret.seat.code : '') + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_seat_data[' + idx + '][amount]" value="' + (ret.seat ? ret.seat.price : 0) + '">';
 
                 dynHtml += '<input type="hidden" name="return_passenger_meal[' + idx + ']" value="' + (ret.meal ? ret.meal.code : '') + '">';
                 dynHtml += '<input type="hidden" name="return_passenger_meal_name[' + idx + ']" value="' + (ret.meal ? ret.meal.name : '') + '">';
                 dynHtml += '<input type="hidden" name="return_passenger_meal_price[' + idx + ']" value="' + (ret.meal ? ret.meal.price : 0) + '">';
                 dynHtml += '<input type="hidden" name="return_passenger_meal_ssid[' + idx + ']" value="' + (ret.meal ? ret.meal.ssid : 0) + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_meal_data[' + idx + '][code]" value="' + (ret.meal ? ret.meal.code : '') + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_meal_data[' + idx + '][desc]" value="' + (ret.meal ? ret.meal.name : '') + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_meal_data[' + idx + '][amount]" value="' + (ret.meal ? ret.meal.price : 0) + '">';
 
                 dynHtml += '<input type="hidden" name="return_passenger_baggage[' + idx + ']" value="' + (ret.baggage ? ret.baggage.code : '') + '">';
                 dynHtml += '<input type="hidden" name="return_passenger_baggage_desc[' + idx + ']" value="' + (ret.baggage ? ret.baggage.desc : '') + '">';
                 dynHtml += '<input type="hidden" name="return_passenger_baggage_price[' + idx + ']" value="' + (ret.baggage ? ret.baggage.price : 0) + '">';
                 dynHtml += '<input type="hidden" name="return_passenger_baggage_ssid[' + idx + ']" value="' + (ret.baggage ? ret.baggage.ssid : 0) + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_baggage_data[' + idx + '][code]" value="' + (ret.baggage ? ret.baggage.code : '') + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_baggage_data[' + idx + '][desc]" value="' + (ret.baggage ? ret.baggage.desc : '') + '">';
+                dynHtml += '<input type="hidden" name="return_passenger_baggage_data[' + idx + '][amount]" value="' + (ret.baggage ? ret.baggage.price : 0) + '">';
             }
         });
         dynContainer.innerHTML = dynHtml;

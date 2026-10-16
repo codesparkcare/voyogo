@@ -1305,28 +1305,148 @@ body {
                             <div class="accordion-body">
                                 
                                 <?php foreach ($passengers as $pIdx => $pax): 
-                                    $paxBaggageDesc = $post_data['passenger_baggage'][$pIdx]['desc'] ?? $post_data['passenger_baggage'][$pIdx]['code'] ?? ($pIdx === 0 ? $onwardBaggageDesc : '');
-                                    $paxBaggageAmt  = (float)($post_data['passenger_baggage'][$pIdx]['amount'] ?? ($pIdx === 0 ? $onwardBaggageAmt : 0));
-                                    $paxMealDesc    = $post_data['passenger_meal'][$pIdx]['desc'] ?? $post_data['passenger_meal'][$pIdx]['code'] ?? ($pIdx === 0 ? $onwardMealDesc : '');
-                                    $paxMealAmt     = (float)($post_data['passenger_meal'][$pIdx]['amount'] ?? ($pIdx === 0 ? $onwardMealAmt : 0));
-                                    $paxSeatCode    = $post_data['passenger_seat'][$pIdx]['code'] ?? ($pIdx === 0 ? $onwardSeatCode : '');
-                                    $paxSeatAmt     = (float)($post_data['passenger_seat'][$pIdx]['amount'] ?? ($pIdx === 0 ? $onwardSeatAmt : 0));
+                                    $isInfant = (isset($pax['type']) && strtolower($pax['type']) === 'infant');
 
-                                    $paxRetBaggageDesc = $post_data['return_passenger_baggage'][$pIdx]['desc'] ?? $post_data['return_passenger_baggage'][$pIdx]['code'] ?? ($pIdx === 0 ? $returnBaggageDesc : '');
-                                    $paxRetBaggageAmt  = (float)($post_data['return_passenger_baggage'][$pIdx]['amount'] ?? ($pIdx === 0 ? $returnBaggageAmt : 0));
-                                    $paxRetMealDesc    = $post_data['return_passenger_meal'][$pIdx]['desc'] ?? $post_data['return_passenger_meal'][$pIdx]['code'] ?? ($pIdx === 0 ? $returnMealDesc : '');
-                                    $paxRetMealAmt     = (float)($post_data['return_passenger_meal'][$pIdx]['amount'] ?? ($pIdx === 0 ? $returnMealAmt : 0));
-                                    $paxRetSeatCode    = $post_data['return_passenger_seat'][$pIdx]['code'] ?? ($pIdx === 0 ? $returnSeatCode : '');
-                                    $paxRetSeatAmt     = (float)($post_data['return_passenger_seat'][$pIdx]['amount'] ?? ($pIdx === 0 ? $returnSeatAmt : 0));
+                                    // Onward Baggage
+                                    $paxBaggageDesc = '';
+                                    $paxBaggageAmt = 0;
+                                    if (isset($post_data['passenger_baggage_desc'][$pIdx]) && !empty($post_data['passenger_baggage_desc'][$pIdx])) {
+                                        $paxBaggageDesc = $post_data['passenger_baggage_desc'][$pIdx];
+                                        $paxBaggageAmt = (float)($post_data['passenger_baggage_price'][$pIdx] ?? 0);
+                                    } elseif (isset($post_data['passenger_baggage_data'][$pIdx]['desc']) && !empty($post_data['passenger_baggage_data'][$pIdx]['desc'])) {
+                                        $paxBaggageDesc = $post_data['passenger_baggage_data'][$pIdx]['desc'];
+                                        $paxBaggageAmt = (float)($post_data['passenger_baggage_data'][$pIdx]['amount'] ?? 0);
+                                    } elseif (isset($post_data['passenger_baggage'][$pIdx])) {
+                                        if (is_array($post_data['passenger_baggage'][$pIdx])) {
+                                            $paxBaggageDesc = $post_data['passenger_baggage'][$pIdx]['desc'] ?? $post_data['passenger_baggage'][$pIdx]['code'] ?? '';
+                                            $paxBaggageAmt  = (float)($post_data['passenger_baggage'][$pIdx]['amount'] ?? 0);
+                                        } elseif (!empty($post_data['passenger_baggage'][$pIdx])) {
+                                            $paxBaggageDesc = $post_data['passenger_baggage'][$pIdx];
+                                            $paxBaggageAmt  = (float)($post_data['passenger_baggage_price'][$pIdx] ?? 0);
+                                        }
+                                    }
+                                    if (empty($paxBaggageDesc) && $pIdx === 0 && !empty($onwardBaggageDesc)) {
+                                        $paxBaggageDesc = $onwardBaggageDesc;
+                                        $paxBaggageAmt = (float)$onwardBaggageAmt;
+                                    }
+
+                                    // Onward Meal
+                                    $paxMealDesc = '';
+                                    $paxMealAmt = 0;
+                                    if (isset($post_data['passenger_meal_name'][$pIdx]) && !empty($post_data['passenger_meal_name'][$pIdx])) {
+                                        $paxMealDesc = $post_data['passenger_meal_name'][$pIdx];
+                                        $paxMealAmt = (float)($post_data['passenger_meal_price'][$pIdx] ?? 0);
+                                    } elseif (isset($post_data['passenger_meal_data'][$pIdx]['desc']) && !empty($post_data['passenger_meal_data'][$pIdx]['desc'])) {
+                                        $paxMealDesc = $post_data['passenger_meal_data'][$pIdx]['desc'];
+                                        $paxMealAmt = (float)($post_data['passenger_meal_data'][$pIdx]['amount'] ?? 0);
+                                    } elseif (isset($post_data['passenger_meal'][$pIdx])) {
+                                        if (is_array($post_data['passenger_meal'][$pIdx])) {
+                                            $paxMealDesc = $post_data['passenger_meal'][$pIdx]['desc'] ?? $post_data['passenger_meal'][$pIdx]['code'] ?? '';
+                                            $paxMealAmt  = (float)($post_data['passenger_meal'][$pIdx]['amount'] ?? 0);
+                                        } elseif (!empty($post_data['passenger_meal'][$pIdx])) {
+                                            $paxMealDesc = $post_data['passenger_meal'][$pIdx];
+                                            $paxMealAmt  = (float)($post_data['passenger_meal_price'][$pIdx] ?? 0);
+                                        }
+                                    }
+                                    if (empty($paxMealDesc) && $pIdx === 0 && !empty($onwardMealDesc)) {
+                                        $paxMealDesc = $onwardMealDesc;
+                                        $paxMealAmt = (float)$onwardMealAmt;
+                                    }
+
+                                    // Onward Seat
+                                    $paxSeatCode = '';
+                                    $paxSeatAmt = 0;
+                                    if (isset($post_data['passenger_seat_data'][$pIdx]['code']) && !empty($post_data['passenger_seat_data'][$pIdx]['code'])) {
+                                        $paxSeatCode = $post_data['passenger_seat_data'][$pIdx]['code'];
+                                        $paxSeatAmt  = (float)($post_data['passenger_seat_data'][$pIdx]['amount'] ?? 0);
+                                    } elseif (isset($post_data['passenger_seat'][$pIdx])) {
+                                        if (is_array($post_data['passenger_seat'][$pIdx])) {
+                                            $paxSeatCode = $post_data['passenger_seat'][$pIdx]['code'] ?? '';
+                                            $paxSeatAmt  = (float)($post_data['passenger_seat'][$pIdx]['amount'] ?? 0);
+                                        } elseif (!empty($post_data['passenger_seat'][$pIdx])) {
+                                            $paxSeatCode = $post_data['passenger_seat'][$pIdx];
+                                            $paxSeatAmt  = (float)($post_data['passenger_seat_price'][$pIdx] ?? 0);
+                                        }
+                                    }
+                                    if (empty($paxSeatCode) && $pIdx === 0 && !empty($onwardSeatCode)) {
+                                        $paxSeatCode = $onwardSeatCode;
+                                        $paxSeatAmt = (float)$onwardSeatAmt;
+                                    }
+
+                                    // Return Baggage
+                                    $paxRetBaggageDesc = '';
+                                    $paxRetBaggageAmt = 0;
+                                    if (isset($post_data['return_passenger_baggage_desc'][$pIdx]) && !empty($post_data['return_passenger_baggage_desc'][$pIdx])) {
+                                        $paxRetBaggageDesc = $post_data['return_passenger_baggage_desc'][$pIdx];
+                                        $paxRetBaggageAmt = (float)($post_data['return_passenger_baggage_price'][$pIdx] ?? 0);
+                                    } elseif (isset($post_data['return_passenger_baggage_data'][$pIdx]['desc']) && !empty($post_data['return_passenger_baggage_data'][$pIdx]['desc'])) {
+                                        $paxRetBaggageDesc = $post_data['return_passenger_baggage_data'][$pIdx]['desc'];
+                                        $paxRetBaggageAmt = (float)($post_data['return_passenger_baggage_data'][$pIdx]['amount'] ?? 0);
+                                    } elseif (isset($post_data['return_passenger_baggage'][$pIdx])) {
+                                        if (is_array($post_data['return_passenger_baggage'][$pIdx])) {
+                                            $paxRetBaggageDesc = $post_data['return_passenger_baggage'][$pIdx]['desc'] ?? $post_data['return_passenger_baggage'][$pIdx]['code'] ?? '';
+                                            $paxRetBaggageAmt  = (float)($post_data['return_passenger_baggage'][$pIdx]['amount'] ?? 0);
+                                        } elseif (!empty($post_data['return_passenger_baggage'][$pIdx])) {
+                                            $paxRetBaggageDesc = $post_data['return_passenger_baggage'][$pIdx];
+                                            $paxRetBaggageAmt  = (float)($post_data['return_passenger_baggage_price'][$pIdx] ?? 0);
+                                        }
+                                    }
+                                    if (empty($paxRetBaggageDesc) && $pIdx === 0 && !empty($returnBaggageDesc)) {
+                                        $paxRetBaggageDesc = $returnBaggageDesc;
+                                        $paxRetBaggageAmt = (float)$returnBaggageAmt;
+                                    }
+
+                                    // Return Meal
+                                    $paxRetMealDesc = '';
+                                    $paxRetMealAmt = 0;
+                                    if (isset($post_data['return_passenger_meal_name'][$pIdx]) && !empty($post_data['return_passenger_meal_name'][$pIdx])) {
+                                        $paxRetMealDesc = $post_data['return_passenger_meal_name'][$pIdx];
+                                        $paxRetMealAmt = (float)($post_data['return_passenger_meal_price'][$pIdx] ?? 0);
+                                    } elseif (isset($post_data['return_passenger_meal_data'][$pIdx]['desc']) && !empty($post_data['return_passenger_meal_data'][$pIdx]['desc'])) {
+                                        $paxRetMealDesc = $post_data['return_passenger_meal_data'][$pIdx]['desc'];
+                                        $paxRetMealAmt = (float)($post_data['return_passenger_meal_data'][$pIdx]['amount'] ?? 0);
+                                    } elseif (isset($post_data['return_passenger_meal'][$pIdx])) {
+                                        if (is_array($post_data['return_passenger_meal'][$pIdx])) {
+                                            $paxRetMealDesc = $post_data['return_passenger_meal'][$pIdx]['desc'] ?? $post_data['return_passenger_meal'][$pIdx]['code'] ?? '';
+                                            $paxRetMealAmt  = (float)($post_data['return_passenger_meal'][$pIdx]['amount'] ?? 0);
+                                        } elseif (!empty($post_data['return_passenger_meal'][$pIdx])) {
+                                            $paxRetMealDesc = $post_data['return_passenger_meal'][$pIdx];
+                                            $paxRetMealAmt  = (float)($post_data['return_passenger_meal_price'][$pIdx] ?? 0);
+                                        }
+                                    }
+                                    if (empty($paxRetMealDesc) && $pIdx === 0 && !empty($returnMealDesc)) {
+                                        $paxRetMealDesc = $returnMealDesc;
+                                        $paxRetMealAmt = (float)$returnMealAmt;
+                                    }
+
+                                    // Return Seat
+                                    $paxRetSeatCode = '';
+                                    $paxRetSeatAmt = 0;
+                                    if (isset($post_data['return_passenger_seat_data'][$pIdx]['code']) && !empty($post_data['return_passenger_seat_data'][$pIdx]['code'])) {
+                                        $paxRetSeatCode = $post_data['return_passenger_seat_data'][$pIdx]['code'];
+                                        $paxRetSeatAmt  = (float)($post_data['return_passenger_seat_data'][$pIdx]['amount'] ?? 0);
+                                    } elseif (isset($post_data['return_passenger_seat'][$pIdx])) {
+                                        if (is_array($post_data['return_passenger_seat'][$pIdx])) {
+                                            $paxRetSeatCode = $post_data['return_passenger_seat'][$pIdx]['code'] ?? '';
+                                            $paxRetSeatAmt  = (float)($post_data['return_passenger_seat'][$pIdx]['amount'] ?? 0);
+                                        } elseif (!empty($post_data['return_passenger_seat'][$pIdx])) {
+                                            $paxRetSeatCode = $post_data['return_passenger_seat'][$pIdx];
+                                            $paxRetSeatAmt  = (float)($post_data['return_passenger_seat_price'][$pIdx] ?? 0);
+                                        }
+                                    }
+                                    if (empty($paxRetSeatCode) && $pIdx === 0 && !empty($returnSeatCode)) {
+                                        $paxRetSeatCode = $returnSeatCode;
+                                        $paxRetSeatAmt = (float)$returnSeatAmt;
+                                    }
                                 ?>
                                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 12px;">
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                                         <div style="font-size: 14px; font-weight: 800; color: #0d3470; display: flex; align-items: center; gap: 8px;">
-                                            <i class="fa-solid fa-user" style="color: #64748b; font-size: 13px;"></i>
+                                            <i class="fa-solid <?php echo $isInfant ? 'fa-baby' : 'fa-user'; ?>" style="color: #64748b; font-size: 13px;"></i>
                                             <?php echo htmlspecialchars($pax['title'] . ' ' . $pax['name']); ?>
                                         </div>
-                                        <span style="font-size: 11.5px; font-weight: 700; color: #64748b; background: #f1f5f9; padding: 2px 10px; border-radius: 12px;">
-                                            <?php echo htmlspecialchars($pax['type'] ?? 'Adult'); ?>
+                                        <span style="font-size: 11.5px; font-weight: 700; color: <?php echo $isInfant ? '#92400e' : '#64748b'; ?>; background: <?php echo $isInfant ? '#fef3c7' : '#f1f5f9'; ?>; padding: 2px 10px; border-radius: 12px;">
+                                            <?php echo $isInfant ? 'Infant (On Lap)' : htmlspecialchars($pax['type'] ?? 'Adult'); ?>
                                         </span>
                                     </div>
 
@@ -1348,16 +1468,26 @@ body {
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
                                             <span><?php echo htmlspecialchars($fromCity); ?> &rarr; <?php echo htmlspecialchars($toCity); ?></span>
                                             <span class="addon-status-pill">
-                                                <i class="fa-solid fa-check"></i>
-                                                <?php echo !empty($paxBaggageDesc) ? htmlspecialchars($paxBaggageDesc) . ' (₹ ' . number_format($paxBaggageAmt) . ')' : 'Standard 15 Kg Included'; ?>
+                                                <?php if ($isInfant): ?>
+                                                    <span style="color: #64748b;"><i class="fa-solid fa-baby" style="color: #f59e0b; margin-right: 4px;"></i> Infant lap baggage included</span>
+                                                <?php elseif (!empty($paxBaggageDesc)): ?>
+                                                    <i class="fa-solid fa-check"></i> <?php echo htmlspecialchars($paxBaggageDesc); ?> (₹ <?php echo number_format($paxBaggageAmt); ?>)
+                                                <?php else: ?>
+                                                    Standard 15 Kg Included
+                                                <?php endif; ?>
                                             </span>
                                         </div>
                                         <?php if ($is_roundtrip): ?>
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155;">
                                             <span><?php echo htmlspecialchars($retFromCity); ?> &rarr; <?php echo htmlspecialchars($retToCity); ?></span>
                                             <span class="addon-status-pill">
-                                                <i class="fa-solid fa-check"></i>
-                                                <?php echo !empty($paxRetBaggageDesc) ? htmlspecialchars($paxRetBaggageDesc) . ' (₹ ' . number_format($paxRetBaggageAmt) . ')' : 'Standard 15 Kg Included'; ?>
+                                                <?php if ($isInfant): ?>
+                                                    <span style="color: #64748b;"><i class="fa-solid fa-baby" style="color: #f59e0b; margin-right: 4px;"></i> Infant lap baggage included</span>
+                                                <?php elseif (!empty($paxRetBaggageDesc)): ?>
+                                                    <i class="fa-solid fa-check"></i> <?php echo htmlspecialchars($paxRetBaggageDesc); ?> (₹ <?php echo number_format($paxRetBaggageAmt); ?>)
+                                                <?php else: ?>
+                                                    Standard 15 Kg Included
+                                                <?php endif; ?>
                                             </span>
                                         </div>
                                         <?php endif; ?>
@@ -1368,7 +1498,9 @@ body {
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
                                             <span><?php echo htmlspecialchars($fromCity); ?> &rarr; <?php echo htmlspecialchars($toCity); ?></span>
                                             <span class="addon-status-pill">
-                                                <?php if (!empty($paxMealDesc)): ?>
+                                                <?php if ($isInfant): ?>
+                                                    <span style="color: #64748b;"><i class="fa-solid fa-baby" style="color: #f59e0b; margin-right: 4px;"></i> Not applicable for lap infant</span>
+                                                <?php elseif (!empty($paxMealDesc)): ?>
                                                     <i class="fa-solid fa-check"></i> <?php echo htmlspecialchars($paxMealDesc); ?> (₹ <?php echo number_format($paxMealAmt); ?>)
                                                 <?php else: ?>
                                                     <span style="color: #64748b;">No meal pre-booked</span>
@@ -1379,7 +1511,9 @@ body {
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155;">
                                             <span><?php echo htmlspecialchars($retFromCity); ?> &rarr; <?php echo htmlspecialchars($retToCity); ?></span>
                                             <span class="addon-status-pill">
-                                                <?php if (!empty($paxRetMealDesc)): ?>
+                                                <?php if ($isInfant): ?>
+                                                    <span style="color: #64748b;"><i class="fa-solid fa-baby" style="color: #f59e0b; margin-right: 4px;"></i> Not applicable for lap infant</span>
+                                                <?php elseif (!empty($paxRetMealDesc)): ?>
                                                     <i class="fa-solid fa-check"></i> <?php echo htmlspecialchars($paxRetMealDesc); ?> (₹ <?php echo number_format($paxRetMealAmt); ?>)
                                                 <?php else: ?>
                                                     <span style="color: #64748b;">No meal pre-booked</span>
@@ -1394,7 +1528,9 @@ body {
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
                                             <span><?php echo htmlspecialchars($fromCity); ?> &rarr; <?php echo htmlspecialchars($toCity); ?></span>
                                             <span class="addon-status-pill">
-                                                <?php if (!empty($paxSeatCode)): ?>
+                                                <?php if ($isInfant): ?>
+                                                    <span style="color: #64748b;"><i class="fa-solid fa-baby" style="color: #f59e0b; margin-right: 4px;"></i> Travelling on adult's lap</span>
+                                                <?php elseif (!empty($paxSeatCode)): ?>
                                                     <i class="fa-solid fa-check"></i> Seat <?php echo htmlspecialchars($paxSeatCode); ?> (₹ <?php echo number_format($paxSeatAmt); ?>)
                                                 <?php else: ?>
                                                     <span style="color: #64748b;">Auto-assigned at check-in</span>
@@ -1405,7 +1541,9 @@ body {
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155;">
                                             <span><?php echo htmlspecialchars($retFromCity); ?> &rarr; <?php echo htmlspecialchars($retToCity); ?></span>
                                             <span class="addon-status-pill">
-                                                <?php if (!empty($paxRetSeatCode)): ?>
+                                                <?php if ($isInfant): ?>
+                                                    <span style="color: #64748b;"><i class="fa-solid fa-baby" style="color: #f59e0b; margin-right: 4px;"></i> Travelling on adult's lap</span>
+                                                <?php elseif (!empty($paxRetSeatCode)): ?>
                                                     <i class="fa-solid fa-check"></i> Seat <?php echo htmlspecialchars($paxRetSeatCode); ?> (₹ <?php echo number_format($paxRetSeatAmt); ?>)
                                                 <?php else: ?>
                                                     <span style="color: #64748b;">Auto-assigned at check-in</span>
