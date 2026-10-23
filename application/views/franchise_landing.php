@@ -7,11 +7,11 @@
   <!-- Hero Background Slider Track -->
   <div class="ref-hero-slider">
     <div class="slider-track">
-      <div class="slide active franchise-hero-slide" style="background-image: url('<?php echo base_url('assets/images/VOYOGO FRANCHISE BANNER.png'); ?>');"></div>
+      <div class="slide active franchise-hero-slide" style="background-image: url('<?php echo base_url('assets/images/VOYOGO FRANCHISE BANNER.png?v=' . filemtime(FCPATH . 'assets/images/VOYOGO FRANCHISE BANNER.png')); ?>');"></div>
     </div>
   </div>
 
-  <!-- Hero Content Overlay (Pure text & download button on left, cursive tag on right) -->
+  <!-- Hero Content Overlay (Pure text & download button on left) -->
   <div class="container ref-hero-container">
     <div class="ref-hero-header-row franchise-hero-header-row">
       <!-- Left Content on Slider -->
@@ -26,12 +26,6 @@
           <span>DOWNLOAD BROCHURE</span>
           <i class="fa-solid fa-cloud-arrow-down"></i>
         </a>
-      </div>
-
-      <!-- Right Handwritten Cursive Tag on Slider -->
-      <div class="ref-cursive-tag franchise-cursive-tag">
-        Travel Together<br>Grow Bigger
-        <i class="fa-solid fa-plane"></i>
       </div>
     </div>
   </div>
@@ -487,133 +481,129 @@
 </section>
 
 <!-- ==========================================
-     3. ABOUT US SECTION (2-COLUMN: LEFT CONTENT, RIGHT IMAGE)
+     3. ABOUT VOYOGO SECTION (MATCHING REFERENCE IMAGE)
      ========================================== -->
-<style>
-  .franchise-about-section,
-  .franchise-about-section * {
-    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif !important;
-  }
-  .about-main-heading {
-    font-family: 'Playfair Display', Georgia, serif !important;
-    font-weight: 800 !important;
-    color: #0d3470 !important;
-    font-size: 2.15rem !important;
-    line-height: 1.3 !important;
-  }
-  .about-lead-text, .about-sub-text {
-    font-family: 'Playfair Display', Georgia, serif !important;
-    font-size: 16px !important;
-    line-height: 1.85 !important;
-    color: #334155 !important;
-  }
-  .about-lead-text strong {
-    font-weight: 800 !important;
-    color: #0F172A !important;
-  }
-  .franchise-vm-tab-section,
-  .franchise-vm-tab-section * {
-    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif !important;
-  }
-  .vm-tab-btn {
-    font-family: 'Playfair Display', Georgia, serif !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.8px !important;
-  }
-  .vm-pane-title {
-    font-family: 'Playfair Display', Georgia, serif !important;
-    font-weight: 800 !important;
-    font-size: 1.85rem !important;
-  }
-  .vm-main-text {
-    font-family: 'Playfair Display', Georgia, serif !important;
-    font-size: 16px !important;
-    line-height: 1.9 !important;
-  }
-  .quote-statement {
-    font-family: 'Playfair Display', Georgia, serif !important;
-    font-size: 16px !important;
-    font-style: italic !important;
-  }
-  .model-bottom-objective {
-    display: flex !important;
-    align-items: center !important;
-    gap: 14px !important;
-    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif !important;
-    font-size: 15.5px !important;
-    font-weight: 600 !important;
-    color: #0d3470 !important;
-    line-height: 1.65 !important;
-    margin: 24px 0 0 0 !important;
-    padding: 16px 24px !important;
-    background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%) !important;
-    border: 1.5px solid #86EFAC !important;
-    border-left: 6px solid #15803d !important;
-    border-radius: 6px 14px 14px 6px !important;
-    box-shadow: 0 6px 20px rgba(21, 128, 61, 0.12) !important;
-  }
-  .model-bottom-objective .objective-icon {
-    font-size: 20px !important;
-    color: #15803d !important;
-    flex-shrink: 0 !important;
-  }
-  .model-bottom-objective strong {
-    color: #15803d !important;
-    font-weight: 800 !important;
-  }
-</style>
 <section class="franchise-about-section">
+  <!-- Decorative flight trail -->
+  <div class="franchise-deco-plane-trail">
+    <svg class="flight-svg-path" viewBox="0 0 500 120" fill="none">
+      <path d="M 10,80 Q 250,-20 480,40" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6,6" fill="none"/>
+    </svg>
+    <i class="fa-solid fa-plane flight-mini-plane"></i>
+  </div>
+
   <div class="container">
     <div class="franchise-about-grid">
       
-      <!-- Left Column: About Content -->
+      <!-- Left Column: About Content & Stats -->
       <div class="franchise-about-content">
-        <span class="franchise-pill-badge green-badge">ABOUT VOYOGO</span>
-        <h2 class="about-main-heading">VOYOGO is a professionally managed travel company offering:</h2>
-        
-        <p class="about-lead-text">
-          <strong>A New Brand. A Proven Legacy.</strong> Skyplanet’s VOYOGO is the flagship franchise brand of Skyplanet Voyages Private Limited, built on years of proven experience in the travel industry. Formerly operating as Skyplanet Holidays, our leadership team has successfully delivered international group departures, customized holidays, visa assistance, and comprehensive travel solutions to thousands of travellers across multiple global destinations.
-        </p>
-        
-        <p class="about-sub-text">
-          Over the years, we have built strong operational systems, trusted global partnerships, and a customer-first approach that have earned us the confidence of travellers and business partners alike. Today, with the launch of Skyplanet’s VOYOGO, we are transforming this proven expertise into a scalable franchise model, empowering entrepreneurs across India with a trusted brand, technology-driven operations, structured business systems, comprehensive training, and continuous support.
-        </p>
-        
-        <p class="about-sub-text">
-          At VOYOGO, we believe that sustainable growth is built on trust, experience, and long-term partnerships. We are not just expanding a travel brand. We are building India’s next generation travel entrepreneur network.
-        </p>
+        <div class="section-badge-pill navy-badge">
+          <span class="badge-dot orange"></span>
+          <span>ABOUT VOYOGO</span>
+        </div>
 
-        <!-- Quick Stats/Highlights Row -->
-        <div class="about-highlights-row">
-          <div class="about-highlight-item">
-            <span class="highlight-num">10+</span>
-            <span class="highlight-lbl">Years Industry Experience</span>
+        <h2 class="section-display-title">
+          <span class="text-orange">VOYOGO</span> is a professionally<br>managed travel company offering:
+        </h2>
+
+        <div class="about-text-body">
+          <p class="about-lead-para">
+            <strong>A New Brand. A Proven Legacy.</strong> Skyplanet’s VOYOGO is the flagship franchise brand of Skyplanet Voyages Private Limited, built on years of proven experience in the travel industry. Formerly operating as Skyplanet Holidays, our leadership team has successfully delivered international group departures, customized holidays, visa assistance, and comprehensive travel solutions to thousands of travellers across multiple global destinations.
+          </p>
+          <p>
+            Over the years, we have built strong operational systems, trusted global partnerships, and a customer-first approach that have earned us the confidence of travellers and business partners alike. Today, with the launch of Skyplanet’s VOYOGO, we are transforming this proven expertise into a scalable franchise model, empowering entrepreneurs across India with a trusted brand, technology-driven operations, structured business systems, comprehensive training, and continuous support.
+          </p>
+          <p>
+            At VOYOGO, we believe that sustainable travel is built on trust, experience, and long-term partnerships. We are not just expanding a travel brand. We are building India’s next generation travel entrepreneur network.
+          </p>
+        </div>
+
+        <!-- 3 Stats Counter Badges Row -->
+        <div class="about-stats-row">
+          <div class="about-stat-card">
+            <div class="stat-icon-circle stat-orange">
+              <i class="fa-solid fa-trophy"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number stat-color-orange">10+</span>
+              <span class="stat-label">Years of Experience</span>
+            </div>
           </div>
-          <div class="about-highlight-item">
-            <span class="highlight-num">100+</span>
-            <span class="highlight-lbl">Global Suppliers</span>
+
+          <div class="about-stat-card">
+            <div class="stat-icon-circle stat-blue">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number stat-color-blue">100+</span>
+              <span class="stat-label">Global Destinations</span>
+            </div>
           </div>
-          <div class="about-highlight-item">
-            <span class="highlight-num">100%</span>
-            <span class="highlight-lbl">Tech & Ops Support</span>
+
+          <div class="about-stat-card">
+            <div class="stat-icon-circle stat-green">
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number stat-color-green">100%</span>
+              <span class="stat-label">Customer Satisfaction</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Right Column: Image Showcase -->
+      <!-- Right Column: Visual Frame with 3 Badges & Square Polaroids Matching Ref Image -->
       <div class="franchise-about-visual-col">
-        <div class="about-image-card">
-          <img src="<?php echo base_url('assets/images/voyogo bali.png'); ?>" alt="Skyplanet Voyogo Franchise Network" class="about-main-img">
+        <div class="about-visual-stack">
           
-          <!-- Floating Feature Badges on Image -->
-          <div class="about-float-badge top-right">
-            <i class="fa-solid fa-certificate"></i>
-            <span>Proven Legacy</span>
+          <!-- Background Square Polaroids (More Visible with Project Images) -->
+          <div class="polaroid-square-card pol-top-square">
+            <div class="polaroid-square-inner">
+              <img src="<?php echo base_url('assets/images/voyogo maladives.png'); ?>" alt="Voyogo Maldives Luxury">
+            </div>
           </div>
-          <div class="about-float-badge bottom-left">
-            <i class="fa-solid fa-shield-halved"></i>
-            <span>Trusted Brand</span>
+
+          <div class="polaroid-square-card pol-side-square">
+            <div class="polaroid-square-inner">
+              <img src="<?php echo base_url('assets/images/voyogo europe.png'); ?>" alt="Voyogo Europe Tours">
+            </div>
           </div>
+
+          <!-- Main Feature Frame with Double Contour Border -->
+          <div class="about-main-frame">
+            <img src="<?php echo base_url('assets/images/voyogo bali.png'); ?>" alt="Voyogo Bali Holidays" class="about-hero-img">
+            
+            <!-- 1. "Proven Legacy" - Dark Navy Top Right Badge with Gold Crown (Matching Ref Image) -->
+            <div class="about-badge-legacy">
+              <i class="fa-solid fa-crown text-gold"></i>
+              <span>Proven Legacy</span>
+            </div>
+
+            <!-- 2. "Global Destinations" - Vibrant Orange Badge with Stacked Text (Matching Ref Image) -->
+            <div class="about-badge-destinations">
+              <span class="dest-icon-wrap">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                </svg>
+              </span>
+              <div class="badge-dest-text">
+                <span class="dest-line-1">Global</span>
+                <span class="dest-line-2">Destinations</span>
+              </div>
+            </div>
+
+            <!-- 3. "Trusted Brand" - Translucent Frosted Glass Bottom Left Badge with Blue Shield (Matching Ref Image) -->
+            <div class="about-badge-trusted">
+              <span class="trusted-shield-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2L4 5V11C4 16.55 7.4 21.74 12 23C16.6 21.74 20 16.55 20 11V5L12 2Z" fill="#0284c7"/>
+                  <path d="M9 12L11 14L15.5 9.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span>Trusted Brand</span>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -622,97 +612,181 @@
 </section>
 
 <!-- ==========================================
-     4. OUR VISION & OUR MISSION (TABBED SECTION WITH TEXT BACKGROUND)
+     4. OUR VISION & OUR MISSION SECTION (MATCHING IMAGE 4)
      ========================================== -->
-<section class="franchise-vm-tab-section">
+<section class="franchise-vision-mission-section">
   <div class="container">
     
-    <div class="vm-tab-container">
-      
-      <!-- Tab Header Buttons -->
-      <div class="vm-tabs-header">
-        <button type="button" class="vm-tab-btn active" data-tab="vision" onclick="switchVmTab('vision')">
-          <i class="fa-solid fa-eye me-2"></i>
+    <!-- Top Tabs Switcher (Pill style matching Image 4) -->
+    <div class="vm-tabs-nav-wrap">
+      <div class="vm-tabs-nav">
+        <button type="button" class="vm-nav-pill active" data-tab="vision" id="tabBtnVision" onclick="switchVmTab('vision')">
+          <span class="pill-icon-ring"><i class="fa-solid fa-bullseye"></i></span>
           <span>OUR VISION</span>
         </button>
-        <button type="button" class="vm-tab-btn" data-tab="mission" onclick="switchVmTab('mission')">
-          <i class="fa-solid fa-bullseye me-2"></i>
+        <button type="button" class="vm-nav-pill" data-tab="mission" id="tabBtnMission" onclick="switchVmTab('mission')">
+          <span class="pill-icon-ring"><i class="fa-solid fa-flag"></i></span>
           <span>OUR MISSION</span>
         </button>
       </div>
+    </div>
 
-      <!-- Tab Content Wrapper with Background Card -->
-      <div class="vm-tab-content-card">
-        
-        <!-- Tab 1: Vision Pane -->
-        <div class="vm-tab-pane active" id="vmTabVision">
-          <div class="vm-pane-header">
-            <span class="vm-pane-tag"><i class="fa-solid fa-compass me-1"></i> Strategic Vision</span>
-            <h3 class="vm-pane-title">Building India's Most Trusted Travel Entrepreneur Network</h3>
-          </div>
+    <!-- Main Card Container -->
+    <div class="vm-main-banner-card">
+      <!-- Decorative plane trail -->
+      <div class="vm-flight-trail">
+        <svg viewBox="0 0 320 80" fill="none">
+          <path d="M 10,70 Q 160,-10 300,25" stroke="#0284c7" stroke-width="2" stroke-dasharray="5,5" fill="none"/>
+        </svg>
+        <i class="fa-solid fa-plane vm-mini-plane"></i>
+      </div>
+
+      <!-- Tab Pane 1: Vision (Active by default) -->
+      <div class="vm-tab-pane active" id="vmTabVision">
+        <div class="vm-pane-grid">
           
-          <div class="vm-text-bg-box">
-            <p class="vm-main-text">
+          <!-- Left Column Content -->
+          <div class="vm-text-column">
+            <div class="section-badge-pill orange-outline-badge">
+              <i class="fa-solid fa-bullseye me-1"></i>
+              <span>STRATEGIC VISION</span>
+            </div>
+
+            <h2 class="vm-banner-title">
+              Building India's Most Trusted<br>
+              <span class="text-orange">Travel Entrepreneur Network</span>
+            </h2>
+            <div class="title-orange-bar"></div>
+
+            <p class="vm-para-desc">
               To build India’s most trusted travel entrepreneur network, empowering passionate entrepreneurs to establish successful travel businesses through a proven business model, innovative technology, structured systems, and continuous support. Our vision is to make Skyplanet’s VOYOGO the first choice for travellers and travel entrepreneurs across India, delivering world-class experiences from Andaman to Antarctica.
             </p>
-          </div>
 
-          <div class="vm-quote-highlight-box">
-            <div class="quote-icon-wrap">
-              <i class="fa-solid fa-quote-left"></i>
+            <!-- Bottom Royal Blue Quote Banner -->
+            <div class="vm-quote-banner-box">
+              <div class="quote-symbol-badge">
+                <i class="fa-solid fa-quote-left"></i>
+              </div>
+              <p class="quote-text-content">
+                “Our vision is not just to expand our business, but <span class="quote-highlight-gold">to empower thousands of entrepreneurs to build successful travel businesses under one trusted brand.</span>”
+              </p>
             </div>
-            <p class="quote-statement">
-              “Our vision is not just to expand our business, but to empower thousands of entrepreneurs to build successful travel businesses under one trusted brand.”
-            </p>
           </div>
+
+          <!-- Right Column Visual: Halong Bay / Clifftop traveler + 3 Polaroids + Compass -->
+          <div class="vm-visual-column">
+            <div class="vm-scenic-wrapper">
+              <img src="<?php echo base_url('assets/images/voyogo thailand.png'); ?>" alt="Travel Entrepreneurship" class="vm-scenic-img">
+
+              <!-- Stacked Polaroid Photo Cards on the right edge -->
+              <div class="vm-polaroid-trio">
+                <div class="polaroid-mini pol-mini-1" title="Paris">
+                  <img src="<?php echo base_url('assets/images/voyogo swiss paris.png'); ?>" alt="Paris Tour">
+                </div>
+                <div class="polaroid-mini pol-mini-2" title="Island Destination">
+                  <img src="<?php echo base_url('assets/images/voyogo andaman.png'); ?>" alt="Island Holidays">
+                </div>
+                <div class="polaroid-mini pol-mini-3" title="Bali Temple">
+                  <img src="<?php echo base_url('assets/images/voyogo bali.png'); ?>" alt="Bali Culture">
+                </div>
+              </div>
+
+              <!-- Antique Golden Compass at bottom right -->
+              <div class="vm-compass-deco">
+                <i class="fa-solid fa-compass"></i>
+              </div>
+            </div>
+          </div>
+
         </div>
+      </div>
 
-        <!-- Tab 2: Mission Pane -->
-        <div class="vm-tab-pane" id="vmTabMission">
-          <div class="vm-pane-header">
-            <span class="vm-pane-tag"><i class="fa-solid fa-rocket me-1"></i> Core Mission</span>
-            <h3 class="vm-pane-title">Empowering Entrepreneurs with Excellence & Integrity</h3>
-          </div>
+      <!-- Tab Pane 2: Mission -->
+      <div class="vm-tab-pane" id="vmTabMission">
+        <div class="vm-pane-grid">
+          
+          <!-- Left Column Content -->
+          <div class="vm-text-column">
+            <div class="section-badge-pill green-outline-badge">
+              <i class="fa-solid fa-rocket me-1"></i>
+              <span>CORE MISSION</span>
+            </div>
 
-          <div class="vm-text-bg-box">
-            <p class="vm-main-text">
+            <h2 class="vm-banner-title">
+              Empowering Entrepreneurs with<br>
+              <span class="text-green">Excellence & Integrity</span>
+            </h2>
+            <div class="title-green-bar"></div>
+
+            <p class="vm-para-desc">
               To empower travel entrepreneurs through a trusted brand, proven business systems, innovative technology, professional training, and continuous support, enabling them to build successful and sustainable travel businesses while delivering exceptional travel experiences with integrity, excellence, and customer satisfaction.
             </p>
+
+            <!-- Mission 4 Pillars -->
+            <div class="vm-mission-pillars-row">
+              <div class="m-pillar-box">
+                <div class="m-pillar-ico"><i class="fa-solid fa-handshake"></i></div>
+                <div>
+                  <strong>Trust & Integrity</strong>
+                  <span>Transparent, long-term partnerships</span>
+                </div>
+              </div>
+              <div class="m-pillar-box">
+                <div class="m-pillar-ico"><i class="fa-solid fa-laptop-code"></i></div>
+                <div>
+                  <strong>Innovative Tech</strong>
+                  <span>Live booking engines & portal</span>
+                </div>
+              </div>
+              <div class="m-pillar-box">
+                <div class="m-pillar-ico"><i class="fa-solid fa-graduation-cap"></i></div>
+                <div>
+                  <strong>Structured Training</strong>
+                  <span>Continuous support & sales playbook</span>
+                </div>
+              </div>
+              <div class="m-pillar-box">
+                <div class="m-pillar-ico"><i class="fa-solid fa-face-smile"></i></div>
+                <div>
+                  <strong>Delighted Travellers</strong>
+                  <span>World-class memorable tours</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Royal Blue Quote Banner -->
+            <div class="vm-quote-banner-box">
+              <div class="quote-symbol-badge">
+                <i class="fa-solid fa-quote-left"></i>
+              </div>
+              <p class="quote-text-content">
+                “Building India's most dependable travel network by <span class="quote-highlight-gold">prioritizing partner prosperity and unmatched guest experiences.</span>”
+              </p>
+            </div>
           </div>
 
-          <!-- Mission 4 Pillars -->
-          <div class="vm-mission-pillars-grid">
-            <div class="mission-pillar-card">
-              <div class="pillar-icon"><i class="fa-solid fa-handshake-simple"></i></div>
-              <div class="pillar-text">
-                <strong>Trust & Integrity</strong>
-                <span>Building transparent, long-term business partnerships</span>
+          <!-- Right Column Visual -->
+          <div class="vm-visual-column">
+            <div class="vm-scenic-wrapper">
+              <img src="<?php echo base_url('assets/images/voyogo dubai.png'); ?>" alt="Voyogo Global Presence" class="vm-scenic-img">
+              <div class="vm-polaroid-trio">
+                <div class="polaroid-mini pol-mini-1">
+                  <img src="<?php echo base_url('assets/images/voyogo cruise 1.png'); ?>" alt="Cruise Tours">
+                </div>
+                <div class="polaroid-mini pol-mini-2">
+                  <img src="<?php echo base_url('assets/images/voyogo maladives.png'); ?>" alt="Maldives">
+                </div>
+                <div class="polaroid-mini pol-mini-3">
+                  <img src="<?php echo base_url('assets/images/voyogo europe.png'); ?>" alt="Europe Package">
+                </div>
               </div>
-            </div>
-            <div class="mission-pillar-card">
-              <div class="pillar-icon"><i class="fa-solid fa-laptop-code"></i></div>
-              <div class="pillar-text">
-                <strong>Innovative Technology</strong>
-                <span>Cutting-edge booking engines & cloud systems</span>
-              </div>
-            </div>
-            <div class="mission-pillar-card">
-              <div class="pillar-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-              <div class="pillar-text">
-                <strong>Professional Training</strong>
-                <span>Continuous guidance and structured sales playbooks</span>
-              </div>
-            </div>
-            <div class="mission-pillar-card">
-              <div class="pillar-icon"><i class="fa-solid fa-face-smile"></i></div>
-              <div class="pillar-text">
-                <strong>Customer Satisfaction</strong>
-                <span>Delivering world-class memorable travel experiences</span>
+              <div class="vm-compass-deco">
+                <i class="fa-solid fa-award"></i>
               </div>
             </div>
           </div>
+
         </div>
-
       </div>
 
     </div>
@@ -720,93 +794,152 @@
   </div>
 </section>
 
-
 <!-- ==========================================
-     4. WHY CHOOSE SKYPLANET'S VOYOGO? (12 PILLARS)
+     5. WHY CHOOSE SKYPLANET'S VOYOGO? (10 PILLARS SHOWCASE)
      ========================================== -->
 <section class="franchise-why-section">
   <div class="container">
-    <div class="franchise-why-card">
+    <div class="franchise-why-showcase">
       
-      <!-- Section Header -->
-      <div class="franchise-why-header">
-        <h2 class="why-main-title">WHY CHOOSE <span class="highlight-gold">SKYPLANET'S VOYOGO?</span></h2>
-        <p class="why-subtitle">Choosing a Skyplanet's VOYOGO Franchise provides access to:</p>
+
+      <!-- Top-Left Airliner Flying In -->
+      <div class="why-plane-left-wrap" aria-hidden="true">
+        <svg class="why-plane-svg-left" viewBox="0 0 100 65" fill="none">
+          <path d="M5,42 C18,34 38,24 55,16 L52,5 C51,2 53,0 56,1 L65,11 L82,6 C86,5 89,7 87,11 L74,22 L91,24 C94,24 96,27 94,29 L86,34 L89,45 L85,46 L79,36 L64,40 L60,54 L56,54 L58,41 L22,48 C16,49 8,47 5,42 Z" fill="#0284c7" opacity="0.85"/>
+          <path d="M55,16 L74,22 L64,40 L45,34 Z" fill="#38bdf8" opacity="0.6"/>
+        </svg>
       </div>
 
-      <!-- 12 Pillars Circle Grid -->
-      <div class="franchise-pillars-grid">
+      <!-- Top-Right Curved Dashed Flight Trail & Airplane -->
+      <div class="why-flight-trail-right" aria-hidden="true">
+        <svg viewBox="0 0 240 90" fill="none" class="why-trail-svg">
+          <path d="M 15,82 Q 120,8 215,22" stroke="#0ea5e9" stroke-width="2.5" stroke-dasharray="6,6" fill="none"/>
+        </svg>
+        <i class="fa-solid fa-plane why-mini-plane-right"></i>
+      </div>
+
+      <!-- Subtle Bottom Ambient Wave Accent -->
+      <div class="why-bottom-wave-accent" aria-hidden="true">
+        <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+          <path d="M0,32 C300,8 600,52 900,24 C1050,12 1150,38 1200,28 L1200,60 L0,60 Z" fill="rgba(186, 230, 253, 0.4)"/>
+          <path d="M0,42 C240,24 540,56 840,36 C1020,24 1120,46 1200,38 L1200,60 L0,60 Z" fill="rgba(224, 242, 254, 0.6)"/>
+        </svg>
+      </div>
+
+      <!-- Center Content Area -->
+      <div class="why-inner-container">
         
-        <!-- Pillar 1 -->
-        <div class="pillar-circle-card">
-          <div class="pillar-circle-icon"><i class="fa-solid fa-certificate"></i></div>
-          <h4 class="pillar-circle-title">Established<br>Brand Identity</h4>
+        <!-- Header Pill Badge -->
+        <div class="why-badge-pill">
+          <span class="pill-sparkle">✦</span>
+          <span>FRANCHISE ADVANTAGES</span>
+          <span class="pill-sparkle">✦</span>
         </div>
 
-        <!-- Pillar 2 -->
-        <div class="pillar-circle-card">
-          <div class="pillar-circle-icon"><i class="fa-solid fa-gears"></i></div>
-          <h4 class="pillar-circle-title">Proven Business<br>Processes</h4>
-        </div>
+        <!-- Section Main Title -->
+        <h2 class="why-hero-title">
+          <span class="why-title-dark">Why Choose</span><br>
+          <span class="why-title-blue">Skyplanet's</span> <span class="why-title-orange">VOYOGO?</span>
+        </h2>
 
-        <!-- Pillar 3 -->
-        <div class="pillar-circle-card">
-          <div class="pillar-circle-icon"><i class="fa-solid fa-network-wired"></i></div>
-          <h4 class="pillar-circle-title">Centralised<br>Operations</h4>
-        </div>
+        <!-- Subtitle -->
+        <p class="why-hero-subtitle">
+          Choosing a Skyplanet's VOYOGO franchise provides access to an established network<br class="d-none d-md-block"> and proven business ecosystem:
+        </p>
 
-        <!-- Pillar 4 -->
-        <div class="pillar-circle-card">
-          <div class="pillar-circle-icon"><i class="fa-solid fa-user-tie"></i></div>
-          <h4 class="pillar-circle-title">Professional<br>CRM</h4>
-        </div>
+        <!-- 10 Feature Cards Grid (5 Columns x 2 Rows) -->
+        <div class="why-features-grid">
+          
+          <!-- Row 1: Card 1 (Blue) -->
+          <div class="why-feature-card">
+            <div class="why-icon-bubble bubble-blue">
+              <i class="fa-solid fa-award"></i>
+            </div>
+            <h4 class="why-feature-name">Established<br>Brand Identity</h4>
+            <p class="why-feature-desc">Recognised market brand & customer trust</p>
+          </div>
 
-        <!-- Pillar 5 -->
-        <div class="pillar-circle-card">
-          <div class="pillar-circle-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
-          <h4 class="pillar-circle-title">Cloud<br>Billing</h4>
-        </div>
+          <!-- Row 1: Card 2 (Orange) -->
+          <div class="why-feature-card">
+            <div class="why-icon-bubble bubble-orange">
+              <i class="fa-solid fa-gears"></i>
+            </div>
+            <h4 class="why-feature-name">Proven Business<br>Processes</h4>
+            <p class="why-feature-desc">Tested operating systems for seamless flow</p>
+          </div>
 
-        <!-- Pillar 6 -->
-        <div class="pillar-circle-card">
-          <div class="pillar-circle-icon"><i class="fa-solid fa-book-open-reader"></i></div>
-          <h4 class="pillar-circle-title">Sales<br>Playbooks</h4>
-        </div>
+          <!-- Row 1: Card 3 (Blue) -->
+          <div class="why-feature-card">
+            <div class="why-icon-bubble bubble-blue">
+              <i class="fa-solid fa-sitemap"></i>
+            </div>
+            <h4 class="why-feature-name">Centralised<br>Operations</h4>
+            <p class="why-feature-desc">Unified backend and operational support</p>
+          </div>
 
-        <!-- Pillar 7 -->
-        <div class="pillar-circle-card">
-          <div class="pillar-circle-icon"><i class="fa-solid fa-book-bookmark"></i></div>
-          <h4 class="pillar-circle-title">Operations<br>Manual</h4>
-        </div>
+          <!-- Row 1: Card 4 (Orange) -->
+          <div class="why-feature-card">
+            <div class="why-icon-bubble bubble-orange">
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <h4 class="why-feature-name">Professional<br>CRM</h4>
+            <p class="why-feature-desc">Smart lead tracking and client management</p>
+          </div>
 
-        <!-- Pillar 8 -->
-        <div class="pillar-circle-card">
-          <div class="pillar-circle-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
-          <h4 class="pillar-circle-title">Training<br>Programmes</h4>
-        </div>
+          <!-- Row 1: Card 5 (Blue) -->
+          <div class="why-feature-card">
+            <div class="why-icon-bubble bubble-blue">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <h4 class="why-feature-name">Cloud<br>Billing</h4>
+            <p class="why-feature-desc">Automated fast invoices & payment tools</p>
+          </div>
 
-        <!-- Pillar 9 -->
-        <div class="pillar-circle-card">
-          <div class="pillar-circle-icon"><i class="fa-solid fa-bullhorn"></i></div>
-          <h4 class="pillar-circle-title">Marketing<br>Support</h4>
-        </div>
+          <!-- Row 2: Card 6 (Orange) -->
+          <div class="why-feature-card">
+            <div class="why-icon-bubble bubble-orange">
+              <i class="fa-solid fa-book-bookmark"></i>
+            </div>
+            <h4 class="why-feature-name">Operations<br>Manual</h4>
+            <p class="why-feature-desc">Comprehensive SOPs & business handbook</p>
+          </div>
 
-        <!-- Pillar 10 -->
-        <div class="pillar-circle-card">
-          <div class="pillar-circle-icon"><i class="fa-solid fa-laptop-code"></i></div>
-          <h4 class="pillar-circle-title">Technology<br>Support</h4>
-        </div>
+          <!-- Row 2: Card 7 (Blue) -->
+          <div class="why-feature-card">
+            <div class="why-icon-bubble bubble-blue">
+              <i class="fa-solid fa-chalkboard-user"></i>
+            </div>
+            <h4 class="why-feature-name">Training<br>Programmes</h4>
+            <p class="why-feature-desc">Regular staff coaching & sales guidance</p>
+          </div>
 
-        <!-- Pillar 11 -->
-        <div class="pillar-circle-card">
-          <div class="pillar-circle-icon"><i class="fa-solid fa-globe"></i></div>
-          <h4 class="pillar-circle-title">Continuous Business<br>Guidance</h4>
-        </div>
+          <!-- Row 2: Card 8 (Orange) -->
+          <div class="why-feature-card">
+            <div class="why-icon-bubble bubble-orange">
+              <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <h4 class="why-feature-name">Marketing<br>Support</h4>
+            <p class="why-feature-desc">National promos & localized ad assets</p>
+          </div>
 
-        <!-- Pillar 12 -->
-        <div class="pillar-circle-card">
-          <div class="pillar-circle-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-          <h4 class="pillar-circle-title">High Earning<br>Potential</h4>
+          <!-- Row 2: Card 9 (Blue) -->
+          <div class="why-feature-card">
+            <div class="why-icon-bubble bubble-blue">
+              <i class="fa-solid fa-laptop-code"></i>
+            </div>
+            <h4 class="why-feature-name">Technology<br>Support</h4>
+            <p class="why-feature-desc">Live booking engine & tech assistance</p>
+          </div>
+
+          <!-- Row 2: Card 10 (Orange) -->
+          <div class="why-feature-card">
+            <div class="why-icon-bubble bubble-orange">
+              <i class="fa-solid fa-hand-holding-dollar"></i>
+            </div>
+            <h4 class="why-feature-name">High Earning<br>Potential</h4>
+            <p class="why-feature-desc">High profit margins with zero royalties</p>
+          </div>
+
         </div>
 
       </div>
@@ -816,42 +949,108 @@
 </section>
 
 <!-- ==========================================
-     5. INVESTMENT DETAILS & SPECIAL OFFER SECTION (HIGHLIGHTED)
+     6. INVESTMENT DETAILS & SPECIAL OFFER (MATCHING IMAGE 3)
      ========================================== -->
-<section class="franchise-investment-section">
+<section class="franchise-investment-banner-section">
   <div class="container">
-    <div class="investment-highlight-card">
+    <div class="investment-showcase-card">
       
-      <!-- Top Badge -->
-      <div class="investment-badge-wrap">
-        <span class="franchise-pill-badge green-badge lg">INVESTMENT DETAILS</span>
+      <!-- Curved Flight Trail & Airplane Icon across top center -->
+      <div class="invest-flight-trail-svg">
+        <svg viewBox="0 0 280 80" fill="none" class="flight-trail-path">
+          <path d="M 10,65 Q 140,8 260,25" stroke="#0ea5e9" stroke-width="2.5" stroke-dasharray="6,6" fill="none"/>
+        </svg>
+        <i class="fa-solid fa-plane invest-mini-flight-icon"></i>
       </div>
 
-      <div class="investment-flex-row">
+      <!-- Interactive Live Content Grid -->
+      <div class="invest-grid-layout">
         
-        <!-- Left: 30% Offer for the first 25 Persons -->
-        <div class="investment-offer-text-col">
-          <span class="offer-sub-title">30% OFFER FOR THE FIRST</span>
-          <div class="offer-persons-row">
-            <h2 class="offer-main-num">25 PERSONS</h2>
-            <i class="fa-solid fa-hand-point-right offer-hand-icon"></i>
+        <!-- Center-Left: Offer Headlines & Benefits -->
+        <div class="invest-left-details">
+          
+          <!-- Green Investment Details Badge with Golden Bar Chart -->
+          <div class="invest-badge-pill">
+            <i class="fa-solid fa-chart-column badge-chart-gold"></i>
+            <span>INVESTMENT DETAILS</span>
           </div>
-        </div>
 
-        <!-- Right: Special Offer Navy Card -->
-        <div class="investment-special-offer-card">
-          <h3 class="special-offer-title">SPECIAL OFFER</h3>
-          <div class="offer-price-box">
-            <span class="price-label-now">NOW</span>
-            <div class="price-amount-wrap">
-              <span class="price-currency">₹</span>
-              <span class="price-value">10,00,000</span>
+          <h3 class="invest-sub-heading">30% OFFER FOR THE FIRST</h3>
+          <div class="invest-headline-row">
+            <h2 class="invest-giant-headline">
+              <span class="text-gradient-orange">25</span>
+              <span class="text-navy">PERSONS</span>
+            </h2>
+          </div>
+
+          <p class="invest-network-subtext">
+            Be a part of India's fastest growing travel franchise network.
+          </p>
+
+          <!-- 4 Feature Pills in a row -->
+          <div class="invest-benefits-row">
+            <div class="benefit-item-chip">
+              <div class="benefit-icon-ring ring-orange">
+                <i class="fa-solid fa-handshake"></i>
+              </div>
+              <span class="benefit-name">Lower<br>Investment</span>
+            </div>
+
+            <div class="benefit-item-chip">
+              <div class="benefit-icon-ring ring-blue">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <span class="benefit-name">Higher<br>Returns</span>
+            </div>
+
+            <div class="benefit-item-chip">
+              <div class="benefit-icon-ring ring-green">
+                <i class="fa-solid fa-headset"></i>
+              </div>
+              <span class="benefit-name">Complete<br>Support</span>
+            </div>
+
+            <div class="benefit-item-chip">
+              <div class="benefit-icon-ring ring-purple">
+                <i class="fa-solid fa-gear"></i>
+              </div>
+              <span class="benefit-name">Proven<br>Model</span>
             </div>
           </div>
-          <button type="button" class="btn-claim-special-offer" onclick="document.querySelector('.franchise-horizontal-form-section').scrollIntoView({ behavior: 'smooth' });">
-            <span>CLAIM OFFER NOW</span>
-            <i class="fa-solid fa-arrow-up"></i>
-          </button>
+
+        </div>
+
+        <!-- Right Side: Special Offer Blue Card with Folded Orange Ribbon & ₹ 10,00,000 -->
+        <div class="invest-right-offer">
+          <div class="invest-special-card">
+            
+            <!-- Folded 3D Orange Ribbon Tag sticking out top-left -->
+            <div class="invest-offer-ribbon">
+              <i class="fa-solid fa-gift"></i>
+              <span>SPECIAL OFFER</span>
+            </div>
+
+            <!-- Inner White Pricing Box -->
+            <div class="invest-inner-white-card">
+              <div class="invest-now-label">
+                <span class="divider-line"></span>
+                <span>NOW</span>
+                <span class="divider-line"></span>
+              </div>
+              <div class="invest-price-display">
+                <span class="currency-symbol">₹</span>
+                <span class="price-digits">10,00,000</span>
+              </div>
+            </div>
+
+            <!-- Green Claim Offer CTA Button with Hand Pointer & Arrow -->
+            <button type="button" class="btn-claim-offer-action" onclick="document.querySelector('.franchise-horizontal-form-section').scrollIntoView({ behavior: 'smooth' });">
+              <i class="fa-solid fa-hand-pointer claim-click-icon"></i>
+              <span>CLAIM OFFER NOW</span>
+              <i class="fa-solid fa-arrow-right claim-arrow-icon"></i>
+            </button>
+
+          </div>
         </div>
 
       </div>
@@ -861,157 +1060,559 @@
 </section>
 
 <!-- ==========================================
-     6. OUR BUSINESS MODEL & SUPPORT (EXACT IMAGE CONTENT)
+     7. OUR BUSINESS MODEL SECTION (MATCHING IMAGE 2)
      ========================================== -->
-<section class="franchise-model-section">
+<section class="franchise-business-model-section">
   <div class="container">
     
-    <div class="franchise-model-main-card">
+    <!-- Section Header -->
+    <div class="section-center-header">
+      <div class="section-badge-pill green-pill-dot">
+        <span class="accent-bar-left"></span>
+        <span>OUR BUSINESS MODEL</span>
+        <span class="accent-bar-right"></span>
+      </div>
+      <h2 class="section-hero-title">
+        <span class="text-orange">VOYOGO</span> Franchise Business Model
+      </h2>
+      <p class="section-hero-subtitle">
+        A simple and proven model to help franchise partners run a successful travel business.
+      </p>
+    </div>
+
+    <!-- Top Row: Card 01 & Card 02 -->
+    <div class="model-cards-top-grid">
       
-      <!-- Section Badge (No extra subheading) -->
-      <div class="model-badge-header">
-        <span class="franchise-pill-badge green-badge">OUR BUSINESS MODEL</span>
+      <!-- Card 01: What Franchise Does -->
+      <div class="model-column-card">
+        <div class="model-card-header header-navy">
+          <div class="model-badge-circle badge-blue">01</div>
+          <div class="model-header-text">
+            <h3 class="model-card-title">What Franchise Does</h3>
+            <span class="model-card-sub">VOYOGO Franchise Business Model</span>
+          </div>
+        </div>
+
+        <div class="model-card-body">
+          <div class="model-role-items-grid">
+            
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-blue">
+                <i class="fa-solid fa-users"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Customer Acquisition</h4>
+                <p class="role-entry-desc">Attract and onboard new customers.</p>
+              </div>
+            </div>
+
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-pink">
+                <i class="fa-solid fa-bullhorn"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Local Marketing</h4>
+                <p class="role-entry-desc">Promote packages in your local market.</p>
+              </div>
+            </div>
+
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-orange">
+                <i class="fa-solid fa-chart-simple"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Sales</h4>
+                <p class="role-entry-desc">Convert enquiries into bookings.</p>
+              </div>
+            </div>
+
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-purple">
+                <i class="fa-solid fa-file-lines"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Documentation Collection</h4>
+                <p class="role-entry-desc">Handle travel documents and formalities.</p>
+              </div>
+            </div>
+
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-teal">
+                <i class="fa-solid fa-comment-dots"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Customer Relationship Management</h4>
+                <p class="role-entry-desc">Build long-term customer relationships.</p>
+              </div>
+            </div>
+
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-amber">
+                <i class="fa-solid fa-credit-card"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Payment Collection</h4>
+                <p class="role-entry-desc">Manage secure and smooth payments.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
 
-      <!-- (i) VOYOGO Franchise Business Model -->
-      <div class="model-group-block">
-        <h3 class="model-group-title">
-          <span class="title-green">(i) VOYOGO Franchise Business Model</span>
-          <span class="title-sub">(What franchise does)</span>
-        </h3>
+      <!-- Card 02: Business Support -->
+      <div class="model-column-card">
+        <div class="model-card-header header-cyan-blue">
+          <div class="model-badge-circle badge-orange">02</div>
+          <div class="model-header-text">
+            <h3 class="model-card-title">Business Support</h3>
+            <span class="model-card-sub">Comprehensive support from VOYOGO</span>
+          </div>
+        </div>
+
+        <div class="model-card-body">
+          <div class="model-support-items-grid">
+            
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-blue">
+                <i class="fa-solid fa-gear"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Operations</h4>
+                <p class="role-entry-desc">End-to-end guidance for daily operations.</p>
+              </div>
+            </div>
+
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-orange">
+                <i class="fa-solid fa-hotel"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Hotel Reservations</h4>
+                <p class="role-entry-desc">Access to global hotel inventory.</p>
+              </div>
+            </div>
+
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-green">
+                <i class="fa-solid fa-handshake"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Supplier Negotiation</h4>
+                <p class="role-entry-desc">Exclusive rates and better deals.</p>
+              </div>
+            </div>
+
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-red">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Billing</h4>
+                <p class="role-entry-desc">Easy and transparent billing system.</p>
+              </div>
+            </div>
+
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-purple">
+                <i class="fa-solid fa-laptop"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Technology Support</h4>
+                <p class="role-entry-desc">Advanced tools and systems.</p>
+              </div>
+            </div>
+
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-amber">
+                <i class="fa-solid fa-tags"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Brand Management</h4>
+                <p class="role-entry-desc">Complete branding support.</p>
+              </div>
+            </div>
+
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-cyan">
+                <i class="fa-solid fa-plane-departure"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Flight Reservations</h4>
+                <p class="role-entry-desc">Global flight booking support.</p>
+              </div>
+            </div>
+
+            <div class="model-role-entry">
+              <div class="role-icon-bubble bubble-blue">
+                <i class="fa-solid fa-address-card"></i>
+              </div>
+              <div class="role-entry-info">
+                <h4 class="role-entry-title">Visa Coordination</h4>
+                <p class="role-entry-desc">Assistance with visa processing.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Row: Card 03 - VOYOGO Services Photo Strip -->
+    <div class="model-card-03-full">
+      <div class="card-03-header-row">
+        <div class="model-badge-circle badge-green">03</div>
+        <div class="card-03-title-wrap">
+          <h3 class="card-03-title">VOYOGO Services</h3>
+          <span class="card-03-subtitle">Wide range of travel services for your customers</span>
+        </div>
+      </div>
+
+      <!-- 9 Photo Thumbnail Cards (Matching Image 2 Card 03) -->
+      <div class="services-photo-strip-grid">
         
-        <div class="franchise-role-grid">
-          <div class="role-item">
-            <span class="role-icon">🧳</span>
-            <span class="role-name">Customer Acquisition</span>
+        <div class="strip-item-card">
+          <div class="strip-thumb-wrap">
+            <img src="<?php echo base_url('assets/images/voyogo andaman.png'); ?>" alt="Domestic Tour Packages">
           </div>
-          <div class="role-item">
-            <span class="role-icon">📢</span>
-            <span class="role-name">Local Marketing</span>
-          </div>
-          <div class="role-item">
-            <span class="role-icon">📈</span>
-            <span class="role-name">Sales</span>
-          </div>
-          <div class="role-item">
-            <span class="role-icon">📋</span>
-            <span class="role-name">Documentation Collection</span>
-          </div>
-          <div class="role-item">
-            <span class="role-icon">💬</span>
-            <span class="role-name">Customer Relationship Management</span>
-          </div>
-          <div class="role-item">
-            <span class="role-icon">💳</span>
-            <span class="role-name">Payment Collection</span>
+          <div class="strip-label-row">
+            <span class="strip-icon-circle"><i class="fa-solid fa-location-dot"></i></span>
+            <span class="strip-item-name">Domestic<br>Tour Packages</span>
           </div>
         </div>
+
+        <div class="strip-item-card">
+          <div class="strip-thumb-wrap">
+            <img src="<?php echo base_url('assets/images/voyogo swiss paris.png'); ?>" alt="International Tour Packages">
+          </div>
+          <div class="strip-label-row">
+            <span class="strip-icon-circle"><i class="fa-solid fa-earth-americas"></i></span>
+            <span class="strip-item-name">International<br>Tour Packages</span>
+          </div>
+        </div>
+
+        <div class="strip-item-card">
+          <div class="strip-thumb-wrap">
+            <img src="<?php echo base_url('assets/images/voyogo maladives.png'); ?>" alt="Honeymoon Packages">
+          </div>
+          <div class="strip-label-row">
+            <span class="strip-icon-circle text-rose"><i class="fa-solid fa-heart"></i></span>
+            <span class="strip-item-name">Honeymoon<br>Packages</span>
+          </div>
+        </div>
+
+        <div class="strip-item-card">
+          <div class="strip-thumb-wrap">
+            <img src="<?php echo base_url('assets/images/voyogo bali.png'); ?>" alt="Family Vacations">
+          </div>
+          <div class="strip-label-row">
+            <span class="strip-icon-circle"><i class="fa-solid fa-people-roof"></i></span>
+            <span class="strip-item-name">Family<br>Vacations</span>
+          </div>
+        </div>
+
+        <div class="strip-item-card">
+          <div class="strip-thumb-wrap">
+            <img src="<?php echo base_url('assets/images/voyogo thailand.png'); ?>" alt="Group Departures">
+          </div>
+          <div class="strip-label-row">
+            <span class="strip-icon-circle"><i class="fa-solid fa-users"></i></span>
+            <span class="strip-item-name">Group<br>Departures</span>
+          </div>
+        </div>
+
+        <div class="strip-item-card">
+          <div class="strip-thumb-wrap">
+            <img src="<?php echo base_url('assets/images/flight-banner/flight ticket banner 1.png'); ?>" alt="Flight Ticket Booking">
+          </div>
+          <div class="strip-label-row">
+            <span class="strip-icon-circle"><i class="fa-solid fa-plane"></i></span>
+            <span class="strip-item-name">Flight<br>Ticket Booking</span>
+          </div>
+        </div>
+
+        <div class="strip-item-card">
+          <div class="strip-thumb-wrap">
+            <img src="<?php echo base_url('assets/images/slider-images/visa/visa 1.png'); ?>" alt="Visa Assistance">
+          </div>
+          <div class="strip-label-row">
+            <span class="strip-icon-circle"><i class="fa-solid fa-passport"></i></span>
+            <span class="strip-item-name">Visa<br>Assistance</span>
+          </div>
+        </div>
+
+        <div class="strip-item-card">
+          <div class="strip-thumb-wrap">
+            <img src="<?php echo base_url('assets/images/voyogo cruise 1.png'); ?>" alt="Cruise Packages">
+          </div>
+          <div class="strip-label-row">
+            <span class="strip-icon-circle"><i class="fa-solid fa-ship"></i></span>
+            <span class="strip-item-name">Cruise<br>Packages</span>
+          </div>
+        </div>
+
+        <div class="strip-item-card">
+          <div class="strip-thumb-wrap">
+            <img src="<?php echo base_url('assets/images/voyogo europe.png'); ?>" alt="Corporate Travel Solutions">
+          </div>
+          <div class="strip-label-row">
+            <span class="strip-icon-circle text-teal"><i class="fa-solid fa-briefcase"></i></span>
+            <span class="strip-item-name">Corporate<br>Travel Solutions</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==========================================
+     8. OUR SERVICES FULL SECTION (MATCHING IMAGE 1)
+     ========================================== -->
+<section class="franchise-full-services-section">
+  <div class="container">
+    
+    <!-- Header with Pill, Main Title & Subtitle -->
+    <div class="services-section-top">
+      
+      <!-- Center Title, Badge & Subtitle -->
+      <div class="services-center-heading">
+        <div class="section-badge-pill green-pill-dot">
+          <span class="accent-bar-left"></span>
+          <span>OUR SERVICES</span>
+          <span class="accent-bar-right"></span>
+        </div>
+
+        <h2 class="services-main-hero-title">
+          What Kind of Services <span class="text-orange">VOYOGO</span> Offered to our Customers?
+        </h2>
+        <p class="services-main-subtitle">
+          We provide a wide range of travel services to make your journey easy, comfortable and memorable.
+        </p>
       </div>
 
-      <!-- (ii) VOYOGO BUSINESS SUPPORT -->
-      <div class="model-group-block">
-        <h3 class="model-group-title">
-          <span class="title-green">(ii) VOYOGO &nbsp;BUSINESS SUPPORT</span>
-        </h3>
+    </div>
+
+    <!-- Main White Card Container with 12 Service Tiles & Objective Box -->
+    <div class="services-master-card">
+      
+      <!-- 2-Column Grid of 12 Interactive Service Tiles -->
+      <div class="services-tiles-2col-grid">
         
-        <div class="voyogo-support-bullets-grid">
-          <div class="support-bullet-item">
-            <i class="fa-solid fa-play bullet-arrow"></i>
-            <span>Operations</span>
+        <!-- 1. International Holiday Packages -->
+        <div class="service-tile-box">
+          <div class="tile-left-content">
+            <div class="tile-icon-circle icon-bg-sky">
+              <i class="fa-solid fa-earth-americas"></i>
+            </div>
+            <div class="tile-text-info">
+              <h4 class="tile-title">International Holiday Packages</h4>
+              <p class="tile-desc">Explore the world with our international tour packages.</p>
+            </div>
           </div>
-          <div class="support-bullet-item">
-            <i class="fa-solid fa-play bullet-arrow"></i>
-            <span>Hotel Reservations</span>
-          </div>
-          <div class="support-bullet-item">
-            <i class="fa-solid fa-play bullet-arrow"></i>
-            <span>Supplier Negotiation</span>
-          </div>
-          <div class="support-bullet-item">
-            <i class="fa-solid fa-play bullet-arrow"></i>
-            <span>Billing</span>
-          </div>
-          <div class="support-bullet-item">
-            <i class="fa-solid fa-play bullet-arrow"></i>
-            <span>Technology Support</span>
-          </div>
-          <div class="support-bullet-item">
-            <i class="fa-solid fa-play bullet-arrow"></i>
-            <span>Brand Management</span>
-          </div>
-          <div class="support-bullet-item">
-            <i class="fa-solid fa-play bullet-arrow"></i>
-            <span>Flight Reservations</span>
-          </div>
-          <div class="support-bullet-item">
-            <i class="fa-solid fa-play bullet-arrow"></i>
-            <span>Visa Coordination</span>
+          <div class="tile-arrow-link">
+            <i class="fa-solid fa-chevron-right"></i>
           </div>
         </div>
+
+        <!-- 2. Flight Ticketing -->
+        <div class="service-tile-box">
+          <div class="tile-left-content">
+            <div class="tile-icon-circle icon-bg-purple">
+              <i class="fa-solid fa-plane-departure"></i>
+            </div>
+            <div class="tile-text-info">
+              <h4 class="tile-title">Flight Ticketing</h4>
+              <p class="tile-desc">Book domestic and international flights at best rates.</p>
+            </div>
+          </div>
+          <div class="tile-arrow-link">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <!-- 3. Domestic Holiday Packages -->
+        <div class="service-tile-box">
+          <div class="tile-left-content">
+            <div class="tile-icon-circle icon-bg-amber">
+              <i class="fa-solid fa-umbrella-beach"></i>
+            </div>
+            <div class="tile-text-info">
+              <h4 class="tile-title">Domestic Holiday Packages</h4>
+              <p class="tile-desc">Discover amazing places within India.</p>
+            </div>
+          </div>
+          <div class="tile-arrow-link">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <!-- 4. Hotel Reservations -->
+        <div class="service-tile-box">
+          <div class="tile-left-content">
+            <div class="tile-icon-circle icon-bg-orange">
+              <i class="fa-solid fa-hotel"></i>
+            </div>
+            <div class="tile-text-info">
+              <h4 class="tile-title">Hotel Reservations</h4>
+              <p class="tile-desc">Stay at the best hotels worldwide.</p>
+            </div>
+          </div>
+          <div class="tile-arrow-link">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <!-- 5. Fixed Group Departures -->
+        <div class="service-tile-box">
+          <div class="tile-left-content">
+            <div class="tile-icon-circle icon-bg-emerald">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="tile-text-info">
+              <h4 class="tile-title">Fixed Group Departures</h4>
+              <p class="tile-desc">Travel together, create better memories.</p>
+            </div>
+          </div>
+          <div class="tile-arrow-link">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <!-- 6. Travel Insurance -->
+        <div class="service-tile-box">
+          <div class="tile-left-content">
+            <div class="tile-icon-circle icon-bg-green">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="tile-text-info">
+              <h4 class="tile-title">Travel Insurance</h4>
+              <p class="tile-desc">Travel safe with our reliable insurance plans.</p>
+            </div>
+          </div>
+          <div class="tile-arrow-link">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <!-- 7. Customized FIT Holidays -->
+        <div class="service-tile-box">
+          <div class="tile-left-content">
+            <div class="tile-icon-circle icon-bg-violet">
+              <i class="fa-solid fa-suitcase-rolling"></i>
+            </div>
+            <div class="tile-text-info">
+              <h4 class="tile-title">Customized FIT Holidays</h4>
+              <p class="tile-desc">Tailor-made trips for your unique needs.</p>
+            </div>
+          </div>
+          <div class="tile-arrow-link">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <!-- 8. Forex Assistance -->
+        <div class="service-tile-box">
+          <div class="tile-left-content">
+            <div class="tile-icon-circle icon-bg-blue">
+              <i class="fa-solid fa-money-bill-transfer"></i>
+            </div>
+            <div class="tile-text-info">
+              <h4 class="tile-title">Forex Assistance</h4>
+              <p class="tile-desc">Get the best exchange rates for your travel.</p>
+            </div>
+          </div>
+          <div class="tile-arrow-link">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <!-- 9. Visa Assistance -->
+        <div class="service-tile-box">
+          <div class="tile-left-content">
+            <div class="tile-icon-circle icon-bg-teal">
+              <i class="fa-solid fa-passport"></i>
+            </div>
+            <div class="tile-text-info">
+              <h4 class="tile-title">Visa Assistance</h4>
+              <p class="tile-desc">Get hassle-free visa support from our experts.</p>
+            </div>
+          </div>
+          <div class="tile-arrow-link">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <!-- 10. Corporate Travel Solutions -->
+        <div class="service-tile-box">
+          <div class="tile-left-content">
+            <div class="tile-icon-circle icon-bg-rose">
+              <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <div class="tile-text-info">
+              <h4 class="tile-title">Corporate Travel Solutions</h4>
+              <p class="tile-desc">Simplify business travel for your team.</p>
+            </div>
+          </div>
+          <div class="tile-arrow-link">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <!-- 11. International Cruise Booking -->
+        <div class="service-tile-box">
+          <div class="tile-left-content">
+            <div class="tile-icon-circle icon-bg-pink">
+              <i class="fa-solid fa-ship"></i>
+            </div>
+            <div class="tile-text-info">
+              <h4 class="tile-title">International Cruise Booking</h4>
+              <p class="tile-desc">Sail to new destinations with ease.</p>
+            </div>
+          </div>
+          <div class="tile-arrow-link">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <!-- 12. One Stop For All Kinds Of Travel Solutions -->
+        <div class="service-tile-box">
+          <div class="tile-left-content">
+            <div class="tile-icon-circle icon-bg-darkteal">
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <div class="tile-text-info">
+              <h4 class="tile-title">One Stop For All Kinds Of Travel Solutions</h4>
+              <p class="tile-desc">All your travel needs under one roof.</p>
+            </div>
+          </div>
+          <div class="tile-arrow-link">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
       </div>
 
-      <!-- VOYOGO SERVICES -->
-      <div class="model-group-block services-group-block">
-        <div class="services-header-row">
-          <span class="franchise-pill-badge green-badge">VOYOGO SERVICES</span>
-          <span class="services-header-subtitle">(What Kind of Services VOYOGO Offered to our Customers)</span>
-        </div>
-
-        <div class="voyogo-services-list-grid">
-          <div class="voyogo-service-item">
-            <i class="fa-solid fa-plane service-icon"></i>
-            <span>International Holiday Packages</span>
+      <!-- Bottom Green Objective Bar with Target & Flight Trail (Exactly as in Image 1) -->
+      <div class="services-objective-bar">
+        <div class="objective-left-wrap">
+          <div class="objective-target-circle">
+            <i class="fa-solid fa-bullseye"></i>
           </div>
-          <div class="voyogo-service-item">
-            <i class="fa-solid fa-plane service-icon"></i>
-            <span>Flight Ticketing</span>
-          </div>
-          <div class="voyogo-service-item">
-            <i class="fa-solid fa-plane service-icon"></i>
-            <span>Domestic Holiday Packages</span>
-          </div>
-          <div class="voyogo-service-item">
-            <i class="fa-solid fa-plane service-icon"></i>
-            <span>Hotel Reservations</span>
-          </div>
-          <div class="voyogo-service-item">
-            <i class="fa-solid fa-plane service-icon"></i>
-            <span>Fixed Group Departures</span>
-          </div>
-          <div class="voyogo-service-item">
-            <i class="fa-solid fa-plane service-icon"></i>
-            <span>Travel Insurance</span>
-          </div>
-          <div class="voyogo-service-item">
-            <i class="fa-solid fa-plane service-icon"></i>
-            <span>Customized FIT Holidays</span>
-          </div>
-          <div class="voyogo-service-item">
-            <i class="fa-solid fa-plane service-icon"></i>
-            <span>Forex Assistance</span>
-          </div>
-          <div class="voyogo-service-item">
-            <i class="fa-solid fa-plane service-icon"></i>
-            <span>Visa Assistance</span>
-          </div>
-          <div class="voyogo-service-item">
-            <i class="fa-solid fa-plane service-icon"></i>
-            <span>Corporate Travel Solutions</span>
-          </div>
-          <div class="voyogo-service-item">
-            <i class="fa-solid fa-plane service-icon"></i>
-            <span>International Cruise Booking</span>
-          </div>
-          <div class="voyogo-service-item">
-            <i class="fa-solid fa-plane service-icon"></i>
-            <span>One Stop For All Kinds Of Travel Solutions</span>
+          <div class="objective-message">
+            <span class="objective-strong">Our objective is to deliver world-class travel experiences</span>
+            <span class="objective-sub">through standardised processes and exceptional customer service.</span>
           </div>
         </div>
 
-        <!-- Bottom Objective Statement -->
-        <div class="model-bottom-objective">
-          <i class="fa-solid fa-bullseye objective-icon"></i>
-          <span><strong>Our objective</strong> is to deliver world-class travel experiences through standardised processes and exceptional customer service.</span>
+        <!-- Dashed Flight Path & Airplane on right -->
+        <div class="objective-flight-path">
+          <svg viewBox="0 0 140 40" fill="none">
+            <path d="M 10,35 Q 70,-5 130,20" stroke="#16a34a" stroke-width="2" stroke-dasharray="4,4" fill="none"/>
+          </svg>
+          <i class="fa-solid fa-plane objective-mini-plane"></i>
         </div>
       </div>
 
@@ -1271,7 +1872,7 @@ function toggleStep5Associations(show) {
 
 function switchVmTab(tabId) {
   // Update Tab Buttons
-  document.querySelectorAll('.vm-tab-btn').forEach(btn => {
+  document.querySelectorAll('.vm-tab-btn, .vm-nav-pill').forEach(btn => {
     if (btn.getAttribute('data-tab') === tabId) {
       btn.classList.add('active');
     } else {
@@ -1290,7 +1891,6 @@ function switchVmTab(tabId) {
   } else if (tabId === 'mission') {
     const missionPane = document.getElementById('vmTabMission');
     if (missionPane) missionPane.classList.add('active');
-  }
 }
 </script>
 

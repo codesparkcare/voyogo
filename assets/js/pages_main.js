@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
       pageContext = 'visa';
     } else if (firstSlideStyle.includes('/holidays/')) {
       pageContext = 'holidays';
+    } else if (firstSlideStyle.includes('FRANCHISE') || heroSection.classList.contains('franchise-hero-section')) {
+      pageContext = 'franchise';
     }
 
     // Dynamic Slide Content Data per page - Each slide has unique content & 4 unique pills
