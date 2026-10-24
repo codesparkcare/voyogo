@@ -195,6 +195,39 @@
         </div>
     </header>
 
+    <?php if (isset($active_page) && in_array($active_page, array('holidays', 'visa', 'forex', 'cruises', 'cabs'))): ?>
+        <!-- Mobile Services Horizontal Pill Navigation Bar -->
+        <nav class="vy-mobile-services-bar" aria-label="Services Navigation">
+            <div class="vy-services-bar-inner">
+                <a href="<?php echo function_exists('site_url') ? site_url('holidays') : '/holidays'; ?>"
+                    class="vy-mobile-nav-link <?php echo ($active_page == 'holidays') ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-umbrella-beach"></i>
+                    <span>Holidays</span>
+                </a>
+                <a href="<?php echo function_exists('site_url') ? site_url('visa') : '/visa'; ?>"
+                    class="vy-mobile-nav-link <?php echo ($active_page == 'visa') ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-passport"></i>
+                    <span>Visas</span>
+                </a>
+                <a href="<?php echo function_exists('site_url') ? site_url('forex') : '/forex'; ?>"
+                    class="vy-mobile-nav-link <?php echo ($active_page == 'forex') ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-money-bill-transfer"></i>
+                    <span>Forex</span>
+                </a>
+                <a href="<?php echo function_exists('site_url') ? site_url('cruises') : '/cruises'; ?>"
+                    class="vy-mobile-nav-link <?php echo ($active_page == 'cruises') ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-ship"></i>
+                    <span>Cruises</span>
+                </a>
+                <a href="<?php echo function_exists('site_url') ? site_url('cabs') : '/cabs'; ?>"
+                    class="vy-mobile-nav-link <?php echo ($active_page == 'cabs') ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-taxi"></i>
+                    <span>Cabs</span>
+                </a>
+            </div>
+        </nav>
+    <?php endif; ?>
+
     <?php if (isset($this->session) && ($this->session->flashdata('success') || $this->session->flashdata('error'))): ?>
         <div id="globalFlashToast"
             style="position: fixed; top: 25px; right: 25px; z-index: 999999; max-width: 420px; box-shadow: 0 12px 35px rgba(0,0,0,0.2); border-radius: 12px; overflow: hidden; animation: fadeIn 0.3s ease;">
@@ -325,8 +358,8 @@
             </div>
 
             <div style="margin-top: 18px; text-align: center; font-size: 11.5px; color: #94a3b8;">
-                By continuing, you agree to Voyogo's <a href="#" style="color: #78B722; text-decoration: none;">Terms of
-                    Service</a> & <a href="#" style="color: #78B722; text-decoration: none;">Privacy Policy</a>.
+                By continuing, you agree to Voyogo's <a href="<?php echo site_url('terms-of-use'); ?>" target="_blank" style="color: #78B722; text-decoration: none;">Terms of
+                    Service</a> & <a href="<?php echo site_url('privacy'); ?>" target="_blank" style="color: #78B722; text-decoration: none;">Privacy Policy</a>.
             </div>
         </div>
     </div>

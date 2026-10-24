@@ -39,6 +39,27 @@ $route['forex']    = 'forex';
 $route['cruises']  = 'cruises';
 $route['cabs']     = 'cabs';
 
+/* Voyogo Legal, Policies & Support Routes (Sidebar Tab System) */
+$route['terms']                          = 'policy/index/terms';
+$route['terms-and-conditions']           = 'policy/index/terms';
+$route['privacy']                        = 'policy/index/privacy';
+$route['privacy-policy']                 = 'policy/index/privacy';
+$route['cancellation-policy']            = 'policy/index/cancellation';
+$route['refund-policy']                  = 'policy/index/cancellation';
+$route['change-cancellation-policy']     = 'policy/index/change-cancellation';
+$route['flight-cancellation-policy']     = 'policy/index/flight-policy';
+$route['flight-rescheduling-policy']     = 'policy/index/flight-policy';
+$route['terms-of-use']                   = 'policy/index/terms-of-use';
+$route['disclaimer']                     = 'policy/index/disclaimer';
+$route['faq']                            = 'policy/index/faq';
+$route['faqs']                           = 'policy/index/faq';
+$route['help']                           = 'policy/index/faq';
+$route['support-center']                 = 'policy/index/support';
+$route['branches']                       = 'policy/index/branches';
+$route['bank-accounts']                  = 'policy/index/branches';
+$route['policy']                         = 'policy/index';
+$route['policy/(:any)']                  = 'policy/index/$1';
+
 /* Voyogo Super Admin Routes */
 $route['admin'] = 'admin/index';
 $route['admin/login'] = 'admin/login';

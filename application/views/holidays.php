@@ -169,8 +169,8 @@
               </div>
 
               <!-- No. of People & Submit -->
-              <div style="display: flex; gap: 12px; align-items: center;">
-                <div class="ref-input-box" style="flex: 1;">
+              <div class="holidays-submit-row">
+                <div class="ref-input-box">
                   <i class="fa-solid fa-users ref-input-icon"></i>
                   <select name="passengers" class="ref-select" required>
                     <option value="" disabled selected>No. of People *</option>
@@ -180,7 +180,7 @@
                     <option value="6+ People (Group)">6+ People (Group)</option>
                   </select>
                 </div>
-                <button type="submit" class="ref-btn-submit" style="flex-shrink: 0;">
+                <button type="submit" class="ref-btn-submit">
                   <i class="fa-solid fa-paper-plane"></i> SEND ENQUIRY
                 </button>
               </div>

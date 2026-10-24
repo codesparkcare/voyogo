@@ -2146,6 +2146,14 @@ class Welcome extends CI_Controller {
         );
 
         $this->db->insert('visa_enquiries', $data);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array(
+                'status'  => 'success',
+                'badge'   => 'Visa Consultation Confirmed',
+                'message' => 'Thank you! Your Visa Application enquiry has been received. Our visa specialist will contact you shortly with checklist and processing details.'
+            ));
+            return;
+        }
         $this->session->set_flashdata('success_msg', 'Your Visa Application enquiry has been received! Our visa specialist will contact you shortly.');
         redirect($this->input->server('HTTP_REFERER') ?: 'visa');
     }
@@ -2205,6 +2213,14 @@ class Welcome extends CI_Controller {
         );
 
         $this->db->insert('cab_enquiries', $data);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array(
+                'status'  => 'success',
+                'badge'   => 'Cab Booking Confirmed',
+                'message' => 'Thank you! Your Cab Booking enquiry has been received. Our transport team will confirm vehicle availability and driver details shortly.'
+            ));
+            return;
+        }
         $this->session->set_flashdata('success_msg', 'Your Cab Booking enquiry has been received! Our transport team will confirm vehicle availability shortly.');
         redirect($this->input->server('HTTP_REFERER') ?: 'cabs');
     }
@@ -2256,6 +2272,14 @@ class Welcome extends CI_Controller {
         );
 
         $this->db->insert('holiday_enquiries', $data);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array(
+                'status'  => 'success',
+                'badge'   => 'Holiday Enquiry Confirmed',
+                'message' => 'Thank you! Your Holiday Package enquiry has been received. Our tour expert will provide a custom itinerary shortly.'
+            ));
+            return;
+        }
         $this->session->set_flashdata('success_msg', 'Your Holiday Package enquiry has been received! Our tour expert will provide a custom itinerary shortly.');
         redirect($this->input->server('HTTP_REFERER') ?: 'holidays');
     }
@@ -2307,6 +2331,14 @@ class Welcome extends CI_Controller {
         );
 
         $this->db->insert('forex_enquiries', $data);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array(
+                'status'  => 'success',
+                'badge'   => 'Forex Order Confirmed',
+                'message' => 'Thank you! Your Forex Order enquiry has been received. Our forex desk will call you with live locked currency rates.'
+            ));
+            return;
+        }
         $this->session->set_flashdata('success_msg', 'Your Forex Order enquiry has been received! Our forex desk will call you with live locked rates.');
         redirect($this->input->server('HTTP_REFERER') ?: 'forex');
     }
@@ -2360,6 +2392,14 @@ class Welcome extends CI_Controller {
         );
 
         $this->db->insert('cruise_enquiries', $data);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array(
+                'status'  => 'success',
+                'badge'   => 'Cruise Vacation Confirmed',
+                'message' => 'Thank you! Your Cruise Vacation enquiry has been received. Our cruise specialist will send available stateroom options shortly.'
+            ));
+            return;
+        }
         $this->session->set_flashdata('success_msg', 'Your Cruise Vacation enquiry has been received! Our cruise specialist will send available stateroom options shortly.');
         redirect($this->input->server('HTTP_REFERER') ?: 'cruises');
     }

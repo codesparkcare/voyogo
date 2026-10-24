@@ -142,14 +142,17 @@ class Franchise extends CI_Controller {
 
         // Also insert into generic enquiries table if it exists
         if ($this->db->table_exists('enquiries')) {
-            $this->db->insert('enquiries', array(
-                'name'         => $client_name,
-                'email'        => $email,
-                'phone'        => $formatted_phone,
-                'package_name' => 'Franchise Opportunity (' . ($city ?: 'All India') . ')',
-                'message'      => "State: {$state} | Location: {$preferred_location} | Timeline: {$start_timeline} | Business: {$current_profession} | Associations: {$associations_str} | Note: {$message}",
-                'created_at'   => date('Y-m-d H:i:s')
-            ));
+            $generic_data = array(
+                'name'       => $client_name,
+                'email'      => $email,
+                'phone'      => $formatted_phone,
+                'message'    => "Franchise Opportunity ({$city}) | State: {$state} | Location: {$preferred_location} | Timeline: {$start_timeline} | Business: {$current_profession} | Associations: {$associations_str} | Note: {$message}",
+                'created_at' => date('Y-m-d H:i:s')
+            );
+            if ($this->db->field_exists('package_name', 'enquiries')) {
+                $generic_data['package_name'] = 'Franchise Opportunity (' . ($city ?: 'All India') . ')';
+            }
+            $this->db->insert('enquiries', $generic_data);
         }
 
         if ($this->input->is_ajax_request()) {
