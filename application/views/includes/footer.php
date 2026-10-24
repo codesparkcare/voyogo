@@ -33,11 +33,9 @@
                     
                     <!-- Column 1: Brand Info -->
                     <div class="footer-col footer-about">
-                        <div class="brand-logo" style="margin-bottom: 16px;">
-                            <a href="<?php echo function_exists('site_url') ? site_url('/') : '/'; ?>" style="display: inline-block;">
-                                <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())) : './assets/images/logo.png'; ?>" alt="Voyogo Logo" style="max-height: 48px; width: auto;">
-                            </a>
-                        </div>
+                        <a href="<?php echo function_exists('site_url') ? site_url('/') : '/'; ?>" class="brand-logo footer-brand-logo" style="display: inline-flex; margin-bottom: 16px;">
+                            <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())) : './assets/images/logo.png'; ?>" alt="Voyogo Logo" style="max-height: 48px; width: auto; object-fit: contain;">
+                        </a>
                         <p>Voyogo is India's leading online travel company offering great deals on flight bookings, hotel reservations, holiday packages, visas, and forex services. Book cheap domestic & international air tickets with ease.</p>
                         <div class="social-icons-row">
                             <a href="https://www.facebook.com/voyogos" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-icon social-fb"><i class="fa-brands fa-facebook-f"></i></a>
