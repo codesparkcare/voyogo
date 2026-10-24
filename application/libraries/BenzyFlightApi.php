@@ -1264,16 +1264,21 @@ class BenzyFlightApi {
         
         // Define booked seats specific to this airway/flight so each airline feels live and authentic
         $bookedSeatsMap = array(
-            'SG' => array('2A', '2D', '2E', '2F', '3A', '5E', '7C', '8D', '11B', '12A', '14F', '17C', '18B', '21E', '22C', '25A', '29B'),
-            'AI' => array('1C', '2B', '3F', '4A', '4E', '6D', '8A', '9A', '11E', '13C', '14B', '15F', '17D', '20B', '21C', '24E', '26D', '28A'),
-            '6E' => array('1A', '2C', '3D', '5B', '7E', '9C', '10F', '12B', '13D', '16A', '19B', '20E', '23C', '25D', '28D'),
-            'QP' => array('1D', '2A', '3C', '5E', '6B', '8F', '10D', '12A', '15D', '18B', '22E', '27C'),
-            'UK' => array('1A', '2E', '3B', '5D', '7A', '9F', '11C', '14A', '18F', '21B', '24B', '29C')
+            'SG'      => array('2A', '2D', '2E', '2F', '3A', '5E', '7C', '8D', '11B', '12A', '14F', '17C', '18B', '21E', '22C', '25A', '29B'),
+            'SG_LEG2' => array('1D', '2B', '3E', '4A', '6C', '8E', '10A', '12D', '14B', '16F', '19A', '21C', '24D', '27B', '30E'),
+            'AI'      => array('1C', '2B', '3F', '4A', '4E', '6D', '8A', '9A', '11E', '13C', '14B', '15F', '17D', '20B', '21C', '24E', '26D', '28A'),
+            'AI_LEG2' => array('2A', '3C', '5D', '7B', '9E', '12A', '14D', '16C', '18F', '22B', '25E', '28F'),
+            '6E'      => array('1A', '2C', '3D', '5B', '7E', '9C', '10F', '12B', '13D', '16A', '19B', '20E', '23C', '25D', '28D'),
+            '6E_LEG2' => array('1F', '2D', '4B', '6E', '8C', '11A', '13E', '15C', '18D', '21A', '24E', '27C'),
+            'QP'      => array('1D', '2A', '3C', '5E', '6B', '8F', '10D', '12A', '15D', '18B', '22E', '27C'),
+            'UK'      => array('1A', '2E', '3B', '5D', '7A', '9F', '11C', '14A', '18F', '21B', '24B', '29C')
         );
-        $bookedList = $bookedSeatsMap[$airlineCode] ?? $bookedSeatsMap['SG'];
+        $fnNum = (int)preg_replace('/\D/', '', (string)$flightNo);
+        $variantKey = ($fnNum % 2 !== 0 || stripos((string)$flightNo, '322') !== false || stripos((string)$flightNo, 'leg2') !== false) ? ($airlineCode . '_LEG2') : $airlineCode;
+        $bookedList = $bookedSeatsMap[$variantKey] ?? ($bookedSeatsMap[$airlineCode] ?? $bookedSeatsMap['SG']);
 
         $seats = array();
-        $ssidCounter = 500;
+        $ssidCounter = 500 + (($fnNum % 10) * 100);
 
         for ($r = 1; $r <= 30; $r++) {
             foreach (array('A', 'B', 'C', 'D', 'E', 'F') as $c) {

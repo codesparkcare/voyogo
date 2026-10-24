@@ -1086,6 +1086,23 @@
                     <input type="hidden" name="duration" value="<?php echo htmlspecialchars($flight['duration'] ?? ''); ?>">
                     <input type="hidden" name="stops" value="<?php echo htmlspecialchars($flight['stops'] ?? 0); ?>">
                     <input type="hidden" name="via" value="<?php echo htmlspecialchars($flight['via'] ?? ''); ?>">
+
+                    <?php if ($isOnwardConnecting && !empty($segData)): ?>
+                    <input type="hidden" name="leg1_flight_number" value="<?php echo htmlspecialchars($segData['leg1_fn']); ?>">
+                    <input type="hidden" name="leg1_origin" value="<?php echo htmlspecialchars($segData['from_code']); ?>">
+                    <input type="hidden" name="leg1_destination" value="<?php echo htmlspecialchars($segData['via_code']); ?>">
+                    <input type="hidden" name="leg1_dep_time" value="<?php echo htmlspecialchars($segData['leg1_dep']); ?>">
+                    <input type="hidden" name="leg1_arr_time" value="<?php echo htmlspecialchars($segData['leg1_arr']); ?>">
+                    <input type="hidden" name="leg1_duration" value="<?php echo htmlspecialchars($segData['leg1_duration']); ?>">
+
+                    <input type="hidden" name="leg2_flight_number" value="<?php echo htmlspecialchars($segData['leg2_fn']); ?>">
+                    <input type="hidden" name="leg2_origin" value="<?php echo htmlspecialchars($segData['via_code']); ?>">
+                    <input type="hidden" name="leg2_destination" value="<?php echo htmlspecialchars($segData['to_code']); ?>">
+                    <input type="hidden" name="leg2_dep_time" value="<?php echo htmlspecialchars($segData['leg2_dep']); ?>">
+                    <input type="hidden" name="leg2_arr_time" value="<?php echo htmlspecialchars($segData['leg2_arr']); ?>">
+                    <input type="hidden" name="leg2_duration" value="<?php echo htmlspecialchars($segData['leg2_duration']); ?>">
+                    <?php endif; ?>
+
                     <input type="hidden" name="net_amount" value="<?php echo htmlspecialchars($fBaseFare); ?>">
                     <input type="hidden" name="base_fare" id="form_base_fare" value="<?php echo htmlspecialchars($fBaseFare); ?>">
                     <input type="hidden" name="taxes" value="<?php echo htmlspecialchars($fTaxes); ?>">
@@ -1128,6 +1145,22 @@
                     <input type="hidden" name="return_duration" value="<?php echo htmlspecialchars($return_flight['duration']); ?>">
                     <input type="hidden" name="return_stops" value="<?php echo htmlspecialchars($return_flight['stops'] ?? 0); ?>">
                     <input type="hidden" name="return_via" value="<?php echo htmlspecialchars($return_flight['via'] ?? ''); ?>">
+
+                    <?php if (!empty($return_flight['stops']) && (int)$return_flight['stops'] > 0 && !empty($retSegData)): ?>
+                    <input type="hidden" name="ret_leg1_flight_number" value="<?php echo htmlspecialchars($retSegData['leg1_fn']); ?>">
+                    <input type="hidden" name="ret_leg1_origin" value="<?php echo htmlspecialchars($retSegData['from_code']); ?>">
+                    <input type="hidden" name="ret_leg1_destination" value="<?php echo htmlspecialchars($retSegData['via_code']); ?>">
+                    <input type="hidden" name="ret_leg1_dep_time" value="<?php echo htmlspecialchars($retSegData['leg1_dep']); ?>">
+                    <input type="hidden" name="ret_leg1_arr_time" value="<?php echo htmlspecialchars($retSegData['leg1_arr']); ?>">
+                    <input type="hidden" name="ret_leg1_duration" value="<?php echo htmlspecialchars($retSegData['leg1_duration']); ?>">
+
+                    <input type="hidden" name="ret_leg2_flight_number" value="<?php echo htmlspecialchars($retSegData['leg2_fn']); ?>">
+                    <input type="hidden" name="ret_leg2_origin" value="<?php echo htmlspecialchars($retSegData['via_code']); ?>">
+                    <input type="hidden" name="ret_leg2_destination" value="<?php echo htmlspecialchars($retSegData['to_code']); ?>">
+                    <input type="hidden" name="ret_leg2_dep_time" value="<?php echo htmlspecialchars($retSegData['leg2_dep']); ?>">
+                    <input type="hidden" name="ret_leg2_arr_time" value="<?php echo htmlspecialchars($retSegData['leg2_arr']); ?>">
+                    <input type="hidden" name="ret_leg2_duration" value="<?php echo htmlspecialchars($retSegData['leg2_duration']); ?>">
+                    <?php endif; ?>
                     <?php endif; ?>
 
                     <input type="hidden" name="ssr_baggage_code" id="ssr_baggage_code" value="">

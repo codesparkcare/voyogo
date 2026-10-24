@@ -147,23 +147,25 @@ if (!function_exists('buildConnectingFlightSegments')) {
         $leg2Dep = minsToTimeStr($leg2DepMins);
         $leg2Arr = $flt['arrival_time'] ?? '12:45';
 
-        $fromCode = strtoupper($flt['from_code'] ?? 'DEL');
-        $toCode = strtoupper($flt['to_code'] ?? 'BOM');
-        $viaCode = !empty($flt['via']) ? strtoupper($flt['via']) : 'HYD';
+        $fromCode = strtoupper($flt['from_code'] ?? ($flt['leg1_origin'] ?? 'DEL'));
+        $toCode = strtoupper($flt['to_code'] ?? ($flt['leg2_destination'] ?? 'BOM'));
+        $viaCode = !empty($flt['via']) ? strtoupper($flt['via']) : (!empty($flt['leg1_destination']) ? strtoupper($flt['leg1_destination']) : 'GOX');
         if ($viaCode === $fromCode || $viaCode === $toCode) {
-            $viaCode = ($fromCode === 'HYD' || $toCode === 'HYD') ? 'BHO' : 'HYD';
+            $viaCode = ($fromCode === 'GOX' || $toCode === 'GOX') ? 'HYD' : 'GOX';
         }
 
         $fromInfo = $airportDb[$fromCode] ?? array('city' => ($flt['from_city'] ?? $fromCode), 'name' => ($flt['from_airport'] ?? $fromCode . ' Airport'), 'country' => 'India', 'terminal' => ($flt['from_terminal'] ?? 'Terminal 2'));
         $toInfo = $airportDb[$toCode] ?? array('city' => ($flt['to_city'] ?? $toCode), 'name' => ($flt['to_airport'] ?? $toCode . ' Airport'), 'country' => 'India', 'terminal' => ($flt['to_terminal'] ?? 'Terminal 1'));
-        $viaInfo = $airportDb[$viaCode] ?? array('city' => $viaCode, 'name' => $viaCode . ' Airport', 'country' => 'India', 'terminal' => 'Terminal 1');
+        $viaInfo = $airportDb[$viaCode] ?? array('city' => ($airportDb[$viaCode]['city'] ?? $viaCode), 'name' => ($airportDb[$viaCode]['name'] ?? $viaCode . ' Airport'), 'country' => 'India', 'terminal' => 'Terminal 1');
 
-        $fn1 = $flt['flight_number'] ?? '6E-5021';
-        $fn2 = $fn1;
-        if (preg_match('/^([A-Z0-9]{2})[-\s]?(\d+)$/i', trim($fn1), $fnM)) {
-            $fn2 = strtoupper($fnM[1]) . '-' . ((int)$fnM[2] + 18);
-        } else {
-            $fn2 = $fn1 . 'B';
+        $fn1 = $flt['leg1_flight_number'] ?? ($flt['flight_number'] ?? 'SG-304');
+        $fn2 = $flt['leg2_flight_number'] ?? '';
+        if (empty($fn2)) {
+            if (preg_match('/^([A-Z0-9]{2})[-\s]?(\d+)$/i', trim($fn1), $fnM)) {
+                $fn2 = strtoupper($fnM[1]) . '-' . ((int)$fnM[2] + 18);
+            } else {
+                $fn2 = $fn1 . 'B';
+            }
         }
 
         return array(
@@ -203,8 +205,9 @@ $toCode        = $flight['to_code'] ?? 'BOM';
 $toAirport     = $flight['to_airport'] ?? 'Chhatrapati Shivaji Maharaj International Airport, Mumbai';
 $toTerminal    = $flight['to_terminal'] ?? 'Terminal 2';
 $flightDuration = $flight['duration'] ?? '05h 30m';
-$flightStops   = (int)($flight['stops'] ?? 0);
+$flightStops   = (int)($flight['stops'] ?? ($post_data['stops'] ?? 0));
 $isOnwardConnecting = ($flightStops > 0);
+$segData = $isOnwardConnecting ? buildConnectingFlightSegments(array_merge($flight, $post_data), $airportDb) : null;
 $isRefundable  = !empty($flight['refundable']);
 if (isset($post_data['refundable'])) {
     $isRefundable = ($post_data['refundable'] === '1' || $post_data['refundable'] === 1 || $post_data['refundable'] === true || $post_data['refundable'] === 'true');
@@ -226,10 +229,11 @@ $retToCity     = $return_flight['to_city'] ?? $fromCity;
 $retToCode     = $return_flight['to_code'] ?? $fromCode;
 $retToAirport  = $return_flight['to_airport'] ?? $fromAirport;
 $retToTerminal = $return_flight['to_terminal'] ?? $fromTerminal;
-$retDuration   = $return_flight['duration'] ?? '05h 15m';
-$retStops      = (int)($return_flight['stops'] ?? 0);
+$retStops      = (int)($return_flight['stops'] ?? ($post_data['return_stops'] ?? 0));
 $isReturnConnecting = ($retStops > 0);
+$retSegData = $isReturnConnecting ? buildConnectingFlightSegments(array_merge($return_flight ?: array(), $post_data), $airportDb) : null;
 $retIsRefundable = !empty($return_flight['refundable']);
+
 if (isset($post_data['return_refundable'])) {
     $retIsRefundable = ($post_data['return_refundable'] === '1' || $post_data['return_refundable'] === 1 || $post_data['return_refundable'] === true || $post_data['return_refundable'] === 'true');
 }
@@ -1168,7 +1172,8 @@ body {
 
                     <?php if ($isOnwardConnecting): ?>
                         <!-- 1+ Stop Connecting Flight View (Screenshot 2 Match) -->
-                        <?php $segData = buildConnectingFlightSegments($flight, $airportDb); ?>
+                        <?php if (empty($segData)) { $segData = buildConnectingFlightSegments(array_merge($flight, $post_data), $airportDb); } ?>
+
                         
                         <!-- Segment 1 (Origin -> Layover) -->
                         <div style="padding-top: 6px;">
@@ -1525,6 +1530,38 @@ body {
                                         $paxRetSeatCode = $returnSeatCode;
                                         $paxRetSeatAmt = (float)$returnSeatAmt;
                                     }
+                                    // Leg 2 Seat
+                                    $paxLeg2SeatCode = '';
+                                    $paxLeg2SeatAmt = 0;
+                                    if (isset($post_data['leg2_passenger_seat_data'][$pIdx]['code']) && !empty($post_data['leg2_passenger_seat_data'][$pIdx]['code'])) {
+                                        $paxLeg2SeatCode = $post_data['leg2_passenger_seat_data'][$pIdx]['code'];
+                                        $paxLeg2SeatAmt  = (float)($post_data['leg2_passenger_seat_data'][$pIdx]['amount'] ?? 0);
+                                    } elseif (isset($post_data['leg2_passenger_seat'][$pIdx]) && !empty($post_data['leg2_passenger_seat'][$pIdx])) {
+                                        $paxLeg2SeatCode = $post_data['leg2_passenger_seat'][$pIdx];
+                                        $paxLeg2SeatAmt  = (float)($post_data['leg2_passenger_seat_price'][$pIdx] ?? 0);
+                                    }
+
+                                    // Leg 2 Meal
+                                    $paxLeg2MealDesc = '';
+                                    $paxLeg2MealAmt = 0;
+                                    if (isset($post_data['leg2_passenger_meal_name'][$pIdx]) && !empty($post_data['leg2_passenger_meal_name'][$pIdx])) {
+                                        $paxLeg2MealDesc = $post_data['leg2_passenger_meal_name'][$pIdx];
+                                        $paxLeg2MealAmt  = (float)($post_data['leg2_passenger_meal_price'][$pIdx] ?? 0);
+                                    } elseif (isset($post_data['leg2_passenger_meal'][$pIdx]) && !empty($post_data['leg2_passenger_meal'][$pIdx])) {
+                                        $paxLeg2MealDesc = $post_data['leg2_passenger_meal'][$pIdx];
+                                        $paxLeg2MealAmt  = (float)($post_data['leg2_passenger_meal_price'][$pIdx] ?? 0);
+                                    }
+
+                                    // Leg 2 Baggage
+                                    $paxLeg2BaggageDesc = '';
+                                    $paxLeg2BaggageAmt = 0;
+                                    if (isset($post_data['leg2_passenger_baggage_desc'][$pIdx]) && !empty($post_data['leg2_passenger_baggage_desc'][$pIdx])) {
+                                        $paxLeg2BaggageDesc = $post_data['leg2_passenger_baggage_desc'][$pIdx];
+                                        $paxLeg2BaggageAmt  = (float)($post_data['leg2_passenger_baggage_price'][$pIdx] ?? 0);
+                                    } elseif (isset($post_data['leg2_passenger_baggage'][$pIdx]) && !empty($post_data['leg2_passenger_baggage'][$pIdx])) {
+                                        $paxLeg2BaggageDesc = $post_data['leg2_passenger_baggage'][$pIdx];
+                                        $paxLeg2BaggageAmt  = (float)($post_data['leg2_passenger_baggage_price'][$pIdx] ?? 0);
+                                    }
                                 ?>
                                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 12px;">
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -1552,6 +1589,32 @@ body {
 
                                     <!-- Baggage Tab View -->
                                     <div id="paxSubtab_baggage_<?php echo $pIdx; ?>" style="display: block;">
+                                        <?php if ($isOnwardConnecting && !empty($segData)): ?>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
+                                            <span><?php echo htmlspecialchars($segData['from_info']['city']); ?> &rarr; <?php echo htmlspecialchars($segData['via_info']['city']); ?> (<?php echo htmlspecialchars($segData['leg1_fn']); ?>)</span>
+                                            <span class="addon-status-pill">
+                                                <?php if ($isInfant): ?>
+                                                    <span style="color: #64748b;"><i class="fa-solid fa-baby" style="color: #f59e0b; margin-right: 4px;"></i> Infant lap baggage included</span>
+                                                <?php elseif (!empty($paxBaggageDesc)): ?>
+                                                    <i class="fa-solid fa-check"></i> <?php echo htmlspecialchars($paxBaggageDesc); ?> (₹ <?php echo number_format($paxBaggageAmt); ?>)
+                                                <?php else: ?>
+                                                    Standard 15 Kg Included
+                                                <?php endif; ?>
+                                            </span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
+                                            <span><?php echo htmlspecialchars($segData['via_info']['city']); ?> &rarr; <?php echo htmlspecialchars($segData['to_info']['city']); ?> (<?php echo htmlspecialchars($segData['leg2_fn']); ?>)</span>
+                                            <span class="addon-status-pill">
+                                                <?php if ($isInfant): ?>
+                                                    <span style="color: #64748b;"><i class="fa-solid fa-baby" style="color: #f59e0b; margin-right: 4px;"></i> Infant lap baggage included</span>
+                                                <?php elseif (!empty($paxLeg2BaggageDesc)): ?>
+                                                    <i class="fa-solid fa-check"></i> <?php echo htmlspecialchars($paxLeg2BaggageDesc); ?> (₹ <?php echo number_format($paxLeg2BaggageAmt); ?>)
+                                                <?php else: ?>
+                                                    Standard 15 Kg Included
+                                                <?php endif; ?>
+                                            </span>
+                                        </div>
+                                        <?php else: ?>
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
                                             <span><?php echo htmlspecialchars($fromCity); ?> &rarr; <?php echo htmlspecialchars($toCity); ?></span>
                                             <span class="addon-status-pill">
@@ -1564,6 +1627,7 @@ body {
                                                 <?php endif; ?>
                                             </span>
                                         </div>
+                                        <?php endif; ?>
                                         <?php if ($is_roundtrip): ?>
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155;">
                                             <span><?php echo htmlspecialchars($retFromCity); ?> &rarr; <?php echo htmlspecialchars($retToCity); ?></span>
@@ -1582,6 +1646,32 @@ body {
 
                                     <!-- Meal Tab View -->
                                     <div id="paxSubtab_meal_<?php echo $pIdx; ?>" style="display: none;">
+                                        <?php if ($isOnwardConnecting && !empty($segData)): ?>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
+                                            <span><?php echo htmlspecialchars($segData['from_info']['city']); ?> &rarr; <?php echo htmlspecialchars($segData['via_info']['city']); ?> (<?php echo htmlspecialchars($segData['leg1_fn']); ?>)</span>
+                                            <span class="addon-status-pill">
+                                                <?php if ($isInfant): ?>
+                                                    <span style="color: #64748b;"><i class="fa-solid fa-baby" style="color: #f59e0b; margin-right: 4px;"></i> Not applicable for lap infant</span>
+                                                <?php elseif (!empty($paxMealDesc)): ?>
+                                                    <i class="fa-solid fa-check"></i> <?php echo htmlspecialchars($paxMealDesc); ?> (₹ <?php echo number_format($paxMealAmt); ?>)
+                                                <?php else: ?>
+                                                    <span style="color: #64748b;">No meal pre-booked</span>
+                                                <?php endif; ?>
+                                            </span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
+                                            <span><?php echo htmlspecialchars($segData['via_info']['city']); ?> &rarr; <?php echo htmlspecialchars($segData['to_info']['city']); ?> (<?php echo htmlspecialchars($segData['leg2_fn']); ?>)</span>
+                                            <span class="addon-status-pill">
+                                                <?php if ($isInfant): ?>
+                                                    <span style="color: #64748b;"><i class="fa-solid fa-baby" style="color: #f59e0b; margin-right: 4px;"></i> Not applicable for lap infant</span>
+                                                <?php elseif (!empty($paxLeg2MealDesc)): ?>
+                                                    <i class="fa-solid fa-check"></i> <?php echo htmlspecialchars($paxLeg2MealDesc); ?> (₹ <?php echo number_format($paxLeg2MealAmt); ?>)
+                                                <?php else: ?>
+                                                    <span style="color: #64748b;">No meal pre-booked</span>
+                                                <?php endif; ?>
+                                            </span>
+                                        </div>
+                                        <?php else: ?>
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
                                             <span><?php echo htmlspecialchars($fromCity); ?> &rarr; <?php echo htmlspecialchars($toCity); ?></span>
                                             <span class="addon-status-pill">
@@ -1594,6 +1684,7 @@ body {
                                                 <?php endif; ?>
                                             </span>
                                         </div>
+                                        <?php endif; ?>
                                         <?php if ($is_roundtrip): ?>
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155;">
                                             <span><?php echo htmlspecialchars($retFromCity); ?> &rarr; <?php echo htmlspecialchars($retToCity); ?></span>
@@ -1612,6 +1703,32 @@ body {
 
                                     <!-- Seats Tab View -->
                                     <div id="paxSubtab_seats_<?php echo $pIdx; ?>" style="display: none;">
+                                        <?php if ($isOnwardConnecting && !empty($segData)): ?>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
+                                            <span><?php echo htmlspecialchars($segData['from_info']['city']); ?> &rarr; <?php echo htmlspecialchars($segData['via_info']['city']); ?> (<?php echo htmlspecialchars($segData['leg1_fn']); ?>)</span>
+                                            <span class="addon-status-pill">
+                                                <?php if ($isInfant): ?>
+                                                    <span style="color: #64748b;"><i class="fa-solid fa-baby" style="color: #f59e0b; margin-right: 4px;"></i> Travelling on adult's lap</span>
+                                                <?php elseif (!empty($paxSeatCode)): ?>
+                                                    <i class="fa-solid fa-check"></i> Seat <?php echo htmlspecialchars($paxSeatCode); ?> (₹ <?php echo number_format($paxSeatAmt); ?>)
+                                                <?php else: ?>
+                                                    <span style="color: #64748b;">Auto-assigned at check-in</span>
+                                                <?php endif; ?>
+                                            </span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
+                                            <span><?php echo htmlspecialchars($segData['via_info']['city']); ?> &rarr; <?php echo htmlspecialchars($segData['to_info']['city']); ?> (<?php echo htmlspecialchars($segData['leg2_fn']); ?>)</span>
+                                            <span class="addon-status-pill">
+                                                <?php if ($isInfant): ?>
+                                                    <span style="color: #64748b;"><i class="fa-solid fa-baby" style="color: #f59e0b; margin-right: 4px;"></i> Travelling on adult's lap</span>
+                                                <?php elseif (!empty($paxLeg2SeatCode)): ?>
+                                                    <i class="fa-solid fa-check"></i> Seat <?php echo htmlspecialchars($paxLeg2SeatCode); ?> (₹ <?php echo number_format($paxLeg2SeatAmt); ?>)
+                                                <?php else: ?>
+                                                    <span style="color: #64748b;">Auto-assigned at check-in</span>
+                                                <?php endif; ?>
+                                            </span>
+                                        </div>
+                                        <?php else: ?>
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155; margin-bottom: 6px;">
                                             <span><?php echo htmlspecialchars($fromCity); ?> &rarr; <?php echo htmlspecialchars($toCity); ?></span>
                                             <span class="addon-status-pill">
@@ -1624,6 +1741,7 @@ body {
                                                 <?php endif; ?>
                                             </span>
                                         </div>
+                                        <?php endif; ?>
                                         <?php if ($is_roundtrip): ?>
                                         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #334155;">
                                             <span><?php echo htmlspecialchars($retFromCity); ?> &rarr; <?php echo htmlspecialchars($retToCity); ?></span>
@@ -1709,7 +1827,8 @@ body {
 
                     <?php if ($isReturnConnecting): ?>
                         <!-- Return 1+ Stop Connecting Flight View (Screenshot 3 Match) -->
-                        <?php $retSegData = buildConnectingFlightSegments($return_flight, $airportDb); ?>
+                        <?php if (empty($retSegData)) { $retSegData = buildConnectingFlightSegments(array_merge($return_flight ?: array(), $post_data), $airportDb); } ?>
+
                         
                         <!-- Return Segment 1 (Origin -> Layover) -->
                         <div style="padding-top: 6px;">
