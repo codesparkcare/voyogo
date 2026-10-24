@@ -617,6 +617,24 @@
 <section class="franchise-vision-mission-section">
   <div class="container">
     
+    <script>
+      function switchVmTab(tabId) {
+        document.querySelectorAll('.vm-tab-btn, .vm-nav-pill').forEach(function(btn) {
+          if (btn.getAttribute('data-tab') === tabId) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+        document.querySelectorAll('.vm-tab-pane').forEach(function(pane) {
+          pane.classList.remove('active');
+        });
+        var targetPane = document.getElementById(tabId === 'vision' ? 'vmTabVision' : 'vmTabMission');
+        if (targetPane) targetPane.classList.add('active');
+      }
+      window.switchVmTab = switchVmTab;
+    </script>
+
     <!-- Top Tabs Switcher (Pill style matching Image 4) -->
     <div class="vm-tabs-nav-wrap">
       <div class="vm-tabs-nav">
@@ -1891,6 +1909,19 @@ function switchVmTab(tabId) {
   } else if (tabId === 'mission') {
     const missionPane = document.getElementById('vmTabMission');
     if (missionPane) missionPane.classList.add('active');
+  }
 }
+window.switchVmTab = switchVmTab;
+
+// Event delegation for Vision & Mission tabs
+document.addEventListener('click', function(e) {
+  const pill = e.target.closest('.vm-nav-pill, .vm-tab-btn');
+  if (pill) {
+    const tab = pill.getAttribute('data-tab');
+    if (tab && typeof window.switchVmTab === 'function') {
+      window.switchVmTab(tab);
+    }
+  }
+});
 </script>
 
