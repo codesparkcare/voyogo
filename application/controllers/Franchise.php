@@ -1342,13 +1342,20 @@ class Franchise extends CI_Controller {
             }
         }
 
+        $intlAirports = array('DXB', 'SHJ', 'DOH', 'SIN', 'BKK', 'KUL', 'LHR', 'JFK', 'AUH', 'MCT', 'KWI', 'BAH', 'CMB', 'DAC', 'KTM');
+        $isIntl = in_array($from_code, $intlAirports, true) || in_array($to_code, $intlAirports, true);
+
+        $onwardFeatures = $this->benzyflightapi->getAirlineFeatures($onwardAirline, $isIntl);
+        $returnFeatures = $is_roundtrip ? $this->benzyflightapi->getAirlineFeatures($returnAirline, $isIntl) : null;
+
         $allSectors = array_merge($onwardSegments, $returnSegments);
         $addonsData = array();
 
         foreach ($allSectors as $sec) {
-            $secAirline = $sec['airline_code'];
-            $secTui     = ($sec['journey_type'] === 'return') ? $returnTui : $onwardTui;
-            $secIndex   = ($sec['journey_type'] === 'return') ? $returnIndex : $onwardIndex;
+            $secAirline  = $sec['airline_code'];
+            $secTui      = ($sec['journey_type'] === 'return') ? $returnTui : $onwardTui;
+            $secIndex    = ($sec['journey_type'] === 'return') ? $returnIndex : $onwardIndex;
+            $secFeatures = ($sec['journey_type'] === 'return' && $returnFeatures) ? $returnFeatures : $onwardFeatures;
 
             $secSSRRaw = $this->benzyflightapi->getSSR($secTui, $sec['origin'], $sec['destination'], $secAirline, $sec['flight_number'], $addonSearchTui, $secIndex);
             $secParsedSSR = $this->benzyflightapi->parseSSRForDisplay($secSSRRaw, $secAirline);
@@ -1356,33 +1363,57 @@ class Franchise extends CI_Controller {
             $secSeatsRaw = $this->benzyflightapi->getSeatLayout($secTui, $secAirline, $sec['flight_number']);
             $secParsedSeats = $this->benzyflightapi->parseSeatLayoutForDisplay($secSeatsRaw);
 
+            // Parse sector duration
+            $durMins = 0;
+            if (preg_match('/(\d+)\s*h/i', $sec['duration'], $hM)) $durMins += (int)$hM[1] * 60;
+            if (preg_match('/(\d+)\s*m/i', $sec['duration'], $mM)) $durMins += (int)$mM[1];
+            $isShortSector = ($durMins > 0 && $durMins < 45);
+
+            $mealsAvailable = $secFeatures['has_meals'] && !$isShortSector && !empty($secParsedSSR['meals']);
+            $mealsNotice = '';
+            if (!$secFeatures['has_meals']) {
+                $mealsNotice = 'Pre-booked meals are not offered by ' . $sec['airline_name'] . ' on this route.';
+            } elseif ($isShortSector) {
+                $mealsNotice = 'In-flight meal service is not available on this short sector (' . $sec['duration'] . ') as per airline catering policy.';
+            }
+
+            // Transit / Connecting Baggage rule (Through-checked to final destination)
+            $isThroughBaggage = !$secFeatures['is_sectorwise_baggage'] && ($sec['stops'] > 0 || count($onwardSegments) > 1);
+
             $addonsData[$sec['key']] = array(
-                'key'              => $sec['key'],
-                'journey_type'     => $sec['journey_type'],
-                'segment_index'    => $sec['segment_index'],
-                'fuid'             => $sec['fuid'],
-                'airline_code'     => $secAirline,
-                'airline_name'     => $sec['airline_name'],
-                'flight_number'    => $sec['flight_number'],
-                'origin'           => $sec['origin'],
-                'origin_city'      => $sec['origin_city'],
-                'destination'      => $sec['destination'],
-                'destination_city' => $sec['destination_city'],
-                'departure_date'   => $sec['departure_date'],
-                'departure_time'   => $sec['departure_time'],
-                'arrival_time'     => $sec['arrival_time'],
-                'duration'         => $sec['duration'],
-                'stops'            => $sec['stops'],
-                'stops_label'      => $sec['stops_label'],
-                'date_label'       => $sec['date_label'],
-                'formatted_date'   => date('l, d M y', strtotime($sec['departure_date'])),
-                'tab_label'        => $sec['tab_label'],
-                'sub_banner_text'  => $sec['sub_banner_text'],
-                'meals'            => $secParsedSSR['meals'],
-                'baggage'          => $secParsedSSR['baggage'],
-                'priority'         => $secParsedSSR['priority'],
-                'seat_rows'        => $secParsedSeats['rows'],
-                'seats_flat'       => $secParsedSeats['seats']
+                'key'                => $sec['key'],
+                'journey_type'       => $sec['journey_type'],
+                'segment_index'      => $sec['segment_index'],
+                'fuid'               => $sec['fuid'],
+                'airline_code'       => $secAirline,
+                'airline_name'       => $sec['airline_name'],
+                'flight_number'      => $sec['flight_number'],
+                'origin'             => $sec['origin'],
+                'origin_city'        => $sec['origin_city'],
+                'destination'        => $sec['destination'],
+                'destination_city'   => $sec['destination_city'],
+                'departure_date'     => $sec['departure_date'],
+                'departure_time'     => $sec['departure_time'],
+                'arrival_time'       => $sec['arrival_time'],
+                'duration'           => $sec['duration'],
+                'stops'              => $sec['stops'],
+                'stops_label'        => $sec['stops_label'],
+                'date_label'         => $sec['date_label'],
+                'formatted_date'     => date('l, d M y', strtotime($sec['departure_date'])),
+                'tab_label'          => $sec['tab_label'],
+                'sub_banner_text'    => $sec['sub_banner_text'],
+                'meals'              => $secParsedSSR['meals'],
+                'baggage'            => $secParsedSSR['baggage'],
+                'priority'           => $secParsedSSR['priority'],
+                'seat_rows'          => $secParsedSeats['rows'],
+                'seats_flat'         => $secParsedSeats['seats'],
+                'features'           => $secFeatures,
+                'meals_available'    => $mealsAvailable,
+                'meals_notice'       => $mealsNotice,
+                'is_through_baggage' => $isThroughBaggage,
+                'has_seats'          => $secFeatures['has_seats'],
+                'has_baggage'        => $secFeatures['has_baggage'],
+                'has_meals'          => $secFeatures['has_meals']
             );
         }
 
@@ -1395,9 +1426,11 @@ class Franchise extends CI_Controller {
             $keyedSectors[$sec['key']] = $sec;
         }
 
-        $data['addons_data']  = $addonsData;
-        $data['sectors_list'] = $keyedSectors;
-
+        $data['addons_data']             = $addonsData;
+        $data['sectors_list']            = $keyedSectors;
+        $data['airline_features']        = $onwardFeatures;
+        $data['return_airline_features'] = $returnFeatures;
+        $data['is_international']        = $isIntl;
 
         $data['flight_number']         = $flight_number;
         $data['airline_name']          = $airline_name;

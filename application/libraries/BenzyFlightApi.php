@@ -315,6 +315,69 @@ class BenzyFlightApi {
     }
 
     /**
+     * Get enabled features for a specific airline from WebSettings (PDF Page 5-15)
+     */
+    public function getAirlineFeatures($airlineCode = '', $isInternational = false) {
+        $airlineCode = strtoupper(trim($airlineCode));
+        if (strlen($airlineCode) > 2) {
+            $airlineCode = substr($airlineCode, -2);
+        }
+
+        $settings = $this->getWebSettings();
+        $settingsMap = array();
+        if (!empty($settings['Settings']) && is_array($settings['Settings'])) {
+            foreach ($settings['Settings'] as $s) {
+                if (!empty($s['Key'])) {
+                    $settingsMap[$s['Key']] = $s['Value'] ?? '';
+                }
+            }
+        }
+
+        $domOrInt = $isInternational ? 'Int' : 'Dom';
+
+        $ssrKey     = 'ShowSSR' . $domOrInt;
+        $mealKey    = 'ShowMeals' . $domOrInt;
+        $bagKey     = 'ShowBaggage' . $domOrInt;
+        $seatKey    = 'ShowSeatLayout' . $domOrInt;
+        $secBagKey  = 'SectorwiseBaggage' . $domOrInt;
+        $secMealKey = 'SectorwiseMeals' . $domOrInt;
+
+        $checkInList = function($key, $code) use ($settingsMap) {
+            if (empty($settingsMap[$key])) return false;
+            $items = array_map('trim', explode(',', strtoupper($settingsMap[$key])));
+            if (in_array($code, $items, true)) return true;
+            if ($code === '6E' && (in_array('R6E', $items, true) || in_array('C6E', $items, true) || in_array('E6E', $items, true))) return true;
+            if ($code === 'SG' && (in_array('RSG', $items, true) || in_array('CSG', $items, true) || in_array('ESG', $items, true) || in_array('PSG', $items, true))) return true;
+            return false;
+        };
+
+        // Major Low-Cost Carriers (6E, SG, QP, AI, AK, I5) support seats/meals/baggage natively in Indian domestic/international aviation
+        $isMajorLcc = in_array($airlineCode, array('6E', 'SG', 'QP', 'AK', 'I5', 'AI', 'UK', 'G8'), true);
+
+        $hasSsr  = empty($airlineCode) ? true : ($checkInList($ssrKey, $airlineCode) || $isMajorLcc);
+        $hasMeal = empty($airlineCode) ? true : ($checkInList($mealKey, $airlineCode) || $isMajorLcc);
+        $hasBag  = empty($airlineCode) ? true : ($checkInList($bagKey, $airlineCode) || $isMajorLcc);
+        $hasSeat = empty($airlineCode) ? true : ($checkInList($seatKey, $airlineCode) || $isMajorLcc);
+
+        // Sectorwise Baggage: Only PG8 (Bangkok Airways) per WebSettings (PDF Page 7). For all others, through-checked.
+        $isSectorwiseBag = empty($airlineCode) ? false : $checkInList($secBagKey, $airlineCode);
+
+        // Sectorwise Meals: Low cost carriers permit meals per leg (PDF Page 7)
+        $isSectorwiseMeal = empty($airlineCode) ? true : ($checkInList($secMealKey, $airlineCode) || in_array($airlineCode, array('SG', 'QP', 'AK', 'I5', '6E'), true));
+
+        return array(
+            'airline_code'          => $airlineCode,
+            'is_international'      => $isInternational,
+            'has_ssr'               => $hasSsr,
+            'has_meals'             => $hasMeal,
+            'has_baggage'           => $hasBag,
+            'has_seats'             => $hasSeat,
+            'is_sectorwise_baggage' => $isSectorwiseBag,
+            'is_sectorwise_meals'   => $isSectorwiseMeal
+        );
+    }
+
+    /**
      * 3. Express Search (Step 1 of Search)
      * Endpoint: /flights/ExpressSearch
      */

@@ -1080,21 +1080,30 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                     <h2 class="akbar-addon-title">Addon Services</h2>
 
                     <!-- 3 Primary Tabs (Meals, Baggage, Seat Selection) -->
+                    <?php
+                    $feat = $airline_features ?? array('has_meals' => true, 'has_baggage' => true, 'has_seats' => true);
+                    $defaultActiveTab = !empty($feat['has_meals']) ? 'meals' : (!empty($feat['has_baggage']) ? 'baggage' : 'seats');
+                    ?>
                     <div class="akbar-tab-row">
                         <!-- Meals Tab (Screenshot 1) -->
-                        <button type="button" class="akbar-tab-btn active" id="tabBtn_meals" onclick="switchAddonTab('meals', this)">
+                        <?php if (!empty($feat['has_meals'])): ?>
+                        <button type="button" class="akbar-tab-btn <?php echo ($defaultActiveTab === 'meals') ? 'active' : ''; ?>" id="tabBtn_meals" onclick="switchAddonTab('meals', this)">
                             <span style="font-size: 18px;">🥪</span>
                             <span>Meals</span>
                         </button>
+                        <?php endif; ?>
 
                         <!-- Baggage Tab (Screenshot 1) -->
-                        <button type="button" class="akbar-tab-btn" id="tabBtn_baggage" onclick="switchAddonTab('baggage', this)">
+                        <?php if (!empty($feat['has_baggage'])): ?>
+                        <button type="button" class="akbar-tab-btn <?php echo ($defaultActiveTab === 'baggage') ? 'active' : ''; ?>" id="tabBtn_baggage" onclick="switchAddonTab('baggage', this)">
                             <span style="font-size: 18px;">🧳</span>
                             <span>Baggage</span>
                         </button>
+                        <?php endif; ?>
 
                         <!-- Seat Selection Tab (Screenshot 3 Matching Akbar) -->
-                        <button type="button" class="akbar-tab-btn" id="tabBtn_seats" onclick="switchAddonTab('seats', this)">
+                        <?php if (!empty($feat['has_seats'])): ?>
+                        <button type="button" class="akbar-tab-btn <?php echo ($defaultActiveTab === 'seats') ? 'active' : ''; ?>" id="tabBtn_seats" onclick="switchAddonTab('seats', this)">
                             <div class="tab-seat-default" id="tabSeatsDefaultContent" style="display: flex; align-items: center; gap: 8px;">
                                 <span style="font-size: 18px;">💺</span>
                                 <span>Seat Selection</span>
@@ -1107,6 +1116,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                                 <span style="width: 20px; height: 20px; border-radius: 50%; background: #22c55e; color: #ffffff; display: inline-flex; align-items: center; justify-content: center; font-size: 11px;"><i class="fa-solid fa-check"></i></span>
                             </div>
                         </button>
+                        <?php endif; ?>
                     </div>
 
                     <!-- Sector & Passenger Selectors (Screenshot 3 Matching Akbar) -->
@@ -1176,21 +1186,21 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                     </div>
 
                     <!-- TAB CONTENT 1: MEALS (Screenshot 1 Exact Match) -->
-                    <div id="tabContent_meals" class="addon-tab-content" style="display: block;">
+                    <div id="tabContent_meals" class="addon-tab-content" style="display: <?php echo ($defaultActiveTab === 'meals') ? 'block' : 'none'; ?>;">
                         <div class="addon-items-grid" id="mealsGridContainer">
                             <!-- Populated dynamically based on active sector airline from Benzy APIs -->
                         </div>
                     </div>
 
                     <!-- TAB CONTENT 2: BAGGAGE (Screenshot 3 Exact Match) -->
-                    <div id="tabContent_baggage" class="addon-tab-content" style="display: none;">
+                    <div id="tabContent_baggage" class="addon-tab-content" style="display: <?php echo ($defaultActiveTab === 'baggage') ? 'block' : 'none'; ?>;">
                         <div class="addon-items-grid" id="baggageGridContainer">
                             <!-- Populated dynamically based on active sector airline from Benzy APIs -->
                         </div>
                     </div>
 
                     <!-- TAB CONTENT 3: SEAT SELECTION (Screenshot 2 & 3 Exact Match) -->
-                    <div id="tabContent_seats" class="addon-tab-content" style="display: none;">
+                    <div id="tabContent_seats" class="addon-tab-content" style="display: <?php echo ($defaultActiveTab === 'seats') ? 'block' : 'none'; ?>;">
                         
                         <div style="margin-top: 14px; margin-bottom: 8px;">
                             <h3 id="seatSectorTitle" style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0;">
@@ -1698,6 +1708,29 @@ function renderMeals(sector) {
     var secData = addonsData && addonsData[sector] ? addonsData[sector] : null;
     var meals = secData && secData.meals ? secData.meals : [];
 
+    var secData = addonsData && addonsData[sector] ? addonsData[sector] : null;
+
+    if (secData && secData.has_meals === false) {
+        container.innerHTML = '<div style="grid-column: 1/-1; padding: 36px 20px; text-align: center; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px;">' +
+            '<div style="font-size: 32px; margin-bottom: 8px;">🥪</div>' +
+            '<div style="font-size: 15px; font-weight: 800; color: #334155; margin-bottom: 4px;">Pre-booked Meals Not Available for this Airline</div>' +
+            '<div style="font-size: 13px; color: #64748b; max-width: 520px; margin: 0 auto; line-height: 1.5;">' + (secData.airline_name || 'This airline') + ' does not offer online pre-booked meal services on this route.</div>' +
+        '</div>';
+        return;
+    }
+
+    if (secData && secData.meals_available === false) {
+        var noticeMsg = secData.meals_notice || "In-flight meal service is not available on this sector due to flight duration or airline catering policy.";
+        container.innerHTML = '<div style="grid-column: 1/-1; padding: 36px 20px; text-align: center; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px;">' +
+            '<div style="font-size: 32px; margin-bottom: 8px;">🥪</div>' +
+            '<div style="font-size: 15px; font-weight: 800; color: #334155; margin-bottom: 4px;">No Meal Service on this Sector</div>' +
+            '<div style="font-size: 13px; color: #64748b; max-width: 520px; margin: 0 auto; line-height: 1.5;">' + noticeMsg + '</div>' +
+        '</div>';
+        return;
+    }
+
+    var meals = secData && secData.meals ? secData.meals : [];
+
     if (!meals || meals.length === 0) {
         container.innerHTML = '<div style="grid-column: 1/-1; padding: 24px; text-align: center; color: #64748b; background: #f8fafc; border-radius: 8px;">No meal options available for this sector from Benzy APIs.</div>';
         return;
@@ -1773,6 +1806,16 @@ function renderBaggage(sector) {
     }
 
     var secData = addonsData && addonsData[sector] ? addonsData[sector] : null;
+
+    if (secData && secData.has_baggage === false) {
+        container.innerHTML = '<div style="grid-column: 1/-1; padding: 36px 20px; text-align: center; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px;">' +
+            '<div style="font-size: 32px; margin-bottom: 8px;">🧳</div>' +
+            '<div style="font-size: 15px; font-weight: 800; color: #334155; margin-bottom: 4px;">Prepaid Baggage Not Available Online for this Airline</div>' +
+            '<div style="font-size: 13px; color: #64748b; max-width: 520px; margin: 0 auto; line-height: 1.5;">Additional baggage allowance can be purchased directly at the airport check-in counter as per airline rules.</div>' +
+        '</div>';
+        return;
+    }
+
     var baggage = secData && secData.baggage ? secData.baggage : [];
 
     if (!baggage || baggage.length === 0) {
@@ -1780,8 +1823,26 @@ function renderBaggage(sector) {
         return;
     }
 
-    var currentPaxBaggage = userSelections[sector][activePaxIndex] ? userSelections[sector][activePaxIndex].baggage : null;
+    // In through-checked transit flight, read current selection from primary journey sector
+    var effectiveBaggageSector = (secData && secData.is_through_baggage) ? 
+        ((sector.indexOf('return') !== -1) ? (sectorKeys.includes('return_0') ? 'return_0' : 'return') : (sectorKeys.includes('onward_0') ? 'onward_0' : 'onward')) : sector;
+
+    var currentPaxBaggage = userSelections[effectiveBaggageSector] && userSelections[effectiveBaggageSector][activePaxIndex] ? userSelections[effectiveBaggageSector][activePaxIndex].baggage : null;
     var html = '';
+
+    // If transit/connecting flight with through-checked luggage, show official through-checked badge
+    if (secData && secData.is_through_baggage) {
+        html += '<div style="grid-column: 1/-1; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 12px 18px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">' +
+            '<div style="display: flex; align-items: center; gap: 10px;">' +
+                '<span style="background: #22c55e; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px;"><i class="fa-solid fa-check"></i></span>' +
+                '<div>' +
+                    '<strong style="color: #166534; font-size: 13.5px;">Through-Checked Baggage (Connecting Flight)</strong>' +
+                    '<div style="color: #15803d; font-size: 12px;">Your check-in baggage is transferred automatically to your destination. Extra baggage selected below applies to your entire trip.</div>' +
+                '</div>' +
+            '</div>' +
+            '<span style="background: #dcfce7; color: #15803d; font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 20px; border: 1px solid #bbf7d0;">Single Journey Fee</span>' +
+        '</div>';
+    }
 
     baggage.forEach(function(item) {
         var isSelected = (currentPaxBaggage && currentPaxBaggage.code === item.code);
@@ -1789,7 +1850,7 @@ function renderBaggage(sector) {
 
         var totalCount = 0;
         passengers.forEach(function(p, pIdx) {
-            if (userSelections[sector][pIdx] && userSelections[sector][pIdx].baggage && userSelections[sector][pIdx].baggage.code === item.code) {
+            if (userSelections[effectiveBaggageSector] && userSelections[effectiveBaggageSector][pIdx] && userSelections[effectiveBaggageSector][pIdx].baggage && userSelections[effectiveBaggageSector][pIdx].baggage.code === item.code) {
                 totalCount++;
             }
         });
@@ -1832,6 +1893,16 @@ function renderSeatMap(sector) {
     }
 
     var secData = addonsData && addonsData[sector] ? addonsData[sector] : null;
+
+    if (secData && secData.has_seats === false) {
+        container.innerHTML = '<div style="padding: 36px 20px; text-align: center; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; margin: 16px 0;">' +
+            '<div style="font-size: 32px; margin-bottom: 8px;">💺</div>' +
+            '<div style="font-size: 15px; font-weight: 800; color: #334155; margin-bottom: 4px;">Online Seat Selection Not Available for this Airline</div>' +
+            '<div style="font-size: 13px; color: #64748b; max-width: 520px; margin: 0 auto; line-height: 1.5;">Seats for this flight will be automatically allocated free of charge during airport check-in or airline web check-in.</div>' +
+        '</div>';
+        return;
+    }
+
     var rows = secData && secData.seat_rows ? secData.seat_rows : null;
 
     if (!rows || Object.keys(rows).length === 0) {
@@ -2044,6 +2115,14 @@ function selectBaggageItem(code, weight, price, ssid, cardEl) {
     }
 
     var sec = currentSector;
+    var secData = addonsData && addonsData[sec] ? addonsData[sec] : null;
+
+    // In transit flights where baggage is through-checked to final destination,
+    // ensure baggage selection is tied to the primary journey leg so passenger is not charged twice
+    if (secData && secData.is_through_baggage) {
+        sec = (sec.indexOf('return') !== -1) ? (sectorKeys.includes('return_0') ? 'return_0' : 'return') : (sectorKeys.includes('onward_0') ? 'onward_0' : 'onward');
+    }
+
     var currentPaxBaggage = userSelections[sec][activePaxIndex] ? userSelections[sec][activePaxIndex].baggage : null;
     var isAlready = (currentPaxBaggage && currentPaxBaggage.code === code);
 
@@ -2059,7 +2138,7 @@ function selectBaggageItem(code, weight, price, ssid, cardEl) {
         };
     }
 
-    renderBaggage(sec);
+    renderBaggage(currentSector);
     recalcTotal();
 }
 
