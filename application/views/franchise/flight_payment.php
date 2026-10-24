@@ -69,6 +69,19 @@ if (!function_exists('formatMinsDuration')) {
         }
     }
 }
+if (!function_exists('renderHiddenInputs')) {
+    function renderHiddenInputs($data, $prefix = '') {
+        if (!is_array($data)) return;
+        foreach ($data as $key => $value) {
+            $name = empty($prefix) ? $key : $prefix . '[' . $key . ']';
+            if (is_array($value)) {
+                renderHiddenInputs($value, $name);
+            } else {
+                echo '<input type="hidden" name="' . htmlspecialchars((string)$name) . '" value="' . htmlspecialchars((string)$value) . '">' . "\n";
+            }
+        }
+    }
+}
 if (!function_exists('buildConnectingFlightSegments')) {
     function buildConnectingFlightSegments($flt, $airportDb) {
         if (!empty($flt['segments']) && is_array($flt['segments']) && count($flt['segments']) >= 2) {
@@ -297,17 +310,17 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
     --font-body: 'Inter', -apple-system, sans-serif;
 }
 
-body {
+.review-payment-page-bg {
     background-color: var(--voyogo-bg);
     font-family: var(--font-body);
     color: #1e293b;
-    margin: 0;
-    padding: 0;
+    padding: 20px 0 60px 0;
+    min-height: 80vh;
 }
 
 .review-payment-wrapper {
     max-width: 1240px;
-    margin: 20px auto 40px;
+    margin: 0 auto;
     padding: 0 16px;
 }
 
@@ -990,7 +1003,8 @@ body {
 }
 </style>
 
-<div class="review-payment-wrapper">
+<div class="review-payment-page-bg">
+    <div class="review-payment-wrapper">
 
     <!-- 1. Breadcrumb / Progress Bar -->
     <div class="step-tracker-bar">
@@ -2139,15 +2153,7 @@ body {
                 <!-- POST Form to execute final booking creation in franchise/flight_book -->
                 <form id="flightPaymentForm" action="<?php echo site_url('franchise/flight_book'); ?>" method="POST">
                     <?php if (!empty($post_data) && is_array($post_data)): ?>
-                        <?php foreach ($post_data as $k => $v): ?>
-                            <?php if (is_array($v)): ?>
-                                <?php foreach ($v as $subKey => $subVal): ?>
-                                    <input type="hidden" name="<?php echo htmlspecialchars($k); ?>[]" value="<?php echo htmlspecialchars($subVal); ?>">
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <input type="hidden" name="<?php echo htmlspecialchars($k); ?>" value="<?php echo htmlspecialchars($v); ?>">
-                            <?php endIf; ?>
-                        <?php endforeach; ?>
+                        <?php renderHiddenInputs($post_data); ?>
                     <?php endif; ?>
 
                     <?php if (!isset($post_data['refundable'])): ?>
@@ -2243,6 +2249,12 @@ body {
                             Guaranteed Fare
                         </span>
                     </div>
+
+                    <?php if (!empty($can_book)): ?>
+                    <button type="button" class="btn-proceed-pay" style="width: 100%; margin-top: 16px; background: #78B722; color: #ffffff; border: none; padding: 14px 20px; border-radius: 10px; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(120, 183, 34, 0.4);" onclick="document.getElementById('flightPaymentForm').submit();">
+                        <i class="fa-solid fa-circle-check"></i> Deduct ₹ <?php echo number_format($grandTotal); ?> &amp; Confirm
+                    </button>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Promo Applied Box -->
@@ -2275,6 +2287,7 @@ body {
 
     </div>
 
+</div>
 </div>
 
 <!-- Franchise Flight Payment Scripts -->

@@ -69,6 +69,19 @@ if (!function_exists('formatMinsDuration')) {
         }
     }
 }
+if (!function_exists('renderHiddenInputs')) {
+    function renderHiddenInputs($data, $prefix = '') {
+        if (!is_array($data)) return;
+        foreach ($data as $key => $value) {
+            $name = empty($prefix) ? $key : $prefix . '[' . $key . ']';
+            if (is_array($value)) {
+                renderHiddenInputs($value, $name);
+            } else {
+                echo '<input type="hidden" name="' . htmlspecialchars((string)$name) . '" value="' . htmlspecialchars((string)$value) . '">' . "\n";
+            }
+        }
+    }
+}
 if (!function_exists('buildConnectingFlightSegments')) {
     function buildConnectingFlightSegments($flt, $airportDb) {
         if (!empty($flt['segments']) && is_array($flt['segments']) && count($flt['segments']) >= 2) {
@@ -297,17 +310,17 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
     --font-body: 'Inter', -apple-system, sans-serif;
 }
 
-body {
+.review-payment-page-bg {
     background-color: var(--voyogo-bg);
     font-family: var(--font-body);
     color: #1e293b;
-    margin: 0;
-    padding: 0;
+    padding: 20px 0 60px 0;
+    min-height: 80vh;
 }
 
 .review-payment-wrapper {
     max-width: 1240px;
-    margin: 20px auto 40px;
+    margin: 0 auto;
     padding: 0 16px;
 }
 
@@ -990,7 +1003,8 @@ body {
 }
 </style>
 
-<div class="review-payment-wrapper">
+<div class="review-payment-page-bg">
+    <div class="review-payment-wrapper">
 
     <!-- 1. Breadcrumb / Progress Bar -->
     <div class="step-tracker-bar">
@@ -2148,15 +2162,7 @@ body {
                 <!-- Hidden POST Form to execute final booking creation in process_flight_payment -->
                 <form id="flightPaymentForm" action="<?php echo site_url('flight/process_payment'); ?>" method="POST" style="display: none;">
                     <?php if (!empty($post_data) && is_array($post_data)): ?>
-                        <?php foreach ($post_data as $k => $v): ?>
-                            <?php if (is_array($v)): ?>
-                                <?php foreach ($v as $subKey => $subVal): ?>
-                                    <input type="hidden" name="<?php echo htmlspecialchars($k); ?>[]" value="<?php echo htmlspecialchars($subVal); ?>">
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <input type="hidden" name="<?php echo htmlspecialchars($k); ?>" value="<?php echo htmlspecialchars($v); ?>">
-                            <?php endIf; ?>
-                        <?php endforeach; ?>
+                        <?php renderHiddenInputs($post_data); ?>
                     <?php endif; ?>
 
                     <?php if (!isset($post_data['refundable'])): ?>
@@ -2246,6 +2252,10 @@ body {
                             Guaranteed Fare
                         </span>
                     </div>
+
+                    <button type="button" class="btn-proceed-pay" style="width: 100%; margin-top: 16px; font-size: 16px; padding: 14px 20px;" onclick="triggerRazorpayPayment();">
+                        <i class="fa-solid fa-lock"></i> Pay Securely ₹ <?php echo number_format($grandTotal); ?>
+                    </button>
                 </div>
 
                 <!-- Promo Applied Box -->
@@ -2279,24 +2289,28 @@ body {
     </div>
 
 </div>
+</div>
 
 <!-- Razorpay Checkout Integration -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 // Trigger Razorpay Standard Web Checkout
 function triggerRazorpayPayment() {
-    var payBtn = document.querySelector('.btn-proceed-pay');
-    var originalBtnHtml = payBtn ? payBtn.innerHTML : '';
+    var payBtns = document.querySelectorAll('.btn-proceed-pay');
     
     function setBtnLoading(isLoading) {
-        if (!payBtn) return;
-        if (isLoading) {
-            payBtn.disabled = true;
-            payBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Initializing Secure Checkout...';
-        } else {
-            payBtn.disabled = false;
-            payBtn.innerHTML = originalBtnHtml;
-        }
+        payBtns.forEach(function(btn) {
+            if (isLoading) {
+                btn.disabled = true;
+                btn.setAttribute('data-orig-html', btn.innerHTML);
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Initializing Secure Checkout...';
+            } else {
+                btn.disabled = false;
+                if (btn.getAttribute('data-orig-html')) {
+                    btn.innerHTML = btn.getAttribute('data-orig-html');
+                }
+            }
+        });
     }
 
     var finalAmount = <?php echo (float)$grandTotal; ?>;

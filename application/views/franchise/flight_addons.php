@@ -53,6 +53,20 @@ $airportDb = array(
     'KUL' => array('city' => 'Kuala Lumpur', 'name' => 'Kuala Lumpur Intl Airport')
 );
 
+if (!function_exists('renderHiddenInputs')) {
+    function renderHiddenInputs($data, $prefix = '') {
+        if (!is_array($data)) return;
+        foreach ($data as $key => $value) {
+            $name = empty($prefix) ? $key : $prefix . '[' . $key . ']';
+            if (is_array($value)) {
+                renderHiddenInputs($value, $name);
+            } else {
+                echo '<input type="hidden" name="' . htmlspecialchars((string)$name) . '" value="' . htmlspecialchars((string)$value) . '">' . "\n";
+            }
+        }
+    }
+}
+
 $originCity = $airportDb[$origin]['city'] ?? $origin;
 $destCity = $airportDb[$destination]['city'] ?? $destination;
 $retOriginCity = $airportDb[$return_origin]['city'] ?? $return_origin;
@@ -1495,15 +1509,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
 <!-- Hidden POST form to proceed to flight review & payment upon button click -->
 <form id="finalPaymentForm" action="<?php echo site_url('franchise/flight_payment'); ?>" method="POST" style="display: none;">
     <?php if (!empty($post_data) && is_array($post_data)): ?>
-        <?php foreach ($post_data as $k => $v): ?>
-            <?php if (is_array($v)): ?>
-                <?php foreach ($v as $subKey => $subVal): ?>
-                    <input type="hidden" name="<?php echo htmlspecialchars($k); ?>[]" value="<?php echo htmlspecialchars($subVal); ?>">
-                <?php endforeach; ?>
-            <?php else: ?>
-                <input type="hidden" name="<?php echo htmlspecialchars($k); ?>" value="<?php echo htmlspecialchars($v); ?>">
-            <?php endIf; ?>
-        <?php endforeach; ?>
+        <?php renderHiddenInputs($post_data); ?>
     <?php endif; ?>
 
     <?php if (!isset($post_data['refundable'])): ?>
