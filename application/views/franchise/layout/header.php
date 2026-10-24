@@ -265,7 +265,7 @@
 <header class="store-navbar">
     <div class="nav-left">
         <a href="<?php echo site_url('franchise/flight'); ?>" class="brand-box">
-            <img src="<?php echo base_url('assets/images/logo.png'); ?>" alt="Voyogo Logo">
+            <img src="<?php echo base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())); ?>" alt="Voyogo Logo">
             <span class="b2b-pill">B2B FRANCHISE</span>
         </a>
 

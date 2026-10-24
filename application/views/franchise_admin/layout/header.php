@@ -238,7 +238,7 @@
 <!-- Sidebar -->
 <aside class="admin-sidebar">
     <div class="sidebar-brand">
-        <img src="<?php echo base_url('assets/images/logo.png'); ?>" alt="Voyogo Logo">
+        <img src="<?php echo base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())); ?>" alt="Voyogo Logo">
         <div>
             <span>Voyogo</span>
             <small>Franchise Admin</small>

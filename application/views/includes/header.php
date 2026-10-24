@@ -75,7 +75,7 @@
 
                 <!-- Brand Logo -->
                 <a href="<?php echo function_exists('site_url') ? site_url('/') : '/'; ?>" class="brand-logo">
-                    <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png') : './assets/images/logo.png'; ?>"
+                    <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())) : './assets/images/logo.png'; ?>"
                         alt="Voyogo Logo" style="max-height: 48px; width: auto;">
                 </a>
 
