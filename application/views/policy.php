@@ -1203,7 +1203,7 @@
             <div class="p-top-card p-top-card-left">
                 <div class="card-left-header">
                     <div class="brand-logo-pill">
-                        <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png') : './assets/images/logo.png'; ?>" alt="Voyogo Logo">
+                        <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())) : './assets/images/logo.png'; ?>" alt="Voyogo Logo">
                     </div>
                     <div class="brand-corp-tag">
                         <i class="fa-solid fa-shield-halved"></i>

@@ -86,6 +86,12 @@
                 <!-- Navigation Links -->
                 <?php $current_page = isset($active_page) ? $active_page : (isset($current_page) ? $current_page : 'flight'); ?>
                 <nav class="nav-menu">
+                    <div class="nav-menu-header-logo">
+                        <a href="<?php echo function_exists('site_url') ? site_url('/') : '/'; ?>">
+                            <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())) : './assets/images/logo.png'; ?>"
+                                alt="Voyogo Logo" style="max-height: 42px; width: auto;">
+                        </a>
+                    </div>
                     <div class="nav-item">
                         <a href="<?php echo function_exists('site_url') ? site_url('flight') : '/index.php/flight'; ?>"
                             class="nav-link <?php echo ($current_page == 'flight') ? 'active' : ''; ?>">
@@ -205,7 +211,7 @@
     <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Mobile Navigation">
         <div class="mobile-drawer-header">
             <a href="<?php echo function_exists('site_url') ? site_url('/') : '/'; ?>" class="drawer-brand-logo">
-                <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png') : './assets/images/logo.png'; ?>" alt="Voyogo Logo" style="max-height: 38px; width: auto;">
+                <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())) : './assets/images/logo.png'; ?>" alt="Voyogo Logo" style="max-height: 42px; width: auto;">
             </a>
             <button type="button" class="close-drawer-btn" id="closeDrawerBtn" aria-label="Close Menu">
                 <i class="fa-solid fa-xmark"></i>

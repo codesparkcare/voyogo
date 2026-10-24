@@ -49,7 +49,9 @@
             <!-- Col 1: Brand Info -->
             <div>
                 <div style="margin-bottom: 16px;">
-                    <img src="<?php echo base_url('assets/images/logo.png'); ?>" alt="Voyogo Logo" style="max-height: 42px; width: auto;">
+                    <a href="<?php echo site_url('franchise/flight'); ?>" style="display: inline-block;">
+                        <img src="<?php echo base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())); ?>" alt="Voyogo Logo" style="max-height: 44px; width: auto;">
+                    </a>
                 </div>
                 <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6; margin-bottom: 18px;">
                     Voyogo is India's leading online travel company offering great deals on flight bookings, hotel reservations, holiday packages, visas, and forex services. Book cheap domestic & international air tickets with ease.

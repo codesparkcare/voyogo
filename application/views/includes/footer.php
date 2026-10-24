@@ -34,7 +34,9 @@
                     <!-- Column 1: Brand Info -->
                     <div class="footer-col footer-about">
                         <div class="brand-logo" style="margin-bottom: 16px;">
-                            <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png') : './assets/images/logo.png'; ?>" alt="Voyogo Logo" style="max-height: 44px; width: auto;">
+                            <a href="<?php echo function_exists('site_url') ? site_url('/') : '/'; ?>" style="display: inline-block;">
+                                <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())) : './assets/images/logo.png'; ?>" alt="Voyogo Logo" style="max-height: 48px; width: auto;">
+                            </a>
                         </div>
                         <p>Voyogo is India's leading online travel company offering great deals on flight bookings, hotel reservations, holiday packages, visas, and forex services. Book cheap domestic & international air tickets with ease.</p>
                         <div class="social-icons-row">
@@ -110,7 +112,7 @@
             <!-- Modal Header Banner -->
             <div class="vy-modal-top-accent">
                 <div class="vy-modal-logo-wrap">
-                    <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png') : './assets/images/logo.png'; ?>" alt="Voyogo Logo">
+                    <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())) : './assets/images/logo.png'; ?>" alt="Voyogo Logo" style="max-height: 42px; width: auto;">
                 </div>
             </div>
 
