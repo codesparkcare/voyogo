@@ -206,7 +206,7 @@
                             <div class="input-subtext" id="fromCitySub">Indira Gandhi Intl Airport</div>
 
                             <!-- Inline Autocomplete Dropdown Popup -->
-                            <div class="dropdown-popup city-autocomplete-popup" id="fromCityDropdown" style="width: 340px; padding: 14px; border-radius: 12px; box-shadow: 0 12px 35px rgba(0,0,0,0.3); background: #ffffff; text-align: left; z-index: 99999;">
+                            <div class="dropdown-popup city-autocomplete-popup" id="fromCityDropdown" style="padding: 14px; border-radius: 12px; box-shadow: 0 12px 35px rgba(0,0,0,0.3); background: #ffffff; text-align: left; z-index: 99999;">
                                 <div style="position: relative; margin-bottom: 10px;" onclick="event.stopPropagation();">
                                     <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 10px; color: #0d3470; font-size: 13px;"></i>
                                     <input type="text" class="city-search-input" id="fromSearchInput" placeholder="Type city or airport (e.g. GOX, Delhi, BOM)..." style="width: 100%; padding: 7px 12px 7px 32px; border: 1.5px solid #0d3470; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none;">
@@ -232,7 +232,7 @@
                             <div class="input-subtext" id="toCitySub">Chhatrapati Shivaji Maharaj Intl</div>
 
                             <!-- Inline Autocomplete Dropdown Popup -->
-                            <div class="dropdown-popup city-autocomplete-popup" id="toCityDropdown" style="width: 340px; padding: 14px; border-radius: 12px; box-shadow: 0 12px 35px rgba(0,0,0,0.3); background: #ffffff; text-align: left; z-index: 99999;">
+                            <div class="dropdown-popup city-autocomplete-popup" id="toCityDropdown" style="padding: 14px; border-radius: 12px; box-shadow: 0 12px 35px rgba(0,0,0,0.3); background: #ffffff; text-align: left; z-index: 99999;">
                                 <div style="position: relative; margin-bottom: 10px;" onclick="event.stopPropagation();">
                                     <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 10px; color: #0d3470; font-size: 13px;"></i>
                                     <input type="text" class="city-search-input" id="toSearchInput" placeholder="Type city or airport (e.g. GOX, Mumbai, GOI)..." style="width: 100%; padding: 7px 12px 7px 32px; border: 1.5px solid #0d3470; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none;">

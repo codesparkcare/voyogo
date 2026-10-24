@@ -41,26 +41,30 @@
     <div class="top-strip">
         <div class="container">
             <div class="top-strip-left">
-                <div class="top-strip-item">
-                    <i class="fa-solid fa-headset"></i>
-                    <span>24x7 Support: <strong>+91 8098999096 / +91 8098999095</strong></span>
+                <div class="top-strip-item top-strip-phone">
+                    <a href="tel:+918098999096" class="top-phone-link">
+                        <i class="fa-solid fa-headset"></i>
+                        <span>24x7 Support: <strong>+91 8098999096</strong><span class="desktop-only-phone"> / +91 8098999095</span></span>
+                    </a>
                 </div>
-                <div class="top-strip-item">
-                    <i class="fa-solid fa-envelope"></i>
-                    <span>support@voyogo.com</span>
+                <div class="top-strip-item desktop-only-email">
+                    <a href="mailto:support@voyogo.com" class="top-email-link">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>support@voyogo.com</span>
+                    </a>
                 </div>
             </div>
             <div class="top-strip-right">
                 <div class="top-strip-item">
                     <i class="fa-solid fa-globe"></i>
-                    <select class="top-select">
+                    <select class="top-select" aria-label="Select Country and Currency">
                         <option value="en-in">India (INR ₹)</option>
                         <option value="en-ae">UAE (AED د.إ)</option>
                         <option value="en-us">USA (USD $)</option>
                         <option value="en-uk">UK (GBP £)</option>
                     </select>
                 </div>
-                <div class="top-strip-item">
+                <div class="top-strip-item desktop-only-business">
                     <a href="<?php echo function_exists('site_url') ? site_url('franchise/login') : '/index.php/franchise/login'; ?>"
                         style="color: #cbd5e1;"><i class="fa-solid fa-briefcase"></i> Voyogo Business</a>
                 </div>
@@ -182,11 +186,12 @@
                         <!-- Logged Out: Login / Sign Up Button -->
                         <button class="btn-login" id="loginModalBtn">
                             <i class="fa-solid fa-user"></i>
-                            <span>Login / Sign Up</span>
+                            <span class="btn-login-text-full">Login / Sign Up</span>
+                            <span class="btn-login-text-mob">Login</span>
                         </button>
                     <?php endif; ?>
 
-                    <button class="mobile-menu-btn" aria-label="Toggle Mobile Menu">
+                    <button class="mobile-menu-btn" id="mobileMenuToggleBtn" aria-label="Toggle Mobile Menu">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                 </div>
@@ -194,6 +199,121 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Navigation Drawer Backdrop & Panel -->
+    <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+    <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Mobile Navigation">
+        <div class="mobile-drawer-header">
+            <a href="<?php echo function_exists('site_url') ? site_url('/') : '/'; ?>" class="drawer-brand-logo">
+                <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png') : './assets/images/logo.png'; ?>" alt="Voyogo Logo" style="max-height: 38px; width: auto;">
+            </a>
+            <button type="button" class="close-drawer-btn" id="closeDrawerBtn" aria-label="Close Menu">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="mobile-drawer-body">
+            <?php if (isset($this->session) && $this->session->userdata('user_logged_in')): ?>
+                <div class="mobile-drawer-user-card">
+                    <div class="drawer-user-avatar">
+                        <?php
+                        $uName = $this->session->userdata('user_name');
+                        echo strtoupper(substr($uName ?: 'U', 0, 1));
+                        ?>
+                    </div>
+                    <div class="drawer-user-meta">
+                        <div class="drawer-user-name"><?php echo htmlspecialchars($this->session->userdata('user_name') ?: 'Voyogo Member'); ?></div>
+                        <div class="drawer-user-phone"><?php echo htmlspecialchars($this->session->userdata('user_phone')); ?></div>
+                    </div>
+                </div>
+                <div class="mobile-drawer-user-links">
+                    <a href="<?php echo site_url('user/profile'); ?>" class="drawer-user-action">
+                        <i class="fa-solid fa-user-gear"></i> My Profile
+                    </a>
+                    <a href="<?php echo site_url('user/logout'); ?>" onclick="handleUserLogout(event);" class="drawer-user-action text-danger">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                    </a>
+                </div>
+            <?php else: ?>
+                <div class="mobile-drawer-login-wrap">
+                    <button type="button" class="drawer-login-cta" id="drawerLoginBtn">
+                        <i class="fa-solid fa-user"></i> Login / Sign Up
+                    </button>
+                </div>
+            <?php endif; ?>
+
+            <div class="drawer-section-heading">All Travel Services</div>
+            <nav class="drawer-nav-list">
+                <a href="<?php echo function_exists('site_url') ? site_url('flight') : '/index.php/flight'; ?>"
+                    class="drawer-nav-link <?php echo ($current_page == 'flight') ? 'active' : ''; ?>">
+                    <span class="drawer-link-icon"><i class="fa-solid fa-plane"></i></span>
+                    <span class="drawer-link-text">Flights</span>
+                    <i class="fa-solid fa-chevron-right drawer-chevron"></i>
+                </a>
+                <a href="<?php echo function_exists('site_url') ? site_url('hotels') : '/index.php/hotels'; ?>"
+                    class="drawer-nav-link <?php echo ($current_page == 'hotels') ? 'active' : ''; ?>">
+                    <span class="drawer-link-icon"><i class="fa-solid fa-hotel"></i></span>
+                    <span class="drawer-link-text">Hotels</span>
+                    <i class="fa-solid fa-chevron-right drawer-chevron"></i>
+                </a>
+                <a href="<?php echo function_exists('site_url') ? site_url('holidays') : '/index.php/holidays'; ?>"
+                    class="drawer-nav-link <?php echo ($current_page == 'holidays') ? 'active' : ''; ?>">
+                    <span class="drawer-link-icon"><i class="fa-solid fa-umbrella-beach"></i></span>
+                    <span class="drawer-link-text">Holidays</span>
+                    <i class="fa-solid fa-chevron-right drawer-chevron"></i>
+                </a>
+                <a href="<?php echo function_exists('site_url') ? site_url('visa') : '/index.php/visa'; ?>"
+                    class="drawer-nav-link <?php echo ($current_page == 'visa') ? 'active' : ''; ?>">
+                    <span class="drawer-link-icon"><i class="fa-solid fa-passport"></i></span>
+                    <span class="drawer-link-text">Visas</span>
+                    <i class="fa-solid fa-chevron-right drawer-chevron"></i>
+                </a>
+                <a href="<?php echo function_exists('site_url') ? site_url('forex') : '/index.php/forex'; ?>"
+                    class="drawer-nav-link <?php echo ($current_page == 'forex') ? 'active' : ''; ?>">
+                    <span class="drawer-link-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
+                    <span class="drawer-link-text">Forex</span>
+                    <i class="fa-solid fa-chevron-right drawer-chevron"></i>
+                </a>
+                <a href="<?php echo function_exists('site_url') ? site_url('cruises') : '/index.php/cruises'; ?>"
+                    class="drawer-nav-link <?php echo ($current_page == 'cruises') ? 'active' : ''; ?>">
+                    <span class="drawer-link-icon"><i class="fa-solid fa-ship"></i></span>
+                    <span class="drawer-link-text">Cruises</span>
+                    <i class="fa-solid fa-chevron-right drawer-chevron"></i>
+                </a>
+                <a href="<?php echo function_exists('site_url') ? site_url('cabs') : '/index.php/cabs'; ?>"
+                    class="drawer-nav-link <?php echo ($current_page == 'cabs') ? 'active' : ''; ?>">
+                    <span class="drawer-link-icon"><i class="fa-solid fa-taxi"></i></span>
+                    <span class="drawer-link-text">Cabs</span>
+                    <i class="fa-solid fa-chevron-right drawer-chevron"></i>
+                </a>
+                <a href="<?php echo function_exists('site_url') ? site_url('franchise') : '/index.php/franchise'; ?>"
+                    class="drawer-nav-link <?php echo ($current_page == 'franchise') ? 'active' : ''; ?>">
+                    <span class="drawer-link-icon"><i class="fa-solid fa-handshake"></i></span>
+                    <span class="drawer-link-text">Franchise Partner</span>
+                    <i class="fa-solid fa-chevron-right drawer-chevron"></i>
+                </a>
+                <a href="<?php echo function_exists('site_url') ? site_url('franchise/login') : '/index.php/franchise/login'; ?>"
+                    class="drawer-nav-link">
+                    <span class="drawer-link-icon"><i class="fa-solid fa-briefcase"></i></span>
+                    <span class="drawer-link-text">Voyogo Business</span>
+                    <i class="fa-solid fa-chevron-right drawer-chevron"></i>
+                </a>
+            </nav>
+
+            <div class="drawer-section-heading">24x7 Customer Support</div>
+            <div class="drawer-support-box">
+                <a href="tel:+918098999096" class="drawer-support-phone">
+                    <i class="fa-solid fa-headset"></i> +91 8098999096
+                </a>
+                <a href="tel:+918098999095" class="drawer-support-phone">
+                    <i class="fa-solid fa-phone"></i> +91 8098999095
+                </a>
+                <a href="mailto:support@voyogo.com" class="drawer-support-email">
+                    <i class="fa-solid fa-envelope"></i> support@voyogo.com
+                </a>
+            </div>
+        </div>
+    </aside>
 
     <?php if (isset($active_page) && in_array($active_page, array('holidays', 'visa', 'forex', 'cruises', 'cabs'))): ?>
         <!-- Mobile Services Horizontal Pill Navigation Bar -->
@@ -694,6 +814,61 @@
                     if (!userMenuBtn.contains(e.target) && !userDropdownMenu.contains(e.target)) {
                         userDropdownMenu.style.display = 'none';
                     }
+                });
+            }
+
+            // Mobile Drawer Logic
+            const mobileMenuToggleBtn = document.getElementById('mobileMenuToggleBtn');
+            const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+            const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
+            const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+            const drawerLoginBtn = document.getElementById('drawerLoginBtn');
+
+            function openMobileDrawer() {
+                if (mobileNavDrawer && mobileNavBackdrop) {
+                    mobileNavDrawer.classList.add('open');
+                    mobileNavBackdrop.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            function closeMobileDrawer() {
+                if (mobileNavDrawer && mobileNavBackdrop) {
+                    mobileNavDrawer.classList.remove('open');
+                    mobileNavBackdrop.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            if (mobileMenuToggleBtn) {
+                mobileMenuToggleBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openMobileDrawer();
+                });
+            }
+
+            if (closeDrawerBtn) {
+                closeDrawerBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    closeMobileDrawer();
+                });
+            }
+
+            if (mobileNavBackdrop) {
+                mobileNavBackdrop.addEventListener('click', closeMobileDrawer);
+            }
+
+            if (drawerLoginBtn && modal) {
+                drawerLoginBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    closeMobileDrawer();
+                    modal.classList.add('open');
+                    switchBackToPhoneStep();
+                    setTimeout(function () {
+                        const phoneInput = document.getElementById('userPhoneInput');
+                        if (phoneInput) phoneInput.focus();
+                    }, 150);
                 });
             }
         });

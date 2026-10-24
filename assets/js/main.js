@@ -360,6 +360,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // Special Fare Tags Click Handler
+  const fareTags = document.querySelectorAll('.fare-type-tags .fare-tag');
+  if (fareTags.length > 0) {
+    fareTags.forEach(tag => {
+      tag.addEventListener('click', function() {
+        fareTags.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  }
+
   // =========================================================================
   // 3. TRIP TYPE TOGGLE & DUAL-MONTH LINKED CALENDAR
   // =========================================================================

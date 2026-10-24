@@ -1637,6 +1637,270 @@ ul {
 /* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
+/* ==========================================================================
+   Mobile Navigation Drawer Styles
+   ========================================================================== */
+.mobile-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(9, 32, 75, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 10001;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-nav-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-nav-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 310px;
+  max-width: 86vw;
+  height: 100vh;
+  height: 100dvh;
+  background: #09204b;
+  color: #ffffff;
+  z-index: 10002;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: -6px 0 30px rgba(0, 0, 0, 0.35);
+}
+
+.mobile-nav-drawer.open {
+  transform: translateX(0);
+}
+
+.mobile-drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #061633;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.close-drawer-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.close-drawer-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+.mobile-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 16px 36px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-drawer-user-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.drawer-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #78B722;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drawer-user-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.drawer-user-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drawer-user-phone {
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+
+.mobile-drawer-user-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.drawer-user-action {
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.drawer-user-action.text-danger {
+  color: #f87171;
+}
+
+.mobile-drawer-login-wrap {
+  margin-bottom: 18px;
+}
+
+.drawer-login-cta {
+  width: 100%;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #78B722, #4a7a12);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(120, 183, 34, 0.35);
+}
+
+.drawer-section-heading {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin: 16px 0 8px 4px;
+}
+
+.drawer-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drawer-nav-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.drawer-nav-link:hover, .drawer-nav-link.active {
+  background: rgba(120, 183, 34, 0.18);
+  color: #a0d454;
+}
+
+.drawer-link-icon {
+  width: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  margin-right: 10px;
+  color: #78B722;
+}
+
+.drawer-link-text {
+  flex: 1;
+}
+
+.drawer-chevron {
+  font-size: 10px;
+  color: #64748b;
+}
+
+.drawer-support-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.drawer-support-phone, .drawer-support-email {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.drawer-support-phone i, .drawer-support-email i {
+  color: #78B722;
+  width: 16px;
+}
+
+/* Visibility toggles for login button text */
+@media (min-width: 769px) {
+  .btn-login-text-mob {
+    display: none !important;
+  }
+  .btn-login-text-full {
+    display: inline !important;
+  }
+}
+
+/* City Autocomplete Dropdown Default Desktop */
+.city-autocomplete-popup {
+  width: 340px;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
 @media (max-width: 1024px) {
   .search-grid {
     grid-template-columns: 1fr 1fr;
@@ -1644,8 +1908,8 @@ ul {
   .search-grid.hotel-grid {
     grid-template-columns: 1fr 1fr;
   }
-  .swap-btn {
-    display: none;
+  .from-to-group {
+    grid-column: 1 / -1;
   }
   .hotel-layout {
     grid-template-columns: 1fr;
@@ -1665,30 +1929,370 @@ ul {
 }
 
 @media (max-width: 768px) {
+  /* Prevent horizontal wobble */
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Top Utility Bar on Mobile */
+  .top-strip {
+    padding: 6px 0;
+    font-size: 11.5px;
+  }
+  .top-strip .container {
+    padding: 0 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .top-strip-left, .top-strip-right {
+    gap: 8px;
+  }
+  .top-phone-link {
+    color: #ffffff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .top-phone-link i {
+    color: #ffffff;
+    font-size: 12px;
+  }
+  .desktop-only-phone,
+  .desktop-only-email,
+  .desktop-only-business {
+    display: none !important;
+  }
+  .top-select {
+    font-size: 11px;
+    padding: 3px 6px;
+    max-width: 130px;
+    text-overflow: ellipsis;
+  }
+
+  /* Main Navigation Header on Mobile */
   .header-wrapper {
-    height: 64px;
+    height: 60px;
+    padding: 0 12px;
+  }
+  .brand-logo img {
+    max-height: 38px !important;
+    max-width: 140px !important;
+    width: auto;
+    object-fit: contain;
   }
   .nav-menu {
     display: none;
   }
+  .header-actions {
+    gap: 8px;
+  }
+  .btn-login {
+    padding: 7px 12px;
+    font-size: 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    white-space: nowrap;
+    gap: 6px;
+  }
+  .btn-login-text-full {
+    display: none !important;
+  }
+  .btn-login-text-mob {
+    display: inline !important;
+  }
   .mobile-menu-btn {
-    display: block;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 17px;
+    cursor: pointer;
+    transition: background 0.2s;
   }
-  .search-grid {
-    grid-template-columns: 1fr;
+  .mobile-menu-btn:hover, .mobile-menu-btn:active {
+    background: rgba(255, 255, 255, 0.2);
   }
-  .search-grid.hotel-grid {
-    grid-template-columns: 1fr;
+
+  /* Hero Section on Mobile */
+  .hero-section {
+    padding: 24px 0 36px !important;
+  }
+  .hero-headline {
+    margin-bottom: 14px;
+    text-align: center;
+    padding: 0 6px;
   }
   .hero-headline h1 {
-    font-size: 28px;
+    font-size: 22px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 6px !important;
   }
+  .hero-headline p {
+    font-size: 12.5px !important;
+    line-height: 1.4 !important;
+    color: #cbd5e1;
+    margin-bottom: 0 !important;
+  }
+
+  /* Flight Search Card on Mobile */
+  .search-card {
+    padding: 14px 12px !important;
+    border-radius: 16px !important;
+    margin: 0 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  /* Trip Type Selector & Fare Pills */
+  .search-tabs {
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .trip-type-options {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 8px;
+  }
+  .radio-custom {
+    font-size: 13px;
+    gap: 6px;
+    font-weight: 700;
+  }
+  .radio-custom input[type="radio"] {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* Special Fare Pills - Smooth Horizontal Touch Scroll */
+  .fare-type-tags {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 8px;
+    padding: 4px 0 4px;
+  }
+  .fare-type-tags::-webkit-scrollbar {
+    display: none;
+  }
+  .fare-tag {
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-size: 11.5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: #f1f5f9;
+    font-weight: 600;
+  }
+  .fare-tag.active {
+    background: #e8f8f0;
+    border-color: #78B722;
+    color: #78B722;
+    font-weight: 700;
+  }
+
+  /* Search Grid Layout */
+  .search-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    position: relative;
+  }
+
+  /* FROM & TO Group Stacked Vertically with Floating Swap Button */
+  .from-to-group {
+    grid-column: 1 / -1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative !important;
+    gap: 8px !important;
+  }
+  .from-to-group .input-box {
+    width: 100%;
+    padding: 10px 14px !important;
+    padding-right: 52px !important; /* Keep text clear of floating swap button */
+  }
+  .from-to-group .input-val {
+    font-size: 16px !important;
+    font-weight: 700;
+  }
+  .from-to-group .input-subtext {
+    font-size: 11.5px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 90%;
+  }
+
+  /* Floating Circular Swap Button Centered between FROM and TO */
+  .swap-btn {
+    display: flex !important;
+    position: absolute !important;
+    right: 14px !important;
+    left: auto !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 38px !important;
+    height: 38px !important;
+    background: #ffffff !important;
+    border: 1.5px solid #78B722 !important;
+    border-radius: 50% !important;
+    color: #78B722 !important;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16) !important;
+    z-index: 20 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: transform 0.25s ease, background 0.2s, color 0.2s;
+  }
+  .swap-btn i {
+    transform: rotate(90deg); /* Points vertically to match stacked From/To */
+    font-size: 14px;
+  }
+  .swap-btn:active {
+    background: #78B722 !important;
+    color: #ffffff !important;
+    transform: translateY(-50%) scale(0.92) !important;
+  }
+
+  /* Dates Row Side-by-Side (50% each) */
+  #departureDateBox {
+    grid-column: 1 / 2 !important;
+    padding: 10px 12px !important;
+  }
+  #returnDateBox {
+    grid-column: 2 / 3 !important;
+    padding: 10px 12px !important;
+  }
+  #departureDateBox .input-val,
+  #returnDateBox .input-val {
+    font-size: 15px !important;
+  }
+  #departureDateBox .input-subtext,
+  #returnDateBox .input-subtext {
+    font-size: 11px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+
+  /* Travelers & Cabin Class Full Width */
+  #passengerSelectBox {
+    grid-column: 1 / -1 !important;
+    padding: 10px 14px !important;
+  }
+  #passengerSelectBox .input-val {
+    font-size: 15px !important;
+  }
+
+  /* Search Flight CTA Button */
+  .search-btn-wrapper {
+    margin-top: 14px;
+    width: 100%;
+  }
+  .btn-search {
+    width: 100%;
+    padding: 13px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* Inline Autocomplete Popups on Mobile */
+  .city-autocomplete-popup {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    box-sizing: border-box !important;
+  }
+  #passengerDropdown {
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Multi-City mobile adjustments */
+  .multi-leg-row {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    padding: 12px !important;
+  }
+
+  /* Hotel Grid on mobile */
+  .search-grid.hotel-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .search-grid.hotel-grid > div:first-child {
+    grid-column: 1 / -1 !important;
+  }
+  .search-grid.hotel-grid > div:last-child {
+    grid-column: 1 / -1 !important;
+  }
+
+  /* Footer on mobile */
   .footer-grid {
     grid-template-columns: 1fr;
   }
   .footer-bottom {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-strip {
+    font-size: 11px;
+  }
+  .top-phone-link {
+    font-size: 11px;
+  }
+  .top-select {
+    max-width: 110px;
+    font-size: 10.5px;
+  }
+  .header-wrapper {
+    height: 56px;
+  }
+  .brand-logo img {
+    max-height: 34px !important;
+    max-width: 120px !important;
+  }
+  .btn-login {
+    padding: 5px 10px;
+    font-size: 11.5px;
+  }
+  .hero-headline h1 {
+    font-size: 20px !important;
+  }
+  .from-to-group .input-val {
+    font-size: 15px !important;
+  }
+  #departureDateBox .input-val,
+  #returnDateBox .input-val {
+    font-size: 14px !important;
   }
 }
 
