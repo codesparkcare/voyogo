@@ -23,6 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalSlides = origSlides.length;
     if (totalSlides === 0) return;
 
+    // If only 1 slide exists, ensure it is visible and do not run carousel animations
+    if (totalSlides <= 1) {
+      if (origSlides[0]) {
+        origSlides[0].classList.add('active');
+        origSlides[0].style.opacity = '1';
+      }
+      track.style.transform = 'none';
+      track.style.transition = 'none';
+      return;
+    }
+
     // Clone first slide to the end for seamless continuous forward scroll
     if (totalSlides > 1 && !track.querySelector('.slide.clone')) {
       const cloneFirst = origSlides[0].cloneNode(true);

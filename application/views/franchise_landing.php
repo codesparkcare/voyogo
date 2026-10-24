@@ -7,7 +7,7 @@
   <!-- Hero Background Slider Track -->
   <div class="ref-hero-slider">
     <div class="slider-track">
-      <div class="slide active franchise-hero-slide" style="background-image: url('<?php echo base_url('assets/images/VOYOGO FRANCHISE BANNER.png?v=' . filemtime(FCPATH . 'assets/images/VOYOGO FRANCHISE BANNER.png')); ?>');"></div>
+      <div class="slide active franchise-hero-slide" style="background-image: url('<?php echo base_url('assets/images/VOYOGO%20FRANCHISE%20BANNER.png?v=' . (file_exists(FCPATH . 'assets/images/VOYOGO FRANCHISE BANNER.png') ? filemtime(FCPATH . 'assets/images/VOYOGO FRANCHISE BANNER.png') : time())); ?>');"></div>
     </div>
   </div>
 
