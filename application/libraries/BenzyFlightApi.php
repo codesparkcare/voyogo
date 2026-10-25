@@ -1135,121 +1135,8 @@ class BenzyFlightApi {
             return $res['data'];
         }
 
-        // Airway-specific Benzy SSR catalog
-        $ssrItems = array();
-
-        if ($airlineCode === 'SG') {
-            // SpiceJet Live SSR Catalog (Meals & Baggage)
-            $ssrItems = array(
-                // Meals (Type: 1)
-                array("Code" => "VCC6", "Description" => "Vegetable Daliya", "PieceDescription" => "", "Charge" => 350.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 2, "IsFreeMeal" => false, "MealImage" => "8bf135e4-6adf-4a0b-87bc-d64a94e5c850.jpg", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "VGML", "Description" => "DD (Vegetarian Thali)", "PieceDescription" => "", "Charge" => 275.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 1, "IsFreeMeal" => false, "MealImage" => "0b176bc7-9855-43fa-ab90-d594bbab6ad5.jpg", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "SPCS", "Description" => "SpiceJet Grilled Veg Club Sandwich", "PieceDescription" => "", "Charge" => 300.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 21, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "PNSH", "Description" => "Paneer Kathi Roll", "PieceDescription" => "", "Charge" => 320.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 22, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "CHML", "Description" => "Roasted Chicken Tikka Sandwich", "PieceDescription" => "", "Charge" => 350.0, "VAT" => 0.0, "Type" => "1", "Category" => "Non-Veg", "PTC" => "ADT", "ID" => 23, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "MUPN", "Description" => "Rava Upma with Filter Coffee", "PieceDescription" => "", "Charge" => 220.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 24, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "AKCF", "Description" => "Amul Kool Cafe (Cold Coffee)", "PieceDescription" => "", "Charge" => 100.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 25, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "RBSK", "Description" => "Rawcha Basil Shikanji", "PieceDescription" => "", "Charge" => 100.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 26, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "BKCF", "Description" => "Black Coffee", "PieceDescription" => "", "Charge" => 100.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 27, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "CNWT", "Description" => "Tender Coconut Water", "PieceDescription" => "", "Charge" => 100.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 28, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-
-                // Baggage (Type: 2)
-                array("Code" => "EB03", "Description" => "3 Kgs", "PieceDescription" => "", "Charge" => 1350.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 31, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "EB05", "Description" => "5 Kgs", "PieceDescription" => "", "Charge" => 1900.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 5, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "EB10", "Description" => "10 Kgs", "PieceDescription" => "", "Charge" => 3800.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 4, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "EB15", "Description" => "15 Kgs", "PieceDescription" => "", "Charge" => 5700.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 32, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "EB20", "Description" => "20 Kgs", "PieceDescription" => "", "Charge" => 7600.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 33, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "EB30", "Description" => "30 Kgs", "PieceDescription" => "", "Charge" => 11400.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 34, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-
-                // Priority Services (Type: 7, 8)
-                array("Code" => "BOF1", "Description" => "Bagout First 1 Bag", "PieceDescription" => "", "Charge" => 100.0, "VAT" => 0.0, "Type" => "7", "Category" => "", "PTC" => "", "ID" => 8, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "BOF2", "Description" => "Bagout First 2 Bag", "PieceDescription" => "", "Charge" => 200.0, "VAT" => 0.0, "Type" => "7", "Category" => "", "PTC" => "", "ID" => 7, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "BOF3", "Description" => "Bagout First 3 Bag", "PieceDescription" => "", "Charge" => 300.0, "VAT" => 0.0, "Type" => "7", "Category" => "", "PTC" => "", "ID" => 6, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "PRCP", "Description" => "Priority Check-In", "PieceDescription" => "", "Charge" => 300.0, "VAT" => 0.0, "Type" => "8", "Category" => "", "PTC" => "", "ID" => 3, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array())
-            );
-        } elseif ($airlineCode === 'AI') {
-            // Air India Live SSR Catalog (Meals & Baggage)
-            $ssrItems = array(
-                // Meals (Type: 1)
-                array("Code" => "AVML", "Description" => "Asian Vegetarian Gourmet Meal", "PieceDescription" => "", "Charge" => 400.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 41, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "NVML", "Description" => "Continental Grilled Chicken with Herb Mash", "PieceDescription" => "", "Charge" => 450.0, "VAT" => 0.0, "Type" => "1", "Category" => "Non-Veg", "PTC" => "ADT", "ID" => 42, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "VJML", "Description" => "Jain Vegetarian Thali", "PieceDescription" => "", "Charge" => 380.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 43, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "DBML", "Description" => "Diabetic Friendly Light Meal", "PieceDescription" => "", "Charge" => 350.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 44, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "HNML", "Description" => "Royal Indian Mughlai Platter", "PieceDescription" => "", "Charge" => 450.0, "VAT" => 0.0, "Type" => "1", "Category" => "Non-Veg", "PTC" => "ADT", "ID" => 45, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "CHTK", "Description" => "Smoked Chicken Salad & Fruit Bowl", "PieceDescription" => "", "Charge" => 420.0, "VAT" => 0.0, "Type" => "1", "Category" => "Non-Veg", "PTC" => "ADT", "ID" => 46, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "VGRL", "Description" => "Spiced Paneer Roll & Mango Nectar", "PieceDescription" => "", "Charge" => 290.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 47, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "FRTB", "Description" => "Fresh Tropical Fruit Medley", "PieceDescription" => "", "Charge" => 250.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 48, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-
-                // Baggage (Type: 2)
-                array("Code" => "AIB05", "Description" => "5 Kgs", "PieceDescription" => "", "Charge" => 2250.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 51, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "AIB10", "Description" => "10 Kgs", "PieceDescription" => "", "Charge" => 4500.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 52, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "AIB15", "Description" => "15 Kgs", "PieceDescription" => "", "Charge" => 6750.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 53, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "AIB20", "Description" => "20 Kgs", "PieceDescription" => "", "Charge" => 9000.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 54, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "PRCL", "Description" => "Maharaja Priority Baggage Tag", "PieceDescription" => "", "Charge" => 350.0, "VAT" => 0.0, "Type" => "7", "Category" => "", "PTC" => "", "ID" => 55, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array())
-            );
-        } elseif ($airlineCode === 'QP') {
-            // Akasa Air Live SSR Catalog
-            $ssrItems = array(
-                array("Code" => "QPM1", "Description" => "Café Akasa Smoked Paneer Bagel & Cold Brew", "PieceDescription" => "", "Charge" => 380.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 71, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "QPM2", "Description" => "Vietnamese Rice Noodle Veg Bowl", "PieceDescription" => "", "Charge" => 420.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 72, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "QPM3", "Description" => "Roast Chicken Mayo Sub Sandwich", "PieceDescription" => "", "Charge" => 440.0, "VAT" => 0.0, "Type" => "1", "Category" => "Non-Veg", "PTC" => "ADT", "ID" => 73, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "QPM4", "Description" => "Gujarati Thepla & Sweet Mango Pickle", "PieceDescription" => "", "Charge" => 260.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 74, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "QPM5", "Description" => "Dark Chocolate Pastry & Fresh Juice", "PieceDescription" => "", "Charge" => 300.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 75, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "QPB03", "Description" => "3 Kgs", "PieceDescription" => "", "Charge" => 1200.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 76, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "QPB05", "Description" => "5 Kgs", "PieceDescription" => "", "Charge" => 2000.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 77, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "QPB10", "Description" => "10 Kgs", "PieceDescription" => "", "Charge" => 4000.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 78, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "QPB15", "Description" => "15 Kgs", "PieceDescription" => "", "Charge" => 6000.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 79, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array())
-            );
-        } else {
-            // IndiGo (6E) & standard
-            $ssrItems = array(
-                array("Code" => "VCSW", "Description" => "6E Eats Choice of Day (Veg) + Beverage", "PieceDescription" => "", "Charge" => 400.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 8, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "VBIR", "Description" => "Veg Biryani Combo + Beverage", "PieceDescription" => "", "Charge" => 400.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 9, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "PTSW", "Description" => "Paneer Tikka Sandwich Combo", "PieceDescription" => "", "Charge" => 500.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 10, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "CJSW", "Description" => "Chicken Junglee Sandwich Combo", "PieceDescription" => "", "Charge" => 500.0, "VAT" => 0.0, "Type" => "1", "Category" => "Non-Veg", "PTC" => "ADT", "ID" => 16, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "AGSW", "Description" => "Regional Favourite Poha + Beverage", "PieceDescription" => "", "Charge" => 300.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 17, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "CPML", "Description" => "Chef's Special Premium Platter", "PieceDescription" => "", "Charge" => 650.0, "VAT" => 0.0, "Type" => "1", "Category" => "Non-Veg", "PTC" => "ADT", "ID" => 15, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "CHCK", "Description" => "Smoked Chicken Salad Bowl", "PieceDescription" => "", "Charge" => 450.0, "VAT" => 0.0, "Type" => "1", "Category" => "Non-Veg", "PTC" => "ADT", "ID" => 18, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "NUTM", "Description" => "Roasted Nut Medley & Belgian Cookies", "PieceDescription" => "", "Charge" => 250.0, "VAT" => 0.0, "Type" => "1", "Category" => "Veg", "PTC" => "ADT", "ID" => 19, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "EB03", "Description" => "3 Kgs", "PieceDescription" => "", "Charge" => 1350.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 61, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "EB05", "Description" => "5 Kgs", "PieceDescription" => "", "Charge" => 2250.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 62, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "EB10", "Description" => "10 Kgs", "PieceDescription" => "", "Charge" => 4500.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 63, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "EB15", "Description" => "15 Kgs", "PieceDescription" => "", "Charge" => 6750.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 64, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "EB30", "Description" => "30 Kgs", "PieceDescription" => "", "Charge" => 13500.0, "VAT" => 0.0, "Type" => "2", "Category" => "", "PTC" => "", "ID" => 65, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array()),
-                array("Code" => "FFWD", "Description" => "6E FastForward Priority Check-In & Bag", "PieceDescription" => "", "Charge" => 450.0, "VAT" => 0.0, "Type" => "8", "Category" => "", "PTC" => "", "ID" => 14, "IsFreeMeal" => false, "MealImage" => "", "SSRUrl" => null, "AdditionalFields" => array())
-            );
-        }
-
-        $simResponse = array(
-            "TUI"     => $tui,
-            "PaidSSR" => true,
-            "Trips"   => array(
-                array(
-                    "From"    => strtoupper($from ?: "DEL"),
-                    "To"      => strtoupper($to ?: "BOM"),
-                    "Journey" => array(
-                        array(
-                            "Provider"       => $airlineCode,
-                            "MultiSSR"       => "",
-                            "ConversationID" => "",
-                            "Segments"       => array(
-                                array(
-                                    "FUID"  => "1",
-                                    "VAC"   => $airlineCode,
-                                    "Index" => null,
-                                    "SSR"   => $ssrItems
-                                )
-                            )
-                        )
-                    )
-                )
-            ),
-            "Code"    => "200",
-            "Msg"     => array("Success")
-        );
-        $lastLogId = !empty($attemptLogIds) ? array_pop($attemptLogIds) : ($res['log_id'] ?? 0);
-        $this->updateOrLogSuccess($lastLogId, 'flights/ssr', $this->ssrUrl, 'POST', $payload, $simResponse, 0, $attemptLogIds);
-        return $simResponse;
+        // Live Mode / Strict Pure Live Data: Return live response directly without dummy fallback
+        return $res['data'] ?? array();
     }
 
     /**
@@ -1318,141 +1205,18 @@ class BenzyFlightApi {
         );
 
         $res = $this->callApi($this->seatLayoutUrl, $payload, $token, 'POST', '/Flights/SeatLayout');
-        if (!empty($res['data']['Trips'][0]['Journey'][0]['Segments'][0]['Seats']) && count($res['data']['Trips'][0]['Journey'][0]['Segments'][0]['Seats']) >= 15) {
+        if (!empty($res['data']['Trips'][0]['Journey'][0]['Segments'][0]['Seats']) && count($res['data']['Trips'][0]['Journey'][0]['Segments'][0]['Seats']) >= 1) {
             return $res['data'];
         }
 
-        // Airway-specific aircraft model & booked seats map
-        $aircraftName = ($airlineCode === 'SG') ? 'B-737-186 (Y186) (1MAX)' : (($airlineCode === 'AI') ? 'A320-180neo (Maharaja)' : 'A320-186 (Y186)');
-        
-        // Define booked seats specific to this airway/flight so each airline feels live and authentic
-        $bookedSeatsMap = array(
-            'SG'      => array('2A', '2D', '2E', '2F', '3A', '5E', '7C', '8D', '11B', '12A', '14F', '17C', '18B', '21E', '22C', '25A', '29B'),
-            'SG_LEG2' => array('1D', '2B', '3E', '4A', '6C', '8E', '10A', '12D', '14B', '16F', '19A', '21C', '24D', '27B', '30E'),
-            'AI'      => array('1C', '2B', '3F', '4A', '4E', '6D', '8A', '9A', '11E', '13C', '14B', '15F', '17D', '20B', '21C', '24E', '26D', '28A'),
-            'AI_LEG2' => array('2A', '3C', '5D', '7B', '9E', '12A', '14D', '16C', '18F', '22B', '25E', '28F'),
-            '6E'      => array('1A', '2C', '3D', '5B', '7E', '9C', '10F', '12B', '13D', '16A', '19B', '20E', '23C', '25D', '28D'),
-            '6E_LEG2' => array('1F', '2D', '4B', '6E', '8C', '11A', '13E', '15C', '18D', '21A', '24E', '27C'),
-            'QP'      => array('1D', '2A', '3C', '5E', '6B', '8F', '10D', '12A', '15D', '18B', '22E', '27C'),
-            'UK'      => array('1A', '2E', '3B', '5D', '7A', '9F', '11C', '14A', '18F', '21B', '24B', '29C')
-        );
-        $fnNum = (int)preg_replace('/\D/', '', (string)$flightNo);
-        $variantKey = ($fnNum % 2 !== 0 || stripos((string)$flightNo, '322') !== false || stripos((string)$flightNo, 'leg2') !== false) ? ($airlineCode . '_LEG2') : $airlineCode;
-        $bookedList = $bookedSeatsMap[$variantKey] ?? ($bookedSeatsMap[$airlineCode] ?? $bookedSeatsMap['SG']);
-
-        $seats = array();
-        $ssidCounter = 500 + (($fnNum % 10) * 100);
-
-        for ($r = 1; $r <= 30; $r++) {
-            foreach (array('A', 'B', 'C', 'D', 'E', 'F') as $c) {
-                $seatNumber = $r . $c;
-                $isBooked = in_array($seatNumber, $bookedList);
-                $isWindow = in_array($c, array('A', 'F'));
-                $isAisle  = in_array($c, array('C', 'D'));
-                $isMiddle = in_array($c, array('B', 'E'));
-
-                $seatInfo = $isWindow ? 'WINDOW' : ($isAisle ? 'AISLE' : '');
-                $seatType = 'SS'; // Standard
-                $fare = 250;
-
-                // Airline-specific seat pricing
-                if ($r === 1) {
-                    // Row 1: Front extra legroom
-                    if ($airlineCode === 'SG') {
-                        $fare = 1650;
-                        $seatType = 'SM'; // Spicemax
-                        $seatInfo = $isWindow ? 'WINDOW (Spicemax Extra Legroom)' : 'Spicemax Extra Legroom';
-                    } elseif ($airlineCode === 'AI') {
-                        $fare = 1200;
-                        $seatType = 'PRS';
-                        $seatInfo = 'Executive Extra Legroom';
-                    } else {
-                        $fare = 1500;
-                        $seatType = 'PRS';
-                        $seatInfo = 'XL Extra Legroom';
-                    }
-                } elseif ($r >= 2 && $r <= 5) {
-                    // Preferred front rows
-                    $seatType = 'PS';
-                    if ($airlineCode === 'SG') {
-                        $fare = ($isWindow || $isAisle) ? 450 : 350;
-                    } elseif ($airlineCode === 'AI') {
-                        $fare = ($isWindow || $isAisle) ? 400 : 300;
-                    } else {
-                        $fare = ($isWindow || $isAisle) ? 450 : 350;
-                    }
-                } elseif ($r >= 6 && $r <= 11) {
-                    // Standard front rows
-                    $seatType = 'PS';
-                    $fare = ($isWindow || $isAisle) ? 350 : 250;
-                } elseif ($r === 12 || $r === 13) {
-                    // Emergency Exit Rows (EES)
-                    $seatType = 'EES';
-                    $seatInfo = 'EES - Seat is not allowed for Child / Infant';
-                    $fare = ($airlineCode === 'SG') ? 999 : (($airlineCode === 'AI') ? 800 : 1000);
-                } elseif ($r >= 14 && $r <= 24) {
-                    // Standard cabin rows
-                    $seatType = 'SS';
-                    $fare = ($isWindow || $isAisle) ? 250 : 150;
-                } elseif ($r >= 25 && $r <= 27) {
-                    // Rear cabin rows
-                    $seatType = 'SS';
-                    $fare = ($isWindow || $isAisle) ? 150 : 100;
-                } else {
-                    // Rows 28-30: Free seats!
-                    $seatType = 'FS';
-                    $fare = 0;
-                }
-
-                $ssidCounter++;
-                $seats[] = array(
-                    "AvailStatus" => !$isBooked,
-                    "SeatStatus"  => $isBooked ? "Booked" : "Open",
-                    "SeatNumber"  => $seatNumber,
-                    "SeatGroup"   => (string)min(8, ceil($r / 4)),
-                    "SeatInfo"    => $seatInfo,
-                    "SeatType"    => $seatType,
-                    "XValue"      => ($c === 'A') ? "1" : (($c === 'B') ? "3" : (($c === 'C') ? "5" : (($c === 'D') ? "9" : (($c === 'E') ? "11" : "13")))),
-                    "YValue"      => (string)($r * 2),
-                    "Fare"        => (string)$fare,
-                    "Tax"         => "0",
-                    "Height"      => "2",
-                    "Width"       => "2",
-                    "SSID"        => $ssidCounter
-                );
-            }
-        }
-
-        $simResponse = array(
-            "TUI"   => $tui,
-            "Trips" => array(
-                array(
-                    "Journey" => array(
-                        array(
-                            "Provider" => $airlineCode,
-                            "Segments" => array(
-                                array(
-                                    "FlightNo"    => $flightNo ?: "8160",
-                                    "AirlineName" => $aircraftName,
-                                    "AirlineUnit" => (string)count($seats),
-                                    "Seats"       => $seats
-                                )
-                            )
-                        )
-                    )
-                )
-            ),
-            "Code"  => "200",
-            "Msg"   => array("Success")
-        );
-        $this->updateOrLogSuccess($res['log_id'] ?? 0, 'flights/SeatLayout', $this->seatLayoutUrl, 'POST', $payload, $simResponse);
-        return $simResponse;
+        // Live Mode / Strict Pure Live Data: Return live response directly without dummy fallback
+        return $res['data'] ?? array();
     }
 
     /**
      * Parse Benzy SSR Response into structured arrays for Meals & Baggage display
      */
-    public function parseSSRForDisplay($ssrResponse, $airlineCode = 'SG') {
+    public function parseSSRForDisplay($ssrResponse, $airlineCode = 'SG', $isTransit = false) {
         $meals = array();
         $baggage = array();
         $priority = array();
@@ -1495,8 +1259,8 @@ class BenzyFlightApi {
                                                 'is_free'  => $isFree,
                                                 'category' => $category ?: (stripos($desc, 'chicken') !== false || stripos($desc, 'mutton') !== false || stripos($desc, 'fish') !== false ? 'Non-Veg' : 'Veg')
                                             );
-                                        } elseif ($isBaggage) {
-                                            // Baggage (Type: 2)
+                                        } elseif ($isBaggage && !$isTransit) {
+                                            // Baggage (Type: 2) - Not allowed on connecting/transit flights as per airline policy
                                             $baggage[] = array(
                                                 'code'   => $code,
                                                 'weight' => $desc,
@@ -1522,14 +1286,9 @@ class BenzyFlightApi {
             }
         }
 
-        // If no meals were returned in live response for this sector, fallback to standard airline catering catalog
-        if (empty($meals)) {
-            $meals = $this->getDefaultAirlineMeals($airCode);
-        }
-
-        // If no baggage options were returned in live response, fallback to standard airline excess baggage tiers
-        if (empty($baggage)) {
-            $baggage = $this->getDefaultAirlineBaggage($airCode);
+        // Pure Live API Mode: No fallback to dummy meals or dummy baggage
+        if ($isTransit) {
+            $baggage = array();
         }
 
         return array(

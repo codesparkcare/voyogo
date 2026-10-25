@@ -1202,14 +1202,32 @@ class Welcome extends CI_Controller {
         $allSectors = array_merge($onwardSegments, $returnSegments);
         $addonsData = array();
 
+        $isOnwardTransit = ($stops > 0 || count($onwardSegments) > 1);
+        $isReturnTransit = ($is_roundtrip && ($return_stops > 0 || count($returnSegments) > 1));
+
+        if ($isOnwardTransit) {
+            $onwardFeatures['has_baggage'] = false;
+        }
+        if ($isReturnTransit && $returnFeatures) {
+            $returnFeatures['has_baggage'] = false;
+        }
+
         foreach ($allSectors as $sec) {
             $secAirline  = $sec['airline_code'];
             $secTui      = ($sec['journey_type'] === 'return') ? $returnTui : $onwardTui;
             $secIndex    = ($sec['journey_type'] === 'return') ? $returnIndex : $onwardIndex;
             $secFeatures = ($sec['journey_type'] === 'return' && $returnFeatures) ? $returnFeatures : $onwardFeatures;
 
+            $isTransit = ($sec['stops'] > 0 || ($sec['journey_type'] === 'return' ? count($returnSegments) > 1 : count($onwardSegments) > 1));
+
             $secSSRRaw = $this->benzyflightapi->getSSR($secTui, $sec['origin'], $sec['destination'], $secAirline, $sec['flight_number'], $addonSearchTui, $secIndex);
-            $secParsedSSR = $this->benzyflightapi->parseSSRForDisplay($secSSRRaw, $secAirline);
+            $secParsedSSR = $this->benzyflightapi->parseSSRForDisplay($secSSRRaw, $secAirline, $isTransit);
+
+            // Option A (Akbar Travels Rule): In connecting/transit flights, airlines do not allow online prepaid baggage
+            if ($isTransit) {
+                $secParsedSSR['baggage'] = array();
+                $secFeatures['has_baggage'] = false;
+            }
 
             $secSeatsRaw = $this->benzyflightapi->getSeatLayout($secTui, $secAirline, $sec['flight_number']);
             $secParsedSeats = $this->benzyflightapi->parseSeatLayoutForDisplay($secSeatsRaw);
@@ -1229,7 +1247,7 @@ class Welcome extends CI_Controller {
             }
 
             // Transit / Connecting Baggage rule (Through-checked to final destination)
-            $isThroughBaggage = !$secFeatures['is_sectorwise_baggage'] && ($sec['stops'] > 0 || count($onwardSegments) > 1);
+            $isThroughBaggage = !$secFeatures['is_sectorwise_baggage'] && $isTransit;
 
             $addonsData[$sec['key']] = array(
                 'key'                => $sec['key'],

@@ -1081,9 +1081,35 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
 
                     <!-- 3 Primary Tabs (Meals, Baggage, Seat Selection) -->
                     <?php
+                    $isTransitFlight = ($stops > 0 || (isset($sectors_list) && count($sectors_list) > 1));
                     $feat = $airline_features ?? array('has_meals' => true, 'has_baggage' => true, 'has_seats' => true);
-                    $defaultActiveTab = !empty($feat['has_meals']) ? 'meals' : (!empty($feat['has_baggage']) ? 'baggage' : 'seats');
+
+                    // Pure Live Mode: Check whether live data actually exists for each service from Benzy APIs
+                    $hasAnyLiveMeals = false;
+                    $hasAnyLiveBaggage = false;
+                    $hasAnyLiveSeats = false;
+
+                    if (!empty($addons_data)) {
+                        foreach ($addons_data as $sDat) {
+                            if (!empty($sDat['meals'])) $hasAnyLiveMeals = true;
+                            if (!$isTransitFlight && !empty($sDat['baggage'])) $hasAnyLiveBaggage = true;
+                            if (!empty($sDat['seat_rows'])) $hasAnyLiveSeats = true;
+                        }
+                    }
+
+                    if (!$hasAnyLiveMeals) $feat['has_meals'] = false;
+                    if (!$hasAnyLiveBaggage || $isTransitFlight) $feat['has_baggage'] = false;
+                    if (!$hasAnyLiveSeats) $feat['has_seats'] = false;
+
+                    $defaultActiveTab = !empty($feat['has_meals']) ? 'meals' : (!empty($feat['has_baggage']) ? 'baggage' : (!empty($feat['has_seats']) ? 'seats' : 'none'));
                     ?>
+                    <?php if ($defaultActiveTab === 'none'): ?>
+                    <div style="padding: 32px 20px; text-align: center; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; margin: 20px 0;">
+                        <div style="font-size: 36px; margin-bottom: 8px;">✈️</div>
+                        <div style="font-size: 16px; font-weight: 800; color: #1e293b; margin-bottom: 6px;">No Online Add-on Services Available for this Flight</div>
+                        <div style="font-size: 13.5px; color: #64748b; max-width: 540px; margin: 0 auto; line-height: 1.5;">The airline does not offer online pre-booked meals, prepaid baggage, or seat selection for this sector. Seats will be assigned free of charge during airport or web check-in.</div>
+                    </div>
+                    <?php endif; ?>
                     <div class="akbar-tab-row">
                         <!-- Meals Tab (Screenshot 1) -->
                         <?php if (!empty($feat['has_meals'])): ?>
@@ -1732,7 +1758,11 @@ function renderMeals(sector) {
     var meals = secData && secData.meals ? secData.meals : [];
 
     if (!meals || meals.length === 0) {
-        container.innerHTML = '<div style="grid-column: 1/-1; padding: 24px; text-align: center; color: #64748b; background: #f8fafc; border-radius: 8px;">No meal options available for this sector from Benzy APIs.</div>';
+        container.innerHTML = '<div style="grid-column: 1/-1; padding: 36px 20px; text-align: center; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px;">' +
+            '<div style="font-size: 32px; margin-bottom: 8px;">🥪</div>' +
+            '<div style="font-size: 15px; font-weight: 800; color: #334155; margin-bottom: 4px;">No Meal Options Available for this Flight</div>' +
+            '<div style="font-size: 13px; color: #64748b; max-width: 520px; margin: 0 auto; line-height: 1.5;">The airline does not offer pre-booked meals on this flight sector. Refreshments can be purchased on board subject to availability.</div>' +
+        '</div>';
         return;
     }
 
@@ -1819,7 +1849,11 @@ function renderBaggage(sector) {
     var baggage = secData && secData.baggage ? secData.baggage : [];
 
     if (!baggage || baggage.length === 0) {
-        container.innerHTML = '<div style="grid-column: 1/-1; padding: 24px; text-align: center; color: #64748b; background: #f8fafc; border-radius: 8px;">No extra baggage options available for this sector from Benzy APIs.</div>';
+        container.innerHTML = '<div style="grid-column: 1/-1; padding: 36px 20px; text-align: center; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px;">' +
+            '<div style="font-size: 32px; margin-bottom: 8px;">🧳</div>' +
+            '<div style="font-size: 15px; font-weight: 800; color: #334155; margin-bottom: 4px;">Prepaid Baggage Not Available Online for this Flight</div>' +
+            '<div style="font-size: 13px; color: #64748b; max-width: 520px; margin: 0 auto; line-height: 1.5;">The airline does not offer online prepaid excess baggage for this sector. Extra baggage can be purchased at the airport check-in counter as per airline rates.</div>' +
+        '</div>';
         return;
     }
 
@@ -1906,22 +1940,41 @@ function renderSeatMap(sector) {
     var rows = secData && secData.seat_rows ? secData.seat_rows : null;
 
     if (!rows || Object.keys(rows).length === 0) {
-        container.innerHTML = '<div style="padding: 24px; text-align: center; color: #64748b;">Seat layout information currently unavailable for this flight sector from Benzy APIs.</div>';
+        container.innerHTML = '<div style="padding: 36px 20px; text-align: center; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; margin: 16px 0;">' +
+            '<div style="font-size: 32px; margin-bottom: 8px;">💺</div>' +
+            '<div style="font-size: 15px; font-weight: 800; color: #334155; margin-bottom: 4px;">Online Seat Selection Not Available for this Flight</div>' +
+            '<div style="font-size: 13px; color: #64748b; max-width: 520px; margin: 0 auto; line-height: 1.5;">The airline has not released an online seat layout for this sector. Seats will be allocated free of charge during airport check-in or airline web check-in.</div>' +
+        '</div>';
         return;
     }
 
     var html = '';
+    var rowKeys = Object.keys(rows).map(Number).sort(function(a, b) { return a - b; });
     var colsLeft = ['A', 'B', 'C'];
     var colsRight = ['D', 'E', 'F'];
 
-    // Render Rows 1 through 30
-    for (var r = 1; r <= 30; r++) {
+    // Dynamically detect column layout from live API rows (e.g. 3x3 narrow-body, 2x2 turboprop)
+    var allCols = [];
+    rowKeys.forEach(function(r) {
+        Object.keys(rows[r] || {}).forEach(function(col) {
+            if (allCols.indexOf(col) === -1) allCols.push(col);
+        });
+    });
+    if (allCols.length <= 4 && allCols.indexOf('B') === -1) {
+        colsLeft = ['A', 'C'].filter(function(c) { return allCols.indexOf(c) !== -1; });
+        if (colsLeft.length === 0) colsLeft = ['A'];
+        colsRight = ['D', 'F'].filter(function(c) { return allCols.indexOf(c) !== -1; });
+        if (colsRight.length === 0) colsRight = ['D'];
+    }
+
+    // Render live rows dynamically based on actual aircraft layout returned from Benzy API
+    rowKeys.forEach(function(r) {
         var rowObj = rows[r] || {};
 
         html += '<div class="plane-seat-row">';
         html += '<div class="plane-seat-num">' + r + '</div>';
 
-        // Left Column Seats (A, B, C)
+        // Left Column Seats
         colsLeft.forEach(function(col) {
             html += renderSingleSeatHtml(rowObj[col], sector);
         });
@@ -1929,14 +1982,14 @@ function renderSeatMap(sector) {
         // Aisle Gap
         html += '<div class="seat-aisle-header"></div>';
 
-        // Right Column Seats (D, E, F)
+        // Right Column Seats
         colsRight.forEach(function(col) {
             html += renderSingleSeatHtml(rowObj[col], sector);
         });
 
         html += '<div class="plane-seat-num">' + r + '</div>';
         html += '</div>';
-    }
+    });
 
     container.innerHTML = html;
     updateSeatAssignmentsList(sector);
