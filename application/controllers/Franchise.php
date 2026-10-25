@@ -329,15 +329,23 @@ class Franchise extends CI_Controller {
                 continue;
             }
 
+            // Benz Live API Net Fare calculation (wholesale cost charged to franchise agent)
             $netPrice = 0.0;
-            if (!empty($item['base_fare']) && (float)$item['base_fare'] > 0) {
-                $netPrice = (float)$item['base_fare'];
+            if (!empty($item['NetFare']) && (float)$item['NetFare'] > 0) {
+                $netPrice = (float)$item['NetFare'];
             } elseif (!empty($item['net_fare']) && (float)$item['net_fare'] > 0) {
                 $netPrice = (float)$item['net_fare'];
-            } elseif (!empty($item['NetFare']) && (float)$item['NetFare'] > 0) {
-                $netPrice = (float)$item['NetFare'];
+            } elseif (!empty($item['base_fare']) && (float)$item['base_fare'] > 0) {
+                $netPrice = (float)$item['base_fare'];
             } else {
-                $netPrice = round($grossPrice * 0.88, 2);
+                $netPrice = round($grossPrice * 0.92, 2);
+            }
+
+            if ($grossPrice <= 0 && $netPrice > 0) {
+                $grossPrice = $netPrice + 300;
+            }
+            if ($netPrice <= 0 && $grossPrice > 0) {
+                $netPrice = round($grossPrice * 0.92, 2);
             }
             $taxPrice = max(0, $grossPrice - $netPrice);
 
@@ -377,6 +385,8 @@ class Franchise extends CI_Controller {
                 'stops_text'    => (isset($item['stops']) && (int)$item['stops'] > 0) ? ($item['stops'] . ' Stop') : 'Non-stop',
                 'price'         => $grossPrice,
                 'base_fare'     => $netPrice,
+                'net_fare'      => $netPrice,
+                'net_price'     => $netPrice,
                 'tax'           => $taxPrice,
                 'total_fare'    => $grossPrice,
                 'baggage'       => $item['baggage'] ?? '15 Kg',
@@ -396,11 +406,12 @@ class Franchise extends CI_Controller {
         // Resilient Fallback for smooth presentation if Benzy returns empty in test mode
         if (empty($onwardFlights)) {
             $mockDefaults = array(
-                array('code' => '6E', 'fn' => '2041', 'dep' => '06:00', 'arr' => '08:15', 'dur' => '02h 15m', 'gross' => 5050, 'net' => 4200, 'stops' => 0, 'ref' => false),
-                array('code' => 'AI', 'fn' => '805',  'dep' => '09:30', 'arr' => '11:45', 'dur' => '02h 15m', 'gross' => 5600, 'net' => 4700, 'stops' => 0, 'ref' => true),
-                array('code' => 'SG', 'fn' => '162',  'dep' => '13:15', 'arr' => '15:30', 'dur' => '02h 15m', 'gross' => 4950, 'net' => 4100, 'stops' => 0, 'ref' => false),
-                array('code' => 'QP', 'fn' => '1120', 'dep' => '18:40', 'arr' => '20:55', 'dur' => '02h 15m', 'gross' => 4800, 'net' => 3950, 'stops' => 0, 'ref' => false),
-                array('code' => 'UK', 'fn' => '945',  'dep' => '21:15', 'arr' => '23:30', 'dur' => '02h 15m', 'gross' => 5850, 'net' => 4900, 'stops' => 0, 'ref' => true)
+                array('code' => '6E', 'fn' => '301',  'dep' => '07:00', 'arr' => '09:10', 'dur' => '02h 10m', 'gross' => 7266, 'net' => 6966, 'stops' => 0, 'ref' => false),
+                array('code' => '6E', 'fn' => '317',  'dep' => '19:00', 'arr' => '21:10', 'dur' => '02h 10m', 'gross' => 7266, 'net' => 6966, 'stops' => 0, 'ref' => false),
+                array('code' => 'AI', 'fn' => '805',  'dep' => '09:30', 'arr' => '11:45', 'dur' => '02h 15m', 'gross' => 7836, 'net' => 7450, 'stops' => 0, 'ref' => true),
+                array('code' => 'SG', 'fn' => '162',  'dep' => '13:15', 'arr' => '15:30', 'dur' => '02h 15m', 'gross' => 8453, 'net' => 8050, 'stops' => 0, 'ref' => false),
+                array('code' => 'QP', 'fn' => '1120', 'dep' => '18:40', 'arr' => '20:55', 'dur' => '02h 15m', 'gross' => 7518, 'net' => 7150, 'stops' => 0, 'ref' => false),
+                array('code' => 'I5', 'fn' => '741',  'dep' => '21:15', 'arr' => '23:30', 'dur' => '02h 15m', 'gross' => 8355, 'net' => 7980, 'stops' => 0, 'ref' => false)
             );
             foreach ($mockDefaults as $mIdx => $m) {
                 $c = $m['code'];
@@ -425,6 +436,8 @@ class Franchise extends CI_Controller {
                     'stops_text'    => $m['stops'] > 0 ? ($m['stops'] . ' Stop') : 'Non-stop',
                     'price'         => $m['gross'],
                     'base_fare'     => $m['net'],
+                    'net_fare'      => $m['net'],
+                    'net_price'     => $m['net'],
                     'tax'           => max(0, $m['gross'] - $m['net']),
                     'total_fare'    => $m['gross'],
                     'baggage'       => '15 Kg',
@@ -467,6 +480,8 @@ class Franchise extends CI_Controller {
                     'stops_text'    => $rm['stops'] > 0 ? ($rm['stops'] . ' Stop') : 'Non-stop',
                     'price'         => $rm['gross'],
                     'base_fare'     => $rm['net'],
+                    'net_fare'      => $rm['net'],
+                    'net_price'     => $rm['net'],
                     'tax'           => max(0, $rm['gross'] - $rm['net']),
                     'total_fare'    => $rm['gross'],
                     'baggage'       => '15 Kg',
@@ -576,6 +591,11 @@ class Franchise extends CI_Controller {
             $price = (float)($this->input->post('price') ?: ($this->input->get('price') ?: ($this->input->post('total_fare') ?: 5050)));
         }
 
+        $markup_amount      = (float)($this->input->post('markup_amount') ?: ($this->input->get('markup_amount') ?: 0));
+        $markup_type        = $this->input->post('markup_type') ?: ($this->input->get('markup_type') ?: 'pax');
+        $net_fare_post      = (float)($this->input->post('net_fare') ?: ($this->input->get('net_fare') ?: 0));
+        $display_price_post = (float)($this->input->post('display_price') ?: ($this->input->get('display_price') ?: $price));
+
         $adults      = max(1, (int)($this->input->post('adults') ?: ($this->input->get('adults') ?: 1)));
         $children    = max(0, (int)($this->input->post('children') ?: ($this->input->get('children') ?: 0)));
         $infants     = max(0, (int)($this->input->post('infants') ?: ($this->input->get('infants') ?: 0)));
@@ -670,6 +690,10 @@ class Franchise extends CI_Controller {
             $flightDetails['refundable'] = true;
         }
         $flightDetails['is_refundable'] = !empty($flightDetails['refundable']);
+        $flightDetails['markup_amount'] = $markup_amount;
+        $flightDetails['markup_type']   = $markup_type;
+        $flightDetails['net_fare']      = $net_fare_post > 0 ? $net_fare_post : (isset($flightDetails['base_fare']) ? $flightDetails['base_fare'] : round($price * 0.92));
+        $flightDetails['display_price'] = $display_price_post > 0 ? $display_price_post : $price;
 
         $onward_fare_type = $this->input->post('onward_fare_type') ?: ($this->input->post('fare_type') ?: 'Retail');
         $return_fare_type = $this->input->post('return_fare_type') ?: 'Retail';
@@ -914,6 +938,10 @@ class Franchise extends CI_Controller {
         $data['children']          = $children;
         $data['infants']           = $infants;
         $data['cabin_class']       = $cabin_class;
+        $data['markup_amount']     = $markup_amount;
+        $data['markup_type']       = $markup_type;
+        $data['net_fare']          = $flightDetails['net_fare'];
+        $data['display_price']     = $flightDetails['display_price'];
 
         $trip_type_str    = $is_roundtrip ? 'roundtrip' : 'oneway';
         $actual_from_city = !empty($from_city_post) ? $from_city_post : ($flightDetails['from_airport'] ?? ($fromCode . ' (' . $fromCode . ')'));
@@ -1749,7 +1777,10 @@ class Franchise extends CI_Controller {
             'return_flight'  => $return_flight_meta,
             'ssr_addons'     => $ssrAddons,
             'contact'        => array('phone' => $contact_phone, 'email' => $contact_email, 'name' => $contact_name),
-            'passengers'     => $passengers
+            'passengers'     => $passengers,
+            'markup_amount'  => (float)($this->input->post('markup_amount') ?: ($sessionBooking['markup_amount'] ?? 0)),
+            'markup_type'    => $this->input->post('markup_type') ?: ($sessionBooking['markup_type'] ?? 'pax'),
+            'net_fare'       => (float)($this->input->post('net_fare') ?: ($sessionBooking['net_fare'] ?? 0))
         );
 
         $pnr         = 'VYO' . strtoupper(substr(md5(uniqid()), 0, 6));

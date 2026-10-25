@@ -1107,6 +1107,9 @@
                     <input type="hidden" name="base_fare" id="form_base_fare" value="<?php echo htmlspecialchars($fBaseFare); ?>">
                     <input type="hidden" name="taxes" value="<?php echo htmlspecialchars($fTaxes); ?>">
                     <input type="hidden" name="total_amount" id="form_total_amount" value="<?php echo htmlspecialchars($initialGrandTotal); ?>">
+                    <input type="hidden" name="markup_amount" id="form_markup_amount" value="<?php echo htmlspecialchars($markup_amount ?? ($flight['markup_amount'] ?? 0)); ?>">
+                    <input type="hidden" name="markup_type" id="form_markup_type" value="<?php echo htmlspecialchars($markup_type ?? ($flight['markup_type'] ?? 'pax')); ?>">
+                    <input type="hidden" name="net_fare" id="form_net_fare" value="<?php echo htmlspecialchars($net_fare ?? ($flight['net_fare'] ?? $fBaseFare)); ?>">
                     
                     <!-- More Fare Options Fields -->
                     <input type="hidden" name="fare_tier" id="form_fare_tier" value="Value">
@@ -2235,6 +2238,26 @@
                             </span>
                             <strong style="color: #16a34a; font-size: 13.5px;">- ₹ <span id="summaryDiscount"><?php echo number_format($initialDiscount); ?></span></strong>
                         </div>
+
+                        <!-- Franchise Markup (Agent Profit) -->
+                        <?php 
+                        $revMarkup = (float)($markup_amount ?? ($flight['markup_amount'] ?? 0));
+                        $revNetFare = (float)($net_fare ?? ($flight['net_fare'] ?? 0));
+                        if ($revMarkup > 0): 
+                        ?>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 6px 10px; background: #fefce8; border-radius: 6px; border: 1px dashed #facc15;">
+                            <span style="font-size: 13px; font-weight: 700; color: #854d0e;">
+                                <i class="fa-solid fa-coins"></i> Franchise Markup
+                            </span>
+                            <strong style="color: #a16207; font-size: 13.5px;">+ ₹ <?php echo number_format($revMarkup); ?></strong>
+                        </div>
+                        <?php if ($revNetFare > 0): ?>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 12px; color: #64748b;">
+                            <span>Benz API Net Cost</span>
+                            <strong style="color: #475569;">₹ <?php echo number_format($revNetFare); ?></strong>
+                        </div>
+                        <?php endif; ?>
+                        <?php endif; ?>
 
                         <!-- Total Amount Row (Screenshots 1 & 2) -->
                         <div class="f-fare-total-row" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #f1f5f9; border-radius: 6px; margin-top: 14px;">

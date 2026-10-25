@@ -2240,6 +2240,23 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                     </div>
                     <?php endif; ?>
 
+                    <?php 
+                    $payMarkup = (float)($post_data['markup_amount'] ?? ($flight['markup_amount'] ?? 0));
+                    $payNetFare = (float)($post_data['net_fare'] ?? ($flight['net_fare'] ?? 0));
+                    if ($payMarkup > 0): 
+                    ?>
+                    <div class="fare-row-item" style="background: #fefce8; padding: 6px 10px; border-radius: 6px; border: 1px dashed #facc15;">
+                        <span style="color: #854d0e; font-weight: 700;"><i class="fa-solid fa-coins"></i> Franchise Markup</span>
+                        <strong style="color: #a16207;">+ ₹ <?php echo number_format($payMarkup); ?></strong>
+                    </div>
+                    <?php if ($payNetFare > 0): ?>
+                    <div class="fare-row-item" style="color: #64748b; font-size: 12px;">
+                        <span>Benz Live API Net Fare</span>
+                        <strong style="color: #475569;">₹ <?php echo number_format($payNetFare); ?></strong>
+                    </div>
+                    <?php endif; ?>
+                    <?php endif; ?>
+
                     <div class="fare-total-row">
                         <div>
                             <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase;">Total Payable</div>

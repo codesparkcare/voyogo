@@ -562,6 +562,36 @@ uasort($connectingAirportsList, function($a, $b) {
         </div>
         <?php endif; ?>
 
+        <!-- 8. Markup Widget (Akbar Travels Franchise Parity - Screenshots 2 & 3) -->
+        <div class="filter-section markup-filter-section" id="markupFilterSection">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h4 class="filter-title" style="margin: 0; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-chevron-up" style="font-size: 11px; color: #64748b;"></i> Markup
+                </h4>
+                <button type="button" id="btnResetMarkup" onclick="resetMarkup();" style="display: none; background: none; border: none; color: #2563eb; font-size: 13px; font-weight: 700; cursor: pointer; padding: 0;">Reset</button>
+            </div>
+
+            <!-- Radio Options: Journey/Pax vs Itinerary -->
+            <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 12px;">
+                <label style="display: flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 600; color: #1e293b; cursor: pointer;">
+                    <input type="radio" name="markup_type" id="markupTypePax" value="pax" checked style="accent-color: #84cc16; width: 17px; height: 17px; cursor: pointer;">
+                    <span>Journey/Pax</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 600; color: #1e293b; cursor: pointer;">
+                    <input type="radio" name="markup_type" id="markupTypeItinerary" value="itinerary" style="accent-color: #84cc16; width: 17px; height: 17px; cursor: pointer;">
+                    <span>Itinerary</span>
+                </label>
+            </div>
+
+            <!-- Amount Input & Calculate Button -->
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="number" id="markupAmountInput" placeholder="Amount" min="0" step="any" onkeydown="if(event.key==='Enter'){ applyMarkup(); }" style="flex: 1; min-width: 0; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 7px 10px; font-size: 13.5px; font-weight: 600; color: #0f172a; outline: none; background: #ffffff;">
+                <button type="button" id="btnCalculateMarkup" onclick="applyMarkup();" style="background: #eab308; color: #000000; font-size: 13px; font-weight: 800; border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer; transition: all 0.15s; white-space: nowrap;">
+                    Calculate
+                </button>
+            </div>
+        </div>
+
         <!-- B2B Net Guarantee Badge -->
         <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px; margin: 16px 20px 20px 20px; text-align: center;">
             <div style="font-size: 12px; font-weight: 800; color: #166534; display: flex; align-items: center; justify-content: center; gap: 6px;">
@@ -636,9 +666,11 @@ uasort($connectingAirportsList, function($a, $b) {
                     ?>
                     <label class="rt-card onward-card <?php echo ($idx === 0) ? 'selected-rt-card' : ''; ?>" 
                            data-idx="<?php echo $idx; ?>" 
+                           data-original-price="<?php echo $fPrice; ?>"
+                           data-price="<?php echo $fPrice; ?>" 
+                           data-net-fare="<?php echo (float)($f['net_fare'] ?? ($f['base_fare'] ?? $fPrice)); ?>"
                            data-stops="<?php echo $stops; ?>" 
                            data-airline="<?php echo htmlspecialchars(strtoupper($f['airline_code'] ?? '6E')); ?>" 
-                           data-price="<?php echo $fPrice; ?>" 
                            data-time="<?php echo htmlspecialchars($depTime); ?>"
                            data-depslot="<?php echo $depSlot; ?>"
                            data-arrslot="<?php echo $arrSlot; ?>"
@@ -654,8 +686,8 @@ uasort($connectingAirportsList, function($a, $b) {
                                 </div>
                             </div>
                             <div style="text-align: right;">
-                                <strong style="font-size: 16px; color: #09204b;">₹ <?php echo number_format($f['price']); ?></strong>
-                                <span style="font-size: 10px; color: #166534; font-weight: 700; display: block;">B2B Net</span>
+                                <strong style="font-size: 16px; color: #09204b;">₹ <span class="card-display-price"><?php echo number_format($f['price']); ?></span></strong>
+                                <span style="font-size: 10.5px; color: #475569; font-weight: 700; display: block;">Net: ₹ <span class="card-net-fare"><?php echo number_format((float)($f['net_fare'] ?? ($f['base_fare'] ?? $fPrice))); ?></span></span>
                             </div>
                         </div>
 
@@ -720,12 +752,16 @@ uasort($connectingAirportsList, function($a, $b) {
 
                         $rStops = (int)($rf['stops'] ?? 0);
                         $rViaAirport = !empty($rf['via']) ? strtoupper($rf['via']) : (!empty($rf['Via']) ? strtoupper($rf['Via']) : ($rStops > 0 ? 'HYD' : ''));
+                        $rfPrice = (float)($rf['price'] ?? 0);
+                        $rfNetFare = (float)($rf['net_fare'] ?? ($rf['base_fare'] ?? $rfPrice));
                     ?>
                     <label class="rt-card return-card <?php echo ($rIdx === 0) ? 'selected-rt-card' : ''; ?>" 
                            data-idx="<?php echo $rIdx; ?>" 
+                           data-original-price="<?php echo $rfPrice; ?>"
+                           data-price="<?php echo $rfPrice; ?>" 
+                           data-net-fare="<?php echo $rfNetFare; ?>"
                            data-stops="<?php echo $rStops; ?>" 
                            data-airline="<?php echo htmlspecialchars(strtoupper($rf['airline_code'] ?? '6E')); ?>" 
-                           data-price="<?php echo (float)$rf['price']; ?>" 
                            data-time="<?php echo htmlspecialchars($rDepTime); ?>"
                            data-depslot="<?php echo $rDepSlot; ?>"
                            data-arrslot="<?php echo $rArrSlot; ?>"
@@ -741,8 +777,8 @@ uasort($connectingAirportsList, function($a, $b) {
                                 </div>
                             </div>
                             <div style="text-align: right;">
-                                <strong style="font-size: 16px; color: #1e3a8a;">₹ <?php echo number_format($rf['price']); ?></strong>
-                                <span style="font-size: 10px; color: #166534; font-weight: 700; display: block;">B2B Net</span>
+                                <strong style="font-size: 16px; color: #1e3a8a;">₹ <span class="card-display-price"><?php echo number_format($rfPrice); ?></span></strong>
+                                <span style="font-size: 10.5px; color: #475569; font-weight: 700; display: block;">Net: ₹ <span class="card-net-fare"><?php echo number_format($rfNetFare); ?></span></span>
                             </div>
                         </div>
 
@@ -826,6 +862,9 @@ uasort($connectingAirportsList, function($a, $b) {
                         <input type="hidden" name="refundable" id="rt_refundable" value="1">
                         <input type="hidden" name="is_refundable" id="rt_is_refundable" value="1">
                         <input type="hidden" name="return_refundable" id="rt_return_refundable" value="1">
+                        <input type="hidden" name="markup_amount" id="rt_markup_amount" value="0">
+                        <input type="hidden" name="markup_type" id="rt_markup_type" value="pax">
+                        <input type="hidden" name="net_fare" id="rt_net_fare" value="">
 
                         <!-- Pax -->
                         <input type="hidden" name="adults" value="<?php echo (int)($search_query['adults'] ?? 1); ?>">
@@ -857,7 +896,7 @@ uasort($connectingAirportsList, function($a, $b) {
                 $stops      = (int)($f['stops'] ?? 0);
                 $grossPrice = (float)($f['price'] ?? 0);
                 if ($grossPrice <= 0) continue;
-                $netPrice   = (float)($f['base_fare'] ?? ($grossPrice * 0.88));
+                $netPrice   = (float)($f['net_fare'] ?? ($f['base_fare'] ?? ($grossPrice * 0.92)));
                 $taxPrice   = max(0, $grossPrice - $netPrice);
                 $baggage    = $f['baggage'] ?? '15 Kg';
 
@@ -876,7 +915,9 @@ uasort($connectingAirportsList, function($a, $b) {
                 $viaAirport = !empty($f['via']) ? strtoupper($f['via']) : (!empty($f['Via']) ? strtoupper($f['Via']) : ($stops > 0 ? 'HYD' : ''));
             ?>
             <div class="f-flight-item" 
+                 data-original-price="<?php echo $grossPrice; ?>"
                  data-price="<?php echo $grossPrice; ?>" 
+                 data-net-fare="<?php echo $netPrice; ?>"
                  data-stops="<?php echo $stops; ?>" 
                  data-airline="<?php echo htmlspecialchars($alCode); ?>" 
                  data-time="<?php echo htmlspecialchars($depTime); ?>"
@@ -939,17 +980,19 @@ uasort($connectingAirportsList, function($a, $b) {
                         </div>
                     </div>
 
-                    <!-- Price & Booking Block -->
+                    <!-- Price & Booking Block (Parity with Akbar Travels Screenshots 2 & 3) -->
                     <div style="text-align: right; border-left: 1px solid #f1f5f9; padding-left: 20px;">
-                        <div style="font-size: 11.5px; color: #94a3b8; text-decoration: line-through;">₹ <?php echo number_format($grossPrice * 1.12); ?></div>
-                        <div style="font-size: 24px; font-weight: 800; color: #09204b; line-height: 1.1;">
-                            ₹ <?php echo number_format($grossPrice, 2); ?>
+                        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 5px;">
+                            <div style="font-size: 24px; font-weight: 800; color: #09204b; line-height: 1.1;">
+                                ₹ <span class="card-display-price"><?php echo number_format($grossPrice); ?></span>
+                            </div>
+                            <span style="color: #64748b; font-size: 13px; cursor: pointer;" title="Fare Details">ⓘ</span>
                         </div>
-                        <span style="font-size: 11px; color: #166534; font-weight: 700; display: block; margin-top: 2px;">
-                            <i class="fa-solid fa-check"></i> Float Wallet Net Fare
-                        </span>
+                        <div style="font-size: 12px; color: #475569; font-weight: 700; margin-top: 3px;">
+                            Net Fare: ₹ <span class="card-net-fare"><?php echo number_format($netPrice); ?></span>
+                        </div>
 
-                        <form method="post" action="<?php echo site_url('franchise/flight_review'); ?>" style="margin-top: 10px;">
+                        <form method="post" action="<?php echo site_url('franchise/flight_review'); ?>" class="flight-book-form" style="margin-top: 10px;">
                             <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($fId); ?>">
                             <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($alName); ?>">
                             <input type="hidden" name="flight_number" value="<?php echo htmlspecialchars($flNumber); ?>">
@@ -962,19 +1005,33 @@ uasort($connectingAirportsList, function($a, $b) {
                             <input type="hidden" name="duration" value="<?php echo htmlspecialchars($duration); ?>">
                             <input type="hidden" name="stops" value="<?php echo (int)$stops; ?>">
                             <input type="hidden" name="base_fare" value="<?php echo $netPrice; ?>">
+                            <input type="hidden" name="net_fare" class="input-form-net-fare" value="<?php echo $netPrice; ?>">
+                            <input type="hidden" name="markup_amount" class="input-form-markup-amount" value="0">
+                            <input type="hidden" name="markup_type" class="input-form-markup-type" value="pax">
+                            <input type="hidden" name="display_price" class="input-form-display-price" value="<?php echo $grossPrice; ?>">
                             <input type="hidden" name="tax" value="<?php echo $taxPrice; ?>">
-                            <input type="hidden" name="price" value="<?php echo $grossPrice; ?>">
-                            <input type="hidden" name="total_fare" value="<?php echo $grossPrice; ?>">
+                            <input type="hidden" name="price" class="input-form-price" value="<?php echo $grossPrice; ?>">
+                            <input type="hidden" name="total_fare" class="input-form-total-fare" value="<?php echo $grossPrice; ?>">
                             <input type="hidden" name="adults" value="<?php echo (int)($search_query['adults'] ?? 1); ?>">
                             <input type="hidden" name="children" value="<?php echo (int)($search_query['children'] ?? 0); ?>">
                             <input type="hidden" name="infants" value="<?php echo (int)($search_query['infants'] ?? 0); ?>">
                             <input type="hidden" name="refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
                             <input type="hidden" name="is_refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
 
-                            <button type="submit" class="f-book-btn">
-                                <span>BOOK NOW</span> <i class="fa-solid fa-arrow-right"></i>
-                            </button>
+                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
+                                <button type="submit" class="f-book-btn" style="background: #8ac33e; color: #ffffff; padding: 8px 18px; font-weight: 800; font-size: 13.5px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                                    <span>Book Now</span>
+                                </button>
+                                <span style="display: inline-flex; flex-direction: column; gap: 3px; color: #475569; font-size: 12px; cursor: pointer;">
+                                    <i class="fa-regular fa-copy" title="Copy Fare"></i>
+                                    <i class="fa-solid fa-print" title="Print Fare Quote"></i>
+                                </span>
+                            </div>
                         </form>
+
+                        <div style="font-size: 11px; color: <?php echo !empty($f['refundable']) ? '#166534' : '#c2410c'; ?>; font-weight: 700; margin-top: 6px;">
+                            ⓘ <?php echo !empty($f['refundable']) ? 'Refundable fares' : 'NON Refundable fares'; ?>
+                        </div>
                     </div>
 
                 </div>
@@ -1053,6 +1110,172 @@ const msAirportsList = [
     { city: "Singapore", code: "SIN", airport: "Changi Airport", country: "Singapore" },
     { city: "London", code: "LHR", airport: "Heathrow Airport", country: "United Kingdom" }
 ];
+
+// 0. B2B Franchise Markup Calculation Engine (Exact match to Akbar Travels Screenshots 2 & 3)
+let currentMarkupAmount = 0;
+let currentMarkupType = 'pax';
+const totalPaxCount = <?php echo max(1, $paxCount); ?>;
+
+function applyMarkup() {
+    const inputEl = document.getElementById('markupAmountInput');
+    const amountVal = inputEl ? inputEl.value.trim() : '';
+    if (amountVal === '') {
+        alert('Please enter a markup amount.');
+        return;
+    }
+    const amount = parseFloat(amountVal);
+    if (isNaN(amount) || amount < 0) {
+        alert('Please enter a valid markup amount.');
+        return;
+    }
+
+    const selectedTypeEl = document.querySelector('input[name="markup_type"]:checked');
+    const markupType = selectedTypeEl ? selectedTypeEl.value : 'pax';
+
+    currentMarkupAmount = amount;
+    currentMarkupType = markupType;
+
+    // Unit addition per flight card:
+    // If Journey/Pax: markup is applied per passenger leg (e.g. +100)
+    // If Itinerary: flat markup for the total booking divided among passengers
+    let unitAddition = amount;
+    if (markupType === 'itinerary') {
+        unitAddition = Math.round(amount / totalPaxCount);
+    }
+
+    // 1. Update One-Way Flight Cards
+    document.querySelectorAll('.f-flight-item').forEach(card => {
+        const origPrice = parseFloat(card.getAttribute('data-original-price') || card.getAttribute('data-price') || 0);
+        if (origPrice <= 0) return;
+        const newPrice = Math.round(origPrice + unitAddition);
+
+        card.setAttribute('data-price', newPrice);
+
+        // Update display price text
+        const priceDisplayEl = card.querySelector('.card-display-price');
+        if (priceDisplayEl) {
+            priceDisplayEl.textContent = newPrice.toLocaleString('en-IN');
+        }
+
+        // Update form hidden inputs
+        const form = card.querySelector('form');
+        if (form) {
+            const pInput = form.querySelector('.input-form-price') || form.querySelector('input[name="price"]');
+            if (pInput) pInput.value = newPrice;
+            const tfInput = form.querySelector('.input-form-total-fare') || form.querySelector('input[name="total_fare"]');
+            if (tfInput) tfInput.value = newPrice;
+            const mAmtInput = form.querySelector('.input-form-markup-amount');
+            if (mAmtInput) mAmtInput.value = amount;
+            const mTypeInput = form.querySelector('.input-form-markup-type');
+            if (mTypeInput) mTypeInput.value = markupType;
+            const dispInput = form.querySelector('.input-form-display-price');
+            if (dispInput) dispInput.value = newPrice;
+        }
+    });
+
+    // 2. Update Round-Trip Cards
+    document.querySelectorAll('.onward-card, .return-card').forEach(card => {
+        const origPrice = parseFloat(card.getAttribute('data-original-price') || card.getAttribute('data-price') || 0);
+        if (origPrice <= 0) return;
+        const newPrice = Math.round(origPrice + unitAddition);
+        card.setAttribute('data-price', newPrice);
+        const priceDisplayEl = card.querySelector('.card-display-price');
+        if (priceDisplayEl) {
+            priceDisplayEl.textContent = newPrice.toLocaleString('en-IN');
+        }
+    });
+
+    // Update in-memory objects for round trip
+    if (typeof onwardFlightsData !== 'undefined' && Array.isArray(onwardFlightsData)) {
+        onwardFlightsData.forEach((f, i) => {
+            const card = document.querySelector(`.onward-card[data-idx="${i}"]`);
+            if (card) {
+                f.display_price = parseFloat(card.getAttribute('data-price'));
+            }
+        });
+    }
+    if (typeof returnFlightsData !== 'undefined' && Array.isArray(returnFlightsData)) {
+        returnFlightsData.forEach((f, i) => {
+            const card = document.querySelector(`.return-card[data-idx="${i}"]`);
+            if (card) {
+                f.display_price = parseFloat(card.getAttribute('data-price'));
+            }
+        });
+    }
+
+    if (typeof updateRoundTripSelection === 'function') {
+        updateRoundTripSelection();
+    }
+
+    // Show Reset link next to Markup
+    const resetBtn = document.getElementById('btnResetMarkup');
+    if (resetBtn) resetBtn.style.display = (amount > 0) ? 'inline-block' : 'none';
+
+    // Re-apply filters with new price values
+    applyFilters();
+}
+
+function resetMarkup() {
+    const inputEl = document.getElementById('markupAmountInput');
+    if (inputEl) inputEl.value = '';
+
+    const paxRadio = document.getElementById('markupTypePax');
+    if (paxRadio) paxRadio.checked = true;
+
+    currentMarkupAmount = 0;
+    currentMarkupType = 'pax';
+
+    // 1. Revert One-Way Cards
+    document.querySelectorAll('.f-flight-item').forEach(card => {
+        const origPrice = parseFloat(card.getAttribute('data-original-price') || 0);
+        if (origPrice <= 0) return;
+
+        card.setAttribute('data-price', origPrice);
+        const priceDisplayEl = card.querySelector('.card-display-price');
+        if (priceDisplayEl) {
+            priceDisplayEl.textContent = origPrice.toLocaleString('en-IN');
+        }
+
+        const form = card.querySelector('form');
+        if (form) {
+            const pInput = form.querySelector('.input-form-price') || form.querySelector('input[name="price"]');
+            if (pInput) pInput.value = origPrice;
+            const tfInput = form.querySelector('.input-form-total-fare') || form.querySelector('input[name="total_fare"]');
+            if (tfInput) tfInput.value = origPrice;
+            const mAmtInput = form.querySelector('.input-form-markup-amount');
+            if (mAmtInput) mAmtInput.value = '0';
+            const dispInput = form.querySelector('.input-form-display-price');
+            if (dispInput) dispInput.value = origPrice;
+        }
+    });
+
+    // 2. Revert Round-Trip Cards
+    document.querySelectorAll('.onward-card, .return-card').forEach(card => {
+        const origPrice = parseFloat(card.getAttribute('data-original-price') || 0);
+        if (origPrice <= 0) return;
+        card.setAttribute('data-price', origPrice);
+        const priceDisplayEl = card.querySelector('.card-display-price');
+        if (priceDisplayEl) {
+            priceDisplayEl.textContent = origPrice.toLocaleString('en-IN');
+        }
+    });
+
+    if (typeof onwardFlightsData !== 'undefined' && Array.isArray(onwardFlightsData)) {
+        onwardFlightsData.forEach(f => { delete f.display_price; });
+    }
+    if (typeof returnFlightsData !== 'undefined' && Array.isArray(returnFlightsData)) {
+        returnFlightsData.forEach(f => { delete f.display_price; });
+    }
+
+    if (typeof updateRoundTripSelection === 'function') {
+        updateRoundTripSelection();
+    }
+
+    const resetBtn = document.getElementById('btnResetMarkup');
+    if (resetBtn) resetBtn.style.display = 'none';
+
+    applyFilters();
+}
 
 // 1. Sidebar Interactive Filter State & Engine (Exact match to Screenshot 1)
 let selectedStopFilter = 'all';
@@ -1363,7 +1586,7 @@ function updateRoundTripSelection() {
         const alLogo = document.getElementById('rt_airline_logo'); if (alLogo) alLogo.value = o.airline_logo || '';
         const depTime = document.getElementById('rt_dep_time'); if (depTime) depTime.value = o.departure_time || '';
         const arrTime = document.getElementById('rt_arr_time'); if (arrTime) arrTime.value = o.arrival_time || '';
-        const onPrice = document.getElementById('rt_onward_price'); if (onPrice) onPrice.value = o.price || '';
+        const onPrice = document.getElementById('rt_onward_price'); if (onPrice) onPrice.value = o.display_price || o.price || '';
         const elRefO = document.getElementById('rt_refundable'); if (elRefO) elRefO.value = (o && o.refundable) ? '1' : '0';
         const elIsRefO = document.getElementById('rt_is_refundable'); if (elIsRefO) elIsRefO.value = (o && o.refundable) ? '1' : '0';
     }
@@ -1378,11 +1601,22 @@ function updateRoundTripSelection() {
         const retNum = document.getElementById('rt_ret_flight_number'); if (retNum) retNum.value = r.flight_number || '';
         const retDep = document.getElementById('rt_ret_dep_time'); if (retDep) retDep.value = r.departure_time || '';
         const retArr = document.getElementById('rt_ret_arr_time'); if (retArr) retArr.value = r.arrival_time || '';
-        const retPrice = document.getElementById('rt_ret_price'); if (retPrice) retPrice.value = r.price || '';
+        const retPrice = document.getElementById('rt_ret_price'); if (retPrice) retPrice.value = r.display_price || r.price || '';
         const elRefR = document.getElementById('rt_return_refundable'); if (elRefR) elRefR.value = (r && r.refundable) ? '1' : '0';
     }
 
-    const total = (o ? parseFloat(o.price || 0) : 0) + (r ? parseFloat(r.price || 0) : 0);
+    const rtMarkupAmt = document.getElementById('rt_markup_amount');
+    if (rtMarkupAmt) rtMarkupAmt.value = currentMarkupAmount;
+    const rtMarkupType = document.getElementById('rt_markup_type');
+    if (rtMarkupType) rtMarkupType.value = currentMarkupType;
+    const rtNetFare = document.getElementById('rt_net_fare');
+    if (rtNetFare) {
+        const netO = o ? (parseFloat(o.net_fare || o.base_fare || o.price || 0)) : 0;
+        const netR = r ? (parseFloat(r.net_fare || r.base_fare || r.price || 0)) : 0;
+        rtNetFare.value = netO + netR;
+    }
+
+    const total = (o ? parseFloat(o.display_price || o.price || 0) : 0) + (r ? parseFloat(r.display_price || r.price || 0) : 0);
     const barTotal = document.getElementById('barTotalPrice');
     if (barTotal) barTotal.textContent = '₹ ' + total.toLocaleString('en-IN');
 }
