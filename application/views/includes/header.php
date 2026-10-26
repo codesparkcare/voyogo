@@ -33,6 +33,41 @@
     <!-- Firebase App & Auth Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+    <style>
+        /* Sticky Header Guarantee for All Pages */
+        html {
+            overflow-x: clip;
+        }
+        body {
+            overflow-x: clip;
+        }
+        .main-header {
+            position: -webkit-sticky !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 1000 !important;
+            background-color: #09204b !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        /* Mobile Services Horizontal Bar: Hidden on desktop, visible and sticky on mobile */
+        .vy-mobile-services-bar {
+            display: none !important;
+        }
+        @media (max-width: 768px) {
+            .vy-mobile-services-bar {
+                display: block !important;
+                position: -webkit-sticky !important;
+                position: sticky !important;
+                top: 60px !important;
+                z-index: 999 !important;
+                background-color: #0b1a3a !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+                width: 100% !important;
+            }
+        }
+    </style>
 </head>
 
 <body>

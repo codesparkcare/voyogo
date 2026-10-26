@@ -52,7 +52,7 @@ body {
   background-color: #F4F6F9;
   color: var(--text-dark);
   line-height: 1.5;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -3052,7 +3052,7 @@ ul {
    ========================================================================== */
 
 html, body {
-  overflow-x: hidden !important;
+  overflow-x: clip !important;
   max-width: 100% !important;
   width: 100% !important;
 }
@@ -6065,15 +6065,22 @@ html, body {
   }
 }
 
+/* Mobile Horizontal Services Bar: Hidden by default on desktop (>768px) */
+.vy-mobile-services-bar {
+  display: none !important;
+}
+
 @media (max-width: 768px) {
   /* Mobile Horizontal Services Bar Styling */
   .vy-mobile-services-bar {
-    display: block;
+    display: block !important;
     background-color: #0b1a3a;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     width: 100%;
-    position: relative;
-    z-index: 100;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 60px;
+    z-index: 999;
   }
   .vy-services-bar-inner {
     display: flex;
@@ -6132,9 +6139,9 @@ html, body {
     border-radius: 3px 3px 0 0;
   }
 
-  /* Prevent horizontal overflow across the 5 service pages */
+  /* Prevent horizontal overflow across the 5 service pages without breaking sticky header */
   html, body {
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
     max-width: 100vw !important;
   }
 
