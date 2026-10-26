@@ -268,13 +268,15 @@ $contactEmail = $post_data['contact_email'] ?? 'booking@voyogo.com';
 $contactPhone = $post_data['contact_phone'] ?? '9876543210';
 
 // Pricing variables
-$fBaseFare       = (float)($fBaseFare ?? 8274);
-$fTaxes          = (float)($fTaxes ?? 2226);
-$fareTierDelta   = (float)($fareTierDelta ?? 0);
-$insuranceAmount = (float)($insuranceAmount ?? 0);
-$addonTotal      = (float)($addonTotal ?? 0);
-$promoDiscount   = (float)($promoDiscount ?? 0);
-$promoCode       = $post_data['promo_code'] ?? 'ATFLY';
+$fBaseFare       = (float)($fBaseFare ?? ($post_data['base_fare'] ?? ($base_fare ?? ($pricing['base_fare'] ?? 4918))));
+$fTaxes          = (float)($fTaxes ?? ($post_data['taxes'] ?? ($taxes ?? ($pricing['taxes'] ?? 2108))));
+$fareTierDelta   = (float)($fareTierDelta ?? ($post_data['fare_tier_price_delta'] ?? 0));
+$insuranceAmount = (float)($insuranceAmount ?? ($post_data['insurance_amount'] ?? 0));
+$addonTotal      = (float)($addonTotal ?? ($post_data['addon_total_amount'] ?? ($post_data['addons_grand_total'] ?? ($ssrAddonsAmount ?? 0))));
+$promoDiscount   = (float)($promoDiscount ?? ($post_data['discount_amount'] ?? ($discount_amount ?? 18)));
+$promoCode       = $promoCode ?? ($post_data['promo_code'] ?? 'ATFLY');
+$payMarkup       = (float)($post_data['markup_amount'] ?? ($markup_amount ?? ($flight['markup_amount'] ?? 0)));
+$payNetFare      = (float)($post_data['net_fare'] ?? ($net_fare ?? ($flight['net_fare'] ?? 0)));
 $grandTotal      = (float)($grandTotal ?? max(0, ($fBaseFare + $fTaxes + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount));
 
 // Addon Selections for display

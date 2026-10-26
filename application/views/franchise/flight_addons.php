@@ -1614,7 +1614,14 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
     <input type="hidden" name="return_selected_seat_amount" id="form_ret_seat_amount" value="0">
     <input type="hidden" name="return_selected_seat_ssid" id="form_ret_seat_ssid" value="0">
 
+    <input type="hidden" name="base_fare" id="form_final_base_fare" value="<?php echo htmlspecialchars((string)($base_fare + $fare_tier_price_delta)); ?>">
+    <input type="hidden" name="taxes" id="form_final_taxes" value="<?php echo htmlspecialchars((string)$taxes); ?>">
+    <input type="hidden" name="discount_amount" id="form_final_discount_amount" value="<?php echo htmlspecialchars((string)$discount_amount); ?>">
+    <input type="hidden" name="promo_code" id="form_final_promo_code" value="<?php echo htmlspecialchars((string)$promo_code); ?>">
+    <input type="hidden" name="insurance_amount" id="form_final_insurance_amount" value="<?php echo htmlspecialchars((string)$insurance_amount); ?>">
+    <input type="hidden" name="fare_tier_price_delta" id="form_final_fare_tier_price_delta" value="<?php echo htmlspecialchars((string)$fare_tier_price_delta); ?>">
     <input type="hidden" name="addon_total_amount" id="form_addon_total_amount" value="0">
+    <input type="hidden" name="addons_grand_total" id="form_addons_grand_total" value="0">
     <input type="hidden" name="total_amount" id="form_final_grand_total" value="<?php echo $initialGrandTotal; ?>">
     <input type="hidden" name="markup_amount" id="form_final_markup_amount" value="<?php echo htmlspecialchars((string)$markup_amount); ?>">
     <input type="hidden" name="markup_type" id="form_final_markup_type" value="<?php echo htmlspecialchars((string)$markup_type); ?>">
@@ -2451,6 +2458,9 @@ function recalcTotal() {
     if (document.getElementById('form_addon_total_amount')) {
         document.getElementById('form_addon_total_amount').value = totalAddons;
     }
+    if (document.getElementById('form_addons_grand_total')) {
+        document.getElementById('form_addons_grand_total').value = totalAddons;
+    }
 
     // Update Seat Selection Tab Badge (Screenshot 3 Matching Akbar)
     var defTab = document.getElementById('tabSeatsDefaultContent');
@@ -2630,6 +2640,11 @@ function applyPromoOption(code, discount, el) {
     document.getElementById('appliedPromoBadge').textContent = code;
     document.getElementById('appliedPromoSavings').textContent = appliedDiscount.toLocaleString('en-IN');
     document.getElementById('summaryDiscountAmount').textContent = appliedDiscount.toLocaleString('en-IN');
+
+    var discInp = document.getElementById('form_final_discount_amount');
+    if (discInp) discInp.value = appliedDiscount;
+    var codeInp = document.getElementById('form_final_promo_code');
+    if (codeInp) codeInp.value = appliedPromoCode;
 
     recalcTotal();
 }

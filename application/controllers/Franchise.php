@@ -1612,15 +1612,36 @@ class Franchise extends CI_Controller {
         }
         $data['passengers'] = $passengers;
 
-        // Calculate grand total including SSR addons
-        $baseFlightFare = (float)($sessionBooking['pricing']['grand_total'] ?? ($sessionBooking['flight']['price'] ?? 5050));
-        $ssrAddonsAmount = (float)($addonsPost['addons_grand_total'] ?? 0);
-        $grandTotal = round($baseFlightFare + $ssrAddonsAmount, 2);
+        // Synchronize and calculate exact pricing matching Addons & Review steps
+        $fBaseFare       = (float)($addonsPost['base_fare'] ?? ($reviewPost['base_fare'] ?? ($sessionBooking['pricing']['base_fare'] ?? 4918)));
+        $fTaxes          = (float)($addonsPost['taxes'] ?? ($reviewPost['taxes'] ?? ($sessionBooking['pricing']['taxes'] ?? 2108)));
+        $fareTierDelta   = (float)($addonsPost['fare_tier_price_delta'] ?? ($reviewPost['fare_tier_price_delta'] ?? 0));
+        $insuranceAmount = (float)($addonsPost['insurance_amount'] ?? ($reviewPost['insurance_amount'] ?? 0));
+        $addonTotal      = (float)($addonsPost['addon_total_amount'] ?? ($addonsPost['addons_grand_total'] ?? 0));
+        $promoDiscount   = (float)($addonsPost['discount_amount'] ?? ($reviewPost['discount_amount'] ?? 18));
+        $promoCode       = $addonsPost['promo_code'] ?? ($reviewPost['promo_code'] ?? 'ATFLY');
+        $payMarkup       = (float)($addonsPost['markup_amount'] ?? ($reviewPost['markup_amount'] ?? ($sessionBooking['markup_amount'] ?? 0)));
+        $payNetFare      = (float)($addonsPost['net_fare'] ?? ($reviewPost['net_fare'] ?? ($sessionBooking['net_fare'] ?? 0)));
 
-        $data['grandTotal'] = $grandTotal;
-        $data['baseFlightFare'] = $baseFlightFare;
-        $data['ssrAddonsAmount'] = $ssrAddonsAmount;
-        $data['can_book'] = ($store['wallet_balance'] >= $grandTotal);
+        if (isset($addonsPost['total_amount']) && (float)$addonsPost['total_amount'] > 0) {
+            $grandTotal = (float)$addonsPost['total_amount'];
+        } else {
+            $grandTotal = max(0, ($fBaseFare + $fTaxes + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount);
+        }
+
+        $data['fBaseFare']       = $fBaseFare;
+        $data['fTaxes']          = $fTaxes;
+        $data['fareTierDelta']   = $fareTierDelta;
+        $data['insuranceAmount'] = $insuranceAmount;
+        $data['addonTotal']      = $addonTotal;
+        $data['ssrAddonsAmount'] = $addonTotal;
+        $data['promoDiscount']   = $promoDiscount;
+        $data['promoCode']       = $promoCode;
+        $data['markup_amount']   = $payMarkup;
+        $data['net_fare']        = $payNetFare;
+        $data['grandTotal']      = $grandTotal;
+        $data['baseFlightFare']  = $fBaseFare + $fTaxes;
+        $data['can_book']        = ($store['wallet_balance'] >= $grandTotal);
 
         $this->load->view('franchise/layout/header', $data);
         $this->load->view('franchise/flight_payment', $data);
