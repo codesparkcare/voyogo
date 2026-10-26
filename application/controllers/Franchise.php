@@ -1629,19 +1629,24 @@ class Franchise extends CI_Controller {
             $grandTotal = max(0, ($fBaseFare + $fTaxes + $payMarkup + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount);
         }
 
-        $data['fBaseFare']       = $fBaseFare;
-        $data['fTaxes']          = $fTaxes;
-        $data['fareTierDelta']   = $fareTierDelta;
-        $data['insuranceAmount'] = $insuranceAmount;
-        $data['addonTotal']      = $addonTotal;
-        $data['ssrAddonsAmount'] = $addonTotal;
-        $data['promoDiscount']   = $promoDiscount;
-        $data['promoCode']       = $promoCode;
-        $data['markup_amount']   = $payMarkup;
-        $data['net_fare']        = $payNetFare;
-        $data['grandTotal']      = $grandTotal;
-        $data['baseFlightFare']  = $fBaseFare + $fTaxes;
-        $data['can_book']        = ($store['wallet_balance'] >= $grandTotal);
+        // Wallet Float Deduction: Deduct only Net Fare (+ addons / insurance) from store float, excluding franchise markup
+        $walletBaseFare = ($payNetFare > 0) ? $payNetFare : ($fBaseFare + $fTaxes);
+        $walletDeductAmount = min($grandTotal, max(0, ($walletBaseFare + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount));
+
+        $data['fBaseFare']          = $fBaseFare;
+        $data['fTaxes']             = $fTaxes;
+        $data['fareTierDelta']      = $fareTierDelta;
+        $data['insuranceAmount']    = $insuranceAmount;
+        $data['addonTotal']         = $addonTotal;
+        $data['ssrAddonsAmount']    = $addonTotal;
+        $data['promoDiscount']      = $promoDiscount;
+        $data['promoCode']          = $promoCode;
+        $data['markup_amount']      = $payMarkup;
+        $data['net_fare']           = $payNetFare;
+        $data['grandTotal']         = $grandTotal;
+        $data['walletDeductAmount'] = $walletDeductAmount;
+        $data['baseFlightFare']     = $fBaseFare + $fTaxes;
+        $data['can_book']           = ($store['wallet_balance'] >= $walletDeductAmount);
 
         $this->load->view('franchise/layout/header', $data);
         $this->load->view('franchise/flight_payment', $data);
@@ -1661,9 +1666,23 @@ class Franchise extends CI_Controller {
             $total_amount = 5050.00;
         }
 
-        // Live Wallet Balance Check
-        if ($store['wallet_balance'] < $total_amount) {
-            $this->session->set_flashdata('error', 'Insufficient store wallet float. Available: ₹ ' . number_format($store['wallet_balance'], 2) . ' | Required: ₹ ' . number_format($total_amount, 2) . '. Please request a float top-up.');
+        $markup_amount = (float)($this->input->post('markup_amount') ?: ($sessionBooking['markup_amount'] ?? 0));
+        $net_fare      = (float)($this->input->post('net_fare') ?: ($sessionBooking['net_fare'] ?? 0));
+
+        $wallet_deduct_amount = (float)$this->input->post('wallet_deduct_amount');
+        if ($wallet_deduct_amount <= 0) {
+            if ($net_fare > 0) {
+                $baseFlightFare = (float)($this->input->post('base_fare') ?: 0) + (float)($this->input->post('taxes') ?: 0);
+                $addonsDelta = max(0, $total_amount - $markup_amount - $baseFlightFare);
+                $wallet_deduct_amount = min($total_amount, max(0, $net_fare + $addonsDelta));
+            } else {
+                $wallet_deduct_amount = max(0, $total_amount - $markup_amount);
+            }
+        }
+
+        // Live Wallet Balance Check against Net Fare float required
+        if ($store['wallet_balance'] < $wallet_deduct_amount) {
+            $this->session->set_flashdata('error', 'Insufficient store wallet float. Available: ₹ ' . number_format($store['wallet_balance'], 2) . ' | Required: ₹ ' . number_format($wallet_deduct_amount, 2) . '. Please request a float top-up.');
             redirect('franchise/flight_payment');
             return;
         }
@@ -1810,14 +1829,14 @@ class Franchise extends CI_Controller {
         $pnr         = 'VYO' . strtoupper(substr(md5(uniqid()), 0, 6));
         $booking_ref = 'FB-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -5));
 
-        // Deduct from wallet atomically
+        // Deduct from wallet atomically (Net Fare float deducted, retaining store markup in cash)
         $wallet_res = $this->Franchise_model->update_wallet_balance(
             $store['id'],
             'debit',
-            $total_amount,
+            $wallet_deduct_amount,
             'flight_booking',
             $booking_ref,
-            'Flight Booking PNR: ' . $pnr . ' (' . $origin . ' → ' . $destination . ') - Store ' . $store['agent_code'],
+            'Flight Booking PNR: ' . $pnr . ' (' . $origin . ' → ' . $destination . ') [Invoice: ₹ ' . number_format($total_amount, 2) . '] - Store ' . $store['agent_code'],
             $store['username']
         );
 
@@ -1827,7 +1846,7 @@ class Franchise extends CI_Controller {
             return;
         }
 
-        // Record booking in database
+        // Record booking in database (total_amount = customer invoice; wallet_deducted = store float deduction)
         $this->Franchise_model->record_flight_booking(array(
             'store_id'           => $store['id'],
             'booking_ref'        => $booking_ref,
@@ -1841,7 +1860,7 @@ class Franchise extends CI_Controller {
             'base_fare'          => (float)($this->input->post('base_fare') ?: ($total_amount * 0.8)),
             'taxes'              => (float)($this->input->post('taxes') ?: ($total_amount * 0.2)),
             'total_amount'       => $total_amount,
-            'wallet_deducted'    => $total_amount,
+            'wallet_deducted'    => $wallet_deduct_amount,
             'status'             => 'confirmed'
         ));
 

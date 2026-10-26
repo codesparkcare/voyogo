@@ -3071,14 +3071,14 @@ class BenzyFlightApi {
                             $netFare = $segNetSum;
                         }
                     }
-                    // 8. Cross-calculate if one is present and the other is 0
+                    // 8. Cross-calculate if one is present and the other is 0 (Benz API Formula: NetFare = GrossFare - (TotalAgentMarkUp + TotalCommission))
+                    $agentMarkup = isset($j['TotalAgentMarkUp']) ? (float)$j['TotalAgentMarkUp'] : 0.0;
+                    $comm = isset($j['TotalCommission']) && (float)$j['TotalCommission'] > 0 ? (float)$j['TotalCommission'] : 0.0;
                     if ($grossFare <= 0 && $netFare > 0) {
-                        $comm = isset($j['TotalCommission']) && (float)$j['TotalCommission'] > 0 ? (float)$j['TotalCommission'] : 0.0;
-                        $grossFare = $netFare + $comm;
+                        $grossFare = $netFare + ($agentMarkup + $comm);
                     }
                     if ($netFare <= 0 && $grossFare > 0) {
-                        $comm = isset($j['TotalCommission']) && (float)$j['TotalCommission'] > 0 ? (float)$j['TotalCommission'] : 0.0;
-                        $netFare = max(0, $grossFare - $comm);
+                        $netFare = max(0, $grossFare - ($agentMarkup + $comm));
                     }
 
                     // 9. CRITICAL SAFETY GUARD: Skip completely unpriced / 0-fare journey records!
@@ -3179,11 +3179,14 @@ class BenzyFlightApi {
                     if (isset($journey['Price']['TotalFare']) && (float)$journey['Price']['TotalFare'] > 0 && $grossFare <= 0) {
                         $grossFare = (float)$journey['Price']['TotalFare'];
                     }
+                    $agentMarkup = isset($journey['Price']['TotalAgentMarkUp']) ? (float)$journey['Price']['TotalAgentMarkUp'] : 0.0;
+                    $comm = isset($journey['Price']['TotalCommission']) ? (float)$journey['Price']['TotalCommission'] : 0.0;
                     if ($grossFare <= 0 && $netFare > 0) {
-                        $grossFare = $netFare;
+                        $grossFare = $netFare + ($agentMarkup + $comm);
                     }
                     if ($netFare <= 0 && $grossFare > 0) {
-                        $netFare = round($grossFare * 0.85);
+                        $deduct = ($agentMarkup + $comm);
+                        $netFare = $deduct > 0 ? max(0, $grossFare - $deduct) : round($grossFare * 0.85);
                     }
                     if ($grossFare <= 0) {
                         continue;
@@ -3256,10 +3259,13 @@ class BenzyFlightApi {
                 $netFare = (float)$fares['NetFare'];
             }
 
+            $agentMarkup = isset($fares['TotalAgentMarkUp']) ? (float)$fares['TotalAgentMarkUp'] : (isset($journey['TotalAgentMarkUp']) ? (float)$journey['TotalAgentMarkUp'] : 0.0);
+            $comm = isset($fares['TotalCommission']) ? (float)$fares['TotalCommission'] : (isset($journey['TotalCommission']) ? (float)$journey['TotalCommission'] : 0.0);
             if ($grossFare <= 0 && $netFare > 0) {
-                $grossFare = $netFare;
+                $grossFare = $netFare + ($agentMarkup + $comm);
             } elseif ($netFare <= 0 && $grossFare > 0) {
-                $netFare = round($grossFare * 0.85);
+                $deduct = ($agentMarkup + $comm);
+                $netFare = $deduct > 0 ? max(0, $grossFare - $deduct) : round($grossFare * 0.85);
             } elseif ($grossFare <= 0) {
                 $grossFare = 5421.0;
                 $netFare = 5150.0;

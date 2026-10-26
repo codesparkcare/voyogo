@@ -368,14 +368,14 @@ $status = strtoupper($booking['status'] ?? 'CONFIRMED');
         <!-- Fare & Payment Summary -->
         <div style="border-top: 1.5px dashed #cbd5e1; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 18px 24px; border-radius: 10px; margin-bottom: 24px;">
             <div>
-                <div style="font-size: 12px; color: #64748b;">Payment Method: <strong style="color: #09204b;">Store Wallet Float Settlement</strong></div>
+                <div style="font-size: 12px; color: #64748b;">Payment Status: <strong style="color: #16a34a;"><i class="fa-solid fa-circle-check"></i> Paid &amp; Confirmed</strong></div>
                 <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Booked on: <?php echo date('d M Y, h:i A', strtotime($booking['created_at'])); ?></div>
-                <div style="font-size: 12px; color: #16a34a; font-weight: 700; margin-top: 3px;">
-                    <i class="fa-solid fa-shield-check"></i> Float Deduction Verified &bull; Reference: <?php echo htmlspecialchars($bookingRef); ?>
+                <div style="font-size: 12px; color: #475569; font-weight: 600; margin-top: 3px;">
+                    Issued by: <?php echo htmlspecialchars($store['store_name']); ?> &bull; Ref: <?php echo htmlspecialchars($bookingRef); ?>
                 </div>
             </div>
             <div style="text-align: right;">
-                <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Total Settlement Amount</div>
+                <div style="font-size: 12px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Invoice Amount</div>
                 <div style="font-size: 24px; font-weight: 900; color: #09204b; font-family: 'Outfit', sans-serif;">
                     ₹ <?php echo number_format($booking['total_amount'], 2); ?>
                 </div>

@@ -278,6 +278,8 @@ $promoCode       = $promoCode ?? ($post_data['promo_code'] ?? '');
 $payMarkup       = (float)($post_data['markup_amount'] ?? ($markup_amount ?? ($flight['markup_amount'] ?? 0)));
 $payNetFare      = (float)($post_data['net_fare'] ?? ($net_fare ?? ($flight['net_fare'] ?? 0)));
 $grandTotal      = (float)($grandTotal ?? max(0, ($fBaseFare + $fTaxes + $payMarkup + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount));
+$walletBaseFare  = ($payNetFare > 0) ? $payNetFare : ($fBaseFare + $fTaxes);
+$walletDeductAmount = (float)($walletDeductAmount ?? min($grandTotal, max(0, ($walletBaseFare + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount)));
 
 // Addon Selections for display
 $onwardBaggageDesc = $post_data['selected_baggage_desc'] ?? '';
@@ -2140,13 +2142,13 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                             <strong style="font-size: 19px; color: #09204b;">₹ <?php echo number_format($store['wallet_balance'] ?? 0, 2); ?></strong>
                         </div>
                         <div style="padding: 12px; background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0;">
-                            <span style="font-size: 11.5px; color: #64748b; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 4px;">Booking Total to Deduct</span>
-                            <strong style="font-size: 19px; color: #dc2626;">- ₹ <?php echo number_format($grandTotal, 2); ?></strong>
+                            <span style="font-size: 11.5px; color: #64748b; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 4px;">Net Float to Deduct</span>
+                            <strong style="font-size: 19px; color: #dc2626;">- ₹ <?php echo number_format($walletDeductAmount, 2); ?></strong>
                         </div>
                         <div style="padding: 12px; background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0;">
                             <span style="font-size: 11.5px; color: #64748b; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 4px;">Float After Booking</span>
-                            <strong style="font-size: 19px; color: <?php echo (($store['wallet_balance'] ?? 0) >= $grandTotal) ? '#16a34a' : '#ef4444'; ?>;">
-                                ₹ <?php echo number_format(($store['wallet_balance'] ?? 0) - $grandTotal, 2); ?>
+                            <strong style="font-size: 19px; color: <?php echo (($store['wallet_balance'] ?? 0) >= $walletDeductAmount) ? '#16a34a' : '#ef4444'; ?>;">
+                                ₹ <?php echo number_format(($store['wallet_balance'] ?? 0) - $walletDeductAmount, 2); ?>
                             </strong>
                         </div>
                     </div>
@@ -2167,22 +2169,23 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                     <?php endif; ?>
 
                     <input type="hidden" name="total_amount" id="payment_total_amount" value="<?php echo $grandTotal; ?>">
+                    <input type="hidden" name="wallet_deduct_amount" id="payment_wallet_deduct_amount" value="<?php echo $walletDeductAmount; ?>">
 
                     <?php if (!empty($can_book)): ?>
                         <button type="submit" class="btn-proceed-pay" style="width: 100%; background: #78B722; color: #ffffff; border: none; padding: 16px; border-radius: 10px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(120, 183, 34, 0.4); transition: all 0.2s;">
-                            <i class="fa-solid fa-circle-check" style="font-size: 18px;"></i> Confirm & Deduct ₹ <?php echo number_format($grandTotal); ?> from Store Float
+                            <i class="fa-solid fa-circle-check" style="font-size: 18px;"></i> Confirm &amp; Deduct ₹ <?php echo number_format($walletDeductAmount); ?> from Store Float
                         </button>
                         <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 14px; font-size: 11.5px; color: #64748b;">
                             <span><i class="fa-solid fa-lock" style="color: #16a34a;"></i> Instant Float Settlement</span>
                             <span>&bull;</span>
-                            <span>Official E-Ticket Issuance</span>
+                            <span>Customer Invoice: ₹ <?php echo number_format($grandTotal); ?></span>
                             <span>&bull;</span>
                             <span>Store Partner: <?php echo htmlspecialchars($store['store_name'] ?? ''); ?> (<?php echo htmlspecialchars($store['agent_code'] ?? ''); ?>)</span>
                         </div>
                     <?php else: ?>
                         <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 10px; padding: 16px; color: #991b1b; font-size: 13.5px; margin-bottom: 14px;">
                             <i class="fa-solid fa-triangle-exclamation" style="font-size: 18px; margin-right: 8px;"></i>
-                            <strong>Insufficient Store Wallet Float:</strong> Your available balance is ₹ <?php echo number_format($store['wallet_balance'] ?? 0, 2); ?>, but this booking requires ₹ <?php echo number_format($grandTotal, 2); ?>. Please contact Franchise Admin for a float top-up.
+                            <strong>Insufficient Store Wallet Float:</strong> Your available balance is ₹ <?php echo number_format($store['wallet_balance'] ?? 0, 2); ?>, but this booking requires ₹ <?php echo number_format($walletDeductAmount, 2); ?>. Please contact Franchise Admin for a float top-up.
                         </div>
                         <button type="button" disabled style="width: 100%; background: #94a3b8; color: #ffffff; border: none; padding: 16px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: not-allowed; display: flex; align-items: center; justify-content: center; gap: 8px;">
                             <i class="fa-solid fa-ban"></i> Booking Blocked (Low Float)
@@ -2273,7 +2276,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
 
                     <div class="fare-total-row">
                         <div>
-                            <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase;">Total Payable</div>
+                            <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase;">Total Invoice Amount</div>
                             <div style="font-size: 26px; font-weight: 900; color: #0f172a;">₹ <?php echo number_format($grandTotal); ?></div>
                         </div>
                         <span style="font-size: 11px; font-weight: 700; color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 4px 10px; border-radius: 20px;">
@@ -2281,9 +2284,14 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                         </span>
                     </div>
 
+                    <div class="fare-row-item" style="background: #f0fdf4; padding: 8px 12px; border-radius: 6px; border: 1px solid #bbf7d0; margin-top: 12px;">
+                        <span style="color: #15803d; font-weight: 700;"><i class="fa-solid fa-wallet"></i> Store Float Deduction:</span>
+                        <strong style="color: #15803d; font-size: 14px;">₹ <?php echo number_format($walletDeductAmount); ?></strong>
+                    </div>
+
                     <?php if (!empty($can_book)): ?>
                     <button type="button" class="btn-proceed-pay" style="width: 100%; margin-top: 16px; background: #78B722; color: #ffffff; border: none; padding: 14px 20px; border-radius: 10px; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(120, 183, 34, 0.4);" onclick="document.getElementById('flightPaymentForm').submit();">
-                        <i class="fa-solid fa-circle-check"></i> Deduct ₹ <?php echo number_format($grandTotal); ?> &amp; Confirm
+                        <i class="fa-solid fa-circle-check"></i> Deduct ₹ <?php echo number_format($walletDeductAmount); ?> &amp; Confirm
                     </button>
                     <?php endif; ?>
                 </div>
