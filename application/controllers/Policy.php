@@ -23,9 +23,7 @@ class Policy extends CI_Controller {
             'terms-of-use'        => 'Terms of Use',
             'privacy'             => 'Privacy Policy',
             'disclaimer'          => 'Disclaimer',
-            'faq'                 => 'Help & FAQs',
-            'branches'            => 'Branches & Bank Accounts',
-            'support'             => 'Support Center'
+            'faq'                 => 'Help & FAQs'
         );
 
         $tab = strtolower(trim((string)$tab));
@@ -41,12 +39,8 @@ class Policy extends CI_Controller {
             $tab = 'flight-policy';
         } elseif ($tab === 'terms-use' || $tab === 'terms_of_use') {
             $tab = 'terms-of-use';
-        } elseif ($tab === 'faqs' || $tab === 'help') {
+        } elseif ($tab === 'faqs' || $tab === 'help' || $tab === 'branches' || $tab === 'support' || $tab === 'support-center' || $tab === 'bank' || $tab === 'bank-accounts') {
             $tab = 'faq';
-        } elseif ($tab === 'bank' || $tab === 'bank-accounts' || $tab === 'bank_accounts') {
-            $tab = 'branches';
-        } elseif ($tab === 'support-center' || $tab === 'contact') {
-            $tab = 'support';
         }
 
         if (!array_key_exists($tab, $allowed_tabs)) {

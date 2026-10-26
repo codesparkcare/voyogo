@@ -49,9 +49,7 @@
             <!-- Col 1: Brand Info -->
             <div>
                 <div style="margin-bottom: 16px;">
-                    <a href="<?php echo site_url('franchise/flight'); ?>" style="display: inline-block;">
-                        <img src="<?php echo base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())); ?>" alt="Voyogo Logo" style="max-height: 44px; width: auto;">
-                    </a>
+                    <img src="<?php echo base_url('assets/images/logo.png'); ?>" alt="Voyogo Logo" style="max-height: 42px; width: auto;">
                 </div>
                 <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6; margin-bottom: 18px;">
                     Voyogo is India's leading online travel company offering great deals on flight bookings, hotel reservations, holiday packages, visas, and forex services. Book cheap domestic & international air tickets with ease.
@@ -111,9 +109,9 @@
                 <ul style="list-style: none; padding: 0; margin: 0; font-size: 13px; display: flex; flex-direction: column; gap: 10px;">
                     <li><a href="<?php echo site_url('disclaimer'); ?>" style="color: #cbd5e1; text-decoration: none;">Disclaimer</a></li>
                     <li><a href="<?php echo site_url('faq'); ?>" style="color: #cbd5e1; text-decoration: none;">Help &amp; FAQs</a></li>
-                    <li><a href="<?php echo site_url('support-center'); ?>" style="color: #cbd5e1; text-decoration: none;">Support Center</a></li>
-                    <li><a href="<?php echo site_url('branches'); ?>" style="color: #cbd5e1; text-decoration: none;">Branches &amp; Offices</a></li>
-                    <li><a href="<?php echo site_url('bank-accounts'); ?>" style="color: #cbd5e1; text-decoration: none;">Bank Accounts</a></li>
+                    <li><a href="tel:+918098999096" style="color: #cbd5e1; text-decoration: none;"><i class="fa-solid fa-phone" style="font-size: 11px; margin-right: 6px; color: #78B722;"></i> +91 8098999096</a></li>
+                    <li><a href="tel:+918098999095" style="color: #cbd5e1; text-decoration: none;"><i class="fa-solid fa-phone" style="font-size: 11px; margin-right: 6px; color: #78B722;"></i> +91 8098999095</a></li>
+                    <li><a href="mailto:support@voyogos.com" style="color: #cbd5e1; text-decoration: none;"><i class="fa-solid fa-envelope" style="font-size: 11px; margin-right: 6px; color: #78B722;"></i> Support@voyogos.com</a></li>
                 </ul>
             </div>
 
@@ -550,7 +548,7 @@
         });
 
         // 1. Check if Flashdata 'success_msg' is set
-        <?php if (isset($this->session) && $this->session->flashdata('success_msg')): ?>
+        <?php if ($this->session->flashdata('success_msg')): ?>
             openVoyogoThankYouModal(<?php echo json_encode($this->session->flashdata('success_msg')); ?>);
         <?php endif; ?>
 

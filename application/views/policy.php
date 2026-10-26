@@ -1203,7 +1203,7 @@
             <div class="p-top-card p-top-card-left">
                 <div class="card-left-header">
                     <div class="brand-logo-pill">
-                        <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())) : './assets/images/logo.png'; ?>" alt="Voyogo Logo">
+                        <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png') : './assets/images/logo.png'; ?>" alt="Voyogo Logo">
                     </div>
                     <div class="brand-corp-tag">
                         <i class="fa-solid fa-shield-halved"></i>
@@ -1218,7 +1218,7 @@
                         <div class="addr-icon"><i class="fa-solid fa-location-dot"></i></div>
                         <div class="addr-info">
                             <span class="addr-title">Corporate Office</span>
-                            <span class="addr-desc">1st Floor, 62 Janjikar Street, Mumbai - 400003, India</span>
+                            <span class="addr-desc">500/1, 11th East Cross St, Aringar Anna Nagar, Anna Nagar, Madurai, Tamil Nadu 625020</span>
                         </div>
                     </div>
 
@@ -1262,15 +1262,15 @@
 
                 <div class="card-right-body">
                     <div class="support-email-unit">
-                        <span class="email-unit-label"><i class="fa-solid fa-plane-departure" style="color: #0284c7;"></i> Int. Flight Support</span>
-                        <a href="mailto:support@voyogos.com" class="email-chip"><i class="fa-regular fa-envelope"></i> support@voyogos.com</a>
+                        <span class="email-unit-label"><i class="fa-solid fa-envelope" style="color: #0284c7;"></i> Customer Support</span>
+                        <a href="mailto:support@voyogos.com" class="email-chip"><i class="fa-regular fa-envelope"></i> Support@voyogos.com</a>
                     </div>
 
                     <div class="support-v-sep"></div>
 
                     <div class="support-email-unit">
-                        <span class="email-unit-label"><i class="fa-solid fa-hotel" style="color: #78B722;"></i> General & Hotel Support</span>
-                        <a href="mailto:supports@voyogo.com" class="email-chip"><i class="fa-regular fa-envelope"></i> supports@voyogo.com</a>
+                        <span class="email-unit-label"><i class="fa-solid fa-globe" style="color: #78B722;"></i> Official Website</span>
+                        <a href="https://voyogos.com/" target="_blank" class="email-chip"><i class="fa-solid fa-arrow-up-right-from-square"></i> voyogos.com</a>
                     </div>
                 </div>
             </div>
@@ -1343,18 +1343,6 @@
                             <span class="nav-badge-icon"><i class="fa-regular fa-address-card"></i></span>
                         </a>
                     </li>
-                    <li class="side-nav-item">
-                        <a href="javascript:void(0)" class="side-nav-link <?php echo ($active_tab === 'branches') ? 'active' : ''; ?>" data-target="tab-branches">
-                            <span class="nav-left-part"><span class="nav-icon-container"><i class="fa-solid fa-building-columns"></i></span> Branches & Bank Accounts</span>
-                            <span class="nav-badge-icon"><i class="fa-regular fa-address-card"></i></span>
-                        </a>
-                    </li>
-                    <li class="side-nav-item">
-                        <a href="javascript:void(0)" class="side-nav-link <?php echo ($active_tab === 'support') ? 'active' : ''; ?>" data-target="tab-support">
-                            <span class="nav-left-part"><span class="nav-icon-container"><i class="fa-solid fa-headset"></i></span> Support Center</span>
-                            <span class="nav-badge-icon"><i class="fa-regular fa-address-card"></i></span>
-                        </a>
-                    </li>
                 </ul>
             </aside>
 
@@ -1369,14 +1357,14 @@
                 </div>
 
                 <!-- ==========================================================
-                     TAB 1: TERMS & CONDITIONS
+                     TAB 1: TERMS & CONDITIONS (Official PDF Document)
                      ========================================================== -->
                 <div class="tab-content-pane <?php echo ($active_tab === 'terms') ? 'active' : ''; ?>" id="tab-terms">
                     <div class="policy-header-row">
                         <div class="policy-title-block">
-                            <div class="policy-title-icon"><i class="fa-regular fa-address-card"></i></div>
+                            <div class="policy-title-icon"><i class="fa-regular fa-file-lines"></i></div>
                             <div>
-                                <h1>Terms & Conditions</h1>
+                                <h1>Terms &amp; Conditions</h1>
                                 <span class="policy-subtitle-pill"><i class="fa-solid fa-circle-check"></i> Official Agreement &bull; SkyPlanet Voyages Pvt. Ltd.</span>
                             </div>
                         </div>
@@ -1387,58 +1375,97 @@
 
                     <div class="policy-lead-para">
                         <div class="lead-badge-row">
-                            <span class="lead-chip"><i class="fa-solid fa-circle-info"></i> Notice to Passengers</span>
-                            <span class="lead-time"><i class="fa-regular fa-clock"></i> Updated: 2026</span>
+                            <span class="lead-chip"><i class="fa-solid fa-shield-halved"></i> Official Terms &amp; Conditions</span>
+                            <span class="lead-time"><i class="fa-regular fa-clock"></i> SkyPlanet Voyages Private Limited</span>
                         </div>
-                        Guests, including children and infants, must present valid identification at check-in. It is your responsibility to ensure you have the appropriate travel documents at all times. These Terms & Conditions govern the use of travel-related services provided by <strong>SkyPlanet Voyages Private Limited</strong> ("SkyPlanet's Voyogo", "Company", "we", "us", or “our”) through our website, offices, representatives, telephone, email, WhatsApp, or other authorised booking channels.
+                        These Terms &amp; Conditions govern the use of travel-related services provided by <strong>SkyPlanet Voyages Private Limited</strong> (&ldquo;SkyPlanet's Voyogo,&rdquo; &ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) through our website, offices, representatives, telephone, email, WhatsApp, or other authorised booking channels.
                     </div>
 
                     <div class="policy-accordion-group">
                         
-                        <!-- Accordion 1: Change and Cancellation Policy (As highlighted in user screenshot!) -->
+                        <!-- Clause 1: Customer Acceptance & Agreement (PDF Page 1) -->
                         <div class="p-accordion-item open">
                             <div class="p-accordion-header">
-                                <span class="p-acc-title"><i class="fa-solid fa-circle-check prefix-icon"></i> Change and cancellation policy</span>
+                                <span class="p-acc-title"><i class="fa-solid fa-circle-check prefix-icon"></i> Customer Acceptance &amp; Agreement</span>
                                 <span class="p-acc-arrow"><i class="fa-solid fa-chevron-down"></i></span>
                             </div>
                             <div class="p-accordion-body">
-                                <p>All requests for changes or cancellation of any travel services, tour packages, bookings, or other services purchased through the SkyPlanet Voyages Private Limited website or through our authorised booking channels must be submitted in writing to the customer support or email address provided at the end of these Terms & Conditions. Such requests must be received during our working days and, unless otherwise specified in the applicable booking terms, at least 24 hours before the scheduled date or time of the relevant travel service.</p>
-                                <div class="p-callout warning">
-                                    <i class="fa-solid fa-clock me-1"></i> <strong>Working Hours:</strong> Our regular working hours are Monday to Saturday, from 10:00 AM to 7:00 PM Indian Standard Time (IST), excluding Sundays and public holidays. Requests received outside our working hours, on Sundays, or on public holidays will be treated as received on the next working day.
-                                </div>
-                                <p>You agree to abide by the booking terms and conditions communicated to you at the time of purchase. The applicable terms will determine the change, cancellation, and refund conditions for your particular booking, including any cancellation charges, supplier penalties, administrative charges, or other applicable fees.</p>
-                                <p>Additionally, you agree that if the applicable booking terms do not provide a specific change or cancellation policy for the service purchased, the booking may be subject to the cancellation and refund conditions of the respective airline, hotel, tour operator, transport provider, visa service provider, or other travel supplier. Any refund, where applicable, will be subject to the terms imposed by the relevant service provider and applicable Indian law.</p>
-                                <p>If the applicable cancellation terms do not expressly specify a refundable amount or the method for calculating the refund, the amount eligible for refund will be determined based on the actual amounts refundable by the relevant service provider, after deducting applicable cancellation charges, non-refundable amounts, taxes, service charges, and other costs already incurred.</p>
-                                <p>Where a booking has been partially utilised, the value of the services already utilised may be deducted when calculating any applicable refund. The calculation will be based on the actual terms and charges applicable to the booking and the relevant service provider and not necessarily on a pro rata basis.</p>
-                                <p>Requests for permitted changes or cancellations will normally be processed within <strong>2 working days</strong> after receipt of the complete request and settlement of all payments or charges required to process the requested change or cancellation.</p>
-                                <p>Where a refund is approved, the eligible refund amount, after deduction of applicable cancellation charges and other permitted deductions, will normally be processed to the same payment method used for the original transaction, subject to the payment gateway, bank, and service provider procedures.</p>
-                                <p>Once SkyPlanet Voyages Private Limited initiates the refund, the time taken for the amount to reflect in the customer's bank account or payment card may vary depending on the payment gateway, issuing bank, or financial institution. SkyPlanet Voyages Private Limited shall not be responsible for delays caused by banks, payment gateways, or third-party service providers.</p>
+                                <p>By accessing our website, making a booking, or using any of our travel services, the customer (&ldquo;Customer&rdquo;, &ldquo;you&rdquo;, or &ldquo;your&rdquo;) acknowledges that they have read, understood, and agreed to these Terms &amp; Conditions.</p>
+                                <p>By making a booking with SkyPlanet Voyages Private Limited, you confirm your acceptance of these Terms &amp; Conditions.</p>
                             </div>
                         </div>
 
-                        <!-- Accordion 2: Acceptance of Terms & Services Scope -->
+                        <!-- Clause 2: Scope of Travel Services & Bookings (PDF Page 1) -->
                         <div class="p-accordion-item">
                             <div class="p-accordion-header">
-                                <span class="p-acc-title"><i class="fa-solid fa-circle-check prefix-icon"></i> Scope of Travel Services & Bookings</span>
+                                <span class="p-acc-title"><i class="fa-solid fa-circle-check prefix-icon"></i> Scope of Travel Services &amp; Bookings</span>
                                 <span class="p-acc-arrow"><i class="fa-solid fa-chevron-down"></i></span>
                             </div>
                             <div class="p-accordion-body">
                                 <p>SkyPlanet Voyages Private Limited may provide travel-related services, including domestic and international tour packages, honeymoon packages, group tours, flight and hotel bookings, visa assistance, transportation, sightseeing, and other travel services.</p>
                                 <p>All bookings are subject to the specific terms mentioned in the applicable quotation, itinerary, invoice, booking confirmation, and the terms and conditions of the respective airlines, hotels, transport operators, tour operators, and other service providers.</p>
-                                <p>By accessing our website, making a booking, or using any of our travel services, the customer ("Customer", "you", or “your”) acknowledges that they have read, understood, and agreed to these Terms & Conditions.</p>
                             </div>
                         </div>
 
-                        <!-- Accordion 3: Governing Law & Updates -->
+                        <!-- Clause 3: Governing Law, Statutory Rights & Updates (PDF Page 1) -->
                         <div class="p-accordion-item">
                             <div class="p-accordion-header">
-                                <span class="p-acc-title"><i class="fa-solid fa-circle-check prefix-icon"></i> Governing Law, Statutory Rights & Updates</span>
+                                <span class="p-acc-title"><i class="fa-solid fa-circle-check prefix-icon"></i> Governing Law, Statutory Rights &amp; Updates</span>
                                 <span class="p-acc-arrow"><i class="fa-solid fa-chevron-down"></i></span>
                             </div>
                             <div class="p-accordion-body">
-                                <p>These Terms & Conditions shall be governed by the applicable laws of India. Nothing contained herein shall exclude or restrict any consumer right or legal remedy that cannot lawfully be excluded under applicable Indian law.</p>
-                                <p>The Company reserves the right to update these Terms & Conditions from time to time. The applicable terms for a confirmed booking shall be those communicated to the customer at the time of booking, subject to applicable law.</p>
-                                <p>By making a booking with SkyPlanet Voyages Private Limited, you confirm your acceptance of these Terms & Conditions.</p>
+                                <p>These Terms &amp; Conditions shall be governed by the applicable laws of India. Nothing contained herein shall exclude or restrict any consumer right or legal remedy that cannot lawfully be excluded under applicable Indian law.</p>
+                                <p>The Company reserves the right to update these Terms &amp; Conditions from time to time. The applicable terms for a confirmed booking shall be those communicated to the customer at the time of booking, subject to applicable law.</p>
+                            </div>
+                        </div>
+
+                        <!-- Clause 4: Legal Entity & Policy Scope (PDF Pages 8-9) -->
+                        <div class="p-accordion-item">
+                            <div class="p-accordion-header">
+                                <span class="p-acc-title"><i class="fa-solid fa-circle-check prefix-icon"></i> Legal Entity &amp; Scope of Terms</span>
+                                <span class="p-acc-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+                            </div>
+                            <div class="p-accordion-body">
+                                <p>SkyPlanet Voyages Private Limited, hereinafter referred to as &ldquo;SkyPlanet's Voyogo&rdquo;, &ldquo;SkyPlanet&rdquo;, &ldquo;Company&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;, as applicable.</p>
+                                <p>These Terms, Policies, and Disclaimers are effective from [Effective Date] and shall apply to all users, customers, clients, and transactions undertaken through the website, booking platforms, offices, and other authorised services of SkyPlanet Voyages Private Limited from the Effective Date onwards.</p>
+                                <p>SkyPlanet Voyages Private Limited reserves the right to modify, amend, update, or replace these Terms, Policies, and Disclaimers from time to time, subject to applicable Indian laws and regulations. Any such modification may be published on the company's website or communicated through appropriate channels, as applicable.</p>
+                                <p>The updated Terms, Policies, or Disclaimers shall become effective from the date specified in the updated version or upon publication, as applicable. Continued use of the website or services after such modification may constitute acceptance of the revised terms, subject to applicable law.</p>
+                            </div>
+                        </div>
+
+                        <!-- Clause 5: Client Acknowledgement & Acceptance Clause (PDF Pages 10-11) -->
+                        <div class="p-accordion-item">
+                            <div class="p-accordion-header">
+                                <span class="p-acc-title"><i class="fa-solid fa-circle-check prefix-icon"></i> Client Acknowledgement &amp; Acceptance Clause</span>
+                                <span class="p-acc-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+                            </div>
+                            <div class="p-accordion-body">
+                                <p>By accessing, registering on, making a booking through, or using the website, booking platform, or travel-related services of SkyPlanet Voyages Private Limited (&ldquo;SkyPlanet&rsquo;s Voyogo&rdquo;), the customer/client hereby:</p>
+                                <ul>
+                                    <li>Confirms that they have read, understood, and accepted these Terms, Policies, and Disclaimers and agree to comply with them.</li>
+                                    <li>Acknowledges that SkyPlanet Voyages Private Limited may act as a travel facilitator, intermediary, or booking agent for certain travel services provided by third-party suppliers.</li>
+                                    <li>Agrees that any booking, transaction, or use of the services by the customer or an authorised representative shall constitute acceptance of these Terms and Conditions on behalf of the customer or organisation, where applicable.</li>
+                                    <li>Acknowledges that the liability of SkyPlanet Voyages Private Limited shall be subject to the terms and limitations stated in the applicable booking conditions and these Terms, to the extent permitted under applicable Indian law.</li>
+                                    <li>Confirms that these Terms and Conditions, together with the applicable quotation, invoice, itinerary, and booking confirmation, shall be binding on the customer, subject to applicable Indian law.</li>
+                                </ul>
+                                <p>In the event of any conflict between these Terms and Conditions and a separate written agreement expressly executed between SkyPlanet Voyages Private Limited and the customer, the terms of such written agreement shall prevail only to the extent of the conflict, unless otherwise required by applicable law.</p>
+                            </div>
+                        </div>
+
+                        <!-- Clause 6: Official Support & Contact Channels (PDF Page 20 & Page 8) -->
+                        <div class="p-accordion-item">
+                            <div class="p-accordion-header">
+                                <span class="p-acc-title"><i class="fa-solid fa-circle-check prefix-icon"></i> Official Support &amp; Contact Details</span>
+                                <span class="p-acc-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+                            </div>
+                            <div class="p-accordion-body">
+                                <p>For inquiries, bookings, or clarifications regarding these Terms &amp; Conditions, please contact us via our official support channels:</p>
+                                <div class="p-callout success">
+                                    <p style="margin-bottom: 6px;"><strong>SkyPlanet Voyages Private Limited</strong></p>
+                                    <p style="margin-bottom: 4px;"><strong>Website:</strong> <a href="https://voyogos.com/" target="_blank" style="color: #0284c7; font-weight: 600;">https://voyogos.com/</a></p>
+                                    <p style="margin-bottom: 4px;"><strong>Mail ID:</strong> <a href="mailto:support@voyogos.com" style="color: #0284c7; font-weight: 600;">support@voyogos.com</a></p>
+                                    <p style="margin-bottom: 0;"><strong>Phone Number:</strong> <a href="tel:+918098999096" style="color: #0284c7; font-weight: 600;">+91 8098999096</a></p>
+                                </div>
                             </div>
                         </div>
 
@@ -1944,7 +1971,7 @@
                                 <p>If you have any questions, concerns, or requests regarding this Privacy Policy or the handling of your personal information, you may contact:</p>
                                 <div class="p-callout">
                                     <strong>SkyPlanet Voyages Private Limited</strong><br>
-                                    Email: <a href="mailto:support@voyogos.com" style="color: #0284c7; font-weight: 600;">support@voyogos.com</a> / <a href="mailto:supports@voyogo.com" style="color: #0284c7; font-weight: 600;">supports@voyogo.com</a><br>
+                                    Email: <a href="mailto:support@voyogos.com" style="color: #0284c7; font-weight: 600;">Support@voyogos.com</a><br>
                                     Helpline: +91 8098999096 / +91 8098999095
                                 </div>
                             </div>
@@ -2160,186 +2187,9 @@
                                 <p>For assistance with registration, account recharge, bookings, cancellations, refunds, technical issues, or other travel-related queries, please contact the SkyPlanet Voyages Private Limited customer support team through the official contact details provided on our website:</p>
                                 <ul>
                                     <li><strong>Helpline:</strong> +91 8098999096 / +91 8098999095</li>
-                                    <li><strong>Flight Support:</strong> support@voyogos.com</li>
-                                    <li><strong>Customer Support:</strong> supports@voyogo.com</li>
+                                    <li><strong>Support Email:</strong> Support@voyogos.com</li>
                                     <li><strong>Website:</strong> <a href="https://voyogos.com" target="_blank" style="color:#0284c7;">https://voyogos.com/</a></li>
                                 </ul>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- ==========================================================
-                     TAB 9: BRANCHES & BANK ACCOUNTS
-                     ========================================================== -->
-                <div class="tab-content-pane <?php echo ($active_tab === 'branches') ? 'active' : ''; ?>" id="tab-branches">
-                    <div class="policy-header-row">
-                        <div class="policy-title-block">
-                            <div class="policy-title-icon"><i class="fa-solid fa-building-columns"></i></div>
-                            <div>
-                                <h1>Branches & Bank Accounts</h1>
-                                <span class="policy-subtitle-pill"><i class="fa-solid fa-circle-check"></i> Verified Company Accounts &bull; SkyPlanet Voyages Pvt. Ltd.</span>
-                            </div>
-                        </div>
-                        <div class="policy-actions-row">
-                            <button type="button" class="btn-toggle-all-acc" onclick="toggleAllAccordions('tab-branches')"><i class="fa-solid fa-arrows-up-down"></i> Expand All</button>
-                        </div>
-                    </div>
-
-                    <div class="policy-lead-para">
-                        <div class="lead-badge-row">
-                            <span class="lead-chip"><i class="fa-solid fa-circle-info"></i> Financial & Banking Details</span>
-                            <span class="lead-time"><i class="fa-regular fa-clock"></i> Authorized Channels</span>
-                        </div>
-                        Find verified corporate office addresses and official banking settlement accounts for SkyPlanet Voyages Private Limited (SkyPlanet's Voyogo).
-                    </div>
-
-                    <div class="policy-accordion-group">
-                        
-                        <div class="p-accordion-item open">
-                            <div class="p-accordion-header">
-                                <span class="p-acc-title"><i class="fa-solid fa-location-dot prefix-icon"></i> Corporate & Registered Offices</span>
-                                <span class="p-acc-arrow"><i class="fa-solid fa-chevron-down"></i></span>
-                            </div>
-                            <div class="p-accordion-body">
-                                <p><strong>SkyPlanet Voyages Private Limited</strong> operates authorized offices and franchise partner networks across India:</p>
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 14px;">
-                                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
-                                        <h4 style="font-size: 14px; font-weight: 700; color: #09204b; margin-bottom: 6px;"><i class="fa-solid fa-building me-1" style="color: #f59e0b;"></i> Corporate Head Office</h4>
-                                        <p style="font-size: 12.5px; color: #475569; margin: 0 0 8px 0; line-height: 1.5;">
-                                            1st Floor, 62 Janjikar Street,<br>
-                                            Mumbai - 400003, Maharashtra, India
-                                        </p>
-                                        <p style="font-size: 12px; color: #64748b; margin: 0;"><strong>Phone:</strong> +91 8098999096 / +91 8098999095</p>
-                                        <p style="font-size: 12px; color: #64748b; margin: 0;"><strong>Email:</strong> support@voyogos.com</p>
-                                    </div>
-                                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
-                                        <h4 style="font-size: 14px; font-weight: 700; color: #09204b; margin-bottom: 6px;"><i class="fa-solid fa-shop me-1" style="color: #78B722;"></i> Franchise & B2B Operations</h4>
-                                        <p style="font-size: 12.5px; color: #475569; margin: 0 0 8px 0; line-height: 1.5;">
-                                            Partner Development Desk,<br>
-                                            SkyPlanet Voyages Pvt. Ltd. Network
-                                        </p>
-                                        <p style="font-size: 12px; color: #64748b; margin: 0;"><strong>Partner Desk:</strong> +91 8098999096</p>
-                                        <p style="font-size: 12px; color: #64748b; margin: 0;"><strong>Hours:</strong> Mon - Sat (10:00 AM - 7:00 PM IST)</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-accordion-item open">
-                            <div class="p-accordion-header">
-                                <span class="p-acc-title"><i class="fa-solid fa-vault prefix-icon"></i> Official Settlement Bank Account Details</span>
-                                <span class="p-acc-arrow"><i class="fa-solid fa-chevron-down"></i></span>
-                            </div>
-                            <div class="p-accordion-body">
-                                <p>For direct NEFT, RTGS, IMPS, or bank wire settlements for agent wallet recharges and holiday bookings, please use only the authorized company accounts below:</p>
-                                <div class="p-callout warning">
-                                    <i class="fa-solid fa-shield-halved me-1"></i> <strong>Security Advisory:</strong> Always verify account details on our official portal before initiating transactions. Voyogo will never ask you to transfer funds to personal savings accounts.
-                                </div>
-                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; margin-top: 12px;">
-                                    <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
-                                        <tr style="border-bottom: 1px solid #e2e8f0;">
-                                            <td style="padding: 8px 0; color: #64748b; width: 180px;"><strong>Account Name:</strong></td>
-                                            <td style="padding: 8px 0; font-weight: 700; color: #09204b;">SkyPlanet Voyages Private Limited</td>
-                                        </tr>
-                                        <tr style="border-bottom: 1px solid #e2e8f0;">
-                                            <td style="padding: 8px 0; color: #64748b;"><strong>Account Type:</strong></td>
-                                            <td style="padding: 8px 0; font-weight: 600;">Current Account</td>
-                                        </tr>
-                                        <tr style="border-bottom: 1px solid #e2e8f0;">
-                                            <td style="padding: 8px 0; color: #64748b;"><strong>Bank Name:</strong></td>
-                                            <td style="padding: 8px 0; font-weight: 600;">HDFC Bank / ICICI Bank</td>
-                                        </tr>
-                                        <tr style="border-bottom: 1px solid #e2e8f0;">
-                                            <td style="padding: 8px 0; color: #64748b;"><strong>Payment Modes:</strong></td>
-                                            <td style="padding: 8px 0;">NEFT / RTGS / IMPS / UPI / NetBanking</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding: 8px 0; color: #64748b;"><strong>Recharge Confirmation:</strong></td>
-                                            <td style="padding: 8px 0;">Email deposit slip / UTR to <a href="mailto:support@voyogos.com" style="color: #0284c7; font-weight: 600;">support@voyogos.com</a> or WhatsApp +91 8098999096</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- ==========================================================
-                     TAB 10: SUPPORT CENTER
-                     ========================================================== -->
-                <div class="tab-content-pane <?php echo ($active_tab === 'support') ? 'active' : ''; ?>" id="tab-support">
-                    <div class="policy-header-row">
-                        <div class="policy-title-block">
-                            <div class="policy-title-icon"><i class="fa-solid fa-headset"></i></div>
-                            <div>
-                                <h1>Support Center & Mishandled Baggage</h1>
-                                <span class="policy-subtitle-pill"><i class="fa-solid fa-circle-check"></i> 24x7 Emergency Assistance &bull; Voyogo Support</span>
-                            </div>
-                        </div>
-                        <div class="policy-actions-row">
-                            <button type="button" class="btn-toggle-all-acc" onclick="toggleAllAccordions('tab-support')"><i class="fa-solid fa-arrows-up-down"></i> Expand All</button>
-                        </div>
-                    </div>
-
-                    <div class="policy-lead-para">
-                        <div class="lead-badge-row">
-                            <span class="lead-chip"><i class="fa-solid fa-circle-info"></i> 24x7 Customer Desk</span>
-                            <span class="lead-time"><i class="fa-regular fa-clock"></i> Instant Escalation</span>
-                        </div>
-                        Voyogo Customer Support operates 24x7 to assist passengers with ticket modifications, emergency cancellations, refund tracking, and baggage assistance.
-                    </div>
-
-                    <div class="policy-accordion-group">
-                        
-                        <div class="p-accordion-item open">
-                            <div class="p-accordion-header">
-                                <span class="p-acc-title"><i class="fa-solid fa-phone-volume prefix-icon"></i> 24x7 Helpline & Dedicated Email Support</span>
-                                <span class="p-acc-arrow"><i class="fa-solid fa-chevron-down"></i></span>
-                            </div>
-                            <div class="p-accordion-body">
-                                <p>You can reach our team around the clock for any assistance regarding your travel reservations:</p>
-                                <ul>
-                                    <li><strong>Primary Helpline:</strong> +91 8098999096</li>
-                                    <li><strong>Secondary Helpline:</strong> +91 8098999095</li>
-                                    <li><strong>Flight Support:</strong> <a href="mailto:support@voyogos.com" style="color: #0284c7;">support@voyogos.com</a></li>
-                                    <li><strong>General Support:</strong> <a href="mailto:supports@voyogo.com" style="color: #0284c7;">supports@voyogo.com</a></li>
-                                    <li><strong>Official Website:</strong> <a href="https://voyogos.com/" target="_blank" style="color: #0284c7;">https://voyogos.com/</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="p-accordion-item">
-                            <div class="p-accordion-header">
-                                <span class="p-acc-title"><i class="fa-solid fa-suitcase-rolling prefix-icon"></i> Mishandled Baggage Assistance & Reporting</span>
-                                <span class="p-acc-arrow"><i class="fa-solid fa-chevron-down"></i></span>
-                            </div>
-                            <div class="p-accordion-body">
-                                <p>If your checked luggage has been delayed, lost, or damaged during a flight, please follow these steps immediately:</p>
-                                <ol>
-                                    <li><strong>File a PIR Report at Airport:</strong> Approach the respective airline's baggage assistance counter in the arrival hall before leaving the airport and obtain a <strong>Property Irregularity Report (PIR)</strong> with a tracking number.</li>
-                                    <li><strong>Retain Baggage Tags:</strong> Keep your boarding pass and checked baggage claim tags safely as they are required for all compensation claims.</li>
-                                    <li><strong>Notify Voyogo Support:</strong> Share your PIR number and booking reference with our support team at <a href="mailto:support@voyogos.com" style="color:#0284c7;">support@voyogos.com</a> so our operations desk can assist in coordinating with airline ground operations.</li>
-                                </ol>
-                            </div>
-                        </div>
-
-                        <div class="p-accordion-item">
-                            <div class="p-accordion-header">
-                                <span class="p-acc-title"><i class="fa-solid fa-user-clock prefix-icon"></i> Grievance Officer & Escalation Matrix</span>
-                                <span class="p-acc-arrow"><i class="fa-solid fa-chevron-down"></i></span>
-                            </div>
-                            <div class="p-accordion-body">
-                                <p>If your query or refund has not been resolved within the standard turnaround time, you can escalate the matter to our Grievance Officer:</p>
-                                <div class="p-callout">
-                                    <strong>Nodal Grievance Officer</strong><br>
-                                    SkyPlanet Voyages Private Limited<br>
-                                    1st Floor, 62 Janjikar Street, Mumbai - 400003, Maharashtra, India<br>
-                                    Email: <a href="mailto:support@voyogos.com" style="color: #0284c7; font-weight: 600;">support@voyogos.com</a> (Subject: Escalation - [Booking ID])<br>
-                                    Expected Response: Within 48 business hours.
-                                </div>
                             </div>
                         </div>
 

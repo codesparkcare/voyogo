@@ -33,9 +33,9 @@
                     
                     <!-- Column 1: Brand Info -->
                     <div class="footer-col footer-about">
-                        <a href="<?php echo function_exists('site_url') ? site_url('/') : '/'; ?>" class="brand-logo footer-brand-logo" style="display: inline-flex; margin-bottom: 16px;">
-                            <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())) : './assets/images/logo.png'; ?>" alt="Voyogo Logo" style="max-height: 48px; width: auto; object-fit: contain;">
-                        </a>
+                        <div class="brand-logo" style="margin-bottom: 16px;">
+                            <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png') : './assets/images/logo.png'; ?>" alt="Voyogo Logo" style="max-height: 44px; width: auto;">
+                        </div>
                         <p>Voyogo is India's leading online travel company offering great deals on flight bookings, hotel reservations, holiday packages, visas, and forex services. Book cheap domestic & international air tickets with ease.</p>
                         <div class="social-icons-row">
                             <a href="https://www.facebook.com/voyogos" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-icon social-fb"><i class="fa-brands fa-facebook-f"></i></a>
@@ -64,9 +64,9 @@
                         <ul class="footer-links">
                             <li><a href="<?php echo function_exists('site_url') ? site_url('disclaimer') : '/disclaimer'; ?>">Disclaimer</a></li>
                             <li><a href="<?php echo function_exists('site_url') ? site_url('faq') : '/faq'; ?>">Help &amp; FAQs</a></li>
-                            <li><a href="<?php echo function_exists('site_url') ? site_url('support-center') : '/support-center'; ?>">Support Center</a></li>
-                            <li><a href="<?php echo function_exists('site_url') ? site_url('branches') : '/branches'; ?>">Branches &amp; Offices</a></li>
-                            <li><a href="<?php echo function_exists('site_url') ? site_url('bank-accounts') : '/bank-accounts'; ?>">Bank Accounts</a></li>
+                            <li><a href="tel:+918098999096"><i class="fa-solid fa-phone" style="font-size: 11px; margin-right: 6px; color: var(--accent-gold, #78B722);"></i> +91 8098999096</a></li>
+                            <li><a href="tel:+918098999095"><i class="fa-solid fa-phone" style="font-size: 11px; margin-right: 6px; color: var(--accent-gold, #78B722);"></i> +91 8098999095</a></li>
+                            <li><a href="mailto:support@voyogos.com"><i class="fa-solid fa-envelope" style="font-size: 11px; margin-right: 6px; color: var(--accent-gold, #78B722);"></i> Support@voyogos.com</a></li>
                         </ul>
                     </div>
 
@@ -110,7 +110,7 @@
             <!-- Modal Header Banner -->
             <div class="vy-modal-top-accent">
                 <div class="vy-modal-logo-wrap">
-                    <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png?v=' . (file_exists(FCPATH . 'assets/images/logo.png') ? filemtime(FCPATH . 'assets/images/logo.png') : time())) : './assets/images/logo.png'; ?>" alt="Voyogo Logo" style="max-height: 42px; width: auto;">
+                    <img src="<?php echo function_exists('base_url') ? base_url('assets/images/logo.png') : './assets/images/logo.png'; ?>" alt="Voyogo Logo">
                 </div>
             </div>
 
@@ -494,7 +494,7 @@
         });
 
         // 1. Check if Flashdata 'success_msg' is set from standard controller redirect
-        <?php if (isset($this->session) && $this->session->flashdata('success_msg')): ?>
+        <?php if ($this->session->flashdata('success_msg')): ?>
             openVoyogoThankYouModal(<?php echo json_encode($this->session->flashdata('success_msg')); ?>);
         <?php endif; ?>
 
