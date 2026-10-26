@@ -1436,7 +1436,10 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                                 </div>
                             </div>
                             <?php 
-                            $addonGrossFare = (float)($flight['price'] ?? ($post_data['price'] ?? ($base_fare + $taxes)));
+                            $addonGrossFare = (float)($base_fare + $taxes);
+                            if ($addonGrossFare <= 0) {
+                                $addonGrossFare = max(0, (float)($flight['price'] ?? ($post_data['price'] ?? 0)) - $markup_amount);
+                            }
                             ?>
                             <?php if ($addonGrossFare > 0): ?>
                             <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #64748b; padding: 4px 10px 0 10px;">
@@ -2467,8 +2470,7 @@ function recalcTotal() {
         if (discAmt) discAmt.textContent = appliedDiscount.toLocaleString('en-IN');
     }
 
-    var markupDelta = currentMarkupAmount - initialMarkupAmount;
-    var grandTotal = Math.max(0, (baseFlightAmount + totalAddons + markupDelta) - appliedDiscount);
+    var grandTotal = Math.max(0, (baseFlightAmount + currentMarkupAmount + totalAddons) - appliedDiscount);
     document.getElementById('summaryGrandTotal').textContent = grandTotal.toLocaleString('en-IN');
     document.getElementById('form_final_grand_total').value = grandTotal;
     if (document.getElementById('form_addon_total_amount')) {

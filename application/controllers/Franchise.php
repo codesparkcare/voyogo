@@ -1626,7 +1626,7 @@ class Franchise extends CI_Controller {
         if (isset($addonsPost['total_amount']) && (float)$addonsPost['total_amount'] > 0) {
             $grandTotal = (float)$addonsPost['total_amount'];
         } else {
-            $grandTotal = max(0, ($fBaseFare + $fTaxes + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount);
+            $grandTotal = max(0, ($fBaseFare + $fTaxes + $payMarkup + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount);
         }
 
         $data['fBaseFare']       = $fBaseFare;

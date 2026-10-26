@@ -277,7 +277,7 @@ $promoDiscount   = (float)($promoDiscount ?? ($post_data['discount_amount'] ?? (
 $promoCode       = $promoCode ?? ($post_data['promo_code'] ?? '');
 $payMarkup       = (float)($post_data['markup_amount'] ?? ($markup_amount ?? ($flight['markup_amount'] ?? 0)));
 $payNetFare      = (float)($post_data['net_fare'] ?? ($net_fare ?? ($flight['net_fare'] ?? 0)));
-$grandTotal      = (float)($grandTotal ?? max(0, ($fBaseFare + $fTaxes + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount));
+$grandTotal      = (float)($grandTotal ?? max(0, ($fBaseFare + $fTaxes + $payMarkup + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount));
 
 // Addon Selections for display
 $onwardBaggageDesc = $post_data['selected_baggage_desc'] ?? '';
@@ -2245,9 +2245,9 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                     <?php 
                     $payMarkup = (float)($post_data['markup_amount'] ?? ($flight['markup_amount'] ?? 0));
                     $payNetFare = (float)($post_data['net_fare'] ?? ($flight['net_fare'] ?? 0));
-                    $payGrossFare = (float)($flight['price'] ?? ($post_data['price'] ?? max(0, $grandTotal - $payMarkup + $promoDiscount - $addonTotal)));
-                    if ($payGrossFare <= 0 && $payNetFare > 0) {
-                        $payGrossFare = max(0, $grandTotal - $payMarkup);
+                    $payGrossFare = (float)($fBaseFare + $fTaxes);
+                    if ($payGrossFare <= 0) {
+                        $payGrossFare = max(0, $grandTotal - $payMarkup + $promoDiscount - $addonTotal - $insuranceAmount - $fareTierDelta);
                     }
                     if ($payMarkup > 0): 
                     ?>

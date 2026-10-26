@@ -18,7 +18,10 @@
     }
     if (empty($rawAirlineCode)) $rawAirlineCode = '6E';
 
-    $reviewPrice = (float)($flight['price'] ?? 5150);
+    $revMarkup = (float)($markup_amount ?? ($flight['markup_amount'] ?? 0));
+    $rawFlightPrice = (float)($flight['price'] ?? 5150);
+    // Airline Gross Fare must NOT include franchise markup
+    $reviewPrice = max(0, $rawFlightPrice - $revMarkup);
 
     // Calculate airline-specific base fare and itemized taxes matching Akbar Travels
     switch ($rawAirlineCode) {
@@ -112,7 +115,7 @@
     $insurancePerPax = 199;
     $initialInsurance = 0; // Default unselected
     $initialDiscount = 0; // No automatic discount
-    $initialGrandTotal = $fBaseFare + $fTaxes + $initialInsurance - $initialDiscount;
+    $initialGrandTotal = $fBaseFare + $fTaxes + $revMarkup + $initialInsurance - $initialDiscount;
     $retReviewPrice = !empty($return_flight['price']) ? (float)$return_flight['price'] : $reviewPrice;
 
     // Airport Database for detailed connecting flight segments (Screenshot 2)
@@ -2251,12 +2254,12 @@
                             <strong style="color: <?php echo $revMarkup > 0 ? '#a16207' : '#0f172a'; ?>; font-size: 13.5px;"><?php echo $revMarkup > 0 ? '+ ₹ ' : '₹ '; ?><?php echo number_format($revMarkup); ?></strong>
                         </div>
                         <?php 
-                        $revGrossFare = (float)($flight['price'] ?? ($fBaseFare + $fTaxes));
+                        $revGrossFare = (float)($fBaseFare + $fTaxes);
                         ?>
                         <?php if ($revGrossFare > 0): ?>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; color: #64748b;">
                             <span>Airline Gross Fare</span>
-                            <strong style="color: #475569;">₹ <?php echo number_format($revGrossFare); ?></strong>
+                            <strong style="color: #475569;">₹ <span id="summaryGrossFare"><?php echo number_format($revGrossFare); ?></span></strong>
                         </div>
                         <?php endif; ?>
                         <?php if ($revNetFare > 0): ?>
@@ -2416,6 +2419,7 @@
 <script>
 var baseFlightFare = <?php echo (float)$fBaseFare; ?>;
 var taxesFare = <?php echo (float)$fTaxes; ?>;
+var markupAmount = <?php echo (float)$revMarkup; ?>;
 var totalPax = <?php echo (int)$total_travelers_review; ?>;
 var insurancePerPax = 199;
 var isInsuranceIncluded = false;
@@ -2851,10 +2855,14 @@ function applyCustomPromoCode() {
 function recalculateAllFares() {
     var insuranceAmount = isInsuranceIncluded ? (insurancePerPax * totalPax) : 0;
     var currentBase = baseFlightFare + fareTierDeltaTotal;
-    var grandTotal = Math.max(0, currentBase + taxesFare + insuranceAmount + selectedSafetyAmount - appliedDiscount);
+    var grossFare = currentBase + taxesFare;
+    var grandTotal = Math.max(0, grossFare + markupAmount + insuranceAmount + selectedSafetyAmount - appliedDiscount);
 
     var baseEl = document.getElementById('summaryBaseFare');
     if (baseEl) baseEl.textContent = currentBase.toLocaleString('en-IN');
+
+    var grossEl = document.getElementById('summaryGrossFare');
+    if (grossEl) grossEl.textContent = grossFare.toLocaleString('en-IN');
 
     var insEl = document.getElementById('summaryInsurance');
     if (insEl) insEl.textContent = insuranceAmount.toLocaleString('en-IN');
