@@ -22,6 +22,9 @@
     <button type="button" id="tabBtnHotels" class="tab-btn" onclick="switchBookingTab('hotels')">
         <i class="fa-solid fa-hotel"></i> Hotel Bookings (<?php echo count($hotel_bookings ?? []); ?>)
     </button>
+    <a href="<?php echo site_url('franchise/hold_bookings'); ?>" class="tab-btn" style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 6px;">
+        <i class="fa-solid fa-hand-holding-dollar" style="color: #78B722;"></i> Hold Bookings (HB)
+    </a>
 </div>
 
 <!-- Flight Bookings List -->

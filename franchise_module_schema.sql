@@ -100,23 +100,30 @@ CREATE TABLE IF NOT EXISTS `franchise_flight_bookings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL,
   `booking_ref` varchar(50) NOT NULL,
+  `booking_type` varchar(20) DEFAULT 'regular',
   `pnr` varchar(50) DEFAULT NULL,
+  `benzy_transaction_id` varchar(50) DEFAULT NULL,
+  `benzy_tui` text DEFAULT NULL,
   `airline_name` varchar(100) DEFAULT NULL,
   `flight_number` varchar(50) DEFAULT NULL,
   `origin` varchar(10) NOT NULL,
   `destination` varchar(10) NOT NULL,
   `departure_datetime` datetime DEFAULT NULL,
+  `hold_expires_at` datetime DEFAULT NULL,
+  `hold_duration_minutes` int(11) DEFAULT 0,
   `passenger_details` longtext DEFAULT NULL,
   `base_fare` decimal(10,2) DEFAULT 0.00,
   `taxes` decimal(10,2) DEFAULT 0.00,
+  `advance_amount` decimal(10,2) DEFAULT 0.00,
   `total_amount` decimal(10,2) NOT NULL,
   `wallet_deducted` decimal(10,2) NOT NULL,
   `status` varchar(30) DEFAULT 'confirmed',
-  `created_at` datetime NOT NULL,
+  `hold_confirmed_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `booking_ref` (`booking_ref`),
   KEY `idx_fb_store_id` (`store_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

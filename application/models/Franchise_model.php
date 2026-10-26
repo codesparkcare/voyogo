@@ -246,6 +246,45 @@ class Franchise_model extends CI_Model {
         return $this->db->get('franchise_flight_bookings')->result_array();
     }
 
+    public function get_store_hold_bookings($store_id, $status_filter = null, $limit = 100) {
+        // Auto-update expired holds
+        $this->db->where('store_id', (int)$store_id);
+        $this->db->where('booking_type', 'HB');
+        $this->db->where('status', 'held');
+        $this->db->where('hold_expires_at <', date('Y-m-d H:i:s'));
+        $this->db->update('franchise_flight_bookings', array('status' => 'expired'));
+
+        $this->db->where('store_id', (int)$store_id);
+        $this->db->where('booking_type', 'HB');
+        if (!empty($status_filter)) {
+            if (is_array($status_filter)) {
+                $this->db->where_in('status', $status_filter);
+            } else {
+                $this->db->where('status', $status_filter);
+            }
+        }
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit($limit);
+        return $this->db->get('franchise_flight_bookings')->result_array();
+    }
+
+    public function count_active_hold_bookings($store_id) {
+        $now = date('Y-m-d H:i:s');
+        $this->db->where('store_id', (int)$store_id);
+        $this->db->where('booking_type', 'HB');
+        $this->db->where('status', 'held');
+        $this->db->where('hold_expires_at >=', $now);
+        return $this->db->count_all_results('franchise_flight_bookings');
+    }
+
+    public function update_flight_booking_status($ref, $store_id, $data) {
+        $this->db->where('booking_ref', $ref);
+        if ($store_id) {
+            $this->db->where('store_id', (int)$store_id);
+        }
+        return $this->db->update('franchise_flight_bookings', $data);
+    }
+
     public function get_store_hotel_bookings($store_id, $limit = 50) {
         $this->db->where('store_id', (int)$store_id);
         $this->db->order_by('id', 'DESC');

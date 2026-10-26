@@ -312,6 +312,22 @@
                     <i class="fa-solid fa-clipboard-list"></i> My Bookings
                 </a>
             </li>
+            <?php
+            $ci =& get_instance();
+            $active_hold_count = 0;
+            if (!empty($store['id'])) {
+                $ci->load->model('Franchise_model');
+                $active_hold_count = $ci->Franchise_model->count_active_hold_bookings($store['id']);
+            }
+            ?>
+            <li>
+                <a href="<?php echo site_url('franchise/hold_bookings'); ?>" class="<?php echo ($active_menu ?? '') === 'hold_bookings' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-hand-holding-dollar"></i> Hold Bookings
+                    <?php if ($active_hold_count > 0): ?>
+                        <span style="background: #ef4444; color: #ffffff; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px; margin-left: 4px;"><?php echo $active_hold_count; ?></span>
+                    <?php endif; ?>
+                </a>
+            </li>
             <li>
                 <a href="<?php echo site_url('franchise/wallet_ledger'); ?>" class="<?php echo ($active_menu ?? '') === 'wallet' ? 'active' : ''; ?>">
                     <i class="fa-solid fa-clock-rotate-left"></i> Wallet Passbook

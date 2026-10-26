@@ -2123,8 +2123,103 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
 
             </div>
 
-            <!-- B. Franchise Store Wallet Float Deduction Card -->
-            <div class="payment-methods-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <!-- Akbar Travels Architecture: Share & Confirm Header Strip -->
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 44px; height: 44px; border-radius: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: center; color: #16a34a; font-size: 20px;">
+                        <i class="fa-solid fa-passport"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 14.5px; font-weight: 800; color: #0f172a;">Share &amp; Confirm</div>
+                        <div style="font-size: 12.5px; color: #64748b;">Share the entered details to customer so that they can verify and confirm. Please click the share option.</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" onclick="shareViaWhatsapp()" style="background: #ffffff; border: 1.5px solid #22c55e; color: #16a34a; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.15s;">
+                        <i class="fa-brands fa-whatsapp" style="font-size: 17px; color: #22c55e;"></i> Whatsapp
+                    </button>
+                    <button type="button" onclick="shareViaEmail()" style="background: #ffffff; border: 1.5px solid #f59e0b; color: #b45309; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.15s;">
+                        <i class="fa-solid fa-envelope" style="font-size: 15px; color: #f59e0b;"></i> EMail
+                    </button>
+                </div>
+            </div>
+
+            <!-- Akbar Travels Architecture: Pay Now vs Hold Booking Tabs -->
+            <div style="display: flex; gap: 14px; margin-bottom: 22px;">
+                <button type="button" id="tabBtnPayNow" onclick="selectPaymentTab('pay_now')" style="flex: 1; padding: 15px 20px; font-size: 15.5px; font-weight: 800; border-radius: 10px; border: 2px solid #fed7aa; background: #fff7ed; color: #9a3412; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s;">
+                    <i class="fa-solid fa-credit-card"></i> Pay Now
+                </button>
+                <button type="button" id="tabBtnHoldBooking" onclick="selectPaymentTab('hold_booking')" style="flex: 1; padding: 15px 20px; font-size: 15.5px; font-weight: 800; border-radius: 10px; border: 2px solid #78B722; background: #78B722; color: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(120, 183, 34, 0.35); transition: all 0.2s;">
+                    <i class="fa-solid fa-hand-holding-dollar"></i> Hold Booking
+                </button>
+            </div>
+
+            <!-- TAB 1: Hold Booking Container (Matches Akbar Travels Screenshot) -->
+            <div id="holdBookingSection" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 24px;">
+                <h3 style="font-size: 17px; font-weight: 800; color: #0f172a; margin: 0 0 16px 0;">Hold Booking Rules &amp; Restrictions</h3>
+
+                <!-- Top Badges Row -->
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+                    <div style="background: #003B95; color: #ffffff; padding: 9px 20px; border-radius: 6px; font-size: 13.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 8px;">
+                        <span>Advanced flight booking amount: ₹ <?php echo number_format($hold_advance_amount ?? 0); ?></span>
+                    </div>
+                    <div style="background: #fee2e2; color: #b91c1c; padding: 9px 20px; border-radius: 6px; font-size: 13.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-clock"></i> Ticketing Time Limit: <?php echo $ticketing_time_limit ?? date('d/m/Y h:i A', strtotime('+4 hours')); ?>
+                    </div>
+                </div>
+
+                <!-- Rules & Restrictions Notice (Exact text matching Akbar Travels Screenshot) -->
+                <div style="font-size: 12.5px; color: #334155; line-height: 1.7; background: #fafafa; border: 1px solid #f1f5f9; border-radius: 8px; padding: 18px 22px; margin-bottom: 22px;">
+                    <p style="margin: 0 0 10px 0;"><strong>NOTE :</strong>Your booking will be under hold, as per the standard policy of 4 hours , we will update the exact time limit,once we receive the same from airline, or you may also contact support center for the same.</p>
+                    <p style="margin: 0 0 10px 0; font-weight: 800; color: #0f172a; letter-spacing: 0.3px;">ALL FARES &amp; SEATS ARE SUBJECT TO AVAILABILITY AT THE TIME OF BOOKING</p>
+                    <p style="margin: 0 0 10px 0; color: #b91c1c; font-weight: 600;">Creating a "Hold PNR" under any Airlines can lead to an ADM which agency will be charged as per airlines Circular if it is "Not Ticketed" or if it is "Auto Cancelled" after Hold.</p>
+                    <p style="margin: 0 0 14px 0;">Advance Flight booking Amount will not be refunded if booking gets cancelled before issuance and if the ticket is booked, amount will be adjusted in Final fare. Hold PNR will only create booking at Airline end, but no tickets will be issued until you confirm ticketing. We are not responsible, if any changes done at Airline end.</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #0f172a; font-weight: 600;">
+                            <span style="width: 8px; height: 8px; border-radius: 50%; background: #eab308; display: inline-block;"></span>
+                            Kindly check the spelling &amp; reconfirm the passenger name(s) before you book.
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; color: #0f172a; font-weight: 600;">
+                            <span style="width: 8px; height: 8px; border-radius: 50%; background: #eab308; display: inline-block;"></span>
+                            Ticket name changes are not permitted once issued
+                        </div>
+                    </div>
+                    <p style="margin: 0; font-size: 12px; color: #64748b;">The above mentioned purchases are subject to cancellation, date change fees and once purchased tickets are non-transferable and name changes are not permitted. For further details, read the overview of all the <a href="#policyTabContainer" style="color: #2563eb; text-decoration: underline;">Restriction, Penalties &amp; Cancellation Charges</a>.</p>
+                </div>
+
+                <!-- Payment Options -->
+                <h4 style="font-size: 15px; font-weight: 800; color: #0f172a; margin: 0 0 14px 0;">Payment Options</h4>
+                <div style="border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; margin-bottom: 24px;">
+                    <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; margin: 0; font-size: 14.5px; font-weight: 700; color: #0f172a;">
+                        <input type="checkbox" checked disabled style="width: 18px; height: 18px; accent-color: #78B722;">
+                        <span><i class="fa-solid fa-circle-check" style="color: #78B722; margin-right: 4px;"></i> Use Deposit Account</span>
+                    </label>
+                    <div style="color: #64748b; font-size: 26px;">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                    </div>
+                </div>
+
+                <!-- Bottom Hold Confirmation Row -->
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 20px; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <div style="font-size: 11.5px; color: #64748b;">By click on Make Payment,</div>
+                        <div style="font-size: 12px; color: #0f172a;">I agree with the booking policies, <a href="#" style="color: #2563eb; text-decoration: underline;">Privacy policy &amp; Terms</a></div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-eye" style="color: #64748b;"></i>
+                            <strong style="font-size: 24px; color: #09204b;">₹ <?php echo number_format($hold_advance_amount ?? 0); ?></strong>
+                        </div>
+                        <button type="button" onclick="submitHoldBooking()" class="btn-proceed-hold" style="background: #78B722; color: #ffffff; border: none; padding: 15px 32px; border-radius: 8px; font-size: 15.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(120, 183, 34, 0.4); transition: all 0.2s;">
+                            <i class="fa-solid fa-hand-holding-dollar"></i> Proceed to Hold
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: Franchise Store Wallet Float Deduction Card (Pay Now) -->
+            <div id="payNowSection" class="payment-methods-card" style="display: none; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 24px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #f1f5f9;">
                     <h3 style="font-size: 18px; font-weight: 800; color: #09204b; margin: 0; display: flex; align-items: center; gap: 10px;">
                         <i class="fa-solid fa-wallet" style="color: #78B722;"></i> Pay with Store Wallet Float
@@ -2154,45 +2249,47 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                     </div>
                 </div>
 
-                <!-- POST Form to execute final booking creation in franchise/flight_book -->
-                <form id="flightPaymentForm" action="<?php echo site_url('franchise/flight_book'); ?>" method="POST">
-                    <?php if (!empty($post_data) && is_array($post_data)): ?>
-                        <?php renderHiddenInputs($post_data); ?>
-                    <?php endif; ?>
-
-                    <?php if (!isset($post_data['refundable'])): ?>
-                    <input type="hidden" name="refundable" value="<?php echo $isRefundable ? '1' : '0'; ?>">
-                    <input type="hidden" name="is_refundable" value="<?php echo $isRefundable ? '1' : '0'; ?>">
-                    <?php endif; ?>
-                    <?php if ($is_roundtrip && !isset($post_data['return_refundable'])): ?>
-                    <input type="hidden" name="return_refundable" value="<?php echo $retIsRefundable ? '1' : '0'; ?>">
-                    <?php endif; ?>
-
-                    <input type="hidden" name="total_amount" id="payment_total_amount" value="<?php echo $grandTotal; ?>">
-                    <input type="hidden" name="wallet_deduct_amount" id="payment_wallet_deduct_amount" value="<?php echo $walletDeductAmount; ?>">
-
-                    <?php if (!empty($can_book)): ?>
-                        <button type="submit" class="btn-proceed-pay" style="width: 100%; background: #78B722; color: #ffffff; border: none; padding: 16px; border-radius: 10px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(120, 183, 34, 0.4); transition: all 0.2s;">
-                            <i class="fa-solid fa-circle-check" style="font-size: 18px;"></i> Confirm &amp; Deduct ₹ <?php echo number_format($walletDeductAmount); ?> from Store Float
-                        </button>
-                        <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 14px; font-size: 11.5px; color: #64748b;">
-                            <span><i class="fa-solid fa-lock" style="color: #16a34a;"></i> Instant Float Settlement</span>
-                            <span>&bull;</span>
-                            <span>Customer Invoice: ₹ <?php echo number_format($grandTotal); ?></span>
-                            <span>&bull;</span>
-                            <span>Store Partner: <?php echo htmlspecialchars($store['store_name'] ?? ''); ?> (<?php echo htmlspecialchars($store['agent_code'] ?? ''); ?>)</span>
-                        </div>
-                    <?php else: ?>
-                        <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 10px; padding: 16px; color: #991b1b; font-size: 13.5px; margin-bottom: 14px;">
-                            <i class="fa-solid fa-triangle-exclamation" style="font-size: 18px; margin-right: 8px;"></i>
-                            <strong>Insufficient Store Wallet Float:</strong> Your available balance is ₹ <?php echo number_format($store['wallet_balance'] ?? 0, 2); ?>, but this booking requires ₹ <?php echo number_format($walletDeductAmount, 2); ?>. Please contact Franchise Admin for a float top-up.
-                        </div>
-                        <button type="button" disabled style="width: 100%; background: #94a3b8; color: #ffffff; border: none; padding: 16px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: not-allowed; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                            <i class="fa-solid fa-ban"></i> Booking Blocked (Low Float)
-                        </button>
-                    <?php endif; ?>
-                </form>
+                <?php if (!empty($can_book)): ?>
+                    <button type="button" onclick="submitPayNowBooking()" class="btn-proceed-pay" style="width: 100%; background: #003B95; color: #ffffff; border: none; padding: 16px; border-radius: 10px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(0, 59, 149, 0.35); transition: all 0.2s;">
+                        <i class="fa-solid fa-circle-check" style="font-size: 18px;"></i> Confirm &amp; Deduct ₹ <?php echo number_format($walletDeductAmount); ?> from Store Float
+                    </button>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 14px; font-size: 11.5px; color: #64748b;">
+                        <span><i class="fa-solid fa-lock" style="color: #16a34a;"></i> Instant Float Settlement</span>
+                        <span>&bull;</span>
+                        <span>Customer Invoice: ₹ <?php echo number_format($grandTotal); ?></span>
+                        <span>&bull;</span>
+                        <span>Store Partner: <?php echo htmlspecialchars($store['store_name'] ?? ''); ?> (<?php echo htmlspecialchars($store['agent_code'] ?? ''); ?>)</span>
+                    </div>
+                <?php else: ?>
+                    <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 10px; padding: 16px; color: #991b1b; font-size: 13.5px; margin-bottom: 14px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 18px; margin-right: 8px;"></i>
+                        <strong>Insufficient Store Wallet Float:</strong> Your available balance is ₹ <?php echo number_format($store['wallet_balance'] ?? 0, 2); ?>, but this booking requires ₹ <?php echo number_format($walletDeductAmount, 2); ?>. Please contact Franchise Admin for a float top-up.
+                    </div>
+                    <button type="button" disabled style="width: 100%; background: #94a3b8; color: #ffffff; border: none; padding: 16px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: not-allowed; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <i class="fa-solid fa-ban"></i> Booking Blocked (Low Float)
+                    </button>
+                <?php endif; ?>
             </div>
+
+            <!-- Unified POST Form to execute booking creation in franchise/flight_book -->
+            <form id="flightPaymentForm" action="<?php echo site_url('franchise/flight_book'); ?>" method="POST" style="margin: 0; padding: 0;">
+                <?php if (!empty($post_data) && is_array($post_data)): ?>
+                    <?php renderHiddenInputs($post_data); ?>
+                <?php endif; ?>
+
+                <?php if (!isset($post_data['refundable'])): ?>
+                <input type="hidden" name="refundable" value="<?php echo $isRefundable ? '1' : '0'; ?>">
+                <input type="hidden" name="is_refundable" value="<?php echo $isRefundable ? '1' : '0'; ?>">
+                <?php endif; ?>
+                <?php if ($is_roundtrip && !isset($post_data['return_refundable'])): ?>
+                <input type="hidden" name="return_refundable" value="<?php echo $retIsRefundable ? '1' : '0'; ?>">
+                <?php endif; ?>
+
+                <input type="hidden" name="total_amount" id="payment_total_amount" value="<?php echo $grandTotal; ?>">
+                <input type="hidden" name="wallet_deduct_amount" id="payment_wallet_deduct_amount" value="<?php echo $walletDeductAmount; ?>">
+                <input type="hidden" name="booking_type" id="form_booking_type" value="HB">
+                <input type="hidden" name="advance_amount" id="form_advance_amount" value="0">
+            </form>
 
         </div>
 
@@ -2331,17 +2428,83 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
 
 <!-- Franchise Flight Payment Scripts -->
 <script>
-// Handle Franchise Wallet Booking Submission
-document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('flightPaymentForm');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            var payBtn = form.querySelector('.btn-proceed-pay');
-            if (payBtn) {
-                payBtn.disabled = true;
-                payBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Store Float Booking...';
-            }
-        });
+function selectPaymentTab(mode) {
+    var holdBtn = document.getElementById('tabBtnHoldBooking');
+    var payBtn  = document.getElementById('tabBtnPayNow');
+    var holdSec = document.getElementById('holdBookingSection');
+    var paySec  = document.getElementById('payNowSection');
+    var bTypeInput = document.getElementById('form_booking_type');
+
+    if (mode === 'hold_booking') {
+        holdBtn.style.background = '#78B722';
+        holdBtn.style.color = '#ffffff';
+        holdBtn.style.borderColor = '#78B722';
+        holdBtn.style.boxShadow = '0 4px 15px rgba(120, 183, 34, 0.35)';
+
+        payBtn.style.background = '#fff7ed';
+        payBtn.style.color = '#9a3412';
+        payBtn.style.borderColor = '#fed7aa';
+        payBtn.style.boxShadow = 'none';
+
+        holdSec.style.display = 'block';
+        paySec.style.display  = 'none';
+        if (bTypeInput) bTypeInput.value = 'HB';
+    } else {
+        payBtn.style.background = '#003B95';
+        payBtn.style.color = '#ffffff';
+        payBtn.style.borderColor = '#003B95';
+        payBtn.style.boxShadow = '0 4px 15px rgba(0, 59, 149, 0.35)';
+
+        holdBtn.style.background = '#f8fafc';
+        holdBtn.style.color = '#475569';
+        holdBtn.style.borderColor = '#e2e8f0';
+        holdBtn.style.boxShadow = 'none';
+
+        paySec.style.display  = 'block';
+        holdSec.style.display = 'none';
+        if (bTypeInput) bTypeInput.value = 'regular';
     }
-});
+}
+
+function submitHoldBooking() {
+    var form = document.getElementById('flightPaymentForm');
+    if (!form) return;
+    var bTypeInput = document.getElementById('form_booking_type');
+    if (bTypeInput) bTypeInput.value = 'HB';
+
+    var btn = document.querySelector('.btn-proceed-hold');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Hold PNR...';
+    }
+    form.submit();
+}
+
+function submitPayNowBooking() {
+    var form = document.getElementById('flightPaymentForm');
+    if (!form) return;
+    var bTypeInput = document.getElementById('form_booking_type');
+    if (bTypeInput) bTypeInput.value = 'regular';
+
+    var btn = document.querySelector('.btn-proceed-pay');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Deducting Float &amp; Issuing Ticket...';
+    }
+    form.submit();
+}
+
+function shareViaWhatsapp() {
+    var route = "<?php echo addslashes(($flight['from_code'] ?? 'DEL') . ' - ' . ($flight['to_code'] ?? 'BOM')); ?>";
+    var date = "<?php echo addslashes($flight['departure_date'] ?? date('d M Y')); ?>";
+    var fare = "₹ <?php echo number_format($grandTotal); ?>";
+    var msg = encodeURIComponent("Voyogo Flight Quotation:\nSector: " + route + "\nDate: " + date + "\nTotal Fare: " + fare + "\nPlease review and confirm to hold your seats.");
+    window.open("https://api.whatsapp.com/send?text=" + msg, "_blank");
+}
+
+function shareViaEmail() {
+    var subject = encodeURIComponent("Voyogo Flight Quotation - " + "<?php echo addslashes(($flight['from_code'] ?? 'DEL') . ' to ' . ($flight['to_code'] ?? 'BOM')); ?>");
+    var body = encodeURIComponent("Dear Customer,\n\nPlease find the flight itinerary details below:\nSector: <?php echo addslashes(($flight['from_code'] ?? 'DEL') . ' - ' . ($flight['to_code'] ?? 'BOM')); ?>\nDate: <?php echo addslashes($flight['departure_date'] ?? date('d M Y')); ?>\nTotal Amount: ₹ <?php echo number_format($grandTotal); ?>\n\nPlease let us know if you wish to confirm.");
+    window.location.href = "mailto:?subject=" + subject + "&body=" + body;
+}
 </script>

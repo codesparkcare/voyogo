@@ -1066,6 +1066,32 @@ class Admin extends CI_Controller {
             }
         }
 
+        // Ensure franchise_flight_bookings has Hold Booking (HB) columns
+        if ($this->db->table_exists('franchise_flight_bookings')) {
+            $ff_fields = $this->db->list_fields('franchise_flight_bookings');
+            if (!in_array('booking_type', $ff_fields)) {
+                $this->db->query("ALTER TABLE franchise_flight_bookings ADD COLUMN booking_type VARCHAR(20) DEFAULT 'regular' AFTER booking_ref");
+            }
+            if (!in_array('benzy_transaction_id', $ff_fields)) {
+                $this->db->query("ALTER TABLE franchise_flight_bookings ADD COLUMN benzy_transaction_id VARCHAR(50) NULL DEFAULT NULL AFTER pnr");
+            }
+            if (!in_array('benzy_tui', $ff_fields)) {
+                $this->db->query("ALTER TABLE franchise_flight_bookings ADD COLUMN benzy_tui TEXT NULL DEFAULT NULL AFTER benzy_transaction_id");
+            }
+            if (!in_array('hold_expires_at', $ff_fields)) {
+                $this->db->query("ALTER TABLE franchise_flight_bookings ADD COLUMN hold_expires_at DATETIME NULL DEFAULT NULL AFTER departure_datetime");
+            }
+            if (!in_array('hold_duration_minutes', $ff_fields)) {
+                $this->db->query("ALTER TABLE franchise_flight_bookings ADD COLUMN hold_duration_minutes INT(11) DEFAULT 0 AFTER hold_expires_at");
+            }
+            if (!in_array('advance_amount', $ff_fields)) {
+                $this->db->query("ALTER TABLE franchise_flight_bookings ADD COLUMN advance_amount DECIMAL(10,2) DEFAULT 0.00 AFTER taxes");
+            }
+            if (!in_array('hold_confirmed_at', $ff_fields)) {
+                $this->db->query("ALTER TABLE franchise_flight_bookings ADD COLUMN hold_confirmed_at DATETIME NULL DEFAULT NULL AFTER status");
+            }
+        }
+
         // Synchronize Razorpay settings table & test credentials
         if ($this->db->table_exists('razorpay_settings')) {
             $rzp_key = getenv('RAZORPAY_KEY_ID') ?: 'rzp_test_TlI3NkfGJYg33P';

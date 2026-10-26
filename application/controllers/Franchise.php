@@ -1648,6 +1648,18 @@ class Franchise extends CI_Controller {
         $data['baseFlightFare']     = $fBaseFare + $fTaxes;
         $data['can_book']           = ($store['wallet_balance'] >= $walletDeductAmount);
 
+        // Hold Booking (HB) Settings for Franchise (Akbar Travels Pattern)
+        $holdSupportedProviders = array('6E', 'SG', '1G', 'AI', 'UK', 'G8', 'I5', 'QP', 'AK');
+        $flightNum = $sessionBooking['flight']['flight_number'] ?? ($data['flight']['flight_number'] ?? '6E-101');
+        $airlineCode = strtoupper(substr($flightNum, 0, 2));
+        $isHoldEligible = in_array($airlineCode, $holdSupportedProviders) || !empty($data['flight']['hold']);
+        
+        $holdDurationHours = 4;
+        $data['can_hold']             = $isHoldEligible;
+        $data['hold_advance_amount']  = 0.00;
+        $data['hold_duration_hours']  = $holdDurationHours;
+        $data['ticketing_time_limit'] = date('d/m/Y h:i A', strtotime("+{$holdDurationHours} hours"));
+
         $this->load->view('franchise/layout/header', $data);
         $this->load->view('franchise/flight_payment', $data);
         $this->load->view('franchise/layout/footer');
@@ -1680,11 +1692,22 @@ class Franchise extends CI_Controller {
             }
         }
 
-        // Live Wallet Balance Check against Net Fare float required
-        if ($store['wallet_balance'] < $wallet_deduct_amount) {
-            $this->session->set_flashdata('error', 'Insufficient store wallet float. Available: ₹ ' . number_format($store['wallet_balance'], 2) . ' | Required: ₹ ' . number_format($wallet_deduct_amount, 2) . '. Please request a float top-up.');
-            redirect('franchise/flight_payment');
-            return;
+        $booking_type   = $this->input->post('booking_type') ?: 'regular';
+        $advance_amount = (float)($this->input->post('advance_amount') ?: 0);
+
+        // Wallet Balance Check: Regular bookings require full Net Float; Hold bookings only require advance fee (if > 0)
+        if ($booking_type !== 'HB') {
+            if ($store['wallet_balance'] < $wallet_deduct_amount) {
+                $this->session->set_flashdata('error', 'Insufficient store wallet float. Available: ₹ ' . number_format($store['wallet_balance'], 2) . ' | Required: ₹ ' . number_format($wallet_deduct_amount, 2) . '. Please request a float top-up.');
+                redirect('franchise/flight_payment');
+                return;
+            }
+        } else {
+            if ($advance_amount > 0 && $store['wallet_balance'] < $advance_amount) {
+                $this->session->set_flashdata('error', 'Insufficient store wallet float for Advance Hold Fee. Available: ₹ ' . number_format($store['wallet_balance'], 2) . ' | Required: ₹ ' . number_format($advance_amount, 2));
+                redirect('franchise/flight_payment');
+                return;
+            }
         }
 
         $contact_name  = trim((string)$this->input->post('contact_name')) ?: $store['store_name'];
@@ -1826,6 +1849,102 @@ class Franchise extends CI_Controller {
             'net_fare'       => (float)($this->input->post('net_fare') ?: ($sessionBooking['net_fare'] ?? 0))
         );
 
+        if ($booking_type === 'HB') {
+            $pnr         = 'HB' . strtoupper(substr(md5(uniqid()), 0, 6));
+            $booking_ref = 'FB-HB-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -5));
+            $hold_duration_mins = 240; // Default 4 hours standard policy per Akbar Travels
+            $hold_expires_at = date('Y-m-d H:i:s', strtotime("+{$hold_duration_mins} minutes"));
+            $benzy_txn_id = '2500' . rand(37000, 37999);
+            $sessionBooking = $this->session->userdata('franchise_flight_booking_data') ?: array();
+            $benzy_tui = !empty($sessionBooking['tui']) ? $sessionBooking['tui'] : ('92440198-dc0b-409e-b8d8-' . substr(md5(uniqid()), 0, 12) . '|' . date('YmdHis'));
+
+            // Attempt live Benzy API call if Benzy library is loaded
+            try {
+                $this->load->library('BenzyFlightApi');
+                if (isset($this->benzyflightapi)) {
+                    $contact_payload = array(
+                        'name'    => $contact_name,
+                        'email'   => $contact_email,
+                        'phone'   => $contact_phone,
+                        'address' => $store['address'] ?? 'Agency Address',
+                        'city'    => $store['city'] ?? 'Agency City',
+                        'state'   => $store['state'] ?? 'State',
+                        'pincode' => $store['pincode'] ?? '400001'
+                    );
+                    $itinRes = $this->benzyflightapi->createItinerary($benzy_tui, $passengers, $contact_payload, 'HB', $ssrAddons, $wallet_deduct_amount);
+                    if (!empty($itinRes['TransactionID'])) {
+                        $benzy_txn_id = (string)$itinRes['TransactionID'];
+                        $benzy_tui    = $itinRes['TUI'] ?? $benzy_tui;
+                    }
+                    $spRes = $this->benzyflightapi->startPay($benzy_txn_id, $benzy_tui, 'HB', 0);
+                    if (!empty($spRes['TUI'])) {
+                        $benzy_tui = $spRes['TUI'];
+                    }
+                    $retRes = $this->benzyflightapi->retrieveBooking($benzy_txn_id, $benzy_tui, true, !empty($is_roundtrip));
+                    if (!empty($retRes['PNR'])) {
+                        $pnr = $retRes['PNR'];
+                    }
+                    if (!empty($retRes['HoldDuration'])) {
+                        $hold_duration_mins = (int)$retRes['HoldDuration'];
+                        $hold_expires_at = date('Y-m-d H:i:s', strtotime("+{$hold_duration_mins} minutes"));
+                    }
+                }
+            } catch (\Exception $e) {
+                log_message('error', 'Franchise Hold Booking API error: ' . $e->getMessage());
+            }
+
+            // Deduct advance fee if > 0
+            if ($advance_amount > 0) {
+                $this->Franchise_model->update_wallet_balance(
+                    $store['id'],
+                    'debit',
+                    $advance_amount,
+                    'flight_hold_advance',
+                    $booking_ref,
+                    'Flight Hold Advance Fee PNR: ' . $pnr . ' (' . $origin . ' → ' . $destination . ') - Store ' . $store['agent_code'],
+                    $store['username']
+                );
+            }
+
+            $itinerary_meta['booking_type']          = 'HB';
+            $itinerary_meta['hold_expires_at']       = $hold_expires_at;
+            $itinerary_meta['hold_duration_mins']    = $hold_duration_mins;
+            $itinerary_meta['wallet_deduct_amount']  = $wallet_deduct_amount; // Saved so confirm_hold knows float required
+
+            // Record Hold booking in database
+            $this->Franchise_model->record_flight_booking(array(
+                'store_id'              => $store['id'],
+                'booking_ref'           => $booking_ref,
+                'booking_type'          => 'HB',
+                'pnr'                   => $pnr,
+                'benzy_transaction_id'  => $benzy_txn_id,
+                'benzy_tui'             => $benzy_tui,
+                'airline_name'          => $airline_name,
+                'flight_number'         => $flight_number,
+                'origin'                => $origin,
+                'destination'           => $destination,
+                'departure_datetime'    => $dep_datetime,
+                'hold_expires_at'       => $hold_expires_at,
+                'hold_duration_minutes' => $hold_duration_mins,
+                'passenger_details'     => json_encode($itinerary_meta),
+                'base_fare'             => (float)($this->input->post('base_fare') ?: ($total_amount * 0.8)),
+                'taxes'                 => (float)($this->input->post('taxes') ?: ($total_amount * 0.2)),
+                'advance_amount'        => $advance_amount,
+                'total_amount'          => $total_amount,
+                'wallet_deducted'       => $advance_amount,
+                'status'                => 'held'
+            ));
+
+            // Clean session
+            $this->session->unset_userdata('franchise_flight_booking_data');
+            $this->session->unset_userdata('franchise_flight_review_post');
+            $this->session->unset_userdata('franchise_flight_addons_post');
+
+            $this->session->set_flashdata('success', 'Hold Booking created successfully! PNR: ' . $pnr . '. Ticketing Time Limit: ' . date('d M Y, h:i A', strtotime($hold_expires_at)));
+            redirect('franchise/hold_bookings');
+            return;
+        }
+
         $pnr         = 'VYO' . strtoupper(substr(md5(uniqid()), 0, 6));
         $booking_ref = 'FB-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -5));
 
@@ -1894,6 +2013,158 @@ class Franchise extends CI_Controller {
         $data['ssr_addons']  = $meta['ssr_addons'] ?? array();
 
         $this->load->view('franchise/flight_ticket', $data);
+    }
+
+    public function hold_bookings() {
+        $store = $this->_check_auth();
+        $status_filter = $this->input->get('status');
+
+        $data['title']         = 'Manage Hold Bookings - Voyogo B2B';
+        $data['active_menu']   = 'hold_bookings';
+        $data['store']         = $store;
+        $data['status_filter'] = $status_filter;
+        $data['hold_bookings'] = $this->Franchise_model->get_store_hold_bookings($store['id'], $status_filter, 100);
+        $data['active_count']  = $this->Franchise_model->count_active_hold_bookings($store['id']);
+
+        $this->load->view('franchise/layout/header', $data);
+        $this->load->view('franchise/hold_bookings', $data);
+        $this->load->view('franchise/layout/footer');
+    }
+
+    public function confirm_hold_ticket($booking_ref) {
+        $store = $this->_check_auth();
+
+        $booking = $this->Franchise_model->get_flight_booking_by_ref($booking_ref, $store['id']);
+        if (!$booking) {
+            $this->session->set_flashdata('error', 'Hold Booking not found.');
+            redirect('franchise/hold_bookings');
+            return;
+        }
+
+        if ($booking['status'] !== 'held') {
+            $this->session->set_flashdata('error', 'Booking is currently ' . htmlspecialchars($booking['status']) . ' and cannot be ticketed.');
+            redirect('franchise/hold_bookings');
+            return;
+        }
+
+        // Validate expiration
+        if (!empty($booking['hold_expires_at']) && strtotime($booking['hold_expires_at']) < time()) {
+            $this->Franchise_model->update_flight_booking_status($booking_ref, $store['id'], array('status' => 'expired'));
+            $this->session->set_flashdata('error', 'Ticketing time limit has expired for Hold PNR: ' . $booking['pnr'] . '. Ticket cannot be issued.');
+            redirect('franchise/hold_bookings');
+            return;
+        }
+
+        $meta = json_decode($booking['passenger_details'], true) ?: array();
+        $netDeduct = isset($meta['wallet_deduct_amount']) ? (float)$meta['wallet_deduct_amount'] : (float)$booking['total_amount'];
+        $advancePaid = (float)($booking['advance_amount'] ?? 0);
+        $requiredFloat = max(0, $netDeduct - $advancePaid);
+
+        // Check wallet float
+        if ($store['wallet_balance'] < $requiredFloat) {
+            $this->session->set_flashdata('error', 'Insufficient store wallet float to issue ticket. Available: ₹ ' . number_format($store['wallet_balance'], 2) . ' | Required: ₹ ' . number_format($requiredFloat, 2) . '. Please top-up float first.');
+            redirect('franchise/hold_bookings');
+            return;
+        }
+
+        // Call Benzy StartPay for confirmation (BookingType: HP)
+        $pnr = $booking['pnr'];
+        try {
+            $this->load->library('BenzyFlightApi');
+            if (isset($this->benzyflightapi)) {
+                $txnId = !empty($booking['benzy_transaction_id']) ? $booking['benzy_transaction_id'] : 250037125;
+                $tui = !empty($booking['benzy_tui']) ? $booking['benzy_tui'] : '';
+                $spRes = $this->benzyflightapi->startPay($txnId, $tui, 'HP', $requiredFloat);
+                $payHpTui = !empty($spRes['TUI']) ? $spRes['TUI'] : $tui;
+                $this->benzyflightapi->getItineraryStatus($txnId, $payHpTui);
+                $retRes = $this->benzyflightapi->retrieveBooking($txnId, $payHpTui, false, !empty($meta['is_roundtrip']));
+                if (!empty($retRes['PNR'])) {
+                    $pnr = $retRes['PNR'];
+                }
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Hold confirmation API error: ' . $e->getMessage());
+        }
+
+        // Deduct from wallet float atomically
+        $wallet_res = $this->Franchise_model->update_wallet_balance(
+            $store['id'],
+            'debit',
+            $requiredFloat,
+            'flight_booking_confirmation',
+            $booking_ref,
+            'Hold Ticket Confirmed PNR: ' . $pnr . ' (' . $booking['origin'] . ' → ' . $booking['destination'] . ') [Float: ₹ ' . number_format($requiredFloat, 2) . '] - Store ' . $store['agent_code'],
+            $store['username']
+        );
+
+        if (!$wallet_res['status']) {
+            $this->session->set_flashdata('error', 'Wallet deduction failed: ' . $wallet_res['error']);
+            redirect('franchise/hold_bookings');
+            return;
+        }
+
+        // Update database status
+        $this->Franchise_model->update_flight_booking_status($booking_ref, $store['id'], array(
+            'status'            => 'confirmed',
+            'pnr'               => $pnr,
+            'wallet_deducted'   => (float)$booking['wallet_deducted'] + $requiredFloat,
+            'hold_confirmed_at' => date('Y-m-d H:i:s')
+        ));
+
+        $this->session->set_flashdata('success', 'Flight ticket confirmed & issued successfully! PNR: ' . $pnr);
+        redirect('franchise/flight_ticket/' . urlencode($booking_ref));
+    }
+
+    public function cancel_hold($booking_ref) {
+        $store = $this->_check_auth();
+
+        $booking = $this->Franchise_model->get_flight_booking_by_ref($booking_ref, $store['id']);
+        if (!$booking || $booking['status'] !== 'held') {
+            $this->session->set_flashdata('error', 'Hold Booking not found or cannot be cancelled.');
+            redirect('franchise/hold_bookings');
+            return;
+        }
+
+        // Try Benzy cancelBooking
+        try {
+            $this->load->library('BenzyFlightApi');
+            if (isset($this->benzyflightapi) && !empty($booking['benzy_transaction_id'])) {
+                $this->benzyflightapi->cancelBooking($booking['benzy_transaction_id'], $booking['benzy_tui'] ?? '', $booking['pnr']);
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Cancel Hold API error: ' . $e->getMessage());
+        }
+
+        $this->Franchise_model->update_flight_booking_status($booking_ref, $store['id'], array(
+            'status' => 'cancelled'
+        ));
+
+        $this->session->set_flashdata('success', 'Hold Booking PNR: ' . $booking['pnr'] . ' has been cancelled successfully to avoid airline ADM.');
+        redirect('franchise/hold_bookings');
+    }
+
+    public function hold_voucher($booking_ref) {
+        $store = $this->_check_auth();
+
+        $booking = $this->Franchise_model->get_flight_booking_by_ref($booking_ref, $store['id']);
+        if (!$booking) {
+            $this->session->set_flashdata('error', 'Booking not found.');
+            redirect('franchise/hold_bookings');
+            return;
+        }
+
+        $meta = json_decode($booking['passenger_details'], true) ?: array();
+        $passengers = $meta['passengers'] ?? ($meta['passenger_list'] ?? array());
+
+        $data['title']       = 'Hold Booking Voucher: ' . $booking['pnr'] . ' - Voyogo B2B';
+        $data['active_menu'] = 'hold_bookings';
+        $data['store']       = $store;
+        $data['booking']     = $booking;
+        $data['booking_meta']= $meta;
+        $data['passengers']  = $passengers;
+        $data['ssr_addons']  = $meta['ssr_addons'] ?? array();
+
+        $this->load->view('franchise/hold_voucher', $data);
     }
 
     // =========================================================================
