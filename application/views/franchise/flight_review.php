@@ -111,7 +111,7 @@
 
     $insurancePerPax = 199;
     $initialInsurance = 0; // Default unselected
-    $initialDiscount = 18; // Default ATFLY discount matching Screenshot 1
+    $initialDiscount = 0; // No automatic discount
     $initialGrandTotal = $fBaseFare + $fTaxes + $initialInsurance - $initialDiscount;
     $retReviewPrice = !empty($return_flight['price']) ? (float)$return_flight['price'] : $reviewPrice;
 
@@ -1125,7 +1125,7 @@
                     <input type="hidden" name="travel_insurance_selected" id="form_travel_insurance_selected" value="0">
                     <input type="hidden" name="insurance_amount" id="form_insurance_amount" value="0">
                     <input type="hidden" name="discount_amount" id="form_discount_amount" value="<?php echo htmlspecialchars($initialDiscount); ?>">
-                    <input type="hidden" name="promo_code" id="form_promo_code" value="ATFLY">
+                    <input type="hidden" name="promo_code" id="form_promo_code" value="">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
                     <input type="hidden" name="is_roundtrip" value="<?php echo !empty($is_roundtrip) ? '1' : '0'; ?>">
                     <input type="hidden" name="fare_type" value="<?php echo htmlspecialchars($flight['fare_type'] ?? 'Retail'); ?>">
@@ -2231,7 +2231,7 @@
                         </div>
 
                         <!-- Promo Discount Applied (Screenshots 1 & 2) -->
-                        <div id="summaryDiscountRow" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div id="summaryDiscountRow" style="display: <?php echo $initialDiscount > 0 ? 'flex' : 'none'; ?>; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                             <span style="font-size: 13px; font-weight: 600; color: #16a34a; display: flex; align-items: center; gap: 6px;">
                                 <span style="background: #16a34a; color: #ffffff; width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900;">%</span>
                                 Promo Discount Applied
@@ -2280,7 +2280,7 @@
                         </div>
                         <div class="promo-body" style="padding: 16px;">
                             <!-- Applied Promo Badge -->
-                            <div class="promo-applied-banner" id="promoAppliedBanner" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;">
+                            <div class="promo-applied-banner" id="promoAppliedBanner" style="display: <?php echo $initialDiscount > 0 ? 'block' : 'none'; ?>; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;">
                                 <div style="display: flex; align-items: center; justify-content: space-between;">
                                     <span style="font-weight: 800; font-size: 13px; color: #166534; display: flex; align-items: center; gap: 6px;">
                                         <i class="fa-solid fa-circle-percent" style="color: #16a34a; font-size: 15px;"></i>
@@ -2378,15 +2378,15 @@
                                 </div>
                             </div>
 
-                            <!-- Offer 7: ATFLY (Default Selected in Screenshot 1) -->
-                            <div class="promo-offer-item active" onclick="selectPromoOffer('ATFLY', 18, 'Default Instant Web Discount. Instant Flat Off ₹ 18')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid #22c55e; border-radius: 8px; margin-bottom: 4px; cursor: pointer; transition: all 0.2s ease; background: #f0fdf4;">
-                                <input type="radio" name="promo_radio" id="promo_ATFLY" value="ATFLY" checked style="margin-top: 2px; accent-color: #16a34a;">
+                            <!-- Offer 7: ATFLY -->
+                            <div class="promo-offer-item <?php echo $initialDiscount > 0 ? 'active' : ''; ?>" onclick="selectPromoOffer('ATFLY', 18, 'Instant Flat Off ₹ 18')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: <?php echo $initialDiscount > 0 ? '1px solid #22c55e' : '1px solid #e2e8f0'; ?>; border-radius: 8px; margin-bottom: 4px; cursor: pointer; transition: all 0.2s ease; background: <?php echo $initialDiscount > 0 ? '#f0fdf4' : '#ffffff'; ?>;">
+                                <input type="radio" name="promo_radio" id="promo_ATFLY" value="ATFLY" <?php echo $initialDiscount > 0 ? 'checked' : ''; ?> style="margin-top: 2px; accent-color: #16a34a;">
                                 <div style="flex: 1;">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <strong style="font-size: 13px; font-weight: 800; color: #0f172a;">ATFLY</strong>
                                         <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 10px;">Save 18</span>
                                     </div>
-                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">Default Instant Web Discount. Instant Flat Off ₹ 18</div>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">Instant Flat Off ₹ 18</div>
                                 </div>
                             </div>
                         </div>
@@ -2420,7 +2420,7 @@ var totalPax = <?php echo (int)$total_travelers_review; ?>;
 var insurancePerPax = 199;
 var isInsuranceIncluded = false;
 var appliedDiscount = <?php echo (float)$initialDiscount; ?>;
-var appliedPromoCodeName = 'ATFLY';
+var appliedPromoCodeName = <?php echo $initialDiscount > 0 ? json_encode('ATFLY') : "''"; ?>;
 
 function goBackToSearch() {
     var form = document.getElementById('backToSearchForm');
@@ -2754,8 +2754,31 @@ function selectFareTier(sectorOrTier, tierOrDelta, deltaOrBtn, btnEl) {
 }
 
 function selectPromoOffer(code, discountAmt, desc) {
+    if (appliedPromoCodeName === code && appliedDiscount > 0) {
+        appliedDiscount = 0;
+        appliedPromoCodeName = '';
+        document.querySelectorAll('input[name="promo_radio"]').forEach(function(r) { r.checked = false; });
+        document.querySelectorAll('.promo-offer-item').forEach(function(item) {
+            item.classList.remove('active');
+            item.style.borderColor = '#e2e8f0';
+            item.style.background = '#ffffff';
+        });
+        var banner = document.getElementById('promoAppliedBanner');
+        if (banner) banner.style.display = 'none';
+        var formPromo = document.getElementById('form_promo_code');
+        if (formPromo) formPromo.value = '';
+        var formDisc = document.getElementById('form_discount_amount');
+        if (formDisc) formDisc.value = 0;
+        recalculateAllFares();
+        return;
+    }
+
     appliedDiscount = parseFloat(discountAmt) || 0;
     appliedPromoCodeName = code;
+    var formPromo = document.getElementById('form_promo_code');
+    if (formPromo) formPromo.value = code;
+    var formDisc = document.getElementById('form_discount_amount');
+    if (formDisc) formDisc.value = appliedDiscount;
 
     // Highlight active radio and card
     document.querySelectorAll('input[name="promo_radio"]').forEach(function(r) {

@@ -1618,8 +1618,8 @@ class Franchise extends CI_Controller {
         $fareTierDelta   = (float)($addonsPost['fare_tier_price_delta'] ?? ($reviewPost['fare_tier_price_delta'] ?? 0));
         $insuranceAmount = (float)($addonsPost['insurance_amount'] ?? ($reviewPost['insurance_amount'] ?? 0));
         $addonTotal      = (float)($addonsPost['addon_total_amount'] ?? ($addonsPost['addons_grand_total'] ?? 0));
-        $promoDiscount   = (float)($addonsPost['discount_amount'] ?? ($reviewPost['discount_amount'] ?? 18));
-        $promoCode       = $addonsPost['promo_code'] ?? ($reviewPost['promo_code'] ?? 'ATFLY');
+        $promoDiscount   = (float)($addonsPost['discount_amount'] ?? ($reviewPost['discount_amount'] ?? 0));
+        $promoCode       = $addonsPost['promo_code'] ?? ($reviewPost['promo_code'] ?? '');
         $payMarkup       = (float)($addonsPost['markup_amount'] ?? ($reviewPost['markup_amount'] ?? ($sessionBooking['markup_amount'] ?? 0)));
         $payNetFare      = (float)($addonsPost['net_fare'] ?? ($reviewPost['net_fare'] ?? ($sessionBooking['net_fare'] ?? 0)));
 

@@ -75,8 +75,8 @@ $retDestCity = $airportDb[$return_destination]['city'] ?? $return_destination;
 $base_fare = (float)($base_fare ?? ($post_data['base_fare'] ?? ($post_data['net_amount'] ?? 8739)));
 $taxes = (float)($taxes ?? ($post_data['taxes'] ?? 1531));
 $insurance_amount = (float)($insurance_amount ?? ($post_data['insurance_amount'] ?? 0));
-$discount_amount = (float)($discount_amount ?? ($post_data['discount_amount'] ?? 18));
-$promo_code = $promo_code ?? ($post_data['promo_code'] ?? 'ATFLY');
+$discount_amount = (float)($discount_amount ?? ($post_data['discount_amount'] ?? 0));
+$promo_code = $promo_code ?? ($post_data['promo_code'] ?? '');
 
 $fare_tier = $fare_tier ?? ($post_data['fare_tier'] ?? 'Value');
 $fare_tier_price_delta = (float)($fare_tier_price_delta ?? ($post_data['fare_tier_price_delta'] ?? 0));
@@ -1463,7 +1463,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                         </div>
 
                         <!-- Promo Discount Applied -->
-                        <div class="f-fare-group" id="summaryDiscountRow" style="margin-bottom: 12px;">
+                        <div class="f-fare-group" id="summaryDiscountRow" style="margin-bottom: 12px; display: <?php echo $discount_amount > 0 ? 'block' : 'none'; ?>;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="font-size: 13px; font-weight: 700; color: #16a34a; display: flex; align-items: center; gap: 6px;">
                                     <i class="fa-solid fa-circle-check"></i> Promo Discount Applied
@@ -1484,7 +1484,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                         <strong style="font-size: 15px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 12px;">Promo Code</strong>
 
                         <!-- Top Green Applied Box -->
-                        <div style="background: #dcfce7; border: 1px solid #86efac; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;">
+                        <div id="appliedPromoBanner" style="background: #dcfce7; border: 1px solid #86efac; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; display: <?php echo $discount_amount > 0 ? 'block' : 'none'; ?>;">
                             <div style="display: flex; align-items: center; gap: 8px; color: #166534; font-weight: 800; font-size: 14px;">
                                 <i class="fa-solid fa-percent"></i> <span id="appliedPromoBadge"><?php echo htmlspecialchars($promo_code); ?></span>
                             </div>
@@ -1548,15 +1548,15 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                                 </div>
                             </div>
 
-                            <!-- Offer 5: ATFLY (Save 18 - Default Checked) -->
-                            <div class="promo-item active-promo" onclick="applyPromoOption('ATFLY', <?php echo $discount_amount; ?>, this)" style="display: flex; align-items: flex-start; gap: 10px; padding: 10px; border: 1.5px solid #22c55e; background: #f0fdf4; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
-                                <input type="radio" name="promo_radio" id="p_ATFLY" checked style="margin-top: 3px; accent-color: #ef4444;">
+                            <!-- Offer 5: ATFLY (Save 18) -->
+                            <div class="promo-item <?php echo ($discount_amount > 0 && $promo_code === 'ATFLY') ? 'active-promo' : ''; ?>" onclick="applyPromoOption('ATFLY', 18, this)" style="display: flex; align-items: flex-start; gap: 10px; padding: 10px; border: <?php echo ($discount_amount > 0 && $promo_code === 'ATFLY') ? '1.5px solid #22c55e' : '1px solid #e2e8f0'; ?>; background: <?php echo ($discount_amount > 0 && $promo_code === 'ATFLY') ? '#f0fdf4' : '#ffffff'; ?>; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
+                                <input type="radio" name="promo_radio" id="p_ATFLY" <?php echo ($discount_amount > 0 && $promo_code === 'ATFLY') ? 'checked' : ''; ?> style="margin-top: 3px; accent-color: #ef4444;">
                                 <div style="flex: 1;">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <strong style="font-size: 12.5px; color: #0f172a;">ATFLY</strong>
-                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a;">Save <?php echo number_format($discount_amount); ?></span>
+                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a;">Save 18</span>
                                     </div>
-                                    <div style="font-size: 10.5px; color: #64748b; margin-top: 2px;">Your Promocode has been applied you've saved ₹ <?php echo number_format($discount_amount); ?></div>
+                                    <div style="font-size: 10.5px; color: #64748b; margin-top: 2px;">Choose this promo to enjoy a discount of ₹ 18</div>
                                 </div>
                             </div>
 
@@ -2460,6 +2460,13 @@ function recalcTotal() {
         addonsRow.style.display = 'none';
     }
 
+    var discRow = document.getElementById('summaryDiscountRow');
+    if (discRow) {
+        discRow.style.display = (appliedDiscount > 0) ? 'block' : 'none';
+        var discAmt = document.getElementById('summaryDiscountAmount');
+        if (discAmt) discAmt.textContent = appliedDiscount.toLocaleString('en-IN');
+    }
+
     var markupDelta = currentMarkupAmount - initialMarkupAmount;
     var grandTotal = Math.max(0, (baseFlightAmount + totalAddons + markupDelta) - appliedDiscount);
     document.getElementById('summaryGrandTotal').textContent = grandTotal.toLocaleString('en-IN');
@@ -2631,20 +2638,56 @@ function recalcTotal() {
 }
 
 function applyPromoOption(code, discount, el) {
+    var radio = el.querySelector('input[type="radio"]');
+    var isCurrentlyActive = (appliedPromoCode === code && appliedDiscount > 0);
+
+    if (isCurrentlyActive) {
+        // Toggle OFF promo
+        appliedDiscount = 0;
+        appliedPromoCode = '';
+
+        document.querySelectorAll('.promo-item').forEach(function(p) {
+            p.classList.remove('active-promo');
+            p.style.borderColor = '#e2e8f0';
+            p.style.background = '#ffffff';
+            var r = p.querySelector('input[type="radio"]');
+            if (r) r.checked = false;
+        });
+
+        var banner = document.getElementById('appliedPromoBanner');
+        if (banner) banner.style.display = 'none';
+        var discRow = document.getElementById('summaryDiscountRow');
+        if (discRow) discRow.style.display = 'none';
+
+        var discInp = document.getElementById('form_final_discount_amount');
+        if (discInp) discInp.value = 0;
+        var codeInp = document.getElementById('form_final_promo_code');
+        if (codeInp) codeInp.value = '';
+
+        recalcTotal();
+        return;
+    }
+
     document.querySelectorAll('.promo-item').forEach(function(p) {
+        p.classList.remove('active-promo');
         p.style.borderColor = '#e2e8f0';
         p.style.background = '#ffffff';
-        var radio = p.querySelector('input[type="radio"]');
-        if (radio) radio.checked = false;
+        var r = p.querySelector('input[type="radio"]');
+        if (r) r.checked = false;
     });
 
+    el.classList.add('active-promo');
     el.style.borderColor = '#22c55e';
     el.style.background = '#f0fdf4';
-    var myRadio = el.querySelector('input[type="radio"]');
-    if (myRadio) myRadio.checked = true;
+    if (radio) radio.checked = true;
 
     appliedDiscount = parseFloat(discount);
     appliedPromoCode = code;
+
+    var banner = document.getElementById('appliedPromoBanner');
+    if (banner) banner.style.display = 'block';
+    var discRow = document.getElementById('summaryDiscountRow');
+    if (discRow) discRow.style.display = 'block';
 
     document.getElementById('appliedPromoBadge').textContent = code;
     document.getElementById('appliedPromoSavings').textContent = appliedDiscount.toLocaleString('en-IN');

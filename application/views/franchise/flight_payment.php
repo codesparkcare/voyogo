@@ -273,8 +273,8 @@ $fTaxes          = (float)($fTaxes ?? ($post_data['taxes'] ?? ($taxes ?? ($prici
 $fareTierDelta   = (float)($fareTierDelta ?? ($post_data['fare_tier_price_delta'] ?? 0));
 $insuranceAmount = (float)($insuranceAmount ?? ($post_data['insurance_amount'] ?? 0));
 $addonTotal      = (float)($addonTotal ?? ($post_data['addon_total_amount'] ?? ($post_data['addons_grand_total'] ?? ($ssrAddonsAmount ?? 0))));
-$promoDiscount   = (float)($promoDiscount ?? ($post_data['discount_amount'] ?? ($discount_amount ?? 18)));
-$promoCode       = $promoCode ?? ($post_data['promo_code'] ?? 'ATFLY');
+$promoDiscount   = (float)($promoDiscount ?? ($post_data['discount_amount'] ?? ($discount_amount ?? 0)));
+$promoCode       = $promoCode ?? ($post_data['promo_code'] ?? '');
 $payMarkup       = (float)($post_data['markup_amount'] ?? ($markup_amount ?? ($flight['markup_amount'] ?? 0)));
 $payNetFare      = (float)($post_data['net_fare'] ?? ($net_fare ?? ($flight['net_fare'] ?? 0)));
 $grandTotal      = (float)($grandTotal ?? max(0, ($fBaseFare + $fTaxes + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount));
@@ -2289,7 +2289,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                 </div>
 
                 <!-- Promo Applied Box -->
-                <?php if (!empty($promoCode)): ?>
+                <?php if (!empty($promoCode) && $promoDiscount > 0): ?>
                 <div style="background: #ffffff; border-radius: 10px; border: 1px solid #bbf7d0; padding: 14px 16px; background: #f0fdf4;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div style="display: flex; align-items: center; gap: 8px;">
