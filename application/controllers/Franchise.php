@@ -364,6 +364,14 @@ class Franchise extends CI_Controller {
                 $isItemRef = false;
             }
 
+            $isItemHold = false;
+            if (isset($item['hold'])) {
+                $isItemHold = ($item['hold'] === true || $item['hold'] === 'true' || $item['hold'] === 1 || $item['hold'] === '1');
+            } elseif (isset($item['Hold'])) {
+                $isItemHold = ($item['Hold'] === true || $item['Hold'] === 'true' || $item['Hold'] === 1 || $item['Hold'] === '1');
+            }
+            $itemHoldInfo = !empty($item['hold_info']) ? (string)$item['hold_info'] : (!empty($item['HoldInfo']) ? (string)$item['HoldInfo'] : '');
+
             $flightObj = array(
                 'id'            => $item['id'] ?? ('FL_' . $code . '_' . ($idx + 101)),
                 'ResultID'      => !empty($item['tui']) ? $item['tui'] : (!empty($tui) ? $tui : ('FL_' . ($idx + 101))),
@@ -393,6 +401,10 @@ class Franchise extends CI_Controller {
                 'cabin_baggage' => '7 Kg',
                 'refundable'    => $isItemRef,
                 'Refundable'    => $isItemRef,
+                'hold'          => $isItemHold,
+                'Hold'          => $isItemHold,
+                'hold_info'     => $itemHoldInfo,
+                'HoldInfo'      => $itemHoldInfo,
                 'return_identifier' => isset($item['return_identifier']) ? (int)$item['return_identifier'] : 0
             );
 
@@ -406,12 +418,12 @@ class Franchise extends CI_Controller {
         // Resilient Fallback for smooth presentation if Benzy returns empty in test mode
         if (empty($onwardFlights)) {
             $mockDefaults = array(
-                array('code' => '6E', 'fn' => '301',  'dep' => '07:00', 'arr' => '09:10', 'dur' => '02h 10m', 'gross' => 7266, 'net' => 6966, 'stops' => 0, 'ref' => false),
-                array('code' => '6E', 'fn' => '317',  'dep' => '19:00', 'arr' => '21:10', 'dur' => '02h 10m', 'gross' => 7266, 'net' => 6966, 'stops' => 0, 'ref' => false),
-                array('code' => 'AI', 'fn' => '805',  'dep' => '09:30', 'arr' => '11:45', 'dur' => '02h 15m', 'gross' => 7836, 'net' => 7450, 'stops' => 0, 'ref' => true),
-                array('code' => 'SG', 'fn' => '162',  'dep' => '13:15', 'arr' => '15:30', 'dur' => '02h 15m', 'gross' => 8453, 'net' => 8050, 'stops' => 0, 'ref' => false),
-                array('code' => 'QP', 'fn' => '1120', 'dep' => '18:40', 'arr' => '20:55', 'dur' => '02h 15m', 'gross' => 7518, 'net' => 7150, 'stops' => 0, 'ref' => false),
-                array('code' => 'I5', 'fn' => '741',  'dep' => '21:15', 'arr' => '23:30', 'dur' => '02h 15m', 'gross' => 8355, 'net' => 7980, 'stops' => 0, 'ref' => false)
+                array('code' => '6E', 'fn' => '301',  'dep' => '07:00', 'arr' => '09:10', 'dur' => '02h 10m', 'gross' => 7266, 'net' => 6966, 'stops' => 0, 'ref' => false, 'hold' => true, 'hold_info' => 'E|02:00|0.00|SE|EE'),
+                array('code' => '6E', 'fn' => '317',  'dep' => '19:00', 'arr' => '21:10', 'dur' => '02h 10m', 'gross' => 7266, 'net' => 6966, 'stops' => 0, 'ref' => false, 'hold' => false, 'hold_info' => ''),
+                array('code' => 'AI', 'fn' => '805',  'dep' => '09:30', 'arr' => '11:45', 'dur' => '02h 15m', 'gross' => 7836, 'net' => 7450, 'stops' => 0, 'ref' => true, 'hold' => true, 'hold_info' => 'E|04:00|0.00|SE|EE'),
+                array('code' => 'SG', 'fn' => '162',  'dep' => '13:15', 'arr' => '15:30', 'dur' => '02h 15m', 'gross' => 8453, 'net' => 8050, 'stops' => 0, 'ref' => false, 'hold' => false, 'hold_info' => ''),
+                array('code' => 'QP', 'fn' => '1120', 'dep' => '18:40', 'arr' => '20:55', 'dur' => '02h 15m', 'gross' => 7518, 'net' => 7150, 'stops' => 0, 'ref' => false, 'hold' => false, 'hold_info' => ''),
+                array('code' => 'I5', 'fn' => '741',  'dep' => '21:15', 'arr' => '23:30', 'dur' => '02h 15m', 'gross' => 8355, 'net' => 7980, 'stops' => 0, 'ref' => false, 'hold' => false, 'hold_info' => '')
             );
             foreach ($mockDefaults as $mIdx => $m) {
                 $c = $m['code'];
@@ -444,6 +456,10 @@ class Franchise extends CI_Controller {
                     'cabin_baggage' => '7 Kg',
                     'refundable'    => !empty($m['ref']),
                     'Refundable'    => !empty($m['ref']),
+                    'hold'          => !empty($m['hold']),
+                    'Hold'          => !empty($m['hold']),
+                    'hold_info'     => $m['hold_info'] ?? '',
+                    'HoldInfo'      => $m['hold_info'] ?? '',
                     'return_identifier' => 0
                 );
             }
@@ -451,11 +467,11 @@ class Franchise extends CI_Controller {
 
         if ($is_roundtrip && empty($inboundFlights)) {
             $mockRetDefaults = array(
-                array('code' => '6E', 'fn' => '2135', 'dep' => '15:30', 'arr' => '17:45', 'dur' => '02h 15m', 'gross' => 5150, 'net' => 4300, 'stops' => 0, 'ref' => false),
-                array('code' => 'SG', 'fn' => '163',  'dep' => '17:45', 'arr' => '20:00', 'dur' => '02h 15m', 'gross' => 4999, 'net' => 4150, 'stops' => 0, 'ref' => false),
-                array('code' => 'AI', 'fn' => '806',  'dep' => '19:15', 'arr' => '21:30', 'dur' => '02h 15m', 'gross' => 5450, 'net' => 4600, 'stops' => 0, 'ref' => true),
-                array('code' => 'QP', 'fn' => '1312', 'dep' => '21:30', 'arr' => '23:45', 'dur' => '02h 15m', 'gross' => 4850, 'net' => 4000, 'stops' => 0, 'ref' => false),
-                array('code' => 'UK', 'fn' => '946',  'dep' => '22:45', 'arr' => '01:00', 'dur' => '02h 15m', 'gross' => 5800, 'net' => 4950, 'stops' => 0, 'ref' => true)
+                array('code' => '6E', 'fn' => '2135', 'dep' => '15:30', 'arr' => '17:45', 'dur' => '02h 15m', 'gross' => 5150, 'net' => 4300, 'stops' => 0, 'ref' => false, 'hold' => true, 'hold_info' => 'E|02:00|0.00|SE|EE'),
+                array('code' => 'SG', 'fn' => '163',  'dep' => '17:45', 'arr' => '20:00', 'dur' => '02h 15m', 'gross' => 4999, 'net' => 4150, 'stops' => 0, 'ref' => false, 'hold' => false, 'hold_info' => ''),
+                array('code' => 'AI', 'fn' => '806',  'dep' => '19:15', 'arr' => '21:30', 'dur' => '02h 15m', 'gross' => 5450, 'net' => 4600, 'stops' => 0, 'ref' => true, 'hold' => true, 'hold_info' => 'E|04:00|0.00|SE|EE'),
+                array('code' => 'QP', 'fn' => '1312', 'dep' => '21:30', 'arr' => '23:45', 'dur' => '02h 15m', 'gross' => 4850, 'net' => 4000, 'stops' => 0, 'ref' => false, 'hold' => false, 'hold_info' => ''),
+                array('code' => 'UK', 'fn' => '946',  'dep' => '22:45', 'arr' => '01:00', 'dur' => '02h 15m', 'gross' => 5800, 'net' => 4950, 'stops' => 0, 'ref' => true, 'hold' => false, 'hold_info' => '')
             );
             foreach ($mockRetDefaults as $rIdx => $rm) {
                 $rc = $rm['code'];
@@ -488,6 +504,10 @@ class Franchise extends CI_Controller {
                     'cabin_baggage' => '7 Kg',
                     'refundable'    => !empty($rm['ref']),
                     'Refundable'    => !empty($rm['ref']),
+                    'hold'          => !empty($rm['hold']),
+                    'Hold'          => !empty($rm['hold']),
+                    'hold_info'     => $rm['hold_info'] ?? '',
+                    'HoldInfo'      => $rm['hold_info'] ?? '',
                     'return_identifier' => 1
                 );
             }
@@ -690,6 +710,20 @@ class Franchise extends CI_Controller {
             $flightDetails['refundable'] = true;
         }
         $flightDetails['is_refundable'] = !empty($flightDetails['refundable']);
+
+        // Hold capability (preserve choice from flight search card / GetSPricer)
+        if ($this->input->post('hold') !== null && $this->input->post('hold') !== '') {
+            $rawHold = $this->input->post('hold');
+            $flightDetails['hold'] = ($rawHold === '1' || $rawHold === 1 || $rawHold === true || $rawHold === 'true');
+        } elseif (!isset($flightDetails['hold'])) {
+            $flightDetails['hold'] = false;
+        }
+        if ($this->input->post('hold_info') !== null && $this->input->post('hold_info') !== '') {
+            $flightDetails['hold_info'] = (string)$this->input->post('hold_info');
+        } elseif (!isset($flightDetails['hold_info'])) {
+            $flightDetails['hold_info'] = '';
+        }
+
         $flightDetails['markup_amount'] = $markup_amount;
         $flightDetails['markup_type']   = $markup_type;
         $flightDetails['net_fare']      = $net_fare_post > 0 ? $net_fare_post : (isset($flightDetails['base_fare']) ? $flightDetails['base_fare'] : round($price * 0.92));
@@ -725,6 +759,14 @@ class Franchise extends CI_Controller {
                 $returnFlight['refundable'] = $flightDetails['refundable'];
             }
             $returnFlight['is_refundable'] = !empty($returnFlight['refundable']);
+
+            $retHold = $this->input->post('return_hold');
+            if ($retHold !== null && $retHold !== '') {
+                $returnFlight['hold'] = ($retHold === '1' || $retHold === 1 || $retHold === true || $retHold === 'true');
+            } else {
+                $returnFlight['hold'] = !empty($flightDetails['hold']);
+            }
+            $returnFlight['hold_info'] = $this->input->post('return_hold_info') ?: ($flightDetails['hold_info'] ?? '');
 
             $returnFlight['from_airport'] = $airportNames[$returnFlight['from_code']]['name'] ?? ($returnFlight['from_code'] . ' Airport');
             $returnFlight['from_terminal'] = $airportNames[$returnFlight['from_code']]['terminal'] ?? 'Terminal 1';
@@ -1648,17 +1690,63 @@ class Franchise extends CI_Controller {
         $data['baseFlightFare']     = $fBaseFare + $fTaxes;
         $data['can_book']           = ($store['wallet_balance'] >= $walletDeductAmount);
 
-        // Hold Booking (HB) Settings for Franchise (Akbar Travels Pattern)
-        $holdSupportedProviders = array('6E', 'SG', '1G', 'AI', 'UK', 'G8', 'I5', 'QP', 'AK');
-        $flightNum = $sessionBooking['flight']['flight_number'] ?? ($data['flight']['flight_number'] ?? '6E-101');
-        $airlineCode = strtoupper(substr($flightNum, 0, 2));
-        $isHoldEligible = in_array($airlineCode, $holdSupportedProviders) || !empty($data['flight']['hold']);
-        
-        $holdDurationHours = 4;
+        // Hold Booking (HB) Settings for Franchise (Akbar Travels Pattern - Strictly Live Benz API Controlled)
+        $flightData = !empty($sessionBooking['flight']) ? $sessionBooking['flight'] : ($data['flight'] ?? array());
+        $holdFromApi = false;
+        if (isset($flightData['hold'])) {
+            $rawH = $flightData['hold'];
+            $holdFromApi = ($rawH === true || $rawH === '1' || $rawH === 1 || $rawH === 'true');
+        }
+        $holdInfoStr = !empty($flightData['hold_info']) ? (string)$flightData['hold_info'] : '';
+
+        // If it's a roundtrip booking, both onward and return must be eligible for hold
+        $isRoundTripBooking = !empty($sessionBooking['is_roundtrip']) || !empty($sessionBooking['return_flight']);
+        if ($isRoundTripBooking && !empty($sessionBooking['return_flight'])) {
+            $retFlightData = $sessionBooking['return_flight'];
+            $retHold = false;
+            if (isset($retFlightData['hold'])) {
+                $rawRH = $retFlightData['hold'];
+                $retHold = ($rawRH === true || $rawRH === '1' || $rawRH === 1 || $rawRH === 'true');
+            }
+            if (!$retHold) {
+                $holdFromApi = false;
+            }
+        }
+
+        // Parse HoldInfo format from Benz API (e.g. "E|01:00|1.00|SE|EE" or "E|10:01|10.00|SE|EE")
+        $holdAdvanceAmount = 0.00;
+        $holdDurationHours = 4.0;
+        if (!empty($holdInfoStr)) {
+            $parts = explode('|', $holdInfoStr);
+            if (!empty($parts[1]) && strpos($parts[1], ':') !== false) {
+                $tParts = explode(':', $parts[1]);
+                $h = (int)$tParts[0];
+                $m = (int)($tParts[1] ?? 0);
+                $totH = $h + ($m / 60);
+                if ($totH > 0) {
+                    $holdDurationHours = $totH;
+                }
+            }
+            if (isset($parts[2]) && is_numeric($parts[2])) {
+                $paxCount = max(1, (int)($sessionBooking['total_travelers'] ?? ($data['total_travelers'] ?? 1)));
+                $holdAdvanceAmount = round((float)$parts[2] * $paxCount, 2);
+            }
+        }
+
+        // Check flight departure time proximity rule (ticketing cutoff must be before departure)
+        $depDate = $flightData['departure_date'] ?? date('Y-m-d');
+        $depTime = $flightData['departure_time'] ?? '23:59';
+        $depTimestamp = strtotime($depDate . ' ' . $depTime);
+        $hoursUntilDeparture = ($depTimestamp - time()) / 3600;
+
+        // Strictly eligible ONLY if Benz API returns hold === true, valid hold_info, and departure > 3 hours
+        $isHoldEligible = $holdFromApi && !empty($holdInfoStr) && ($hoursUntilDeparture > 3);
+
+        $holdLimitTime = min($depTimestamp - (2 * 3600), time() + round($holdDurationHours * 3600));
         $data['can_hold']             = $isHoldEligible;
-        $data['hold_advance_amount']  = 0.00;
-        $data['hold_duration_hours']  = $holdDurationHours;
-        $data['ticketing_time_limit'] = date('d/m/Y h:i A', strtotime("+{$holdDurationHours} hours"));
+        $data['hold_advance_amount']  = $holdAdvanceAmount;
+        $data['hold_duration_hours']  = round($holdDurationHours, 1);
+        $data['ticketing_time_limit'] = date('d/m/Y h:i A', $holdLimitTime);
 
         $this->load->view('franchise/layout/header', $data);
         $this->load->view('franchise/flight_payment', $data);

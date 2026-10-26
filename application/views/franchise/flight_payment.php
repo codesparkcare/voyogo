@@ -2144,6 +2144,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                 </div>
             </div>
 
+            <?php if (!empty($can_hold)): ?>
             <!-- Akbar Travels Architecture: Pay Now vs Hold Booking Tabs -->
             <div style="display: flex; gap: 14px; margin-bottom: 22px;">
                 <button type="button" id="tabBtnPayNow" onclick="selectPaymentTab('pay_now')" style="flex: 1; padding: 15px 20px; font-size: 15.5px; font-weight: 800; border-radius: 10px; border: 2px solid #fed7aa; background: #fff7ed; color: #9a3412; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s;">
@@ -2217,9 +2218,21 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                     </div>
                 </div>
             </div>
+            <?php else: ?>
+            <!-- Hold Booking is not available according to live Benz API -->
+            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; font-size: 13.5px;">
+                <div style="display: flex; align-items: center; gap: 10px; color: #334155;">
+                    <i class="fa-solid fa-circle-info" style="color: #0284c7; font-size: 18px;"></i>
+                    <span><strong>Instant Ticket Issuance:</strong> Hold Booking is not available for this flight according to live airline inventory.</span>
+                </div>
+                <span style="background: #e0f2fe; color: #0369a1; font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 4px;">
+                    Pay Now
+                </span>
+            </div>
+            <?php endif; ?>
 
             <!-- TAB 2: Franchise Store Wallet Float Deduction Card (Pay Now) -->
-            <div id="payNowSection" class="payment-methods-card" style="display: none; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 24px;">
+            <div id="payNowSection" class="payment-methods-card" style="<?php echo empty($can_hold) ? 'display: block;' : 'display: none;'; ?> background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 24px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #f1f5f9;">
                     <h3 style="font-size: 18px; font-weight: 800; color: #09204b; margin: 0; display: flex; align-items: center; gap: 10px;">
                         <i class="fa-solid fa-wallet" style="color: #78B722;"></i> Pay with Store Wallet Float
@@ -2287,8 +2300,8 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
 
                 <input type="hidden" name="total_amount" id="payment_total_amount" value="<?php echo $grandTotal; ?>">
                 <input type="hidden" name="wallet_deduct_amount" id="payment_wallet_deduct_amount" value="<?php echo $walletDeductAmount; ?>">
-                <input type="hidden" name="booking_type" id="form_booking_type" value="HB">
-                <input type="hidden" name="advance_amount" id="form_advance_amount" value="0">
+                <input type="hidden" name="booking_type" id="form_booking_type" value="<?php echo !empty($can_hold) ? 'HB' : 'regular'; ?>">
+                <input type="hidden" name="advance_amount" id="form_advance_amount" value="<?php echo !empty($can_hold) ? (float)($hold_advance_amount ?? 0) : '0'; ?>">
             </form>
 
         </div>
@@ -2434,6 +2447,7 @@ function selectPaymentTab(mode) {
     var holdSec = document.getElementById('holdBookingSection');
     var paySec  = document.getElementById('payNowSection');
     var bTypeInput = document.getElementById('form_booking_type');
+    if (!holdBtn || !payBtn || !holdSec || !paySec) return;
 
     if (mode === 'hold_booking') {
         holdBtn.style.background = '#78B722';

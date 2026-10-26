@@ -386,6 +386,17 @@
                 ?>
 
                 <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
+                    <?php if (!empty($flight['hold']) && ($flight['hold'] === true || $flight['hold'] === '1' || $flight['hold'] === 1 || $flight['hold'] === 'true')): ?>
+                    <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 10px 16px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; font-size: 13px;">
+                        <div style="display: flex; align-items: center; gap: 8px; color: #166534; font-weight: 700;">
+                            <i class="fa-solid fa-clock-rotate-left" style="font-size: 15px; color: #16a34a;"></i>
+                            <span>Hold Booking (HB) Available for this flight</span>
+                        </div>
+                        <span style="font-size: 11.5px; background: #dcfce7; color: #15803d; padding: 3px 8px; border-radius: 4px; font-weight: 700;">
+                            Benz GDS Ticketing Time Limit Applies
+                        </span>
+                    </div>
+                    <?php endif; ?>
                     <?php if ($isOnwardConnecting): ?>
                         <?php $segData = buildConnectingFlightSegments($flight, $airportDb); ?>
                         <!-- 1+ Stop Connecting Flight View (Screenshot 2 Match) -->
@@ -1137,10 +1148,14 @@
                     <input type="hidden" name="is_refundable" value="<?php echo !empty($flight['refundable']) ? '1' : '0'; ?>">
                     <input type="hidden" name="fare_class" value="<?php echo htmlspecialchars($flight['fare_class'] ?? ''); ?>">
                     <input type="hidden" name="fbc" value="<?php echo htmlspecialchars($flight['fbc'] ?? ''); ?>">
+                    <input type="hidden" name="hold" value="<?php echo (!empty($flight['hold']) && ($flight['hold'] === true || $flight['hold'] === '1' || $flight['hold'] === 1 || $flight['hold'] === 'true')) ? '1' : '0'; ?>">
+                    <input type="hidden" name="hold_info" value="<?php echo htmlspecialchars($flight['hold_info'] ?? ''); ?>">
 
                     <?php if (!empty($return_flight)): ?>
                     <input type="hidden" name="return_fare_type" value="<?php echo htmlspecialchars($return_flight['fare_type'] ?? 'Retail'); ?>">
                     <input type="hidden" name="return_refundable" value="<?php echo !empty($return_flight['refundable']) ? '1' : '0'; ?>">
+                    <input type="hidden" name="return_hold" value="<?php echo (!empty($return_flight['hold']) && ($return_flight['hold'] === true || $return_flight['hold'] === '1' || $return_flight['hold'] === 1 || $return_flight['hold'] === 'true')) ? '1' : '0'; ?>">
+                    <input type="hidden" name="return_hold_info" value="<?php echo htmlspecialchars($return_flight['hold_info'] ?? ''); ?>">
                     <input type="hidden" name="return_flight_number" value="<?php echo htmlspecialchars($return_flight['flight_number']); ?>">
                     <input type="hidden" name="return_airline_name" value="<?php echo htmlspecialchars($return_flight['airline_name']); ?>">
                     <input type="hidden" name="return_origin" value="<?php echo htmlspecialchars($return_flight['from_code']); ?>">

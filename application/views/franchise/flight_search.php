@@ -654,6 +654,10 @@ uasort($connectingAirportsList, function($a, $b) {
                         <input type="hidden" name="refundable" id="rt_refundable" value="1">
                         <input type="hidden" name="is_refundable" id="rt_is_refundable" value="1">
                         <input type="hidden" name="return_refundable" id="rt_return_refundable" value="1">
+                        <input type="hidden" name="hold" id="rt_hold" value="0">
+                        <input type="hidden" name="hold_info" id="rt_hold_info" value="">
+                        <input type="hidden" name="return_hold" id="rt_return_hold" value="0">
+                        <input type="hidden" name="return_hold_info" id="rt_return_hold_info" value="">
                         <input type="hidden" name="markup_amount" id="rt_markup_amount" value="0">
                         <input type="hidden" name="markup_type" id="rt_markup_type" value="pax">
                         <input type="hidden" name="net_fare" id="rt_net_fare" value="">
@@ -740,6 +744,11 @@ uasort($connectingAirportsList, function($a, $b) {
                                         Non-Refundable
                                     </span>
                                 <?php endif; ?>
+                                <?php if (!empty($f['hold']) && ($f['hold'] === true || $f['hold'] === '1' || $f['hold'] === 1 || $f['hold'] === 'true')): ?>
+                                    <span style="display: inline-flex; align-items: center; gap: 3px; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px;" title="Hold Booking (HB) Available">
+                                        <i class="fa-solid fa-clock-rotate-left" style="font-size: 10px;"></i> Hold Available
+                                    </span>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -809,6 +818,8 @@ uasort($connectingAirportsList, function($a, $b) {
                             <input type="hidden" name="infants" value="<?php echo (int)($search_query['infants'] ?? 0); ?>">
                             <input type="hidden" name="refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
                             <input type="hidden" name="is_refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
+                            <input type="hidden" name="hold" value="<?php echo (!empty($f['hold']) && ($f['hold'] === true || $f['hold'] === '1' || $f['hold'] === 1 || $f['hold'] === 'true')) ? '1' : '0'; ?>">
+                            <input type="hidden" name="hold_info" value="<?php echo htmlspecialchars($f['hold_info'] ?? ''); ?>">
 
                             <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
                                 <button type="submit" class="f-book-btn" style="background: #8ac33e; color: #ffffff; padding: 8px 18px; font-weight: 800; font-size: 13.5px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
@@ -1626,6 +1637,8 @@ function updateRoundTripSelection() {
         const onPrice = document.getElementById('rt_onward_price'); if (onPrice) onPrice.value = o.display_price || o.price || '';
         const elRefO = document.getElementById('rt_refundable'); if (elRefO) elRefO.value = (o && o.refundable) ? '1' : '0';
         const elIsRefO = document.getElementById('rt_is_refundable'); if (elIsRefO) elIsRefO.value = (o && o.refundable) ? '1' : '0';
+        const elHoldO = document.getElementById('rt_hold'); if (elHoldO) elHoldO.value = (o && (o.hold === true || o.hold === 1 || o.hold === '1' || o.hold === 'true')) ? '1' : '0';
+        const elHoldInfoO = document.getElementById('rt_hold_info'); if (elHoldInfoO) elHoldInfoO.value = (o && o.hold_info) ? o.hold_info : '';
     }
 
     if (r) {
@@ -1640,6 +1653,8 @@ function updateRoundTripSelection() {
         const retArr = document.getElementById('rt_ret_arr_time'); if (retArr) retArr.value = r.arrival_time || '';
         const retPrice = document.getElementById('rt_ret_price'); if (retPrice) retPrice.value = r.display_price || r.price || '';
         const elRefR = document.getElementById('rt_return_refundable'); if (elRefR) elRefR.value = (r && r.refundable) ? '1' : '0';
+        const elHoldR = document.getElementById('rt_return_hold'); if (elHoldR) elHoldR.value = (r && (r.hold === true || r.hold === 1 || r.hold === '1' || r.hold === 'true')) ? '1' : '0';
+        const elHoldInfoR = document.getElementById('rt_return_hold_info'); if (elHoldInfoR) elHoldInfoR.value = (r && r.hold_info) ? r.hold_info : '';
     }
 
     const rtMarkupAmt = document.getElementById('rt_markup_amount');

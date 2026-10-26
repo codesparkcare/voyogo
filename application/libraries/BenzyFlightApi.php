@@ -466,16 +466,16 @@ class BenzyFlightApi {
         // Onward Flight Templates (Morning / Day)
         $flightTemplates = array(
             // Direct Non-Stop Flights
-            array('vac' => '6E', 'fn' => '2134', 'name' => 'IndiGo', 'dep' => '06:00', 'arr' => '08:15', 'gross' => 5150.00, 'net' => 4300.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => '6E|1'),
-            array('vac' => 'SG', 'fn' => '162',  'name' => 'SpiceJet', 'dep' => '09:30', 'arr' => '11:45', 'gross' => 4999.00, 'net' => 4150.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'SG|1'),
-            array('vac' => 'AI', 'fn' => '805',  'name' => 'Air India', 'dep' => '14:15', 'arr' => '16:30', 'gross' => 5450.00, 'net' => 4600.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'AI|1'),
-            array('vac' => 'QP', 'fn' => '1311', 'name' => 'Akasa Air', 'dep' => '18:20', 'arr' => '20:35', 'gross' => 4850.00, 'net' => 4000.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'QP|1'),
-            array('vac' => 'UK', 'fn' => '945',  'name' => 'Vistara', 'dep' => '20:45', 'arr' => '23:00', 'gross' => 5800.00, 'net' => 4950.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'UK|1'),
+            array('vac' => '6E', 'fn' => '2134', 'name' => 'IndiGo', 'dep' => '06:00', 'arr' => '08:15', 'gross' => 5150.00, 'net' => 4300.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => '6E|1', 'hold' => true, 'hold_info' => 'E|02:00|0.00|SE|EE'),
+            array('vac' => 'SG', 'fn' => '162',  'name' => 'SpiceJet', 'dep' => '09:30', 'arr' => '11:45', 'gross' => 4999.00, 'net' => 4150.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'SG|1', 'hold' => false, 'hold_info' => ''),
+            array('vac' => 'AI', 'fn' => '805',  'name' => 'Air India', 'dep' => '14:15', 'arr' => '16:30', 'gross' => 5450.00, 'net' => 4600.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'AI|1', 'hold' => true, 'hold_info' => 'E|04:00|0.00|SE|EE'),
+            array('vac' => 'QP', 'fn' => '1311', 'name' => 'Akasa Air', 'dep' => '18:20', 'arr' => '20:35', 'gross' => 4850.00, 'net' => 4000.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'QP|1', 'hold' => false, 'hold_info' => ''),
+            array('vac' => 'UK', 'fn' => '945',  'name' => 'Vistara', 'dep' => '20:45', 'arr' => '23:00', 'gross' => 5800.00, 'net' => 4950.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'UK|1', 'hold' => false, 'hold_info' => ''),
 
             // 1-Stop Connecting Flights
-            array('vac' => '6E', 'fn' => '5021', 'name' => 'IndiGo', 'dep' => '07:15', 'arr' => '12:45', 'gross' => 5120.00, 'net' => 4280.00, 'dur' => '05h 30m', 'stops' => 1, 'idx' => '6E|1', 'via' => 'HYD'),
-            array('vac' => 'SG', 'fn' => '304',  'name' => 'SpiceJet', 'dep' => '11:00', 'arr' => '15:45', 'gross' => 4890.00, 'net' => 4050.00, 'dur' => '04h 45m', 'stops' => 1, 'idx' => 'SG|1', 'via' => 'GOX'),
-            array('vac' => 'AI', 'fn' => '631',  'name' => 'Air India', 'dep' => '13:00', 'arr' => '18:15', 'gross' => 5380.00, 'net' => 4520.00, 'dur' => '05h 15m', 'stops' => 1, 'idx' => 'AI|1', 'via' => 'AMD')
+            array('vac' => '6E', 'fn' => '5021', 'name' => 'IndiGo', 'dep' => '07:15', 'arr' => '12:45', 'gross' => 5120.00, 'net' => 4280.00, 'dur' => '05h 30m', 'stops' => 1, 'idx' => '6E|1', 'via' => 'HYD', 'hold' => true, 'hold_info' => 'E|01:30|0.00|SE|EE'),
+            array('vac' => 'SG', 'fn' => '304',  'name' => 'SpiceJet', 'dep' => '11:00', 'arr' => '15:45', 'gross' => 4890.00, 'net' => 4050.00, 'dur' => '04h 45m', 'stops' => 1, 'idx' => 'SG|1', 'via' => 'GOX', 'hold' => false, 'hold_info' => ''),
+            array('vac' => 'AI', 'fn' => '631',  'name' => 'Air India', 'dep' => '13:00', 'arr' => '18:15', 'gross' => 5380.00, 'net' => 4520.00, 'dur' => '05h 15m', 'stops' => 1, 'idx' => 'AI|1', 'via' => 'AMD', 'hold' => false, 'hold_info' => '')
         );
 
         $journeyItems = array();
@@ -521,8 +521,8 @@ class BenzyFlightApi {
                     "Meals"            => null,
                     "PieceDescription" => null
                 ),
-                "Hold"                => true,
-                "HoldInfo"            => "E|01:00|1.00|SE|EE",
+                "Hold"                => !empty($ft['hold']),
+                "HoldInfo"            => !empty($ft['hold_info']) ? $ft['hold_info'] : "",
                 "Connections"         => $ft['stops'] > 0 ? array(
                     array(
                         "Airport"        => !empty($ft['via']) ? $ft['via'] : 'HYD',
@@ -562,16 +562,16 @@ class BenzyFlightApi {
         if ($isRoundtrip || !empty($returnDate)) {
             $returnFlightTemplates = array(
                 // Direct Return Flights (Afternoon / Evening)
-                array('vac' => '6E', 'fn' => '2135', 'name' => 'IndiGo', 'dep' => '15:30', 'arr' => '17:45', 'gross' => 5150.00, 'net' => 4300.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => '6E|1'),
-                array('vac' => 'SG', 'fn' => '163',  'name' => 'SpiceJet', 'dep' => '17:45', 'arr' => '20:00', 'gross' => 4999.00, 'net' => 4150.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'SG|1'),
-                array('vac' => 'AI', 'fn' => '806',  'name' => 'Air India', 'dep' => '19:15', 'arr' => '21:30', 'gross' => 5450.00, 'net' => 4600.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'AI|1'),
-                array('vac' => 'QP', 'fn' => '1312', 'name' => 'Akasa Air', 'dep' => '21:30', 'arr' => '23:45', 'gross' => 4850.00, 'net' => 4000.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'QP|1'),
-                array('vac' => 'UK', 'fn' => '946',  'name' => 'Vistara', 'dep' => '22:45', 'arr' => '01:00', 'gross' => 5800.00, 'net' => 4950.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'UK|1'),
+                array('vac' => '6E', 'fn' => '2135', 'name' => 'IndiGo', 'dep' => '15:30', 'arr' => '17:45', 'gross' => 5150.00, 'net' => 4300.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => '6E|1', 'hold' => true, 'hold_info' => 'E|02:00|0.00|SE|EE'),
+                array('vac' => 'SG', 'fn' => '163',  'name' => 'SpiceJet', 'dep' => '17:45', 'arr' => '20:00', 'gross' => 4999.00, 'net' => 4150.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'SG|1', 'hold' => false, 'hold_info' => ''),
+                array('vac' => 'AI', 'fn' => '806',  'name' => 'Air India', 'dep' => '19:15', 'arr' => '21:30', 'gross' => 5450.00, 'net' => 4600.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'AI|1', 'hold' => true, 'hold_info' => 'E|04:00|0.00|SE|EE'),
+                array('vac' => 'QP', 'fn' => '1312', 'name' => 'Akasa Air', 'dep' => '21:30', 'arr' => '23:45', 'gross' => 4850.00, 'net' => 4000.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'QP|1', 'hold' => false, 'hold_info' => ''),
+                array('vac' => 'UK', 'fn' => '946',  'name' => 'Vistara', 'dep' => '22:45', 'arr' => '01:00', 'gross' => 5800.00, 'net' => 4950.00, 'dur' => '02h 15m', 'stops' => 0, 'idx' => 'UK|1', 'hold' => false, 'hold_info' => ''),
 
                 // 1-Stop Connecting Return Flights
-                array('vac' => '6E', 'fn' => '5022', 'name' => 'IndiGo', 'dep' => '16:00', 'arr' => '21:30', 'gross' => 5120.00, 'net' => 4280.00, 'dur' => '05h 30m', 'stops' => 1, 'idx' => '6E|1', 'via' => 'HYD'),
-                array('vac' => 'SG', 'fn' => '305',  'name' => 'SpiceJet', 'dep' => '18:15', 'arr' => '23:00', 'gross' => 4890.00, 'net' => 4050.00, 'dur' => '04h 45m', 'stops' => 1, 'idx' => 'SG|1', 'via' => 'GOX'),
-                array('vac' => 'AI', 'fn' => '632',  'name' => 'Air India', 'dep' => '19:45', 'arr' => '01:00', 'gross' => 5380.00, 'net' => 4520.00, 'dur' => '05h 15m', 'stops' => 1, 'idx' => 'AI|1', 'via' => 'AMD')
+                array('vac' => '6E', 'fn' => '5022', 'name' => 'IndiGo', 'dep' => '16:00', 'arr' => '21:30', 'gross' => 5120.00, 'net' => 4280.00, 'dur' => '05h 30m', 'stops' => 1, 'idx' => '6E|1', 'via' => 'HYD', 'hold' => true, 'hold_info' => 'E|01:30|0.00|SE|EE'),
+                array('vac' => 'SG', 'fn' => '305',  'name' => 'SpiceJet', 'dep' => '18:15', 'arr' => '23:00', 'gross' => 4890.00, 'net' => 4050.00, 'dur' => '04h 45m', 'stops' => 1, 'idx' => 'SG|1', 'via' => 'GOX', 'hold' => false, 'hold_info' => ''),
+                array('vac' => 'AI', 'fn' => '632',  'name' => 'Air India', 'dep' => '19:45', 'arr' => '01:00', 'gross' => 5380.00, 'net' => 4520.00, 'dur' => '05h 15m', 'stops' => 1, 'idx' => 'AI|1', 'via' => 'AMD', 'hold' => false, 'hold_info' => '')
             );
 
             $returnDateStr = $returnDate ?: $dateStr;
@@ -616,8 +616,8 @@ class BenzyFlightApi {
                         "Meals"            => null,
                         "PieceDescription" => null
                     ),
-                    "Hold"                => true,
-                    "HoldInfo"            => "E|01:00|1.00|SE|EE",
+                    "Hold"                => !empty($rft['hold']),
+                    "HoldInfo"            => !empty($rft['hold_info']) ? $rft['hold_info'] : "",
                     "Connections"         => $rft['stops'] > 0 ? array(
                         array(
                             "Airport"        => !empty($rft['via']) ? $rft['via'] : 'HYD',
@@ -3130,8 +3130,8 @@ class BenzyFlightApi {
                             }
                             return !in_array($airlineCode, array_merge($lccList, array('6E')));
                         })(),
-                        'hold' => !empty($j['Hold']),
-                        'hold_info' => !empty($j['HoldInfo']) ? $j['HoldInfo'] : '',
+                        'hold' => (!empty($j['Hold']) && ($j['Hold'] === true || $j['Hold'] === 'true' || $j['Hold'] === 1 || $j['Hold'] === '1')),
+                        'hold_info' => !empty($j['HoldInfo']) ? (string)$j['HoldInfo'] : '',
                         'baggage' => !empty($j['Inclusions']['Baggage']) ? $j['Inclusions']['Baggage'] : '15 Kg',
                         'FareClass' => !empty($j['FareClass']) ? $j['FareClass'] : '',
                         'FBC' => !empty($j['FBC']) ? $j['FBC'] : '',
@@ -3211,7 +3211,9 @@ class BenzyFlightApi {
                         'price' => $grossFare,
                         'base_fare' => $netFare,
                         'taxes' => $taxes,
-                        'refundable' => true
+                        'refundable' => true,
+                        'hold' => (!empty($journey['Hold']) && ($journey['Hold'] === true || $journey['Hold'] === 'true' || $journey['Hold'] === 1 || $journey['Hold'] === '1')),
+                        'hold_info' => !empty($journey['HoldInfo']) ? (string)$journey['HoldInfo'] : ''
                     );
                 }
             }
@@ -3326,6 +3328,22 @@ class BenzyFlightApi {
             $flightNo = !empty($flight['FlightNo']) ? $flight['FlightNo'] : '1451';
             $flightNumber = (strpos($flightNo, $airlineCode) === 0) ? $flightNo : ($airlineCode . '-' . $flightNo);
 
+            // Extract Hold capability strictly from Benzy GetSPricer response (PDF Spec Page 22, 27, 42)
+            $isHoldFromApi = false;
+            $holdInfoFromApi = '';
+            if (!empty($data['HoldInfo'])) {
+                $holdInfoFromApi = (string)$data['HoldInfo'];
+            } elseif (!empty($journey['HoldInfo'])) {
+                $holdInfoFromApi = (string)$journey['HoldInfo'];
+            }
+            if (isset($journey['Hold'])) {
+                $isHoldFromApi = ($journey['Hold'] === true || $journey['Hold'] === 'true' || $journey['Hold'] === 1 || $journey['Hold'] === '1');
+            } elseif (isset($data['Hold'])) {
+                $isHoldFromApi = ($data['Hold'] === true || $data['Hold'] === 'true' || $data['Hold'] === 1 || $data['Hold'] === '1');
+            } elseif (!empty($holdInfoFromApi) && $holdInfoFromApi !== '0') {
+                $isHoldFromApi = true;
+            }
+
             return array(
                 'TUI'             => $actualTui,
                 'tui'             => $actualTui,
@@ -3361,6 +3379,8 @@ class BenzyFlightApi {
                 'checkin_baggage' => 'Adult - 15Kg',
                 'cabin_baggage'   => 'Adult - 7Kg',
                 'refundable'      => isset($flight['Refundable']) && $flight['Refundable'] === 'Y',
+                'hold'            => $isHoldFromApi,
+                'hold_info'       => $isHoldFromApi ? $holdInfoFromApi : '',
                 'rules'           => isset($data['Rules']) ? $data['Rules'] : array(),
                 'ssr'             => isset($data['SSR']) ? $data['SSR'] : array(),
                 'raw'             => $data
@@ -3379,6 +3399,22 @@ class BenzyFlightApi {
             $taxes   = isset($journey['Price']['Tax']) ? (float)$journey['Price']['Tax'] : 850;
             $grossFare = isset($journey['Price']['GrossFare']) ? (float)$journey['Price']['GrossFare'] : ($netFare + $taxes);
             $totalBaseFare = isset($journey['Price']['BaseFare']) ? (float)$journey['Price']['BaseFare'] : round($grossFare * 0.788);
+
+            // Extract Hold capability strictly from Benzy GetSPricer response (PDF Spec Page 22, 27, 42)
+            $isHoldFromApi = false;
+            $holdInfoFromApi = '';
+            if (!empty($data['HoldInfo'])) {
+                $holdInfoFromApi = (string)$data['HoldInfo'];
+            } elseif (!empty($journey['HoldInfo'])) {
+                $holdInfoFromApi = (string)$journey['HoldInfo'];
+            }
+            if (isset($journey['Hold'])) {
+                $isHoldFromApi = ($journey['Hold'] === true || $journey['Hold'] === 'true' || $journey['Hold'] === 1 || $journey['Hold'] === '1');
+            } elseif (isset($data['Hold'])) {
+                $isHoldFromApi = ($data['Hold'] === true || $data['Hold'] === 'true' || $data['Hold'] === 1 || $data['Hold'] === '1');
+            } elseif (!empty($holdInfoFromApi) && $holdInfoFromApi !== '0') {
+                $isHoldFromApi = true;
+            }
 
             return array(
                 'TUI'             => $actualTui,
@@ -3414,6 +3450,8 @@ class BenzyFlightApi {
                 'checkin_baggage' => 'Adult - 15Kg',
                 'cabin_baggage'   => 'Adult - 7Kg',
                 'refundable'      => true,
+                'hold'            => $isHoldFromApi,
+                'hold_info'       => $isHoldFromApi ? $holdInfoFromApi : '',
                 'rules'           => isset($data['Rules']) ? $data['Rules'] : array(),
                 'ssr'             => isset($data['SSR']) ? $data['SSR'] : array(),
                 'raw'             => $data
@@ -3439,17 +3477,17 @@ class BenzyFlightApi {
         if (empty($date)) $date = date('Y-m-d', strtotime('+7 days'));
         
         $airlines = array(
-            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-2000', 'dep' => '06:00', 'arr' => '08:15', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4300, 'tax' => 850),
-            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-2134', 'dep' => '09:30', 'arr' => '11:45', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4800, 'tax' => 920),
-            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-5042', 'dep' => '14:15', 'arr' => '16:30', 'dur' => '2h 15m', 'stops' => 0, 'base' => 3950, 'tax' => 800),
-            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-6891', 'dep' => '17:00', 'arr' => '19:15', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4100, 'tax' => 820),
-            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-7205', 'dep' => '20:30', 'arr' => '22:45', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4450, 'tax' => 870)
+            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-2000', 'dep' => '06:00', 'arr' => '08:15', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4300, 'tax' => 850, 'hold' => true, 'hold_info' => 'E|04:00|0.00|SE|EE'),
+            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-2134', 'dep' => '09:30', 'arr' => '11:45', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4800, 'tax' => 920, 'hold' => false, 'hold_info' => ''),
+            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-5042', 'dep' => '14:15', 'arr' => '16:30', 'dur' => '2h 15m', 'stops' => 0, 'base' => 3950, 'tax' => 800, 'hold' => true, 'hold_info' => 'E|02:30|0.00|SE|EE'),
+            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-6891', 'dep' => '17:00', 'arr' => '19:15', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4100, 'tax' => 820, 'hold' => false, 'hold_info' => ''),
+            array('code' => '6E', 'name' => 'IndiGo', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-7205', 'dep' => '20:30', 'arr' => '22:45', 'dur' => '2h 15m', 'stops' => 0, 'base' => 4450, 'tax' => 870, 'hold' => false, 'hold_info' => '')
         );
 
         if ($isConnecting) {
             $airlines = array(
-                array('code' => '6E', 'name' => 'IndiGo (Via HYD)', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-8721', 'dep' => '07:30', 'arr' => '13:00', 'dur' => '5h 30m', 'stops' => 1, 'base' => 3600, 'tax' => 750),
-                array('code' => '6E', 'name' => 'IndiGo (Via BOM)', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-3419', 'dep' => '11:00', 'arr' => '16:45', 'dur' => '5h 45m', 'stops' => 1, 'base' => 3850, 'tax' => 800)
+                array('code' => '6E', 'name' => 'IndiGo (Via HYD)', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-8721', 'dep' => '07:30', 'arr' => '13:00', 'dur' => '5h 30m', 'stops' => 1, 'base' => 3600, 'tax' => 750, 'hold' => true, 'hold_info' => 'E|01:30|0.00|SE|EE'),
+                array('code' => '6E', 'name' => 'IndiGo (Via BOM)', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png', 'flight_no' => '6E-3419', 'dep' => '11:00', 'arr' => '16:45', 'dur' => '5h 45m', 'stops' => 1, 'base' => 3850, 'tax' => 800, 'hold' => false, 'hold_info' => '')
             );
         }
 
@@ -3473,14 +3511,17 @@ class BenzyFlightApi {
                 'price' => $price,
                 'base_fare' => $a['base'],
                 'taxes' => $a['tax'],
-                'refundable' => true
+                'refundable' => true,
+                'hold' => !empty($a['hold']),
+                'hold_info' => !empty($a['hold_info']) ? $a['hold_info'] : ''
             );
         }
         return $list;
     }
 
-    public function getMockReviewDetails($tui = '', $priceHint = 0) {
+    public function getMockReviewDetails($tui = '', $priceHint = 0, $holdEligible = null) {
         $price = $priceHint > 0 ? (float)$priceHint : 5350;
+        $isHold = ($holdEligible !== null) ? (bool)$holdEligible : true;
         return array(
             'tui' => !empty($tui) ? $tui : ('100e7378-' . md5(uniqid()) . '|' . date('YmdHis')),
             'airline_code' => '6E',
@@ -3505,7 +3546,9 @@ class BenzyFlightApi {
             'taxes' => round($price * 0.18),
             'checkin_baggage' => 'Adult - 15Kg',
             'cabin_baggage' => 'Adult - 7Kg',
-            'refundable' => true
+            'refundable' => true,
+            'hold' => $isHold,
+            'hold_info' => $isHold ? 'E|02:00|0.00|SE|EE' : ''
         );
     }
 
