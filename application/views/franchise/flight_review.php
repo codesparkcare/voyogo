@@ -2250,9 +2250,18 @@
                             </span>
                             <strong style="color: <?php echo $revMarkup > 0 ? '#a16207' : '#0f172a'; ?>; font-size: 13.5px;"><?php echo $revMarkup > 0 ? '+ ₹ ' : '₹ '; ?><?php echo number_format($revMarkup); ?></strong>
                         </div>
-                        <?php if ($revMarkup > 0 && $revNetFare > 0): ?>
+                        <?php 
+                        $revGrossFare = (float)($flight['price'] ?? ($fBaseFare + $fTaxes));
+                        ?>
+                        <?php if ($revGrossFare > 0): ?>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; color: #64748b;">
+                            <span>Airline Gross Fare</span>
+                            <strong style="color: #475569;">₹ <?php echo number_format($revGrossFare); ?></strong>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ($revNetFare > 0): ?>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 12px; color: #64748b;">
-                            <span>Benz API Net Cost</span>
+                            <span>Benz Live API Net Fare</span>
                             <strong style="color: #475569;">₹ <?php echo number_format($revNetFare); ?></strong>
                         </div>
                         <?php endif; ?>

@@ -1435,9 +1435,18 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                                     <button type="button" onclick="toggleMarkupEdit(event)" style="background: #f1f5f9; color: #475569; font-size: 12px; font-weight: 600; border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer;">Cancel</button>
                                 </div>
                             </div>
-                            <?php if ($net_fare > 0 && $markup_amount > 0): ?>
+                            <?php 
+                            $addonGrossFare = (float)($flight['price'] ?? ($post_data['price'] ?? ($base_fare + $taxes)));
+                            ?>
+                            <?php if ($addonGrossFare > 0): ?>
                             <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #64748b; padding: 4px 10px 0 10px;">
-                                <span>Benz API Net Cost</span>
+                                <span>Airline Gross Fare</span>
+                                <span style="font-weight: 600; color: #475569;">₹ <?php echo number_format($addonGrossFare); ?></span>
+                            </div>
+                            <?php endif; ?>
+                            <?php if ($net_fare > 0): ?>
+                            <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #64748b; padding: 4px 10px 0 10px;">
+                                <span>Benz Live API Net Fare</span>
                                 <span style="font-weight: 600; color: #475569;">₹ <?php echo number_format($net_fare); ?></span>
                             </div>
                             <?php endif; ?>

@@ -2245,18 +2245,30 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                     <?php 
                     $payMarkup = (float)($post_data['markup_amount'] ?? ($flight['markup_amount'] ?? 0));
                     $payNetFare = (float)($post_data['net_fare'] ?? ($flight['net_fare'] ?? 0));
+                    $payGrossFare = (float)($flight['price'] ?? ($post_data['price'] ?? max(0, $grandTotal - $payMarkup + $promoDiscount - $addonTotal)));
+                    if ($payGrossFare <= 0 && $payNetFare > 0) {
+                        $payGrossFare = max(0, $grandTotal - $payMarkup);
+                    }
                     if ($payMarkup > 0): 
                     ?>
                     <div class="fare-row-item" style="background: #fefce8; padding: 6px 10px; border-radius: 6px; border: 1px dashed #facc15;">
                         <span style="color: #854d0e; font-weight: 700;"><i class="fa-solid fa-coins"></i> Franchise Markup</span>
                         <strong style="color: #a16207;">+ ₹ <?php echo number_format($payMarkup); ?></strong>
                     </div>
+                    <?php endif; ?>
+
+                    <?php if ($payGrossFare > 0): ?>
+                    <div class="fare-row-item" style="color: #64748b; font-size: 12px;">
+                        <span>Airline Gross Fare</span>
+                        <strong style="color: #475569;">₹ <?php echo number_format($payGrossFare); ?></strong>
+                    </div>
+                    <?php endif; ?>
+
                     <?php if ($payNetFare > 0): ?>
                     <div class="fare-row-item" style="color: #64748b; font-size: 12px;">
                         <span>Benz Live API Net Fare</span>
                         <strong style="color: #475569;">₹ <?php echo number_format($payNetFare); ?></strong>
                     </div>
-                    <?php endif; ?>
                     <?php endif; ?>
 
                     <div class="fare-total-row">
