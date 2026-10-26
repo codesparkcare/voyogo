@@ -690,7 +690,7 @@ class Hotel_cert extends CI_Controller {
                 'FName'             => 'Abdul',
                 'LName'             => 'Rahman',
                 'Mobile'            => '9876543210',
-                'Email'             => 'support@voyogo.com',
+                'Email'             => 'support@voyogos.com',
                 'City'              => $city,
                 'CountryCode'       => 'IN',
                 'MobileCountryCode' => '+91'
@@ -720,7 +720,7 @@ class Hotel_cert extends CI_Controller {
                         'MobileNo'   => '9876543210',
                         'PaxType'    => 'A',
                         'Age'        => '25',
-                        'Email'      => 'support@voyogo.com',
+                        'Email'      => 'support@voyogos.com',
                         'Pan'        => ''
                     );
                 }
@@ -739,7 +739,7 @@ class Hotel_cert extends CI_Controller {
                             'MobileNo'   => '9876543210',
                             'PaxType'    => 'C',
                             'Age'        => (string)$cAge,
-                            'Email'      => 'support@voyogo.com',
+                            'Email'      => 'support@voyogos.com',
                             'Pan'        => ''
                         );
                     }
@@ -768,7 +768,7 @@ class Hotel_cert extends CI_Controller {
                         'FName'             => 'Abdul',
                         'LName'             => 'Rahman',
                         'Mobile'            => '9876543210',
-                        'Email'             => 'support@voyogo.com',
+                        'Email'             => 'support@voyogos.com',
                         'Address'           => 'Voyogo Online Travel, Mumbai',
                         'State'             => 'Maharashtra',
                         'City'              => $city,

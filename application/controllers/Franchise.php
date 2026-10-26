@@ -1036,6 +1036,9 @@ class Franchise extends CI_Controller {
         $data['active_menu'] = 'flight';
         $data['title'] = "Add-on Services: Meals, Baggage & Seats - Voyogo B2B";
         $data['post_data'] = $postData;
+        $data['markup_amount'] = (float)($postData['markup_amount'] ?? ($sessionBooking['markup_amount'] ?? ($sessionBooking['flight']['markup_amount'] ?? 0)));
+        $data['markup_type']   = $postData['markup_type'] ?? ($sessionBooking['markup_type'] ?? ($sessionBooking['flight']['markup_type'] ?? 'pax'));
+        $data['net_fare']      = (float)($postData['net_fare'] ?? ($sessionBooking['net_fare'] ?? ($sessionBooking['flight']['net_fare'] ?? 0)));
 
         // Parse passengers
         $titles        = $postData['passenger_title'] ?? array();

@@ -12,7 +12,7 @@ Request Body:
         "lead_title": "Mr",
         "lead_first": "Abdul",
         "lead_last": "Rahman",
-        "email": "support@voyogo.com",
+        "email": "support@voyogos.com",
         "mobile": "9876543210"
     },
     "TotalAmount": 17024

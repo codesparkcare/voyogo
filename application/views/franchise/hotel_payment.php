@@ -901,7 +901,7 @@ body {
                     </div>
                     <div>Need help or float assistance?</div>
                     <div style="margin-top: 6px; font-weight: 700; color: #09204b;">
-                        <i class="fa-solid fa-phone" style="color: #64748b; font-size: 11px;"></i> +91 8098999096 / support@voyogo.com
+                        <i class="fa-solid fa-phone" style="color: #64748b; font-size: 11px;"></i> +91 8098999096 / support@voyogos.com
                     </div>
                 </div>
 

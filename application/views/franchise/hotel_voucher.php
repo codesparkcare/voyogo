@@ -397,7 +397,7 @@ if (empty($paxList)) {
         <p style="margin-bottom: 4px;">1. <strong>Photo ID Required:</strong> Primary guest must be at least 18 years of age and carry a valid Government-issued photo ID with address proof (Aadhaar / Passport / Driving License). PAN card is not accepted.</p>
         <p style="margin-bottom: 4px;">2. <strong>Check-in & Check-out:</strong> Standard check-in is 02:00 PM and check-out is 11:00 AM. Early check-in or late check-out is subject to hotel availability and may incur supplemental charges.</p>
         <p style="margin-bottom: 4px;">3. <strong>Prepaid B2B Voucher:</strong> This voucher is confirmed and fully prepaid by Voyogo partner agency <strong><?php echo htmlspecialchars($store['store_name'] ?? ''); ?></strong>. The guest is NOT required to pay room charges at the front desk, except personal incidentals (room service, laundry, telephone).</p>
-        <p>4. <strong>24x7 Emergency Partner Helpline:</strong> For any check-in assistance or supplier confirmation, contact Voyogo B2B Operations at +91 8098999096 or email support@voyogo.com.</p>
+        <p>4. <strong>24x7 Emergency Partner Helpline:</strong> For any check-in assistance or supplier confirmation, contact Voyogo B2B Operations at +91 8098999096 or email support@voyogos.com.</p>
     </div>
 
 </div>

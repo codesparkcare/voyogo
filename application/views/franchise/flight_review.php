@@ -2243,20 +2243,18 @@
                         <?php 
                         $revMarkup = (float)($markup_amount ?? ($flight['markup_amount'] ?? 0));
                         $revNetFare = (float)($net_fare ?? ($flight['net_fare'] ?? 0));
-                        if ($revMarkup > 0): 
                         ?>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 6px 10px; background: #fefce8; border-radius: 6px; border: 1px dashed #facc15;">
-                            <span style="font-size: 13px; font-weight: 700; color: #854d0e;">
-                                <i class="fa-solid fa-coins"></i> Franchise Markup
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 6px 10px; background: <?php echo $revMarkup > 0 ? '#fefce8' : '#f8fafc'; ?>; border-radius: 6px; border: 1px dashed <?php echo $revMarkup > 0 ? '#facc15' : '#cbd5e1'; ?>;">
+                            <span style="font-size: 13px; font-weight: 700; color: <?php echo $revMarkup > 0 ? '#854d0e' : '#475569'; ?>;">
+                                <i class="fa-solid fa-coins" style="color: <?php echo $revMarkup > 0 ? '#ca8a04' : '#64748b'; ?>;"></i> Markup Price
                             </span>
-                            <strong style="color: #a16207; font-size: 13.5px;">+ ₹ <?php echo number_format($revMarkup); ?></strong>
+                            <strong style="color: <?php echo $revMarkup > 0 ? '#a16207' : '#0f172a'; ?>; font-size: 13.5px;"><?php echo $revMarkup > 0 ? '+ ₹ ' : '₹ '; ?><?php echo number_format($revMarkup); ?></strong>
                         </div>
-                        <?php if ($revNetFare > 0): ?>
+                        <?php if ($revMarkup > 0 && $revNetFare > 0): ?>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 12px; color: #64748b;">
                             <span>Benz API Net Cost</span>
                             <strong style="color: #475569;">₹ <?php echo number_format($revNetFare); ?></strong>
                         </div>
-                        <?php endif; ?>
                         <?php endif; ?>
 
                         <!-- Total Amount Row (Screenshots 1 & 2) -->

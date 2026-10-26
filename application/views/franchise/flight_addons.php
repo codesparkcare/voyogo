@@ -83,6 +83,10 @@ $fare_tier_price_delta = (float)($fare_tier_price_delta ?? ($post_data['fare_tie
 $safety_cancellation_type = $safety_cancellation_type ?? ($post_data['safety_cancellation_type'] ?? '');
 $safety_cancellation_amount = (float)($safety_cancellation_amount ?? ($post_data['safety_cancellation_amount'] ?? 0));
 
+$markup_amount = (float)($markup_amount ?? ($post_data['markup_amount'] ?? ($flight['markup_amount'] ?? 0)));
+$markup_type   = $markup_type ?? ($post_data['markup_type'] ?? ($flight['markup_type'] ?? 'pax'));
+$net_fare      = (float)($net_fare ?? ($post_data['net_fare'] ?? ($flight['net_fare'] ?? 0)));
+
 $allPaxList = array();
 if (!empty($passengers) && is_array($passengers)) {
     foreach ($passengers as $pIdx => $p) {
@@ -1411,6 +1415,34 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
                         </div>
                         <?php endif; ?>
 
+                        <!-- Markup Price (Franchise Markup) -->
+                        <div class="f-fare-group" id="summaryMarkupRow" style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: <?php echo $markup_amount > 0 ? '#fefce8' : '#f8fafc'; ?>; border-radius: 8px; border: 1.5px dashed <?php echo $markup_amount > 0 ? '#facc15' : '#cbd5e1'; ?>;">
+                                <span style="font-size: 13.5px; font-weight: 700; color: <?php echo $markup_amount > 0 ? '#854d0e' : '#334155'; ?>; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-coins" style="color: <?php echo $markup_amount > 0 ? '#ca8a04' : '#64748b'; ?>;"></i> Markup Price
+                                    <button type="button" onclick="toggleMarkupEdit(event)" style="background: none; border: none; color: #0284c7; font-size: 11px; font-weight: 700; cursor: pointer; text-decoration: underline; padding: 0 4px;" title="Adjust Markup">(<?php echo $markup_amount > 0 ? 'Edit' : '+ Add'; ?>)</button>
+                                </span>
+                                <strong style="color: <?php echo $markup_amount > 0 ? '#a16207' : '#0f172a'; ?>; font-size: 13.5px;">
+                                    <span id="summaryMarkupPrefix"><?php echo $markup_amount > 0 ? '+ ₹ ' : '₹ '; ?></span><span id="summaryMarkupAmount"><?php echo number_format($markup_amount); ?></span>
+                                </strong>
+                            </div>
+                            <!-- Quick Inline Markup Edit Form (Allows Franchise partner to adjust markup anytime) -->
+                            <div id="markupEditBox" style="display: none; margin-top: 6px; padding: 10px 12px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                                <div style="font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px;">Set / Update Franchise Markup (₹)</div>
+                                <div style="display: flex; gap: 6px; align-items: center;">
+                                    <input type="number" id="inlineMarkupInput" value="<?php echo (float)$markup_amount; ?>" min="0" step="any" placeholder="0" style="flex: 1; min-width: 0; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 5px 8px; font-size: 13px; font-weight: 700; color: #0f172a; outline: none;">
+                                    <button type="button" onclick="applyInlineMarkup()" style="background: #eab308; color: #000; font-size: 12px; font-weight: 800; border: none; border-radius: 6px; padding: 6px 12px; cursor: pointer;">Apply</button>
+                                    <button type="button" onclick="toggleMarkupEdit(event)" style="background: #f1f5f9; color: #475569; font-size: 12px; font-weight: 600; border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer;">Cancel</button>
+                                </div>
+                            </div>
+                            <?php if ($net_fare > 0 && $markup_amount > 0): ?>
+                            <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #64748b; padding: 4px 10px 0 10px;">
+                                <span>Benz API Net Cost</span>
+                                <span style="font-weight: 600; color: #475569;">₹ <?php echo number_format($net_fare); ?></span>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+
                         <!-- SSR Dynamic Add-ons Breakdown in Sidebar -->
                         <div class="f-fare-group" id="summaryAddonsRow" style="display: none; margin-bottom: 12px;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -1584,6 +1616,9 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
 
     <input type="hidden" name="addon_total_amount" id="form_addon_total_amount" value="0">
     <input type="hidden" name="total_amount" id="form_final_grand_total" value="<?php echo $initialGrandTotal; ?>">
+    <input type="hidden" name="markup_amount" id="form_final_markup_amount" value="<?php echo htmlspecialchars((string)$markup_amount); ?>">
+    <input type="hidden" name="markup_type" id="form_final_markup_type" value="<?php echo htmlspecialchars((string)$markup_type); ?>">
+    <input type="hidden" name="net_fare" id="form_final_net_fare" value="<?php echo htmlspecialchars((string)$net_fare); ?>">
     <input type="hidden" name="selected_ssr_json" id="form_selected_ssr_json" value="[]">
     <div id="dynamicPaxAddonInputs"></div>
 </form>
@@ -1601,6 +1636,50 @@ var activePaxIndex = 0; // index into passengers array
 var baseFlightAmount = <?php echo (float)($base_fare + $taxes + $insurance_amount + $safety_cancellation_amount + $fare_tier_price_delta); ?>;
 var appliedDiscount = <?php echo (float)$discount_amount; ?>;
 var appliedPromoCode = "<?php echo htmlspecialchars($promo_code); ?>";
+
+// B2B Franchise Markup handling
+var initialMarkupAmount = <?php echo (float)$markup_amount; ?>;
+var currentMarkupAmount = initialMarkupAmount;
+
+function toggleMarkupEdit(e) {
+    if (e) e.stopPropagation();
+    var box = document.getElementById('markupEditBox');
+    if (!box) return;
+    if (box.style.display === 'none' || box.style.display === '') {
+        box.style.display = 'block';
+        var inp = document.getElementById('inlineMarkupInput');
+        if (inp) { inp.focus(); inp.select(); }
+    } else {
+        box.style.display = 'none';
+    }
+}
+
+function applyInlineMarkup() {
+    var inp = document.getElementById('inlineMarkupInput');
+    var val = parseFloat(inp ? inp.value : 0);
+    if (isNaN(val) || val < 0) val = 0;
+    currentMarkupAmount = val;
+
+    var dispAmount = document.getElementById('summaryMarkupAmount');
+    if (dispAmount) dispAmount.textContent = currentMarkupAmount.toLocaleString('en-IN');
+
+    var dispPrefix = document.getElementById('summaryMarkupPrefix');
+    if (dispPrefix) dispPrefix.textContent = (currentMarkupAmount > 0) ? '+ ₹ ' : '₹ ';
+
+    var row = document.getElementById('summaryMarkupRow');
+    if (row && row.firstElementChild) {
+        row.firstElementChild.style.background = currentMarkupAmount > 0 ? '#fefce8' : '#f8fafc';
+        row.firstElementChild.style.borderColor = currentMarkupAmount > 0 ? '#facc15' : '#cbd5e1';
+    }
+
+    var hiddenInput = document.getElementById('form_final_markup_amount');
+    if (hiddenInput) hiddenInput.value = currentMarkupAmount;
+
+    var box = document.getElementById('markupEditBox');
+    if (box) box.style.display = 'none';
+
+    recalcTotal();
+}
 
 // Separate user addon selections per flight sector AND per passenger
 var userSelections = {};
@@ -2365,7 +2444,8 @@ function recalcTotal() {
         addonsRow.style.display = 'none';
     }
 
-    var grandTotal = Math.max(0, (baseFlightAmount + totalAddons) - appliedDiscount);
+    var markupDelta = currentMarkupAmount - initialMarkupAmount;
+    var grandTotal = Math.max(0, (baseFlightAmount + totalAddons + markupDelta) - appliedDiscount);
     document.getElementById('summaryGrandTotal').textContent = grandTotal.toLocaleString('en-IN');
     document.getElementById('form_final_grand_total').value = grandTotal;
     if (document.getElementById('form_addon_total_amount')) {

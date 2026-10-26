@@ -144,6 +144,26 @@ uasort($connectingAirportsList, function($a, $b) {
 });
 ?>
 
+<style>
+/* Full screen flight search loading overlay styles & keyframes */
+@keyframes flightPulse {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.15) translateY(-6px); }
+}
+@keyframes flightProgress {
+    0% { left: -40%; width: 30%; }
+    50% { left: 35%; width: 50%; }
+    100% { left: 100%; width: 30%; }
+}
+/* Ensure modify search overlay is 100% hidden by default */
+.modify-search-overlay {
+    display: none !important;
+}
+.modify-search-overlay.active {
+    display: flex !important;
+}
+</style>
+
 <div style="margin-bottom: 24px;">
     <!-- Top Search Header Box (Parity with customer flight results) -->
     <div style="background: linear-gradient(135deg, #09204b 0%, #0d3470 100%); border-radius: 14px; padding: 18px 24px; color: #ffffff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 16px rgba(9, 32, 75, 0.15); flex-wrap: wrap; gap: 16px;">
@@ -199,234 +219,6 @@ uasort($connectingAirportsList, function($a, $b) {
             <button type="button" id="openModifySearchBtn" class="btn-modify-search">
                 <i class="fa-solid fa-pen-to-square"></i> MODIFY SEARCH
             </button>
-        </div>
-    </div>
-</div>
-
-<!-- ========================================================================= -->
-<!-- MODIFY SEARCH POPUP MODAL (Parity with Customer voyogos.com/flight)      -->
-<!-- ========================================================================= -->
-<div class="modify-search-overlay" id="modifySearchOverlay">
-    <div class="modify-search-modal" id="modifySearchModal">
-        <button type="button" class="ms-close-btn" id="closeModifySearchBtn" title="Close"><i class="fa-solid fa-xmark"></i></button>
-        
-        <!-- Top Bar: Trip Type Pills & Title -->
-        <div class="ms-top-bar">
-            <div class="ms-trip-tabs">
-                <label class="ms-trip-tab <?php echo empty($is_roundtrip) ? 'active' : ''; ?>" id="tabOneway">
-                    <input type="radio" name="ms_trip_type" value="oneway" <?php echo empty($is_roundtrip) ? 'checked' : ''; ?>>
-                    <span class="ms-radio-indicator"><span class="ms-radio-dot"></span></span>
-                    <span>One Way</span>
-                </label>
-                <label class="ms-trip-tab <?php echo !empty($is_roundtrip) ? 'active' : ''; ?>" id="tabRoundtrip">
-                    <input type="radio" name="ms_trip_type" value="roundtrip" <?php echo !empty($is_roundtrip) ? 'checked' : ''; ?>>
-                    <span class="ms-radio-indicator"><span class="ms-radio-dot"></span></span>
-                    <span>Round Trip</span>
-                </label>
-                <label class="ms-trip-tab" id="tabMulticity">
-                    <input type="radio" name="ms_trip_type" value="multicity">
-                    <span class="ms-radio-indicator"><span class="ms-radio-dot"></span></span>
-                    <span>Multi City</span>
-                </label>
-            </div>
-
-            <div class="ms-header-title">
-                <i class="fa-solid fa-plane" style="transform: rotate(-35deg); font-size: 20px;"></i>
-                <span>Book Flight Tickets</span>
-            </div>
-        </div>
-
-        <!-- Inner White Card -->
-        <div class="ms-card-inner">
-            <form action="<?php echo site_url('franchise/flight_search'); ?>" method="GET" id="modifySearchForm">
-                <input type="hidden" name="trip_type" id="ms_tripType" value="<?php echo !empty($is_roundtrip) ? 'roundtrip' : 'oneway'; ?>">
-                <input type="hidden" name="from_code" id="ms_from_code" value="<?php echo htmlspecialchars($origCode); ?>">
-                <input type="hidden" name="to_code" id="ms_to_code" value="<?php echo htmlspecialchars($destCode); ?>">
-                <input type="hidden" name="origin" id="ms_origin" value="<?php echo htmlspecialchars($origCode); ?>">
-                <input type="hidden" name="destination" id="ms_destination" value="<?php echo htmlspecialchars($destCode); ?>">
-
-                <!-- 1. Standard Search Grid (One Way & Round Trip) -->
-                <div class="ms-form-grid" id="msStandardGrid">
-                    <!-- From -->
-                    <div class="ms-field ms-field-from" id="msFromBox">
-                        <div class="ms-field-label">From</div>
-                        <input type="text" name="from_city" id="ms_from_city" class="ms-city-input" value="<?php echo htmlspecialchars($fromCity); ?>" placeholder="City or Airport" autocomplete="off">
-                        <div class="ms-field-sub" id="ms_from_sub"><?php echo htmlspecialchars($origCode); ?>, Airport</div>
-                        <!-- Dropdown Suggestion Box -->
-                        <div class="ms-airport-suggest" id="msFromSuggest"></div>
-                    </div>
-
-                    <!-- Swap Button -->
-                    <button type="button" class="ms-swap-btn" id="msSwapBtn" title="Swap Cities">
-                        <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                    </button>
-
-                    <!-- To -->
-                    <div class="ms-field ms-field-to" id="msToBox">
-                        <div class="ms-field-label">To</div>
-                        <input type="text" name="to_city" id="ms_to_city" class="ms-city-input" value="<?php echo htmlspecialchars($toCity); ?>" placeholder="City or Airport" autocomplete="off">
-                        <div class="ms-field-sub" id="ms_to_sub"><?php echo htmlspecialchars($destCode); ?>, Airport</div>
-                        <!-- Dropdown Suggestion Box -->
-                        <div class="ms-airport-suggest" id="msToSuggest"></div>
-                    </div>
-
-                    <!-- Departure -->
-                    <div class="ms-field ms-field-date" id="msDepartureBox">
-                        <div class="ms-field-label"><i class="fa-regular fa-calendar-days" style="color: #0ea5e9; margin-right: 4px;"></i> Departure <i class="fa-solid fa-chevron-down ms-chevron" id="msDepChevron"></i></div>
-                        <div class="ms-date-value" id="ms_dep_disp"><?php echo date('d M\'y', strtotime($departDate)); ?></div>
-                        <div class="ms-field-sub" id="ms_dep_sub"><?php echo date('l', strtotime($departDate)); ?></div>
-                        <input type="hidden" name="depart_date" id="ms_departure_date" value="<?php echo htmlspecialchars($departDate); ?>">
-                    </div>
-
-                    <!-- Return -->
-                    <div class="ms-field ms-field-date ms-return-field" id="msReturnField" style="<?php echo empty($is_roundtrip) ? 'opacity:0.4; cursor:not-allowed;' : 'cursor:pointer;'; ?>">
-                        <div class="ms-field-label"><i class="fa-regular fa-calendar-days" style="color: #0ea5e9; margin-right: 4px;"></i> Return <i class="fa-solid fa-chevron-down ms-chevron" id="msRetChevron"></i> <i class="fa-solid fa-circle-xmark ms-clear-return" id="msClearReturn" title="Clear return date" style="display: <?php echo !empty($is_roundtrip) ? 'inline-block' : 'none'; ?>; margin-left: 4px;"></i></div>
-                        <div class="ms-date-value" id="ms_ret_disp"><?php echo !empty($is_roundtrip) ? date('d M\'y', strtotime($returnDate)) : '-- --\'--'; ?></div>
-                        <div class="ms-field-sub" id="ms_ret_sub"><?php echo !empty($is_roundtrip) ? date('l', strtotime($returnDate)) : 'Select round trip'; ?></div>
-                        <input type="hidden" name="return_date" id="ms_return_date" value="<?php echo htmlspecialchars($returnDate); ?>" <?php echo empty($is_roundtrip) ? 'disabled' : ''; ?>>
-                    </div>
-
-                    <!-- Travellers & Class -->
-                    <div class="ms-field ms-field-pax ms-traveller-field" id="msTravellerBox">
-                        <div class="ms-field-label">Travellers & Class</div>
-                        <div class="ms-traveller-display" id="msTravellerDisplay">
-                            <?php echo sprintf('%02d', $paxCount); ?> Traveller<?php echo $paxCount > 1 ? 's' : ''; ?>
-                        </div>
-                        <div class="ms-field-sub" id="ms_cabin_sub"><?php echo htmlspecialchars($cabinClass); ?></div>
-                    </div>
-
-                    <!-- Search Button -->
-                    <div class="ms-action-wrap">
-                        <button type="submit" class="ms-search-btn"><span>SEARCH</span> <i class="fa-solid fa-magnifying-glass"></i></button>
-                    </div>
-                </div>
-
-                <!-- 2. Multi-City Grid (Multi City) -->
-                <div class="ms-multicity-grid" id="msMulticityGrid">
-                    <!-- Leg 1 -->
-                    <div class="ms-multi-row" id="msLegRow1">
-                        <div class="ms-field">
-                            <div class="ms-field-label">From</div>
-                            <input type="text" name="multi_from[]" id="msMultiFrom1" class="ms-city-input" value="<?php echo htmlspecialchars($fromCity); ?>" autocomplete="off">
-                            <div class="ms-field-sub" id="msMultiFromSub1"><?php echo htmlspecialchars($origCode); ?>, Airport</div>
-                        </div>
-                        <div class="ms-field">
-                            <div class="ms-field-label">To</div>
-                            <input type="text" name="multi_to[]" id="msMultiTo1" class="ms-city-input" value="<?php echo htmlspecialchars($toCity); ?>" autocomplete="off">
-                            <div class="ms-field-sub" id="msMultiToSub1"><?php echo htmlspecialchars($destCode); ?>, Airport</div>
-                        </div>
-                        <div class="ms-field ms-field-date ms-multi-dep-box" data-leg="1" id="msMultiDepBox1">
-                            <div class="ms-field-label">Departure <i class="fa-solid fa-chevron-down ms-chevron"></i></div>
-                            <div class="ms-date-value" id="msMultiDepDisp1"><?php echo date('d M\'y', strtotime($departDate)); ?></div>
-                            <div class="ms-field-sub" id="msMultiDepSub1"><?php echo date('l', strtotime($departDate)); ?></div>
-                            <input type="hidden" name="multi_date[]" id="msMultiDate1" value="<?php echo htmlspecialchars($departDate); ?>">
-                        </div>
-                        <div class="ms-field ms-field-pax ms-traveller-field" id="msMultiTravellerBox" style="cursor: pointer;">
-                            <div class="ms-field-label">Travellers & Class</div>
-                            <div class="ms-traveller-display" id="msMultiTravellerDisplay"><?php echo sprintf('%02d', $paxCount); ?> Traveller<?php echo $paxCount > 1 ? 's' : ''; ?></div>
-                            <div class="ms-field-sub" id="msMultiCabinSub"><?php echo htmlspecialchars($cabinClass); ?></div>
-                        </div>
-                    </div>
-
-                    <!-- Leg 2 -->
-                    <div class="ms-multi-row" id="msLegRow2">
-                        <div class="ms-field">
-                            <div class="ms-field-label">From</div>
-                            <input type="text" name="multi_from[]" id="msMultiFrom2" class="ms-city-input" value="<?php echo htmlspecialchars($toCity); ?>" autocomplete="off">
-                            <div class="ms-field-sub" id="msMultiFromSub2"><?php echo htmlspecialchars($destCode); ?>, Airport</div>
-                        </div>
-                        <div class="ms-field">
-                            <div class="ms-field-label">To</div>
-                            <input type="text" name="multi_to[]" id="msMultiTo2" class="ms-city-input" placeholder="Select a City" value="" autocomplete="off">
-                            <div class="ms-field-sub" id="msMultiToSub2" style="display: none;">Destination Airport</div>
-                        </div>
-                        <div class="ms-field ms-field-date ms-multi-dep-box" data-leg="2" id="msMultiDepBox2">
-                            <div class="ms-field-label"><i class="fa-regular fa-calendar-days" style="color: #0ea5e9; margin-right: 4px;"></i> Departure <i class="fa-solid fa-chevron-down ms-chevron"></i></div>
-                            <div class="ms-date-value" id="msMultiDepDisp2"><?php echo date('d M\'y', strtotime($departDate . ' +3 days')); ?></div>
-                            <div class="ms-field-sub" id="msMultiDepSub2"><?php echo date('l', strtotime($departDate . ' +3 days')); ?></div>
-                            <input type="hidden" name="multi_date[]" id="msMultiDate2" value="<?php echo date('Y-m-d', strtotime($departDate . ' +3 days')); ?>">
-                        </div>
-                        <div class="ms-multi-actions" id="msMultiActionsCell">
-                            <button type="button" class="ms-btn-add-city" id="msAddCityBtn">+ ADD CITY</button>
-                            <button type="submit" class="ms-search-btn"><span>SEARCH</span> <i class="fa-solid fa-magnifying-glass"></i></button>
-                        </div>
-                    </div>
-
-                    <!-- Dynamic Extra Legs Container -->
-                    <div id="msExtraLegsContainer"></div>
-                </div>
-
-                <!-- Shared Hidden Traveller Inputs -->
-                <input type="hidden" name="adults" id="ms_adults" value="<?php echo $search_query['adults'] ?? 1; ?>">
-                <input type="hidden" name="children" id="ms_children" value="<?php echo $search_query['children'] ?? 0; ?>">
-                <input type="hidden" name="infants" id="ms_infants" value="<?php echo $search_query['infants'] ?? 0; ?>">
-                <input type="hidden" name="cabin" id="ms_cabin" value="<?php echo htmlspecialchars($cabinClass); ?>">
-                <input type="hidden" name="cabin_class" id="ms_cabin_class" value="<?php echo htmlspecialchars($cabinClass); ?>">
-
-                <!-- Shared Traveller Popup -->
-                <div class="ms-traveller-popup" id="msTravellerPopup">
-                    <div class="ms-pax-row">
-                        <div><strong>Adults</strong><small>12+ years</small></div>
-                        <div class="ms-pax-controls">
-                            <button type="button" onclick="event.stopPropagation(); msPaxUpdate('adult',-1);">−</button>
-                            <span id="ms_adultCount"><?php echo $search_query['adults'] ?? 1; ?></span>
-                            <button type="button" onclick="event.stopPropagation(); msPaxUpdate('adult',1);">+</button>
-                        </div>
-                    </div>
-                    <div class="ms-pax-row">
-                        <div><strong>Children</strong><small>2-12 years</small></div>
-                        <div class="ms-pax-controls">
-                            <button type="button" onclick="event.stopPropagation(); msPaxUpdate('child',-1);">−</button>
-                            <span id="ms_childCount"><?php echo $search_query['children'] ?? 0; ?></span>
-                            <button type="button" onclick="event.stopPropagation(); msPaxUpdate('child',1);">+</button>
-                        </div>
-                    </div>
-                    <div class="ms-pax-row">
-                        <div><strong>Infants</strong><small>Below 2 years</small></div>
-                        <div class="ms-pax-controls">
-                            <button type="button" onclick="event.stopPropagation(); msPaxUpdate('infant',-1);">−</button>
-                            <span id="ms_infantCount"><?php echo $search_query['infants'] ?? 0; ?></span>
-                            <button type="button" onclick="event.stopPropagation(); msPaxUpdate('infant',1);">+</button>
-                        </div>
-                    </div>
-                    <div class="ms-pax-row" style="border:none; padding-bottom:0;">
-                        <div><strong>Cabin Class</strong></div>
-                        <select id="ms_cabinSelect" onchange="document.getElementById('ms_cabin').value=this.value; document.getElementById('ms_cabin_class').value=this.value; msUpdateTravellerText();" style="border:1.5px solid #0d3470; border-radius:6px; padding:6px 10px; font-weight:600; font-size:13px;">
-                            <option value="Economy" <?php echo ($cabinClass == 'Economy') ? 'selected' : ''; ?>>Economy</option>
-                            <option value="Premium Economy" <?php echo ($cabinClass == 'Premium Economy') ? 'selected' : ''; ?>>Premium Economy</option>
-                            <option value="Business" <?php echo ($cabinClass == 'Business') ? 'selected' : ''; ?>>Business</option>
-                            <option value="First Class" <?php echo ($cabinClass == 'First Class') ? 'selected' : ''; ?>>First Class</option>
-                        </select>
-                    </div>
-                    <button type="button" class="ms-pax-done" onclick="event.stopPropagation(); document.getElementById('msTravellerPopup').style.display='none';">Apply</button>
-                </div>
-
-                <!-- Dual Month Interactive Calendar Popup -->
-                <div class="ms-calendar-popup" id="msCalendarPopup">
-                    <div class="ms-cal-header-tabs">
-                        <div class="ms-cal-tab active" id="msCalTabDep">
-                            <span class="ms-cal-tab-label">DEPARTURE</span>
-                            <span class="ms-cal-tab-date" id="msCalDepText"><?php echo date('M d, Y', strtotime($departDate)); ?></span>
-                        </div>
-                        <div class="ms-cal-tab" id="msCalTabRet">
-                            <span class="ms-cal-tab-label">RETURN</span>
-                            <span class="ms-cal-tab-date" id="msCalRetText"><?php echo !empty($is_roundtrip) ? date('M d, Y', strtotime($returnDate)) : 'Select Return'; ?> <i class="fa-solid fa-circle-xmark ms-cal-clear-ret" id="msCalClearRet" title="Clear return date" style="display: <?php echo !empty($is_roundtrip) ? 'inline-block' : 'none'; ?>;"></i></span>
-                        </div>
-                    </div>
-                    <div class="ms-cal-months-grid" id="msCalMonthsGrid">
-                        <!-- Dynamically rendered 2 months -->
-                    </div>
-                    <div class="ms-cal-bottom-note">* All fares are in INR</div>
-                </div>
-
-                <!-- Bottom Bar: Special Fares -->
-                <div class="ms-bottom-bar" id="msBottomBar">
-                    <label class="ms-fare-checkbox ms-fare-direct" id="msFareDirect"><input type="checkbox" name="direct_only"> Direct Flights</label>
-                    <label class="ms-fare-checkbox"><input type="checkbox" name="defence_fare"> Defence Fare</label>
-                    <label class="ms-fare-checkbox"><input type="checkbox" name="student_fare"> Student Fare</label>
-                    <label class="ms-fare-checkbox"><input type="checkbox" name="senior_fare"> Senior Citizen Fare</label>
-                </div>
-            </form>
         </div>
     </div>
 </div>
@@ -1077,6 +869,251 @@ uasort($connectingAirportsList, function($a, $b) {
 </div>
 
 <!-- ========================================================================= -->
+<!-- MODIFY SEARCH POPUP MODAL (Parity with Customer voyogos.com/flight)      -->
+<!-- ========================================================================= -->
+<div class="modify-search-overlay" id="modifySearchOverlay" style="display: none;">
+    <div class="modify-search-modal" id="modifySearchModal">
+        <button type="button" class="ms-close-btn" id="closeModifySearchBtn" title="Close"><i class="fa-solid fa-xmark"></i></button>
+        
+        <!-- Top Bar: Trip Type Pills & Title -->
+        <div class="ms-top-bar">
+            <div class="ms-trip-tabs">
+                <label class="ms-trip-tab <?php echo empty($is_roundtrip) ? 'active' : ''; ?>" id="tabOneway">
+                    <input type="radio" name="ms_trip_type" value="oneway" <?php echo empty($is_roundtrip) ? 'checked' : ''; ?>>
+                    <span class="ms-radio-indicator"><span class="ms-radio-dot"></span></span>
+                    <span>One Way</span>
+                </label>
+                <label class="ms-trip-tab <?php echo !empty($is_roundtrip) ? 'active' : ''; ?>" id="tabRoundtrip">
+                    <input type="radio" name="ms_trip_type" value="roundtrip" <?php echo !empty($is_roundtrip) ? 'checked' : ''; ?>>
+                    <span class="ms-radio-indicator"><span class="ms-radio-dot"></span></span>
+                    <span>Round Trip</span>
+                </label>
+                <label class="ms-trip-tab" id="tabMulticity">
+                    <input type="radio" name="ms_trip_type" value="multicity">
+                    <span class="ms-radio-indicator"><span class="ms-radio-dot"></span></span>
+                    <span>Multi City</span>
+                </label>
+            </div>
+
+            <div class="ms-header-title">
+                <i class="fa-solid fa-plane" style="transform: rotate(-35deg); font-size: 20px;"></i>
+                <span>Book Flight Tickets</span>
+            </div>
+        </div>
+
+        <!-- Inner White Card -->
+        <div class="ms-card-inner">
+            <form action="<?php echo site_url('franchise/flight_search'); ?>" method="GET" id="modifySearchForm">
+                <input type="hidden" name="trip_type" id="ms_tripType" value="<?php echo !empty($is_roundtrip) ? 'roundtrip' : 'oneway'; ?>">
+                <input type="hidden" name="from_code" id="ms_from_code" value="<?php echo htmlspecialchars($origCode); ?>">
+                <input type="hidden" name="to_code" id="ms_to_code" value="<?php echo htmlspecialchars($destCode); ?>">
+                <input type="hidden" name="origin" id="ms_origin" value="<?php echo htmlspecialchars($origCode); ?>">
+                <input type="hidden" name="destination" id="ms_destination" value="<?php echo htmlspecialchars($destCode); ?>">
+
+                <!-- 1. Standard Search Grid (One Way & Round Trip) -->
+                <div class="ms-form-grid" id="msStandardGrid">
+                    <!-- From -->
+                    <div class="ms-field ms-field-from" id="msFromBox">
+                        <div class="ms-field-label">From</div>
+                        <input type="text" name="from_city" id="ms_from_city" class="ms-city-input" value="<?php echo htmlspecialchars($fromCity); ?>" placeholder="City or Airport" autocomplete="off">
+                        <div class="ms-field-sub" id="ms_from_sub"><?php echo htmlspecialchars($origCode); ?>, Airport</div>
+                        <!-- Dropdown Suggestion Box -->
+                        <div class="ms-airport-suggest" id="msFromSuggest"></div>
+                    </div>
+
+                    <!-- Swap Button -->
+                    <button type="button" class="ms-swap-btn" id="msSwapBtn" title="Swap Cities">
+                        <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                    </button>
+
+                    <!-- To -->
+                    <div class="ms-field ms-field-to" id="msToBox">
+                        <div class="ms-field-label">To</div>
+                        <input type="text" name="to_city" id="ms_to_city" class="ms-city-input" value="<?php echo htmlspecialchars($toCity); ?>" placeholder="City or Airport" autocomplete="off">
+                        <div class="ms-field-sub" id="ms_to_sub"><?php echo htmlspecialchars($destCode); ?>, Airport</div>
+                        <!-- Dropdown Suggestion Box -->
+                        <div class="ms-airport-suggest" id="msToSuggest"></div>
+                    </div>
+
+                    <!-- Departure -->
+                    <div class="ms-field ms-field-date" id="msDepartureBox">
+                        <div class="ms-field-label"><i class="fa-regular fa-calendar-days" style="color: #0ea5e9; margin-right: 4px;"></i> Departure <i class="fa-solid fa-chevron-down ms-chevron" id="msDepChevron"></i></div>
+                        <div class="ms-date-value" id="ms_dep_disp"><?php echo date('d M\'y', strtotime($departDate)); ?></div>
+                        <div class="ms-field-sub" id="ms_dep_sub"><?php echo date('l', strtotime($departDate)); ?></div>
+                        <input type="hidden" name="depart_date" id="ms_departure_date" value="<?php echo htmlspecialchars($departDate); ?>">
+                    </div>
+
+                    <!-- Return -->
+                    <div class="ms-field ms-field-date ms-return-field" id="msReturnField" style="<?php echo empty($is_roundtrip) ? 'opacity:0.4; cursor:not-allowed;' : 'cursor:pointer;'; ?>">
+                        <div class="ms-field-label"><i class="fa-regular fa-calendar-days" style="color: #0ea5e9; margin-right: 4px;"></i> Return <i class="fa-solid fa-chevron-down ms-chevron" id="msRetChevron"></i> <i class="fa-solid fa-circle-xmark ms-clear-return" id="msClearReturn" title="Clear return date" style="display: <?php echo !empty($is_roundtrip) ? 'inline-block' : 'none'; ?>; margin-left: 4px;"></i></div>
+                        <div class="ms-date-value" id="ms_ret_disp"><?php echo !empty($is_roundtrip) ? date('d M\'y', strtotime($returnDate)) : '-- --\'--'; ?></div>
+                        <div class="ms-field-sub" id="ms_ret_sub"><?php echo !empty($is_roundtrip) ? date('l', strtotime($returnDate)) : 'Select round trip'; ?></div>
+                        <input type="hidden" name="return_date" id="ms_return_date" value="<?php echo htmlspecialchars($returnDate); ?>" <?php echo empty($is_roundtrip) ? 'disabled' : ''; ?>>
+                    </div>
+
+                    <!-- Travellers & Class -->
+                    <div class="ms-field ms-field-pax ms-traveller-field" id="msTravellerBox">
+                        <div class="ms-field-label">Travellers & Class</div>
+                        <div class="ms-traveller-display" id="msTravellerDisplay">
+                            <?php echo sprintf('%02d', $paxCount); ?> Traveller<?php echo $paxCount > 1 ? 's' : ''; ?>
+                        </div>
+                        <div class="ms-field-sub" id="ms_cabin_sub"><?php echo htmlspecialchars($cabinClass); ?></div>
+                    </div>
+
+                    <!-- Search Button -->
+                    <div class="ms-action-wrap">
+                        <button type="submit" class="ms-search-btn"><span>SEARCH</span> <i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                </div>
+
+                <!-- 2. Multi-City Grid (Multi City) -->
+                <div class="ms-multicity-grid" id="msMulticityGrid">
+                    <!-- Leg 1 -->
+                    <div class="ms-multi-row" id="msLegRow1">
+                        <div class="ms-field">
+                            <div class="ms-field-label">From</div>
+                            <input type="text" name="multi_from[]" id="msMultiFrom1" class="ms-city-input" value="<?php echo htmlspecialchars($fromCity); ?>" autocomplete="off">
+                            <div class="ms-field-sub" id="msMultiFromSub1"><?php echo htmlspecialchars($origCode); ?>, Airport</div>
+                        </div>
+                        <div class="ms-field">
+                            <div class="ms-field-label">To</div>
+                            <input type="text" name="multi_to[]" id="msMultiTo1" class="ms-city-input" value="<?php echo htmlspecialchars($toCity); ?>" autocomplete="off">
+                            <div class="ms-field-sub" id="msMultiToSub1"><?php echo htmlspecialchars($destCode); ?>, Airport</div>
+                        </div>
+                        <div class="ms-field ms-field-date ms-multi-dep-box" data-leg="1" id="msMultiDepBox1">
+                            <div class="ms-field-label">Departure <i class="fa-solid fa-chevron-down ms-chevron"></i></div>
+                            <div class="ms-date-value" id="msMultiDepDisp1"><?php echo date('d M\'y', strtotime($departDate)); ?></div>
+                            <div class="ms-field-sub" id="msMultiDepSub1"><?php echo date('l', strtotime($departDate)); ?></div>
+                            <input type="hidden" name="multi_date[]" id="msMultiDate1" value="<?php echo htmlspecialchars($departDate); ?>">
+                        </div>
+                        <div class="ms-field ms-field-pax ms-traveller-field" id="msMultiTravellerBox" style="cursor: pointer;">
+                            <div class="ms-field-label">Travellers & Class</div>
+                            <div class="ms-traveller-display" id="msMultiTravellerDisplay"><?php echo sprintf('%02d', $paxCount); ?> Traveller<?php echo $paxCount > 1 ? 's' : ''; ?></div>
+                            <div class="ms-field-sub" id="msMultiCabinSub"><?php echo htmlspecialchars($cabinClass); ?></div>
+                        </div>
+                    </div>
+
+                    <!-- Leg 2 -->
+                    <div class="ms-multi-row" id="msLegRow2">
+                        <div class="ms-field">
+                            <div class="ms-field-label">From</div>
+                            <input type="text" name="multi_from[]" id="msMultiFrom2" class="ms-city-input" value="<?php echo htmlspecialchars($toCity); ?>" autocomplete="off">
+                            <div class="ms-field-sub" id="msMultiFromSub2"><?php echo htmlspecialchars($destCode); ?>, Airport</div>
+                        </div>
+                        <div class="ms-field">
+                            <div class="ms-field-label">To</div>
+                            <input type="text" name="multi_to[]" id="msMultiTo2" class="ms-city-input" placeholder="Select a City" value="" autocomplete="off">
+                            <div class="ms-field-sub" id="msMultiToSub2" style="display: none;">Destination Airport</div>
+                        </div>
+                        <div class="ms-field ms-field-date ms-multi-dep-box" data-leg="2" id="msMultiDepBox2">
+                            <div class="ms-field-label"><i class="fa-regular fa-calendar-days" style="color: #0ea5e9; margin-right: 4px;"></i> Departure <i class="fa-solid fa-chevron-down ms-chevron"></i></div>
+                            <div class="ms-date-value" id="msMultiDepDisp2"><?php echo date('d M\'y', strtotime($departDate . ' +3 days')); ?></div>
+                            <div class="ms-field-sub" id="msMultiDepSub2"><?php echo date('l', strtotime($departDate . ' +3 days')); ?></div>
+                            <input type="hidden" name="multi_date[]" id="msMultiDate2" value="<?php echo date('Y-m-d', strtotime($departDate . ' +3 days')); ?>">
+                        </div>
+                        <div class="ms-multi-actions" id="msMultiActionsCell">
+                            <button type="button" class="ms-btn-add-city" id="msAddCityBtn">+ ADD CITY</button>
+                            <button type="submit" class="ms-search-btn"><span>SEARCH</span> <i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Extra Legs Container -->
+                    <div id="msExtraLegsContainer"></div>
+                </div>
+
+                <!-- Shared Hidden Traveller Inputs -->
+                <input type="hidden" name="adults" id="ms_adults" value="<?php echo $search_query['adults'] ?? 1; ?>">
+                <input type="hidden" name="children" id="ms_children" value="<?php echo $search_query['children'] ?? 0; ?>">
+                <input type="hidden" name="infants" id="ms_infants" value="<?php echo $search_query['infants'] ?? 0; ?>">
+                <input type="hidden" name="cabin" id="ms_cabin" value="<?php echo htmlspecialchars($cabinClass); ?>">
+                <input type="hidden" name="cabin_class" id="ms_cabin_class" value="<?php echo htmlspecialchars($cabinClass); ?>">
+
+                <!-- Shared Traveller Popup -->
+                <div class="ms-traveller-popup" id="msTravellerPopup">
+                    <div class="ms-pax-row">
+                        <div><strong>Adults</strong><small>12+ years</small></div>
+                        <div class="ms-pax-controls">
+                            <button type="button" onclick="event.stopPropagation(); msPaxUpdate('adult',-1);">−</button>
+                            <span id="ms_adultCount"><?php echo $search_query['adults'] ?? 1; ?></span>
+                            <button type="button" onclick="event.stopPropagation(); msPaxUpdate('adult',1);">+</button>
+                        </div>
+                    </div>
+                    <div class="ms-pax-row">
+                        <div><strong>Children</strong><small>2-12 years</small></div>
+                        <div class="ms-pax-controls">
+                            <button type="button" onclick="event.stopPropagation(); msPaxUpdate('child',-1);">−</button>
+                            <span id="ms_childCount"><?php echo $search_query['children'] ?? 0; ?></span>
+                            <button type="button" onclick="event.stopPropagation(); msPaxUpdate('child',1);">+</button>
+                        </div>
+                    </div>
+                    <div class="ms-pax-row">
+                        <div><strong>Infants</strong><small>Below 2 years</small></div>
+                        <div class="ms-pax-controls">
+                            <button type="button" onclick="event.stopPropagation(); msPaxUpdate('infant',-1);">−</button>
+                            <span id="ms_infantCount"><?php echo $search_query['infants'] ?? 0; ?></span>
+                            <button type="button" onclick="event.stopPropagation(); msPaxUpdate('infant',1);">+</button>
+                        </div>
+                    </div>
+                    <div class="ms-pax-row" style="border:none; padding-bottom:0;">
+                        <div><strong>Cabin Class</strong></div>
+                        <select id="ms_cabinSelect" onchange="document.getElementById('ms_cabin').value=this.value; document.getElementById('ms_cabin_class').value=this.value; msUpdateTravellerText();" style="border:1.5px solid #0d3470; border-radius:6px; padding:6px 10px; font-weight:600; font-size:13px;">
+                            <option value="Economy" <?php echo ($cabinClass == 'Economy') ? 'selected' : ''; ?>>Economy</option>
+                            <option value="Premium Economy" <?php echo ($cabinClass == 'Premium Economy') ? 'selected' : ''; ?>>Premium Economy</option>
+                            <option value="Business" <?php echo ($cabinClass == 'Business') ? 'selected' : ''; ?>>Business</option>
+                            <option value="First Class" <?php echo ($cabinClass == 'First Class') ? 'selected' : ''; ?>>First Class</option>
+                        </select>
+                    </div>
+                    <button type="button" class="ms-pax-done" onclick="event.stopPropagation(); document.getElementById('msTravellerPopup').style.display='none';">Apply</button>
+                </div>
+
+                <!-- Dual Month Interactive Calendar Popup -->
+                <div class="ms-calendar-popup" id="msCalendarPopup">
+                    <div class="ms-cal-header-tabs">
+                        <div class="ms-cal-tab active" id="msCalTabDep">
+                            <span class="ms-cal-tab-label">DEPARTURE</span>
+                            <span class="ms-cal-tab-date" id="msCalDepText"><?php echo date('M d, Y', strtotime($departDate)); ?></span>
+                        </div>
+                        <div class="ms-cal-tab" id="msCalTabRet">
+                            <span class="ms-cal-tab-label">RETURN</span>
+                            <span class="ms-cal-tab-date" id="msCalRetText"><?php echo !empty($is_roundtrip) ? date('M d, Y', strtotime($returnDate)) : 'Select Return'; ?> <i class="fa-solid fa-circle-xmark ms-cal-clear-ret" id="msCalClearRet" title="Clear return date" style="display: <?php echo !empty($is_roundtrip) ? 'inline-block' : 'none'; ?>;"></i></span>
+                        </div>
+                    </div>
+                    <div class="ms-cal-months-grid" id="msCalMonthsGrid">
+                        <!-- Dynamically rendered 2 months -->
+                    </div>
+                    <div class="ms-cal-bottom-note">* All fares are in INR</div>
+                </div>
+
+                <!-- Bottom Bar: Special Fares -->
+                <div class="ms-bottom-bar" id="msBottomBar">
+                    <label class="ms-fare-checkbox ms-fare-direct" id="msFareDirect"><input type="checkbox" name="direct_only"> Direct Flights</label>
+                    <label class="ms-fare-checkbox"><input type="checkbox" name="defence_fare"> Defence Fare</label>
+                    <label class="ms-fare-checkbox"><input type="checkbox" name="student_fare"> Student Fare</label>
+                    <label class="ms-fare-checkbox"><input type="checkbox" name="senior_fare"> Senior Citizen Fare</label>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Full Screen Flight Search Loading Overlay -->
+<div id="flightSearchLoadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(9, 32, 75, 0.94); z-index: 9999999; justify-content: center; align-items: center; flex-direction: column; color: #ffffff; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+    <div style="text-align: center; max-width: 480px; padding: 32px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+        <div style="width: 70px; height: 70px; margin: 0 auto 20px auto; background: rgba(120, 183, 34, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-plane-departure" style="font-size: 32px; color: #78B722; animation: flightPulse 1.8s infinite ease-in-out;"></i>
+        </div>
+        <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 8px; color: #ffffff; letter-spacing: -0.3px;">Searching Flights...</h3>
+        <p style="font-size: 13.5px; color: #93c5fd; margin-bottom: 24px; line-height: 1.5;" id="loaderRouteText">Fetching real-time wholesale fares from SpiceJet, IndiGo, Air India & partners</p>
+        <div style="width: 100%; height: 5px; background: rgba(255,255,255,0.12); border-radius: 10px; overflow: hidden; position: relative;">
+            <div style="position: absolute; left: 0; top: 0; height: 100%; width: 45%; background: linear-gradient(90deg, #78B722, #a3e635); border-radius: 10px; animation: flightProgress 1.5s infinite ease-in-out;"></div>
+        </div>
+        <div style="font-size: 11.5px; color: #cbd5e1; margin-top: 14px; font-weight: 500;">
+            <i class="fa-solid fa-shield-halved" style="color: #78B722; margin-right: 4px;"></i> B2B Franchise Net Guarantee
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================================= -->
 <!-- JAVASCRIPT: FILTER ENGINE + MODIFY SEARCH POPUP CONTROLS + CALENDAR      -->
 <!-- ========================================================================= -->
 <script>
@@ -1668,42 +1705,61 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Modal Open/Close Handlers
+    function closeModifyModal() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        overlay.style.display = 'none';
+        document.body.style.overflow = '';
+        closeCalendar();
+        closeAllCitySuggest();
+    }
+
     if (openBtn && overlay) {
         openBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            overlay.style.display = 'flex';
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
         });
     }
 
-    if (closeBtn && overlay) {
-        closeBtn.addEventListener('click', function() {
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
-            closeCalendar();
-            closeAllCitySuggest();
-        });
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeModifyModal);
     }
 
     if (overlay) {
         overlay.addEventListener('click', function(e) {
             if (e.target === overlay) {
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
-                closeCalendar();
-                closeAllCitySuggest();
+                closeModifyModal();
             }
         });
     }
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && overlay && overlay.classList.contains('active')) {
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
-            closeCalendar();
-            closeAllCitySuggest();
+            closeModifyModal();
         }
     });
+
+    // Flight Search Loading Overlay trigger on Modify Search Form submit
+    function showFlightSearchLoader() {
+        const loader = document.getElementById('flightSearchLoadingOverlay');
+        if (loader) {
+            const fromCity = document.getElementById('ms_from_city') ? document.getElementById('ms_from_city').value : '';
+            const toCity = document.getElementById('ms_to_city') ? document.getElementById('ms_to_city').value : '';
+            const routeText = (fromCity && toCity) ? `Searching flights from ${fromCity} to ${toCity}...` : 'Fetching real-time wholesale fares from SpiceJet, IndiGo, Air India & partners';
+            const txt = document.getElementById('loaderRouteText');
+            if (txt) txt.textContent = routeText;
+            loader.style.display = 'flex';
+        }
+    }
+    const msForm = document.getElementById('modifySearchForm');
+    if (msForm) {
+        msForm.addEventListener('submit', function() {
+            closeModifyModal();
+            showFlightSearchLoader();
+        });
+    }
 
     // Swap Cities
     const swapBtn = document.getElementById('msSwapBtn');

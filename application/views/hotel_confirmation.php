@@ -146,7 +146,7 @@ $booking = $b;
             <div
                 style="background: #f1f5f9; padding: 16px 32px; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; text-align: center;">
                 &copy; <?php echo date('Y'); ?> Voyogo Travel Technologies. 24x7 Customer Helpline: +91 8098999096 /
-                support@voyogo.com
+                support@voyogos.com
             </div>
 
         </div>

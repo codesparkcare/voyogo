@@ -1304,4 +1304,47 @@ function updatePaxSummary() {
 // Initial flight calendar setup
 updateFlightDateDisplays();
 renderFlightCalendarMonths();
+
+// Full Screen Search Loader on Form Submit
+const b2bForm = document.getElementById('b2bFlightForm');
+if (b2bForm) {
+    b2bForm.addEventListener('submit', function() {
+        const fromCity = document.getElementById('fFromCityInput') ? document.getElementById('fFromCityInput').value : '';
+        const toCity = document.getElementById('fToCityInput') ? document.getElementById('fToCityInput').value : '';
+        const routeText = (fromCity && toCity) ? `Searching flights from ${fromCity} to ${toCity}...` : 'Fetching real-time wholesale fares from SpiceJet, IndiGo, Air India & partners';
+        const txt = document.getElementById('loaderRouteText');
+        if (txt) txt.textContent = routeText;
+        const loader = document.getElementById('flightSearchLoadingOverlay');
+        if (loader) loader.style.display = 'flex';
+    });
+}
 </script>
+
+<!-- Full Screen Flight Search Loading Overlay for Dashboard -->
+<div id="flightSearchLoadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(9, 32, 75, 0.94); z-index: 9999999; justify-content: center; align-items: center; flex-direction: column; color: #ffffff; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+    <div style="text-align: center; max-width: 480px; padding: 32px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+        <div style="width: 70px; height: 70px; margin: 0 auto 20px auto; background: rgba(120, 183, 34, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-plane-departure" style="font-size: 32px; color: #78B722; animation: flightPulse 1.8s infinite ease-in-out;"></i>
+        </div>
+        <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 8px; color: #ffffff; letter-spacing: -0.3px;">Searching Flights...</h3>
+        <p style="font-size: 13.5px; color: #93c5fd; margin-bottom: 24px; line-height: 1.5;" id="loaderRouteText">Fetching real-time wholesale fares from SpiceJet, IndiGo, Air India & partners</p>
+        <div style="width: 100%; height: 5px; background: rgba(255,255,255,0.12); border-radius: 10px; overflow: hidden; position: relative;">
+            <div style="position: absolute; left: 0; top: 0; height: 100%; width: 45%; background: linear-gradient(90deg, #78B722, #a3e635); border-radius: 10px; animation: flightProgress 1.5s infinite ease-in-out;"></div>
+        </div>
+        <div style="font-size: 11.5px; color: #cbd5e1; margin-top: 14px; font-weight: 500;">
+            <i class="fa-solid fa-shield-halved" style="color: #78B722; margin-right: 4px;"></i> B2B Franchise Net Guarantee
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes flightPulse {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.15) translateY(-6px); }
+}
+@keyframes flightProgress {
+    0% { left: -40%; width: 30%; }
+    50% { left: 35%; width: 50%; }
+    100% { left: 100%; width: 30%; }
+}
+</style>

@@ -243,6 +243,28 @@
         }
         .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
         .alert-danger  { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+
+        /* Modify Search Modal Overlay Base Rules (Hidden by default to avoid FOUC on load) */
+        .modify-search-overlay {
+            display: none !important;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .modify-search-overlay.active {
+            display: flex !important;
+        }
     </style>
 </head>
 <body>

@@ -12,7 +12,7 @@ Request Body:
         "FName": "Abdul",
         "LName": "Rahman",
         "Mobile": "8110899000",
-        "Email": "support@voyogo.com",
+        "Email": "support@voyogos.com",
         "Address": "Voyogo Online Travel, Mumbai",
         "State": "Maharashtra",
         "City": "Mumbai",
@@ -37,7 +37,7 @@ Request Body:
                     "MobileNo": "8110899000",
                     "PaxType": "A",
                     "Age": "25",
-                    "Email": "support@voyogo.com",
+                    "Email": "support@voyogos.com",
                     "Pan": ""
                 },
                 {
@@ -50,7 +50,7 @@ Request Body:
                     "MobileNo": "8110899000",
                     "PaxType": "A",
                     "Age": "25",
-                    "Email": "support@voyogo.com",
+                    "Email": "support@voyogos.com",
                     "Pan": ""
                 },
                 {
@@ -63,7 +63,7 @@ Request Body:
                     "MobileNo": "8110899000",
                     "PaxType": "C",
                     "Age": "3",
-                    "Email": "support@voyogo.com",
+                    "Email": "support@voyogos.com",
                     "Pan": ""
                 },
                 {
@@ -76,7 +76,7 @@ Request Body:
                     "MobileNo": "8110899000",
                     "PaxType": "C",
                     "Age": "7",
-                    "Email": "support@voyogo.com",
+                    "Email": "support@voyogos.com",
                     "Pan": ""
                 }
             ]
@@ -97,7 +97,7 @@ Request Body:
                     "MobileNo": "8110899000",
                     "PaxType": "A",
                     "Age": "25",
-                    "Email": "support@voyogo.com",
+                    "Email": "support@voyogos.com",
                     "Pan": ""
                 },
                 {
@@ -110,7 +110,7 @@ Request Body:
                     "MobileNo": "8110899000",
                     "PaxType": "A",
                     "Age": "25",
-                    "Email": "support@voyogo.com",
+                    "Email": "support@voyogos.com",
                     "Pan": ""
                 },
                 {
@@ -123,7 +123,7 @@ Request Body:
                     "MobileNo": "8110899000",
                     "PaxType": "C",
                     "Age": "3",
-                    "Email": "support@voyogo.com",
+                    "Email": "support@voyogos.com",
                     "Pan": ""
                 },
                 {
@@ -136,7 +136,7 @@ Request Body:
                     "MobileNo": "8110899000",
                     "PaxType": "C",
                     "Age": "7",
-                    "Email": "support@voyogo.com",
+                    "Email": "support@voyogos.com",
                     "Pan": ""
                 }
             ]
