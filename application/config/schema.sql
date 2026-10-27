@@ -343,6 +343,58 @@ CREATE TABLE IF NOT EXISTS `franchise_hotel_bookings` (
   KEY `idx_hb_store_id` (`store_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE IF NOT EXISTS `franchise_group_tours` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `s_no` varchar(50) DEFAULT NULL,
+  `tour_date` varchar(100) DEFAULT NULL,
+  `tour_code` varchar(100) DEFAULT NULL,
+  `country_name` varchar(255) DEFAULT NULL,
+  `tour_amount` varchar(100) DEFAULT NULL,
+  `confirmed` varchar(100) DEFAULT NULL,
+  `grp_tkn` varchar(50) DEFAULT NULL,
+  `need` varchar(50) DEFAULT NULL,
+  `reminder_45` varchar(100) DEFAULT NULL,
+  `reminder_30` varchar(100) DEFAULT NULL,
+  `ticket_status` varchar(100) DEFAULT NULL,
+  `visa_status` varchar(255) DEFAULT NULL,
+  `handling_person` varchar(150) DEFAULT NULL,
+  `travel_bag` varchar(150) DEFAULT NULL,
+  `tour_manager` varchar(150) DEFAULT NULL,
+  `month_group` varchar(100) DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `tour_code_idx` (`tour_code`),
+  KEY `month_group_idx` (`month_group`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `franchise_enquiries` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `client_name` varchar(191) NOT NULL,
+  `mobile_number` varchar(50) NOT NULL,
+  `email` varchar(191) DEFAULT NULL,
+  `otp` varchar(20) DEFAULT NULL,
+  `city` varchar(191) DEFAULT NULL,
+  `state` varchar(100) DEFAULT NULL,
+  `preferred_location` varchar(255) DEFAULT NULL,
+  `own_business` varchar(50) DEFAULT 'No',
+  `current_profession` varchar(191) DEFAULT NULL,
+  `start_timeline` varchar(100) DEFAULT NULL,
+  `previous_franchise` varchar(50) DEFAULT 'No',
+  `association_member` varchar(50) DEFAULT 'No',
+  `associations` text DEFAULT NULL,
+  `hear_about_us` varchar(100) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `status` varchar(50) DEFAULT 'New',
+  `admin_notes` text DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- Default Franchise Admin: franchiseadmin / Admin@123*
 INSERT INTO `franchise_admins` (`id`, `username`, `password`, `name`, `email`, `phone`, `status`, `created_at`, `updated_at`)
 SELECT 1, 'franchiseadmin', '$2y$10$oe/Ylru3/s9Hvb8qGXDHQe8dMHlDAGrpEOKgK01BT8OWFAfBRjWV2', 'Franchise Master Admin', 'franchise@voyogo.com', '9876543210', 'active', NOW(), NOW()

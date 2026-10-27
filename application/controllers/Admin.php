@@ -1119,10 +1119,41 @@ class Admin extends CI_Controller {
             }
         }
 
+        // Synchronize Franchise Module (Manage Franchise Enquiries, Group Tours, Stores, Admins)
+        if (!isset($this->Franchise_model)) {
+            $this->load->model('Franchise_model');
+        }
+        if (isset($this->Franchise_model)) {
+            if (method_exists($this->Franchise_model, 'ensure_enquiries_table')) {
+                $this->Franchise_model->ensure_enquiries_table();
+            }
+            if (method_exists($this->Franchise_model, 'ensure_group_tours_table')) {
+                $this->Franchise_model->ensure_group_tours_table();
+            }
+        }
+
+        // Ensure Default Franchise Master Admin exists
+        if ($this->db->table_exists('franchise_admins')) {
+            $fadminExists = $this->db->get_where('franchise_admins', array('username' => 'franchiseadmin'))->num_rows();
+            if ($fadminExists == 0) {
+                $this->db->insert('franchise_admins', array(
+                    'id'         => 1,
+                    'username'   => 'franchiseadmin',
+                    'password'   => '$2y$10$oe/Ylru3/s9Hvb8qGXDHQe8dMHlDAGrpEOKgK01BT8OWFAfBRjWV2',
+                    'name'       => 'Franchise Master Admin',
+                    'email'      => 'franchise@voyogo.com',
+                    'phone'      => '9876543210',
+                    'status'     => 'active',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ));
+            }
+        }
+
         // Restore original database debug setting
         $this->db->db_debug = $saved_debug;
 
-        $this->session->set_flashdata('success', 'All database tables including Razorpay Checkout (order_id), Flight/Hotel Bookings, and Settings have been synchronized successfully!');
+        $this->session->set_flashdata('success', 'All database tables including Flight/Hotel Bookings, Leads, Razorpay Checkout, and Franchise Module (Manage Franchise Enquiries & Group Tours) have been synchronized successfully!');
         redirect('admin');
     }
 

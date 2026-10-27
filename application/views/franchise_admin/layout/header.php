@@ -276,6 +276,18 @@
                 <span>Group Tour Follow Up</span>
             </a>
         </li>
+        <li class="nav-item <?php echo ($active_menu == 'enquiries') ? 'active' : ''; ?>">
+            <a href="<?php echo site_url('franchise-admin/enquiries'); ?>">
+                <i class="fa-solid fa-clipboard-question"></i>
+                <span>Manage FRANCHISE ENQUIRY</span>
+                <?php 
+                    $nav_new_count = isset($new_enquiries_count) ? $new_enquiries_count : (isset($this->Franchise_model) ? $this->Franchise_model->count_new_franchise_enquiries() : 0);
+                    if ($nav_new_count > 0): 
+                ?>
+                    <span class="badge" style="background: #ef4444; color: #fff; font-size: 11px; padding: 2px 7px; border-radius: 10px; margin-left: auto;"><?php echo $nav_new_count; ?></span>
+                <?php endif; ?>
+            </a>
+        </li>
     </ul>
 
     <div class="sidebar-footer">

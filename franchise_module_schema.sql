@@ -154,6 +154,37 @@ CREATE TABLE IF NOT EXISTS `franchise_hotel_bookings` (
   KEY `idx_hb_store_id` (`store_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `franchise_enquiries`
+--
+
+CREATE TABLE IF NOT EXISTS `franchise_enquiries` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `client_name` varchar(191) NOT NULL,
+  `mobile_number` varchar(50) NOT NULL,
+  `email` varchar(191) DEFAULT NULL,
+  `otp` varchar(20) DEFAULT NULL,
+  `city` varchar(191) DEFAULT NULL,
+  `state` varchar(100) DEFAULT NULL,
+  `preferred_location` varchar(255) DEFAULT NULL,
+  `own_business` varchar(50) DEFAULT 'No',
+  `current_profession` varchar(191) DEFAULT NULL,
+  `start_timeline` varchar(100) DEFAULT NULL,
+  `previous_franchise` varchar(50) DEFAULT 'No',
+  `association_member` varchar(50) DEFAULT 'No',
+  `associations` text DEFAULT NULL,
+  `hear_about_us` varchar(100) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `status` varchar(50) DEFAULT 'New',
+  `admin_notes` text DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 --

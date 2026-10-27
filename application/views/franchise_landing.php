@@ -79,7 +79,7 @@
           </div>
         </div>
 
-        <form action="<?php echo site_url('franchise/submit_enquiry'); ?>" method="POST" id="franchiseMultiStepForm" class="franchise-step-form">
+        <form action="<?php echo site_url('franchise/submit_enquiry'); ?>" method="POST" id="franchiseMultiStepForm" class="franchise-step-form" novalidate>
           <input type="hidden" name="client_name" id="combinedClientName" value="">
           <input type="hidden" name="otp" id="combinedOtp" value="">
 
@@ -1921,6 +1921,43 @@ document.addEventListener('click', function(e) {
     if (tab && typeof window.switchVmTab === 'function') {
       window.switchVmTab(tab);
     }
+  }
+});
+
+// Form submission handler & auto-scroll to alerts
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('franchiseMultiStepForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      if (!validateCurrentStep(1)) {
+        e.preventDefault();
+        goToStep(1);
+        return false;
+      }
+      if (!validateCurrentStep(2)) {
+        e.preventDefault();
+        goToStep(2);
+        return false;
+      }
+      const fn = document.getElementById('step1FirstName') ? document.getElementById('step1FirstName').value.trim() : '';
+      const ln = document.getElementById('step1LastName') ? document.getElementById('step1LastName').value.trim() : '';
+      if (fn || ln) {
+        document.getElementById('combinedClientName').value = (fn + ' ' + ln).trim();
+      }
+      collectOtp();
+
+      const btn = document.getElementById('btnSubmitMultiStep');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>SUBMITTING ENQUIRY...</span> <i class="fa-solid fa-spinner fa-spin ms-2"></i>';
+      }
+    });
+  }
+
+  // Auto-scroll to flash alert if present
+  const alertEl = document.querySelector('.franchise-alert');
+  if (alertEl) {
+    alertEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 });
 </script>

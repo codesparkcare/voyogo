@@ -327,13 +327,19 @@ class Franchise_model extends CI_Model {
         $today_flights = $this->db->like('created_at', $today, 'after')->count_all_results('franchise_flight_bookings');
         $today_hotels  = $this->db->like('created_at', $today, 'after')->count_all_results('franchise_hotel_bookings');
 
+        $this->ensure_enquiries_table();
+        $total_enquiries = $this->db->count_all('franchise_enquiries');
+        $new_enquiries   = $this->db->where('status', 'New')->count_all_results('franchise_enquiries');
+
         return array(
             'total_stores'          => $total_stores,
             'active_stores'         => $active_stores,
             'total_wallet_float'    => $total_wallet_float,
             'total_flight_bookings' => $total_flight_bookings,
             'total_hotel_bookings'  => $total_hotel_bookings,
-            'today_bookings'        => $today_flights + $today_hotels
+            'today_bookings'        => $today_flights + $today_hotels,
+            'total_enquiries'       => $total_enquiries,
+            'new_enquiries'         => $new_enquiries
         );
     }
 
@@ -595,4 +601,141 @@ class Franchise_model extends CI_Model {
         $this->resequence_s_no();
         return count($samples);
     }
+
+    // =========================================================================
+    // 7. FRANCHISE ENQUIRIES MANAGEMENT
+    // =========================================================================
+    public function ensure_enquiries_table() {
+        $sql = "CREATE TABLE IF NOT EXISTS `franchise_enquiries` (
+            `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `client_name` varchar(191) NOT NULL,
+            `mobile_number` varchar(50) NOT NULL,
+            `email` varchar(191) DEFAULT NULL,
+            `otp` varchar(20) DEFAULT NULL,
+            `city` varchar(191) DEFAULT NULL,
+            `state` varchar(100) DEFAULT NULL,
+            `preferred_location` varchar(255) DEFAULT NULL,
+            `own_business` varchar(50) DEFAULT 'No',
+            `current_profession` varchar(191) DEFAULT NULL,
+            `start_timeline` varchar(100) DEFAULT NULL,
+            `previous_franchise` varchar(50) DEFAULT 'No',
+            `association_member` varchar(50) DEFAULT 'No',
+            `associations` text DEFAULT NULL,
+            `hear_about_us` varchar(100) DEFAULT NULL,
+            `message` text DEFAULT NULL,
+            `status` varchar(50) DEFAULT 'New',
+            `admin_notes` text DEFAULT NULL,
+            `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` datetime DEFAULT NULL,
+            KEY `idx_status` (`status`),
+            KEY `idx_created_at` (`created_at`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
+        $this->db->query($sql);
+    }
+
+    public function record_franchise_enquiry($data) {
+        $this->ensure_enquiries_table();
+        if (empty($data['created_at'])) {
+            $data['created_at'] = date('Y-m-d H:i:s');
+        }
+        $this->db->insert('franchise_enquiries', $data);
+        return $this->db->insert_id();
+    }
+
+    public function get_franchise_enquiries($filters = array(), $limit = 50, $offset = 0) {
+        $this->ensure_enquiries_table();
+
+        if (!empty($filters['status']) && $filters['status'] !== 'all') {
+            $this->db->where('status', $filters['status']);
+        }
+
+        if (!empty($filters['search'])) {
+            $q = trim($filters['search']);
+            $this->db->group_start();
+            $this->db->like('client_name', $q);
+            $this->db->or_like('mobile_number', $q);
+            $this->db->or_like('email', $q);
+            $this->db->or_like('city', $q);
+            $this->db->or_like('state', $q);
+            $this->db->or_like('preferred_location', $q);
+            $this->db->or_like('current_profession', $q);
+            $this->db->or_like('associations', $q);
+            $this->db->or_like('hear_about_us', $q);
+            $this->db->group_end();
+        }
+
+        $this->db->order_by('id', 'DESC');
+        if ($limit > 0) {
+            $this->db->limit($limit, $offset);
+        }
+        return $this->db->get('franchise_enquiries')->result_array();
+    }
+
+    public function count_franchise_enquiries($filters = array()) {
+        $this->ensure_enquiries_table();
+
+        if (!empty($filters['status']) && $filters['status'] !== 'all') {
+            $this->db->where('status', $filters['status']);
+        }
+
+        if (!empty($filters['search'])) {
+            $q = trim($filters['search']);
+            $this->db->group_start();
+            $this->db->like('client_name', $q);
+            $this->db->or_like('mobile_number', $q);
+            $this->db->or_like('email', $q);
+            $this->db->or_like('city', $q);
+            $this->db->or_like('state', $q);
+            $this->db->or_like('preferred_location', $q);
+            $this->db->or_like('current_profession', $q);
+            $this->db->or_like('associations', $q);
+            $this->db->or_like('hear_about_us', $q);
+            $this->db->group_end();
+        }
+
+        return $this->db->count_all_results('franchise_enquiries');
+    }
+
+    public function count_new_franchise_enquiries() {
+        $this->ensure_enquiries_table();
+        return (int)$this->db->where('status', 'New')->count_all_results('franchise_enquiries');
+    }
+
+    public function get_franchise_enquiry_by_id($id) {
+        $this->ensure_enquiries_table();
+        return $this->db->get_where('franchise_enquiries', array('id' => (int)$id))->row_array();
+    }
+
+    public function update_franchise_enquiry($id, $data) {
+        $this->ensure_enquiries_table();
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        $this->db->where('id', (int)$id);
+        return $this->db->update('franchise_enquiries', $data);
+    }
+
+    public function delete_franchise_enquiry($id) {
+        $this->ensure_enquiries_table();
+        $this->db->where('id', (int)$id);
+        return $this->db->delete('franchise_enquiries');
+    }
+
+    public function get_enquiries_stats() {
+        $this->ensure_enquiries_table();
+        $total = $this->db->count_all('franchise_enquiries');
+        $new = $this->db->where('status', 'New')->count_all_results('franchise_enquiries');
+        $contacted = $this->db->where('status', 'Contacted')->count_all_results('franchise_enquiries');
+        $in_disc = $this->db->where('status', 'In Discussion')->count_all_results('franchise_enquiries');
+        $converted = $this->db->where('status', 'Converted')->count_all_results('franchise_enquiries');
+        $rejected = $this->db->where('status', 'Rejected')->count_all_results('franchise_enquiries');
+
+        return array(
+            'total'         => $total,
+            'new'           => $new,
+            'contacted'     => $contacted,
+            'in_discussion' => $in_disc,
+            'converted'     => $converted,
+            'rejected'      => $rejected
+        );
+    }
 }
+

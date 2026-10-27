@@ -56,6 +56,12 @@ class Franchise extends CI_Controller {
         }
 
         $client_name         = trim((string)$this->input->post('client_name'));
+        $first_name          = trim((string)$this->input->post('first_name'));
+        $last_name           = trim((string)$this->input->post('last_name'));
+        if (empty($client_name) && (!empty($first_name) || !empty($last_name))) {
+            $client_name = trim($first_name . ' ' . $last_name);
+        }
+
         $country_code        = trim((string)$this->input->post('country_code')) ?: '+91';
         $mobile_number       = trim((string)$this->input->post('mobile_number'));
         $email               = trim((string)$this->input->post('email'));
@@ -96,27 +102,7 @@ class Franchise extends CI_Controller {
             $formatted_phone = $mobile_number;
         }
 
-        // Auto-create franchise_enquiries table if it doesn't exist
-        $this->db->query("CREATE TABLE IF NOT EXISTS `franchise_enquiries` (
-            `id` INT AUTO_INCREMENT PRIMARY KEY,
-            `client_name` VARCHAR(191) NOT NULL,
-            `mobile_number` VARCHAR(50) NOT NULL,
-            `email` VARCHAR(191) DEFAULT NULL,
-            `otp` VARCHAR(20) DEFAULT NULL,
-            `city` VARCHAR(191) DEFAULT NULL,
-            `state` VARCHAR(100) DEFAULT NULL,
-            `preferred_location` VARCHAR(255) DEFAULT NULL,
-            `own_business` VARCHAR(20) DEFAULT 'No',
-            `current_profession` VARCHAR(191) DEFAULT NULL,
-            `start_timeline` VARCHAR(100) DEFAULT NULL,
-            `previous_franchise` VARCHAR(20) DEFAULT 'No',
-            `association_member` VARCHAR(20) DEFAULT 'No',
-            `associations` TEXT DEFAULT NULL,
-            `hear_about_us` VARCHAR(100) DEFAULT NULL,
-            `message` TEXT DEFAULT NULL,
-            `status` VARCHAR(50) DEFAULT 'New',
-            `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+        $this->Franchise_model->ensure_enquiries_table();
 
         $enquiry_data = array(
             'client_name'        => $client_name,
@@ -138,7 +124,7 @@ class Franchise extends CI_Controller {
             'created_at'         => date('Y-m-d H:i:s')
         );
 
-        $this->db->insert('franchise_enquiries', $enquiry_data);
+        $this->Franchise_model->record_franchise_enquiry($enquiry_data);
 
         // Also insert into generic enquiries table if it exists
         if ($this->db->table_exists('enquiries')) {

@@ -66,12 +66,14 @@ class Franchise_admin extends CI_Controller {
     public function index() {
         $this->_check_auth();
 
-        $data['title']        = 'Franchise Admin Dashboard';
-        $data['active_menu']  = 'dashboard';
-        $data['stats']        = $this->Franchise_model->get_admin_dashboard_stats();
-        $data['recent_stores']= $this->Franchise_model->get_all_stores();
-        $data['recent_tx']    = $this->Franchise_model->get_wallet_ledger(null, 10);
-        $data['admin_name']   = $this->session->userdata('franchise_admin_name');
+        $data['title']            = 'Franchise Admin Dashboard';
+        $data['active_menu']      = 'dashboard';
+        $data['stats']            = $this->Franchise_model->get_admin_dashboard_stats();
+        $data['recent_stores']    = $this->Franchise_model->get_all_stores();
+        $data['recent_tx']        = $this->Franchise_model->get_wallet_ledger(null, 10);
+        $data['recent_enquiries'] = $this->Franchise_model->get_franchise_enquiries(array(), 6);
+        $data['new_enquiries_count'] = $data['stats']['new_enquiries'] ?? 0;
+        $data['admin_name']       = $this->session->userdata('franchise_admin_name');
 
         $this->load->view('franchise_admin/layout/header', $data);
         $this->load->view('franchise_admin/dashboard', $data);
@@ -497,6 +499,143 @@ class Franchise_admin extends CI_Controller {
         fputcsv($output, array('1', '16.09.2026', 'NBO160926', 'KENYA (5N/6D)', '259,000', '21+1+1+2+2', '22', '-', '02.08.2026', '17.08.2026', 'GROUP TAKEN', 'WE APPLY (INCLUDE)', 'KEERTHANA DEVI', '-', 'YOGESH', 'SEPTEMBER:2026'));
         fputcsv($output, array('2', '17.09.2026', 'NRT170926', 'JAPAN (7N/8D)', '259,000', '35+1', '36', '-', '03.08.2026', '18.08.2026', 'GROUP TAKEN', 'WE APPLY (INCLUDE)', 'NAVEENA', '-', 'SARATHKUMAR', 'SEPTEMBER:2026'));
         fputcsv($output, array('3', '20.09.2025', 'CDG200926', 'AMAZING EUROPE (9N/10)', '274,000', '31+1+1+2', '32', '-', '06.08.2026', '21.08.2026', 'GROUP TAKEN', 'WE APPLY (INCLUDE)', 'MUKESH', '-', 'RAJA MITHUN', 'SEPTEMBER:2026'));
+        fclose($output);
+        exit;
+    }
+
+    // =========================================================================
+    // 7. MANAGE FRANCHISE ENQUIRIES
+    // =========================================================================
+    public function enquiries() {
+        $this->_check_auth();
+
+        $search = trim($this->input->get('q') ?: '');
+        $status = trim($this->input->get('status') ?: '');
+
+        $filters = array();
+        if (!empty($search)) {
+            $filters['search'] = $search;
+        }
+        if (!empty($status) && $status !== 'all') {
+            $filters['status'] = $status;
+        }
+
+        $data['title']               = 'Manage FRANCHISE ENQUIRY';
+        $data['active_menu']         = 'enquiries';
+        $data['enquiries']           = $this->Franchise_model->get_franchise_enquiries($filters, 100);
+        $data['stats']               = $this->Franchise_model->get_enquiries_stats();
+        $data['new_enquiries_count'] = $data['stats']['new'] ?? 0;
+        $data['search']              = $search;
+        $data['selected_status']     = $status;
+
+        $this->load->view('franchise_admin/layout/header', $data);
+        $this->load->view('franchise_admin/enquiries', $data);
+        $this->load->view('franchise_admin/layout/footer');
+    }
+
+    public function enquiry_update_status($id) {
+        $this->_check_auth();
+
+        $status = trim((string)$this->input->post('status'));
+        $admin_notes = trim((string)$this->input->post('admin_notes'));
+
+        $update_data = array();
+        if (!empty($status)) {
+            $update_data['status'] = $status;
+        }
+        if ($this->input->post('admin_notes') !== null) {
+            $update_data['admin_notes'] = $admin_notes;
+        }
+
+        if (!empty($update_data)) {
+            $this->Franchise_model->update_franchise_enquiry($id, $update_data);
+        }
+
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array('status' => 'success', 'message' => 'Enquiry status updated successfully.'));
+            return;
+        }
+
+        $this->session->set_flashdata('success', 'Franchise Enquiry #' . $id . ' updated successfully.');
+        redirect('franchise-admin/enquiries');
+    }
+
+    public function enquiry_delete($id) {
+        $this->_check_auth();
+
+        $this->Franchise_model->delete_franchise_enquiry($id);
+
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array('status' => 'success', 'message' => 'Enquiry deleted successfully.'));
+            return;
+        }
+
+        $this->session->set_flashdata('success', 'Franchise Enquiry #' . $id . ' deleted successfully.');
+        redirect('franchise-admin/enquiries');
+    }
+
+    public function enquiry_export() {
+        $this->_check_auth();
+
+        $search = trim($this->input->get('q') ?: '');
+        $status = trim($this->input->get('status') ?: '');
+
+        $filters = array();
+        if (!empty($search)) $filters['search'] = $search;
+        if (!empty($status) && $status !== 'all') $filters['status'] = $status;
+
+        $enquiries = $this->Franchise_model->get_franchise_enquiries($filters, 0);
+
+        $filename = 'Franchise_Enquiries_' . date('Y-m-d_His') . '.csv';
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+
+        $output = fopen('php://output', 'w');
+        // CSV Headers
+        fputcsv($output, array(
+            'Enquiry ID',
+            'Full Name',
+            'Mobile Number',
+            'Email',
+            'City',
+            'State',
+            'Preferred Location',
+            'Owns Business',
+            'Current Profession',
+            'Start Timeline',
+            'Previous Franchise',
+            'Association Member',
+            'Associations',
+            'Hear About Us',
+            'Message / Requirements',
+            'Status',
+            'Admin Notes',
+            'Created At'
+        ));
+
+        foreach ($enquiries as $row) {
+            fputcsv($output, array(
+                '#FE-' . str_pad($row['id'], 4, '0', STR_PAD_LEFT),
+                $row['client_name'],
+                $row['mobile_number'],
+                $row['email'],
+                $row['city'],
+                $row['state'],
+                $row['preferred_location'],
+                $row['own_business'],
+                $row['current_profession'],
+                $row['start_timeline'],
+                $row['previous_franchise'],
+                $row['association_member'],
+                $row['associations'],
+                $row['hear_about_us'],
+                $row['message'],
+                $row['status'],
+                $row['admin_notes'],
+                $row['created_at']
+            ));
+        }
+
         fclose($output);
         exit;
     }

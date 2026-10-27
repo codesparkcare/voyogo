@@ -156,6 +156,14 @@ $route['franchise-admin/group-tour-delete-row/(:num)'] = 'Franchise_admin/group_
 $route['franchise-admin/group-tour-clear-all']     = 'Franchise_admin/group_tour_clear_all';
 $route['franchise-admin/group-tour-seed-sample']   = 'Franchise_admin/group_tour_seed_sample';
 $route['franchise-admin/group-tour-export-template'] = 'Franchise_admin/group_tour_export_template';
+$route['franchise-admin/enquiries']                = 'Franchise_admin/enquiries';
+$route['franchise-admin/manage-enquiries']         = 'Franchise_admin/enquiries';
+$route['franchise-admin/enquiry-status/(:num)']    = 'Franchise_admin/enquiry_update_status/$1';
+$route['franchise-admin/enquiry_status/(:num)']    = 'Franchise_admin/enquiry_update_status/$1';
+$route['franchise-admin/enquiry-delete/(:num)']    = 'Franchise_admin/enquiry_delete/$1';
+$route['franchise-admin/enquiry_delete/(:num)']    = 'Franchise_admin/enquiry_delete/$1';
+$route['franchise-admin/enquiry-export']           = 'Franchise_admin/enquiry_export';
+$route['franchise-admin/enquiries-export']         = 'Franchise_admin/enquiry_export';
 
 // Franchise Store Owner (B2B Portal) & Landing Page
 $route['franchise']                               = 'Franchise/index';

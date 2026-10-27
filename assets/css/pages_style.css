@@ -9406,5 +9406,34 @@ html, body {
   }
 }
 
-
-
+/* Franchise Flash Alerts */
+.franchise-alert {
+  padding: 16px 22px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  animation: franchiseAlertSlide 0.35s ease-out;
+}
+.franchise-alert.success {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  color: #15803d;
+}
+.franchise-alert.error {
+  background: #fef2f2;
+  border: 1.5px solid #fecaca;
+  color: #b91c1c;
+}
+.franchise-alert i {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+@keyframes franchiseAlertSlide {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
