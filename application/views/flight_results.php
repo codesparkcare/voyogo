@@ -733,8 +733,10 @@
     .date-carousel-items {
         display: flex;
         flex: 1;
+        min-width: 0;
         overflow-x: auto;
         scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
     }
     .date-carousel-items::-webkit-scrollbar { display: none; }
     .date-pill {
@@ -1160,13 +1162,32 @@
         text-decoration: underline;
     }
 
-    /* Fix Flight Card Grid to Prevent Overlapping of Price & Book Now */
-    .f-card-main {
-        display: grid !important;
-        grid-template-columns: 140px minmax(210px, 1fr) 60px minmax(115px, auto) 115px !important;
-        align-items: center !important;
-        gap: 16px !important;
-        padding: 18px 20px !important;
+    /* Fix Flight Card Grid to Prevent Overlapping of Price & Book Now on Desktop */
+    @media (min-width: 1121px) {
+        .f-card-main {
+            display: grid !important;
+            grid-template-columns: 140px minmax(210px, 1fr) 60px minmax(115px, auto) 115px !important;
+            align-items: center !important;
+            gap: 16px !important;
+            padding: 18px 20px !important;
+        }
+        .f-price {
+            text-align: right !important;
+            white-space: nowrap !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-end !important;
+            justify-content: center !important;
+            min-width: 110px !important;
+        }
+        .f-action {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-end !important;
+            justify-content: center !important;
+            width: 115px !important;
+            min-width: 115px !important;
+        }
     }
 
     .f-seats {
@@ -1182,25 +1203,6 @@
     .f-seats i {
         font-size: 16px;
         margin-bottom: 3px;
-    }
-
-    .f-price {
-        text-align: right !important;
-        white-space: nowrap !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: flex-end !important;
-        justify-content: center !important;
-        min-width: 110px !important;
-    }
-
-    .f-action {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: flex-end !important;
-        justify-content: center !important;
-        width: 115px !important;
-        min-width: 115px !important;
     }
 
     .f-book-btn {
@@ -1254,7 +1256,7 @@
         color: #16a34a;
     }
 
-    @media (max-width: 1120px) {
+    @media (min-width: 769px) and (max-width: 1120px) {
         .f-card-main {
             grid-template-columns: 130px minmax(180px, 1fr) 55px minmax(105px, auto) 110px !important;
             gap: 12px !important;
@@ -2213,19 +2215,508 @@
     }
 
     @media (max-width: 768px) {
-        /* Round Trip Mobile Dual Column -> Tabbed Switcher */
+        /* Prevent Page Horizontal Overflow */
+        body, html {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+        }
+        .container, .layout-grid, .rt-layout-grid, .results-area {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow-x: hidden !important;
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+
+        /* Top Search Summary Header on Mobile (2-Column Grid with Full-Width Button) */
+        .search-header-box {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 10px 14px !important;
+            padding: 12px 14px !important;
+            border-radius: 10px !important;
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+        .sh-block {
+            padding: 0 !important;
+            border: none !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            min-width: 0 !important;
+        }
+        .sh-block .sh-label {
+            font-size: 10px !important;
+            color: #64748b !important;
+            text-transform: uppercase !important;
+            font-weight: 700 !important;
+            margin-bottom: 2px !important;
+            display: block !important;
+        }
+        .sh-block .sh-title {
+            font-size: 14.5px !important;
+            color: #0f172a !important;
+            font-weight: 800 !important;
+            line-height: 1.2 !important;
+            margin-bottom: 2px !important;
+            display: block !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            max-width: 100% !important;
+        }
+        .sh-block .sh-sub {
+            font-size: 10.5px !important;
+            color: #94a3b8 !important;
+            font-weight: 500 !important;
+            display: block !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            max-width: 100% !important;
+        }
+        .sh-divider {
+            display: none !important;
+        }
+        .sh-action {
+            grid-column: 1 / -1 !important;
+            width: 100% !important;
+            padding: 6px 0 0 0 !important;
+        }
+        .btn-modify {
+            width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            padding: 10px 16px !important;
+            border-radius: 6px !important;
+            font-size: 13.5px !important;
+            font-weight: 700 !important;
+            background: #ef4444 !important;
+            color: #ffffff !important;
+        }
+
+        /* 7-Day Date Carousel on Mobile */
+        .date-carousel-container {
+            display: flex !important;
+            align-items: center !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            border-radius: 8px !important;
+            margin-bottom: 10px !important;
+        }
+        .date-carousel-items {
+            min-width: 0 !important;
+            flex: 1 1 0 !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+        }
+        .date-carousel-items::-webkit-scrollbar {
+            display: none !important;
+        }
+        .date-pill {
+            min-width: 82px !important;
+            flex: 0 0 82px !important;
+            padding: 7px 4px !important;
+        }
+        .date-arrow-btn {
+            width: 30px !important;
+            height: 54px !important;
+            flex-shrink: 0 !important;
+            font-size: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        /* Sorting Tabs Bar on Mobile */
+        .sorting-bar {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+            margin-bottom: 12px !important;
+        }
+        .sort-tabs {
+            width: 100% !important;
+            display: flex !important;
+            gap: 6px !important;
+        }
+        .sort-tab {
+            flex: 1 !important;
+            padding: 8px 6px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            white-space: nowrap !important;
+            text-align: center !important;
+            border-radius: 6px !important;
+        }
+        .sort-right {
+            width: 100% !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+        }
+
+        /* ========================================================
+           SINGLE TRIP FLIGHT CARDS (Exact Match with Screenshot 2)
+           ======================================================== */
+        .flights-list {
+            gap: 12px !important;
+        }
+        .f-card {
+            border-radius: 10px !important;
+            overflow: hidden !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+            background: #ffffff !important;
+            margin-bottom: 6px !important;
+        }
+        .f-card-main {
+            display: grid !important;
+            grid-template-columns: 1fr auto !important;
+            grid-template-areas:
+                "airline seats"
+                "time time"
+                "price action" !important;
+            gap: 10px !important;
+            padding: 12px 14px !important;
+            align-items: center !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Area 1: Airline logo + name + flight number (Top-Left) */
+        .f-airline {
+            grid-area: airline !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            justify-content: flex-start !important;
+            width: auto !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            min-width: 0 !important;
+        }
+        .f-logo {
+            flex-shrink: 0 !important;
+        }
+        .f-logo img {
+            width: 32px !important;
+            height: 32px !important;
+            object-fit: contain !important;
+            border-radius: 4px !important;
+        }
+        .f-name {
+            display: flex !important;
+            flex-direction: column !important;
+            min-width: 0 !important;
+        }
+        .f-name strong {
+            font-size: 14px !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            line-height: 1.2 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        .f-name span {
+            font-size: 11px !important;
+            color: #64748b !important;
+            font-weight: 500 !important;
+            line-height: 1.2 !important;
+        }
+
+        /* Area 2: Seats Left Pill (Top-Right) */
+        .f-seats {
+            grid-area: seats !important;
+            display: inline-flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 4px !important;
+            background: #fef2f2 !important;
+            color: #ef4444 !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            padding: 3px 8px !important;
+            border-radius: 4px !important;
+            border: 1px solid #fee2e2 !important;
+            white-space: nowrap !important;
+            justify-self: end !important;
+        }
+        .f-seats i {
+            font-size: 11px !important;
+            margin: 0 !important;
+            color: #ef4444 !important;
+        }
+
+        /* Area 3: Flight Schedule Box (Middle Full-Width) */
+        .f-time-block {
+            grid-area: time !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+            background: #f8fafc !important;
+            border-radius: 8px !important;
+            padding: 10px 12px !important;
+            border: 1px solid #edf2f7 !important;
+            box-sizing: border-box !important;
+            gap: 8px !important;
+            margin: 0 !important;
+        }
+        .f-time-left, .f-time-right {
+            display: flex !important;
+            flex-direction: column !important;
+            min-width: 65px !important;
+        }
+        .f-time-left {
+            text-align: left !important;
+        }
+        .f-time-right {
+            text-align: right !important;
+        }
+        .f-time {
+            font-size: 18px !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            line-height: 1.2 !important;
+        }
+        .f-city {
+            font-size: 11px !important;
+            color: #64748b !important;
+            margin-top: 2px !important;
+            font-weight: 500 !important;
+        }
+        .f-duration {
+            flex: 1 !important;
+            max-width: 120px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            padding: 0 4px !important;
+        }
+        .f-duration > span:first-child {
+            font-size: 10.5px !important;
+            color: #64748b !important;
+            margin-bottom: 2px !important;
+            font-weight: 600 !important;
+        }
+        .f-line {
+            width: 100% !important;
+            border-top: 1.5px dashed #cbd5e1 !important;
+            position: relative !important;
+            margin: 3px 0 !important;
+        }
+        .f-line i {
+            position: absolute !important;
+            right: -6px !important;
+            top: -6px !important;
+            font-size: 10px !important;
+            color: #94a3b8 !important;
+        }
+        .f-duration > span:last-child {
+            font-size: 10.5px !important;
+            font-weight: 700 !important;
+            white-space: nowrap !important;
+        }
+
+        /* Area 4: Price Block (Bottom-Left) */
+        .f-price {
+            grid-area: price !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            text-align: left !important;
+            min-width: 0 !important;
+            width: auto !important;
+        }
+        .f-price div:first-child {
+            font-size: 11px !important;
+            color: #ef4444 !important;
+            text-decoration: line-through !important;
+            font-weight: 600 !important;
+            line-height: 1.2 !important;
+        }
+        .f-price strong {
+            font-size: 21px !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            line-height: 1.2 !important;
+            display: block !important;
+        }
+        .f-price div:last-child {
+            font-size: 10.5px !important;
+            color: #16a34a !important;
+            font-weight: 700 !important;
+            margin-top: 2px !important;
+            white-space: nowrap !important;
+        }
+
+        /* Area 5: Action Button & Details (Bottom-Right) */
+        .f-action {
+            grid-area: action !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-end !important;
+            width: auto !important;
+            min-width: 120px !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .f-action form {
+            width: 100% !important;
+            display: flex !important;
+            justify-content: flex-end !important;
+        }
+        .f-book-btn {
+            width: auto !important;
+            min-width: 115px !important;
+            max-width: 130px !important;
+            padding: 9px 18px !important;
+            font-size: 13.5px !important;
+            font-weight: 700 !important;
+            border-radius: 6px !important;
+            background: #ef4444 !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25) !important;
+            cursor: pointer !important;
+        }
+        .f-action > div:last-child {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            gap: 8px !important;
+            margin-top: 4px !important;
+            width: 100% !important;
+        }
+        .btn-details-toggle {
+            font-size: 11.5px !important;
+            color: #0284c7 !important;
+            font-weight: 700 !important;
+            text-decoration: underline !important;
+        }
+        .badge-refundable-r {
+            font-size: 11px !important;
+            font-weight: 800 !important;
+        }
+
+        /* Notice & Footer Strips on Mobile */
+        .f-card > div[style*="Meal, Seat are chargeable"] {
+            padding: 6px 14px 8px 14px !important;
+            font-size: 11px !important;
+        }
+        .f-card-footer {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 5px !important;
+            padding: 8px 14px !important;
+            font-size: 11px !important;
+            border-top: 1px solid #f1f5f9 !important;
+            background: #ffffff !important;
+        }
+        .f-card-footer div:last-child {
+            font-size: 11px !important;
+            color: #2563eb !important;
+            font-weight: 600 !important;
+        }
+
+        /* Collapsible Details Drawer on Mobile */
+        .f-drawer-nav {
+            padding: 0 10px !important;
+            overflow-x: auto !important;
+            white-space: nowrap !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+        }
+        .f-drawer-nav::-webkit-scrollbar {
+            display: none !important;
+        }
+        .f-drawer-tab {
+            padding: 10px 12px !important;
+            font-size: 12px !important;
+            flex-shrink: 0 !important;
+        }
+        .f-drawer-pane {
+            padding: 12px !important;
+        }
+        .f-info-box {
+            padding: 12px 14px !important;
+        }
+        .f-info-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+            margin-bottom: 12px !important;
+        }
+        .f-info-aircraft-badge {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            justify-content: space-between !important;
+            padding: 6px 10px !important;
+            font-size: 11px !important;
+        }
+        .f-leg-card {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+            padding: 8px 0 !important;
+        }
+        .f-leg-airline {
+            width: 100% !important;
+            padding-bottom: 6px !important;
+            border-bottom: 1px dashed #e2e8f0 !important;
+        }
+        .f-leg-point {
+            width: 100% !important;
+        }
+        .f-leg-mid {
+            width: 100% !important;
+            margin: 4px 0 !important;
+        }
+        .fare-rules-layout {
+            grid-template-columns: 1fr !important;
+            gap: 15px !important;
+        }
+        .f-fare-details-box {
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Fare Family Options on Mobile */
+        .fo-sector-tabs-container {
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+        }
+        .fo-cards-grid {
+            grid-template-columns: 1fr !important;
+        }
+
+        /* ========================================================
+           ROUND-TRIP MOBILE OPTIMIZATIONS
+           ======================================================== */
         .mobile-rt-sector-tabs {
             display: flex !important;
             gap: 8px !important;
             margin-bottom: 12px !important;
-            background: #f1f5f9 !important;
+            background: #e2e8f0 !important;
             padding: 4px !important;
             border-radius: 10px !important;
         }
         .mobile-rt-tab {
             flex: 1 !important;
-            background: transparent !important;
-            border: none !important;
+            background: #ffffff !important;
+            border: 1.5px solid #cbd5e1 !important;
             padding: 8px 10px !important;
             border-radius: 8px !important;
             text-align: left !important;
@@ -2236,14 +2727,18 @@
             gap: 2px !important;
         }
         .mobile-rt-tab.active {
-            background: #ffffff !important;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
+            background: #0d3470 !important;
+            border-color: #0d3470 !important;
+            box-shadow: 0 3px 8px rgba(13, 52, 112, 0.25) !important;
         }
         .mobile-rt-tab.active .m-rt-label {
-            color: #0284c7 !important;
+            color: #93c5fd !important;
         }
         .mobile-rt-tab.active .m-rt-route {
-            color: #0d3470 !important;
+            color: #ffffff !important;
+        }
+        .mobile-rt-tab.active .m-rt-date {
+            color: #e0f2fe !important;
         }
         .m-rt-label {
             font-size: 9.5px !important;
@@ -2267,7 +2762,7 @@
             display: flex !important;
             flex-direction: column !important;
             gap: 0 !important;
-            margin-bottom: 110px !important; /* Space for sticky bar */
+            margin-bottom: 110px !important;
         }
         #onwardSectorCol, #returnSectorCol {
             display: none !important;
@@ -2277,134 +2772,187 @@
         #returnSectorCol.active-m-sector {
             display: block !important;
         }
-
-        /* Flight Cards on Mobile */
         .rt-card {
-            padding: 10px !important;
+            padding: 10px 12px !important;
+            border-radius: 8px !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            margin-bottom: 8px !important;
+        }
+        .rt-card > div:first-child > div:first-child {
+            min-width: 0 !important;
+            flex: 1 1 auto !important;
+        }
+        .rt-card > div:first-child > div:first-child > div {
+            min-width: 0 !important;
+            overflow: hidden !important;
+        }
+        .rt-card > div:first-child > div:first-child strong {
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            max-width: 120px !important;
+        }
+        .rt-card > div:last-child {
+            flex-wrap: wrap !important;
+            gap: 4px 8px !important;
+        }
+
+        /* Akbar Travels Style Flight Details Modal on Mobile */
+        .rt-modal-overlay {
+            padding: 8px !important;
+        }
+        .rt-modal-content {
+            max-height: 94vh !important;
+            border-radius: 10px !important;
+            width: 100% !important;
+        }
+        .rt-modal-header {
+            padding: 12px 16px !important;
+        }
+        .rt-modal-tabs {
+            padding: 0 8px !important;
+            overflow-x: auto !important;
+            white-space: nowrap !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+        }
+        .rt-modal-tabs::-webkit-scrollbar {
+            display: none !important;
+        }
+        .rt-modal-tab {
+            padding: 10px 12px !important;
+            font-size: 12px !important;
+            flex-shrink: 0 !important;
+        }
+        .rt-modal-body {
+            padding: 12px 14px !important;
+            max-height: calc(94vh - 110px) !important;
         }
 
         /* Sticky Bottom Bar on Mobile */
         .rt-sticky-bar {
             padding: 8px 0 !important;
-            box-shadow: 0 -10px 25px rgba(0,0,0,0.15) !important;
+            box-shadow: 0 -8px 25px rgba(0,0,0,0.18) !important;
         }
         .rt-bar-inner {
             flex-direction: column !important;
             gap: 6px !important;
-            padding: 0 12px !important;
+            padding: 0 10px !important;
         }
         .rt-bar-flights-wrap {
             width: 100% !important;
-            gap: 6px !important;
+            display: flex !important;
             justify-content: space-between !important;
-            padding-bottom: 5px !important;
+            gap: 6px !important;
+            padding-bottom: 4px !important;
             border-bottom: 1px solid #f1f5f9 !important;
         }
         .rt-bar-flight-item {
             flex: 1 1 0 !important;
             min-width: 0 !important;
+            display: flex !important;
+            align-items: center !important;
             gap: 6px !important;
         }
         .rt-bar-badge-depart, .rt-bar-badge-return {
-            font-size: 9px !important;
+            font-size: 8.5px !important;
             padding: 2px 5px !important;
+            font-weight: 800 !important;
+            border-radius: 3px !important;
+            flex-shrink: 0 !important;
+        }
+        .rt-bar-flight-details {
+            min-width: 0 !important;
+            flex: 1 !important;
+            overflow: hidden !important;
         }
         .rt-bar-airline-line strong {
-            font-size: 12px !important;
+            font-size: 11.5px !important;
             white-space: nowrap !important;
             overflow: hidden !important;
             text-overflow: ellipsis !important;
             display: block !important;
         }
         .rt-bar-time-line {
-            font-size: 10px !important;
+            font-size: 9.5px !important;
             white-space: nowrap !important;
             overflow: hidden !important;
             text-overflow: ellipsis !important;
             display: block !important;
         }
-        .rt-bar-flight-details {
-            min-width: 0 !important;
-            flex: 1 !important;
-        }
         .rt-bar-divider {
-            height: 24px !important;
+            height: 22px !important;
+            width: 1px !important;
+            background: #e2e8f0 !important;
             margin: 0 2px !important;
+            flex-shrink: 0 !important;
         }
         .rt-bar-action-wrap {
             width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
             justify-content: space-between !important;
-            gap: 10px !important;
+            gap: 6px !important;
         }
         .rt-bar-price-box {
             text-align: left !important;
+            flex-shrink: 0 !important;
         }
         .rt-bar-price-label {
-            font-size: 9.5px !important;
+            font-size: 9px !important;
+            line-height: 1 !important;
         }
         .rt-bar-price-val {
-            font-size: 18px !important;
+            font-size: 16px !important;
+            line-height: 1.1 !important;
+            font-weight: 800 !important;
+            color: #0d3470 !important;
         }
         .rt-bar-details-link {
-            font-size: 10.5px !important;
+            font-size: 9.5px !important;
+            display: inline-block !important;
+        }
+        .rt-bar-buttons-wrap {
+            display: flex !important;
+            align-items: center !important;
+            gap: 5px !important;
+            flex-shrink: 0 !important;
         }
         .btn-rt-view-fare {
-            padding: 8px 14px !important;
-            font-size: 12.5px !important;
+            padding: 7px 9px !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            white-space: nowrap !important;
+            border-radius: 5px !important;
         }
         .btn-rt-continue {
-            padding: 8px 16px !important;
-            font-size: 13px !important;
+            padding: 7px 11px !important;
+            font-size: 11.5px !important;
+            font-weight: 700 !important;
+            white-space: nowrap !important;
+            border-radius: 5px !important;
         }
-
-        /* Fare Family Options on Mobile */
-        .fo-sector-tabs-container {
-            grid-template-columns: 1fr !important;
-            gap: 10px !important;
+        .btn-rt-back {
+            padding: 7px 9px !important;
+            font-size: 11px !important;
+            border-radius: 5px !important;
         }
-        .fo-cards-grid {
-            grid-template-columns: 1fr !important;
-        }
-
-        /* One-Way Flight Cards on Mobile */
-        .f-card-main {
-            grid-template-columns: 1fr !important;
-            gap: 10px !important;
-            padding: 12px 14px !important;
-        }
-        .f-airline {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            width: 100% !important;
-            padding-bottom: 8px !important;
-            border-bottom: 1px dashed #e2e8f0 !important;
-        }
-        .f-time-block {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            width: 100% !important;
-        }
-        .f-seats {
-            display: none !important;
-        }
-        .f-price {
-            text-align: left !important;
-        }
-        .f-action {
-            width: 100% !important;
-            min-width: 100% !important;
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            margin-top: 4px !important;
-            padding-top: 8px !important;
-            border-top: 1px dashed #e2e8f0 !important;
-        }
-        .f-book-btn {
-            max-width: 140px !important;
-            width: 140px !important;
+        @media (max-width: 380px) {
+            .rt-bar-buttons-wrap {
+                gap: 4px !important;
+            }
+            .btn-rt-view-fare {
+                padding: 6px 7px !important;
+                font-size: 10px !important;
+            }
+            .btn-rt-continue {
+                padding: 6px 9px !important;
+                font-size: 10.5px !important;
+            }
+            .rt-bar-price-val {
+                font-size: 14.5px !important;
+            }
         }
     }
     </style>
@@ -3658,7 +4206,7 @@
                             <span><?php echo $f['SeatsLeft']; ?> Left</span>
                         </div>
                         
-                        <div class="f-price" style="text-align:right;">
+                        <div class="f-price">
                             <div style="font-size:12px; color:#ef4444; text-decoration:line-through; font-weight:600; line-height:1.2;">₹ <?php echo number_format($strikePrice); ?></div>
                             <strong style="font-size:22px; color:#0f172a; display:block; line-height:1.2;">₹ <?php echo number_format($owPrice); ?></strong>
                             <div style="font-size:11px; color:#16a34a; font-weight:700; margin-top:2px;">Extra ₹ <?php echo number_format($discountAmt); ?> Off</div>

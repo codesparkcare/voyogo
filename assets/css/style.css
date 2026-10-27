@@ -2702,14 +2702,10 @@ ul {
 
 @media (max-width: 1024px) {
   .layout-grid { grid-template-columns: 1fr; }
-  .filters-sidebar { display: none; } /* Hide on mobile for now */
+  .filters-sidebar { display: none; }
   .search-header-box { flex-wrap: wrap; }
   .sh-divider { display: none; }
   .sh-block { border-bottom: 1px solid #e2e8f0; padding: 10px; }
-  .f-card-main { grid-template-columns: 1fr; gap: 15px; }
-  .f-time-block, .f-airline, .f-seats, .f-price, .f-action { justify-content: space-between; align-items: center; flex-direction: row; text-align: left; }
-  .f-price { text-align: left; }
-  .f-action { flex-direction: row; }
 }
 
 /* Modal Backdrop Overlay Rules */
