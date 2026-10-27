@@ -268,37 +268,46 @@
                         <div class="input-subtext" id="returnDateSub">Save up to 20% on round trips</div>
                     </div>
 
-                    <!-- Dual Month Linked Calendar Popup -->
+                    <!-- Dual Month Linked Calendar Backdrop & Popup -->
+                    <div class="calendar-backdrop" id="flightCalBackdrop"></div>
                     <div class="dropdown-popup dual-calendar-popup" id="flightCalendarDropdown" onclick="event.stopPropagation();">
                         
                         <!-- Calendar Header Bar -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <button type="button" id="calTabDeparture" class="cal-mode-btn" style="padding: 6px 12px; border-radius: 8px; border: 1.5px solid #0d3470; background: #e0f2fe; color: #0d3470; cursor: pointer; text-align: left; transition: all 0.2s;">
-                                    <span style="font-size: 10px; text-transform: uppercase; font-weight: 700; display: block; color: #0369a1;">Departure Date</span>
-                                    <strong id="calDepDateText" style="font-size: 13px;"><?php echo date('D, d M Y', strtotime('+3 days')); ?></strong>
-                                </button>
-                                <i class="fa-solid fa-arrow-right" style="color: #94a3b8; font-size: 11px;"></i>
-                                <button type="button" id="calTabReturn" class="cal-mode-btn" style="padding: 6px 12px; border-radius: 8px; border: 1.5px solid #e2e8f0; background: #ffffff; color: #64748b; cursor: pointer; text-align: left; transition: all 0.2s;">
-                                    <span style="font-size: 10px; text-transform: uppercase; font-weight: 700; display: block; color: #94a3b8;">Return Date (Round Trip)</span>
-                                    <strong id="calRetDateText" style="font-size: 13px; color: #0d3470;"><?php echo date('D, d M Y', strtotime('+7 days')); ?></strong>
-                                </button>
+                        <div class="cal-header-bar">
+                            <div class="cal-header-top">
+                                <div class="cal-title-box">
+                                    <span class="cal-title-main"><i class="fa-regular fa-calendar-days" style="color: #0284c7; margin-right: 6px;"></i> Select Dates</span>
+                                    <span id="calStatusBadge" class="cal-status-badge">Select Departure</span>
+                                </div>
+                                <button type="button" id="closeCalBtn" class="cal-close-btn" title="Close Calendar" aria-label="Close Calendar">&times;</button>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <span id="calStatusBadge" style="font-size: 11px; font-weight: 700; color: #0369a1; background: #e0f2fe; padding: 4px 10px; border-radius: 20px;">Picking Departure</span>
-                                <button type="button" id="closeCalBtn" style="background: none; border: none; font-size: 22px; line-height: 1; color: #94a3b8; cursor: pointer; padding: 2px 6px;" title="Close Calendar">&times;</button>
+                            <div class="cal-tabs-container">
+                                <button type="button" id="calTabDeparture" class="cal-mode-btn cal-tab-dep active">
+                                    <span class="cal-tab-label">DEPARTURE</span>
+                                    <strong id="calDepDateText" class="cal-tab-val"><?php echo date('D, d M Y', strtotime('+3 days')); ?></strong>
+                                </button>
+                                <div class="cal-tab-divider">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </div>
+                                <button type="button" id="calTabReturn" class="cal-mode-btn cal-tab-ret">
+                                    <span class="cal-tab-label">RETURN (ROUND TRIP)</span>
+                                    <strong id="calRetDateText" class="cal-tab-val"><?php echo date('D, d M Y', strtotime('+7 days')); ?></strong>
+                                </button>
                             </div>
                         </div>
 
-                        <!-- Dual Months Side-by-Side Container -->
-                        <div id="dualCalendarMonthsWrap" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px;">
+                        <!-- Dual Months Side-by-Side / Scrollable Container -->
+                        <div id="dualCalendarMonthsWrap" class="dual-cal-months-wrap">
                             <!-- Month 1 and Month 2 rendered dynamically via JS -->
                         </div>
 
                         <!-- Calendar Footer -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 18px; background: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 12px;">
-                            <span style="color: #64748b;"><i class="fa-solid fa-circle-info" style="color: #0284c7; margin-right: 4px;"></i> Select a return date to automatically make it a Round Trip</span>
-                            <button type="button" id="calDoneBtn" style="background: #0d3470; color: #ffffff; border: none; padding: 6px 18px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer;">Done</button>
+                        <div class="cal-footer-bar">
+                            <div class="cal-footer-info" id="calFooterInfo">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <span id="calFooterText">Select a return date to automatically make it a Round Trip</span>
+                            </div>
+                            <button type="button" id="calDoneBtn" class="cal-done-btn">Done</button>
                         </div>
                     </div>
 

@@ -2067,7 +2067,7 @@
                                 <input type="hidden" name="contact_name" id="hidden_contact_name" value="<?php echo htmlspecialchars($curContactName); ?>">
 
                                 <!-- Inputs: Country Code + Mobile Number & Email (Screenshot 1) -->
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+                                <div class="contact-inputs-grid" style="margin-bottom: 16px;">
                                     <!-- Mobile with Calling Code Flag Dropdown -->
                                     <div style="display: flex; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; background: #ffffff;">
                                         <select name="contact_country_code" style="border: none; background: #f8fafc; padding: 10px 12px; font-size: 13px; font-weight: 600; color: #334155; border-right: 1px solid #cbd5e1; cursor: pointer; outline: none;">
@@ -3172,6 +3172,11 @@ function showProcessingModal(message) {
     margin: 0 20px;
     flex-shrink: 0;
 }
+.contact-inputs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
 @media (max-width: 640px) {
     .flight-specs-strip {
         display: grid !important;
@@ -3181,6 +3186,13 @@ function showProcessingModal(message) {
     }
     .spec-divider {
         display: none !important;
+    }
+    .contact-inputs-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+    #gstFieldsSection {
+        grid-template-columns: 1fr !important;
     }
 }
 

@@ -492,33 +492,41 @@ document.addEventListener('DOMContentLoaded', function() {
     // Active mode styles
     if (calTabDeparture && calTabReturn) {
       if (currentCalMode === 'departure') {
-        calTabDeparture.style.borderColor = '#0d3470';
-        calTabDeparture.style.background = '#e0f2fe';
-        calTabDeparture.querySelector('strong').style.color = '#0d3470';
-
-        calTabReturn.style.borderColor = '#e2e8f0';
-        calTabReturn.style.background = '#ffffff';
-        calTabReturn.querySelector('strong').style.color = '#64748b';
+        calTabDeparture.classList.add('active');
+        calTabReturn.classList.remove('active');
 
         if (calStatusBadge) {
-          calStatusBadge.textContent = 'Picking Departure Date';
+          calStatusBadge.textContent = 'Select Departure';
           calStatusBadge.style.background = '#e0f2fe';
           calStatusBadge.style.color = '#0369a1';
         }
       } else {
-        calTabDeparture.style.borderColor = '#e2e8f0';
-        calTabDeparture.style.background = '#ffffff';
-        calTabDeparture.querySelector('strong').style.color = '#64748b';
-
-        calTabReturn.style.borderColor = '#16a34a';
-        calTabReturn.style.background = '#dcfce7';
-        calTabReturn.querySelector('strong').style.color = '#15803d';
+        calTabDeparture.classList.remove('active');
+        calTabReturn.classList.add('active');
 
         if (calStatusBadge) {
-          calStatusBadge.textContent = 'Picking Return Date';
+          calStatusBadge.textContent = 'Select Return';
           calStatusBadge.style.background = '#dcfce7';
           calStatusBadge.style.color = '#15803d';
         }
+      }
+    }
+
+    // Dynamic footer trip info
+    const calFooterText = document.getElementById('calFooterText');
+    if (calFooterText) {
+      if (depInput && depInput.value && retInput && retInput.value && isRoundTrip) {
+        const d1 = new Date(depInput.value + 'T00:00:00');
+        const d2 = new Date(retInput.value + 'T00:00:00');
+        const diffTime = d2.getTime() - d1.getTime();
+        const diffDays = Math.round(diffTime / (1000 * 3600 * 24));
+        if (diffDays > 0) {
+          calFooterText.textContent = `Round Trip: ${diffDays} night${diffDays > 1 ? 's' : ''} duration`;
+        } else {
+          calFooterText.textContent = `Same-day return flight selected`;
+        }
+      } else {
+        calFooterText.textContent = `Select a return date to book a round trip`;
       }
     }
   }
@@ -537,20 +545,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const depDate = depInput && depInput.value ? new Date(depInput.value + 'T00:00:00') : null;
     const retDate = (isRoundTrip && retInput && retInput.value) ? new Date(retInput.value + 'T00:00:00') : null;
 
+    const isPastMonth = (year < today.getFullYear()) || (year === today.getFullYear() && month <= today.getMonth());
+
     let html = `<div class="cal-month-box">`;
     html += `<div class="cal-month-nav-header">`;
+
+    // Left navigation button
     if (isLeft) {
-      const isPast = (year < today.getFullYear()) || (year === today.getFullYear() && month <= today.getMonth());
-      html += `<button type="button" class="cal-nav-btn" id="calPrevMonthBtn" ${isPast ? 'disabled' : ''}><i class="fa-solid fa-chevron-left"></i></button>`;
+      html += `<button type="button" class="cal-nav-btn cal-prev-btn" ${isPastMonth ? 'disabled' : ''} title="Previous Month"><i class="fa-solid fa-chevron-left"></i></button>`;
     } else {
-      html += `<div></div>`;
+      html += `<button type="button" class="cal-nav-btn cal-prev-btn cal-mobile-nav" title="Previous Month"><i class="fa-solid fa-chevron-left"></i></button><div class="cal-desktop-spacer"></div>`;
     }
+
     html += `<h4>${monthNames[month]} ${year}</h4>`;
+
+    // Right navigation button
     if (!isLeft) {
-      html += `<button type="button" class="cal-nav-btn" id="calNextMonthBtn"><i class="fa-solid fa-chevron-right"></i></button>`;
+      html += `<button type="button" class="cal-nav-btn cal-next-btn" title="Next Month"><i class="fa-solid fa-chevron-right"></i></button>`;
     } else {
-      html += `<div></div>`;
+      html += `<button type="button" class="cal-nav-btn cal-next-btn cal-mobile-nav" title="Next Month"><i class="fa-solid fa-chevron-right"></i></button><div class="cal-desktop-spacer"></div>`;
     }
+
     html += `</div>`;
 
     html += `<table class="cal-month-table">
@@ -626,12 +641,12 @@ document.addEventListener('DOMContentLoaded', function() {
     dualCalendarMonthsWrap.innerHTML = html1 + html2;
     updateHeaderDisplays();
 
-    // Bind navigation buttons
-    const prevBtn = document.getElementById('calPrevMonthBtn');
-    const nextBtn = document.getElementById('calNextMonthBtn');
+    // Bind all navigation buttons (works on both desktop and mobile)
+    const prevBtns = dualCalendarMonthsWrap.querySelectorAll('.cal-prev-btn:not(:disabled)');
+    const nextBtns = dualCalendarMonthsWrap.querySelectorAll('.cal-next-btn');
 
-    if (prevBtn) {
-      prevBtn.addEventListener('click', function(e) {
+    prevBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
         e.stopPropagation();
         calViewMonth--;
         if (calViewMonth < 0) {
@@ -640,10 +655,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         renderDualCalendar();
       });
-    }
+    });
 
-    if (nextBtn) {
-      nextBtn.addEventListener('click', function(e) {
+    nextBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
         e.stopPropagation();
         calViewMonth++;
         if (calViewMonth > 11) {
@@ -652,7 +667,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         renderDualCalendar();
       });
-    }
+    });
 
     // Bind day clicks
     const dayBtns = dualCalendarMonthsWrap.querySelectorAll('.cal-day-btn:not(.disabled)');
@@ -744,15 +759,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (flightCalendarDropdown) {
+      flightCalendarDropdown.classList.add('open');
       flightCalendarDropdown.style.display = 'block';
+      const backdrop = document.getElementById('flightCalBackdrop');
+      if (backdrop) backdrop.classList.add('open');
+      document.body.classList.add('cal-modal-open');
       renderDualCalendar();
     }
   }
 
   function closeCalendar() {
     if (flightCalendarDropdown) {
+      flightCalendarDropdown.classList.remove('open');
       flightCalendarDropdown.style.display = 'none';
+      const backdrop = document.getElementById('flightCalBackdrop');
+      if (backdrop) backdrop.classList.remove('open');
+      document.body.classList.remove('cal-modal-open');
     }
+  }
+
+  // Backdrop click listener to dismiss modal
+  const flightCalBackdrop = document.getElementById('flightCalBackdrop');
+  if (flightCalBackdrop) {
+    flightCalBackdrop.addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeCalendar();
+    });
   }
 
   // Open calendar on Departure click
@@ -837,7 +869,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Close calendar when clicking outside
   document.addEventListener('click', function(e) {
-    if (flightCalendarDropdown && flightCalendarDropdown.style.display === 'block') {
+    if (flightCalendarDropdown && (flightCalendarDropdown.style.display === 'block' || flightCalendarDropdown.classList.contains('open'))) {
       if (!flightCalendarDropdown.contains(e.target) && 
           (!departureDateBox || !departureDateBox.contains(e.target)) && 
           (!returnDateBox || !returnDateBox.contains(e.target))) {

@@ -2012,6 +2012,401 @@
         border-color: #94a3b8;
         color: #0f172a;
     }
+
+    /* ========================================================
+       ROUND TRIP & FLIGHT RESULTS MOBILE RESPONSIVE STYLES
+       ======================================================== */
+    .rt-layout-grid {
+        grid-template-columns: 240px 1fr;
+    }
+    .rt-dual-col-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+    .mobile-rt-sector-tabs {
+        display: none;
+    }
+    .mobile-filter-bar-wrap {
+        display: none;
+    }
+    .mobile-filter-backdrop {
+        display: none;
+    }
+    .mobile-filter-close-btn {
+        display: none;
+    }
+    .rt-sticky-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        border-top: 2px solid #2563eb;
+        box-shadow: 0 -8px 30px rgba(0,0,0,0.12);
+        z-index: 9999;
+        padding: 12px 0;
+    }
+    .rt-bar-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+    .rt-bar-flights-wrap {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+    .rt-bar-flight-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .rt-bar-badge-depart {
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 11px;
+        font-weight: 800;
+        padding: 4px 8px;
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+    .rt-bar-badge-return {
+        background: #f0fdf4;
+        color: #16a34a;
+        font-size: 11px;
+        font-weight: 800;
+        padding: 4px 8px;
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+    .rt-bar-airline-line {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .rt-bar-airline-line strong {
+        font-size: 14px;
+        color: #0f172a;
+    }
+    .rt-bar-time-line {
+        font-size: 12px;
+        color: #64748b;
+    }
+    .rt-bar-divider {
+        height: 35px;
+        width: 1px;
+        background: #e2e8f0;
+    }
+    .rt-bar-action-wrap {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .rt-bar-price-box {
+        text-align: right;
+    }
+    .rt-bar-price-label {
+        font-size: 11px;
+        color: #64748b;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: block;
+    }
+    .rt-bar-price-val {
+        font-size: 22px;
+        color: #0d3470;
+        display: block;
+        line-height: 1.1;
+    }
+    .rt-bar-details-link {
+        font-size: 11.5px;
+        color: #0284c7;
+        font-weight: 700;
+        text-decoration: underline;
+        margin-top: 2px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .rt-bar-buttons-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    @media (max-width: 992px) {
+        .layout-grid, .rt-layout-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+        }
+        .mobile-filter-bar-wrap {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 14px;
+        }
+        .btn-mobile-filter-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            border: 1.5px solid #0d3470;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #0d3470;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(13, 52, 112, 0.08);
+            transition: all 0.2s ease;
+        }
+        .btn-mobile-filter-trigger:hover {
+            background: #f0f9ff;
+        }
+        .filters-sidebar {
+            display: none;
+        }
+        .filters-sidebar.mobile-open {
+            display: block !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            width: 320px !important;
+            max-width: 86vw !important;
+            background: #ffffff !important;
+            z-index: 99999 !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            box-shadow: 10px 0 35px rgba(0,0,0,0.3) !important;
+            animation: filterDrawerSlide 0.25s ease-out !important;
+        }
+        @keyframes filterDrawerSlide {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        .mobile-filter-backdrop.mobile-open {
+            display: block !important;
+            position: fixed !important;
+            inset: 0 !important;
+            background: rgba(15, 23, 42, 0.6) !important;
+            backdrop-filter: blur(2px) !important;
+            z-index: 99998 !important;
+        }
+        .mobile-filter-close-btn {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 20px;
+            color: #64748b;
+            cursor: pointer;
+        }
+    }
+
+    @media (max-width: 768px) {
+        /* Round Trip Mobile Dual Column -> Tabbed Switcher */
+        .mobile-rt-sector-tabs {
+            display: flex !important;
+            gap: 8px !important;
+            margin-bottom: 12px !important;
+            background: #f1f5f9 !important;
+            padding: 4px !important;
+            border-radius: 10px !important;
+        }
+        .mobile-rt-tab {
+            flex: 1 !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 8px 10px !important;
+            border-radius: 8px !important;
+            text-align: left !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 2px !important;
+        }
+        .mobile-rt-tab.active {
+            background: #ffffff !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
+        }
+        .mobile-rt-tab.active .m-rt-label {
+            color: #0284c7 !important;
+        }
+        .mobile-rt-tab.active .m-rt-route {
+            color: #0d3470 !important;
+        }
+        .m-rt-label {
+            font-size: 9.5px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            color: #64748b !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+        }
+        .m-rt-route {
+            font-size: 13.5px !important;
+            font-weight: 800 !important;
+            color: #1e293b !important;
+        }
+        .m-rt-date {
+            font-size: 11px !important;
+            color: #64748b !important;
+        }
+        .rt-dual-col-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 0 !important;
+            margin-bottom: 110px !important; /* Space for sticky bar */
+        }
+        #onwardSectorCol, #returnSectorCol {
+            display: none !important;
+            width: 100% !important;
+        }
+        #onwardSectorCol.active-m-sector,
+        #returnSectorCol.active-m-sector {
+            display: block !important;
+        }
+
+        /* Flight Cards on Mobile */
+        .rt-card {
+            padding: 10px !important;
+        }
+
+        /* Sticky Bottom Bar on Mobile */
+        .rt-sticky-bar {
+            padding: 8px 0 !important;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.15) !important;
+        }
+        .rt-bar-inner {
+            flex-direction: column !important;
+            gap: 6px !important;
+            padding: 0 12px !important;
+        }
+        .rt-bar-flights-wrap {
+            width: 100% !important;
+            gap: 6px !important;
+            justify-content: space-between !important;
+            padding-bottom: 5px !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+        }
+        .rt-bar-flight-item {
+            flex: 1 1 0 !important;
+            min-width: 0 !important;
+            gap: 6px !important;
+        }
+        .rt-bar-badge-depart, .rt-bar-badge-return {
+            font-size: 9px !important;
+            padding: 2px 5px !important;
+        }
+        .rt-bar-airline-line strong {
+            font-size: 12px !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            display: block !important;
+        }
+        .rt-bar-time-line {
+            font-size: 10px !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            display: block !important;
+        }
+        .rt-bar-flight-details {
+            min-width: 0 !important;
+            flex: 1 !important;
+        }
+        .rt-bar-divider {
+            height: 24px !important;
+            margin: 0 2px !important;
+        }
+        .rt-bar-action-wrap {
+            width: 100% !important;
+            justify-content: space-between !important;
+            gap: 10px !important;
+        }
+        .rt-bar-price-box {
+            text-align: left !important;
+        }
+        .rt-bar-price-label {
+            font-size: 9.5px !important;
+        }
+        .rt-bar-price-val {
+            font-size: 18px !important;
+        }
+        .rt-bar-details-link {
+            font-size: 10.5px !important;
+        }
+        .btn-rt-view-fare {
+            padding: 8px 14px !important;
+            font-size: 12.5px !important;
+        }
+        .btn-rt-continue {
+            padding: 8px 16px !important;
+            font-size: 13px !important;
+        }
+
+        /* Fare Family Options on Mobile */
+        .fo-sector-tabs-container {
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+        }
+        .fo-cards-grid {
+            grid-template-columns: 1fr !important;
+        }
+
+        /* One-Way Flight Cards on Mobile */
+        .f-card-main {
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+            padding: 12px 14px !important;
+        }
+        .f-airline {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+            padding-bottom: 8px !important;
+            border-bottom: 1px dashed #e2e8f0 !important;
+        }
+        .f-time-block {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            width: 100% !important;
+        }
+        .f-seats {
+            display: none !important;
+        }
+        .f-price {
+            text-align: left !important;
+        }
+        .f-action {
+            width: 100% !important;
+            min-width: 100% !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            margin-top: 4px !important;
+            padding-top: 8px !important;
+            border-top: 1px dashed #e2e8f0 !important;
+        }
+        .f-book-btn {
+            max-width: 140px !important;
+            width: 140px !important;
+        }
+    }
     </style>
     
     <!-- Top Search Header Box -->
@@ -2670,14 +3065,25 @@
     }
     ?>
 
+    <!-- Mobile Filter Bar Trigger -->
+    <div class="container mobile-filter-bar-wrap">
+        <button type="button" class="btn-mobile-filter-trigger" id="btnMobileFilterTrigger" onclick="toggleMobileFilters()">
+            <i class="fa-solid fa-sliders"></i> <span>Filters & Sort</span>
+        </button>
+    </div>
+    <div class="mobile-filter-backdrop" id="mobileFilterBackdrop" onclick="toggleMobileFilters()"></div>
+
     <!-- Main Layout: Sidebar + Results -->
-    <div class="container layout-grid" style="<?php echo !empty($is_roundtrip) ? 'grid-template-columns: 240px 1fr;' : ''; ?>">
+    <div class="container layout-grid <?php echo !empty($is_roundtrip) ? 'rt-layout-grid' : ''; ?>">
         
         <!-- Sidebar (Filters) -->
-        <aside class="filters-sidebar">
+        <aside class="filters-sidebar" id="filtersSidebar">
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1.5px solid #e2e8f0;">
                 <h3 class="filter-heading" style="padding: 0; border: none; font-size: 18px; font-weight: 800; color: #000000;">Filters</h3>
-                <button type="button" class="filter-reset-btn" id="resetAllFiltersBtn" onclick="resetAllFilters();"><i class="fa-solid fa-rotate-left"></i> Reset All</button>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button type="button" class="filter-reset-btn" id="resetAllFiltersBtn" onclick="resetAllFilters();"><i class="fa-solid fa-rotate-left"></i> Reset All</button>
+                    <button type="button" class="mobile-filter-close-btn" onclick="toggleMobileFilters()" title="Close Filters">&times;</button>
+                </div>
             </div>
             
             <?php
@@ -3653,10 +4059,24 @@
             <!-- ========================================== -->
             <!-- ROUND TRIP DUAL COLUMN SELECTION VIEW     -->
             <!-- ========================================== -->
-            <div id="rtDualColumnGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+            <!-- Mobile Round-Trip Sector Selector Tabs -->
+            <div class="mobile-rt-sector-tabs" id="mobileRtSectorTabs">
+                <button type="button" class="mobile-rt-tab active" id="tabSectorOnward" onclick="switchMobileRtSector('onward')">
+                    <span class="m-rt-label"><i class="fa-solid fa-plane-departure"></i> Departure</span>
+                    <strong class="m-rt-route"><?php echo htmlspecialchars($search_query['from_code']); ?> &rarr; <?php echo htmlspecialchars($search_query['to_code']); ?></strong>
+                    <span class="m-rt-date"><?php echo date('d M, D', strtotime($search_query['date'])); ?></span>
+                </button>
+                <button type="button" class="mobile-rt-tab" id="tabSectorReturn" onclick="switchMobileRtSector('return')">
+                    <span class="m-rt-label"><i class="fa-solid fa-plane-arrival"></i> Return</span>
+                    <strong class="m-rt-route"><?php echo htmlspecialchars($search_query['to_code']); ?> &rarr; <?php echo htmlspecialchars($search_query['from_code']); ?></strong>
+                    <span class="m-rt-date"><?php echo date('d M, D', strtotime($search_query['return_date'])); ?></span>
+                </button>
+            </div>
+
+            <div id="rtDualColumnGrid" class="rt-dual-col-grid">
                 
                 <!-- Left Sector: Onward Departure Flights -->
-                <div>
+                <div id="onwardSectorCol" class="active-m-sector">
                     <div style="background: #0d3470; color: #fff; padding: 12px 18px; border-radius: 10px 10px 0 0; display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <span style="font-size: 11px; text-transform: uppercase; font-weight: 700; opacity: 0.8; display: block;"><i class="fa-solid fa-plane-departure"></i> DEPARTURE FLIGHT</span>
@@ -3734,7 +4154,7 @@
                 </div>
 
                 <!-- Right Sector: Return Inbound Flights -->
-                <div>
+                <div id="returnSectorCol">
                     <div style="background: #1e3a8a; color: #fff; padding: 12px 18px; border-radius: 10px 10px 0 0; display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <span style="font-size: 11px; text-transform: uppercase; font-weight: 700; opacity: 0.8; display: block;"><i class="fa-solid fa-plane-arrival"></i> RETURN FLIGHT</span>
@@ -3913,42 +4333,42 @@
             </div>
 
             <!-- Sticky Bottom Round Trip Action Bar (Screenshot 1 & 2) -->
-            <div id="roundTripStickyBar" style="position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 2px solid #2563eb; box-shadow: 0 -8px 30px rgba(0,0,0,0.12); z-index: 9999; padding: 14px 0;">
-                <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 15px;">
+            <div id="roundTripStickyBar" class="rt-sticky-bar">
+                <div class="rt-bar-inner">
                     
-                    <div style="display: flex; gap: 24px; align-items: center;">
+                    <div class="rt-bar-flights-wrap">
                         <!-- Departure Summary -->
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <span style="background: #eff6ff; color: #2563eb; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 4px;">DEPART</span>
-                            <div>
-                                <div style="display: flex; align-items: center; gap: 6px;">
-                                    <strong style="font-size: 14px; color: #0f172a;" id="barOnwardAirline">IndiGo 6E-2134</strong>
+                        <div class="rt-bar-flight-item">
+                            <span class="rt-bar-badge-depart">DEPART</span>
+                            <div class="rt-bar-flight-details">
+                                <div class="rt-bar-airline-line">
+                                    <strong id="barOnwardAirline">IndiGo 6E-2134</strong>
                                     <span id="barOnwardFareBadge" style="background: #eff6ff; color: #2563eb; font-size: 10.5px; font-weight: 800; padding: 1px 6px; border-radius: 3px; display: none;">Retail</span>
                                 </div>
-                                <div style="font-size: 12px; color: #64748b;" id="barOnwardTime">06:00 - 08:15 (DEL &rarr; BOM)</div>
+                                <div class="rt-bar-time-line" id="barOnwardTime">06:00 - 08:15 (DEL &rarr; BOM)</div>
                             </div>
                         </div>
 
-                        <div style="height: 35px; width: 1px; background: #e2e8f0;"></div>
+                        <div class="rt-bar-divider"></div>
 
                         <!-- Return Summary -->
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <span style="background: #f0fdf4; color: #16a34a; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 4px;">RETURN</span>
-                            <div>
-                                <div style="display: flex; align-items: center; gap: 6px;">
-                                    <strong style="font-size: 14px; color: #0f172a;" id="barReturnAirline">IndiGo 6E-2135</strong>
+                        <div class="rt-bar-flight-item">
+                            <span class="rt-bar-badge-return">RETURN</span>
+                            <div class="rt-bar-flight-details">
+                                <div class="rt-bar-airline-line">
+                                    <strong id="barReturnAirline">IndiGo 6E-2135</strong>
                                     <span id="barReturnFareBadge" style="background: #f0fdf4; color: #16a34a; font-size: 10.5px; font-weight: 800; padding: 1px 6px; border-radius: 3px; display: none;">Retail</span>
                                 </div>
-                                <div style="font-size: 12px; color: #64748b;" id="barReturnTime">07:30 - 09:45 (BOM &rarr; DEL)</div>
+                                <div class="rt-bar-time-line" id="barReturnTime">07:30 - 09:45 (BOM &rarr; DEL)</div>
                             </div>
                         </div>
                     </div>
 
-                    <div style="display: flex; align-items: center; gap: 20px;">
-                        <div style="text-align: right;">
-                            <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Round Trip Fare</span>
-                            <strong style="font-size: 24px; color: #0d3470; display: block; line-height: 1;" id="barTotalPrice">₹ 10,300</strong>
-                            <a href="javascript:void(0);" onclick="openRtModal('onward', null, event);" style="font-size: 12px; color: #0284c7; font-weight: 700; text-decoration: underline; margin-top: 4px; display: inline-flex; align-items: center; gap: 4px;">Flight Details</a>
+                    <div class="rt-bar-action-wrap">
+                        <div class="rt-bar-price-box">
+                            <span class="rt-bar-price-label">Total Round Trip Fare</span>
+                            <strong class="rt-bar-price-val" id="barTotalPrice">₹ 10,300</strong>
+                            <a href="javascript:void(0);" onclick="openRtModal('onward', null, event);" class="rt-bar-details-link">Flight Details</a>
                         </div>
 
                         <form action="<?php echo site_url('flight/review'); ?>" method="POST" id="roundTripBookingForm">
@@ -4008,7 +4428,7 @@
                             <input type="hidden" name="onward_refundable" id="rt_onward_refundable" value="1">
                             <input type="hidden" name="return_refundable" id="rt_return_refundable" value="1">
 
-                            <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="rt-bar-buttons-wrap">
                                 <button type="button" id="btnRtStickyBack" class="btn-rt-back" onclick="hideFareOptionsView();" style="display: none;">
                                     <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
                                 </button>
@@ -4219,6 +4639,40 @@
             let selectedReturnFare = { id: 'retail', fare_type: 'Retail', price: 0 };
             const foOptionsCache = {};
 
+            // Mobile Round Trip Sector Switcher
+            window.switchMobileRtSector = function(sector) {
+                const tabO = document.getElementById('tabSectorOnward');
+                const tabR = document.getElementById('tabSectorReturn');
+                const colO = document.getElementById('onwardSectorCol');
+                const colR = document.getElementById('returnSectorCol');
+                if (!tabO || !tabR || !colO || !colR) return;
+
+                if (sector === 'return') {
+                    tabO.classList.remove('active');
+                    tabR.classList.add('active');
+                    colO.classList.remove('active-m-sector');
+                    colR.classList.add('active-m-sector');
+                } else {
+                    tabR.classList.remove('active');
+                    tabO.classList.add('active');
+                    colR.classList.remove('active-m-sector');
+                    colO.classList.add('active-m-sector');
+                }
+            };
+
+            // Mobile Filter Drawer Toggle
+            window.toggleMobileFilters = function() {
+                const sidebar = document.getElementById('filtersSidebar');
+                const backdrop = document.getElementById('mobileFilterBackdrop');
+                if (sidebar) sidebar.classList.toggle('mobile-open');
+                if (backdrop) backdrop.classList.toggle('mobile-open');
+                if (sidebar && sidebar.classList.contains('mobile-open')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            };
+
             function updateRoundTripSelection() {
                 const onwardRadio = document.querySelector('input[name="selected_onward_idx"]:checked');
                 const returnRadio = document.querySelector('input[name="selected_return_idx"]:checked');
@@ -4301,6 +4755,15 @@
                     document.getElementById('rt_return_via').value = r.via || r.Via || (r.Stops > 0 ? 'HYD' : '');
                     const elRefR = document.getElementById('rt_return_refundable');
                     if (elRefR) elRefR.value = (r && r.Refundable) ? '1' : '0';
+                }
+
+                // Auto switch tab to return on mobile when onward flight is selected
+                if (window.innerWidth <= 768 && window.event && window.event.target && window.event.target.name === 'selected_onward_idx') {
+                    setTimeout(function() {
+                        if (typeof switchMobileRtSector === 'function') {
+                            switchMobileRtSector('return');
+                        }
+                    }, 220);
                 }
 
                 updateStickyTotalPrice();
@@ -4685,6 +5148,12 @@
                 const grid = document.getElementById('rtDualColumnGrid');
                 if (grid) grid.style.display = 'none';
 
+                const mTabs = document.getElementById('mobileRtSectorTabs');
+                if (mTabs) mTabs.style.display = 'none';
+
+                const mFilterBar = document.querySelector('.mobile-filter-bar-wrap');
+                if (mFilterBar) mFilterBar.style.display = 'none';
+
                 const sidebar = document.querySelector('.filters-sidebar');
                 if (sidebar) sidebar.style.display = 'none';
 
@@ -4767,13 +5236,19 @@
                 if (foSection) foSection.style.display = 'none';
 
                 const grid = document.getElementById('rtDualColumnGrid');
-                if (grid) grid.style.display = 'grid';
+                if (grid) grid.style.display = '';
+
+                const mTabs = document.getElementById('mobileRtSectorTabs');
+                if (mTabs) mTabs.style.display = '';
+
+                const mFilterBar = document.querySelector('.mobile-filter-bar-wrap');
+                if (mFilterBar) mFilterBar.style.display = '';
 
                 const sidebar = document.querySelector('.filters-sidebar');
                 if (sidebar) sidebar.style.display = '';
 
                 const layoutGrid = document.querySelector('.layout-grid');
-                if (layoutGrid) layoutGrid.style.gridTemplateColumns = '240px 1fr';
+                if (layoutGrid) layoutGrid.style.gridTemplateColumns = '';
 
                 // Restore Sticky Bar to View Fare mode
                 const btnViewFare = document.getElementById('btnRtViewFare');

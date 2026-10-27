@@ -35,6 +35,35 @@ $names = explode(' ', trim($sessionUserName));
 $defaultFname = $names[0] ?? '';
 $defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
 ?>
+<style>
+.hotel-review-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+.traveller-row {
+    display: grid;
+    grid-template-columns: 80px 100px 1fr 1fr;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+@media (max-width: 991px) {
+    .hotel-review-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+}
+@media (max-width: 640px) {
+    .traveller-row {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+    }
+    .traveller-row > div:first-child {
+        grid-column: 1 / -1;
+    }
+}
+</style>
 <div style="background-color: #f5f7fa; padding: 30px 0 60px 0;">
     <div class="container">
         
@@ -85,7 +114,7 @@ $defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
             </div>
         <?php endif; ?>
 
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+        <div class="hotel-review-grid">
             
             <!-- Left Side Form -->
             <div>
@@ -290,7 +319,7 @@ $defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
                                     $paxNum = $a + 1;
                                     $isLead = ($rIdx === 0 && $a === 0);
                                 ?>
-                                <div class="traveller-row" style="display: grid; grid-template-columns: 80px 100px 1fr 1fr; gap: 12px; align-items: center; margin-bottom: 12px;">
+                                <div class="traveller-row">
                                     <div style="font-size: 13px; font-weight: 600; color: #475569;">
                                         Adult <?php echo $paxNum; ?>
                                     </div>
@@ -316,7 +345,7 @@ $defaultLname = isset($names[1]) ? implode(' ', array_slice($names, 1)) : '';
                                         $cNum = $rAdults + $c + 1;
                                         $cAge = isset($rChildAges[$c]) && (int)$rChildAges[$c] > 0 ? (int)$rChildAges[$c] : (($c === 0) ? 7 : 3);
                                     ?>
-                                    <div class="traveller-row" style="display: grid; grid-template-columns: 80px 100px 1fr 1fr; gap: 12px; align-items: center; margin-bottom: 12px;">
+                                    <div class="traveller-row">
                                         <div style="font-size: 13px; font-weight: 600; color: #475569;">
                                             Child <?php echo $cNum; ?>
                                             <div style="font-size: 11px; color: #94a3b8; font-weight: 400;">Age: <?php echo $cAge; ?></div>
