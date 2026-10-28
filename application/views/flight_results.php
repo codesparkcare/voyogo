@@ -913,6 +913,33 @@
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
         height: fit-content;
     }
+    .filters-sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1.5px solid #e2e8f0;
+        background: #ffffff;
+        border-radius: 10px 10px 0 0;
+    }
+    .desktop-filter-title {
+        display: block;
+        margin: 0;
+    }
+    .mobile-filter-drawer-title {
+        display: none;
+    }
+    .filters-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .mobile-drawer-sort-section {
+        display: none !important;
+    }
+    .mobile-filter-drawer-footer {
+        display: none !important;
+    }
     .filter-heading {
         font-size: 18px !important;
         font-weight: 800 !important;
@@ -2141,7 +2168,7 @@
         gap: 10px;
     }
 
-    @media (max-width: 992px) {
+    @media (max-width: 1024px) {
         .layout-grid, .rt-layout-grid {
             grid-template-columns: 1fr !important;
             gap: 16px !important;
@@ -2166,51 +2193,247 @@
             box-shadow: 0 2px 6px rgba(13, 52, 112, 0.08);
             transition: all 0.2s ease;
         }
-        .btn-mobile-filter-trigger:hover {
+        .btn-mobile-filter-trigger:hover,
+        .btn-mobile-filter-trigger:active {
             background: #f0f9ff;
+            border-color: #0d3470;
         }
-        .filters-sidebar {
-            display: none;
-        }
-        .filters-sidebar.mobile-open {
-            display: block !important;
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            bottom: 0 !important;
-            width: 320px !important;
-            max-width: 86vw !important;
-            background: #ffffff !important;
-            z-index: 99999 !important;
-            overflow-y: auto !important;
-            -webkit-overflow-scrolling: touch !important;
-            box-shadow: 10px 0 35px rgba(0,0,0,0.3) !important;
-            animation: filterDrawerSlide 0.25s ease-out !important;
-        }
-        @keyframes filterDrawerSlide {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
-        }
-        .mobile-filter-backdrop.mobile-open {
+        /* Mobile Filter Drawer Backdrop (Matching Voyogo Mobile Nav Backdrop) */
+        .mobile-filter-backdrop {
             display: block !important;
             position: fixed !important;
             inset: 0 !important;
-            background: rgba(15, 23, 42, 0.6) !important;
-            backdrop-filter: blur(2px) !important;
-            z-index: 99998 !important;
+            background: rgba(6, 22, 51, 0.65) !important;
+            backdrop-filter: blur(4px) !important;
+            -webkit-backdrop-filter: blur(4px) !important;
+            z-index: 100002 !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            transition: opacity 0.3s ease, visibility 0.3s ease !important;
         }
-        .mobile-filter-close-btn {
+        .mobile-filter-backdrop.mobile-open {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+        }
+
+        /* Filters Sidebar - Slides in from the RIGHT like Nav Menu */
+        .filters-sidebar {
             display: flex !important;
-            align-items: center;
-            justify-content: center;
-            background: #f1f5f9;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            font-size: 20px;
-            color: #64748b;
-            cursor: pointer;
+            flex-direction: column !important;
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            left: auto !important;
+            bottom: 0 !important;
+            width: 330px !important;
+            max-width: 88vw !important;
+            height: 100vh !important;
+            height: 100dvh !important;
+            background: #ffffff !important;
+            z-index: 100005 !important;
+            transform: translateX(105%) !important;
+            transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s !important;
+            box-shadow: -8px 0 35px rgba(0, 0, 0, 0.35) !important;
+            border-radius: 0 !important;
+            border: none !important;
+            overflow: hidden !important;
+            padding: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        .filters-sidebar.mobile-open {
+            transform: translateX(0) !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+        }
+
+        /* Drawer Header - Matching Voyogo Nav Menu Header Aesthetic */
+        .filters-sidebar-header {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 16px 18px !important;
+            background: #061633 !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+            border-radius: 0 !important;
+            flex-shrink: 0 !important;
+        }
+        .desktop-filter-title {
+            display: none !important;
+        }
+        .mobile-filter-drawer-title {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 9px !important;
+            color: #ffffff !important;
+            font-size: 16.5px !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.2px !important;
+        }
+        .mobile-filter-drawer-title i {
+            color: #78B722 !important;
+            font-size: 16px !important;
+        }
+        .filters-header-actions {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+        }
+
+        /* Reset Button in Mobile Drawer Header */
+        .filter-reset-btn {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border: 1px solid rgba(255, 255, 255, 0.24) !important;
+            color: #ffffff !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            padding: 6px 12px !important;
+            border-radius: 20px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            text-decoration: none !important;
+        }
+        .filter-reset-btn:hover,
+        .filter-reset-btn:active {
+            background: rgba(239, 68, 68, 0.3) !important;
+            border-color: rgba(239, 68, 68, 0.6) !important;
+            color: #fecaca !important;
+        }
+        .filter-reset-btn i {
+            font-size: 11px !important;
+            color: inherit !important;
+        }
+
+        /* Close Button - Matching Nav Menu Close Drawer Button */
+        .mobile-filter-close-btn {
+            width: 34px !important;
+            height: 34px !important;
+            border-radius: 50% !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            border: none !important;
+            color: #ffffff !important;
+            font-size: 16px !important;
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: background 0.2s, transform 0.2s !important;
+            padding: 0 !important;
+        }
+        .mobile-filter-close-btn:hover,
+        .mobile-filter-close-btn:active {
+            background: rgba(255, 255, 255, 0.25) !important;
+            transform: rotate(90deg) !important;
+        }
+
+        /* Scrollable Drawer Body */
+        .filters-sidebar-content {
+            flex: 1 !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            padding-bottom: 16px !important;
+        }
+
+        /* Mobile Sort Section inside Drawer */
+        .mobile-drawer-sort-section {
+            display: block !important;
+            background: #f8fafc !important;
+            border-bottom: 1.5px solid #e2e8f0 !important;
+            padding: 14px 18px !important;
+        }
+        .drawer-sort-grid {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 8px !important;
+            margin-top: 10px !important;
+        }
+        .drawer-sort-tab {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 5px !important;
+            padding: 9px 6px !important;
+            background: #ffffff !important;
+            border: 1.5px solid #cbd5e1 !important;
+            border-radius: 8px !important;
+            font-size: 11.5px !important;
+            font-weight: 700 !important;
+            color: #334155 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+        .drawer-sort-tab i {
+            font-size: 14px !important;
+        }
+        .drawer-sort-tab.active {
+            background: #0d3470 !important;
+            border-color: #0d3470 !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 6px rgba(13, 52, 112, 0.2) !important;
+        }
+        .drawer-sort-tab.active i {
+            color: #ffffff !important;
+        }
+
+        /* Sticky Footer Action Bar in Mobile Drawer */
+        .mobile-filter-drawer-footer {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            padding: 12px 18px !important;
+            background: #ffffff !important;
+            border-top: 1px solid #e2e8f0 !important;
+            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06) !important;
+            flex-shrink: 0 !important;
+            z-index: 10 !important;
+        }
+        .drawer-footer-reset-btn {
+            flex: 1 !important;
+            padding: 10px 14px !important;
+            background: #f1f5f9 !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 8px !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: #475569 !important;
+            cursor: pointer !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 6px !important;
+            transition: all 0.2s ease !important;
+        }
+        .drawer-footer-reset-btn:hover {
+            background: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        .drawer-footer-apply-btn {
+            flex: 2 !important;
+            padding: 10px 16px !important;
+            background: #0d3470 !important;
+            border: none !important;
+            border-radius: 8px !important;
+            font-size: 13.5px !important;
+            font-weight: 800 !important;
+            color: #ffffff !important;
+            cursor: pointer !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            box-shadow: 0 3px 8px rgba(13, 52, 112, 0.25) !important;
+            transition: all 0.2s ease !important;
+        }
+        .drawer-footer-apply-btn:hover,
+        .drawer-footer-apply-btn:active {
+            background: #09204b !important;
+            transform: translateY(-1px) !important;
         }
     }
 
@@ -3613,24 +3836,129 @@
     }
     ?>
 
+    <!-- Mobile Filter Drawer Controller Script (Guaranteed Global Execution for One-Way & Round-Trip) -->
+    <script>
+    (function() {
+        window.toggleMobileFilters = function(forceState) {
+            var sidebar = document.getElementById('filtersSidebar');
+            var backdrop = document.getElementById('mobileFilterBackdrop');
+            if (!sidebar) {
+                console.warn('[Voyogo] filtersSidebar not found');
+                return;
+            }
+            var isOpen = sidebar.classList.contains('mobile-open');
+            var willOpen = (typeof forceState === 'boolean') ? forceState : !isOpen;
+
+            if (willOpen) {
+                sidebar.classList.add('mobile-open');
+                if (backdrop) backdrop.classList.add('mobile-open');
+                document.body.style.overflow = 'hidden';
+                if (window.syncDrawerSortTabs && typeof currentSort !== 'undefined') {
+                    window.syncDrawerSortTabs(currentSort);
+                }
+            } else {
+                sidebar.classList.remove('mobile-open');
+                if (backdrop) backdrop.classList.remove('mobile-open');
+                document.body.style.overflow = '';
+            }
+        };
+
+        window.closeMobileFilters = function() {
+            window.toggleMobileFilters(false);
+        };
+
+        window.openMobileFilters = function() {
+            window.toggleMobileFilters(true);
+        };
+
+        window.syncDrawerSortTabs = function(sortType) {
+            document.querySelectorAll('.drawer-sort-tab').forEach(function(btn) {
+                if (btn.getAttribute('data-sort') === sortType) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        };
+
+        window.setDrawerSort = function(sortType) {
+            window.syncDrawerSortTabs(sortType);
+            var targetId = (sortType === 'cheapest') ? 'sortCheapest' : ((sortType === 'fastest') ? 'sortFastest' : 'sortBestValue');
+            var targetBtn = document.getElementById(targetId);
+            if (typeof setSortTab === 'function') {
+                setSortTab(sortType, targetBtn);
+            }
+        };
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                window.toggleMobileFilters(false);
+            }
+        });
+
+        // Ensure robust event bindings
+        function initMobileFilterDrawerEvents() {
+            var triggerBtn = document.getElementById('btnMobileFilterTrigger');
+            if (triggerBtn) {
+                triggerBtn.onclick = function(e) {
+                    if (e) e.preventDefault();
+                    window.toggleMobileFilters(true);
+                };
+            }
+            var backdrop = document.getElementById('mobileFilterBackdrop');
+            if (backdrop) {
+                backdrop.onclick = function(e) {
+                    if (e) e.preventDefault();
+                    window.toggleMobileFilters(false);
+                };
+            }
+            var closeBtn = document.getElementById('mobileFilterCloseBtn');
+            if (closeBtn) {
+                closeBtn.onclick = function(e) {
+                    if (e) e.preventDefault();
+                    window.toggleMobileFilters(false);
+                };
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initMobileFilterDrawerEvents);
+        } else {
+            initMobileFilterDrawerEvents();
+        }
+    })();
+    </script>
+
     <!-- Mobile Filter Bar Trigger -->
     <div class="container mobile-filter-bar-wrap">
-        <button type="button" class="btn-mobile-filter-trigger" id="btnMobileFilterTrigger" onclick="toggleMobileFilters()">
+        <button type="button" class="btn-mobile-filter-trigger" id="btnMobileFilterTrigger" onclick="toggleMobileFilters(true);">
             <i class="fa-solid fa-sliders"></i> <span>Filters & Sort</span>
         </button>
     </div>
-    <div class="mobile-filter-backdrop" id="mobileFilterBackdrop" onclick="toggleMobileFilters()"></div>
+    <div class="mobile-filter-backdrop" id="mobileFilterBackdrop" onclick="toggleMobileFilters(false);"></div>
 
     <!-- Main Layout: Sidebar + Results -->
     <div class="container layout-grid <?php echo !empty($is_roundtrip) ? 'rt-layout-grid' : ''; ?>">
         
-        <!-- Sidebar (Filters) -->
+        <!-- Sidebar (Filters & Sort Drawer on Mobile / Desktop Left Sidebar) -->
         <aside class="filters-sidebar" id="filtersSidebar">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1.5px solid #e2e8f0;">
-                <h3 class="filter-heading" style="padding: 0; border: none; font-size: 18px; font-weight: 800; color: #000000;">Filters</h3>
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <button type="button" class="filter-reset-btn" id="resetAllFiltersBtn" onclick="resetAllFilters();"><i class="fa-solid fa-rotate-left"></i> Reset All</button>
-                    <button type="button" class="mobile-filter-close-btn" onclick="toggleMobileFilters()" title="Close Filters">&times;</button>
+            <!-- Sidebar Header: Desktop Card Style / Mobile Nav Drawer Style -->
+            <div class="filters-sidebar-header">
+                <div class="filters-header-title-box">
+                    <h3 class="filter-heading desktop-filter-title">Filters</h3>
+                    <div class="mobile-filter-drawer-title">
+                        <i class="fa-solid fa-sliders"></i>
+                        <span>Filters & Sort</span>
+                    </div>
+                </div>
+                <div class="filters-header-actions">
+                    <button type="button" class="filter-reset-btn" id="resetAllFiltersBtn" onclick="resetAllFilters();" title="Reset All Filters">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Reset All</span>
+                    </button>
+                    <button type="button" class="mobile-filter-close-btn" id="mobileFilterCloseBtn" onclick="toggleMobileFilters()" title="Close Filters" aria-label="Close Filters">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                 </div>
             </div>
             
@@ -3717,7 +4045,28 @@
             });
             ?>
             
-            <!-- Stops (Screenshot 1: Non Stop, 1, 1+) -->
+            <!-- Scrollable Content Body (Desktop card body / Mobile scrollable drawer body) -->
+            <div class="filters-sidebar-content">
+                <!-- Mobile Sort By (Visible only in mobile drawer mode) -->
+                <div class="filter-section mobile-drawer-sort-section">
+                    <h4 class="filter-title"><i class="fa-solid fa-arrow-down-short-wide" style="color: #0d3470; margin-right: 6px;"></i> Sort By</h4>
+                    <div class="drawer-sort-grid">
+                        <button type="button" class="drawer-sort-tab active" data-sort="cheapest" onclick="setDrawerSort('cheapest');">
+                            <i class="fa-solid fa-money-bill-wave" style="color:#16a34a;"></i>
+                            <span>Cheapest</span>
+                        </button>
+                        <button type="button" class="drawer-sort-tab" data-sort="fastest" onclick="setDrawerSort('fastest');">
+                            <i class="fa-solid fa-stopwatch" style="color:#2563eb;"></i>
+                            <span>Fastest</span>
+                        </button>
+                        <button type="button" class="drawer-sort-tab" data-sort="best_value" onclick="setDrawerSort('best_value');">
+                            <i class="fa-regular fa-thumbs-up" style="color:#d97706;"></i>
+                            <span>Best Value</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stops (Screenshot 1: Non Stop, 1, 1+) -->
             <div class="filter-section">
                 <h4 class="filter-title">Stops</h4>
                 <div class="stops-grid-3">
@@ -3832,6 +4181,18 @@
                 <?php endif; ?>
             </div>
             <?php endif; ?>
+            </div><!-- /.filters-sidebar-content -->
+
+            <!-- Mobile Sticky Footer Action Bar -->
+            <div class="mobile-filter-drawer-footer">
+                <button type="button" class="drawer-footer-reset-btn" onclick="resetAllFilters();">
+                    <i class="fa-solid fa-rotate-left"></i> Reset
+                </button>
+                <button type="button" class="drawer-footer-apply-btn" onclick="toggleMobileFilters();">
+                    <span>Apply Filters</span>
+                    <i class="fa-solid fa-check" style="font-size: 13px;"></i>
+                </button>
+            </div>
         </aside>
 
         <!-- Right Side Results -->
@@ -5205,19 +5566,6 @@
                     tabO.classList.add('active');
                     colR.classList.remove('active-m-sector');
                     colO.classList.add('active-m-sector');
-                }
-            };
-
-            // Mobile Filter Drawer Toggle
-            window.toggleMobileFilters = function() {
-                const sidebar = document.getElementById('filtersSidebar');
-                const backdrop = document.getElementById('mobileFilterBackdrop');
-                if (sidebar) sidebar.classList.toggle('mobile-open');
-                if (backdrop) backdrop.classList.toggle('mobile-open');
-                if (sidebar && sidebar.classList.contains('mobile-open')) {
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = '';
                 }
             };
 
@@ -7057,6 +7405,9 @@ function setSortTab(sortType, element) {
     currentSort = sortType;
     document.querySelectorAll('.sort-tab').forEach(t => t.classList.remove('active'));
     if (element) element.classList.add('active');
+    if (window.syncDrawerSortTabs) {
+        window.syncDrawerSortTabs(sortType);
+    }
 
     const container = document.getElementById('flightListContainer');
     if (!container) return;
