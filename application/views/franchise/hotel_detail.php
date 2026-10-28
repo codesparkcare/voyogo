@@ -1341,28 +1341,343 @@ body {
     padding: 20px;
 }
 
-/* Responsive adjustments */
+/* ========================================================
+   RESPONSIVE ADJUSTMENTS FOR TABLETS & MOBILE (SCREENSHOT FIX)
+   ======================================================== */
 @media (max-width: 960px) {
+    .hotel-detail-wrapper {
+        margin: 12px auto 40px auto !important;
+        padding: 0 12px !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+
+    /* 1. Header Strip Mobile */
+    .hotel-header-strip {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+        padding-bottom: 12px !important;
+        margin-bottom: 12px !important;
+    }
+    .hotel-title-group h1 {
+        font-size: 19px !important;
+        line-height: 1.25 !important;
+        margin: 0 0 4px 0 !important;
+        display: inline !important;
+    }
+    .hotel-stars-span {
+        font-size: 14px !important;
+        letter-spacing: 1.5px !important;
+        display: inline-block !important;
+        margin-left: 6px !important;
+    }
+    .hotel-address-line {
+        font-size: 12.5px !important;
+        line-height: 1.4 !important;
+        margin-top: 6px !important;
+    }
+    .hotel-header-pricing-actions {
+        align-items: stretch !important;
+        width: 100% !important;
+        gap: 10px !important;
+    }
+    .header-price-display {
+        display: flex !important;
+        align-items: baseline !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        padding: 8px 12px !important;
+        background: #f1f5f9 !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 6px !important;
+        box-sizing: border-box !important;
+    }
+    .header-price-num {
+        font-size: 22px !important;
+        color: #082b59 !important;
+    }
+    .header-price-tax {
+        margin-top: 0 !important;
+        font-size: 11.5px !important;
+        color: #64748b !important;
+    }
+    .header-action-buttons {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 40px !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+    .btn-hdr-outline {
+        order: 1 !important;
+        justify-content: center !important;
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+        white-space: nowrap !important;
+    }
+    .btn-hdr-shortlist {
+        order: 2 !important;
+        justify-content: center !important;
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+        white-space: nowrap !important;
+    }
+    .btn-hdr-icon {
+        order: 3 !important;
+        width: 100% !important;
+        height: 36px !important;
+    }
+    .btn-hdr-choose-room {
+        order: 4 !important;
+        grid-column: 1 / -1 !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 11px 16px !important;
+        font-size: 13.5px !important;
+        font-weight: 800 !important;
+        box-shadow: 0 3px 10px rgba(220, 38, 38, 0.22) !important;
+    }
+
+    /* 2. Sticky Tab Navigation Mobile */
+    .detail-tab-navigation {
+        top: 56px !important;
+        margin-bottom: 14px !important;
+        border-radius: 6px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+    }
+    .detail-tab-navigation::-webkit-scrollbar {
+        display: none !important;
+    }
+    .detail-nav-tabs {
+        display: flex !important;
+        gap: 16px !important;
+        padding: 0 10px !important;
+        justify-content: flex-start !important;
+        width: max-content !important;
+        min-width: 100% !important;
+    }
+    .detail-nav-tabs li a {
+        font-size: 11.5px !important;
+        padding: 10px 4px !important;
+        white-space: nowrap !important;
+    }
+
+    /* 3. Hero Showcase Card & Photo Gallery (Fix Overlap Bug) */
     .hero-showcase-card {
-        grid-template-columns: 1fr;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 14px !important;
+        padding: 10px !important;
+        margin-bottom: 20px !important;
+        border-radius: 8px !important;
     }
     .hero-gallery-mosaic {
-        height: 240px;
+        display: grid !important;
+        grid-template-columns: 2fr 1fr 1fr !important;
+        grid-template-rows: 110px 110px !important;
+        height: 226px !important;
+        max-height: 226px !important;
+        gap: 6px !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .mosaic-main-item {
+        border-radius: 6px !important;
+    }
+    .mosaic-sub-item {
+        border-radius: 6px !important;
+    }
+    .mosaic-view-all-overlay {
+        font-size: 11px !important;
+    }
+    .mosaic-view-all-overlay i {
+        font-size: 14px !important;
+    }
+
+    /* Stay Summary Widget Mobile */
+    .hero-stay-widget {
+        height: auto !important;
+        min-height: auto !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 14px 12px !important;
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 6px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+    .widget-dates-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 6px !important;
+        padding-bottom: 10px !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+    }
+    .date-box-item {
+        flex: 1 !important;
+    }
+    .date-box-day {
+        font-size: 19px !important;
+    }
+    .widget-nights-divider {
+        font-size: 10.5px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        padding: 0 4px !important;
+    }
+    .widget-occupancy-row {
+        padding: 8px 0 !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+    }
+    .widget-occupancy-val {
+        font-size: 13.5px !important;
+    }
+    .widget-rating-row {
+        padding-top: 4px !important;
+    }
+
+    /* 4. Rooms & Rates Mobile */
+    .rooms-section-wrapper {
+        margin-top: 20px !important;
+    }
+    .rooms-filter-strip {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+        padding: 10px 12px !important;
+        margin-bottom: 18px !important;
+    }
+    .rooms-filter-left {
+        gap: 10px !important;
+        font-size: 12px !important;
+    }
+    .rooms-filter-search {
+        width: 100% !important;
+    }
+    .room-category-container {
+        margin-bottom: 20px !important;
+    }
+    .room-category-heading {
+        font-size: 15px !important;
+    }
+    .room-category-card {
+        padding: 12px !important;
     }
     .room-cat-main-content {
-        flex-direction: column;
+        flex-direction: column !important;
+        gap: 12px !important;
     }
     .room-image-wrapper {
-        width: 100%;
-        height: 200px;
+        width: 100% !important;
+        height: 190px !important;
+        border-radius: 6px !important;
+    }
+    .rate-card-box {
+        padding: 14px 12px !important;
+    }
+    .rate-card-box.has-recommended,
+    .rate-card-box.has-urgency {
+        padding-top: 26px !important;
+    }
+    .rate-urgency-top {
+        position: static !important;
+        margin-bottom: 4px !important;
     }
     .rate-card-content {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
     }
     .rate-action-col {
-        justify-content: space-between;
-        width: 100%;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        border-top: 1px dashed #e2e8f0 !important;
+        padding-top: 10px !important;
+        margin-top: 6px !important;
+    }
+    .rate-price-block {
+        text-align: left !important;
+        align-items: flex-start !important;
+    }
+    .price-strike-row {
+        justify-content: flex-start !important;
+    }
+    .price-bold-val {
+        font-size: 19px !important;
+    }
+    .btn-book-red {
+        height: 38px !important;
+        padding: 8px 18px !important;
+        font-size: 13px !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* 5. Amenities & Map Mobile */
+    .detail-content-card {
+        padding: 16px !important;
+        margin-top: 16px !important;
+    }
+    .detail-card-heading {
+        font-size: 16px !important;
+        margin-bottom: 12px !important;
+    }
+    .amenities-chips-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+    .amenity-chip-item {
+        padding: 7px 10px !important;
+        font-size: 12px !important;
+    }
+
+    /* 6. Gallery Modal Mobile */
+    .gallery-modal-header {
+        padding: 12px 16px !important;
+    }
+    .gallery-modal-title {
+        font-size: 15px !important;
+    }
+    .gallery-modal-body {
+        padding: 10px !important;
+    }
+    .gallery-nav-btn {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 16px !important;
+    }
+    .gallery-nav-prev { left: 8px !important; }
+    .gallery-nav-next { right: 8px !important; }
+    .gallery-thumbnails-strip {
+        padding: 10px !important;
+        justify-content: flex-start !important;
+    }
+    .gallery-thumb-item {
+        width: 60px !important;
+        height: 42px !important;
+    }
+
+    /* 7. Modify Search Modal Mobile */
+    .modify-modal-dialog {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 15px auto !important;
+    }
+    .modify-grid-form {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
     }
 }
 </style>
