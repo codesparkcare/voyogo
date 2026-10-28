@@ -930,6 +930,268 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         transform: translateY(-1px);
         box-shadow: 0 6px 18px rgba(220,38,38,0.35);
     }
+
+    /* ========================================================
+       RESPONSIVE UI FOR MOBILE (Flight Addons Services Page)
+       ======================================================== */
+    html, body {
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+    }
+    .akbar-addons-wrapper {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+    }
+    .akbar-addons-wrapper * {
+        box-sizing: border-box !important;
+    }
+
+    /* Responsive Layout Grid */
+    @media (max-width: 992px) {
+        .addons-layout-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 20px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        .addons-layout-grid > div {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+        }
+        .addons-sidebar-col > div {
+            position: static !important;
+            top: auto !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .akbar-addons-wrapper {
+            padding: 14px 0 40px !important;
+        }
+        .akbar-addons-container {
+            padding: 0 10px !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+        }
+
+        /* Top Connected Flight Bar */
+        .akbar-flight-summary-bar {
+            border-radius: 10px !important;
+            margin-bottom: 12px !important;
+        }
+        .flight-pill-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            width: 100% !important;
+        }
+        .flight-pill-item {
+            padding: 12px 14px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        .flight-pill-item.with-border-right {
+            border-right: none !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+        }
+        .flight-route-title {
+            font-size: 15px !important;
+            gap: 6px !important;
+        }
+        .flight-sub-info {
+            font-size: 11.5px !important;
+        }
+        .flight-badge-pill {
+            font-size: 11px !important;
+            padding: 3px 10px !important;
+        }
+
+        /* Sub-banner: Onward & Return */
+        .flight-sub-banner {
+            flex-direction: column !important;
+            gap: 10px !important;
+            margin-bottom: 14px !important;
+            padding: 0 2px !important;
+        }
+        .flight-sub-banner-col {
+            width: 100% !important;
+            text-align: left !important;
+        }
+        #subBannerReturn {
+            text-align: left !important;
+        }
+        .flight-sub-banner-title {
+            font-size: 14.5px !important;
+        }
+        .flight-sub-banner-desc {
+            font-size: 12px !important;
+        }
+
+        /* Main Addon Card */
+        .akbar-addon-card {
+            padding: 14px 12px !important;
+            border-radius: 12px !important;
+            margin-bottom: 16px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        .akbar-addon-title {
+            font-size: 17px !important;
+            margin: 0 0 12px 0 !important;
+        }
+
+        /* Addon Navigation Tabs (Meals, Baggage, Seats) */
+        .akbar-tab-row {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            gap: 8px !important;
+            padding-bottom: 4px !important;
+            margin-bottom: 14px !important;
+        }
+        .akbar-tab-btn {
+            flex: 0 0 auto !important;
+            padding: 8px 14px !important;
+            font-size: 13px !important;
+            gap: 6px !important;
+            white-space: nowrap !important;
+        }
+
+        /* Sector Selector Strip (DEL -> BOM, BOM -> HYD) */
+        .sector-selector-strip {
+            padding-top: 12px !important;
+            margin-bottom: 10px !important;
+        }
+        .sector-btn-group {
+            display: flex !important;
+            overflow-x: auto !important;
+            flex-wrap: nowrap !important;
+            -webkit-overflow-scrolling: touch !important;
+            gap: 8px !important;
+            padding-bottom: 6px !important;
+            margin-bottom: 6px !important;
+        }
+        .sector-btn {
+            flex: 0 0 auto !important;
+            min-width: 150px !important;
+            padding: 8px 12px !important;
+        }
+        .sector-btn-line1 {
+            font-size: 13px !important;
+        }
+        .sector-btn-line2 {
+            font-size: 11px !important;
+        }
+
+        /* Passenger Strip */
+        .passenger-strip-wrapper {
+            padding-top: 10px !important;
+            margin-bottom: 12px !important;
+        }
+        .passenger-selector-pill {
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+            gap: 6px !important;
+        }
+
+        /* Service Cards Grid (Meals / Baggage) */
+        .addon-items-grid {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+            margin-top: 14px !important;
+        }
+        .akbar-service-card {
+            padding: 12px !important;
+        }
+
+        /* Seat Selection Cabin */
+        .seat-cabin-container {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+        }
+        .airplane-fuselage {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding: 16px 6px 20px !important;
+            border-radius: 90px 90px 16px 16px !important;
+        }
+        .fuselage-seat {
+            width: 27px !important;
+            height: 27px !important;
+            font-size: 9px !important;
+        }
+        .seat-col-header {
+            width: 27px !important;
+            font-size: 11px !important;
+        }
+        .seat-aisle-header {
+            width: 14px !important;
+        }
+        .plane-seat-row, .seat-grid-columns {
+            gap: 4px !important;
+        }
+
+        /* Bottom Action Bar */
+        .akbar-bottom-bar {
+            flex-direction: column-reverse !important;
+            gap: 12px !important;
+            align-items: stretch !important;
+            padding-top: 16px !important;
+            margin-top: 18px !important;
+        }
+        .akbar-bottom-bar > div:last-child {
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: column-reverse !important;
+            gap: 10px !important;
+            align-items: stretch !important;
+        }
+        .btn-continue-red {
+            width: 100% !important;
+            text-align: center !important;
+            padding: 12px !important;
+            font-size: 15px !important;
+        }
+        .btn-skip-addons {
+            text-align: center !important;
+            margin-right: 0 !important;
+            display: block !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .akbar-addons-container {
+            padding: 0 8px !important;
+        }
+        .flight-pill-item {
+            padding: 10px 12px !important;
+        }
+        .flight-route-title {
+            font-size: 14px !important;
+        }
+        .akbar-addon-card {
+            padding: 12px 10px !important;
+        }
+        .fuselage-seat {
+            width: 25px !important;
+            height: 25px !important;
+            font-size: 8.5px !important;
+        }
+        .seat-col-header {
+            width: 25px !important;
+        }
+        .seat-aisle-header {
+            width: 10px !important;
+        }
+        .plane-seat-row, .seat-grid-columns {
+            gap: 3px !important;
+        }
+    }
 </style>
 
 <div class="akbar-addons-wrapper">
@@ -1072,7 +1334,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
         </div>
 
         <!-- Main 2-Column Grid -->
-        <div style="display: grid; grid-template-columns: 2.3fr 1fr; gap: 24px;">
+        <div class="addons-layout-grid" style="display: grid; grid-template-columns: 2.3fr 1fr; gap: 24px;">
 
             <!-- Left Column: Addon Services (Screenshots 1 & 2) -->
             <div>
@@ -1337,7 +1599,7 @@ $razorpay_settings = $this->Admin_model->get_razorpay_settings();
             </div>
 
             <!-- Right Column: Sticky Fare Details & Promo Code Sidebar (Screenshots 1 & 2) -->
-            <div>
+            <div class="addons-sidebar-col">
                 <div style="position: sticky; top: 90px; display: flex; flex-direction: column; gap: 18px;">
                     
                     <!-- 1. Fare Details Card (Screenshots 1 & 2) -->
