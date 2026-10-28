@@ -316,12 +316,22 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
     color: #1e293b;
     padding: 20px 0 60px 0;
     min-height: 80vh;
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
 }
 
 .review-payment-wrapper {
     max-width: 1240px;
     margin: 0 auto;
     padding: 0 16px;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.review-payment-wrapper * {
+    box-sizing: border-box !important;
 }
 
 /* 4-Step Breadcrumb Bar */
@@ -390,7 +400,18 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
 
 @media (max-width: 991px) {
     .payment-main-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    .payment-main-grid > div {
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .sticky-fare-sidebar {
+        position: static !important;
+        top: 0 !important;
+        width: 100% !important;
     }
 }
 
@@ -436,6 +457,13 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
     border-bottom: 1px solid var(--voyogo-border);
     padding: 0 16px;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex-wrap: nowrap;
+}
+
+.route-nav-tabs::-webkit-scrollbar {
+    display: none;
 }
 
 .route-tab-btn {
@@ -451,6 +479,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
     align-items: center;
     gap: 8px;
     white-space: nowrap;
+    flex-shrink: 0;
     transition: all 0.2s ease;
 }
 
@@ -619,7 +648,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
     }
 }
 
-/* Flight Schedule Grid */
+/* Flight Schedule Grid (Direct Flight) */
 .flight-schedule-grid {
     display: flex;
     justify-content: space-between;
@@ -629,10 +658,13 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
     border-radius: 12px;
     padding: 20px 24px;
     margin-bottom: 24px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .schedule-city-col {
     max-width: 38%;
+    min-width: 0;
 }
 
 .schedule-city-col.text-right {
@@ -708,6 +740,51 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
     font-size: 11px;
     color: #b45309;
     font-weight: 700;
+}
+
+/* Connecting Leg Timing Grid */
+.connecting-flight-schedule-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px;
+    background: #f8fafc;
+    border: 1px solid #edf2f7;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.connecting-schedule-col.dep-col {
+    text-align: left;
+    max-width: 38%;
+    min-width: 0;
+}
+
+.connecting-schedule-middle {
+    text-align: center;
+    flex: 1;
+    margin: 0 20px;
+}
+
+.connecting-schedule-col.arr-col {
+    text-align: left;
+    max-width: 38%;
+    min-width: 190px;
+}
+
+.connecting-layover-banner {
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    margin: 18px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);
 }
 
 /* Accordion Sections (Screenshot 2 & 3) */
@@ -796,6 +873,15 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
     border-bottom-color: var(--voyogo-blue);
 }
 
+.pax-addon-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #334155;
+    margin-bottom: 6px;
+}
+
 .addon-status-pill {
     display: inline-flex;
     align-items: center;
@@ -842,6 +928,13 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
     border-color: #7dd3fc;
 }
 
+.policy-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 16px;
+}
+
 .policy-table {
     width: 100%;
     border-collapse: collapse;
@@ -850,7 +943,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
     border-radius: 8px;
     overflow: hidden;
     border: 1px solid var(--voyogo-border);
-    margin-bottom: 16px;
+    margin-bottom: 0;
 }
 
 .policy-table th {
@@ -1000,6 +1093,397 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
     display: flex;
     flex-direction: column;
     gap: 8px;
+}
+
+/* Responsive Mobile Layout Fixes (< 768px) */
+@media (max-width: 768px) {
+    .review-payment-page-bg {
+        padding: 12px 0 40px 0 !important;
+    }
+    .review-payment-wrapper {
+        padding: 0 10px !important;
+    }
+
+    /* 1. Progress Step Tracker */
+    .step-tracker-bar {
+        padding: 12px 14px !important;
+        margin-bottom: 16px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+    .step-items-container {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 6px 8px !important;
+        width: 100% !important;
+    }
+    .step-items-container > span[style*="cbd5e1"] {
+        display: none !important;
+    }
+    .step-item {
+        font-size: 11px !important;
+        padding: 6px 8px !important;
+        border-radius: 8px !important;
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        justify-content: flex-start !important;
+    }
+    .step-item.completed {
+        color: var(--voyogo-green) !important;
+        background: #f0fdf4 !important;
+        border-color: #bbf7d0 !important;
+    }
+    .step-item.active {
+        color: #0369a1 !important;
+        background: #e0f2fe !important;
+        border-color: #7dd3fc !important;
+    }
+    .btn-back-link {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 8px 12px !important;
+        background: #f1f5f9 !important;
+        border-radius: 8px !important;
+        font-size: 12px !important;
+    }
+
+    /* 2. Card Header & Route Tabs */
+    .flight-details-card {
+        border-radius: 12px !important;
+        margin-bottom: 18px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .card-header-bar {
+        padding: 14px 14px !important;
+    }
+    .card-header-title {
+        font-size: 16px !important;
+        line-height: 1.3 !important;
+    }
+    .card-header-sub {
+        font-size: 11.5px !important;
+        line-height: 1.4 !important;
+    }
+    .route-nav-tabs {
+        padding: 0 10px !important;
+    }
+    .route-tab-btn {
+        padding: 12px 14px !important;
+        font-size: 13px !important;
+    }
+    .tab-pane-content {
+        padding: 14px 10px !important;
+    }
+
+    /* 3. Sector Banner Strip */
+    .sector-banner-strip {
+        padding: 10px 12px !important;
+        margin-bottom: 14px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+    }
+    .sector-banner-route {
+        font-size: 13.5px !important;
+        line-height: 1.3 !important;
+    }
+    .sector-banner-meta {
+        width: 100% !important;
+        justify-content: space-between !important;
+    }
+
+    /* 4. Flight Meta & Baggage Strip */
+    .flight-meta-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        margin-bottom: 14px !important;
+    }
+    .airline-brand-group img {
+        height: 32px !important;
+        width: 32px !important;
+    }
+    .airline-brand-text h4 {
+        font-size: 14.5px !important;
+    }
+    .airline-brand-text span {
+        font-size: 11.5px !important;
+    }
+    .cabin-baggage-pill {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 11px !important;
+        padding: 7px 10px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    /* 5. Direct Flight Timing Grid (Guaranteed Full Visibility of Departure & Arrival) */
+    .flight-schedule-grid {
+        padding: 12px 8px !important;
+        gap: 4px !important;
+        margin-bottom: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .schedule-city-col {
+        max-width: 37% !important;
+        min-width: 0 !important;
+        flex: 1 1 37% !important;
+        overflow: hidden !important;
+        text-align: left !important;
+    }
+    .schedule-city-col.text-right {
+        text-align: right !important;
+    }
+    .schedule-duration-col {
+        flex: 0 0 66px !important;
+        min-width: 58px !important;
+        max-width: 72px !important;
+        padding: 0 2px !important;
+        margin: 0 !important;
+    }
+    .flight-time-big {
+        font-size: 19px !important;
+        font-weight: 900 !important;
+        line-height: 1.1 !important;
+    }
+    .flight-date-sub {
+        font-size: 10.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    .flight-city-title {
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        margin-top: 3px !important;
+    }
+    .flight-terminal-text {
+        font-size: 10.5px !important;
+        line-height: 1.3 !important;
+        color: #64748b !important;
+        margin-top: 2px !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        word-break: break-word !important;
+    }
+    .flight-duration-label {
+        font-size: 10px !important;
+        white-space: nowrap !important;
+        margin-bottom: 3px !important;
+    }
+    .flight-stops-label {
+        font-size: 9.5px !important;
+        white-space: nowrap !important;
+    }
+    .duration-line-pill {
+        margin: 4px 0 !important;
+    }
+    .duration-line-pill i {
+        font-size: 11px !important;
+        padding: 0 4px !important;
+    }
+
+    /* 6. Connecting Flight Timing Grid */
+    .connecting-flight-schedule-grid {
+        padding: 12px 8px !important;
+        gap: 4px !important;
+        margin-bottom: 14px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .connecting-schedule-col.dep-col {
+        max-width: 37% !important;
+        min-width: 0 !important;
+        flex: 1 1 37% !important;
+        overflow: hidden !important;
+        text-align: left !important;
+    }
+    .connecting-schedule-col.arr-col {
+        max-width: 37% !important;
+        min-width: 0 !important;
+        flex: 1 1 37% !important;
+        overflow: hidden !important;
+        text-align: right !important;
+    }
+    .connecting-schedule-middle {
+        flex: 0 0 66px !important;
+        min-width: 58px !important;
+        max-width: 72px !important;
+        margin: 0 2px !important;
+    }
+    .connecting-schedule-middle span {
+        font-size: 10px !important;
+        white-space: nowrap !important;
+    }
+    .connecting-schedule-col span[style*="font-size: 26px"] {
+        font-size: 19px !important;
+        line-height: 1.1 !important;
+    }
+    .connecting-schedule-col span[style*="font-size: 13px"] {
+        font-size: 10.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    .connecting-schedule-col div[style*="font-size: 14.5px"] {
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        margin-top: 3px !important;
+    }
+    .connecting-schedule-col div[style*="font-size: 12px; color: #64748b"] {
+        font-size: 10.5px !important;
+        line-height: 1.3 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        word-break: break-word !important;
+    }
+    .connecting-schedule-col span[style*="font-size: 11px; font-weight: 700"] {
+        font-size: 10px !important;
+        white-space: nowrap !important;
+    }
+    .connecting-layover-banner {
+        padding: 10px 12px !important;
+        font-size: 11.5px !important;
+        line-height: 1.4 !important;
+        flex-direction: column !important;
+        text-align: center !important;
+        margin: 12px 0 !important;
+        gap: 6px !important;
+    }
+
+    /* 7. Travellers & Addons Accordion */
+    .flight-accordion-group {
+        margin-top: 18px !important;
+        padding-top: 16px !important;
+        gap: 10px !important;
+    }
+    .accordion-trigger {
+        padding: 12px 14px !important;
+        font-size: 13px !important;
+    }
+    .accordion-body {
+        padding: 14px 12px !important;
+    }
+    .traveller-subtabs-row {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        flex-wrap: nowrap !important;
+        gap: 4px !important;
+        margin-bottom: 12px !important;
+    }
+    .traveller-subtab-btn {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+    }
+    .pax-addon-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 4px !important;
+        margin-bottom: 8px !important;
+        padding-bottom: 8px !important;
+        border-bottom: 1px dashed #f1f5f9 !important;
+    }
+    .pax-addon-row:last-child {
+        border-bottom: none !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    .addon-status-pill {
+        font-size: 11px !important;
+        padding: 4px 8px !important;
+    }
+    .contact-info-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+
+    /* 8. Fare Rules & Policies */
+    .policy-subtabs-container {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        flex-wrap: nowrap !important;
+        gap: 6px !important;
+        padding-bottom: 8px !important;
+    }
+    .policy-subtab-btn {
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+    }
+    .policy-table-wrapper {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        width: 100% !important;
+    }
+    .policy-table th, .policy-table td {
+        padding: 8px 10px !important;
+        font-size: 11.5px !important;
+    }
+
+    /* 9. Payment Methods Card */
+    .payment-methods-card {
+        padding: 16px 14px !important;
+        margin-bottom: 18px !important;
+        border-radius: 12px !important;
+    }
+    .payment-methods-title {
+        font-size: 16px !important;
+        margin-bottom: 14px !important;
+    }
+    .payment-options-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        margin-bottom: 18px !important;
+    }
+    .payment-option-item {
+        padding: 12px 14px !important;
+    }
+    .btn-proceed-pay {
+        font-size: 15.5px !important;
+        padding: 14px 16px !important;
+    }
+    .security-badges-row {
+        flex-wrap: wrap !important;
+        gap: 8px 12px !important;
+        font-size: 11px !important;
+        justify-content: center !important;
+    }
+
+    /* 10. Sticky Fare Summary Sidebar */
+    .fare-card-box {
+        padding: 16px 14px !important;
+        border-radius: 12px !important;
+    }
+    .fare-row-item {
+        font-size: 12.5px !important;
+        margin-bottom: 10px !important;
+    }
+    .trust-badges-container {
+        padding: 12px 14px !important;
+        font-size: 11.5px !important;
+    }
 }
 </style>
 
@@ -1223,8 +1707,8 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                 </div>
                             </div>
 
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: #f8fafc; border: 1px solid #edf2f7; border-radius: 12px; margin-bottom: 18px;">
-                                <div style="text-align: left; max-width: 38%;">
+                            <div class="connecting-flight-schedule-grid">
+                                <div class="connecting-schedule-col dep-col">
                                     <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg1_dep']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($depDate)); ?></span>
                                     <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
@@ -1234,7 +1718,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                     <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($segData['from_info']['terminal']); ?></span>
                                 </div>
 
-                                <div style="text-align: center; flex: 1; margin: 0 20px;">
+                                <div class="connecting-schedule-middle">
                                     <span style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($segData['leg1_duration']); ?></span>
                                     <div style="position: relative; display: flex; align-items: center; justify-content: center;">
                                         <div style="width: 100%; border-top: 2px dashed #38bdf8;"></div>
@@ -1242,7 +1726,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                     </div>
                                 </div>
 
-                                <div style="text-align: left; max-width: 38%; min-width: 190px;">
+                                <div class="connecting-schedule-col arr-col">
                                     <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg1_arr']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($depDate)); ?></span>
                                     <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
@@ -1254,7 +1738,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                         </div>
 
                         <!-- Layover / Connecting Plane Banner (Screenshot 2 Exact Match) -->
-                        <div style="background: linear-gradient(90deg, #e0f2fe 0%, #bae6fd 50%, #e0f2fe 100%); border: 1px solid #7dd3fc; color: #0369a1; padding: 11px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin: 18px 0; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);">
+                        <div class="connecting-layover-banner" style="background: linear-gradient(90deg, #e0f2fe 0%, #bae6fd 50%, #e0f2fe 100%); border: 1px solid #7dd3fc; color: #0369a1; padding: 11px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin: 18px 0; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);">
                             <i class="fa-solid fa-circle-info" style="font-size: 14px; color: #0284c7;"></i>
                             <span>Change planes at <strong><?php echo htmlspecialchars($segData['via_info']['city']); ?> | <?php echo htmlspecialchars($segData['via_info']['city']); ?> | IN | India (<?php echo htmlspecialchars($segData['via_code']); ?>)</strong>, Connecting Time: <strong><?php echo htmlspecialchars($segData['layover_duration']); ?></strong></span>
                         </div>
@@ -1293,8 +1777,8 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                 </div>
                             </div>
 
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: #f8fafc; border: 1px solid #edf2f7; border-radius: 12px; margin-bottom: 24px;">
-                                <div style="text-align: left; max-width: 38%;">
+                            <div class="connecting-flight-schedule-grid">
+                                <div class="connecting-schedule-col dep-col">
                                     <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg2_dep']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($depDate)); ?></span>
                                     <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
@@ -1303,7 +1787,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                     <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['via_info']['name']); ?></div>
                                 </div>
 
-                                <div style="text-align: center; flex: 1; margin: 0 20px;">
+                                <div class="connecting-schedule-middle">
                                     <span style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($segData['leg2_duration']); ?></span>
                                     <div style="position: relative; display: flex; align-items: center; justify-content: center;">
                                         <div style="width: 100%; border-top: 2px dashed #38bdf8;"></div>
@@ -1311,7 +1795,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                     </div>
                                 </div>
 
-                                <div style="text-align: left; max-width: 38%; min-width: 190px;">
+                                <div class="connecting-schedule-col arr-col">
                                     <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg2_arr']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($arrDate)); ?></span>
                                     <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
@@ -1787,7 +2271,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                 <i class="fa-solid fa-chevron-down icon-chevron"></i>
                             </button>
                             <div class="accordion-body">
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+                                <div class="contact-info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
                                     <div>
                                         <div style="font-size: 11.5px; font-weight: 700; color: #64748b;">CONTACT NAME</div>
                                         <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-top: 2px;">
@@ -1878,8 +2362,8 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                 </div>
                             </div>
 
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: #f8fafc; border: 1px solid #edf2f7; border-radius: 12px; margin-bottom: 18px;">
-                                <div style="text-align: left; max-width: 38%;">
+                            <div class="connecting-flight-schedule-grid">
+                                <div class="connecting-schedule-col dep-col">
                                     <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg1_dep']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($retDepDate)); ?></span>
                                     <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
@@ -1889,7 +2373,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                     <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($retSegData['from_info']['terminal']); ?></span>
                                 </div>
 
-                                <div style="text-align: center; flex: 1; margin: 0 20px;">
+                                <div class="connecting-schedule-middle">
                                     <span style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($retSegData['leg1_duration']); ?></span>
                                     <div style="position: relative; display: flex; align-items: center; justify-content: center;">
                                         <div style="width: 100%; border-top: 2px dashed #10b981;"></div>
@@ -1897,7 +2381,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                     </div>
                                 </div>
 
-                                <div style="text-align: left; max-width: 38%; min-width: 190px;">
+                                <div class="connecting-schedule-col arr-col">
                                     <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg1_arr']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($retDepDate)); ?></span>
                                     <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
@@ -1909,7 +2393,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                         </div>
 
                         <!-- Return Layover / Connecting Plane Banner (Screenshot 3 Exact Match) -->
-                        <div style="background: linear-gradient(90deg, #ecfdf5 0%, #d1fae5 50%, #ecfdf5 100%); border: 1px solid #a7f3d0; color: #065f46; padding: 11px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin: 18px 0; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);">
+                        <div class="connecting-layover-banner" style="background: linear-gradient(90deg, #ecfdf5 0%, #d1fae5 50%, #ecfdf5 100%); border: 1px solid #a7f3d0; color: #065f46; padding: 11px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin: 18px 0; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);">
                             <i class="fa-solid fa-circle-info" style="font-size: 14px; color: #10b981;"></i>
                             <span>Change planes at <strong><?php echo htmlspecialchars($retSegData['via_info']['city']); ?> | <?php echo htmlspecialchars($retSegData['via_info']['city']); ?> | IN | India (<?php echo htmlspecialchars($retSegData['via_code']); ?>)</strong>, Connecting Time: <strong><?php echo htmlspecialchars($retSegData['layover_duration']); ?></strong></span>
                         </div>
@@ -1948,8 +2432,8 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                 </div>
                             </div>
 
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: #f8fafc; border: 1px solid #edf2f7; border-radius: 12px; margin-bottom: 24px;">
-                                <div style="text-align: left; max-width: 38%;">
+                            <div class="connecting-flight-schedule-grid">
+                                <div class="connecting-schedule-col dep-col">
                                     <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg2_dep']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($retDepDate)); ?></span>
                                     <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
@@ -1958,7 +2442,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                     <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['via_info']['name']); ?></div>
                                 </div>
 
-                                <div style="text-align: center; flex: 1; margin: 0 20px;">
+                                <div class="connecting-schedule-middle">
                                     <span style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($retSegData['leg2_duration']); ?></span>
                                     <div style="position: relative; display: flex; align-items: center; justify-content: center;">
                                         <div style="width: 100%; border-top: 2px dashed #10b981;"></div>
@@ -1966,7 +2450,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                                     </div>
                                 </div>
 
-                                <div style="text-align: left; max-width: 38%; min-width: 190px;">
+                                <div class="connecting-schedule-col arr-col">
                                     <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg2_arr']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($retArrDate)); ?></span>
                                     <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
@@ -2037,76 +2521,82 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
 
                     <!-- Change Fee Matrix -->
                     <div id="policyBox_change" style="display: block;">
-                        <table class="policy-table">
-                            <thead>
-                                <tr>
-                                    <th>Timeframe Before Departure</th>
-                                    <th>Change Fee (Per Passenger)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>0 HRS - 4 HRS To Departure</td>
-                                    <td><strong style="color: #dc2626;">Non-Changeable</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>4 HRS - 4 Days To Departure</td>
-                                    <td><strong>₹ 3,899</strong> + Fare Difference</td>
-                                </tr>
-                                <tr>
-                                    <td>4 Days - 999 Days To Departure</td>
-                                    <td><strong>₹ 3,899</strong> + Fare Difference</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="policy-table-wrapper">
+                            <table class="policy-table">
+                                <thead>
+                                    <tr>
+                                        <th>Timeframe Before Departure</th>
+                                        <th>Change Fee (Per Passenger)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>0 HRS - 4 HRS To Departure</td>
+                                        <td><strong style="color: #dc2626;">Non-Changeable</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4 HRS - 4 Days To Departure</td>
+                                        <td><strong>₹ 3,899</strong> + Fare Difference</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4 Days - 999 Days To Departure</td>
+                                        <td><strong>₹ 3,899</strong> + Fare Difference</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <!-- Cancellation Fee Matrix -->
                     <div id="policyBox_cancel" style="display: none;">
-                        <table class="policy-table">
-                            <thead>
-                                <tr>
-                                    <th>Timeframe Before Departure</th>
-                                    <th>Cancellation Fee (Per Passenger)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>0 HRS - 4 HRS To Departure</td>
-                                    <td><strong style="color: #dc2626;">Non-Refundable</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>4 HRS - 4 Days To Departure</td>
-                                    <td><strong>₹ 3,999</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>4 Days - 999 Days To Departure</td>
-                                    <td><strong>₹ 3,500</strong></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="policy-table-wrapper">
+                            <table class="policy-table">
+                                <thead>
+                                    <tr>
+                                        <th>Timeframe Before Departure</th>
+                                        <th>Cancellation Fee (Per Passenger)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>0 HRS - 4 HRS To Departure</td>
+                                        <td><strong style="color: #dc2626;">Non-Refundable</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4 HRS - 4 Days To Departure</td>
+                                        <td><strong>₹ 3,999</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4 Days - 999 Days To Departure</td>
+                                        <td><strong>₹ 3,500</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <!-- ATO Service Fee -->
                     <div id="policyBox_ato" style="display: none;">
-                        <table class="policy-table">
-                            <thead>
-                                <tr>
-                                    <th>Service Type</th>
-                                    <th>Charge</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Airport Ticket Counter (ATO) Assistance</td>
-                                    <td>₹ 500 per request</td>
-                                </tr>
-                                <tr>
-                                    <td>Voyogo Customer Desk Processing Fee</td>
-                                    <td>Standard Free 24x7 Support</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="policy-table-wrapper">
+                            <table class="policy-table">
+                                <thead>
+                                    <tr>
+                                        <th>Service Type</th>
+                                        <th>Charge</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Airport Ticket Counter (ATO) Assistance</td>
+                                        <td>₹ 500 per request</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Voyogo Customer Desk Processing Fee</td>
+                                        <td>Standard Free 24x7 Support</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div style="font-size: 11.5px; color: #64748b; line-height: 1.6; border-top: 1px solid #e2e8f0; padding-top: 12px;">
@@ -2183,7 +2673,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                     <i class="fa-solid fa-shield-halved"></i> Pay Securely ₹ <?php echo number_format($grandTotal); ?>
                 </button>
 
-                <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 14px; font-size: 11.5px; color: #64748b;">
+                <div class="security-badges-row" style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 14px; font-size: 11.5px; color: #64748b;">
                     <span><i class="fa-solid fa-lock" style="color: #16a34a;"></i> 256-Bit SSL Encrypted</span>
                     <span>&bull;</span>
                     <span>PCI-DSS Level 1 Certified</span>
@@ -2358,7 +2848,9 @@ function triggerRazorpayPayment() {
             "image": "<?php echo base_url('assets/images/logo.png'); ?>",
             "order_id": orderData.order_id,
             "handler": function (response) {
-                if (payBtn) payBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verifying Payment Signature...';
+                payBtns.forEach(function(btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verifying Payment Signature...';
+                });
 
                 // STEP 3: Verify Payment Signature via Backend
                 fetch("<?php echo site_url('api/verify-payment'); ?>", {
@@ -2382,7 +2874,9 @@ function triggerRazorpayPayment() {
                         document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
                         document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
                         document.getElementById('razorpay_signature').value = response.razorpay_signature;
-                        if (payBtn) payBtn.innerHTML = '<i class="fa-solid fa-check-circle"></i> Payment Verified! Booking Flight...';
+                        payBtns.forEach(function(btn) {
+                            btn.innerHTML = '<i class="fa-solid fa-check-circle"></i> Payment Verified! Booking Flight...';
+                        });
                         document.getElementById('flightPaymentForm').submit();
                     } else {
                         alert("Payment Verification Error: " + (vData.message || "Signature mismatch. Transaction cannot be validated."));
