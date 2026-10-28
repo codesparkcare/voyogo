@@ -1555,29 +1555,458 @@ if ($maxPrice == 0) $maxPrice = 60000;
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-    .hotel-results-container {
-        grid-template-columns: 1fr;
-    }
-    .hotel-filter-sidebar {
-        position: static;
-        max-height: none;
-    }
+/* Desktop defaults for mobile drawer components */
+.mobile-filter-bar-wrap {
+    display: none;
 }
-@media (max-width: 768px) {
+.mobile-filter-backdrop {
+    display: none;
+}
+.hotel-filter-drawer-header {
+    display: none;
+}
+.mobile-drawer-sort-section {
+    display: none;
+}
+.mobile-filter-drawer-footer {
+    display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .hotel-results-page {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 1. Mobile Filter Bar Trigger (Screenshot 2 Match) */
+    .mobile-filter-bar-wrap {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        padding: 10px 16px !important;
+        background: #ffffff !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        margin-bottom: 12px !important;
+    }
+    .btn-mobile-filter-trigger {
+        background: #ffffff !important;
+        border: 1.5px solid #003B95 !important;
+        color: #003B95 !important;
+        padding: 8px 18px !important;
+        border-radius: 8px !important;
+        font-size: 13.5px !important;
+        font-weight: 800 !important;
+        cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        box-shadow: 0 2px 8px rgba(0, 59, 149, 0.08) !important;
+        transition: all 0.2s ease !important;
+    }
+    .btn-mobile-filter-trigger:hover,
+    .btn-mobile-filter-trigger:active {
+        background: #003B95 !important;
+        color: #ffffff !important;
+    }
+    .btn-mobile-filter-trigger i {
+        font-size: 14px !important;
+    }
+    .mobile-filter-badge {
+        background: #ef4444 !important;
+        color: #ffffff !important;
+        font-size: 10.5px !important;
+        font-weight: 800 !important;
+        border-radius: 12px !important;
+        padding: 1px 7px !important;
+        line-height: 1.2 !important;
+    }
+
+    /* 2. Backdrop Overlay */
+    .mobile-filter-backdrop {
+        display: block !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background: rgba(0, 0, 0, 0.55) !important;
+        backdrop-filter: blur(2px) !important;
+        -webkit-backdrop-filter: blur(2px) !important;
+        z-index: 99998 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: opacity 0.3s ease, visibility 0.3s ease !important;
+    }
+    .mobile-filter-backdrop.active {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* 3. Main Results Container */
+    .hotel-results-container {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+        margin: 0 auto !important;
+        padding: 0 12px 30px 12px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .results-area-col {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+    .hotel-list-split-col {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+    .results-top-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        padding: 12px 14px !important;
+    }
+    .results-sort-bar {
+        display: none !important;
+    }
+
+    /* 4. Right-Side Sliding Drawer Sidebar (Screenshot 3 Match) */
+    .hotel-filter-sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: auto !important;
+        width: 85% !important;
+        max-width: 380px !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        background: #ffffff !important;
+        z-index: 99999 !important;
+        box-shadow: -6px 0 24px rgba(0, 0, 0, 0.22) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        transform: translateX(100%) !important;
+        transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        overflow: hidden !important;
+    }
+    .hotel-filter-sidebar.mobile-open {
+        transform: translateX(0) !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+    /* Drawer Header - Dark Navy theme like Screenshot 3 */
+    .hotel-filter-drawer-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 16px 18px !important;
+        background: #061633 !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+        flex-shrink: 0 !important;
+    }
+    .mobile-filter-drawer-title {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 9px !important;
+        color: #ffffff !important;
+        font-size: 16.5px !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.2px !important;
+    }
+    .mobile-filter-drawer-title i {
+        color: #78B722 !important;
+        font-size: 16px !important;
+    }
+    .drawer-header-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+    .drawer-header-reset-btn {
+        background: rgba(255, 255, 255, 0.12) !important;
+        border: 1px solid rgba(255, 255, 255, 0.24) !important;
+        color: #ffffff !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        padding: 6px 12px !important;
+        border-radius: 20px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+    .drawer-header-reset-btn:hover {
+        background: rgba(239, 68, 68, 0.25) !important;
+        color: #fecaca !important;
+    }
+    .drawer-header-close-btn {
+        width: 34px !important;
+        height: 34px !important;
+        border-radius: 50% !important;
+        background: rgba(255, 255, 255, 0.12) !important;
+        border: none !important;
+        color: #ffffff !important;
+        font-size: 16px !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: background 0.2s, transform 0.2s !important;
+        padding: 0 !important;
+    }
+    .drawer-header-close-btn:hover {
+        background: rgba(255, 255, 255, 0.25) !important;
+        transform: rotate(90deg) !important;
+    }
+
+    /* Mobile Sort Section inside Drawer (Screenshot 3 Match) */
+    .mobile-drawer-sort-section {
+        display: block !important;
+        background: #f8fafc !important;
+        border-bottom: 1.5px solid #e2e8f0 !important;
+        padding: 14px 18px !important;
+        flex-shrink: 0 !important;
+    }
+    .drawer-sort-title {
+        font-size: 13.5px !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+    .drawer-sort-title i {
+        color: #0284c7 !important;
+    }
+    .drawer-sort-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+        margin-top: 10px !important;
+    }
+    .drawer-sort-tab {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 5px !important;
+        padding: 9px 6px !important;
+        background: #ffffff !important;
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        font-size: 11.5px !important;
+        font-weight: 700 !important;
+        color: #334155 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+    .drawer-sort-tab i {
+        font-size: 13px !important;
+    }
+    .drawer-sort-tab.active {
+        background: #0d3470 !important;
+        border-color: #0d3470 !important;
+        color: #ffffff !important;
+        box-shadow: 0 2px 6px rgba(13, 52, 112, 0.2) !important;
+    }
+    .drawer-sort-tab.active i {
+        color: #ffffff !important;
+    }
+
+    /* Scrollable Drawer Body */
+    .hotel-filter-drawer-scroll {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 12px 14px 20px 14px !important;
+    }
+    .hotel-filter-drawer-scroll .unified-filters-card {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+    .desktop-reset-action {
+        display: none !important;
+    }
+
+    /* Sticky Footer Action Bar in Mobile Drawer (Screenshot 3 Match) */
+    .mobile-filter-drawer-footer {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        padding: 12px 16px !important;
+        background: #ffffff !important;
+        border-top: 1px solid #e2e8f0 !important;
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06) !important;
+        flex-shrink: 0 !important;
+        z-index: 10 !important;
+    }
+    .drawer-footer-reset-btn {
+        flex: 1 !important;
+        padding: 11px 14px !important;
+        background: #f1f5f9 !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #475569 !important;
+        cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        transition: all 0.2s ease !important;
+    }
+    .drawer-footer-reset-btn:hover {
+        background: #e2e8f0 !important;
+        color: #0f172a !important;
+    }
+    .drawer-footer-apply-btn {
+        flex: 2 !important;
+        padding: 11px 16px !important;
+        background: #0d3470 !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-size: 13.5px !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
+        cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        box-shadow: 0 4px 12px rgba(13, 52, 112, 0.3) !important;
+        transition: all 0.2s ease !important;
+    }
+    .drawer-footer-apply-btn:hover {
+        background: #09204b !important;
+    }
+
+    /* Hotel Card Mobile Responsiveness */
+    .hotel-card {
+        border-radius: 12px !important;
+        margin-bottom: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
     .hotel-card-main {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
+        gap: 0 !important;
     }
     .hotel-card-image-box {
-        height: 200px;
+        height: 200px !important;
+        width: 100% !important;
+        border-radius: 12px 12px 0 0 !important;
+    }
+    .hotel-card-info-box {
+        padding: 14px 14px 8px 14px !important;
     }
     .hotel-card-pricing-box {
-        align-items: flex-start;
-        text-align: left;
+        align-items: flex-start !important;
+        text-align: left !important;
+        padding: 8px 14px 14px 14px !important;
+        border-top: 1px dashed #e2e8f0 !important;
+    }
+    .btn-view-rates {
+        width: 100% !important;
+        justify-content: center !important;
     }
     .modify-grid-form {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Mobile Map View Placement (Downside to Selected Hotel) */
+    .hotel-results-container.map-split-active {
+        max-width: 100% !important;
+        padding: 0 12px 30px 12px !important;
+    }
+    .hotel-results-container.map-split-active .results-split-wrapper {
+        display: block !important;
+        width: 100% !important;
+        gap: 0 !important;
+    }
+    .hotel-results-container.map-split-active .hotel-list-split-col {
+        flex: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        max-height: none !important;
+        overflow-y: visible !important;
+        padding-right: 0 !important;
+    }
+    .hotel-results-container.map-split-active .hotel-map-split-col {
+        display: block !important;
+        flex: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        height: 380px !important;
+        min-height: 340px !important;
+        position: relative !important;
+        top: 0 !important;
+        margin: 10px 0 20px 0 !important;
+        border-radius: 12px !important;
+        border: 2px solid #003B95 !important;
+        box-shadow: 0 6px 20px rgba(0, 59, 149, 0.15) !important;
+        overflow: hidden !important;
+        background: #e2e8f0 !important;
+        z-index: 10 !important;
+    }
+    .hotel-results-container.map-split-active .hotel-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 16px !important;
+    }
+    .hotel-results-container.map-split-active .hotel-card.selected-on-map {
+        border: 2px solid #ef4444 !important;
+        box-shadow: 0 4px 18px rgba(239, 68, 68, 0.22) !important;
+        background-color: #fffafb !important;
+    }
+    .map-view-back-bar {
+        margin-bottom: 14px !important;
+    }
+    .back-to-list-link {
+        font-size: 13.5px !important;
+        padding: 8px 14px !important;
+        background: #eff6ff !important;
+        border: 1px solid #bfdbfe !important;
+        border-radius: 8px !important;
+        display: inline-flex !important;
+        color: #1d4ed8 !important;
+        font-weight: 700 !important;
+        text-decoration: none !important;
+    }
+    .back-to-list-link:hover {
+        background: #dbeafe !important;
+        color: #1e40af !important;
+    }
+    .map-split-close-btn {
+        top: 10px !important;
+        right: 10px !important;
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 15px !important;
+        z-index: 1000 !important;
+    }
+    .btn-mobile-map-trigger {
+        background: #f0fdf4 !important;
+        border-color: #16a34a !important;
+        color: #16a34a !important;
+    }
+    .btn-mobile-map-trigger:hover,
+    .btn-mobile-map-trigger:active {
+        background: #16a34a !important;
+        color: #ffffff !important;
     }
 }
 </style>
@@ -1649,40 +2078,93 @@ if ($maxPrice == 0) $maxPrice = 60000;
         </div>
     </header>
 
+    <!-- Mobile Filter Bar Trigger (Screenshot 2 Match) -->
+    <div class="mobile-filter-bar-wrap">
+        <button type="button" class="btn-mobile-filter-trigger" id="btnMobileFilterTrigger" onclick="toggleMobileHotelFilters(true);">
+            <i class="fa-solid fa-sliders"></i> <span>Filters &amp; Sort</span>
+            <span class="mobile-filter-badge" id="mobileFilterActiveBadge" style="display: none;">0</span>
+        </button>
+        <button type="button" class="btn-mobile-filter-trigger btn-mobile-map-trigger" id="btnMobileMapTrigger" onclick="toggleMapView();">
+            <i class="fa-solid fa-map-location-dot"></i> <span id="mobileMapTriggerText">See Map View</span>
+        </button>
+    </div>
+    <div class="mobile-filter-backdrop" id="mobileHotelFilterBackdrop" onclick="toggleMobileHotelFilters(false);"></div>
+
     <!-- ========================================================
          2. MAIN LAYOUT (Filter Sidebar + Hotel Results)
          ======================================================== -->
     <div class="hotel-results-container">
         
         <!-- ========================================================
-             LEFT FILTER SIDEBAR (Screenshot Matching)
+             LEFT FILTER SIDEBAR (Screenshot Matching & Mobile Drawer)
              ======================================================== -->
-        <aside class="hotel-filter-sidebar">
+        <aside class="hotel-filter-sidebar" id="hotelFilterSidebar">
             
-            <!-- SEE MAP VIEW Card -->
-            <div class="map-view-trigger-card" id="btnSeeMapView" onclick="toggleMapView(true)">
-                <i class="fa-solid fa-location-dot map-view-pin-icon"></i>
-                <span class="map-view-text">SEE MAP VIEW</span>
+            <!-- Mobile Drawer Top Header (Screenshot 3 Match) -->
+            <div class="hotel-filter-drawer-header">
+                <div class="mobile-filter-drawer-title">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>Filters &amp; Sort</span>
+                </div>
+                <div class="drawer-header-actions">
+                    <button type="button" class="drawer-header-reset-btn" onclick="resetAllHotelFilters();" title="Reset All Filters">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Reset All</span>
+                    </button>
+                    <button type="button" class="drawer-header-close-btn" onclick="toggleMobileHotelFilters(false);" title="Close Filters" aria-label="Close Filters">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
             </div>
 
-            <!-- Unified Filter Box (Single White Card with clean Dividers) -->
-            <div class="unified-filters-card">
-                
-                <!-- 1. HOTEL NAME Filter -->
-                <div class="filter-section-row">
-                    <div class="filter-section-header" onclick="toggleFilterSection(this)">
-                        <div class="filter-section-header-left">
-                            <i class="fa-solid fa-chevron-down filter-chevron-icon"></i>
-                            <h4>HOTEL NAME</h4>
-                        </div>
-                    </div>
-                    <div class="filter-section-body">
-                        <div class="filter-search-input-wrap">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="hotelNameFilterInput" placeholder="Search by hotel name" autocomplete="off">
-                        </div>
-                    </div>
+            <!-- Mobile Sort Section inside Drawer (Screenshot 3 Match) -->
+            <div class="mobile-drawer-sort-section">
+                <div class="drawer-sort-title">
+                    <i class="fa-solid fa-arrow-down-short-wide"></i> Sort By
                 </div>
+                <div class="drawer-sort-grid">
+                    <button type="button" class="drawer-sort-tab active" data-sort="featured" onclick="selectDrawerSort('featured', this)">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                        <span>Featured</span>
+                    </button>
+                    <button type="button" class="drawer-sort-tab" data-sort="price" onclick="selectDrawerSort('price', this)">
+                        <i class="fa-solid fa-wallet"></i>
+                        <span>Cheapest</span>
+                    </button>
+                    <button type="button" class="drawer-sort-tab" data-sort="rating" onclick="selectDrawerSort('rating', this)">
+                        <i class="fa-solid fa-star"></i>
+                        <span>Rating</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Scrollable Content wrapper for Filters -->
+            <div class="hotel-filter-drawer-scroll">
+                
+                <!-- SEE MAP VIEW Card -->
+                <div class="map-view-trigger-card" id="btnSeeMapView" onclick="toggleMapView(true); toggleMobileHotelFilters(false);">
+                    <i class="fa-solid fa-location-dot map-view-pin-icon"></i>
+                    <span class="map-view-text">SEE MAP VIEW</span>
+                </div>
+
+                <!-- Unified Filter Box (Single White Card with clean Dividers) -->
+                <div class="unified-filters-card">
+                    
+                    <!-- 1. HOTEL NAME Filter -->
+                    <div class="filter-section-row">
+                        <div class="filter-section-header" onclick="toggleFilterSection(this)">
+                            <div class="filter-section-header-left">
+                                <i class="fa-solid fa-chevron-down filter-chevron-icon"></i>
+                                <h4>HOTEL NAME</h4>
+                            </div>
+                        </div>
+                        <div class="filter-section-body">
+                            <div class="filter-search-input-wrap">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="hotelNameFilterInput" placeholder="Search by hotel name" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
 
                 <!-- 2. POPULAR FILTER -->
                 <div class="filter-section-row">
@@ -1964,15 +2446,27 @@ if ($maxPrice == 0) $maxPrice = 60000;
                     </label>
                 </div>
 
-                <!-- Reset Filters Action -->
-                <div style="padding: 10px 16px; background: #fafafa; border-top: 1px solid #e2e8f0;">
+                <!-- Reset Filters Action (Desktop only) -->
+                <div class="desktop-reset-action" style="padding: 10px 16px; background: #fafafa; border-top: 1px solid #e2e8f0;">
                     <button type="button" class="clear-filters-btn" id="btnResetFilters">
                         <i class="fa-solid fa-rotate-left"></i> Reset All Filters
                     </button>
                 </div>
 
-            </div>
-        </aside>
+            </div><!-- /.unified-filters-card -->
+        </div><!-- /.hotel-filter-drawer-scroll -->
+
+        <!-- Sticky Bottom Footer Action Bar in Mobile Drawer (Screenshot 3 Match) -->
+        <div class="mobile-filter-drawer-footer">
+            <button type="button" class="drawer-footer-reset-btn" onclick="resetAllHotelFilters();">
+                <i class="fa-solid fa-rotate-left"></i> Reset
+            </button>
+            <button type="button" class="drawer-footer-apply-btn" onclick="toggleMobileHotelFilters(false);">
+                <span>Apply Filters</span>
+                <i class="fa-solid fa-check"></i>
+            </button>
+        </div>
+    </aside>
 
         <!-- ========================================================
              RIGHT HOTEL RESULTS AREA
@@ -2563,6 +3057,24 @@ function applyFilters() {
         visibleCountElem.textContent = visibleCount;
     }
 
+    // Update Mobile Filter Active Count Badge
+    let activeFilterCount = 0;
+    if (nameQuery) activeFilterCount++;
+    if (isAvailOnly) activeFilterCount++;
+    Object.values(selected).forEach(arr => {
+        activeFilterCount += arr.length;
+    });
+
+    const activeBadge = document.getElementById('mobileFilterActiveBadge');
+    if (activeBadge) {
+        if (activeFilterCount > 0) {
+            activeBadge.textContent = activeFilterCount;
+            activeBadge.style.display = 'inline-block';
+        } else {
+            activeBadge.style.display = 'none';
+        }
+    }
+
     // Keep map markers synchronized with visible hotel cards
     updateMapMarkersVisibility();
 }
@@ -2581,12 +3093,60 @@ if (cbAvailableOnly) {
 // Reset filters button
 const btnReset = document.getElementById('btnResetFilters');
 if (btnReset) {
-    btnReset.addEventListener('click', () => {
-        if (hotelNameInput) hotelNameInput.value = '';
-        filterCheckboxes.forEach(cb => cb.checked = false);
-        if (cbAvailableOnly) cbAvailableOnly.checked = false;
-        applyFilters();
-    });
+    btnReset.addEventListener('click', resetAllHotelFilters);
+}
+
+// ========================================================
+// 2b. MOBILE FILTER & SORT DRAWER CONTROLS (Screenshot 2 & 3)
+// ========================================================
+function toggleMobileHotelFilters(open) {
+    const sidebar = document.getElementById('hotelFilterSidebar');
+    const backdrop = document.getElementById('mobileHotelFilterBackdrop');
+    if (!sidebar) return;
+
+    const shouldOpen = (open === undefined) ? !sidebar.classList.contains('mobile-open') : open;
+
+    if (shouldOpen) {
+        sidebar.classList.add('mobile-open');
+        if (backdrop) backdrop.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    } else {
+        sidebar.classList.remove('mobile-open');
+        if (backdrop) backdrop.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+function resetAllHotelFilters() {
+    if (hotelNameInput) hotelNameInput.value = '';
+    filterCheckboxes.forEach(cb => cb.checked = false);
+    if (cbAvailableOnly) cbAvailableOnly.checked = false;
+
+    // Reset drawer sort tabs
+    document.querySelectorAll('.drawer-sort-tab').forEach(t => t.classList.remove('active'));
+    const featuredDrawerTab = document.querySelector('.drawer-sort-tab[data-sort="featured"]');
+    if (featuredDrawerTab) featuredDrawerTab.classList.add('active');
+
+    // Reset desktop sort items
+    document.querySelectorAll('.sort-item').forEach(el => el.classList.remove('active'));
+    const featuredSortItem = document.querySelector('.sort-item[data-sort="featured"]');
+    if (featuredSortItem) featuredSortItem.classList.add('active');
+
+    applyFilters();
+}
+
+function selectDrawerSort(criteria, btnElem) {
+    document.querySelectorAll('.drawer-sort-tab').forEach(t => t.classList.remove('active'));
+    if (btnElem) btnElem.classList.add('active');
+
+    // Sync desktop sort bar if present
+    const matchDesktop = document.querySelector('.sort-item[data-sort="' + criteria + '"]');
+    if (matchDesktop) {
+        document.querySelectorAll('.sort-item').forEach(el => el.classList.remove('active'));
+        matchDesktop.classList.add('active');
+    }
+
+    sortHotels(criteria, btnElem);
 }
 
 // ========================================================
@@ -2868,10 +3428,63 @@ const ACTIVE_PIN_ICON = {
     anchor: { x: 21, y: 50 }
 };
 
+function updateMapPlacement() {
+    const mapCol = document.getElementById('hotelMapSplitCol');
+    const splitWrapper = document.getElementById('resultsSplitWrapper');
+    if (!mapCol || !splitWrapper) return;
+
+    const isMobile = window.innerWidth <= 991;
+
+    if (isMapViewActive && isMobile) {
+        const cards = document.querySelectorAll('.hotel-card');
+        let targetCard = null;
+
+        // Try selected hotel card first if visible
+        if (selectedHotelIndex !== null && cards[selectedHotelIndex] && cards[selectedHotelIndex].style.display !== 'none') {
+            targetCard = cards[selectedHotelIndex];
+        } else {
+            // Find first visible hotel card
+            for (let i = 0; i < cards.length; i++) {
+                if (cards[i].style.display !== 'none') {
+                    targetCard = cards[i];
+                    selectedHotelIndex = i;
+                    break;
+                }
+            }
+        }
+
+        if (targetCard) {
+            // Move mapCol directly downside to targetCard
+            if (targetCard.nextElementSibling !== mapCol) {
+                targetCard.after(mapCol);
+            }
+            mapCol.style.display = 'block';
+
+            cards.forEach((c, idx) => {
+                if (idx === selectedHotelIndex) {
+                    c.classList.add('selected-on-map');
+                } else {
+                    c.classList.remove('selected-on-map');
+                }
+            });
+        }
+    } else {
+        // Desktop or map inactive: ensure mapCol is direct child of resultsSplitWrapper
+        if (mapCol.parentElement !== splitWrapper) {
+            splitWrapper.appendChild(mapCol);
+        }
+    }
+
+    if (googleMap && typeof google !== 'undefined' && google.maps) {
+        google.maps.event.trigger(googleMap, 'resize');
+    }
+}
+
 function toggleMapView(enable) {
     const resultsContainer = document.querySelector('.hotel-results-container');
     const backBar = document.getElementById('mapViewBackBar');
     const mapCol = document.getElementById('hotelMapSplitCol');
+    const mapTriggerText = document.getElementById('mobileMapTriggerText');
     
     if (typeof enable === 'boolean') {
         isMapViewActive = enable;
@@ -2883,6 +3496,8 @@ function toggleMapView(enable) {
         if (resultsContainer) resultsContainer.classList.add('map-split-active');
         if (backBar) backBar.style.display = 'block';
         if (mapCol) mapCol.style.display = 'block';
+        if (mapTriggerText) mapTriggerText.textContent = 'Hide Map';
+        updateMapPlacement();
         initOrUpdateGoogleMap();
 
         // Select first visible hotel on map view open
@@ -2902,10 +3517,12 @@ function toggleMapView(enable) {
         if (resultsContainer) resultsContainer.classList.remove('map-split-active');
         if (backBar) backBar.style.display = 'none';
         if (mapCol) mapCol.style.display = 'none';
+        if (mapTriggerText) mapTriggerText.textContent = 'See Map View';
         document.querySelectorAll('.hotel-card.selected-on-map').forEach(c => c.classList.remove('selected-on-map'));
         if (activeInfoWindow) {
             activeInfoWindow.close();
         }
+        updateMapPlacement();
     }
 }
 
@@ -3041,11 +3658,19 @@ function initOrUpdateGoogleMap() {
     }
 }
 
-// Called when hotel card in left list is clicked
+// Called when hotel card in list is clicked
 function onHotelCardClick(idx) {
     // Only interact with map if user has explicitly opened map view
     if (!isMapViewActive) return;
     selectHotelOnMap(idx, false);
+    if (window.innerWidth <= 991) {
+        const cards = document.querySelectorAll('.hotel-card');
+        if (cards[idx]) {
+            setTimeout(() => {
+                cards[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 60);
+        }
+    }
 }
 
 function selectHotelOnMap(idx, shouldScrollCard) {
@@ -3053,17 +3678,23 @@ function selectHotelOnMap(idx, shouldScrollCard) {
 
     selectedHotelIndex = idx;
 
-    // Highlight selected card on left list
+    let selectedCard = null;
+    // Highlight selected card on list
     document.querySelectorAll('.hotel-card').forEach((card, cIdx) => {
         if (cIdx === idx) {
             card.classList.add('selected-on-map');
-            if (shouldScrollCard) {
-                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
+            selectedCard = card;
         } else {
             card.classList.remove('selected-on-map');
         }
     });
+
+    // Reposition map directly downside to selected hotel on mobile
+    updateMapPlacement();
+
+    if (shouldScrollCard && selectedCard) {
+        selectedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
 
     // Update marker pins on map and pan to selected hotel
     googleMarkers.forEach(m => {
@@ -3111,7 +3742,15 @@ function updateMapMarkersVisibility() {
             item.marker.setVisible(isVisible);
         }
     });
+    if (isMapViewActive) {
+        updateMapPlacement();
+    }
 }
+
+// Responsive window resize listener
+window.addEventListener('resize', () => {
+    updateMapPlacement();
+});
 
 // Share button copy link
 const btnShare = document.getElementById('btnShareSearch');

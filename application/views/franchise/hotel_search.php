@@ -162,15 +162,15 @@ $defaultNights   = 4;
                                 <span>ROOMS & GUESTS</span> <i class="fa-solid fa-chevron-down ak-chevron"></i>
                             </div>
                             <div class="ak-guests-main-row">
-                                <span class="ak-guest-num" id="hotelRoomsDisplay">2</span>
-                                <span class="ak-guest-lbl">Rooms</span>
-                                <span class="ak-guest-num" id="hotelGuestsDisplay" style="margin-left: 6px;">4</span>
-                                <span class="ak-guest-lbl">Guests</span>
+                                <span class="ak-guest-num" id="hotelRoomsDisplay">1</span>
+                                <span class="ak-guest-lbl" id="hotelRoomsLabel">Room</span>
+                                <span class="ak-guest-num" id="hotelGuestsDisplay" style="margin-left: 6px;">2</span>
+                                <span class="ak-guest-lbl" id="hotelGuestsLabel">Guests</span>
                             </div>
-                            <div class="ak-date-day" id="hotelGuestSub">4 Adults, 0 Children</div>
+                            <div class="ak-date-day" id="hotelGuestSub">2 Adults, 0 Children</div>
 
-                            <input type="hidden" name="rooms" id="hotelHiddenRooms" value="2">
-                            <input type="hidden" name="adults" id="hotelHiddenAdults" value="4">
+                            <input type="hidden" name="rooms" id="hotelHiddenRooms" value="1">
+                            <input type="hidden" name="adults" id="hotelHiddenAdults" value="2">
                             <input type="hidden" name="children" id="hotelHiddenChildren" value="0">
                             <input type="hidden" name="roomData" id="hotelHiddenRoomData" value="">
 
@@ -1252,7 +1252,6 @@ function renderHotelCalendarMonths() {
 
 // Akbar Multi-Room & Guests Engine (Screenshot 1 Exact Match)
 var hotelRoomsData = [
-    { adults: 2, children: 0, childAges: [] },
     { adults: 2, children: 0, childAges: [] }
 ];
 var activeEditRoomIndex = 0;
@@ -1307,27 +1306,27 @@ function renderHotelRooms() {
             html += '  </div>';
             html += '</div>';
 
-            // Children Row
+            // Children Row (Max 2 children per room)
             html += '<div class="akbar-room-row">';
             html += '  <div><div class="akbar-room-row-label">Children</div><div class="akbar-room-row-sub">0- 12 Years</div></div>';
             html += '  <div class="akbar-counter-wrap">';
             html += '    <span class="akbar-counter-val">' + room.children + '</span>';
             html += '    <div class="akbar-counter-btn-group">';
             html += '      <button type="button" class="akbar-counter-btn" onclick="updateHotelRoomChildren(' + idx + ', -1)" ' + (room.children <= 0 ? 'disabled' : '') + '>-</button>';
-            html += '      <button type="button" class="akbar-counter-btn" onclick="updateHotelRoomChildren(' + idx + ', 1)" ' + (room.children >= 4 ? 'disabled' : '') + '>+</button>';
+            html += '      <button type="button" class="akbar-counter-btn" onclick="updateHotelRoomChildren(' + idx + ', 1)" ' + (room.children >= 2 ? 'disabled' : '') + '>+</button>';
             html += '    </div>';
             html += '  </div>';
             html += '</div>';
 
-            // Children Ages Box
+            // Children Ages Box (Max 2: CHILD 1 and CHILD 2)
             if (room.children > 0) {
                 html += '<div class="akbar-child-age-box">';
                 html += '  <div class="akbar-child-age-title">CHILDREN\'S AGE</div>';
                 html += '  <div class="akbar-child-age-grid">';
-                for (var c = 0; c < room.children; c++) {
-                    var childAge = room.childAges[c] !== undefined ? room.childAges[c] : 0;
+                for (var c = 0; c < Math.min(2, room.children); c++) {
+                    var childAge = room.childAges[c] !== undefined ? room.childAges[c] : (c === 0 ? 7 : 3);
                     html += '    <div class="akbar-child-select-wrap">';
-                    html += '      <label class="akbar-child-select-label">Child ' + (c + 1) + '</label>';
+                    html += '      <label class="akbar-child-select-label">CHILD ' + (c + 1) + '</label>';
                     html += '      <select class="akbar-child-select" onchange="updateHotelChildAge(' + idx + ', ' + c + ', this.value)">';
                     html += '        <option value="0"' + (childAge === 0 ? ' selected' : '') + '>Under 1</option>';
                     for (var a = 1; a <= 12; a++) {
@@ -1375,11 +1374,24 @@ function renderHotelRooms() {
     var guestsDisplay = document.getElementById('hotelGuestsDisplay');
     var guestSubtitle = document.getElementById('hotelGuestSub');
 
-    if (roomsDisplay) roomsDisplay.textContent = totalRooms;
-    if (guestsDisplay) guestsDisplay.textContent = totalGuests;
+    if (roomsDisplay) {
+        roomsDisplay.textContent = totalRooms;
+        var roomsLabel = document.getElementById('hotelRoomsLabel') || (roomsDisplay ? roomsDisplay.nextElementSibling : null);
+        if (roomsLabel && roomsLabel.classList.contains('ak-guest-lbl')) {
+            roomsLabel.textContent = totalRooms === 1 ? 'Room' : 'Rooms';
+        }
+    }
+    if (guestsDisplay) {
+        guestsDisplay.textContent = totalGuests;
+        var guestsLabel = document.getElementById('hotelGuestsLabel') || (guestsDisplay ? guestsDisplay.nextElementSibling : null);
+        if (guestsLabel && guestsLabel.classList.contains('ak-guest-lbl')) {
+            guestsLabel.textContent = totalGuests === 1 ? 'Guest' : 'Guests';
+        }
+    }
     if (guestSubtitle) {
+        var adultStr = totalAdults === 1 ? '1 Adult' : totalAdults + ' Adults';
         var childStr = totalChildren === 1 ? '1 Child' : totalChildren + ' Children';
-        guestSubtitle.textContent = totalAdults + ' Adults, ' + childStr;
+        guestSubtitle.textContent = adultStr + ', ' + childStr;
     }
 
     var hiddenRooms = document.getElementById('hotelHiddenRooms');
@@ -1395,7 +1407,7 @@ function renderHotelRooms() {
 
 function addHotelRoom() {
     if (hotelRoomsData.length < 8) {
-        hotelRoomsData.push({ adults: 1, children: 0, childAges: [] });
+        hotelRoomsData.push({ adults: 2, children: 0, childAges: [] });
         activeEditRoomIndex = hotelRoomsData.length - 1;
         renderHotelRooms();
     }
@@ -1425,7 +1437,7 @@ function updateHotelRoomAdults(idx, delta) {
 
 function updateHotelRoomChildren(idx, delta) {
     if (hotelRoomsData[idx]) {
-        var newCount = Math.max(0, Math.min(4, hotelRoomsData[idx].children + delta));
+        var newCount = Math.max(0, Math.min(2, hotelRoomsData[idx].children + delta));
         hotelRoomsData[idx].children = newCount;
         while (hotelRoomsData[idx].childAges.length < newCount) {
             var defaultAge = hotelRoomsData[idx].childAges.length === 0 ? 7 : 3;

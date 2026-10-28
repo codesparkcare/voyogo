@@ -1217,15 +1217,15 @@ $defaultNights   = 4;
                         <span>ROOMS & GUESTS</span> <i class="fa-solid fa-chevron-down" style="font-size: 9px; color: #64748b;"></i>
                     </div>
                     <div class="akbar-guest-display">
-                        <span class="akbar-guest-num" id="akbarRoomsDisplay">2</span>
-                        <span class="akbar-guest-lbl">Rooms</span>
-                        <span class="akbar-guest-num" id="akbarGuestsDisplay" style="margin-left: 6px;">4</span>
-                        <span class="akbar-guest-lbl">Guests</span>
+                        <span class="akbar-guest-num" id="akbarRoomsDisplay">1</span>
+                        <span class="akbar-guest-lbl" id="akbarRoomsLabel">Room</span>
+                        <span class="akbar-guest-num" id="akbarGuestsDisplay" style="margin-left: 6px;">2</span>
+                        <span class="akbar-guest-lbl" id="akbarGuestsLabel">Guests</span>
                     </div>
                     <div class="akbar-date-day" id="akbarGuestSubtitle">2 Adults, 0 Children</div>
 
-                    <input type="hidden" name="rooms" id="akbarHiddenRooms" value="2">
-                    <input type="hidden" name="adults" id="akbarHiddenAdults" value="4">
+                    <input type="hidden" name="rooms" id="akbarHiddenRooms" value="1">
+                    <input type="hidden" name="adults" id="akbarHiddenAdults" value="2">
                     <input type="hidden" name="children" id="akbarHiddenChildren" value="0">
                     <input type="hidden" name="roomData" id="akbarHiddenRoomData" value="">
                     <!-- Akbar Multi-Room & Guests Configuration Popover -->
@@ -2138,7 +2138,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // 3. AKBAR MULTI-ROOM & GUESTS ENGINE
     // =========================================================================
     var akbarRoomsData = [
-        { adults: 2, children: 0, childAges: [] },
         { adults: 2, children: 0, childAges: [] }
     ];
     var activeEditRoomIndex = 0;
@@ -2183,27 +2182,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 html += '  </div>';
                 html += '</div>';
 
-                // Children Row
+                // Children Row (Max 2 children per room)
                 html += '<div class="akbar-room-row">';
                 html += '  <div><div class="akbar-room-row-label">Children</div><div class="akbar-room-row-sub">0- 12 Years</div></div>';
                 html += '  <div class="akbar-counter-wrap">';
                 html += '    <span class="akbar-counter-val">' + room.children + '</span>';
                 html += '    <div class="akbar-counter-btn-group">';
                 html += '      <button type="button" class="akbar-counter-btn" onclick="updateRoomChildren(' + idx + ', -1)" ' + (room.children <= 0 ? 'disabled' : '') + '>-</button>';
-                html += '      <button type="button" class="akbar-counter-btn" onclick="updateRoomChildren(' + idx + ', 1)" ' + (room.children >= 4 ? 'disabled' : '') + '>+</button>';
+                html += '      <button type="button" class="akbar-counter-btn" onclick="updateRoomChildren(' + idx + ', 1)" ' + (room.children >= 2 ? 'disabled' : '') + '>+</button>';
                 html += '    </div>';
                 html += '  </div>';
                 html += '</div>';
 
-                // Children Ages Box
+                // Children Ages Box (Max 2: CHILD 1 and CHILD 2)
                 if (room.children > 0) {
                     html += '<div class="akbar-child-age-box">';
                     html += '  <div class="akbar-child-age-title">CHILDREN\'S AGE</div>';
                     html += '  <div class="akbar-child-age-grid">';
-                    for (var c = 0; c < room.children; c++) {
-                        var childAge = room.childAges[c] !== undefined ? room.childAges[c] : 0;
+                    for (var c = 0; c < Math.min(2, room.children); c++) {
+                        var childAge = room.childAges[c] !== undefined ? room.childAges[c] : (c === 0 ? 7 : 3);
                         html += '    <div class="akbar-child-select-wrap">';
-                        html += '      <label class="akbar-child-select-label">Child ' + (c + 1) + '</label>';
+                        html += '      <label class="akbar-child-select-label">CHILD ' + (c + 1) + '</label>';
                         html += '      <select class="akbar-child-select" onchange="updateChildAge(' + idx + ', ' + c + ', this.value)">';
                         html += '        <option value="0"' + (childAge === 0 ? ' selected' : '') + '>Under 1</option>';
                         for (var a = 1; a <= 12; a++) {
@@ -2253,11 +2252,24 @@ document.addEventListener('DOMContentLoaded', function() {
         var guestsDisplay = document.getElementById('akbarGuestsDisplay');
         var guestSubtitle = document.getElementById('akbarGuestSubtitle');
 
-        if (roomsDisplay) roomsDisplay.textContent = totalRooms;
-        if (guestsDisplay) guestsDisplay.textContent = totalGuests;
+        if (roomsDisplay) {
+            roomsDisplay.textContent = totalRooms;
+            var roomsLabel = document.getElementById('akbarRoomsLabel') || (roomsDisplay ? roomsDisplay.nextElementSibling : null);
+            if (roomsLabel && roomsLabel.classList.contains('akbar-guest-lbl')) {
+                roomsLabel.textContent = totalRooms === 1 ? 'Room' : 'Rooms';
+            }
+        }
+        if (guestsDisplay) {
+            guestsDisplay.textContent = totalGuests;
+            var guestsLabel = document.getElementById('akbarGuestsLabel') || (guestsDisplay ? guestsDisplay.nextElementSibling : null);
+            if (guestsLabel && guestsLabel.classList.contains('akbar-guest-lbl')) {
+                guestsLabel.textContent = totalGuests === 1 ? 'Guest' : 'Guests';
+            }
+        }
         if (guestSubtitle) {
+            var adultStr = totalAdults === 1 ? '1 Adult' : totalAdults + ' Adults';
             var childStr = totalChildren === 1 ? '1 Child' : totalChildren + ' Children';
-            guestSubtitle.textContent = totalAdults + ' Adults, ' + childStr;
+            guestSubtitle.textContent = adultStr + ', ' + childStr;
         }
 
         var hiddenRooms = document.getElementById('akbarHiddenRooms');
@@ -2273,7 +2285,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.addAkbarRoom = function() {
         if (akbarRoomsData.length < 8) {
-            akbarRoomsData.push({ adults: 1, children: 0, childAges: [] });
+            akbarRoomsData.push({ adults: 2, children: 0, childAges: [] });
             activeEditRoomIndex = akbarRoomsData.length - 1;
             renderAkbarRooms();
         }
@@ -2303,7 +2315,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.updateRoomChildren = function(idx, delta) {
         if (akbarRoomsData[idx]) {
-            var newCount = Math.max(0, Math.min(4, akbarRoomsData[idx].children + delta));
+            var newCount = Math.max(0, Math.min(2, akbarRoomsData[idx].children + delta));
             akbarRoomsData[idx].children = newCount;
             while (akbarRoomsData[idx].childAges.length < newCount) {
                 var defaultAge = akbarRoomsData[idx].childAges.length === 0 ? 7 : 3;
