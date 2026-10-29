@@ -3139,7 +3139,17 @@ class BenzyFlightApi {
                         'Index' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1'),
                         'FlightIndex' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1'),
                         'return_identifier' => isset($j['ReturnIdentifier']) ? (int)$j['ReturnIdentifier'] : 0,
-                        'departure_date' => !empty($j['DepartureTime']) ? date('Y-m-d', strtotime($j['DepartureTime'])) : ''
+                        'departure_date' => !empty($j['DepartureTime']) ? date('Y-m-d', strtotime($j['DepartureTime'])) : '',
+                        'mac' => !empty($j['MAC']) ? $j['MAC'] : (!empty($j['VAC']) ? $j['VAC'] : $airlineCode),
+                        'MAC' => !empty($j['MAC']) ? $j['MAC'] : (!empty($j['VAC']) ? $j['VAC'] : $airlineCode),
+                        'fare_type' => !empty($j['FareType']) ? $j['FareType'] : '',
+                        'FareType' => !empty($j['FareType']) ? $j['FareType'] : '',
+                        'departure_terminal' => !empty($j['DepartureTerminal']) ? $j['DepartureTerminal'] : '',
+                        'arrival_terminal' => !empty($j['ArrivalTerminal']) ? $j['ArrivalTerminal'] : '',
+                        'DepartureTerminal' => !empty($j['DepartureTerminal']) ? $j['DepartureTerminal'] : '',
+                        'ArrivalTerminal' => !empty($j['ArrivalTerminal']) ? $j['ArrivalTerminal'] : '',
+                        'journey_key' => !empty($j['JourneyKey']) ? $j['JourneyKey'] : '',
+                        'JourneyKey' => !empty($j['JourneyKey']) ? $j['JourneyKey'] : ''
                     );
                 }
                 continue;

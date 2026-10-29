@@ -13,6 +13,63 @@ $onwardList = !empty($onwardFlights) ? $onwardFlights : (!empty($flights) ? $fli
 $returnList = !empty($returnFlights) ? $returnFlights : array();
 $activeTui  = $search_tui ?? ($search_query['tui'] ?? '');
 
+$groupedOnward = !empty($groupedOnwardFlights) ? $groupedOnwardFlights : array();
+$groupedReturn = !empty($groupedReturnFlights) ? $groupedReturnFlights : array();
+$totalFaresCount = !empty($totalFaresCount) ? $totalFaresCount : count($onwardList);
+
+// Resilient Fallback Grouping per Benz specification if grouped array is not supplied
+if (empty($groupedOnward) && !empty($onwardList)) {
+    $tempGrouped = array();
+    foreach ($onwardList as $f) {
+        $mac = strtoupper(trim((string)($f['mac'] ?? ($f['airline_code'] ?? '6E'))));
+        $fnRaw = (string)($f['flight_number'] ?? '101');
+        $fnClean = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $fnRaw));
+        if (!empty($mac) && substr($fnClean, 0, strlen($mac)) === $mac) {
+            $fnClean = substr($fnClean, strlen($mac));
+        }
+        $depTime = substr(trim((string)($f['departure_time'] ?? '06:00')), 0, 5);
+        $arrTime = substr(trim((string)($f['arrival_time'] ?? '08:15')), 0, 5);
+        $durClean = strtolower(preg_replace('/[^a-z0-9]/', '', (string)($f['duration'] ?? '02h15m')));
+        $gKey = $mac . '_' . $fnClean . '_' . ($f['from_code'] ?? $origCode) . '_' . ($f['to_code'] ?? $destCode) . '_' . $depTime . '_' . $arrTime . '_' . $durClean;
+        if (!isset($tempGrouped[$gKey])) {
+            $tempGrouped[$gKey] = array(
+                'group_key'          => $gKey,
+                'airline_name'       => $f['airline_name'] ?? ($f['airline'] ?? 'Airline'),
+                'airline_code'       => $mac,
+                'airline_logo'       => $f['airline_logo'] ?? '',
+                'flight_number'      => $mac . ' - ' . $fnClean,
+                'raw_flight_number'  => $mac . '-' . $fnClean,
+                'from_code'          => $f['from_code'] ?? $origCode,
+                'to_code'            => $f['to_code'] ?? $destCode,
+                'departure_time'     => $depTime,
+                'arrival_time'       => $arrTime,
+                'duration'           => $f['duration'] ?? '02h 15m',
+                'stops'              => (int)($f['stops'] ?? 0),
+                'stops_text'         => ((int)($f['stops'] ?? 0) > 0) ? ($f['stops'] . ' Stop') : 'Non stop',
+                'via'                => $f['via'] ?? '',
+                'departure_date'     => date('D, d M, y', strtotime($departDate)),
+                'arrival_date'       => date('D, d M, y', strtotime($departDate)),
+                'dep_terminal'       => !empty($f['departure_terminal']) ? ($origCode . ', ' . $f['departure_terminal']) : ($origCode . ', Terminal 2'),
+                'arr_terminal'       => !empty($f['arrival_terminal']) ? ($destCode . ', ' . $f['arrival_terminal']) : ($destCode . ', Terminal 3'),
+                'fares'              => array(),
+                'min_price'          => PHP_FLOAT_MAX,
+                'min_net_fare'       => PHP_FLOAT_MAX,
+                'has_refundable'     => false
+            );
+        }
+        $tempGrouped[$gKey]['fares'][] = $f;
+        $p = (float)($f['price'] ?? 0);
+        if ($p > 0 && $p < $tempGrouped[$gKey]['min_price']) {
+            $tempGrouped[$gKey]['min_price'] = $p;
+            $tempGrouped[$gKey]['min_net_fare'] = (float)($f['net_fare'] ?? ($p * 0.92));
+        }
+        if (!empty($f['refundable'])) {
+            $tempGrouped[$gKey]['has_refundable'] = true;
+        }
+    }
+    $groupedOnward = array_values($tempGrouped);
+}
+
 $isFlightRefundable = function($row) {
     if (isset($row['refundable']) && is_bool($row['refundable'])) {
         return $row['refundable'];
@@ -398,7 +455,7 @@ uasort($connectingAirportsList, function($a, $b) {
         <!-- Sorting & Results Summary Bar -->
         <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <strong style="font-size: 15px; color: #0f172a;" id="resultsCountText">Showing <?php echo count($onwardList); ?> Flights</strong>
+                <strong style="font-size: 15px; color: #0f172a;" id="resultsCountText">Showing <?php echo count($groupedOnward); ?> Flights (<?php echo $totalFaresCount; ?> Fares found)</strong>
                 <span style="background: #e0f2fe; color: #0369a1; font-size: 11.5px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">Live Benzy API Inventory</span>
             </div>
 
@@ -679,196 +736,246 @@ uasort($connectingAirportsList, function($a, $b) {
         <!-- ================================================================ -->
         <!-- ONE WAY FLIGHT LIST                                              -->
         <!-- ================================================================ -->
-        <div id="flightListContainer" style="display: flex; flex-direction: column; gap: 16px;">
-            <?php foreach ($onwardList as $f): 
-                $fId        = $f['id'] ?? ('FL_' . rand(100, 999));
-                $alCode     = strtoupper($f['airline_code'] ?? '6E');
-                $alName     = $f['airline_name'] ?? ($f['airline'] ?? 'IndiGo');
-                $alLogo     = $f['airline_logo'] ?? 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/6E.png';
-                $flNumber   = $f['flight_number'] ?? '6E-2041';
-                $depTime    = $f['departure_time'] ?? '06:00';
-                $arrTime    = $f['arrival_time'] ?? '08:15';
-                $duration   = $f['duration'] ?? '2h 15m';
-                $stops      = (int)($f['stops'] ?? 0);
-                $grossPrice = (float)($f['price'] ?? 0);
-                if ($grossPrice <= 0) continue;
-                $netPrice   = (float)($f['net_fare'] ?? ($f['base_fare'] ?? ($grossPrice * 0.92)));
-                $taxPrice   = max(0, $grossPrice - $netPrice);
-                $baggage    = $f['baggage'] ?? '15 Kg';
+        <div id="flightListContainer" style="display: flex; flex-direction: column; gap: 18px;">
+            <?php foreach ($groupedOnward as $gIdx => $g): 
+                $gMinPrice = (float)($g['min_price'] ?? 0);
+                if ($gMinPrice <= 0 || $gMinPrice === PHP_FLOAT_MAX) continue;
+                $gMinNet   = (float)($g['min_net_fare'] ?? ($gMinPrice * 0.92));
+                $gStops    = (int)($g['stops'] ?? 0);
+                $gAlCode   = strtoupper($g['airline_code'] ?? '6E');
+                $gDepTime  = $g['departure_time'] ?? '06:00';
+                $gArrTime  = $g['arrival_time'] ?? '08:15';
+                $gDuration = $g['duration'] ?? '2h 15m';
 
-                $depHour = (int)substr($depTime, 0, 2);
+                $depHour = (int)substr($gDepTime, 0, 2);
                 $depSlot = 'night';
                 if ($depHour >= 5 && $depHour < 12) $depSlot = 'morning';
                 elseif ($depHour >= 12 && $depHour < 18) $depSlot = 'afternoon';
                 elseif ($depHour >= 18 && $depHour < 23) $depSlot = 'evening';
 
-                $arrHour = (int)substr($arrTime, 0, 2);
+                $arrHour = (int)substr($gArrTime, 0, 2);
                 $arrSlot = 'night';
                 if ($arrHour >= 5 && $arrHour < 12) $arrSlot = 'morning';
                 elseif ($arrHour >= 12 && $arrHour < 18) $arrSlot = 'afternoon';
                 elseif ($arrHour >= 18 && $arrHour < 23) $arrSlot = 'evening';
 
-                $viaAirport = !empty($f['via']) ? strtoupper($f['via']) : (!empty($f['Via']) ? strtoupper($f['Via']) : ($stops > 0 ? 'HYD' : ''));
+                $viaAirport = !empty($g['via']) ? strtoupper($g['via']) : ($gStops > 0 ? 'HYD' : '');
             ?>
             <div class="f-flight-item" 
-                 data-original-price="<?php echo $grossPrice; ?>"
-                 data-price="<?php echo $grossPrice; ?>" 
-                 data-net-fare="<?php echo $netPrice; ?>"
-                 data-stops="<?php echo $stops; ?>" 
-                 data-airline="<?php echo htmlspecialchars($alCode); ?>" 
-                 data-time="<?php echo htmlspecialchars($depTime); ?>"
+                 id="flight_group_<?php echo $gIdx; ?>"
+                 data-original-price="<?php echo $gMinPrice; ?>"
+                 data-price="<?php echo $gMinPrice; ?>" 
+                 data-net-fare="<?php echo $gMinNet; ?>"
+                 data-stops="<?php echo $gStops; ?>" 
+                 data-airline="<?php echo htmlspecialchars($gAlCode); ?>" 
+                 data-time="<?php echo htmlspecialchars($gDepTime); ?>"
                  data-depslot="<?php echo $depSlot; ?>"
                  data-arrslot="<?php echo $arrSlot; ?>"
-                 data-refundable="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>"
+                 data-refundable="<?php echo !empty($g['has_refundable']) ? '1' : '0'; ?>"
                  data-via="<?php echo htmlspecialchars($viaAirport); ?>">
                 
-                <!-- Main Flight Row -->
-                <div style="padding: 20px 24px; display: grid; grid-template-columns: 200px 1fr 220px; gap: 20px; align-items: center;">
+                <!-- 1. Akbar Travels Parity Flight Schedule Header -->
+                <div class="f-group-header" style="padding: 18px 24px; border-bottom: 1px solid #f1f5f9; display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: center; background: #ffffff;">
                     
                     <!-- Airline Block -->
                     <div style="display: flex; align-items: center; gap: 14px;">
-                        <img src="<?php echo htmlspecialchars($alLogo); ?>" alt="<?php echo htmlspecialchars($alName); ?>" style="width: 38px; height: 38px; object-fit: contain;">
+                        <img src="<?php echo htmlspecialchars($g['airline_logo']); ?>" alt="<?php echo htmlspecialchars($g['airline_name']); ?>" style="width: 40px; height: 40px; object-fit: contain;">
                         <div>
-                            <strong style="font-size: 15px; color: #0f172a; display: block;"><?php echo htmlspecialchars($alName); ?></strong>
-                            <span style="font-size: 12px; color: #64748b;"><?php echo htmlspecialchars($flNumber); ?> &bull; <?php echo htmlspecialchars($cabinClass); ?></span>
-                            <div style="margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap;">
-                                <span style="display: inline-block; background: #e0f2fe; color: #0284c7; font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">
-                                    B2B Net Fare
-                                </span>
-                                <?php if (!empty($f['refundable'])): ?>
-                                    <span style="display: inline-block; background: #dcfce7; color: #166534; font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">
-                                        Refundable
-                                    </span>
-                                <?php else: ?>
-                                    <span style="display: inline-block; background: #ffedd5; color: #c2410c; font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">
-                                        Non-Refundable
-                                    </span>
-                                <?php endif; ?>
-                                <?php if (!empty($f['hold']) && ($f['hold'] === true || $f['hold'] === '1' || $f['hold'] === 1 || $f['hold'] === 'true')): ?>
-                                    <span style="display: inline-flex; align-items: center; gap: 3px; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px;" title="Hold Booking (HB) Available">
-                                        <i class="fa-solid fa-clock-rotate-left" style="font-size: 10px;"></i> Hold Available
-                                    </span>
-                                <?php endif; ?>
-                            </div>
+                            <strong style="font-size: 15px; color: #0f172a; display: block; font-weight: 800;"><?php echo htmlspecialchars($g['airline_name']); ?></strong>
+                            <span style="font-size: 12px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($g['flight_number']); ?> &bull; <?php echo htmlspecialchars($cabinClass); ?></span>
                         </div>
                     </div>
 
-                    <!-- Timings & Route Block -->
-                    <div style="display: flex; align-items: center; justify-content: space-around; text-align: center;">
-                        <!-- Dep -->
+                    <!-- Timings & Route Schedule (Akbar Travels layout) -->
+                    <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px;">
+                        <!-- Departure Info -->
                         <div style="text-align: left;">
-                            <strong style="font-size: 22px; color: #0f172a; display: block; font-weight: 800;"><?php echo htmlspecialchars($depTime); ?></strong>
-                            <span style="font-size: 13px; font-weight: 700; color: #334155;"><?php echo htmlspecialchars($origCode); ?></span>
-                            <span style="font-size: 11px; color: #94a3b8; display: block;">Airport</span>
+                            <div style="display: flex; align-items: baseline; gap: 8px;">
+                                <strong style="font-size: 22px; color: #0f172a; font-weight: 800; line-height: 1;"><?php echo htmlspecialchars($g['departure_time']); ?></strong>
+                                <span style="font-size: 11.5px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($g['departure_date']); ?></span>
+                            </div>
+                            <div style="font-size: 12px; font-weight: 700; color: #334155; margin-top: 4px;">
+                                <?php echo htmlspecialchars($g['dep_terminal']); ?>
+                            </div>
                         </div>
 
-                        <!-- Duration Path -->
-                        <div style="display: flex; flex-direction: column; align-items: center; width: 140px;">
-                            <span style="font-size: 11.5px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($duration); ?></span>
+                        <!-- Duration & Route Path -->
+                        <div style="display: flex; flex-direction: column; align-items: center; min-width: 130px;">
+                            <span style="font-size: 11.5px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($g['duration']); ?></span>
                             <div style="width: 100%; height: 2px; background: #cbd5e1; position: relative; margin: 6px 0;">
                                 <i class="fa-solid fa-plane" style="position: absolute; top: -6px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #78B722; background: #ffffff; padding: 0 4px;"></i>
                             </div>
-                            <span style="font-size: 11px; font-weight: 700; color: <?php echo ($stops == 0) ? '#166534' : '#d97706'; ?>;">
-                                <?php echo ($stops == 0) ? 'Non Stop' : ($stops . ' Stop' . ($viaAirport ? ' (' . $viaAirport . ')' : '')); ?>
+                            <span style="font-size: 11px; font-weight: 700; color: <?php echo ($gStops == 0) ? '#166534' : '#d97706'; ?>;">
+                                <?php echo ($gStops == 0) ? 'Non stop' : ($gStops . ' Stop' . ($viaAirport ? ' (' . $viaAirport . ')' : '')); ?>
                             </span>
                         </div>
 
-                        <!-- Arr -->
+                        <!-- Arrival Info -->
                         <div style="text-align: right;">
-                            <strong style="font-size: 22px; color: #0f172a; display: block; font-weight: 800;"><?php echo htmlspecialchars($arrTime); ?></strong>
-                            <span style="font-size: 13px; font-weight: 700; color: #334155;"><?php echo htmlspecialchars($destCode); ?></span>
-                            <span style="font-size: 11px; color: #94a3b8; display: block;">Airport</span>
-                        </div>
-                    </div>
-
-                    <!-- Price & Booking Block (Parity with Akbar Travels Screenshots 2 & 3) -->
-                    <div style="text-align: right; border-left: 1px solid #f1f5f9; padding-left: 20px;">
-                        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 5px;">
-                            <div style="font-size: 24px; font-weight: 800; color: #09204b; line-height: 1.1;">
-                                ₹ <span class="card-display-price"><?php echo number_format($grossPrice); ?></span>
+                            <div style="display: flex; align-items: baseline; justify-content: flex-end; gap: 8px;">
+                                <strong style="font-size: 22px; color: #0f172a; font-weight: 800; line-height: 1;"><?php echo htmlspecialchars($g['arrival_time']); ?></strong>
+                                <span style="font-size: 11.5px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($g['arrival_date']); ?></span>
+                                <?php if (!empty($g['is_next_day'])): ?>
+                                    <span style="background: #ffedd5; color: #c2410c; font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 4px;">Next Day</span>
+                                <?php endif; ?>
                             </div>
-                            <span style="color: #64748b; font-size: 13px; cursor: pointer;" title="Fare Details">ⓘ</span>
-                        </div>
-                        <div style="font-size: 12px; color: #475569; font-weight: 700; margin-top: 3px;">
-                            Net Fare: ₹ <span class="card-net-fare"><?php echo number_format($netPrice); ?></span>
-                        </div>
-
-                        <form method="post" action="<?php echo site_url('franchise/flight_review'); ?>" class="flight-book-form" style="margin-top: 10px;">
-                            <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($fId); ?>">
-                            <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($alName); ?>">
-                            <input type="hidden" name="flight_number" value="<?php echo htmlspecialchars($flNumber); ?>">
-                            <input type="hidden" name="airline_code" value="<?php echo htmlspecialchars($alCode); ?>">
-                            <input type="hidden" name="airline_logo" value="<?php echo htmlspecialchars($alLogo); ?>">
-                            <input type="hidden" name="from_code" value="<?php echo htmlspecialchars($origCode); ?>">
-                            <input type="hidden" name="to_code" value="<?php echo htmlspecialchars($destCode); ?>">
-                            <input type="hidden" name="departure_time" value="<?php echo htmlspecialchars($depTime); ?>">
-                            <input type="hidden" name="arrival_time" value="<?php echo htmlspecialchars($arrTime); ?>">
-                            <input type="hidden" name="duration" value="<?php echo htmlspecialchars($duration); ?>">
-                            <input type="hidden" name="stops" value="<?php echo (int)$stops; ?>">
-                            <input type="hidden" name="base_fare" value="<?php echo $netPrice; ?>">
-                            <input type="hidden" name="net_fare" class="input-form-net-fare" value="<?php echo $netPrice; ?>">
-                            <input type="hidden" name="markup_amount" class="input-form-markup-amount" value="0">
-                            <input type="hidden" name="markup_type" class="input-form-markup-type" value="pax">
-                            <input type="hidden" name="display_price" class="input-form-display-price" value="<?php echo $grossPrice; ?>">
-                            <input type="hidden" name="tax" value="<?php echo $taxPrice; ?>">
-                            <input type="hidden" name="price" class="input-form-price" value="<?php echo $grossPrice; ?>">
-                            <input type="hidden" name="total_fare" class="input-form-total-fare" value="<?php echo $grossPrice; ?>">
-                            <input type="hidden" name="adults" value="<?php echo (int)($search_query['adults'] ?? 1); ?>">
-                            <input type="hidden" name="children" value="<?php echo (int)($search_query['children'] ?? 0); ?>">
-                            <input type="hidden" name="infants" value="<?php echo (int)($search_query['infants'] ?? 0); ?>">
-                            <input type="hidden" name="refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
-                            <input type="hidden" name="is_refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
-                            <input type="hidden" name="hold" value="<?php echo (!empty($f['hold']) && ($f['hold'] === true || $f['hold'] === '1' || $f['hold'] === 1 || $f['hold'] === 'true')) ? '1' : '0'; ?>">
-                            <input type="hidden" name="hold_info" value="<?php echo htmlspecialchars($f['hold_info'] ?? ''); ?>">
-
-                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
-                                <button type="submit" class="f-book-btn" style="background: #8ac33e; color: #ffffff; padding: 8px 18px; font-weight: 800; font-size: 13.5px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-                                    <span>Book Now</span>
-                                </button>
-                                <span style="display: inline-flex; flex-direction: column; gap: 3px; color: #475569; font-size: 12px; cursor: pointer;">
-                                    <i class="fa-regular fa-copy" title="Copy Fare"></i>
-                                    <i class="fa-solid fa-print" title="Print Fare Quote"></i>
-                                </span>
+                            <div style="font-size: 12px; font-weight: 700; color: #334155; margin-top: 4px;">
+                                <?php echo htmlspecialchars($g['arr_terminal']); ?>
                             </div>
-                        </form>
-
-                        <div style="font-size: 11px; color: <?php echo !empty($f['refundable']) ? '#166534' : '#c2410c'; ?>; font-weight: 700; margin-top: 6px;">
-                            ⓘ <?php echo !empty($f['refundable']) ? 'Refundable fares' : 'NON Refundable fares'; ?>
                         </div>
                     </div>
 
                 </div>
 
-                <!-- Accordion Drawer (Baggage, Policies, Flight Details) -->
-                <div style="background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #475569;">
-                    <div style="display: flex; gap: 20px; align-items: center;">
-                        <span><i class="fa-solid fa-suitcase" style="color: #78B722; margin-right: 5px;"></i> <strong>Check-in:</strong> <?php echo htmlspecialchars($baggage); ?></span>
-                        <span><i class="fa-solid fa-briefcase" style="color: #0284c7; margin-right: 5px;"></i> <strong>Cabin:</strong> 7 Kg</span>
-                        <?php if (!empty($f['refundable'])): ?>
-                            <span style="color: #16a34a; font-weight: 700;"><i class="fa-solid fa-circle-check" style="color: #16a34a; margin-right: 5px;"></i> Refundable Fare</span>
-                        <?php else: ?>
-                            <span style="color: #ea580c; font-weight: 700;"><i class="fa-solid fa-ban" style="color: #ea580c; margin-right: 5px;"></i> Non-Refundable Fare</span>
-                        <?php endif; ?>
-                    </div>
-
-                    <div style="color: #2563eb; font-weight: 700; cursor: pointer;" onclick="toggleDetailsDrawer('details_<?php echo $fId; ?>')">
-                        <span>Flight Details</span> <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i>
-                    </div>
-                </div>
-
-                <!-- Hidden Collapsible Detail Section -->
-                <div id="details_<?php echo $fId; ?>" style="display: none; padding: 16px 24px; background: #ffffff; border-top: 1px dashed #e2e8f0; font-size: 12.5px; color: #334155;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <!-- 2. Akbar Travels Multi-Fare Brand Rows -->
+                <div class="f-fares-container">
+                    <?php 
+                    $faresList = $g['fares'];
+                    foreach ($faresList as $fIdx => $f): 
+                        $fGross    = (float)($f['price'] ?? 0);
+                        if ($fGross <= 0) continue;
+                        $fNet      = (float)($f['net_fare'] ?? ($f['base_fare'] ?? ($fGross * 0.92)));
+                        $fTax      = max(0, $fGross - $fNet);
+                        $fLabel    = $f['fare_label'] ?? 'ECO VALUE';
+                        $fCode     = $f['fare_code'] ?? ($f['fbc'] ?? 'SU1YXRII');
+                        $fBaggage  = $f['baggage'] ?? '15 Kg';
+                        $isExtra   = ($fIdx >= 1); // Extra fare collapsed by default
+                        $fareRowId = 'fare_' . $gIdx . '_' . $fIdx;
+                    ?>
+                    <div class="f-fare-row <?php echo $isExtra ? 'f-extra-fare f-extra-fare-' . $gIdx : ''; ?>" 
+                         id="<?php echo $fareRowId; ?>"
+                         style="<?php echo $isExtra ? 'display: none;' : ''; ?> padding: 14px 24px; border-top: 1px solid #f1f5f9; background: <?php echo ($fIdx % 2 === 0) ? '#ffffff' : '#fcfdfe'; ?>; display: grid; grid-template-columns: 210px 140px 180px 1fr 180px; gap: 16px; align-items: center;"
+                         data-original-price="<?php echo $fGross; ?>"
+                         data-net-fare="<?php echo $fNet; ?>">
+                        
+                        <!-- Fare Brand & Fare Code -->
                         <div>
-                            <strong style="color: #09204b; display: block; margin-bottom: 6px;">Baggage Allowance</strong>
-                            <p style="margin: 0; color: #64748b;">Adult check-in baggage: 15 Kg (1 piece) &bull; Hand baggage: 7 Kg. Excess baggage can be purchased at airline counter.</p>
+                            <strong style="font-size: 13.5px; color: #0f172a; display: block; font-weight: 800; letter-spacing: 0.3px;"><?php echo htmlspecialchars($fLabel); ?></strong>
+                            <span style="font-size: 11px; color: #94a3b8; font-weight: 600;">(<?php echo htmlspecialchars($fCode); ?>)</span>
                         </div>
-                        <div>
-                            <strong style="color: #09204b; display: block; margin-bottom: 6px;">B2B Cancellation Rules</strong>
-                            <p style="margin: 0; color: #64748b;">Standard airline cancellation fee applies up to 2 hours before departure. Refund credited back directly to your Store Float.</p>
+
+                        <!-- Baggage Icons -->
+                        <div style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #475569;">
+                            <span title="Check-in Baggage" style="display: inline-flex; align-items: center; gap: 5px;">
+                                <i class="fa-solid fa-suitcase" style="color: #64748b; font-size: 13px;"></i> <strong><?php echo htmlspecialchars($fBaggage); ?></strong>
+                            </span>
+                            <span title="Cabin Baggage" style="display: inline-flex; align-items: center; gap: 5px;">
+                                <i class="fa-solid fa-briefcase" style="color: #64748b; font-size: 13px;"></i> 7 Kg
+                            </span>
+                        </div>
+
+                        <!-- Details & Policy Links -->
+                        <div style="font-size: 11.5px;">
+                            <span style="color: #0284c7; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;" onclick="toggleDetailsDrawer('details_<?php echo $fareRowId; ?>')">
+                                <span>Flight Details</span> <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
+                            </span>
+                            <div style="margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+                                <?php if (!empty($f['refundable'])): ?>
+                                    <span style="color: #166534; font-weight: 700; font-size: 11px;">● Refundable</span>
+                                <?php else: ?>
+                                    <span style="color: #c2410c; font-weight: 700; font-size: 11px;">● Non-Refundable</span>
+                                <?php endif; ?>
+                                <?php if (!empty($f['hold']) && ($f['hold'] === true || $f['hold'] === '1' || $f['hold'] === 1 || $f['hold'] === 'true')): ?>
+                                    <span style="color: #0284c7; font-weight: 700; font-size: 11px;">● Hold</span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Price & Wholesale Net Fare -->
+                        <div style="text-align: right;">
+                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 5px;">
+                                <div style="font-size: 21px; font-weight: 800; color: #09204b; line-height: 1;">
+                                    ₹ <span class="fare-display-price card-display-price"><?php echo number_format($fGross); ?></span>
+                                </div>
+                                <span style="color: #94a3b8; font-size: 12px; cursor: pointer;" title="Fare Details">ⓘ</span>
+                            </div>
+                            <div style="font-size: 11.5px; color: #475569; font-weight: 700; margin-top: 3px;">
+                                Net Fare: ₹ <span class="fare-net-price card-net-fare"><?php echo number_format($fNet); ?></span>
+                            </div>
+                        </div>
+
+                        <!-- Action: Book Now Button -->
+                        <div style="text-align: right;">
+                            <form method="post" action="<?php echo site_url('franchise/flight_review'); ?>" class="flight-book-form">
+                                <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($f['id'] ?? ('FL_' . $gAlCode . '_' . rand(100, 999))); ?>">
+                                <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($g['airline_name']); ?>">
+                                <input type="hidden" name="flight_number" value="<?php echo htmlspecialchars($g['raw_flight_number']); ?>">
+                                <input type="hidden" name="airline_code" value="<?php echo htmlspecialchars($gAlCode); ?>">
+                                <input type="hidden" name="airline_logo" value="<?php echo htmlspecialchars($g['airline_logo']); ?>">
+                                <input type="hidden" name="from_code" value="<?php echo htmlspecialchars($g['from_code']); ?>">
+                                <input type="hidden" name="to_code" value="<?php echo htmlspecialchars($g['to_code']); ?>">
+                                <input type="hidden" name="departure_time" value="<?php echo htmlspecialchars($g['departure_time']); ?>">
+                                <input type="hidden" name="arrival_time" value="<?php echo htmlspecialchars($g['arrival_time']); ?>">
+                                <input type="hidden" name="duration" value="<?php echo htmlspecialchars($g['duration']); ?>">
+                                <input type="hidden" name="stops" value="<?php echo (int)$gStops; ?>">
+                                <input type="hidden" name="base_fare" value="<?php echo $fNet; ?>">
+                                <input type="hidden" name="net_fare" class="input-form-net-fare" value="<?php echo $fNet; ?>">
+                                <input type="hidden" name="markup_amount" class="input-form-markup-amount" value="0">
+                                <input type="hidden" name="markup_type" class="input-form-markup-type" value="pax">
+                                <input type="hidden" name="display_price" class="input-form-display-price" value="<?php echo $fGross; ?>">
+                                <input type="hidden" name="tax" value="<?php echo $fTax; ?>">
+                                <input type="hidden" name="price" class="input-form-price" value="<?php echo $fGross; ?>">
+                                <input type="hidden" name="total_fare" class="input-form-total-fare" value="<?php echo $fGross; ?>">
+                                <input type="hidden" name="adults" value="<?php echo (int)($search_query['adults'] ?? 1); ?>">
+                                <input type="hidden" name="children" value="<?php echo (int)($search_query['children'] ?? 0); ?>">
+                                <input type="hidden" name="infants" value="<?php echo (int)($search_query['infants'] ?? 0); ?>">
+                                <input type="hidden" name="refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
+                                <input type="hidden" name="is_refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
+                                <input type="hidden" name="hold" value="<?php echo (!empty($f['hold']) && ($f['hold'] === true || $f['hold'] === '1' || $f['hold'] === 1 || $f['hold'] === 'true')) ? '1' : '0'; ?>">
+                                <input type="hidden" name="hold_info" value="<?php echo htmlspecialchars($f['hold_info'] ?? ''); ?>">
+                                <input type="hidden" name="flight_index" value="<?php echo htmlspecialchars($f['flight_index'] ?? ($f['Index'] ?? '')); ?>">
+                                <input type="hidden" name="fare_class" value="<?php echo htmlspecialchars($f['fare_class'] ?? ($f['FareClass'] ?? '')); ?>">
+                                <input type="hidden" name="fbc" value="<?php echo htmlspecialchars($f['fbc'] ?? ($f['FBC'] ?? '')); ?>">
+                                <input type="hidden" name="fare_type" value="<?php echo htmlspecialchars($f['fare_type'] ?? ($f['FareType'] ?? '')); ?>">
+                                <input type="hidden" name="fare_name" value="<?php echo htmlspecialchars($fLabel); ?>">
+                                <input type="hidden" name="baggage" value="<?php echo htmlspecialchars($fBaggage); ?>">
+
+                                <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
+                                    <button type="submit" class="f-book-btn" style="background: #8ac33e; color: #ffffff; padding: 7px 16px; font-weight: 800; font-size: 13px; border-radius: 6px; border: none; cursor: pointer;">
+                                        Book Now
+                                    </button>
+                                    <span style="display: inline-flex; flex-direction: column; gap: 3px; color: #64748b; font-size: 11px; cursor: pointer;">
+                                        <i class="fa-regular fa-copy" title="Copy Fare"></i>
+                                        <i class="fa-solid fa-print" title="Print Fare Quote"></i>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <!-- Hidden Collapsible Detail Drawer for this fare -->
+                    <div id="details_<?php echo $fareRowId; ?>" style="display: none; padding: 14px 24px; background: #f8fafc; border-top: 1px dashed #cbd5e1; font-size: 12px; color: #334155;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <strong style="color: #09204b; display: block; margin-bottom: 4px;">Baggage Allowance</strong>
+                                <p style="margin: 0; color: #64748b;">Adult check-in baggage: <?php echo htmlspecialchars($fBaggage); ?> (1 piece) &bull; Hand baggage: 7 Kg. Excess baggage can be purchased at airline check-in.</p>
+                            </div>
+                            <div>
+                                <strong style="color: #09204b; display: block; margin-bottom: 4px;">B2B Cancellation Rules</strong>
+                                <p style="margin: 0; color: #64748b;">
+                                    <?php echo !empty($f['refundable']) ? 'Standard airline cancellation fee applies up to 2 hours before departure. Refund credited back directly to your Store Float.' : 'Non-refundable fare. Only statutory airline passenger taxes refundable upon cancellation.'; ?>
+                                </p>
+                            </div>
                         </div>
                     </div>
+                    <?php endforeach; ?>
                 </div>
+
+                <!-- 3. Multi-fare Expand/Collapse Bar matching Akbar Travels Screenshot 1 -->
+                <?php if (count($faresList) > 1): ?>
+                <div style="background: #f8fafc; border-top: 1px solid #e2e8f0; text-align: center; padding: 7px 16px;">
+                    <button type="button" 
+                            class="btn-fare-toggle"
+                            data-group-id="<?php echo $gIdx; ?>"
+                            data-count="<?php echo count($faresList) - 1; ?>"
+                            onclick="toggleFlightFares(<?php echo $gIdx; ?>, this)"
+                            style="background: transparent; border: none; color: #0284c7; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                        <span>View More Fares (<?php echo count($faresList) - 1; ?> more)</span>
+                        <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                    </button>
+                </div>
+                <?php endif; ?>
 
             </div>
             <?php endforeach; ?>
@@ -1191,7 +1298,7 @@ function applyMarkup() {
         unitAddition = Math.round(amount / totalPaxCount);
     }
 
-    // 1. Update One-Way Flight Cards
+    // 1. Update One-Way Flight Cards & Fares
     document.querySelectorAll('.f-flight-item').forEach(card => {
         const origPrice = parseFloat(card.getAttribute('data-original-price') || card.getAttribute('data-price') || 0);
         if (origPrice <= 0) return;
@@ -1199,26 +1306,32 @@ function applyMarkup() {
 
         card.setAttribute('data-price', newPrice);
 
-        // Update display price text
-        const priceDisplayEl = card.querySelector('.card-display-price');
-        if (priceDisplayEl) {
-            priceDisplayEl.textContent = newPrice.toLocaleString('en-IN');
-        }
+        // Update all individual fare rows inside this flight card
+        card.querySelectorAll('.f-fare-row').forEach(row => {
+            const rowOrigPrice = parseFloat(row.getAttribute('data-original-price') || 0);
+            if (rowOrigPrice <= 0) return;
+            const newRowPrice = Math.round(rowOrigPrice + unitAddition);
+            row.setAttribute('data-price', newRowPrice);
 
-        // Update form hidden inputs
-        const form = card.querySelector('form');
-        if (form) {
-            const pInput = form.querySelector('.input-form-price') || form.querySelector('input[name="price"]');
-            if (pInput) pInput.value = newPrice;
-            const tfInput = form.querySelector('.input-form-total-fare') || form.querySelector('input[name="total_fare"]');
-            if (tfInput) tfInput.value = newPrice;
-            const mAmtInput = form.querySelector('.input-form-markup-amount');
-            if (mAmtInput) mAmtInput.value = amount;
-            const mTypeInput = form.querySelector('.input-form-markup-type');
-            if (mTypeInput) mTypeInput.value = markupType;
-            const dispInput = form.querySelector('.input-form-display-price');
-            if (dispInput) dispInput.value = newPrice;
-        }
+            const rowDispEl = row.querySelector('.fare-display-price') || row.querySelector('.card-display-price');
+            if (rowDispEl) {
+                rowDispEl.textContent = newRowPrice.toLocaleString('en-IN');
+            }
+
+            const form = row.querySelector('form');
+            if (form) {
+                const pInput = form.querySelector('.input-form-price') || form.querySelector('input[name="price"]');
+                if (pInput) pInput.value = newRowPrice;
+                const tfInput = form.querySelector('.input-form-total-fare') || form.querySelector('input[name="total_fare"]');
+                if (tfInput) tfInput.value = newRowPrice;
+                const mAmtInput = form.querySelector('.input-form-markup-amount');
+                if (mAmtInput) mAmtInput.value = amount;
+                const mTypeInput = form.querySelector('.input-form-markup-type');
+                if (mTypeInput) mTypeInput.value = markupType;
+                const dispInput = form.querySelector('.input-form-display-price');
+                if (dispInput) dispInput.value = newRowPrice;
+            }
+        });
     });
 
     // 2. Update Round-Trip Cards
@@ -1273,28 +1386,35 @@ function resetMarkup() {
     currentMarkupAmount = 0;
     currentMarkupType = 'pax';
 
-    // 1. Revert One-Way Cards
+    // 1. Revert One-Way Cards & Fares
     document.querySelectorAll('.f-flight-item').forEach(card => {
         const origPrice = parseFloat(card.getAttribute('data-original-price') || 0);
         if (origPrice <= 0) return;
 
         card.setAttribute('data-price', origPrice);
-        const priceDisplayEl = card.querySelector('.card-display-price');
-        if (priceDisplayEl) {
-            priceDisplayEl.textContent = origPrice.toLocaleString('en-IN');
-        }
 
-        const form = card.querySelector('form');
-        if (form) {
-            const pInput = form.querySelector('.input-form-price') || form.querySelector('input[name="price"]');
-            if (pInput) pInput.value = origPrice;
-            const tfInput = form.querySelector('.input-form-total-fare') || form.querySelector('input[name="total_fare"]');
-            if (tfInput) tfInput.value = origPrice;
-            const mAmtInput = form.querySelector('.input-form-markup-amount');
-            if (mAmtInput) mAmtInput.value = '0';
-            const dispInput = form.querySelector('.input-form-display-price');
-            if (dispInput) dispInput.value = origPrice;
-        }
+        card.querySelectorAll('.f-fare-row').forEach(row => {
+            const rowOrigPrice = parseFloat(row.getAttribute('data-original-price') || 0);
+            if (rowOrigPrice <= 0) return;
+            row.setAttribute('data-price', rowOrigPrice);
+
+            const rowDispEl = row.querySelector('.fare-display-price') || row.querySelector('.card-display-price');
+            if (rowDispEl) {
+                rowDispEl.textContent = rowOrigPrice.toLocaleString('en-IN');
+            }
+
+            const form = row.querySelector('form');
+            if (form) {
+                const pInput = form.querySelector('.input-form-price') || form.querySelector('input[name="price"]');
+                if (pInput) pInput.value = rowOrigPrice;
+                const tfInput = form.querySelector('.input-form-total-fare') || form.querySelector('input[name="total_fare"]');
+                if (tfInput) tfInput.value = rowOrigPrice;
+                const mAmtInput = form.querySelector('.input-form-markup-amount');
+                if (mAmtInput) mAmtInput.value = '0';
+                const dispInput = form.querySelector('.input-form-display-price');
+                if (dispInput) dispInput.value = rowOrigPrice;
+            }
+        });
     });
 
     // 2. Revert Round-Trip Cards
@@ -1597,6 +1717,25 @@ function toggleDetailsDrawer(drawerId) {
     const el = document.getElementById(drawerId);
     if (el) {
         el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+    }
+}
+
+function toggleFlightFares(groupId, btn) {
+    const extraRows = document.querySelectorAll('.f-extra-fare-' + groupId);
+    if (!extraRows || extraRows.length === 0) return;
+    
+    const firstRow = extraRows[0];
+    const isHidden = (firstRow.style.display === 'none' || firstRow.style.display === '');
+    const count = btn.getAttribute('data-count') || extraRows.length;
+    
+    extraRows.forEach(row => {
+        row.style.display = isHidden ? 'grid' : 'none';
+    });
+
+    if (isHidden) {
+        btn.innerHTML = '<span>Show less fare</span> <i class="fa-solid fa-chevron-up" style="font-size: 10px;"></i>';
+    } else {
+        btn.innerHTML = `<span>View More Fares (${count} more)</span> <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>`;
     }
 }
 
