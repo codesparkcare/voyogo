@@ -146,8 +146,15 @@ class Franchise extends CI_Controller {
             usort($g['fares'], function($a, $b) {
                 $pa = (float)($a['price'] ?? 0);
                 $pb = (float)($b['price'] ?? 0);
-                if ($pa == $pb) return 0;
-                return ($pa < $pb) ? -1 : 1;
+                if ($pa != $pb) {
+                    return ($pa < $pb) ? -1 : 1;
+                }
+                // When prices are equal, prioritize SAVER before CP/SME
+                $fbca = strtoupper(trim((string)($a['fbc'] ?? ($a['FBC'] ?? ''))));
+                $fbcb = strtoupper(trim((string)($b['fbc'] ?? ($b['FBC'] ?? ''))));
+                $isSaverA = (strpos($fbca, 'SAV') !== false) ? 0 : 1;
+                $isSaverB = (strpos($fbcb, 'SAV') !== false) ? 0 : 1;
+                return $isSaverA <=> $isSaverB;
             });
 
             // FIX #2: Deduplicate by FareBasisCode — keep the first (cheapest) fare per FBC.
@@ -168,35 +175,108 @@ class Franchise extends CI_Controller {
 
             $fareCount = count($g['fares']);
             foreach ($g['fares'] as $fIdx => &$fare) {
-                $fbc = strtoupper(trim((string)($fare['fbc'] ?? ($fare['FBC'] ?? ''))));
-                $fc  = strtoupper(trim((string)($fare['fare_class'] ?? ($fare['FareClass'] ?? ''))));
-                $ft  = strtoupper(trim((string)($fare['fare_type'] ?? ($fare['FareType'] ?? ''))));
+                $alCode = strtoupper(trim((string)($fare['airline_code'] ?? ($g['airline_code'] ?? ''))));
+                $fbc    = strtoupper(trim((string)($fare['fbc'] ?? ($fare['FBC'] ?? ''))));
+                $fc     = strtoupper(trim((string)($fare['fare_class'] ?? ($fare['FareClass'] ?? ''))));
+                $ft     = strtoupper(trim((string)($fare['fare_type'] ?? ($fare['FareType'] ?? ''))));
 
-                // FIX #3: Priority 1 — use the API's own FareType name (e.g. "SPECIAL CP", "SAVER",
-                // "CORPORATE STRATEGIC FARES", "SME FARE", "FLEX") so the label matches Akbar Travels exactly.
-                if (!empty($ft) && strlen($ft) > 2) {
-                    $label = $ft;
-                } elseif (!empty($fare['fare_name'])) {
+                // Channel codes from Benzy API that must NEVER be used as a branded fare label
+                $isChannelCode = empty($ft) || (substr($ft, -1) === '-') || in_array($ft, array('PB-', 'PB', 'SR-', 'SR', 'CP-', 'CD-', 'ON', 'RT', 'OW', 'GDS', 'NDC', 'LCC', 'RETAIL'));
+
+                // FIX #3: Map FBC & Airline to exact Akbar Travels brand names
+                if (!empty($fare['fare_name']) && !in_array($fare['fare_name'], array('ECO VALUE', 'PB-'))) {
                     $label = $fare['fare_name'];
-                } elseif (strpos($fbc, 'SME') !== false) {
-                    $label = 'SME FARE';
-                } elseif (strpos($fbc, 'FLEX') !== false) {
-                    $label = 'ECO FLEX';
-                } elseif (strpos($fbc, 'CLASSIC') !== false) {
-                    $label = 'ECO CLASSIC';
-                } elseif (strpos($fbc, 'CORP') !== false) {
-                    $label = 'CORPORATE FARE';
-                } elseif (strpos($fc, 'PREM') !== false || strpos($fbc, 'PREM') !== false) {
-                    $label = ($fIdx >= 4) ? 'PREMIUM FLEX' : 'PREMIUM VALUE';
-                } elseif ($fareCount > 1) {
-                    $standardTiers = array('ECO VALUE', 'SME FARE', 'ECO CLASSIC', 'ECO FLEX', 'PREMIUM VALUE', 'PREMIUM FLEX');
-                    $label = $standardTiers[$fIdx] ?? ('FARE TIER ' . ($fIdx + 1));
+                } elseif (!$isChannelCode && strlen($ft) > 3) {
+                    $label = $ft;
+                } elseif ($alCode === 'SG') {
+                    // SpiceJet specific mapping (matches Akbar Travels exactly: SAVER, SPECIAL CP, FLEX, CORPORATE STRATEGIC FARES, SME FARE)
+                    if (strpos($fbc, 'CPN') !== false || strpos($fbc, 'CP') !== false || strpos($fbc, 'IRIC') !== false) {
+                        $label = 'SPECIAL CP';
+                    } elseif (strpos($fbc, 'SAV') !== false) {
+                        $label = 'SAVER';
+                    } elseif (strpos($fbc, 'SMF') !== false || strpos($fbc, 'FLEX') !== false) {
+                        $label = 'FLEX';
+                    } elseif (strpos($fbc, 'CRS') !== false) {
+                        $label = 'CORPORATE STRATEGIC FARES';
+                    } elseif (strpos($fbc, 'SME') !== false) {
+                        $label = 'SME FARE';
+                    } else {
+                        $sgTiers = array('SAVER', 'SPECIAL CP', 'FLEX', 'CORPORATE STRATEGIC FARES', 'SME FARE');
+                        $label = $sgTiers[$fIdx] ?? ('FARE TIER ' . ($fIdx + 1));
+                    }
+                } elseif ($alCode === 'AI') {
+                    // Air India specific mapping (matches Akbar Travels: ECO VALUE, SME FARE, ECO CLASSIC, ECO FLEX, PREMIUM VALUE, PREMIUM FLEX)
+                    if (strpos($fbc, 'X7') !== false || strpos($fbc, 'SME') !== false) {
+                        $label = 'SME FARE';
+                    } elseif (strpos($fbc, 'PFD') !== false) {
+                        $label = 'PREMIUM FLEX';
+                    } elseif (strpos($fbc, 'PWD') !== false || strpos($fbc, 'PREM') !== false) {
+                        $label = 'PREMIUM VALUE';
+                    } elseif (strpos($fbc, 'FRI') !== false || strpos($fbc, 'FLX') !== false || strpos($fbc, 'FLEX') !== false) {
+                        $label = 'ECO FLEX';
+                    } elseif (strpos($fbc, 'WRI') !== false || strpos($fbc, 'CLASSIC') !== false) {
+                        $label = 'ECO CLASSIC';
+                    } elseif (strpos($fbc, 'XRI') !== false || strpos($fbc, 'VAL') !== false) {
+                        $label = 'ECO VALUE';
+                    } else {
+                        $aiTiers = array('ECO VALUE', 'SME FARE', 'ECO CLASSIC', 'ECO FLEX', 'PREMIUM VALUE', 'PREMIUM FLEX');
+                        $label = $aiTiers[$fIdx] ?? ('FARE TIER ' . ($fIdx + 1));
+                    }
                 } else {
-                    $label = 'ECO VALUE';
+                    // IndiGo (6E), Akasa (QP), Air India Express (IX/I5), etc.
+                    if (strpos($fbc, 'SME') !== false) {
+                        $label = 'SME FARE';
+                    } elseif (strpos($fbc, 'CPN') !== false || strpos($fbc, 'CP') !== false) {
+                        $label = 'SPECIAL CP';
+                    } elseif (strpos($fbc, 'CRS') !== false || strpos($fbc, 'CORP') !== false) {
+                        $label = 'CORPORATE FARE';
+                    } elseif (strpos($fbc, 'SMF') !== false || strpos($fbc, 'FLEX') !== false || strpos($fbc, 'FLX') !== false) {
+                        $label = 'ECO FLEX';
+                    } elseif (strpos($fbc, 'CLASSIC') !== false) {
+                        $label = 'ECO CLASSIC';
+                    } elseif (strpos($fbc, 'SAV') !== false) {
+                        $label = 'SAVER';
+                    } elseif (strpos($fc, 'PREM') !== false || strpos($fbc, 'PREM') !== false) {
+                        $label = ($fIdx >= 4) ? 'PREMIUM FLEX' : 'PREMIUM VALUE';
+                    } elseif ($fareCount > 1) {
+                        $standardTiers = array('ECO VALUE', 'SME FARE', 'ECO CLASSIC', 'ECO FLEX', 'PREMIUM VALUE', 'PREMIUM FLEX');
+                        $label = $standardTiers[$fIdx] ?? ('FARE TIER ' . ($fIdx + 1));
+                    } else {
+                        $label = 'ECO VALUE';
+                    }
                 }
 
                 $fare['fare_label'] = $label;
                 $fare['fare_code']  = !empty($fbc) ? $fbc : (!empty($fc) ? $fc : ('FA' . ($fIdx + 1)));
+
+                // Net Fare parity with Akbar Travels B2B agent panel:
+                // 1) Zero-commission corporate/SME/CP fares (e.g. SpiceJet): Net Fare = Gross Fare, unless API provided genuine commission
+                // 2) Standard published fares (SAVER, FLEX, ECO VALUE, etc.): apply ~1.5% B2B agent commission if API returned equal gross & net
+                $isZeroComm = in_array($label, array('SPECIAL CP', 'CORPORATE STRATEGIC FARES', 'CORPORATE FARE', 'SME FARE'));
+                $grossVal   = (float)($fare['price'] ?? 0);
+                $currentNet = (float)($fare['net_fare'] ?? ($fare['base_fare'] ?? $grossVal));
+
+                if ($isZeroComm) {
+                    if ($currentNet < $grossVal && $currentNet > 0) {
+                        // Preserve API-provided discounted net fare (e.g. Air India SME)
+                        $fare['net_fare']  = $currentNet;
+                        $fare['base_fare'] = $currentNet;
+                        $fare['net_price'] = $currentNet;
+                    } else {
+                        // Zero-commission negotiated fares (SpiceJet CP / Corporate / SME)
+                        $fare['net_fare']  = $grossVal;
+                        $fare['base_fare'] = $grossVal;
+                        $fare['net_price'] = $grossVal;
+                    }
+                } else {
+                    if ($currentNet >= $grossVal && $grossVal > 0) {
+                        $comm = round($grossVal * 0.015);
+                        $computedNet = max(0, $grossVal - $comm);
+                        $fare['net_fare']  = $computedNet;
+                        $fare['base_fare'] = $computedNet;
+                        $fare['net_price'] = $computedNet;
+                    }
+                }
 
                 if (empty($fare['baggage'])) {
                     if ($label === 'ECO FLEX' || $label === 'PREMIUM FLEX') {
@@ -209,6 +289,12 @@ class Franchise extends CI_Controller {
                 }
             }
             unset($fare);
+
+            // Update group summary lowest price & lowest net fare from the first fare
+            if (!empty($g['fares'][0])) {
+                $g['min_price'] = (float)($g['fares'][0]['price'] ?? 0);
+                $g['min_net_fare'] = (float)($g['fares'][0]['net_fare'] ?? ($g['fares'][0]['base_fare'] ?? $g['min_price']));
+            }
         }
         unset($g);
 
