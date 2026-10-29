@@ -3087,13 +3087,14 @@ class BenzyFlightApi {
                         continue;
                     }
 
-                    $taxes = isset($j['TotalTax']) && (float)$j['TotalTax'] > 0 ? (float)$j['TotalTax'] : max(0, $grossFare - $netFare);
-                    if ($taxes <= 0) {
-                        $taxes = round($grossFare * 0.15);
-                        if ($netFare >= $grossFare) {
-                            $netFare = max(0, $grossFare - $taxes);
-                        }
-                    }
+                    // Use API-provided tax if available; otherwise derive from gross-net spread.
+                    // IMPORTANT: Do NOT reduce $netFare based on estimated taxes.
+                    // When NetFare == GrossFare the airline gives zero agent commission
+                    // (e.g. SPECIAL CP, CORPORATE, SME fares) -- Net Fare must equal
+                    // Gross Fare in those cases, matching Akbar Travels B2B behaviour.
+                    $taxes = isset($j['TotalTax']) && (float)$j['TotalTax'] > 0
+                        ? (float)$j['TotalTax']
+                        : max(0, $grossFare - $netFare);
 
                     $results[] = array(
                         'tui' => !empty($j['TUI']) ? $j['TUI'] : $tui,

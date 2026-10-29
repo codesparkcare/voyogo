@@ -141,7 +141,7 @@ class Franchise extends CI_Controller {
             }
         }
 
-        // Sort fares inside each group ascending by price and assign friendly branded fare names
+        // Sort fares inside each group ascending by price, deduplicate by FBC, then assign fare names
         foreach ($grouped as &$g) {
             usort($g['fares'], function($a, $b) {
                 $pa = (float)($a['price'] ?? 0);
@@ -150,26 +150,45 @@ class Franchise extends CI_Controller {
                 return ($pa < $pb) ? -1 : 1;
             });
 
+            // FIX #2: Deduplicate by FareBasisCode — keep the first (cheapest) fare per FBC.
+            // Benzy API returns both GDS/Published and B2B Agent channel fares with the same FBC;
+            // deduplicating here ensures only 5 distinct fares show per flight, matching Akbar Travels.
+            $seenFbc      = array();
+            $dedupedFares = array();
+            foreach ($g['fares'] as $fare) {
+                $fareFbc = strtoupper(trim((string)($fare['fbc'] ?? ($fare['FBC'] ?? ''))));
+                if (empty($fareFbc) || !isset($seenFbc[$fareFbc])) {
+                    $dedupedFares[] = $fare;
+                    if (!empty($fareFbc)) {
+                        $seenFbc[$fareFbc] = true;
+                    }
+                }
+            }
+            $g['fares'] = $dedupedFares;
+
             $fareCount = count($g['fares']);
             foreach ($g['fares'] as $fIdx => &$fare) {
                 $fbc = strtoupper(trim((string)($fare['fbc'] ?? ($fare['FBC'] ?? ''))));
                 $fc  = strtoupper(trim((string)($fare['fare_class'] ?? ($fare['FareClass'] ?? ''))));
                 $ft  = strtoupper(trim((string)($fare['fare_type'] ?? ($fare['FareType'] ?? ''))));
 
-                if (!empty($fare['fare_name'])) {
+                // FIX #3: Priority 1 — use the API's own FareType name (e.g. "SPECIAL CP", "SAVER",
+                // "CORPORATE STRATEGIC FARES", "SME FARE", "FLEX") so the label matches Akbar Travels exactly.
+                if (!empty($ft) && strlen($ft) > 2) {
+                    $label = $ft;
+                } elseif (!empty($fare['fare_name'])) {
                     $label = $fare['fare_name'];
-                } elseif (strpos($fbc, 'SME') !== false || strpos($ft, 'SME') !== false) {
+                } elseif (strpos($fbc, 'SME') !== false) {
                     $label = 'SME FARE';
-                } elseif (strpos($fbc, 'FLEX') !== false || strpos($ft, 'FLEX') !== false) {
+                } elseif (strpos($fbc, 'FLEX') !== false) {
                     $label = 'ECO FLEX';
                 } elseif (strpos($fbc, 'CLASSIC') !== false) {
                     $label = 'ECO CLASSIC';
-                } elseif (strpos($fbc, 'CORP') !== false || strpos($ft, 'CORP') !== false) {
+                } elseif (strpos($fbc, 'CORP') !== false) {
                     $label = 'CORPORATE FARE';
                 } elseif (strpos($fc, 'PREM') !== false || strpos($fbc, 'PREM') !== false) {
                     $label = ($fIdx >= 4) ? 'PREMIUM FLEX' : 'PREMIUM VALUE';
                 } elseif ($fareCount > 1) {
-                    // Parity with Akbar Travels Screenshot 1
                     $standardTiers = array('ECO VALUE', 'SME FARE', 'ECO CLASSIC', 'ECO FLEX', 'PREMIUM VALUE', 'PREMIUM FLEX');
                     $label = $standardTiers[$fIdx] ?? ('FARE TIER ' . ($fIdx + 1));
                 } else {
