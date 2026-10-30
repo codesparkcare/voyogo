@@ -1227,23 +1227,36 @@
                         <?php 
                         $onwardTiers = !empty($onward_fare_tiers) ? $onward_fare_tiers : array();
                         if (empty($onwardTiers) && isset($this->benzyflightapi)) {
-                            $onwardTiers = $this->benzyflightapi->getDynamicFareTiers($flight['airline_code'] ?? '6E', $fBaseFare, $fTaxes, $fare_rules ?? array(), $flight['inclusions'] ?? array(), $ssr ?? array());
+                            $onwardPriceVal = (!empty($return_flight) && !empty($flight['unit_price'])) ? ($flight['unit_price'] - (float)$return_flight['price']) : $reviewPrice;
+                            if ($onwardPriceVal <= 0 && !empty($price)) $onwardPriceVal = (float)$price;
+                            $onwardBaseVal = round($onwardPriceVal * 0.788);
+                            $onwardTaxVal  = max(0, $onwardPriceVal - $onwardBaseVal);
+                            $onwardTiers = $this->benzyflightapi->getDynamicFareTiers($flight['airline_code'] ?? '6E', $onwardBaseVal, $onwardTaxVal, $fare_rules ?? array(), $flight['inclusions'] ?? array(), $ssr ?? array(), $onward_sibling_fares ?? array());
                         }
                         $returnTiers = !empty($return_fare_tiers) ? $return_fare_tiers : array();
                         if (empty($returnTiers) && !empty($return_flight) && isset($this->benzyflightapi)) {
                             $retBaseVal = round($retReviewPrice * 0.788);
                             $retTaxVal  = max(0, $retReviewPrice - $retBaseVal);
-                            $returnTiers = $this->benzyflightapi->getDynamicFareTiers($return_flight['airline_code'] ?? '6E', $retBaseVal, $retTaxVal, $fare_rules ?? array(), array(), $ssr ?? array());
+                            $returnTiers = $this->benzyflightapi->getDynamicFareTiers($return_flight['airline_code'] ?? '6E', $retBaseVal, $retTaxVal, $fare_rules ?? array(), array(), $ssr ?? array(), $return_sibling_fares ?? array());
                         }
                         ?>
 
                         <!-- ONWARD SECTOR CONTAINER -->
                         <div id="sectorContainer_onward" style="display: block;">
                             <!-- Economy Starting Pill -->
-                            <div style="margin-bottom: 14px;">
+                            <div style="margin-bottom: 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                                 <span style="background: #e0f2fe; color: #0369a1; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
                                     Economy <span style="font-weight: 500; color: #475569;">Starting at ₹ <?php echo number_format($onwardTiers['Value']['price_per_pax'] ?? ($fBaseFare + $fTaxes)); ?></span>
                                 </span>
+                                <?php if (count($onwardTiers) <= 1): ?>
+                                    <span style="color: #0284c7; font-weight: 700; font-size: 12.5px; display: inline-flex; align-items: center; gap: 6px;">
+                                        <i class="fa-solid fa-circle-check"></i> Standard Retail fare is available for this sector
+                                    </span>
+                                <?php else: ?>
+                                    <span style="color: #16a34a; font-weight: 700; font-size: 12.5px; display: inline-flex; align-items: center; gap: 6px;">
+                                        <i class="fa-solid fa-sparkles"></i> <?php echo count($onwardTiers); ?> Fare Families available
+                                    </span>
+                                <?php endif; ?>
                             </div>
 
                             <!-- Mobile Horizontal Swipe Hint -->
@@ -1252,7 +1265,7 @@
                             </div>
 
                             <!-- 3 Comparison Cards Track (Onward) -->
-                            <div class="fare-tiers-cards-track" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                            <div class="fare-tiers-cards-track" style="display: grid; grid-template-columns: <?php echo count($onwardTiers) === 1 ? 'minmax(300px, 420px)' : 'repeat(auto-fit, minmax(220px, 1fr))'; ?>; gap: 16px;">
                                 <?php foreach ($onwardTiers as $tKey => $tier): 
                                     $isDefaultSelected = ($tKey === 'Value');
                                 ?>
@@ -1316,10 +1329,19 @@
                         <!-- RETURN SECTOR CONTAINER -->
                         <div id="sectorContainer_return" style="display: none;">
                             <!-- Economy Starting Pill (Return) -->
-                            <div style="margin-bottom: 14px;">
+                            <div style="margin-bottom: 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                                 <span style="background: #e0f2fe; color: #0369a1; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
                                     Economy <span style="font-weight: 500; color: #475569;">Starting at ₹ <?php echo number_format($returnTiers['Value']['price_per_pax'] ?? $retReviewPrice); ?></span>
                                 </span>
+                                <?php if (count($returnTiers) <= 1): ?>
+                                    <span style="color: #0284c7; font-weight: 700; font-size: 12.5px; display: inline-flex; align-items: center; gap: 6px;">
+                                        <i class="fa-solid fa-circle-check"></i> Standard Retail fare is available for this sector
+                                    </span>
+                                <?php else: ?>
+                                    <span style="color: #16a34a; font-weight: 700; font-size: 12.5px; display: inline-flex; align-items: center; gap: 6px;">
+                                        <i class="fa-solid fa-sparkles"></i> <?php echo count($returnTiers); ?> Fare Families available
+                                    </span>
+                                <?php endif; ?>
                             </div>
 
                             <!-- Mobile Horizontal Swipe Hint -->
@@ -1328,7 +1350,7 @@
                             </div>
 
                             <!-- 3 Comparison Cards Track (Return) -->
-                            <div class="fare-tiers-cards-track" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                            <div class="fare-tiers-cards-track" style="display: grid; grid-template-columns: <?php echo count($returnTiers) === 1 ? 'minmax(300px, 420px)' : 'repeat(auto-fit, minmax(220px, 1fr))'; ?>; gap: 16px;">
                                 <?php foreach ($returnTiers as $tKey => $tier): 
                                     $isDefaultSelected = ($tKey === 'Value');
                                 ?>

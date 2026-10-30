@@ -3575,9 +3575,12 @@ class BenzyFlightApi {
      * @param array $ssr Benzy SSR catalog items
      * @return array
      */
-    public function getDynamicFareTiers($airlineCode, $baseFare, $taxFare, $rules = array(), $inclusions = array(), $ssr = array()) {
+    public function getDynamicFareTiers($airlineCode, $baseFare, $taxFare, $rules = array(), $inclusions = array(), $ssr = array(), $siblingFares = array()) {
         $airlineCode = strtoupper($airlineCode ?: '6E');
         $perPaxTotal = max(1000, round((float)$baseFare + (float)$taxFare));
+        if (!empty($siblingFares[0]['Price'])) {
+            $perPaxTotal = (float)$siblingFares[0]['Price'];
+        }
 
         // 1. Dynamic Baggage from Benzy API Inclusions or SSR
         $checkedBaggageStr = '15 Kgs';
@@ -3651,33 +3654,36 @@ class BenzyFlightApi {
         );
 
         $deltaConfig = $airlineDeltas[$airlineCode] ?? array('classic' => 600, 'flex' => 1800, 'classic_name' => 'Classic', 'flex_name' => 'Flex');
-        $classicDelta = (int)$deltaConfig['classic'];
-        $flexDelta = (int)$deltaConfig['flex'];
 
-        return array(
-            'Value' => array(
-                'name'               => 'Value',
-                'sub_name'           => 'Saver',
-                'badge'              => 'Most Popular',
-                'badge_color'        => '#16a34a',
-                'delta'              => 0,
-                'price_per_pax'      => $perPaxTotal,
-                'checked_baggage'    => $checkedBaggageStr,
-                'cabin_baggage'      => $cabinBaggageStr,
-                'cancellation_text'  => 'Cancellation Fee - Cancellation fee apply (from ₹' . number_format($cancellationFeeVal) . ')',
-                'change_text'        => 'Date Change Fee - Available on additional charge (from ₹' . number_format($changeFeeVal) . ')',
-                'seat_text'          => 'Seat Selection - Available on additional charges (From ₹99)',
-                'meal_text'          => 'Meal - Available on additional charges (From ₹275)',
-                'meal_highlight'     => false,
-                'priority_text'      => ''
-            ),
-            'Classic' => array(
+        $tiers = array();
+        $tiers['Value'] = array(
+            'name'               => 'Value',
+            'sub_name'           => 'Saver',
+            'badge'              => 'Most Popular',
+            'badge_color'        => '#16a34a',
+            'delta'              => 0,
+            'price_per_pax'      => $perPaxTotal,
+            'checked_baggage'    => $checkedBaggageStr,
+            'cabin_baggage'      => $cabinBaggageStr,
+            'cancellation_text'  => 'Cancellation Fee - Cancellation fee apply (from ₹' . number_format($cancellationFeeVal) . ')',
+            'change_text'        => 'Date Change Fee - Available on additional charge (from ₹' . number_format($changeFeeVal) . ')',
+            'seat_text'          => 'Seat Selection - Available on additional charges (From ₹99)',
+            'meal_text'          => 'Meal - Available on additional charges (From ₹275)',
+            'meal_highlight'     => false,
+            'priority_text'      => ''
+        );
+
+        // ONLY add Classic and Flex cards if Benz Live API actually returned sibling fares for this flight!
+        if (isset($siblingFares[1]['Price']) && (float)$siblingFares[1]['Price'] > $perPaxTotal) {
+            $classicPrice = (float)$siblingFares[1]['Price'];
+            $classicDelta = (int)round($classicPrice - $perPaxTotal);
+            $tiers['Classic'] = array(
                 'name'               => 'Classic',
                 'sub_name'           => $deltaConfig['classic_name'],
                 'badge'              => 'Best Value',
                 'badge_color'        => '#0284c7',
                 'delta'              => $classicDelta,
-                'price_per_pax'      => $perPaxTotal + $classicDelta,
+                'price_per_pax'      => $classicPrice,
                 'checked_baggage'    => $checkedBaggageStr,
                 'cabin_baggage'      => $cabinBaggageStr,
                 'cancellation_text'  => 'Cancellation Fee - Standard airline fee apply',
@@ -3686,14 +3692,19 @@ class BenzyFlightApi {
                 'meal_text'          => 'Meal - Complimentary Lite Bite / Snack Included',
                 'meal_highlight'     => true,
                 'priority_text'      => ''
-            ),
-            'Flex' => array(
+            );
+        }
+
+        if (isset($siblingFares[2]['Price']) && (float)$siblingFares[2]['Price'] > $perPaxTotal) {
+            $flexPrice = (float)$siblingFares[2]['Price'];
+            $flexDelta = (int)round($flexPrice - $perPaxTotal);
+            $tiers['Flex'] = array(
                 'name'               => 'Flex',
                 'sub_name'           => $deltaConfig['flex_name'],
                 'badge'              => 'Premium Choice',
                 'badge_color'        => '#f59e0b',
                 'delta'              => $flexDelta,
-                'price_per_pax'      => $perPaxTotal + $flexDelta,
+                'price_per_pax'      => $flexPrice,
                 'checked_baggage'    => $extraBaggageStr,
                 'cabin_baggage'      => $cabinBaggageStr,
                 'cancellation_text'  => 'Cancellation Fee - Low Fee Protection (Save up to ₹1,500)',
@@ -3702,8 +3713,10 @@ class BenzyFlightApi {
                 'meal_text'          => 'Meal - Complimentary Hot Meal & Beverage Included',
                 'meal_highlight'     => true,
                 'priority_text'      => 'Priority Check-In & Baggage Out First Included'
-            )
-        );
+            );
+        }
+
+        return $tiers;
     }
 }
 

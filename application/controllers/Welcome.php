@@ -642,10 +642,60 @@ class Welcome extends CI_Controller {
         $fareRules['cancellation'] = $cancellationRules;
         $fareRules['date_change']   = $dateChangeRules;
 
+        // Read sibling fares passed from live search results for real Benz API fare families
+        $onwardSiblingJson = $this->input->post('onward_sibling_fares') ?: $this->input->post('sibling_fares');
+        $returnSiblingJson = $this->input->post('return_sibling_fares');
+
+        $onwardSiblingFares = array();
+        if (!empty($onwardSiblingJson)) {
+            $decoded = json_decode($onwardSiblingJson, true);
+            if (is_array($decoded)) {
+                $seenPrices = array();
+                foreach ($decoded as $item) {
+                    $p = (float)($item['Price'] ?? ($item['price'] ?? 0));
+                    if ($p > 0 && !isset($seenPrices[(int)$p])) {
+                        $seenPrices[(int)$p] = $p;
+                        $onwardSiblingFares[] = $item;
+                    }
+                }
+                usort($onwardSiblingFares, function($a, $b) {
+                    $pa = (float)($a['Price'] ?? ($a['price'] ?? 0));
+                    $pb = (float)($b['Price'] ?? ($b['price'] ?? 0));
+                    return $pa <=> $pb;
+                });
+            }
+        }
+
+        $returnSiblingFares = array();
+        if (!empty($returnSiblingJson)) {
+            $decoded = json_decode($returnSiblingJson, true);
+            if (is_array($decoded)) {
+                $seenPrices = array();
+                foreach ($decoded as $item) {
+                    $p = (float)($item['Price'] ?? ($item['price'] ?? 0));
+                    if ($p > 0 && !isset($seenPrices[(int)$p])) {
+                        $seenPrices[(int)$p] = $p;
+                        $returnSiblingFares[] = $item;
+                    }
+                }
+                usort($returnSiblingFares, function($a, $b) {
+                    $pa = (float)($a['Price'] ?? ($a['price'] ?? 0));
+                    $pb = (float)($b['Price'] ?? ($b['price'] ?? 0));
+                    return $pa <=> $pb;
+                });
+            }
+        }
+
         // Build dynamic Fare Tiers ("More Fare Options for Additional Benefits") from Benzy API
         $onwardAirlineCode = $flightDetails['airline_code'] ?? $airline_code;
-        $onwardBasePrice   = (float)($flightDetails['base_fare'] ?? round($price * 0.788));
-        $onwardTaxPrice    = (float)($flightDetails['taxes'] ?? max(0, $price - $onwardBasePrice));
+        if ($is_roundtrip && !empty($returnFlight)) {
+            $onwardGrossVal  = (float)($search_onward_price ?: ($price ?: 5150));
+            $onwardBasePrice = round($onwardGrossVal * 0.788);
+            $onwardTaxPrice  = max(0, $onwardGrossVal - $onwardBasePrice);
+        } else {
+            $onwardBasePrice = (float)($flightDetails['base_fare'] ?? round($price * 0.788));
+            $onwardTaxPrice  = (float)($flightDetails['taxes'] ?? max(0, $price - $onwardBasePrice));
+        }
         $onwardRules       = !empty($fareRules['Trips'][0]['Journey'][0]['Segments'][0]['Rules']) ? $fareRules['Trips'][0]['Journey'][0]['Segments'][0]['Rules'] : ($flightDetails['rules'] ?? array());
         $onwardInclusions  = $flightDetails['inclusions'] ?? array();
         $onwardSsrItems    = !empty($ssrOptions['Trips'][0]['Journey'][0]['Segments'][0]['SSR']) ? $ssrOptions['Trips'][0]['Journey'][0]['Segments'][0]['SSR'] : ($flightDetails['ssr'] ?? array());
@@ -656,7 +706,8 @@ class Welcome extends CI_Controller {
             $onwardTaxPrice,
             $onwardRules,
             $onwardInclusions,
-            $onwardSsrItems
+            $onwardSsrItems,
+            $onwardSiblingFares
         );
 
         $returnFareTiers = array();
@@ -714,20 +765,23 @@ class Welcome extends CI_Controller {
                 $returnTaxPrice,
                 $onwardRules,
                 $onwardInclusions,
-                $onwardSsrItems
+                $onwardSsrItems,
+                $returnSiblingFares
             );
         }
 
-        $data['flight']            = $flightDetails;
-        $data['return_flight']     = $returnFlight;
-        $data['is_refundable']     = !empty($flightDetails['refundable']);
-        $data['is_roundtrip']      = $is_roundtrip;
-        $data['fare_rules']        = $fareRules;
-        $data['return_fare_rules'] = $returnFareRules;
-        $data['ssr']               = $ssrOptions;
-        $data['onward_fare_tiers'] = $onwardFareTiers;
-        $data['return_fare_tiers'] = $returnFareTiers;
-        $data['fare_updated']      = $fare_updated;
+        $data['flight']               = $flightDetails;
+        $data['return_flight']        = $returnFlight;
+        $data['is_refundable']        = !empty($flightDetails['refundable']);
+        $data['is_roundtrip']         = $is_roundtrip;
+        $data['fare_rules']           = $fareRules;
+        $data['return_fare_rules']    = $returnFareRules;
+        $data['ssr']                  = $ssrOptions;
+        $data['onward_fare_tiers']    = $onwardFareTiers;
+        $data['return_fare_tiers']    = $returnFareTiers;
+        $data['onward_sibling_fares'] = $onwardSiblingFares;
+        $data['return_sibling_fares'] = $returnSiblingFares;
+        $data['fare_updated']         = $fare_updated;
         $data['old_fare']          = $old_fare;
         $data['new_fare']          = $new_fare;
         $data['fare_change_msg']   = $fare_change_msg;

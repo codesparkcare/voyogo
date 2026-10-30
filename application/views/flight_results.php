@@ -4607,6 +4607,18 @@
                                 <input type="hidden" name="is_refundable" value="<?php echo !empty($f['Refundable']) ? '1' : '0'; ?>">
                                 <input type="hidden" name="fare_class" value="<?php echo htmlspecialchars($f['FareClass'] ?? ($f['fare_class'] ?? '')); ?>">
                                 <input type="hidden" name="fbc" value="<?php echo htmlspecialchars($f['FBC'] ?? ($f['fbc'] ?? '')); ?>">
+                                <?php 
+                                    $currSibs = array();
+                                    if (!empty($flights) && is_array($flights)) {
+                                        foreach ($flights as $fltItem) {
+                                            if (!empty($fltItem['FlightNumber']) && $fltItem['FlightNumber'] === $f['FlightNumber'] &&
+                                                !empty($fltItem['DepartureTime']) && $fltItem['DepartureTime'] === $f['DepartureTime']) {
+                                                $currSibs[] = $fltItem;
+                                            }
+                                        }
+                                    }
+                                ?>
+                                <input type="hidden" name="sibling_fares" value="<?php echo htmlspecialchars(json_encode($currSibs)); ?>">
                                 <button type="submit" class="f-book-btn">Book Now</button>
                             </form>
                             <div style="display:flex; flex-direction:column; align-items:flex-end; gap:3px; margin-top:6px; width:100%;">
@@ -5322,6 +5334,8 @@
                             <input type="hidden" name="return_fare_type" id="rt_return_fare_type" value="Retail">
                             <input type="hidden" name="onward_fare_desc" id="rt_onward_fare_desc" value="">
                             <input type="hidden" name="return_fare_desc" id="rt_return_fare_desc" value="">
+                            <input type="hidden" name="onward_sibling_fares" id="rt_onward_sibling_fares" value="">
+                            <input type="hidden" name="return_sibling_fares" id="rt_return_sibling_fares" value="">
 
                             <!-- Pax info -->
                             <input type="hidden" name="adults" value="<?php echo htmlspecialchars($search_query['adults'] ?? 1); ?>">
@@ -5603,9 +5617,12 @@
 
                 // Update Sticky Bar Text
                 if (o) {
-                    selectedOnwardFare = { id: 'retail', fare_type: 'Retail', price: parseFloat(o.Price) };
-                    const elTypeO = document.getElementById('rt_onward_fare_type');
-                    if (elTypeO) elTypeO.value = 'Retail';
+                    if (!isFareOptionsMode || !selectedOnwardFare || selectedOnwardFare.flightNumber !== o.FlightNumber) {
+                        selectedOnwardFare = { id: 'retail', fare_type: 'Retail', price: parseFloat(o.Price), flightNumber: o.FlightNumber };
+                        const elTypeO = document.getElementById('rt_onward_fare_type');
+                        if (elTypeO) elTypeO.value = 'Retail';
+                        document.getElementById('rt_onward_price').value = o.Price;
+                    }
 
                     document.getElementById('barOnwardAirline').textContent = o.AirlineName + ' ' + o.FlightNumber;
                     document.getElementById('barOnwardTime').textContent = o.DepartureTime + ' - ' + o.ArrivalTime + ' (' + o.FromCode + ' → ' + o.ToCode + ')';
@@ -5616,7 +5633,9 @@
                     document.getElementById('rt_flight_number').value = o.FlightNumber;
                     document.getElementById('rt_departure_time').value = o.DepartureTime;
                     document.getElementById('rt_arrival_time').value = o.ArrivalTime;
-                    document.getElementById('rt_onward_price').value = o.Price;
+                    if (!isFareOptionsMode) {
+                        document.getElementById('rt_onward_price').value = o.Price;
+                    }
                     document.getElementById('rt_flight_index').value = o.FlightIndex || o.flight_index || o.Index || ((o.FlightNumber ? o.FlightNumber.substring(0, 2) : '6E') + '|1');
                     document.getElementById('rt_duration').value = o.Duration || '02h 15m';
                     document.getElementById('rt_stops').value = (o.Stops !== undefined) ? o.Stops : 0;
@@ -5627,12 +5646,22 @@
                     if (elRef) elRef.value = (o && o.Refundable) ? '1' : '0';
                     const elIsRef = document.getElementById('rt_is_refundable');
                     if (elIsRef) elIsRef.value = (o && o.Refundable) ? '1' : '0';
+
+                    const siblingFaresO = onwardData.filter(item => 
+                        item && (item.FlightNumber === o.FlightNumber || item.flight_number === o.flight_number) &&
+                        (item.DepartureTime === o.DepartureTime || item.departure_time === o.departure_time)
+                    );
+                    const elSibO = document.getElementById('rt_onward_sibling_fares');
+                    if (elSibO) elSibO.value = JSON.stringify(siblingFaresO);
                 }
 
                 if (r) {
-                    selectedReturnFare = { id: 'retail', fare_type: 'Retail', price: parseFloat(r.Price) };
-                    const elTypeR = document.getElementById('rt_return_fare_type');
-                    if (elTypeR) elTypeR.value = 'Retail';
+                    if (!isFareOptionsMode || !selectedReturnFare || selectedReturnFare.flightNumber !== r.FlightNumber) {
+                        selectedReturnFare = { id: 'retail', fare_type: 'Retail', price: parseFloat(r.Price), flightNumber: r.FlightNumber };
+                        const elTypeR = document.getElementById('rt_return_fare_type');
+                        if (elTypeR) elTypeR.value = 'Retail';
+                        document.getElementById('rt_return_price').value = r.Price;
+                    }
 
                     document.getElementById('barReturnAirline').textContent = r.AirlineName + ' ' + r.FlightNumber;
                     document.getElementById('barReturnTime').textContent = r.DepartureTime + ' - ' + r.ArrivalTime + ' (' + r.FromCode + ' → ' + r.ToCode + ')';
@@ -5642,13 +5671,22 @@
                     document.getElementById('rt_return_flight_number').value = r.FlightNumber;
                     document.getElementById('rt_return_departure_time').value = r.DepartureTime;
                     document.getElementById('rt_return_arrival_time').value = r.ArrivalTime;
-                    document.getElementById('rt_return_price').value = r.Price;
+                    if (!isFareOptionsMode) {
+                        document.getElementById('rt_return_price').value = r.Price;
+                    }
                     document.getElementById('rt_return_flight_index').value = r.FlightIndex || r.flight_index || r.Index || ((r.FlightNumber ? r.FlightNumber.substring(0, 2) : '6E') + '|1');
                     document.getElementById('rt_return_duration').value = r.Duration || '02h 15m';
                     document.getElementById('rt_return_stops').value = (r.Stops !== undefined) ? r.Stops : 0;
                     document.getElementById('rt_return_via').value = r.via || r.Via || (r.Stops > 0 ? 'HYD' : '');
                     const elRefR = document.getElementById('rt_return_refundable');
                     if (elRefR) elRefR.value = (r && r.Refundable) ? '1' : '0';
+
+                    const siblingFaresR = returnData.filter(item => 
+                        item && (item.FlightNumber === r.FlightNumber || item.flight_number === r.flight_number) &&
+                        (item.DepartureTime === r.DepartureTime || item.departure_time === r.departure_time)
+                    );
+                    const elSibR = document.getElementById('rt_return_sibling_fares');
+                    if (elSibR) elSibR.value = JSON.stringify(siblingFaresR);
                 }
 
                 // Auto switch tab to return on mobile when onward flight is selected
@@ -6024,7 +6062,9 @@
             // AKBAR TRAVELS STYLE FARE OPTIONS CONTROLLER
             // =========================================================
             function submitDirectRoundTripBooking() {
-                updateRoundTripSelection();
+                if (!isFareOptionsMode) {
+                    updateRoundTripSelection();
+                }
                 const form = document.getElementById('roundTripBookingForm');
                 if (form) form.submit();
             }
@@ -6382,9 +6422,11 @@
                 if (event) event.stopPropagation();
 
                 const priceNum = parseFloat(price);
+                const oFlt = onwardData[currentRtOnwardIdx] || onwardData[0] || {};
+                const rFlt = returnData[currentRtReturnIdx] || returnData[0] || {};
 
                 if (sector === 'onward') {
-                    selectedOnwardFare = { id: cardId, fare_type: fareType, price: priceNum };
+                    selectedOnwardFare = { id: cardId, fare_type: fareType, price: priceNum, flightNumber: oFlt.FlightNumber || '' };
                     const elPrice = document.getElementById('rt_onward_price');
                     if (elPrice) elPrice.value = priceNum;
                     const elType = document.getElementById('rt_onward_fare_type');
@@ -6398,7 +6440,7 @@
                     const barBadge = document.getElementById('barOnwardFareBadge');
                     if (barBadge) barBadge.textContent = fareType;
                 } else {
-                    selectedReturnFare = { id: cardId, fare_type: fareType, price: priceNum };
+                    selectedReturnFare = { id: cardId, fare_type: fareType, price: priceNum, flightNumber: rFlt.FlightNumber || '' };
                     const elPrice = document.getElementById('rt_return_price');
                     if (elPrice) elPrice.value = priceNum;
                     const elType = document.getElementById('rt_return_fare_type');
