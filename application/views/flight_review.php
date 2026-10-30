@@ -112,8 +112,14 @@
     $initialInsurance = 0; // Default unselected
 
     // ATFLY default promo discount (flat ₹18 instant web discount)
-    $initialDiscount = 18;
-    $initialGrandTotal = max(0, $fBaseFare + $fTaxes + $initialInsurance - $initialDiscount);
+    $displayDiscount = (float)($discount_amount ?? 0);
+    if ($displayDiscount <= 0) {
+        $reviewFlightPrice = $fBaseFare + $fTaxes;
+        $calcStrikePrice   = round($reviewFlightPrice * 1.003 + 18);
+        $displayDiscount   = max(18, $calcStrikePrice - $reviewFlightPrice);
+    }
+    $initialDiscount = 0; // ATFLY is cosmetic - no real deduction
+    $initialGrandTotal = max(0, $fBaseFare + $fTaxes + $initialInsurance); // Total = Base + Tax exactly
     $retReviewPrice = !empty($return_flight['price']) ? (float)$return_flight['price'] : $reviewPrice;
 
     // Airport Database for detailed connecting flight segments (Screenshot 2)
@@ -1130,8 +1136,8 @@
                     <input type="hidden" name="safety_cancellation_amount" id="form_safety_cancellation_amount" value="0">
                     <input type="hidden" name="travel_insurance_selected" id="form_travel_insurance_selected" value="0">
                     <input type="hidden" name="insurance_amount" id="form_insurance_amount" value="0">
-                    <input type="hidden" name="discount_amount" id="form_discount_amount" value="<?php echo htmlspecialchars($initialDiscount); ?>">
-                    <input type="hidden" name="promo_discount" id="form_promo_discount" value="<?php echo htmlspecialchars($initialDiscount); ?>">
+                    <input type="hidden" name="discount_amount" id="form_discount_amount" value="0">
+                    <input type="hidden" name="promo_discount" id="form_promo_discount" value="0">
                     <input type="hidden" name="promo_code" id="form_promo_code" value="ATFLY">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
                     <input type="hidden" name="is_roundtrip" value="<?php echo !empty($is_roundtrip) ? '1' : '0'; ?>">
@@ -2253,7 +2259,7 @@
                                 <span style="background: #16a34a; color: #ffffff; width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900;">%</span>
                                 Promo Discount Applied
                             </span>
-                            <strong style="color: #16a34a; font-size: 13.5px;">- ₹ <span id="summaryDiscount"><?php echo number_format($initialDiscount); ?></span></strong>
+                            <strong style="color: #16a34a; font-size: 13.5px;">- ₹ <span id="summaryDiscount"><?php echo number_format($displayDiscount); ?></span></strong>
                         </div>
 
                         <!-- Total Amount Row (Screenshots 1 & 2) -->
@@ -2279,7 +2285,7 @@
                                     <span style="font-size: 11px; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 2px 8px; border-radius: 12px; border: 1px solid #86efac;">APPLIED</span>
                                 </div>
                                 <div style="font-size: 11.5px; color: #15803d; font-weight: 500; margin-top: 4px;">
-                                    Your Promocode has been applied you've saved ₹ <span id="dispAppliedSavings"><?php echo number_format($initialDiscount); ?></span>
+                                    Your Promocode has been applied you've saved ₹ <span id="dispAppliedSavings"><?php echo number_format($displayDiscount); ?></span>
                                 </div>
                             </div>
 
@@ -2369,14 +2375,14 @@
                             </div>
 
                             <!-- Offer 7: ATFLY (Default Selected in Screenshot 1) -->
-                            <div class="promo-offer-item active" onclick="selectPromoOffer('ATFLY', <?php echo (float)$initialDiscount; ?>, 'Default Instant Web Discount. Instant Flat Off ₹ <?php echo number_format($initialDiscount); ?>')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid #22c55e; border-radius: 8px; margin-bottom: 4px; cursor: pointer; transition: all 0.2s ease; background: #f0fdf4;">
+                            <div class="promo-offer-item active" onclick="selectPromoOffer('ATFLY', 0, 'Default Instant Web Discount. Instant Flat Off ₹ <?php echo number_format($displayDiscount); ?>')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid #22c55e; border-radius: 8px; margin-bottom: 4px; cursor: pointer; transition: all 0.2s ease; background: #f0fdf4;">
                                 <input type="radio" name="promo_radio" id="promo_ATFLY" value="ATFLY" checked style="margin-top: 2px; accent-color: #16a34a;">
                                 <div style="flex: 1;">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <strong style="font-size: 13px; font-weight: 800; color: #0f172a;">ATFLY</strong>
-                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 10px;">Save <?php echo number_format($initialDiscount); ?></span>
+                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 10px;">Save <?php echo number_format($displayDiscount); ?></span>
                                     </div>
-                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">Default Instant Web Discount. Instant Flat Off ₹ <?php echo number_format($initialDiscount); ?></div>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">Default Instant Web Discount. Instant Flat Off ₹ <?php echo number_format($displayDiscount); ?></div>
                                 </div>
                             </div>
                         </div>
@@ -2409,7 +2415,7 @@ var taxesFare = <?php echo (float)$fTaxes; ?>;
 var totalPax = <?php echo (int)$total_travelers_review; ?>;
 var insurancePerPax = 199;
 var isInsuranceIncluded = false;
-var appliedDiscount = <?php echo (float)$initialDiscount; ?>;
+var appliedDiscount = 0; // ATFLY is cosmetic display only — real deduction = 0
 var appliedPromoCodeName = 'ATFLY';
 
 function goBackToSearch() {
@@ -2807,7 +2813,7 @@ function applyCustomPromoCode() {
         'RAINYDEAL': 218,
         'ATAUDD': 200,
         'ATDBS': 200,
-        'ATFLY': <?php echo (float)$initialDiscount; ?>,
+        'ATFLY': 0, // cosmetic — no real deduction
         'SWADES': 500
     };
 

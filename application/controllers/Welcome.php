@@ -732,6 +732,14 @@ class Welcome extends CI_Controller {
         $data['new_fare']          = $new_fare;
         $data['fare_change_msg']   = $fare_change_msg;
         $data['total_travelers']   = $total_travelers;
+
+        // Pass search cosmetic discount to review page (display only — not deducted from total)
+        $postDiscount = (float)($this->input->post('discount_amount') ?: 0);
+        if ($postDiscount <= 0) {
+            $calcStrike = round($final_flight_price * 1.003 + 18);
+            $postDiscount = max(18, $calcStrike - $final_flight_price);
+        }
+        $data['discount_amount'] = $postDiscount;
         $airportDisplayNames = array(
             'DEL' => 'Delhi (DEL)', 'BOM' => 'Mumbai (BOM)', 'BLR' => 'Bengaluru (BLR)',
             'MAA' => 'Chennai (MAA)', 'HYD' => 'Hyderabad (HYD)', 'CCU' => 'Kolkata (CCU)',
