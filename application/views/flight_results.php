@@ -6208,6 +6208,19 @@
                 fd.append('cabin', rtSearchQuery.cabin_class || 'Economy');
                 // Sector onward has multiple fare families; Sector return has single Retail (Screenshot 3)
                 fd.append('has_fare_options', sector === 'onward' ? '1' : '0');
+                // Pass TUI and flight index for live Benz API SmartPricer lookup
+                fd.append('tui', '<?php echo htmlspecialchars($activeSearchTui); ?>');
+                fd.append('flight_index', flt.FlightIndex || flt.flight_index || flt.Index || ((flt.AirlineCode || '6E') + '|1'));
+
+                // Pass sibling fares for same flight from search results if available
+                const allFltData = (sector === 'onward' ? onwardData : returnData) || [];
+                const siblingFares = allFltData.filter(item => 
+                    item && (item.FlightNumber === flt.FlightNumber || item.flight_number === flt.flight_number) &&
+                    (item.DepartureTime === flt.DepartureTime || item.departure_time === flt.departure_time)
+                );
+                if (siblingFares.length > 0) {
+                    fd.append('sibling_fares', JSON.stringify(siblingFares));
+                }
 
                 fetch('<?php echo site_url('flight/ajax_fare_options'); ?>', {
                     method: 'POST',

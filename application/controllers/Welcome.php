@@ -2714,17 +2714,18 @@ class Welcome extends CI_Controller {
     {
         $this->output->set_content_type('application/json');
 
-        $tui = trim((string)($this->input->post('tui') ?: $this->input->get('tui')));
-        $sector = trim((string)($this->input->post('sector') ?: $this->input->get('sector') ?: 'onward')); // 'onward' or 'return'
-        $airline = strtoupper(trim((string)($this->input->post('airline') ?: $this->input->get('airline') ?: '6E')));
+        $tui          = trim((string)($this->input->post('tui')           ?: $this->input->get('tui')           ?: ''));
+        $flightIndex  = trim((string)($this->input->post('flight_index')  ?: $this->input->get('flight_index')  ?: ''));
+        $sector       = trim((string)($this->input->post('sector')        ?: $this->input->get('sector')        ?: 'onward'));
+        $airline      = strtoupper(trim((string)($this->input->post('airline')       ?: $this->input->get('airline')       ?: '6E')));
         $flightNumber = trim((string)($this->input->post('flight_number') ?: $this->input->get('flight_number') ?: ''));
-        $price = (float)($this->input->post('price') ?: $this->input->get('price') ?: 5150);
-        $from = strtoupper(trim((string)($this->input->post('from') ?: $this->input->get('from') ?: 'DEL')));
-        $to = strtoupper(trim((string)($this->input->post('to') ?: $this->input->get('to') ?: 'BOM')));
-        $date = trim((string)($this->input->post('date') ?: $this->input->get('date') ?: ''));
-        $cabin = trim((string)($this->input->post('cabin') ?: $this->input->get('cabin') ?: 'Economy'));
+        $price        = (float)($this->input->post('price')  ?: $this->input->get('price')  ?: 5150);
+        $from         = strtoupper(trim((string)($this->input->post('from')  ?: $this->input->get('from')  ?: 'DEL')));
+        $to           = strtoupper(trim((string)($this->input->post('to')    ?: $this->input->get('to')    ?: 'BOM')));
+        $date         = trim((string)($this->input->post('date')   ?: $this->input->get('date')   ?: ''));
+        $cabin        = trim((string)($this->input->post('cabin')  ?: $this->input->get('cabin')  ?: 'Economy'));
         $allowMultiple = $this->input->post('has_fare_options');
-        $style = trim((string)($this->input->post('style') ?: $this->input->get('style') ?: ''));
+        $style        = trim((string)($this->input->post('style')  ?: $this->input->get('style')  ?: ''));
 
         $this->load->library('BenzyFlightApi');
 
@@ -2827,9 +2828,125 @@ class Welcome extends CI_Controller {
             return;
         }
 
+        // Sibling fares passed from live search results (matching flight number and departure time)
+        $siblingFaresJson = $this->input->post('sibling_fares');
+        $siblingFares = array();
+        if (!empty($siblingFaresJson)) {
+            $decoded = json_decode($siblingFaresJson, true);
+            if (is_array($decoded)) {
+                $seenPrices = array();
+                foreach ($decoded as $item) {
+                    $p = (float)($item['Price'] ?? ($item['price'] ?? 0));
+                    if ($p > 0 && !isset($seenPrices[(int)$p])) {
+                        $seenPrices[(int)$p] = $p;
+                        $siblingFares[] = $item;
+                    }
+                }
+                usort($siblingFares, function($a, $b) {
+                    $pa = (float)($a['Price'] ?? ($a['price'] ?? 0));
+                    $pb = (float)($b['Price'] ?? ($b['price'] ?? 0));
+                    return $pa <=> $pb;
+                });
+            }
+        }
+
+        // Live Benz API revalidation via SmartPricer & FareRule
+        $liveRules = array();
+        $liveInclusions = array();
+        $liveSsr = array();
+        $liveGrossFare = $price;
+
+        if (!empty($tui) && !empty($flightIndex)) {
+            try {
+                $smartData = $this->benzyflightapi->smartPricer($tui, $price, $flightIndex, ($sector === 'return'), $from, $to);
+                if (!empty($smartData) && is_array($smartData)) {
+                    if (!empty($smartData['Rules'])) {
+                        $liveRules = $smartData['Rules'];
+                    }
+                    if (!empty($smartData['SSR'])) {
+                        $liveSsr = $smartData['SSR'];
+                    }
+                    if (!empty($smartData['Trips'][0]['Journey'][0]['Inclusions'])) {
+                        $liveInclusions = $smartData['Trips'][0]['Journey'][0]['Inclusions'];
+                    }
+                    $g = (float)($smartData['GrossAmount'] ?? ($smartData['Trips'][0]['Journey'][0]['GrossFare'] ?? 0));
+                    if ($g > 0) {
+                        $liveGrossFare = $g;
+                    }
+                }
+            } catch (\Throwable $e) {
+                log_message('error', 'SmartPricer live call in ajax_fare_options: ' . $e->getMessage());
+            }
+        }
+
+        // Extract live cancellation and date change fees from Benz API Rules
+        $cancellationFee = null;
+        $dateChangeFee = null;
+        if (!empty($liveRules) && is_array($liveRules)) {
+            foreach ($liveRules as $re) {
+                $subRules = $re['Rule'] ?? ($re['Rules'] ?? array());
+                if (!is_array($subRules)) continue;
+                foreach ($subRules as $grp) {
+                    $head = strtolower($grp['Head'] ?? '');
+                    $infoList = $grp['Info'] ?? array();
+                    if (!is_array($infoList)) continue;
+                    if (strpos($head, 'cancellation') !== false) {
+                        foreach ($infoList as $inf) {
+                            if (!empty($inf['AdultAmount']) && is_numeric($inf['AdultAmount'])) {
+                                $amt = (float)$inf['AdultAmount'];
+                                if ($cancellationFee === null || ($amt > 0 && $amt < $cancellationFee)) {
+                                    $cancellationFee = $amt;
+                                }
+                            }
+                        }
+                    }
+                    if (strpos($head, 'change') !== false || strpos($head, 'reissue') !== false || strpos($head, 'ato service') !== false) {
+                        foreach ($infoList as $inf) {
+                            if (!empty($inf['AdultAmount']) && is_numeric($inf['AdultAmount'])) {
+                                $amt = (float)$inf['AdultAmount'];
+                                if ($dateChangeFee === null || ($amt > 0 && $amt < $dateChangeFee)) {
+                                    $dateChangeFee = $amt;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $cancellationDesc = ($cancellationFee !== null && $cancellationFee > 0)
+            ? ('Fee starts from ₹ ' . number_format($cancellationFee) . ' per pax (up to 2 hrs before flight)')
+            : 'Fee starts from ₹ 3,500 per pax (up to 2 hrs before flight)';
+
+        $cancellationFeeStr = ($cancellationFee !== null && $cancellationFee > 0)
+            ? ('₹ ' . number_format($cancellationFee))
+            : '₹ 3,500';
+
+        $dateChangeDesc = ($dateChangeFee !== null && $dateChangeFee > 0)
+            ? ('Fee starts from ₹ ' . number_format($dateChangeFee) . ' + Fare Difference')
+            : 'Fee starts from ₹ 3,000 + Fare Difference';
+
+        $dateChangeFeeStr = ($dateChangeFee !== null && $dateChangeFee > 0)
+            ? ('₹ ' . number_format($dateChangeFee) . ' + Diff')
+            : '₹ 3,000 + Diff';
+
+        // Extract live baggage from Benz API Inclusions or SSR
+        $checkinBaggage = '15 Kg (1 piece)';
+        $cabinBaggage   = '7 Kg (1 piece)';
+        if (!empty($liveInclusions['Baggage'])) {
+            $checkinBaggage = $liveInclusions['Baggage'];
+        } elseif (!empty($liveSsr) && is_array($liveSsr)) {
+            foreach ($liveSsr as $item) {
+                if (isset($item['Code']) && $item['Code'] === 'BAG' && !empty($item['Description'])) {
+                    $parts = explode(',', $item['Description']);
+                    if (!empty($parts[0])) $checkinBaggage = trim($parts[0]);
+                    if (!empty($parts[1])) $cabinBaggage   = trim($parts[1]);
+                    break;
+                }
+            }
+        }
+
         // Determine if this flight/sector has multiple fare families
-        // User requirement: "Some flight not have fare option, Check 2nd screen shot and third screen shot"
-        // In Screenshot 3: Sector 2 (DEL -> BOM return) has ONLY "Retail" card!
         $hasMultiple = true;
         if ($allowMultiple !== null && ($allowMultiple === '0' || $allowMultiple === 0 || $allowMultiple === false || $allowMultiple === 'false')) {
             $hasMultiple = false;
@@ -2837,14 +2954,14 @@ class Welcome extends CI_Controller {
             if ($allowMultiple === '1' || $allowMultiple === 1 || $allowMultiple === true || $allowMultiple === 'true') {
                 $hasMultiple = true;
             } else {
-                // Exactly matches Screenshot 3 where Return DEL->BOM only has Retail!
                 $hasMultiple = false;
             }
         }
 
-        // Base Retail Card (Always present - Screenshots 2 & 3)
         $options = array();
 
+        // 1. Retail Fare Card (Live base fare)
+        $retailPrice = !empty($siblingFares[0]['Price']) ? (float)$siblingFares[0]['Price'] : $liveGrossFare;
         $retailCard = array(
             'id' => 'retail',
             'fare_type' => 'Retail',
@@ -2852,21 +2969,21 @@ class Welcome extends CI_Controller {
             'badge' => null,
             'badge_color' => null,
             'badge_icon' => null,
-            'price' => $price,
+            'price' => $retailPrice,
             'price_diff' => 0,
             'currency' => '₹',
             'is_default' => true,
             'baggage' => array(
-                'checkin' => '15 Kg (1 piece)',
-                'cabin' => '7 Kg (1 piece)'
+                'checkin' => $checkinBaggage,
+                'cabin' => $cabinBaggage
             ),
             'cancellation' => array(
-                'fee' => '₹ 3,500',
-                'desc' => 'Fee starts from ₹ 3,500 per pax (up to 2 hrs before flight)'
+                'fee' => $cancellationFeeStr,
+                'desc' => $cancellationDesc
             ),
             'date_change' => array(
-                'fee' => '₹ 3,000 + Diff',
-                'desc' => 'Fee starts from ₹ 3,000 + Fare Difference'
+                'fee' => $dateChangeFeeStr,
+                'desc' => $dateChangeDesc
             ),
             'seat' => array(
                 'included' => false,
@@ -2881,9 +2998,18 @@ class Welcome extends CI_Controller {
         $options[] = $retailCard;
 
         if ($hasMultiple) {
-            // Flexi Fare Card (Most Popular - Matching Screenshot 2)
-            $flexiDiff = ($airline === 'AI' || $airline === 'UK') ? 450 : 314;
-            $flexiPrice = $price + $flexiDiff;
+            // 2. Flexi Fare Card
+            $flexiPrice = 0.0;
+            $flexiDiff  = 0.0;
+            if (isset($siblingFares[1]['Price']) && (float)$siblingFares[1]['Price'] > $retailPrice) {
+                // Exact live Benz API fare from search results!
+                $flexiPrice = (float)$siblingFares[1]['Price'];
+                $flexiDiff  = $flexiPrice - $retailPrice;
+            } else {
+                $flexiDiff  = ($airline === 'SG') ? 550 : (($airline === 'AI' || $airline === 'UK') ? 450 : 599);
+                $flexiPrice = $retailPrice + $flexiDiff;
+            }
+
             $options[] = array(
                 'id' => 'flexi',
                 'fare_type' => 'Flexi',
@@ -2896,8 +3022,8 @@ class Welcome extends CI_Controller {
                 'currency' => '₹',
                 'is_default' => false,
                 'baggage' => array(
-                    'checkin' => '15 Kg (1 piece)',
-                    'cabin' => '7 Kg (1 piece)'
+                    'checkin' => $checkinBaggage,
+                    'cabin' => $cabinBaggage
                 ),
                 'cancellation' => array(
                     'fee' => 'Lower Penalty',
@@ -2918,7 +3044,7 @@ class Welcome extends CI_Controller {
                 'priority' => null
             );
 
-            // Upfront / Premium Fare Card (Indigo upfront / Super 6E / Comfort Plus / SpiceMax - Matching Screenshot 2)
+            // 3. Upfront / Premium Fare Card
             $upfrontName = 'Indigo upfront';
             if ($airline === 'AI' || $airline === 'UK') {
                 $upfrontName = 'Comfort Plus';
@@ -2927,8 +3053,18 @@ class Welcome extends CI_Controller {
             } elseif ($airline === 'QP') {
                 $upfrontName = 'Akasa VIP';
             }
-            $upfrontDiff = ($airline === 'AI' || $airline === 'UK') ? 1800 : 2615;
-            $upfrontPrice = $price + $upfrontDiff;
+
+            $upfrontPrice = 0.0;
+            $upfrontDiff  = 0.0;
+            if (isset($siblingFares[2]['Price']) && (float)$siblingFares[2]['Price'] > $retailPrice) {
+                // Exact live Benz API fare from search results!
+                $upfrontPrice = (float)$siblingFares[2]['Price'];
+                $upfrontDiff  = $upfrontPrice - $retailPrice;
+            } else {
+                $upfrontDiff  = ($airline === 'SG') ? 1650 : (($airline === 'AI' || $airline === 'UK') ? 1800 : 1799);
+                $upfrontPrice = $retailPrice + $upfrontDiff;
+            }
+
             $options[] = array(
                 'id' => 'upfront',
                 'fare_type' => $upfrontName,
@@ -2942,7 +3078,7 @@ class Welcome extends CI_Controller {
                 'is_default' => false,
                 'baggage' => array(
                     'checkin' => '20 Kg (1 piece)',
-                    'cabin' => '7 Kg (1 piece)'
+                    'cabin' => $cabinBaggage
                 ),
                 'cancellation' => array(
                     'fee' => 'Lower Penalty',
@@ -2973,7 +3109,7 @@ class Welcome extends CI_Controller {
             'to' => $to,
             'date' => $date,
             'cabin' => $cabin,
-            'starting_price' => $price,
+            'starting_price' => $retailPrice,
             'has_multiple_fares' => $hasMultiple,
             'options' => $options
         );
