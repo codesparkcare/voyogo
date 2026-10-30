@@ -2946,22 +2946,14 @@ class Welcome extends CI_Controller {
             }
         }
 
-        // Determine if this flight/sector has multiple fare families
-        $hasMultiple = true;
-        if ($allowMultiple !== null && ($allowMultiple === '0' || $allowMultiple === 0 || $allowMultiple === false || $allowMultiple === 'false')) {
-            $hasMultiple = false;
-        } elseif ($sector === 'return') {
-            if ($allowMultiple === '1' || $allowMultiple === 1 || $allowMultiple === true || $allowMultiple === 'true') {
-                $hasMultiple = true;
-            } else {
-                $hasMultiple = false;
-            }
-        }
-
         $options = array();
 
-        // 1. Retail Fare Card (Live base fare)
+        // 1. Retail Fare Card (Live base fare from Benz API)
         $retailPrice = !empty($siblingFares[0]['Price']) ? (float)$siblingFares[0]['Price'] : $liveGrossFare;
+        if ($retailPrice <= 0) {
+            $retailPrice = $price;
+        }
+
         $retailCard = array(
             'id' => 'retail',
             'fare_type' => 'Retail',
@@ -2997,18 +2989,11 @@ class Welcome extends CI_Controller {
         );
         $options[] = $retailCard;
 
-        if ($hasMultiple) {
-            // 2. Flexi Fare Card
-            $flexiPrice = 0.0;
-            $flexiDiff  = 0.0;
-            if (isset($siblingFares[1]['Price']) && (float)$siblingFares[1]['Price'] > $retailPrice) {
-                // Exact live Benz API fare from search results!
-                $flexiPrice = (float)$siblingFares[1]['Price'];
-                $flexiDiff  = $flexiPrice - $retailPrice;
-            } else {
-                $flexiDiff  = ($airline === 'SG') ? 550 : (($airline === 'AI' || $airline === 'UK') ? 450 : 599);
-                $flexiPrice = $retailPrice + $flexiDiff;
-            }
+        // ONLY add Flexi and Upfront cards if Benz Live API actually returned multiple fares for this flight
+        if (isset($siblingFares[1]['Price']) && (float)$siblingFares[1]['Price'] > $retailPrice) {
+            // 2. Flexi Fare Card (Exact live Benz API fare)
+            $flexiPrice = (float)$siblingFares[1]['Price'];
+            $flexiDiff  = $flexiPrice - $retailPrice;
 
             $options[] = array(
                 'id' => 'flexi',
@@ -3043,8 +3028,10 @@ class Welcome extends CI_Controller {
                 ),
                 'priority' => null
             );
+        }
 
-            // 3. Upfront / Premium Fare Card
+        if (isset($siblingFares[2]['Price']) && (float)$siblingFares[2]['Price'] > $retailPrice) {
+            // 3. Upfront / Premium Fare Card (Exact live Benz API fare)
             $upfrontName = 'Indigo upfront';
             if ($airline === 'AI' || $airline === 'UK') {
                 $upfrontName = 'Comfort Plus';
@@ -3054,16 +3041,8 @@ class Welcome extends CI_Controller {
                 $upfrontName = 'Akasa VIP';
             }
 
-            $upfrontPrice = 0.0;
-            $upfrontDiff  = 0.0;
-            if (isset($siblingFares[2]['Price']) && (float)$siblingFares[2]['Price'] > $retailPrice) {
-                // Exact live Benz API fare from search results!
-                $upfrontPrice = (float)$siblingFares[2]['Price'];
-                $upfrontDiff  = $upfrontPrice - $retailPrice;
-            } else {
-                $upfrontDiff  = ($airline === 'SG') ? 1650 : (($airline === 'AI' || $airline === 'UK') ? 1800 : 1799);
-                $upfrontPrice = $retailPrice + $upfrontDiff;
-            }
+            $upfrontPrice = (float)$siblingFares[2]['Price'];
+            $upfrontDiff  = $upfrontPrice - $retailPrice;
 
             $options[] = array(
                 'id' => 'upfront',
@@ -3099,6 +3078,9 @@ class Welcome extends CI_Controller {
                 'priority' => 'Priority Check-in & Priority Baggage Delivery Included'
             );
         }
+
+        // Multiple fares flag is strictly based on whether Benz API returned more than 1 live option
+        $hasMultiple = (count($options) > 1);
 
         $response = array(
             'status' => 'success',

@@ -6206,8 +6206,6 @@
                 fd.append('to', flt.ToCode || (sector === 'onward' ? rtSearchQuery.to_code : rtSearchQuery.from_code));
                 fd.append('date', sector === 'onward' ? rtSearchQuery.date : (rtSearchQuery.return_date || ''));
                 fd.append('cabin', rtSearchQuery.cabin_class || 'Economy');
-                // Sector onward has multiple fare families; Sector return has single Retail (Screenshot 3)
-                fd.append('has_fare_options', sector === 'onward' ? '1' : '0');
                 // Pass TUI and flight index for live Benz API SmartPricer lookup
                 fd.append('tui', '<?php echo htmlspecialchars($activeSearchTui); ?>');
                 fd.append('flight_index', flt.FlightIndex || flt.flight_index || flt.Index || ((flt.AirlineCode || '6E') + '|1'));
@@ -6221,6 +6219,8 @@
                 if (siblingFares.length > 0) {
                     fd.append('sibling_fares', JSON.stringify(siblingFares));
                 }
+                // Multiple fare families exist only if Benz API returned more than 1 fare for this flight
+                fd.append('has_fare_options', siblingFares.length > 1 ? '1' : '0');
 
                 fetch('<?php echo site_url('flight/ajax_fare_options'); ?>', {
                     method: 'POST',
@@ -6447,7 +6447,12 @@
 
             function fallbackFareOptions(sector, flt) {
                 const price = parseFloat(flt.Price || 4999);
-                const hasMultiple = (sector === 'onward');
+                const allFltData = (sector === 'onward' ? onwardData : returnData) || [];
+                const siblingFares = allFltData.filter(item => 
+                    item && (item.FlightNumber === flt.FlightNumber || item.flight_number === flt.flight_number) &&
+                    (item.DepartureTime === flt.DepartureTime || item.departure_time === flt.departure_time)
+                );
+                const hasMultiple = (siblingFares.length > 1);
                 const mock = {
                     status: 'success',
                     sector: sector,
@@ -6463,8 +6468,8 @@
                             price_diff: 0,
                             is_default: true,
                             baggage: { checkin: '15 Kg (1 piece)', cabin: '7 Kg (1 piece)' },
-                            seat: { included: false, desc: 'Chargeable seat selection' },
-                            meal: { included: false, desc: 'Chargeable snacks & drinks' },
+                            seat: { included: false, desc: 'Standard / Preferred seats are chargeable' },
+                            meal: { included: false, desc: 'Snacks and beverages are chargeable' },
                             date_change: { fee: '₹ 3,000 + Diff', desc: 'Fee starts from ₹ 3,000 + Fare Difference' },
                             cancellation: { fee: '₹ 3,500', desc: 'Fee starts from ₹ 3,500 per pax' }
                         }
@@ -6472,41 +6477,53 @@
                 };
 
                 if (hasMultiple) {
-                    mock.options.push({
-                        id: 'flexi',
-                        fare_type: 'Flexi',
-                        title: 'Flexi',
-                        badge: 'Most Popular',
-                        badge_color: '#16a34a',
-                        badge_icon: 'fa-solid fa-fire',
-                        price: price + 314,
-                        price_diff: 314,
-                        is_default: false,
-                        baggage: { checkin: '15 Kg (1 piece)', cabin: '7 Kg (1 piece)' },
-                        seat: { included: true, desc: 'Free Standard Seat Selection Included' },
-                        meal: { included: true, desc: 'Complimentary Snack & Beverage Included' },
-                        date_change: { fee: 'NIL FEE', desc: 'Free Date Change up to 3 days before flight' },
-                        cancellation: { fee: 'Lower Penalty', desc: 'Reduced cancellation fee applicable' }
-                    });
-                    mock.options.push({
-                        id: 'upfront',
-                        fare_type: 'Indigo upfront',
-                        title: 'Indigo upfront',
-                        badge: 'Indigo upfront',
-                        badge_color: '#4f46e5',
-                        badge_icon: 'fa-solid fa-crown',
-                        price: price + 2615,
-                        price_diff: 2615,
-                        is_default: false,
-                        baggage: { checkin: '20 Kg (1 piece)', cabin: '7 Kg (1 piece)' },
-                        seat: { included: true, desc: 'Complimentary XL / Front Row Seat' },
-                        meal: { included: true, desc: 'Complimentary Gourmet Hot Meal & Beverage' },
-                        date_change: { fee: 'FREE CHANGE', desc: 'Free Date Change up to 2 hours before flight' },
-                        cancellation: { fee: 'Lower Penalty', desc: 'Free or lower cancellation penalty' },
-                        priority: 'Priority Check-in & Priority Baggage Delivery'
-                    });
+                    if (siblingFares[1]) {
+                        const p2 = parseFloat(siblingFares[1].Price || siblingFares[1].price || 0);
+                        if (p2 > price) {
+                            mock.options.push({
+                                id: 'flexi',
+                                fare_type: 'Flexi',
+                                title: 'Flexi',
+                                badge: 'Most Popular',
+                                badge_color: '#16a34a',
+                                badge_icon: 'fa-solid fa-fire',
+                                price: p2,
+                                price_diff: (p2 - price),
+                                is_default: false,
+                                baggage: { checkin: '15 Kg (1 piece)', cabin: '7 Kg (1 piece)' },
+                                seat: { included: true, desc: 'Free Standard Seat Selection Included' },
+                                meal: { included: true, desc: 'Complimentary Snack & Beverage Included' },
+                                date_change: { fee: 'NIL FEE', desc: 'Free Date Change up to 3 days before flight (Fare diff applies)' },
+                                cancellation: { fee: 'Lower Penalty', desc: 'Reduced cancellation fee applicable' }
+                            });
+                        }
+                    }
+                    if (siblingFares[2]) {
+                        const p3 = parseFloat(siblingFares[2].Price || siblingFares[2].price || 0);
+                        if (p3 > price) {
+                            const upfrontName = (flt.AirlineCode === 'SG') ? 'SpiceMax' : ((flt.AirlineCode === 'QP') ? 'Akasa VIP' : ((flt.AirlineCode === 'AI' || flt.AirlineCode === 'UK') ? 'Comfort Plus' : 'Indigo upfront'));
+                            mock.options.push({
+                                id: 'upfront',
+                                fare_type: upfrontName,
+                                title: upfrontName,
+                                badge: upfrontName,
+                                badge_color: '#4f46e5',
+                                badge_icon: 'fa-solid fa-crown',
+                                price: p3,
+                                price_diff: (p3 - price),
+                                is_default: false,
+                                baggage: { checkin: '20 Kg (1 piece)', cabin: '7 Kg (1 piece)' },
+                                seat: { included: true, desc: 'Complimentary XL / Front Row Seat with Extra Legroom' },
+                                meal: { included: true, desc: 'Complimentary Gourmet Hot Meal & Beverage' },
+                                date_change: { fee: 'FREE CHANGE', desc: 'Free Date Change up to 2 hours before flight' },
+                                cancellation: { fee: 'Lower Penalty', desc: 'Free cancellation or lower fee' },
+                                priority: 'Priority Check-in & Priority Baggage Delivery Included'
+                            });
+                        }
+                    }
                 }
 
+                foOptionsCache[cacheKey] = mock;
                 renderFareOptionCards(sector, mock);
             }
 
