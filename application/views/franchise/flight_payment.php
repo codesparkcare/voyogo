@@ -278,7 +278,7 @@ $promoCode       = $promoCode ?? ($post_data['promo_code'] ?? '');
 $payMarkup       = (float)($post_data['markup_amount'] ?? ($markup_amount ?? ($flight['markup_amount'] ?? 0)));
 $payNetFare      = (float)($post_data['net_fare'] ?? ($net_fare ?? ($flight['net_fare'] ?? 0)));
 $grandTotal      = (float)($grandTotal ?? max(0, ($fBaseFare + $fTaxes + $payMarkup + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount));
-$walletBaseFare  = ($payNetFare > 0) ? $payNetFare : ($fBaseFare + $fTaxes);
+$walletBaseFare  = ($fBaseFare + $fTaxes);
 $walletDeductAmount = (float)($walletDeductAmount ?? min($grandTotal, max(0, ($walletBaseFare + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount)));
 
 // Addon Selections for display
@@ -2752,7 +2752,7 @@ $returnSeatAmt     = (float)($post_data['return_selected_seat_amount'] ?? 0);
                             <strong style="font-size: 19px; color: #09204b;">₹ <?php echo number_format($store['wallet_balance'] ?? 0, 2); ?></strong>
                         </div>
                         <div style="padding: 12px; background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0;">
-                            <span style="font-size: 11.5px; color: #64748b; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 4px;">Net Float to Deduct</span>
+                            <span style="font-size: 11.5px; color: #64748b; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 4px;">Float to Deduct</span>
                             <strong style="font-size: 19px; color: #dc2626;">- ₹ <?php echo number_format($walletDeductAmount, 2); ?></strong>
                         </div>
                         <div style="padding: 12px; background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0;">

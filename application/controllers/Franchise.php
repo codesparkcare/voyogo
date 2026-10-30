@@ -1967,8 +1967,8 @@ class Franchise extends CI_Controller {
             $grandTotal = max(0, ($fBaseFare + $fTaxes + $payMarkup + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount);
         }
 
-        // Wallet Float Deduction: Deduct only Net Fare (+ addons / insurance) from store float, excluding franchise markup
-        $walletBaseFare = ($payNetFare > 0) ? $payNetFare : ($fBaseFare + $fTaxes);
+        // Wallet Float Deduction: Deduct Airline Gross Fare (+ addons / insurance) from store float, excluding franchise markup
+        $walletBaseFare = ($fBaseFare + $fTaxes);
         $walletDeductAmount = min($grandTotal, max(0, ($walletBaseFare + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount));
 
         $data['fBaseFare']          = $fBaseFare;
@@ -2067,13 +2067,9 @@ class Franchise extends CI_Controller {
 
         $wallet_deduct_amount = (float)$this->input->post('wallet_deduct_amount');
         if ($wallet_deduct_amount <= 0) {
-            if ($net_fare > 0) {
-                $baseFlightFare = (float)($this->input->post('base_fare') ?: 0) + (float)($this->input->post('taxes') ?: 0);
-                $addonsDelta = max(0, $total_amount - $markup_amount - $baseFlightFare);
-                $wallet_deduct_amount = min($total_amount, max(0, $net_fare + $addonsDelta));
-            } else {
-                $wallet_deduct_amount = max(0, $total_amount - $markup_amount);
-            }
+            $baseFlightFare = (float)($this->input->post('base_fare') ?: 0) + (float)($this->input->post('taxes') ?: 0);
+            $addonsDelta = max(0, $total_amount - $markup_amount - $baseFlightFare);
+            $wallet_deduct_amount = min($total_amount, max(0, $baseFlightFare + $addonsDelta));
         }
 
         $booking_type   = $this->input->post('booking_type') ?: 'regular';
