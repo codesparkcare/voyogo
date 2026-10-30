@@ -4583,6 +4583,8 @@
                                 <input type="hidden" name="to_city" value="<?php echo htmlspecialchars($search_query['to'] ?? ''); ?>">
                                 <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($cardTui); ?>">
                                 <input type="hidden" name="tui" value="<?php echo htmlspecialchars($cardTui); ?>">
+                                <input type="hidden" name="discount_amount" value="<?php echo htmlspecialchars($discountAmt); ?>">
+                                <input type="hidden" name="strike_price" value="<?php echo htmlspecialchars($strikePrice); ?>">
                                 <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($f['AirlineName']); ?>">
                                 <input type="hidden" name="airline_logo" value="<?php echo htmlspecialchars($f['AirlineLogo']); ?>">
                                 <input type="hidden" name="flight_number" value="<?php echo htmlspecialchars($f['FlightNumber']); ?>">

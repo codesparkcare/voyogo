@@ -110,8 +110,15 @@
 
     $insurancePerPax = 199;
     $initialInsurance = 0; // Default unselected
-    $initialDiscount = 18; // Default ATFLY discount matching Screenshot 1
-    $initialGrandTotal = $fBaseFare + $fTaxes + $initialInsurance - $initialDiscount;
+
+    // Initial ATFLY promo discount matching Screenshot 1 (Search page: 6,446 - 37 = 6,409)
+    $initialDiscount = (float)($discount_amount ?? ($this->input->post('discount_amount') ?? 0));
+    if ($initialDiscount <= 0) {
+        $reviewFlightPrice = $fBaseFare + $fTaxes;
+        $calcStrikePrice   = round($reviewFlightPrice * 1.003 + 18);
+        $initialDiscount   = max(18, $calcStrikePrice - $reviewFlightPrice);
+    }
+    $initialGrandTotal = max(0, $fBaseFare + $fTaxes + $initialInsurance - $initialDiscount);
     $retReviewPrice = !empty($return_flight['price']) ? (float)$return_flight['price'] : $reviewPrice;
 
     // Airport Database for detailed connecting flight segments (Screenshot 2)
@@ -1129,6 +1136,7 @@
                     <input type="hidden" name="travel_insurance_selected" id="form_travel_insurance_selected" value="0">
                     <input type="hidden" name="insurance_amount" id="form_insurance_amount" value="0">
                     <input type="hidden" name="discount_amount" id="form_discount_amount" value="<?php echo htmlspecialchars($initialDiscount); ?>">
+                    <input type="hidden" name="promo_discount" id="form_promo_discount" value="<?php echo htmlspecialchars($initialDiscount); ?>">
                     <input type="hidden" name="promo_code" id="form_promo_code" value="ATFLY">
                     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
                     <input type="hidden" name="is_roundtrip" value="<?php echo !empty($is_roundtrip) ? '1' : '0'; ?>">
@@ -2366,14 +2374,14 @@
                             </div>
 
                             <!-- Offer 7: ATFLY (Default Selected in Screenshot 1) -->
-                            <div class="promo-offer-item active" onclick="selectPromoOffer('ATFLY', 18, 'Default Instant Web Discount. Instant Flat Off ₹ 18')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid #22c55e; border-radius: 8px; margin-bottom: 4px; cursor: pointer; transition: all 0.2s ease; background: #f0fdf4;">
+                            <div class="promo-offer-item active" onclick="selectPromoOffer('ATFLY', <?php echo (float)$initialDiscount; ?>, 'Default Instant Web Discount. Instant Flat Off ₹ <?php echo number_format($initialDiscount); ?>')" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid #22c55e; border-radius: 8px; margin-bottom: 4px; cursor: pointer; transition: all 0.2s ease; background: #f0fdf4;">
                                 <input type="radio" name="promo_radio" id="promo_ATFLY" value="ATFLY" checked style="margin-top: 2px; accent-color: #16a34a;">
                                 <div style="flex: 1;">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <strong style="font-size: 13px; font-weight: 800; color: #0f172a;">ATFLY</strong>
-                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 10px;">Save 18</span>
+                                        <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 10px;">Save <?php echo number_format($initialDiscount); ?></span>
                                     </div>
-                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">Default Instant Web Discount. Instant Flat Off ₹ 18</div>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">Default Instant Web Discount. Instant Flat Off ₹ <?php echo number_format($initialDiscount); ?></div>
                                 </div>
                             </div>
                         </div>
@@ -2804,7 +2812,7 @@ function applyCustomPromoCode() {
         'RAINYDEAL': 218,
         'ATAUDD': 200,
         'ATDBS': 200,
-        'ATFLY': 18,
+        'ATFLY': <?php echo (float)$initialDiscount; ?>,
         'SWADES': 500
     };
 
