@@ -732,16 +732,6 @@ class Welcome extends CI_Controller {
         $data['new_fare']          = $new_fare;
         $data['fare_change_msg']   = $fare_change_msg;
         $data['total_travelers']   = $total_travelers;
-
-        // Dynamic search discount calculation (matching search results: StrikePrice - FlightPrice, e.g. 6446 - 6409 = 37)
-        $postDiscount = (float)($this->input->post('discount_amount') ?: ($this->input->get('discount_amount') ?: 0));
-        if ($postDiscount > 0) {
-            $data['discount_amount'] = $postDiscount;
-        } else {
-            $calcStrike = round($final_flight_price * 1.003 + 18);
-            $data['discount_amount'] = max(18, $calcStrike - $final_flight_price);
-        }
-        $data['strike_price'] = round($final_flight_price + $data['discount_amount']);
         $airportDisplayNames = array(
             'DEL' => 'Delhi (DEL)', 'BOM' => 'Mumbai (BOM)', 'BLR' => 'Bengaluru (BLR)',
             'MAA' => 'Chennai (MAA)', 'HYD' => 'Hyderabad (HYD)', 'CCU' => 'Kolkata (CCU)',
@@ -1485,7 +1475,7 @@ class Welcome extends CI_Controller {
             $addonTotal = (float)$addonsPost['addon_total_amount'];
         }
 
-        $promoDiscount = (float)($reviewPost['promo_discount'] ?? ($addonsPost['promo_discount'] ?? ($reviewPost['discount_amount'] ?? ($addonsPost['discount_amount'] ?? 0))));
+        $promoDiscount = (float)($reviewPost['promo_discount'] ?? ($addonsPost['promo_discount'] ?? 0));
         $grandTotal = max(0, ($fBaseFare + $fTaxes + $fareTierDelta + $insuranceAmount + $addonTotal) - $promoDiscount);
 
         if (isset($addonsPost['total_amount']) && (float)$addonsPost['total_amount'] > 0) {

@@ -111,13 +111,8 @@
     $insurancePerPax = 199;
     $initialInsurance = 0; // Default unselected
 
-    // Initial ATFLY promo discount matching Screenshot 1 (Search page: 6,446 - 37 = 6,409)
-    $initialDiscount = (float)($discount_amount ?? ($this->input->post('discount_amount') ?? 0));
-    if ($initialDiscount <= 0) {
-        $reviewFlightPrice = $fBaseFare + $fTaxes;
-        $calcStrikePrice   = round($reviewFlightPrice * 1.003 + 18);
-        $initialDiscount   = max(18, $calcStrikePrice - $reviewFlightPrice);
-    }
+    // ATFLY default promo discount (flat ₹18 instant web discount)
+    $initialDiscount = 18;
     $initialGrandTotal = max(0, $fBaseFare + $fTaxes + $initialInsurance - $initialDiscount);
     $retReviewPrice = !empty($return_flight['price']) ? (float)$return_flight['price'] : $reviewPrice;
 

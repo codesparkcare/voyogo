@@ -4583,8 +4583,6 @@
                                 <input type="hidden" name="to_city" value="<?php echo htmlspecialchars($search_query['to'] ?? ''); ?>">
                                 <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($cardTui); ?>">
                                 <input type="hidden" name="tui" value="<?php echo htmlspecialchars($cardTui); ?>">
-                                <input type="hidden" name="discount_amount" value="<?php echo htmlspecialchars($discountAmt); ?>">
-                                <input type="hidden" name="strike_price" value="<?php echo htmlspecialchars($strikePrice); ?>">
                                 <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($f['AirlineName']); ?>">
                                 <input type="hidden" name="airline_logo" value="<?php echo htmlspecialchars($f['AirlineLogo']); ?>">
                                 <input type="hidden" name="flight_number" value="<?php echo htmlspecialchars($f['FlightNumber']); ?>">
@@ -4940,9 +4938,6 @@
                             <?php else: ?>
                                 <span style="color:#ea580c; font-weight:700;"><i class="fa-solid fa-ban"></i> Non-Refundable Fare</span>
                             <?php endif; ?>
-                        </div>
-                        <div style="font-size:12px; color:#2563eb; font-weight:600;">
-                            Get ₹500 Instant Discount with Code: <strong>VOYOGO500</strong>
                         </div>
                     </div>
                 </div>
