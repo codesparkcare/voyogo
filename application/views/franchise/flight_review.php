@@ -108,6 +108,58 @@
         $airlineTaxes = $flight['itemized_taxes'];
     }
 
+    // Add Return Flight Fare if Round Trip
+    $retReviewPrice = (!empty($is_roundtrip) && !empty($return_flight['price'])) ? (float)$return_flight['price'] : 0;
+    if ($retReviewPrice > 0) {
+        $rawRetCode = strtoupper(substr($return_flight['flight_number'] ?? '', 0, 2));
+        if (strpos($rawRetCode, '-') !== false) {
+            $rawRetCode = explode('-', $return_flight['flight_number'])[0];
+        }
+        if (empty($rawRetCode)) $rawRetCode = '6E';
+
+        switch ($rawRetCode) {
+            case 'AI':
+                $retBaseFare = round($retReviewPrice * 0.725);
+                $retTaxes = max(0, $retReviewPrice - $retBaseFare);
+                break;
+            case 'IX':
+                $retBaseFare = round($retReviewPrice * 0.694);
+                $retTaxes = max(0, $retReviewPrice - $retBaseFare);
+                break;
+            case 'SG':
+                $retBaseFare = round($retReviewPrice * 0.745);
+                $retTaxes = max(0, $retReviewPrice - $retBaseFare);
+                break;
+            case 'QP':
+                $retBaseFare = round($retReviewPrice * 0.825);
+                $retTaxes = max(0, $retReviewPrice - $retBaseFare);
+                break;
+            case '6E':
+            default:
+                $retBaseFare = round($retReviewPrice * 0.788);
+                $retTaxes = max(0, $retReviewPrice - $retBaseFare);
+                break;
+        }
+
+        if (!empty($return_flight['total_base_fare']) && (float)$return_flight['total_base_fare'] > 0) {
+            $retBaseFare = (float)$return_flight['total_base_fare'];
+            $retTaxes = max(0, $retReviewPrice - $retBaseFare);
+        } elseif (!empty($return_flight['base_fare']) && (float)$return_flight['base_fare'] > 0) {
+            $retBaseFare = (float)$return_flight['base_fare'];
+            $retTaxes = max(0, $retReviewPrice - $retBaseFare);
+        }
+
+        $fBaseFare += $retBaseFare;
+        $fTaxes    += $retTaxes;
+
+        $airlineTaxes[] = array(
+            'name' => 'Return Taxes (' . $rawRetCode . ')',
+            'amount' => $retTaxes
+        );
+    } else {
+        $retReviewPrice = $reviewPrice;
+    }
+
     $adultBaseFare = round($fBaseFare * ($adult_count / $total_travelers_review));
     $childBaseFare = ($child_count > 0) ? round($fBaseFare * ($child_count / $total_travelers_review)) : 0;
     $infantBaseFare = ($infant_count > 0) ? max(0, $fBaseFare - $adultBaseFare - $childBaseFare) : 0;
@@ -116,7 +168,6 @@
     $initialInsurance = 0; // Default unselected
     $initialDiscount = 0; // No automatic discount
     $initialGrandTotal = $fBaseFare + $fTaxes + $revMarkup + $initialInsurance - $initialDiscount;
-    $retReviewPrice = !empty($return_flight['price']) ? (float)$return_flight['price'] : $reviewPrice;
 
     // Airport Database for detailed connecting flight segments (Screenshot 2)
     $airportDb = array(
