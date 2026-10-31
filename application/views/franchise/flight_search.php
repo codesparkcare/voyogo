@@ -70,6 +70,58 @@ if (empty($groupedOnward) && !empty($onwardList)) {
     $groupedOnward = array_values($tempGrouped);
 }
 
+if (empty($groupedReturn) && !empty($returnList)) {
+    $tempGroupedRet = array();
+    foreach ($returnList as $f) {
+        $mac = strtoupper(trim((string)($f['mac'] ?? ($f['airline_code'] ?? '6E'))));
+        $fnRaw = (string)($f['flight_number'] ?? '101');
+        $fnClean = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $fnRaw));
+        if (!empty($mac) && substr($fnClean, 0, strlen($mac)) === $mac) {
+            $fnClean = substr($fnClean, strlen($mac));
+        }
+        $depTime = substr(trim((string)($f['departure_time'] ?? '06:00')), 0, 5);
+        $arrTime = substr(trim((string)($f['arrival_time'] ?? '08:15')), 0, 5);
+        $durClean = strtolower(preg_replace('/[^a-z0-9]/', '', (string)($f['duration'] ?? '02h15m')));
+        $gKey = $mac . '_' . $fnClean . '_' . ($f['from_code'] ?? $destCode) . '_' . ($f['to_code'] ?? $origCode) . '_' . $depTime . '_' . $arrTime . '_' . $durClean;
+        if (!isset($tempGroupedRet[$gKey])) {
+            $tempGroupedRet[$gKey] = array(
+                'group_key'          => $gKey,
+                'airline_name'       => $f['airline_name'] ?? ($f['airline'] ?? 'Airline'),
+                'airline_code'       => $mac,
+                'airline_logo'       => $f['airline_logo'] ?? '',
+                'flight_number'      => $mac . ' - ' . $fnClean,
+                'raw_flight_number'  => $mac . '-' . $fnClean,
+                'from_code'          => $f['from_code'] ?? $destCode,
+                'to_code'            => $f['to_code'] ?? $origCode,
+                'departure_time'     => $depTime,
+                'arrival_time'       => $arrTime,
+                'duration'           => $f['duration'] ?? '02h 15m',
+                'stops'              => (int)($f['stops'] ?? 0),
+                'stops_text'         => ((int)($f['stops'] ?? 0) > 0) ? ($f['stops'] . ' Stop') : 'Non stop',
+                'via'                => $f['via'] ?? '',
+                'departure_date'     => date('D, d M, y', strtotime($returnDate)),
+                'arrival_date'       => date('D, d M, y', strtotime($returnDate)),
+                'dep_terminal'       => !empty($f['departure_terminal']) ? ($destCode . ', ' . $f['departure_terminal']) : ($destCode . ', Terminal 2'),
+                'arr_terminal'       => !empty($f['arrival_terminal']) ? ($origCode . ', ' . $f['arrival_terminal']) : ($origCode . ', Terminal 3'),
+                'fares'              => array(),
+                'min_price'          => PHP_FLOAT_MAX,
+                'min_net_fare'       => PHP_FLOAT_MAX,
+                'has_refundable'     => false
+            );
+        }
+        $tempGroupedRet[$gKey]['fares'][] = $f;
+        $p = (float)($f['price'] ?? 0);
+        if ($p > 0 && $p < $tempGroupedRet[$gKey]['min_price']) {
+            $tempGroupedRet[$gKey]['min_price'] = $p;
+            $tempGroupedRet[$gKey]['min_net_fare'] = (float)($f['net_fare'] ?? ($p * 0.92));
+        }
+        if (!empty($f['refundable'])) {
+            $tempGroupedRet[$gKey]['has_refundable'] = true;
+        }
+    }
+    $groupedReturn = array_values($tempGroupedRet);
+}
+
 $isFlightRefundable = function($row) {
     if (isset($row['refundable']) && is_bool($row['refundable'])) {
         return $row['refundable'];
@@ -526,81 +578,187 @@ uasort($connectingAirportsList, function($a, $b) {
                     </span>
                 </div>
 
-                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: none; border-radius: 0 0 10px 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px;" id="onwardFlightGroup">
-                    <?php foreach ($onwardList as $idx => $f): 
-                        $depTime = $f['departure_time'] ?? '06:00';
-                        $arrTime = $f['arrival_time'] ?? '08:15';
-                        $depHour = (int)substr($depTime, 0, 2);
+                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: none; border-radius: 0 0 10px 10px; padding: 12px; display: flex; flex-direction: column; gap: 12px;" id="onwardFlightGroup">
+                    <?php foreach ($groupedOnward as $gIdx => $g): 
+                        $gDepTime  = $g['departure_time'] ?? '06:00';
+                        $gArrTime  = $g['arrival_time'] ?? '08:15';
+                        $gDuration = $g['duration'] ?? '02h 15m';
+                        $gStops    = (int)($g['stops'] ?? 0);
+                        $gAlCode   = strtoupper($g['airline_code'] ?? '6E');
+                        $gMinPrice = (float)($g['min_price'] ?? 0);
+                        $gMinNet   = (float)($g['min_net_fare'] ?? ($gMinPrice * 0.92));
+
+                        $depHour = (int)substr($gDepTime, 0, 2);
                         $depSlot = 'night';
                         if ($depHour >= 5 && $depHour < 12) $depSlot = 'morning';
                         elseif ($depHour >= 12 && $depHour < 18) $depSlot = 'afternoon';
                         elseif ($depHour >= 18 && $depHour < 23) $depSlot = 'evening';
 
-                        $arrHour = (int)substr($arrTime, 0, 2);
+                        $arrHour = (int)substr($gArrTime, 0, 2);
                         $arrSlot = 'night';
                         if ($arrHour >= 5 && $arrHour < 12) $arrSlot = 'morning';
                         elseif ($arrHour >= 12 && $arrHour < 18) $arrSlot = 'afternoon';
                         elseif ($arrHour >= 18 && $arrHour < 23) $arrSlot = 'evening';
 
-                        $stops = (int)($f['stops'] ?? 0);
-                        $viaAirport = !empty($f['via']) ? strtoupper($f['via']) : (!empty($f['Via']) ? strtoupper($f['Via']) : ($stops > 0 ? 'HYD' : ''));
-                        $fPrice = (float)($f['price'] ?? 0);
-                        if ($fPrice <= 0) continue;
+                        $viaAirport = !empty($g['via']) ? strtoupper($g['via']) : ($gStops > 0 ? 'HYD' : '');
+                        $faresList  = !empty($g['fares']) ? $g['fares'] : array();
+                        if (empty($faresList)) continue;
                     ?>
-                    <label class="rt-card onward-card <?php echo ($idx === 0) ? 'selected-rt-card' : ''; ?>" 
-                           data-idx="<?php echo $idx; ?>" 
-                           data-original-price="<?php echo $fPrice; ?>"
-                           data-price="<?php echo $fPrice; ?>" 
-                           data-net-fare="<?php echo (float)($f['net_fare'] ?? ($f['base_fare'] ?? $fPrice)); ?>"
-                           data-stops="<?php echo $stops; ?>" 
-                           data-airline="<?php echo htmlspecialchars(strtoupper($f['airline_code'] ?? '6E')); ?>" 
-                           data-time="<?php echo htmlspecialchars($depTime); ?>"
-                           data-depslot="<?php echo $depSlot; ?>"
-                           data-arrslot="<?php echo $arrSlot; ?>"
-                           data-refundable="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>"
-                           data-via="<?php echo htmlspecialchars($viaAirport); ?>">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <input type="radio" name="selected_onward_idx" value="<?php echo $idx; ?>" <?php echo ($idx === 0) ? 'checked' : ''; ?> onchange="updateRoundTripSelection(); onOnwardFlightSelectedMobile();" style="accent-color: #78B722; width: 16px; height: 16px;">
-                                <img src="<?php echo htmlspecialchars($f['airline_logo']); ?>" alt="logo" style="width: 24px; height: 24px; object-fit: contain;">
+                    <div class="rt-group-card onward-group-card <?php echo ($gIdx === 0) ? 'active-flight' : ''; ?>" 
+                         id="onward_group_<?php echo $gIdx; ?>"
+                         data-idx="<?php echo $gIdx; ?>" 
+                         data-original-price="<?php echo $gMinPrice; ?>"
+                         data-price="<?php echo $gMinPrice; ?>" 
+                         data-net-fare="<?php echo $gMinNet; ?>"
+                         data-stops="<?php echo $gStops; ?>" 
+                         data-airline="<?php echo htmlspecialchars($gAlCode); ?>" 
+                         data-time="<?php echo htmlspecialchars($gDepTime); ?>"
+                         data-depslot="<?php echo $depSlot; ?>"
+                         data-arrslot="<?php echo $arrSlot; ?>"
+                         data-refundable="<?php echo !empty($g['has_refundable']) ? '1' : '0'; ?>"
+                         data-via="<?php echo htmlspecialchars($viaAirport); ?>">
+                        
+                        <!-- Flight Schedule Header (Akbar Travels layout) -->
+                        <div class="rt-group-header">
+                            <div class="rt-group-airline">
+                                <img src="<?php echo htmlspecialchars($g['airline_logo']); ?>" alt="<?php echo htmlspecialchars($g['airline_name']); ?>">
                                 <div>
-                                    <strong style="font-size: 13.5px; color: #0f172a; display: block;"><?php echo htmlspecialchars($f['airline_name']); ?></strong>
-                                    <span style="font-size: 11px; color: #64748b;"><?php echo htmlspecialchars($f['flight_number']); ?></span>
+                                    <strong><?php echo htmlspecialchars($g['airline_name']); ?></strong>
+                                    <span><?php echo htmlspecialchars($g['flight_number']); ?></span>
                                 </div>
                             </div>
-                            <div style="text-align: right;">
-                                <strong style="font-size: 16px; color: #09204b;">₹ <span class="card-display-price"><?php echo number_format($f['price']); ?></span></strong>
-                                <span style="font-size: 10.5px; color: #475569; font-weight: 700; display: block;">Net: ₹ <span class="card-net-fare"><?php echo number_format((float)($f['net_fare'] ?? ($f['base_fare'] ?? $fPrice))); ?></span></span>
+                            <div class="rt-group-schedule">
+                                <div class="rt-sched-point">
+                                    <span class="rt-sched-time"><?php echo htmlspecialchars($g['departure_time']); ?></span>
+                                    <span class="rt-sched-code"><?php echo htmlspecialchars($g['from_code']); ?></span>
+                                </div>
+                                <div class="rt-sched-dur">
+                                    <span><?php echo htmlspecialchars($g['duration']); ?></span>
+                                    <div class="rt-sched-line"></div>
+                                    <span class="rt-sched-stops" style="color: <?php echo ($gStops == 0) ? '#166534' : '#d97706'; ?>;">
+                                        <?php echo ($gStops == 0) ? 'Non stop' : ($gStops . ' Stop'); ?>
+                                    </span>
+                                </div>
+                                <div class="rt-sched-point">
+                                    <span class="rt-sched-time"><?php echo htmlspecialchars($g['arrival_time']); ?></span>
+                                    <span class="rt-sched-code"><?php echo htmlspecialchars($g['to_code']); ?></span>
+                                </div>
                             </div>
                         </div>
 
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px dashed #e2e8f0; font-size: 12px;">
-                            <div>
-                                <strong style="font-size: 15px; color: #0f172a;"><?php echo htmlspecialchars($depTime); ?></strong>
-                                <span style="color: #64748b; font-size: 11px; display: block;"><?php echo htmlspecialchars($origCode); ?></span>
-                            </div>
-                            <div style="text-align: center; color: #64748b; font-size: 11px;">
-                                <span><?php echo htmlspecialchars($f['duration']); ?></span>
-                                <div style="height: 1px; background: #cbd5e1; width: 50px; margin: 2px auto;"></div>
-                                <span style="color: <?php echo ($stops == 0) ? '#166534' : '#d97706'; ?>; font-weight: 700;">
-                                    <?php echo ($stops == 0) ? 'Non Stop' : ($stops . ' Stop'); ?>
-                                </span>
-                            </div>
-                            <div style="text-align: right;">
-                                <strong style="font-size: 15px; color: #0f172a;"><?php echo htmlspecialchars($arrTime); ?></strong>
-                                <span style="color: #64748b; font-size: 11px; display: block;"><?php echo htmlspecialchars($destCode); ?></span>
-                            </div>
+                        <!-- Fares List (Akbar Travels multi-fare brands) -->
+                        <div class="rt-fares-list">
+                            <?php 
+                            foreach ($faresList as $fIdx => $f): 
+                                $fGross    = (float)($f['price'] ?? 0);
+                                if ($fGross <= 0) continue;
+                                $fNet      = (float)($f['net_fare'] ?? ($f['base_fare'] ?? ($fGross * 0.92)));
+                                $fLabel    = $f['fare_label'] ?? ($f['fare_name'] ?? ($f['fare_type'] ?? 'SAVER'));
+                                $fCode     = $f['fare_code'] ?? ($f['fbc'] ?? ($f['FareBasisCode'] ?? ''));
+                                $fBaggage  = $f['baggage'] ?? '15 Kg';
+                                $isRef     = !empty($f['refundable']);
+                                $isExtra   = ($fIdx >= 2); // Show top 2 fares by default, collapse remaining
+                                $rowFareId = 'o_' . $gIdx . '_' . $fIdx;
+                                $isChecked = ($gIdx === 0 && $fIdx === 0);
+                            ?>
+                            <label class="rt-fare-row onward-fare-item <?php echo $isExtra ? 'rt-extra-fare rt-extra-fare-o-' . $gIdx : ''; ?> <?php echo $isChecked ? 'selected-fare' : ''; ?>" 
+                                   id="fare_row_<?php echo $rowFareId; ?>"
+                                   style="<?php echo $isExtra ? 'display: none;' : ''; ?>"
+                                   data-original-price="<?php echo $fGross; ?>"
+                                   data-price="<?php echo $fGross; ?>"
+                                   data-net-fare="<?php echo $fNet; ?>"
+                                   data-stops="<?php echo $gStops; ?>"
+                                   data-airline="<?php echo htmlspecialchars($gAlCode); ?>"
+                                   data-depslot="<?php echo $depSlot; ?>"
+                                   data-refundable="<?php echo $isRef ? '1' : '0'; ?>">
+                                
+                                <input type="radio" 
+                                       name="selected_onward_fare" 
+                                       value="<?php echo $rowFareId; ?>" 
+                                       <?php echo $isChecked ? 'checked' : ''; ?>
+                                       onchange="updateRoundTripSelection(); onOnwardFlightSelectedMobile();"
+                                       data-id="<?php echo htmlspecialchars($f['id'] ?? ('FL_' . $gAlCode . '_' . $fIdx)); ?>"
+                                       data-airline-name="<?php echo htmlspecialchars($g['airline_name']); ?>"
+                                       data-flight-number="<?php echo htmlspecialchars($g['flight_number']); ?>"
+                                       data-airline-code="<?php echo htmlspecialchars($g['airline_code']); ?>"
+                                       data-airline-logo="<?php echo htmlspecialchars($g['airline_logo']); ?>"
+                                       data-flight-index="<?php echo htmlspecialchars($f['flight_index'] ?? ($gAlCode . '|1')); ?>"
+                                       data-departure-time="<?php echo htmlspecialchars($g['departure_time']); ?>"
+                                       data-arrival-time="<?php echo htmlspecialchars($g['arrival_time']); ?>"
+                                       data-from-code="<?php echo htmlspecialchars($g['from_code']); ?>"
+                                       data-to-code="<?php echo htmlspecialchars($g['to_code']); ?>"
+                                       data-stops="<?php echo $g['stops']; ?>"
+                                       data-duration="<?php echo htmlspecialchars($g['duration']); ?>"
+                                       data-via="<?php echo htmlspecialchars($viaAirport); ?>"
+                                       data-price="<?php echo $fGross; ?>"
+                                       data-net-fare="<?php echo $fNet; ?>"
+                                       data-fare-label="<?php echo htmlspecialchars($fLabel); ?>"
+                                       data-fare-code="<?php echo htmlspecialchars($fCode); ?>"
+                                       data-baggage="<?php echo htmlspecialchars($fBaggage); ?>"
+                                       data-refundable="<?php echo $isRef ? '1' : '0'; ?>"
+                                       data-hold="<?php echo (!empty($f['hold']) && ($f['hold'] === true || $f['hold'] === '1' || $f['hold'] === 1 || $f['hold'] === 'true')) ? '1' : '0'; ?>"
+                                       data-hold-info="<?php echo htmlspecialchars($f['hold_info'] ?? ''); ?>"
+                                >
+
+                                <div class="rt-fare-info">
+                                    <div class="rt-fare-brand-line">
+                                        <strong class="rt-fare-label"><?php echo htmlspecialchars($fLabel); ?></strong>
+                                        <?php if (!empty($fCode)): ?>
+                                            <span class="rt-fare-code">(<?php echo htmlspecialchars($fCode); ?>)</span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="rt-fare-meta">
+                                        <span title="Check-in Baggage"><i class="fa-solid fa-suitcase"></i> <?php echo htmlspecialchars($fBaggage); ?></span>
+                                        <span title="Cabin Baggage"><i class="fa-solid fa-briefcase"></i> 7 Kg</span>
+                                        <?php if ($isRef): ?>
+                                            <span style="color: #166534; font-weight: 700;">● Refundable</span>
+                                        <?php else: ?>
+                                            <span style="color: #c2410c; font-weight: 700;">● Non-Refundable</span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+                                <div class="rt-fare-pricing">
+                                    <strong class="rt-fare-gross">₹ <span class="rt-fare-gross-num card-display-price"><?php echo number_format($fGross); ?></span></strong>
+                                    <span class="rt-fare-net">Net: ₹ <span class="rt-fare-net-num card-net-fare"><?php echo number_format($fNet); ?></span></span>
+                                </div>
+                            </label>
+                            <?php endforeach; ?>
                         </div>
 
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding-top: 4px; font-size: 11px;">
-                            <?php if (!empty($f['refundable'])): ?>
-                                <span style="color: #16a34a; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-shield-halved"></i> Refundable</span>
+                        <!-- Flight Card Footer: View More Fares + Flight Details -->
+                        <div class="rt-card-footer">
+                            <?php if (count($faresList) > 2): ?>
+                                <button type="button" 
+                                        class="rt-btn-more-fares"
+                                        onclick="toggleRtGroupFares('o-<?php echo $gIdx; ?>', this, <?php echo count($faresList) - 2; ?>)">
+                                    <span>View More Fares (<?php echo count($faresList) - 2; ?> more)</span>
+                                    <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                                </button>
                             <?php else: ?>
-                                <span style="color: #ea580c; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-ban"></i> Non-Refundable</span>
+                                <span></span>
                             <?php endif; ?>
-                            <span style="color: #64748b;"><?php echo htmlspecialchars($f['baggage'] ?? '15 Kg'); ?></span>
+                            
+                            <span class="rt-link-details" onclick="toggleDetailsDrawer('rt_details_o_<?php echo $gIdx; ?>')">
+                                Flight Details <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
+                            </span>
                         </div>
-                    </label>
+
+                        <!-- Hidden Details Drawer -->
+                        <div id="rt_details_o_<?php echo $gIdx; ?>" class="f-fare-details-drawer" style="display: none; padding: 12px 14px; background: #f8fafc; border-top: 1px dashed #cbd5e1; font-size: 11.5px; color: #334155;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                                <div>
+                                    <strong style="color: #09204b; display: block; margin-bottom: 2px;">Baggage Allowance</strong>
+                                    <p style="margin: 0; color: #64748b;">Adult check-in: 15 Kg &bull; Cabin: 7 Kg</p>
+                                </div>
+                                <div>
+                                    <strong style="color: #09204b; display: block; margin-bottom: 2px;">Cancellation Rules</strong>
+                                    <p style="margin: 0; color: #64748b;"><?php echo !empty($g['has_refundable']) ? 'Refundable with standard airline fee.' : 'Non-refundable fare.'; ?></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -617,81 +775,187 @@ uasort($connectingAirportsList, function($a, $b) {
                     </span>
                 </div>
 
-                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: none; border-radius: 0 0 10px 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px;" id="returnFlightGroup">
-                    <?php foreach ($returnList as $rIdx => $rf): 
-                        $rDepTime = $rf['departure_time'] ?? '15:30';
-                        $rArrTime = $rf['arrival_time'] ?? '17:45';
-                        $rDepHour = (int)substr($rDepTime, 0, 2);
+                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: none; border-radius: 0 0 10px 10px; padding: 12px; display: flex; flex-direction: column; gap: 12px;" id="returnFlightGroup">
+                    <?php foreach ($groupedReturn as $rIdx => $rg): 
+                        $rgDepTime  = $rg['departure_time'] ?? '18:00';
+                        $rgArrTime  = $rg['arrival_time'] ?? '20:15';
+                        $rgDuration = $rg['duration'] ?? '02h 15m';
+                        $rgStops    = (int)($rg['stops'] ?? 0);
+                        $rgAlCode   = strtoupper($rg['airline_code'] ?? '6E');
+                        $rgMinPrice = (float)($rg['min_price'] ?? 0);
+                        $rgMinNet   = (float)($rg['min_net_fare'] ?? ($rgMinPrice * 0.92));
+
+                        $rDepHour = (int)substr($rgDepTime, 0, 2);
                         $rDepSlot = 'night';
                         if ($rDepHour >= 5 && $rDepHour < 12) $rDepSlot = 'morning';
                         elseif ($rDepHour >= 12 && $rDepHour < 18) $rDepSlot = 'afternoon';
                         elseif ($rDepHour >= 18 && $rDepHour < 23) $rDepSlot = 'evening';
 
-                        $rArrHour = (int)substr($rArrTime, 0, 2);
+                        $rArrHour = (int)substr($rgArrTime, 0, 2);
                         $rArrSlot = 'night';
                         if ($rArrHour >= 5 && $rArrHour < 12) $rArrSlot = 'morning';
                         elseif ($rArrHour >= 12 && $rArrHour < 18) $rArrSlot = 'afternoon';
                         elseif ($rArrHour >= 18 && $rArrHour < 23) $rArrSlot = 'evening';
 
-                        $rStops = (int)($rf['stops'] ?? 0);
-                        $rViaAirport = !empty($rf['via']) ? strtoupper($rf['via']) : (!empty($rf['Via']) ? strtoupper($rf['Via']) : ($rStops > 0 ? 'HYD' : ''));
-                        $rfPrice = (float)($rf['price'] ?? 0);
-                        $rfNetFare = (float)($rf['net_fare'] ?? ($rf['base_fare'] ?? $rfPrice));
+                        $rViaAirport = !empty($rg['via']) ? strtoupper($rg['via']) : ($rgStops > 0 ? 'HYD' : '');
+                        $rFaresList  = !empty($rg['fares']) ? $rg['fares'] : array();
+                        if (empty($rFaresList)) continue;
                     ?>
-                    <label class="rt-card return-card <?php echo ($rIdx === 0) ? 'selected-rt-card' : ''; ?>" 
-                           data-idx="<?php echo $rIdx; ?>" 
-                           data-original-price="<?php echo $rfPrice; ?>"
-                           data-price="<?php echo $rfPrice; ?>" 
-                           data-net-fare="<?php echo $rfNetFare; ?>"
-                           data-stops="<?php echo $rStops; ?>" 
-                           data-airline="<?php echo htmlspecialchars(strtoupper($rf['airline_code'] ?? '6E')); ?>" 
-                           data-time="<?php echo htmlspecialchars($rDepTime); ?>"
-                           data-depslot="<?php echo $rDepSlot; ?>"
-                           data-arrslot="<?php echo $rArrSlot; ?>"
-                           data-refundable="<?php echo !empty($rf['refundable']) ? '1' : '0'; ?>"
-                           data-via="<?php echo htmlspecialchars($rViaAirport); ?>">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <input type="radio" name="selected_return_idx" value="<?php echo $rIdx; ?>" <?php echo ($rIdx === 0) ? 'checked' : ''; ?> onchange="updateRoundTripSelection()" style="accent-color: #1e3a8a; width: 16px; height: 16px;">
-                                <img src="<?php echo htmlspecialchars($rf['airline_logo']); ?>" alt="logo" style="width: 24px; height: 24px; object-fit: contain;">
+                    <div class="rt-group-card return-group-card <?php echo ($rIdx === 0) ? 'active-flight' : ''; ?>" 
+                         id="return_group_<?php echo $rIdx; ?>"
+                         data-idx="<?php echo $rIdx; ?>" 
+                         data-original-price="<?php echo $rgMinPrice; ?>"
+                         data-price="<?php echo $rgMinPrice; ?>" 
+                         data-net-fare="<?php echo $rgMinNet; ?>"
+                         data-stops="<?php echo $rgStops; ?>" 
+                         data-airline="<?php echo htmlspecialchars($rgAlCode); ?>" 
+                         data-time="<?php echo htmlspecialchars($rgDepTime); ?>"
+                         data-depslot="<?php echo $rDepSlot; ?>"
+                         data-arrslot="<?php echo $rArrSlot; ?>"
+                         data-refundable="<?php echo !empty($rg['has_refundable']) ? '1' : '0'; ?>"
+                         data-via="<?php echo htmlspecialchars($rViaAirport); ?>">
+                        
+                        <!-- Flight Schedule Header (Akbar Travels layout) -->
+                        <div class="rt-group-header">
+                            <div class="rt-group-airline">
+                                <img src="<?php echo htmlspecialchars($rg['airline_logo']); ?>" alt="<?php echo htmlspecialchars($rg['airline_name']); ?>">
                                 <div>
-                                    <strong style="font-size: 13.5px; color: #0f172a; display: block;"><?php echo htmlspecialchars($rf['airline_name']); ?></strong>
-                                    <span style="font-size: 11px; color: #64748b;"><?php echo htmlspecialchars($rf['flight_number']); ?></span>
+                                    <strong><?php echo htmlspecialchars($rg['airline_name']); ?></strong>
+                                    <span><?php echo htmlspecialchars($rg['flight_number']); ?></span>
                                 </div>
                             </div>
-                            <div style="text-align: right;">
-                                <strong style="font-size: 16px; color: #1e3a8a;">₹ <span class="card-display-price"><?php echo number_format($rfPrice); ?></span></strong>
-                                <span style="font-size: 10.5px; color: #475569; font-weight: 700; display: block;">Net: ₹ <span class="card-net-fare"><?php echo number_format($rfNetFare); ?></span></span>
+                            <div class="rt-group-schedule">
+                                <div class="rt-sched-point">
+                                    <span class="rt-sched-time"><?php echo htmlspecialchars($rg['departure_time']); ?></span>
+                                    <span class="rt-sched-code"><?php echo htmlspecialchars($rg['from_code']); ?></span>
+                                </div>
+                                <div class="rt-sched-dur">
+                                    <span><?php echo htmlspecialchars($rg['duration']); ?></span>
+                                    <div class="rt-sched-line"></div>
+                                    <span class="rt-sched-stops" style="color: <?php echo ($rgStops == 0) ? '#166534' : '#d97706'; ?>;">
+                                        <?php echo ($rgStops == 0) ? 'Non stop' : ($rgStops . ' Stop'); ?>
+                                    </span>
+                                </div>
+                                <div class="rt-sched-point">
+                                    <span class="rt-sched-time"><?php echo htmlspecialchars($rg['arrival_time']); ?></span>
+                                    <span class="rt-sched-code"><?php echo htmlspecialchars($rg['to_code']); ?></span>
+                                </div>
                             </div>
                         </div>
 
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px dashed #e2e8f0; font-size: 12px;">
-                            <div>
-                                <strong style="font-size: 15px; color: #0f172a;"><?php echo htmlspecialchars($rDepTime); ?></strong>
-                                <span style="color: #64748b; font-size: 11px; display: block;"><?php echo htmlspecialchars($destCode); ?></span>
-                            </div>
-                            <div style="text-align: center; color: #64748b; font-size: 11px;">
-                                <span><?php echo htmlspecialchars($rf['duration']); ?></span>
-                                <div style="height: 1px; background: #cbd5e1; width: 50px; margin: 2px auto;"></div>
-                                <span style="color: <?php echo ($rStops == 0) ? '#166534' : '#d97706'; ?>; font-weight: 700;">
-                                    <?php echo ($rStops == 0) ? 'Non Stop' : ($rStops . ' Stop'); ?>
-                                </span>
-                            </div>
-                            <div style="text-align: right;">
-                                <strong style="font-size: 15px; color: #0f172a;"><?php echo htmlspecialchars($rArrTime); ?></strong>
-                                <span style="color: #64748b; font-size: 11px; display: block;"><?php echo htmlspecialchars($origCode); ?></span>
-                            </div>
+                        <!-- Fares List (Akbar Travels multi-fare brands) -->
+                        <div class="rt-fares-list">
+                            <?php 
+                            foreach ($rFaresList as $rfIdx => $rf): 
+                                $rfGross   = (float)($rf['price'] ?? 0);
+                                if ($rfGross <= 0) continue;
+                                $rfNet     = (float)($rf['net_fare'] ?? ($rf['base_fare'] ?? ($rfGross * 0.92)));
+                                $rfLabel   = $rf['fare_label'] ?? ($rf['fare_name'] ?? ($rf['fare_type'] ?? 'SAVER'));
+                                $rfCode    = $rf['fare_code'] ?? ($rf['fbc'] ?? ($rf['FareBasisCode'] ?? ''));
+                                $rfBaggage = $rf['baggage'] ?? '15 Kg';
+                                $isRfRef   = !empty($rf['refundable']);
+                                $isRfExtra = ($rfIdx >= 2); // Show top 2 fares by default, collapse remaining
+                                $rowRfId   = 'r_' . $rIdx . '_' . $rfIdx;
+                                $isRfChecked = ($rIdx === 0 && $rfIdx === 0);
+                            ?>
+                            <label class="rt-fare-row return-fare-item <?php echo $isRfExtra ? 'rt-extra-fare rt-extra-fare-r-' . $rIdx : ''; ?> <?php echo $isRfChecked ? 'selected-fare' : ''; ?>" 
+                                   id="fare_row_<?php echo $rowRfId; ?>"
+                                   style="<?php echo $isRfExtra ? 'display: none;' : ''; ?>"
+                                   data-original-price="<?php echo $rfGross; ?>"
+                                   data-price="<?php echo $rfGross; ?>"
+                                   data-net-fare="<?php echo $rfNet; ?>"
+                                   data-stops="<?php echo $rgStops; ?>"
+                                   data-airline="<?php echo htmlspecialchars($rgAlCode); ?>"
+                                   data-depslot="<?php echo $rDepSlot; ?>"
+                                   data-refundable="<?php echo $isRfRef ? '1' : '0'; ?>">
+                                
+                                <input type="radio" 
+                                       name="selected_return_fare" 
+                                       value="<?php echo $rowRfId; ?>" 
+                                       <?php echo $isRfChecked ? 'checked' : ''; ?>
+                                       onchange="updateRoundTripSelection();"
+                                       data-id="<?php echo htmlspecialchars($rf['id'] ?? ('FL_RET_' . $rgAlCode . '_' . $rfIdx)); ?>"
+                                       data-airline-name="<?php echo htmlspecialchars($rg['airline_name']); ?>"
+                                       data-flight-number="<?php echo htmlspecialchars($rg['flight_number']); ?>"
+                                       data-airline-code="<?php echo htmlspecialchars($rg['airline_code']); ?>"
+                                       data-airline-logo="<?php echo htmlspecialchars($rg['airline_logo']); ?>"
+                                       data-flight-index="<?php echo htmlspecialchars($rf['flight_index'] ?? ($rgAlCode . '|1')); ?>"
+                                       data-departure-time="<?php echo htmlspecialchars($rg['departure_time']); ?>"
+                                       data-arrival-time="<?php echo htmlspecialchars($rg['arrival_time']); ?>"
+                                       data-from-code="<?php echo htmlspecialchars($rg['from_code']); ?>"
+                                       data-to-code="<?php echo htmlspecialchars($rg['to_code']); ?>"
+                                       data-stops="<?php echo $rg['stops']; ?>"
+                                       data-duration="<?php echo htmlspecialchars($rg['duration']); ?>"
+                                       data-via="<?php echo htmlspecialchars($rViaAirport); ?>"
+                                       data-price="<?php echo $rfGross; ?>"
+                                       data-net-fare="<?php echo $rfNet; ?>"
+                                       data-fare-label="<?php echo htmlspecialchars($rfLabel); ?>"
+                                       data-fare-code="<?php echo htmlspecialchars($rfCode); ?>"
+                                       data-baggage="<?php echo htmlspecialchars($rfBaggage); ?>"
+                                       data-refundable="<?php echo $isRfRef ? '1' : '0'; ?>"
+                                       data-hold="<?php echo (!empty($rf['hold']) && ($rf['hold'] === true || $rf['hold'] === '1' || $rf['hold'] === 1 || $rf['hold'] === 'true')) ? '1' : '0'; ?>"
+                                       data-hold-info="<?php echo htmlspecialchars($rf['hold_info'] ?? ''); ?>"
+                                >
+
+                                <div class="rt-fare-info">
+                                    <div class="rt-fare-brand-line">
+                                        <strong class="rt-fare-label"><?php echo htmlspecialchars($rfLabel); ?></strong>
+                                        <?php if (!empty($rfCode)): ?>
+                                            <span class="rt-fare-code">(<?php echo htmlspecialchars($rfCode); ?>)</span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="rt-fare-meta">
+                                        <span title="Check-in Baggage"><i class="fa-solid fa-suitcase"></i> <?php echo htmlspecialchars($rfBaggage); ?></span>
+                                        <span title="Cabin Baggage"><i class="fa-solid fa-briefcase"></i> 7 Kg</span>
+                                        <?php if ($isRfRef): ?>
+                                            <span style="color: #166534; font-weight: 700;">● Refundable</span>
+                                        <?php else: ?>
+                                            <span style="color: #c2410c; font-weight: 700;">● Non-Refundable</span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+                                <div class="rt-fare-pricing">
+                                    <strong class="rt-fare-gross">₹ <span class="rt-fare-gross-num card-display-price"><?php echo number_format($rfGross); ?></span></strong>
+                                    <span class="rt-fare-net">Net: ₹ <span class="rt-fare-net-num card-net-fare"><?php echo number_format($rfNet); ?></span></span>
+                                </div>
+                            </label>
+                            <?php endforeach; ?>
                         </div>
 
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding-top: 4px; font-size: 11px;">
-                            <?php if (!empty($rf['refundable'])): ?>
-                                <span style="color: #16a34a; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-shield-halved"></i> Refundable</span>
+                        <!-- Flight Card Footer: View More Fares + Flight Details -->
+                        <div class="rt-card-footer">
+                            <?php if (count($rFaresList) > 2): ?>
+                                <button type="button" 
+                                        class="rt-btn-more-fares"
+                                        onclick="toggleRtGroupFares('r-<?php echo $rIdx; ?>', this, <?php echo count($rFaresList) - 2; ?>)">
+                                    <span>View More Fares (<?php echo count($rFaresList) - 2; ?> more)</span>
+                                    <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                                </button>
                             <?php else: ?>
-                                <span style="color: #ea580c; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-ban"></i> Non-Refundable</span>
+                                <span></span>
                             <?php endif; ?>
-                            <span style="color: #64748b;"><?php echo htmlspecialchars($rf['baggage'] ?? '15 Kg'); ?></span>
+                            
+                            <span class="rt-link-details" onclick="toggleDetailsDrawer('rt_details_r_<?php echo $rIdx; ?>')">
+                                Flight Details <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
+                            </span>
                         </div>
-                    </label>
+
+                        <!-- Hidden Details Drawer -->
+                        <div id="rt_details_r_<?php echo $rIdx; ?>" class="f-fare-details-drawer" style="display: none; padding: 12px 14px; background: #f8fafc; border-top: 1px dashed #cbd5e1; font-size: 11.5px; color: #334155;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                                <div>
+                                    <strong style="color: #09204b; display: block; margin-bottom: 2px;">Baggage Allowance</strong>
+                                    <p style="margin: 0; color: #64748b;">Adult check-in: 15 Kg &bull; Cabin: 7 Kg</p>
+                                </div>
+                                <div>
+                                    <strong style="color: #09204b; display: block; margin-bottom: 2px;">Cancellation Rules</strong>
+                                    <p style="margin: 0; color: #64748b;"><?php echo !empty($rg['has_refundable']) ? 'Refundable with standard airline fee.' : 'Non-refundable fare.'; ?></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -707,6 +971,7 @@ uasort($connectingAirportsList, function($a, $b) {
                         <span style="background: #e8f5e9; color: #2e7d32; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px;">OUTBOUND</span>
                         <strong style="font-size: 14px; color: #0f172a; margin-left: 8px;" id="barOnwardAirline"></strong>
                         <div style="font-size: 12px; color: #64748b;" id="barOnwardTime"></div>
+                        <div style="font-size: 11.5px; color: #166534; font-weight: 700; margin-top: 2px;" id="barOnwardFare"></div>
                     </div>
                     <div style="height: 35px; width: 1px; background: #e2e8f0;"></div>
                     <!-- Return Info -->
@@ -714,6 +979,7 @@ uasort($connectingAirportsList, function($a, $b) {
                         <span style="background: #eff6ff; color: #1e40af; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px;">RETURN</span>
                         <strong style="font-size: 14px; color: #0f172a; margin-left: 8px;" id="barReturnAirline"></strong>
                         <div style="font-size: 12px; color: #64748b;" id="barReturnTime"></div>
+                        <div style="font-size: 11.5px; color: #1e40af; font-weight: 700; margin-top: 2px;" id="barReturnFare"></div>
                     </div>
                 </div>
 
@@ -725,22 +991,41 @@ uasort($connectingAirportsList, function($a, $b) {
 
                     <form action="<?php echo site_url('franchise/flight_review'); ?>" method="POST" id="roundTripForm">
                         <input type="hidden" name="is_roundtrip" value="1">
+                        <input type="hidden" name="tui" id="rt_tui" value="<?php echo htmlspecialchars($activeTui); ?>">
                         <input type="hidden" name="flight_id" id="rt_flight_id" value="">
                         <input type="hidden" name="airline_name" id="rt_airline_name" value="">
                         <input type="hidden" name="flight_number" id="rt_flight_number" value="">
                         <input type="hidden" name="airline_code" id="rt_airline_code" value="">
                         <input type="hidden" name="airline_logo" id="rt_airline_logo" value="">
+                        <input type="hidden" name="flight_index" id="rt_flight_index" value="">
+                        <input type="hidden" name="fare_type" id="rt_fare_type" value="">
+                        <input type="hidden" name="onward_fare_type" id="rt_onward_fare_type" value="">
+                        <input type="hidden" name="fare_name" id="rt_onward_fare_label" value="">
+                        <input type="hidden" name="baggage" id="rt_baggage" value="">
                         <input type="hidden" name="origin" value="<?php echo htmlspecialchars($origCode); ?>">
                         <input type="hidden" name="destination" value="<?php echo htmlspecialchars($destCode); ?>">
+                        <input type="hidden" name="from_code" value="<?php echo htmlspecialchars($origCode); ?>">
+                        <input type="hidden" name="to_code" value="<?php echo htmlspecialchars($destCode); ?>">
                         <input type="hidden" name="departure_time" id="rt_dep_time" value="">
                         <input type="hidden" name="arrival_time" id="rt_arr_time" value="">
+                        <input type="hidden" name="departure_date" value="<?php echo htmlspecialchars($departDate); ?>">
                         <input type="hidden" name="price" id="rt_onward_price" value="">
                         
                         <!-- Return info -->
+                        <input type="hidden" name="return_flight_id" id="rt_ret_flight_id" value="">
                         <input type="hidden" name="return_airline_name" id="rt_ret_airline_name" value="">
                         <input type="hidden" name="return_flight_number" id="rt_ret_flight_number" value="">
+                        <input type="hidden" name="return_airline_code" id="rt_ret_airline_code" value="">
+                        <input type="hidden" name="return_airline_logo" id="rt_ret_airline_logo" value="">
+                        <input type="hidden" name="return_flight_index" id="rt_ret_flight_index" value="">
+                        <input type="hidden" name="return_fare_type" id="rt_return_fare_type" value="">
+                        <input type="hidden" name="return_fare_name" id="rt_return_fare_label" value="">
+                        <input type="hidden" name="return_baggage" id="rt_return_baggage" value="">
+                        <input type="hidden" name="return_from_code" value="<?php echo htmlspecialchars($destCode); ?>">
+                        <input type="hidden" name="return_to_code" value="<?php echo htmlspecialchars($origCode); ?>">
                         <input type="hidden" name="return_departure_time" id="rt_ret_dep_time" value="">
                         <input type="hidden" name="return_arrival_time" id="rt_ret_arr_time" value="">
+                        <input type="hidden" name="return_departure_date" value="<?php echo htmlspecialchars($returnDate); ?>">
                         <input type="hidden" name="return_price" id="rt_ret_price" value="">
                         <input type="hidden" name="refundable" id="rt_refundable" value="1">
                         <input type="hidden" name="is_refundable" id="rt_is_refundable" value="1">
@@ -1642,8 +1927,8 @@ function applyFilters() {
     if (countEl) countEl.innerText = `Showing ${visibleCount} Flights`;
 
     // Filter Round-Trip Sector Cards
-    const onwardCards = document.querySelectorAll('.onward-card');
-    const returnCards = document.querySelectorAll('.return-card');
+    const onwardCards = document.querySelectorAll('.onward-group-card, .onward-card');
+    const returnCards = document.querySelectorAll('.return-group-card, .return-card');
 
     if (onwardCards.length > 0 || returnCards.length > 0) {
         let firstVisibleOnward = null;
@@ -1698,14 +1983,20 @@ function applyFilters() {
         });
 
         // If currently selected radio button is hidden by filters, pick first visible
-        const currentCheckedOnward = document.querySelector('input[name="selected_onward_idx"]:checked');
-        if (currentCheckedOnward && currentCheckedOnward.closest('.onward-card') && currentCheckedOnward.closest('.onward-card').style.display === 'none' && firstVisibleOnward) {
-            firstVisibleOnward.checked = true;
+        const currentCheckedOnward = document.querySelector('input[name="selected_onward_fare"]:checked') || document.querySelector('input[name="selected_onward_idx"]:checked');
+        if (currentCheckedOnward) {
+            const parentCard = currentCheckedOnward.closest('.onward-group-card, .onward-card');
+            if (parentCard && parentCard.style.display === 'none' && firstVisibleOnward) {
+                firstVisibleOnward.checked = true;
+            }
         }
 
-        const currentCheckedReturn = document.querySelector('input[name="selected_return_idx"]:checked');
-        if (currentCheckedReturn && currentCheckedReturn.closest('.return-card') && currentCheckedReturn.closest('.return-card').style.display === 'none' && firstVisibleReturn) {
-            firstVisibleReturn.checked = true;
+        const currentCheckedReturn = document.querySelector('input[name="selected_return_fare"]:checked') || document.querySelector('input[name="selected_return_idx"]:checked');
+        if (currentCheckedReturn) {
+            const parentCard = currentCheckedReturn.closest('.return-group-card, .return-card');
+            if (parentCard && parentCard.style.display === 'none' && firstVisibleReturn) {
+                firstVisibleReturn.checked = true;
+            }
         }
 
         if (typeof updateRoundTripSelection === 'function') {
@@ -1719,32 +2010,40 @@ function sortFlights(type, elem) {
     document.querySelectorAll('.f-sort-tab').forEach(t => t.classList.remove('active'));
     elem.classList.add('active');
 
-    const container = document.getElementById('flightListContainer');
-    if (!container) return;
+    const containers = [
+        document.getElementById('flightListContainer'),
+        document.getElementById('onwardFlightGroup'),
+        document.getElementById('returnFlightGroup')
+    ];
 
-    const cards = Array.from(container.querySelectorAll('.f-flight-item'));
-    cards.sort((a, b) => {
-        const priceA = parseFloat(a.getAttribute('data-price') || 0);
-        const priceB = parseFloat(b.getAttribute('data-price') || 0);
-        const stopsA = parseInt(a.getAttribute('data-stops') || 0);
-        const stopsB = parseInt(b.getAttribute('data-stops') || 0);
-        const timeA  = a.getAttribute('data-time') || '00:00';
-        const timeB  = b.getAttribute('data-time') || '00:00';
+    containers.forEach(container => {
+        if (!container) return;
+        const cards = Array.from(container.querySelectorAll('.f-flight-item, .onward-group-card, .return-group-card'));
+        if (cards.length === 0) return;
 
-        if (priceA <= 0 && priceB > 0) return 1;
-        if (priceB <= 0 && priceA > 0) return -1;
+        cards.sort((a, b) => {
+            const priceA = parseFloat(a.getAttribute('data-price') || 0);
+            const priceB = parseFloat(b.getAttribute('data-price') || 0);
+            const stopsA = parseInt(a.getAttribute('data-stops') || 0);
+            const stopsB = parseInt(b.getAttribute('data-stops') || 0);
+            const timeA  = a.getAttribute('data-time') || '00:00';
+            const timeB  = b.getAttribute('data-time') || '00:00';
 
-        if (type === 'cheapest') {
-            return priceA - priceB;
-        } else if (type === 'fastest') {
-            return (stopsA - stopsB) || (priceA - priceB);
-        } else if (type === 'earliest') {
-            return timeA.localeCompare(timeB);
-        }
-        return 0;
+            if (priceA <= 0 && priceB > 0) return 1;
+            if (priceB <= 0 && priceA > 0) return -1;
+
+            if (type === 'cheapest') {
+                return priceA - priceB;
+            } else if (type === 'fastest') {
+                return (stopsA - stopsB) || (priceA - priceB);
+            } else if (type === 'earliest') {
+                return timeA.localeCompare(timeB);
+            }
+            return 0;
+        });
+
+        cards.forEach(c => container.appendChild(c));
     });
-
-    cards.forEach(c => container.appendChild(c));
 }
 
 function toggleDetailsDrawer(drawerId) {
@@ -1831,77 +2130,134 @@ function toggleFlightFares(groupId, btn) {
     }
 }
 
-// Round-trip sticky bar update
+function toggleRtGroupFares(groupKey, btn, count) {
+    const extraRows = document.querySelectorAll('.rt-extra-fare-' + groupKey);
+    if (!extraRows || extraRows.length === 0) return;
+    
+    const firstRow = extraRows[0];
+    const isHidden = (firstRow.style.display === 'none' || firstRow.style.display === '');
+    
+    extraRows.forEach(row => {
+        row.style.display = isHidden ? 'grid' : 'none';
+    });
+
+    if (isHidden) {
+        btn.innerHTML = '<span>Show less fare</span> <i class="fa-solid fa-chevron-up" style="font-size: 10px;"></i>';
+    } else {
+        btn.innerHTML = `<span>View More Fares (${count} more)</span> <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>`;
+    }
+}
+
+// Round-trip sticky bar update (Supports Grouped Live Benz API Fare Brands)
 function updateRoundTripSelection() {
-    const onwardRadio = document.querySelector('input[name="selected_onward_idx"]:checked');
-    const returnRadio = document.querySelector('input[name="selected_return_idx"]:checked');
+    const onwardRadio = document.querySelector('input[name="selected_onward_fare"]:checked') || document.querySelector('input[name="selected_onward_idx"]:checked');
+    const returnRadio = document.querySelector('input[name="selected_return_fare"]:checked') || document.querySelector('input[name="selected_return_idx"]:checked');
 
-    const oIdx = onwardRadio ? parseInt(onwardRadio.value) : 0;
-    const rIdx = returnRadio ? parseInt(returnRadio.value) : 0;
+    if (!onwardRadio || !returnRadio) return;
 
-    const o = onwardFlightsData[oIdx] || onwardFlightsData[0];
-    const r = returnFlightsData[rIdx] || returnFlightsData[0];
-
-    document.querySelectorAll('.onward-card').forEach((card, idx) => {
-        if (idx === oIdx) card.classList.add('selected-rt-card');
-        else card.classList.remove('selected-rt-card');
-    });
-
-    document.querySelectorAll('.return-card').forEach((card, idx) => {
-        if (idx === rIdx) card.classList.add('selected-rt-card');
-        else card.classList.remove('selected-rt-card');
-    });
-
-    if (o) {
-        const barOAir = document.getElementById('barOnwardAirline');
-        const barOTime = document.getElementById('barOnwardTime');
-        if (barOAir) barOAir.textContent = (o.airline_name || 'Airline') + ' ' + (o.flight_number || '');
-        if (barOTime) barOTime.textContent = (o.departure_time || '') + ' - ' + (o.arrival_time || '') + ' (' + (o.from_code || 'DEL') + ' → ' + (o.to_code || 'BOM') + ')';
-        
-        const fId = document.getElementById('rt_flight_id'); if (fId) fId.value = o.id || 'FL_101';
-        const alName = document.getElementById('rt_airline_name'); if (alName) alName.value = o.airline_name || '';
-        const flNum = document.getElementById('rt_flight_number'); if (flNum) flNum.value = o.flight_number || '';
-        const alCode = document.getElementById('rt_airline_code'); if (alCode) alCode.value = o.airline_code || '';
-        const alLogo = document.getElementById('rt_airline_logo'); if (alLogo) alLogo.value = o.airline_logo || '';
-        const depTime = document.getElementById('rt_dep_time'); if (depTime) depTime.value = o.departure_time || '';
-        const arrTime = document.getElementById('rt_arr_time'); if (arrTime) arrTime.value = o.arrival_time || '';
-        const onPrice = document.getElementById('rt_onward_price'); if (onPrice) onPrice.value = o.display_price || o.price || '';
-        const elRefO = document.getElementById('rt_refundable'); if (elRefO) elRefO.value = (o && o.refundable) ? '1' : '0';
-        const elIsRefO = document.getElementById('rt_is_refundable'); if (elIsRefO) elIsRefO.value = (o && o.refundable) ? '1' : '0';
-        const elHoldO = document.getElementById('rt_hold'); if (elHoldO) elHoldO.value = (o && (o.hold === true || o.hold === 1 || o.hold === '1' || o.hold === 'true')) ? '1' : '0';
-        const elHoldInfoO = document.getElementById('rt_hold_info'); if (elHoldInfoO) elHoldInfoO.value = (o && o.hold_info) ? o.hold_info : '';
+    // Highlight selected onward fare row and active flight card
+    document.querySelectorAll('.onward-fare-item').forEach(el => el.classList.remove('selected-fare'));
+    document.querySelectorAll('.onward-group-card').forEach(el => el.classList.remove('active-flight'));
+    const onwardRow = onwardRadio.closest('.onward-fare-item');
+    if (onwardRow) {
+        onwardRow.classList.add('selected-fare');
+        const card = onwardRow.closest('.onward-group-card');
+        if (card) card.classList.add('active-flight');
     }
 
-    if (r) {
-        const barRAir = document.getElementById('barReturnAirline');
-        const barRTime = document.getElementById('barReturnTime');
-        if (barRAir) barRAir.textContent = (r.airline_name || 'Airline') + ' ' + (r.flight_number || '');
-        if (barRTime) barRTime.textContent = (r.departure_time || '') + ' - ' + (r.arrival_time || '') + ' (' + (r.from_code || 'BOM') + ' → ' + (r.to_code || 'DEL') + ')';
-
-        const retName = document.getElementById('rt_ret_airline_name'); if (retName) retName.value = r.airline_name || '';
-        const retNum = document.getElementById('rt_ret_flight_number'); if (retNum) retNum.value = r.flight_number || '';
-        const retDep = document.getElementById('rt_ret_dep_time'); if (retDep) retDep.value = r.departure_time || '';
-        const retArr = document.getElementById('rt_ret_arr_time'); if (retArr) retArr.value = r.arrival_time || '';
-        const retPrice = document.getElementById('rt_ret_price'); if (retPrice) retPrice.value = r.display_price || r.price || '';
-        const elRefR = document.getElementById('rt_return_refundable'); if (elRefR) elRefR.value = (r && r.refundable) ? '1' : '0';
-        const elHoldR = document.getElementById('rt_return_hold'); if (elHoldR) elHoldR.value = (r && (r.hold === true || r.hold === 1 || r.hold === '1' || r.hold === 'true')) ? '1' : '0';
-        const elHoldInfoR = document.getElementById('rt_return_hold_info'); if (elHoldInfoR) elHoldInfoR.value = (r && r.hold_info) ? r.hold_info : '';
+    // Highlight selected return fare row and active flight card
+    document.querySelectorAll('.return-fare-item').forEach(el => el.classList.remove('selected-fare'));
+    document.querySelectorAll('.return-group-card').forEach(el => el.classList.remove('active-flight'));
+    const returnRow = returnRadio.closest('.return-fare-item');
+    if (returnRow) {
+        returnRow.classList.add('selected-fare');
+        const card = returnRow.closest('.return-group-card');
+        if (card) card.classList.add('active-flight');
     }
 
-    const rtMarkupAmt = document.getElementById('rt_markup_amount');
-    if (rtMarkupAmt) rtMarkupAmt.value = currentMarkupAmount;
-    const rtMarkupType = document.getElementById('rt_markup_type');
-    if (rtMarkupType) rtMarkupType.value = currentMarkupType;
-    const rtNetFare = document.getElementById('rt_net_fare');
-    if (rtNetFare) {
-        const netO = o ? (parseFloat(o.net_fare || o.base_fare || o.price || 0)) : 0;
-        const netR = r ? (parseFloat(r.net_fare || r.base_fare || r.price || 0)) : 0;
-        rtNetFare.value = netO + netR;
-    }
+    // Read attributes from dataset
+    const oAirName = onwardRadio.dataset.airlineName || 'Airline';
+    const oFlNum   = onwardRadio.dataset.flightNumber || '';
+    const oDepTime = onwardRadio.dataset.departureTime || '';
+    const oArrTime = onwardRadio.dataset.arrivalTime || '';
+    const oFrom    = onwardRadio.dataset.fromCode || 'DEL';
+    const oTo      = onwardRadio.dataset.toCode || 'BOM';
+    const oPrice   = parseFloat(onwardRadio.dataset.price || 0);
+    const oNet     = parseFloat(onwardRadio.dataset.netFare || oPrice);
+    const oLabel   = onwardRadio.dataset.fareLabel || 'SAVER';
 
-    const total = (o ? parseFloat(o.display_price || o.price || 0) : 0) + (r ? parseFloat(r.display_price || r.price || 0) : 0);
+    const rAirName = returnRadio.dataset.airlineName || 'Airline';
+    const rFlNum   = returnRadio.dataset.flightNumber || '';
+    const rDepTime = returnRadio.dataset.departureTime || '';
+    const rArrTime = returnRadio.dataset.arrivalTime || '';
+    const rFrom    = returnRadio.dataset.fromCode || 'BOM';
+    const rTo      = returnRadio.dataset.toCode || 'DEL';
+    const rPrice   = parseFloat(returnRadio.dataset.price || 0);
+    const rNet     = parseFloat(returnRadio.dataset.netFare || rPrice);
+    const rLabel   = returnRadio.dataset.fareLabel || 'SAVER';
+
+    // Update Bottom Sticky Bar
+    const barOAir = document.getElementById('barOnwardAirline');
+    const barOTime = document.getElementById('barOnwardTime');
+    const barOFare = document.getElementById('barOnwardFare');
+    if (barOAir) barOAir.textContent = oAirName + ' ' + oFlNum;
+    if (barOTime) barOTime.textContent = oDepTime + ' - ' + oArrTime + ' (' + oFrom + ' → ' + oTo + ')';
+    if (barOFare) barOFare.textContent = oLabel + ' • ₹ ' + Math.round(oPrice).toLocaleString('en-IN') + ' (Net: ₹ ' + Math.round(oNet).toLocaleString('en-IN') + ')';
+
+    const barRAir = document.getElementById('barReturnAirline');
+    const barRTime = document.getElementById('barReturnTime');
+    const barRFare = document.getElementById('barReturnFare');
+    if (barRAir) barRAir.textContent = rAirName + ' ' + rFlNum;
+    if (barRTime) barRTime.textContent = rDepTime + ' - ' + rArrTime + ' (' + rFrom + ' → ' + rTo + ')';
+    if (barRFare) barRFare.textContent = rLabel + ' • ₹ ' + Math.round(rPrice).toLocaleString('en-IN') + ' (Net: ₹ ' + Math.round(rNet).toLocaleString('en-IN') + ')';
+
+    // Total Net Fare
+    const totalNet = oNet + rNet;
     const barTotal = document.getElementById('barTotalPrice');
-    if (barTotal) barTotal.textContent = '₹ ' + total.toLocaleString('en-IN');
+    if (barTotal) barTotal.textContent = '₹ ' + Math.round(totalNet).toLocaleString('en-IN');
+
+    // Update Hidden Form Inputs
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+    
+    // Onward form fields
+    setVal('rt_flight_id', onwardRadio.dataset.id || 'FL_101');
+    setVal('rt_airline_name', oAirName);
+    setVal('rt_flight_number', oFlNum);
+    setVal('rt_airline_code', onwardRadio.dataset.airlineCode || '');
+    setVal('rt_airline_logo', onwardRadio.dataset.airlineLogo || '');
+    setVal('rt_dep_time', oDepTime);
+    setVal('rt_arr_time', oArrTime);
+    setVal('rt_onward_price', oPrice);
+    setVal('rt_flight_index', onwardRadio.dataset.flightIndex || '');
+    setVal('rt_refundable', onwardRadio.dataset.refundable || '1');
+    setVal('rt_is_refundable', onwardRadio.dataset.refundable || '1');
+    setVal('rt_hold', onwardRadio.dataset.hold || '0');
+    setVal('rt_hold_info', onwardRadio.dataset.holdInfo || '');
+    setVal('rt_onward_fare_label', oLabel);
+    setVal('rt_fare_type', oLabel);
+    setVal('rt_onward_fare_type', oLabel);
+    setVal('rt_baggage', onwardRadio.dataset.baggage || '15 Kg');
+
+    // Return form fields
+    setVal('rt_ret_flight_id', returnRadio.dataset.id || 'FL_RET_101');
+    setVal('rt_ret_airline_name', rAirName);
+    setVal('rt_ret_flight_number', rFlNum);
+    setVal('rt_ret_airline_code', returnRadio.dataset.airlineCode || '');
+    setVal('rt_ret_airline_logo', returnRadio.dataset.airlineLogo || '');
+    setVal('rt_ret_dep_time', rDepTime);
+    setVal('rt_ret_arr_time', rArrTime);
+    setVal('rt_ret_price', rPrice);
+    setVal('rt_ret_flight_index', returnRadio.dataset.flightIndex || '');
+    setVal('rt_return_refundable', returnRadio.dataset.refundable || '1');
+    setVal('rt_return_hold', returnRadio.dataset.hold || '0');
+    setVal('rt_return_hold_info', returnRadio.dataset.holdInfo || '');
+    setVal('rt_return_fare_label', rLabel);
+    setVal('rt_return_fare_type', rLabel);
+    setVal('rt_return_baggage', returnRadio.dataset.baggage || '15 Kg');
+
+    setVal('rt_markup_amount', currentMarkupAmount);
+    setVal('rt_markup_type', currentMarkupType);
+    setVal('rt_net_fare', totalNet);
 }
 
 // =========================================================================
@@ -3767,7 +4123,7 @@ function msUpdateTravellerText() {
     background: #6aa31e;
 }
 
-/* Round Trip Cards */
+/* Round Trip Cards & Grouped Live Benz Fares (Akbar Travels Parity) */
 .rt-card {
     display: block;
     cursor: pointer;
@@ -3780,6 +4136,201 @@ function msUpdateTravellerText() {
 .rt-card.selected-rt-card {
     border-color: #78B722;
     background: #f0fdf4;
+}
+
+.rt-group-card {
+    display: block;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+.rt-group-card.active-flight {
+    border-color: #78B722;
+    box-shadow: 0 3px 12px rgba(120, 183, 34, 0.15);
+}
+.rt-group-header {
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+.rt-group-airline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.rt-group-airline img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+}
+.rt-group-airline strong {
+    font-size: 13px;
+    color: #0f172a;
+    display: block;
+    line-height: 1.2;
+}
+.rt-group-airline span {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 600;
+}
+.rt-group-schedule {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+}
+.rt-sched-point {
+    text-align: center;
+}
+.rt-sched-time {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.1;
+    display: block;
+}
+.rt-sched-code {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 600;
+}
+.rt-sched-dur {
+    font-size: 10.5px;
+    color: #64748b;
+    font-weight: 600;
+    min-width: 55px;
+}
+.rt-sched-line {
+    height: 1px;
+    background: #cbd5e1;
+    width: 40px;
+    margin: 2px auto;
+}
+.rt-sched-stops {
+    font-size: 10px;
+    font-weight: 700;
+    display: block;
+}
+.rt-fares-list {
+    display: flex;
+    flex-direction: column;
+}
+.rt-fare-row {
+    display: grid;
+    grid-template-columns: 20px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    margin: 0;
+}
+.rt-fare-row:last-child {
+    border-bottom: none;
+}
+.rt-fare-row:hover {
+    background: #f8fafc;
+}
+.rt-fare-row.selected-fare {
+    background: #f0fdf4;
+}
+.rt-fare-row input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #78B722;
+    cursor: pointer;
+    margin: 0;
+}
+.rt-fare-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+.rt-fare-brand-line {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.rt-fare-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: 0.2px;
+}
+.rt-fare-code {
+    font-size: 10.5px;
+    color: #94a3b8;
+    font-weight: 600;
+}
+.rt-fare-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10.5px;
+    color: #64748b;
+}
+.rt-fare-pricing {
+    text-align: right;
+    white-space: nowrap;
+}
+.rt-fare-gross {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #09204b;
+    display: block;
+    line-height: 1.2;
+}
+.rt-fare-net {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #475569;
+    display: block;
+}
+.rt-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 14px;
+    background: #fcfdfe;
+    border-top: 1px solid #f1f5f9;
+    font-size: 11px;
+}
+.rt-btn-more-fares {
+    background: none;
+    border: none;
+    color: #0284c7;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.rt-btn-more-fares:hover {
+    text-decoration: underline;
+}
+.rt-link-details {
+    color: #64748b;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+}
+.rt-link-details:hover {
+    color: #0f172a;
 }
 
 /* Base desktop defaults for filter drawer elements */
@@ -4206,6 +4757,36 @@ function msUpdateTravellerText() {
         width: 100% !important;
         border-top: 1px solid #f1f5f9 !important;
         padding-top: 6px !important;
+    }
+
+    /* Round Trip Grouped Cards Mobile Layout */
+    .rt-group-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+    }
+    .rt-group-schedule {
+        justify-content: space-between !important;
+        width: 100% !important;
+        padding-top: 8px !important;
+        border-top: 1px dashed #e2e8f0 !important;
+    }
+    .rt-fare-row {
+        grid-template-columns: 20px 1fr !important;
+        grid-template-areas: 
+            "radio info"
+            "radio price" !important;
+        gap: 6px 10px !important;
+    }
+    .rt-fare-info {
+        grid-area: info !important;
+    }
+    .rt-fare-pricing {
+        grid-area: price !important;
+        text-align: left !important;
+        display: flex !important;
+        align-items: baseline !important;
+        gap: 8px !important;
     }
     .f-rt-price-cta #barTotalPrice {
         font-size: 20px !important;
