@@ -495,13 +495,27 @@ uasort($connectingAirportsList, function($a, $b) {
         </div>
 
         <?php if ($is_roundtrip): ?>
+        <!-- Mobile Dual Sector Switcher Tabs (Screenshot 3 Parity) -->
+        <div class="f-rt-mobile-tabs">
+            <div class="f-rt-tab active" id="fRtTabOnward" onclick="switchRtSector('onward')">
+                <span class="f-rt-tab-badge"><i class="fa-solid fa-plane-departure"></i> DEPARTURE</span>
+                <strong class="f-rt-tab-route"><?php echo htmlspecialchars($origCode); ?> &rarr; <?php echo htmlspecialchars($destCode); ?></strong>
+                <span class="f-rt-tab-date"><?php echo date('d M, D', strtotime($departDate)); ?></span>
+            </div>
+            <div class="f-rt-tab" id="fRtTabReturn" onclick="switchRtSector('return')">
+                <span class="f-rt-tab-badge"><i class="fa-solid fa-plane-arrival"></i> RETURN</span>
+                <strong class="f-rt-tab-route"><?php echo htmlspecialchars($destCode); ?> &rarr; <?php echo htmlspecialchars($origCode); ?></strong>
+                <span class="f-rt-tab-date"><?php echo date('d M, D', strtotime($returnDate)); ?></span>
+            </div>
+        </div>
+
         <!-- ================================================================ -->
         <!-- ROUND TRIP DUAL SECTOR LAYOUT (Onward Left + Return Right)       -->
         <!-- ================================================================ -->
         <div class="f-roundtrip-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 80px;">
             
             <!-- 1. Onward Flights Column -->
-            <div>
+            <div id="rtColOnward" class="f-rt-sector-col f-mobile-active-col">
                 <div style="background: #09204b; color: #ffffff; padding: 12px 16px; border-radius: 10px 10px 0 0; display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <span style="font-size: 11px; text-transform: uppercase; color: #93c5fd; font-weight: 700; display: block;">DEPARTURE FLIGHT</span>
@@ -547,7 +561,7 @@ uasort($connectingAirportsList, function($a, $b) {
                            data-via="<?php echo htmlspecialchars($viaAirport); ?>">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div style="display: flex; align-items: center; gap: 10px;">
-                                <input type="radio" name="selected_onward_idx" value="<?php echo $idx; ?>" <?php echo ($idx === 0) ? 'checked' : ''; ?> onchange="updateRoundTripSelection()" style="accent-color: #78B722; width: 16px; height: 16px;">
+                                <input type="radio" name="selected_onward_idx" value="<?php echo $idx; ?>" <?php echo ($idx === 0) ? 'checked' : ''; ?> onchange="updateRoundTripSelection(); onOnwardFlightSelectedMobile();" style="accent-color: #78B722; width: 16px; height: 16px;">
                                 <img src="<?php echo htmlspecialchars($f['airline_logo']); ?>" alt="logo" style="width: 24px; height: 24px; object-fit: contain;">
                                 <div>
                                     <strong style="font-size: 13.5px; color: #0f172a; display: block;"><?php echo htmlspecialchars($f['airline_name']); ?></strong>
@@ -592,7 +606,7 @@ uasort($connectingAirportsList, function($a, $b) {
             </div>
 
             <!-- 2. Return Flights Column -->
-            <div>
+            <div id="rtColReturn" class="f-rt-sector-col">
                 <div style="background: #1e3a8a; color: #ffffff; padding: 12px 16px; border-radius: 10px 10px 0 0; display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <span style="font-size: 11px; text-transform: uppercase; color: #93c5fd; font-weight: 700; display: block;">RETURN FLIGHT</span>
@@ -689,14 +703,14 @@ uasort($connectingAirportsList, function($a, $b) {
             <div class="f-rt-sticky-inner" style="max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
                 <div class="f-rt-flight-info" style="display: flex; gap: 30px; align-items: center;">
                     <!-- Onward Info -->
-                    <div>
+                    <div style="cursor: pointer;" onclick="switchRtSector('onward')" title="View Departure Flights">
                         <span style="background: #e8f5e9; color: #2e7d32; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px;">OUTBOUND</span>
                         <strong style="font-size: 14px; color: #0f172a; margin-left: 8px;" id="barOnwardAirline"></strong>
                         <div style="font-size: 12px; color: #64748b;" id="barOnwardTime"></div>
                     </div>
                     <div style="height: 35px; width: 1px; background: #e2e8f0;"></div>
                     <!-- Return Info -->
-                    <div>
+                    <div style="cursor: pointer;" onclick="switchRtSector('return')" title="View Return Flights">
                         <span style="background: #eff6ff; color: #1e40af; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px;">RETURN</span>
                         <strong style="font-size: 14px; color: #0f172a; margin-left: 8px;" id="barReturnAirline"></strong>
                         <div style="font-size: 12px; color: #64748b;" id="barReturnTime"></div>
@@ -1761,6 +1775,42 @@ document.addEventListener('keydown', function(e) {
         toggleFilterDrawer(false);
     }
 });
+
+function switchRtSector(sector) {
+    const tabOnward = document.getElementById('fRtTabOnward');
+    const tabReturn = document.getElementById('fRtTabReturn');
+    const colOnward = document.getElementById('rtColOnward');
+    const colReturn = document.getElementById('rtColReturn');
+
+    if (!tabOnward || !tabReturn || !colOnward || !colReturn) return;
+
+    if (sector === 'onward') {
+        tabOnward.classList.add('active');
+        tabReturn.classList.remove('active');
+        colOnward.classList.add('f-mobile-active-col');
+        colReturn.classList.remove('f-mobile-active-col');
+    } else {
+        tabReturn.classList.add('active');
+        tabOnward.classList.remove('active');
+        colReturn.classList.add('f-mobile-active-col');
+        colOnward.classList.remove('f-mobile-active-col');
+    }
+
+    if (window.innerWidth <= 991) {
+        const topTabs = document.querySelector('.f-rt-mobile-tabs');
+        if (topTabs) {
+            topTabs.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
+}
+
+function onOnwardFlightSelectedMobile() {
+    if (window.innerWidth <= 991) {
+        setTimeout(function() {
+            switchRtSector('return');
+        }, 350);
+    }
+}
 
 function toggleFlightFares(groupId, btn) {
     const extraRows = document.querySelectorAll('.f-extra-fare-' + groupId);
@@ -3746,6 +3796,63 @@ function msUpdateTravellerText() {
     display: none;
 }
 
+/* Mobile Round Trip Sector Switcher Tabs (Screenshot 3 Parity) */
+.f-rt-mobile-tabs {
+    display: none;
+}
+.f-rt-tab {
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 10px 14px;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    color: #475569;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+.f-rt-tab.active {
+    background: #09204b;
+    border-color: #09204b;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(9, 32, 75, 0.2);
+}
+.f-rt-tab-badge {
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #64748b;
+}
+.f-rt-tab.active .f-rt-tab-badge {
+    color: #93c5fd;
+}
+.f-rt-tab.active .f-rt-tab-badge i {
+    color: #78B722;
+}
+.f-rt-tab-route {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+}
+.f-rt-tab.active .f-rt-tab-route {
+    color: #ffffff;
+}
+.f-rt-tab-date {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #64748b;
+}
+.f-rt-tab.active .f-rt-tab-date {
+    color: #cbd5e1;
+}
+
 /* ============================================================== */
 /* MOBILE RESPONSIVE UI RULES (Viewport <= 991px and <= 768px)    */
 /* ============================================================== */
@@ -3754,10 +3861,23 @@ function msUpdateTravellerText() {
         grid-template-columns: 1fr !important;
         gap: 16px !important;
     }
+    .f-rt-mobile-tabs {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
     .f-roundtrip-grid {
-        grid-template-columns: 1fr !important;
-        gap: 16px !important;
+        display: block !important;
+        grid-template-columns: none !important;
+        gap: 0 !important;
         margin-bottom: 120px !important;
+    }
+    .f-rt-sector-col {
+        display: none !important;
+    }
+    .f-rt-sector-col.f-mobile-active-col {
+        display: block !important;
     }
 
     /* Mobile Filter Button */
