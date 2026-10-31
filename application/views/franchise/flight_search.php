@@ -223,8 +223,8 @@ uasort($connectingAirportsList, function($a, $b) {
 
 <div style="margin-bottom: 24px;">
     <!-- Top Search Header Box (Parity with customer flight results) -->
-    <div style="background: linear-gradient(135deg, #09204b 0%, #0d3470 100%); border-radius: 14px; padding: 18px 24px; color: #ffffff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 16px rgba(9, 32, 75, 0.15); flex-wrap: wrap; gap: 16px;">
-        <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+    <div class="f-top-summary-card" style="background: linear-gradient(135deg, #09204b 0%, #0d3470 100%); border-radius: 14px; padding: 18px 24px; color: #ffffff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 16px rgba(9, 32, 75, 0.15); flex-wrap: wrap; gap: 16px;">
+        <div class="f-top-summary-info" style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
             <!-- From -->
             <div>
                 <span style="font-size: 11px; text-transform: uppercase; color: #93c5fd; font-weight: 700; display: block;">From</span>
@@ -243,7 +243,7 @@ uasort($connectingAirportsList, function($a, $b) {
                 <span style="font-size: 12px; color: #cbd5e1; display: block;"><?php echo htmlspecialchars($destCode); ?>, Airport</span>
             </div>
 
-            <div style="height: 32px; width: 1px; background: rgba(255,255,255,0.2);"></div>
+            <div class="f-summary-divider" style="height: 32px; width: 1px; background: rgba(255,255,255,0.2);"></div>
 
             <!-- Departure Date -->
             <div>
@@ -254,7 +254,7 @@ uasort($connectingAirportsList, function($a, $b) {
 
             <!-- Return Date if Round Trip -->
             <?php if ($is_roundtrip): ?>
-            <div style="height: 32px; width: 1px; background: rgba(255,255,255,0.2);"></div>
+            <div class="f-summary-divider" style="height: 32px; width: 1px; background: rgba(255,255,255,0.2);"></div>
             <div>
                 <span style="font-size: 11px; text-transform: uppercase; color: #93c5fd; font-weight: 700; display: block;">Return</span>
                 <strong style="font-size: 16px; font-weight: 700; color: #78B722;"><?php echo date('d M\'y', strtotime($returnDate)); ?></strong>
@@ -262,7 +262,7 @@ uasort($connectingAirportsList, function($a, $b) {
             </div>
             <?php endif; ?>
 
-            <div style="height: 32px; width: 1px; background: rgba(255,255,255,0.2);"></div>
+            <div class="f-summary-divider" style="height: 32px; width: 1px; background: rgba(255,255,255,0.2);"></div>
 
             <!-- Pax & Class -->
             <div>
@@ -453,15 +453,15 @@ uasort($connectingAirportsList, function($a, $b) {
     <!-- Right Results Area -->
     <div>
         <!-- Sorting & Results Summary Bar -->
-        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div class="f-results-top-bar" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
             <div style="display: flex; align-items: center; gap: 12px;">
                 <strong style="font-size: 15px; color: #0f172a;" id="resultsCountText">Showing <?php echo count($groupedOnward); ?> Flights (<?php echo $totalFaresCount; ?> Fares found)</strong>
                 <span style="background: #e0f2fe; color: #0369a1; font-size: 11.5px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">Live Benzy API Inventory</span>
             </div>
 
             <!-- Sorting Tabs matching voyogos.com/flight -->
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <span style="font-size: 12px; color: #64748b; font-weight: 600;">Sort By:</span>
+            <div class="f-sort-tabs-wrap" style="display: flex; gap: 8px; align-items: center;">
+                <span class="f-sort-label" style="font-size: 12px; color: #64748b; font-weight: 600;">Sort By:</span>
                 <div class="f-sort-tab active" onclick="sortFlights('cheapest', this)">
                     <i class="fa-solid fa-arrow-down-1-9"></i> CHEAPEST
                 </div>
@@ -478,7 +478,7 @@ uasort($connectingAirportsList, function($a, $b) {
         <!-- ================================================================ -->
         <!-- ROUND TRIP DUAL SECTOR LAYOUT (Onward Left + Return Right)       -->
         <!-- ================================================================ -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 80px;">
+        <div class="f-roundtrip-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 80px;">
             
             <!-- 1. Onward Flights Column -->
             <div>
@@ -665,9 +665,9 @@ uasort($connectingAirportsList, function($a, $b) {
         </div>
 
         <!-- Sticky Bottom Action Bar for Round Trip (matching voyogos.com/flight) -->
-        <div id="roundTripStickyBar" style="position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 2px solid #78B722; box-shadow: 0 -8px 30px rgba(0,0,0,0.12); z-index: 9999; padding: 14px 24px;">
-            <div style="max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; gap: 30px; align-items: center;">
+        <div id="roundTripStickyBar" class="f-rt-sticky-bar" style="position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 2px solid #78B722; box-shadow: 0 -8px 30px rgba(0,0,0,0.12); z-index: 9999; padding: 14px 24px;">
+            <div class="f-rt-sticky-inner" style="max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+                <div class="f-rt-flight-info" style="display: flex; gap: 30px; align-items: center;">
                     <!-- Onward Info -->
                     <div>
                         <span style="background: #e8f5e9; color: #2e7d32; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px;">OUTBOUND</span>
@@ -683,7 +683,7 @@ uasort($connectingAirportsList, function($a, $b) {
                     </div>
                 </div>
 
-                <div style="display: flex; align-items: center; gap: 24px;">
+                <div class="f-rt-price-cta" style="display: flex; align-items: center; gap: 24px;">
                     <div style="text-align: right;">
                         <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total B2B Net Fare</span>
                         <strong style="font-size: 24px; color: #09204b; display: block; line-height: 1;" id="barTotalPrice">₹ 0</strong>
@@ -778,7 +778,7 @@ uasort($connectingAirportsList, function($a, $b) {
                 <div class="f-group-header" style="padding: 18px 24px; border-bottom: 1px solid #f1f5f9; display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: center; background: #ffffff;">
                     
                     <!-- Airline Block -->
-                    <div style="display: flex; align-items: center; gap: 14px;">
+                    <div class="f-airline-info" style="display: flex; align-items: center; gap: 14px;">
                         <img src="<?php echo htmlspecialchars($g['airline_logo']); ?>" alt="<?php echo htmlspecialchars($g['airline_name']); ?>" style="width: 40px; height: 40px; object-fit: contain;">
                         <div>
                             <strong style="font-size: 15px; color: #0f172a; display: block; font-weight: 800;"><?php echo htmlspecialchars($g['airline_name']); ?></strong>
@@ -787,9 +787,9 @@ uasort($connectingAirportsList, function($a, $b) {
                     </div>
 
                     <!-- Timings & Route Schedule (Akbar Travels layout) -->
-                    <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px;">
+                    <div class="f-route-schedule" style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px;">
                         <!-- Departure Info -->
-                        <div style="text-align: left;">
+                        <div class="f-dep-info" style="text-align: left;">
                             <div style="display: flex; align-items: baseline; gap: 8px;">
                                 <strong style="font-size: 22px; color: #0f172a; font-weight: 800; line-height: 1;"><?php echo htmlspecialchars($g['departure_time']); ?></strong>
                                 <span style="font-size: 11.5px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($g['departure_date']); ?></span>
@@ -800,7 +800,7 @@ uasort($connectingAirportsList, function($a, $b) {
                         </div>
 
                         <!-- Duration & Route Path -->
-                        <div style="display: flex; flex-direction: column; align-items: center; min-width: 130px;">
+                        <div class="f-dur-info" style="display: flex; flex-direction: column; align-items: center; min-width: 130px;">
                             <span style="font-size: 11.5px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($g['duration']); ?></span>
                             <div style="width: 100%; height: 2px; background: #cbd5e1; position: relative; margin: 6px 0;">
                                 <i class="fa-solid fa-plane" style="position: absolute; top: -6px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #78B722; background: #ffffff; padding: 0 4px;"></i>
@@ -811,7 +811,7 @@ uasort($connectingAirportsList, function($a, $b) {
                         </div>
 
                         <!-- Arrival Info -->
-                        <div style="text-align: right;">
+                        <div class="f-arr-info" style="text-align: right;">
                             <div style="display: flex; align-items: baseline; justify-content: flex-end; gap: 8px;">
                                 <strong style="font-size: 22px; color: #0f172a; font-weight: 800; line-height: 1;"><?php echo htmlspecialchars($g['arrival_time']); ?></strong>
                                 <span style="font-size: 11.5px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($g['arrival_date']); ?></span>
@@ -849,13 +849,13 @@ uasort($connectingAirportsList, function($a, $b) {
                          data-net-fare="<?php echo $fNet; ?>">
                         
                         <!-- Fare Brand & Fare Code -->
-                        <div>
+                        <div class="f-fare-col-brand">
                             <strong style="font-size: 13.5px; color: #0f172a; display: block; font-weight: 800; letter-spacing: 0.3px;"><?php echo htmlspecialchars($fLabel); ?></strong>
                             <span style="font-size: 11px; color: #94a3b8; font-weight: 600;">(<?php echo htmlspecialchars($fCode); ?>)</span>
                         </div>
 
                         <!-- Baggage Icons -->
-                        <div style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #475569;">
+                        <div class="f-fare-col-baggage" style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #475569;">
                             <span title="Check-in Baggage" style="display: inline-flex; align-items: center; gap: 5px;">
                                 <i class="fa-solid fa-suitcase" style="color: #64748b; font-size: 13px;"></i> <strong><?php echo htmlspecialchars($fBaggage); ?></strong>
                             </span>
@@ -865,7 +865,7 @@ uasort($connectingAirportsList, function($a, $b) {
                         </div>
 
                         <!-- Details & Policy Links -->
-                        <div style="font-size: 11.5px;">
+                        <div class="f-fare-col-details" style="font-size: 11.5px;">
                             <span style="color: #0284c7; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;" onclick="toggleDetailsDrawer('details_<?php echo $fareRowId; ?>')">
                                 <span>Flight Details</span> <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
                             </span>
@@ -882,7 +882,7 @@ uasort($connectingAirportsList, function($a, $b) {
                         </div>
 
                         <!-- Price & Wholesale Net Fare -->
-                        <div style="text-align: right;">
+                        <div class="f-fare-col-price" style="text-align: right;">
                             <div style="display: flex; align-items: center; justify-content: flex-end; gap: 5px;">
                                 <div style="font-size: 21px; font-weight: 800; color: #09204b; line-height: 1;">
                                     ₹ <span class="fare-display-price card-display-price"><?php echo number_format($fGross); ?></span>
@@ -895,7 +895,7 @@ uasort($connectingAirportsList, function($a, $b) {
                         </div>
 
                         <!-- Action: Book Now Button -->
-                        <div style="text-align: right;">
+                        <div class="f-fare-col-action" style="text-align: right;">
                             <form method="post" action="<?php echo site_url('franchise/flight_review'); ?>" class="flight-book-form">
                                 <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($f['id'] ?? ('FL_' . $gAlCode . '_' . rand(100, 999))); ?>">
                                 <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($g['airline_name']); ?>">
@@ -945,8 +945,8 @@ uasort($connectingAirportsList, function($a, $b) {
                     </div>
 
                     <!-- Hidden Collapsible Detail Drawer for this fare -->
-                    <div id="details_<?php echo $fareRowId; ?>" style="display: none; padding: 14px 24px; background: #f8fafc; border-top: 1px dashed #cbd5e1; font-size: 12px; color: #334155;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div id="details_<?php echo $fareRowId; ?>" class="f-fare-details-drawer" style="display: none; padding: 14px 24px; background: #f8fafc; border-top: 1px dashed #cbd5e1; font-size: 12px; color: #334155;">
+                        <div class="f-fare-details-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                             <div>
                                 <strong style="color: #09204b; display: block; margin-bottom: 4px;">Baggage Allowance</strong>
                                 <p style="margin: 0; color: #64748b;">Adult check-in baggage: <?php echo htmlspecialchars($fBaggage); ?> (1 piece) &bull; Hand baggage: 7 Kg. Excess baggage can be purchased at airline check-in.</p>
@@ -3688,5 +3688,227 @@ function msUpdateTravellerText() {
 .rt-card.selected-rt-card {
     border-color: #78B722;
     background: #f0fdf4;
+}
+
+/* ============================================================== */
+/* MOBILE RESPONSIVE UI RULES (Viewport <= 991px and <= 768px)    */
+/* ============================================================== */
+@media (max-width: 991px) {
+    .flight-results-layout {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .f-roundtrip-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+        margin-bottom: 120px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    html, body {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    /* Top Search Summary Card */
+    .f-top-summary-card {
+        padding: 14px 16px !important;
+        border-radius: 12px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+    .f-top-summary-info {
+        display: grid !important;
+        grid-template-columns: 1fr auto 1fr !important;
+        gap: 10px 8px !important;
+        width: 100% !important;
+        align-items: center !important;
+    }
+    .f-summary-divider {
+        display: none !important;
+    }
+    .btn-modify-search {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 10px 14px !important;
+        font-size: 13px !important;
+    }
+
+    /* Sidebar Filters */
+    .flight-filters-sidebar {
+        border-radius: 12px !important;
+        margin-bottom: 16px !important;
+    }
+    .filter-header-row {
+        padding: 12px 14px !important;
+    }
+    .filter-section {
+        padding: 12px 14px !important;
+    }
+
+    /* Results Count & Sort Tabs Bar */
+    .f-results-top-bar {
+        padding: 12px 14px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+        border-radius: 12px !important;
+    }
+    .f-results-top-bar > div:first-child {
+        justify-content: space-between !important;
+        width: 100% !important;
+    }
+    .f-sort-tabs-wrap {
+        width: 100% !important;
+        justify-content: space-between !important;
+    }
+    .f-sort-label {
+        display: none !important;
+    }
+    .f-sort-tab {
+        flex: 1 !important;
+        justify-content: center !important;
+        padding: 8px 4px !important;
+        font-size: 11px !important;
+        text-align: center !important;
+    }
+
+    /* Flight Item Card */
+    .f-flight-item {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        margin-bottom: 14px !important;
+    }
+
+    /* Schedule Header: Airline Info & Route Timings */
+    .f-group-header {
+        padding: 12px 14px !important;
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+    .f-airline-info {
+        gap: 10px !important;
+    }
+    .f-airline-info img {
+        width: 32px !important;
+        height: 32px !important;
+    }
+    .f-airline-info strong {
+        font-size: 14px !important;
+    }
+    .f-route-schedule {
+        display: grid !important;
+        grid-template-columns: 1fr auto 1fr !important;
+        gap: 6px !important;
+        align-items: center !important;
+        width: 100% !important;
+        padding-top: 10px !important;
+        border-top: 1px dashed #e2e8f0 !important;
+    }
+    .f-dep-info strong, .f-arr-info strong {
+        font-size: 18px !important;
+        line-height: 1.1 !important;
+    }
+    .f-dur-info {
+        min-width: 80px !important;
+    }
+    .f-dur-info span {
+        font-size: 10.5px !important;
+    }
+
+    /* Fare Rows: 2-Column Mobile Grid Area Layout (Brand, Baggage, Details, Price, Action) */
+    .f-fare-row {
+        padding: 12px 14px !important;
+        grid-template-columns: 1fr auto !important;
+        grid-template-areas: 
+            "brand price"
+            "baggage price"
+            "details action" !important;
+        gap: 6px 10px !important;
+        align-items: center !important;
+    }
+    .f-fare-row[style*="display: none"],
+    .f-extra-fare[style*="display: none"] {
+        display: none !important;
+    }
+    .f-fare-col-brand {
+        grid-area: brand !important;
+    }
+    .f-fare-col-brand strong {
+        font-size: 13px !important;
+    }
+    .f-fare-col-baggage {
+        grid-area: baggage !important;
+        font-size: 11px !important;
+        gap: 8px !important;
+    }
+    .f-fare-col-details {
+        grid-area: details !important;
+        font-size: 11px !important;
+        margin-top: 2px !important;
+    }
+    .f-fare-col-price {
+        grid-area: price !important;
+        text-align: right !important;
+        align-self: center !important;
+    }
+    .f-fare-col-price .fare-display-price {
+        font-size: 18px !important;
+    }
+    .f-fare-col-price div:last-child {
+        font-size: 11px !important;
+    }
+    .f-fare-col-action {
+        grid-area: action !important;
+        text-align: right !important;
+        margin-top: 2px !important;
+    }
+    .f-book-btn {
+        padding: 7px 16px !important;
+        font-size: 12.5px !important;
+    }
+
+    /* Fare Details Drawer */
+    .f-fare-details-drawer {
+        padding: 12px 14px !important;
+    }
+    .f-fare-details-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+
+    /* Round Trip Sticky Bottom Action Bar */
+    .f-rt-sticky-bar {
+        padding: 10px 14px !important;
+    }
+    .f-rt-sticky-inner {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+    }
+    .f-rt-flight-info {
+        gap: 12px !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+    }
+    .f-rt-flight-info > div:nth-child(2) {
+        height: 25px !important;
+    }
+    .f-rt-price-cta {
+        justify-content: space-between !important;
+        gap: 12px !important;
+        width: 100% !important;
+        border-top: 1px solid #f1f5f9 !important;
+        padding-top: 6px !important;
+    }
+    .f-rt-price-cta #barTotalPrice {
+        font-size: 20px !important;
+    }
+    .f-rt-price-cta button {
+        padding: 10px 18px !important;
+        font-size: 13.5px !important;
+    }
 }
 </style>
