@@ -103,6 +103,21 @@
             align-items: center;
         }
 
+        @media (max-width: 640px) {
+            body { padding: 12px 8px; }
+            .action-bar { flex-direction: column; gap: 10px; align-items: stretch; }
+            .action-bar a, .action-bar button { width: 100%; justify-content: center; }
+            .ticket-header { padding: 16px; flex-direction: column; gap: 12px; align-items: flex-start; }
+            .pnr-box { width: 100%; text-align: left; }
+            .agent-bar { padding: 10px 16px; flex-direction: column; gap: 6px; align-items: flex-start; }
+            .ticket-body { padding: 16px; }
+            .flight-card { padding: 14px; }
+            .flight-route-row { flex-direction: column; gap: 10px; align-items: center; }
+            table.pax-table { font-size: 11.5px; }
+            table.pax-table th, table.pax-table td { padding: 8px 6px; }
+            .ticket-footer { padding: 14px 16px; }
+        }
+
         @media print {
             body { background: #ffffff; padding: 0; }
             .action-bar { display: none !important; }

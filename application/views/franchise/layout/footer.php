@@ -1,11 +1,53 @@
 </div> <!-- /.store-container -->
 
+<style>
+.f-footer-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+.f-footer-links-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+    gap: 32px;
+}
+@media (max-width: 991px) {
+    .f-footer-links-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+    }
+}
+@media (max-width: 640px) {
+    .f-footer-features {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .f-footer-features > div {
+        padding: 18px 16px !important;
+    }
+    .f-footer-links-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .f-footer-bottom {
+        flex-direction: column !important;
+        text-align: center !important;
+        justify-content: center !important;
+        gap: 14px !important;
+    }
+    .f-footer-wrap {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+}
+</style>
+
 <!-- Main Deep Navy Footer (Matching Screenshot 2) -->
 <footer style="background: #09204b; color: #ffffff; margin-top: auto; padding-top: 50px;">
 
     <!-- 4 White Feature Cards on Navy Background -->
-    <div style="max-width: 1240px; margin: 0 auto 40px auto; padding: 0 20px;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+    <div class="f-footer-wrap" style="max-width: 1240px; margin: 0 auto 40px auto; padding: 0 20px;">
+        <div class="f-footer-features">
             
             <div style="background: #ffffff; border-radius: 12px; padding: 24px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.12); text-align: center;">
                 <div style="width: 48px; height: 48px; border-radius: 50%; background: #eff6ff; color: #78B722; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; font-size: 20px;">
@@ -43,8 +85,8 @@
     </div>
 
     <!-- 4 Columns Footer on Deep Navy Background -->
-    <div style="max-width: 1240px; margin: 0 auto; padding: 0 20px 40px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-        <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px;">
+    <div class="f-footer-wrap" style="max-width: 1240px; margin: 0 auto; padding: 0 20px 40px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <div class="f-footer-links-grid">
             
             <!-- Col 1: Brand Info -->
             <div>
@@ -136,7 +178,7 @@
     </div>
 
     <!-- Bottom Copyright Bar matching Screenshot 2 -->
-    <div style="max-width: 1240px; margin: 0 auto; padding: 20px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: #94a3b8; flex-wrap: wrap; gap: 12px;">
+    <div class="f-footer-bottom f-footer-wrap" style="max-width: 1240px; margin: 0 auto; padding: 20px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: #94a3b8; flex-wrap: wrap; gap: 12px;">
         <div>
             &copy; 2026 SkyPlanet Voyages Private Limited. All rights reserved. &bull; Franchise B2B Network
         </div>

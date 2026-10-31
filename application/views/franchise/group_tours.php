@@ -31,6 +31,29 @@
 .gt-b2b-layout.full-width .gt-b2b-sidebar {
     display: none !important;
 }
+@media (max-width: 991px) {
+    .gt-b2b-layout {
+        grid-template-columns: 1fr;
+    }
+    .gt-b2b-sidebar {
+        width: 100%;
+        position: static;
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+    }
+    .gt-nav-link {
+        flex: 1;
+        justify-content: center;
+        padding: 12px 14px;
+        white-space: nowrap;
+        border-left: none !important;
+        border-bottom: 3px solid transparent;
+    }
+    .gt-nav-link.active {
+        border-bottom-color: #f97316 !important;
+    }
+}
 
 /* Left Sidebar Menu (Matching Flight & Hotel Pages) */
 .gt-b2b-sidebar {

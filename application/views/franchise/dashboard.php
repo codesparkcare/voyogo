@@ -1,23 +1,23 @@
 <!-- Main Container with B2B Left Sidebar -->
-<div style="display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: start;">
+<div class="f-main-layout">
 
-    <div style="background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.03); overflow: hidden; height: fit-content;">
-        <a href="<?php echo site_url('franchise/flight'); ?>" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; text-decoration: none; color: #ea580c; font-weight: 700; font-size: 14px; border-left: 4px solid #f97316; background: #fff7ed; white-space: nowrap;">
-            <i class="fa-solid fa-plane-departure" style="font-size: 16px; color: #ea580c; width: 20px; text-align: center;"></i>
+    <div class="f-sidebar-nav">
+        <a href="<?php echo site_url('franchise/flight'); ?>" class="f-side-link active">
+            <i class="fa-solid fa-plane-departure"></i>
             <span>Flight</span>
         </a>
-        <a href="<?php echo site_url('franchise/hotel'); ?>" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; text-decoration: none; color: #475569; font-weight: 600; font-size: 14px; border-left: 4px solid transparent; transition: background 0.15s; white-space: nowrap;">
-            <i class="fa-solid fa-hotel" style="font-size: 16px; color: #64748b; width: 20px; text-align: center;"></i>
+        <a href="<?php echo site_url('franchise/hotel'); ?>" class="f-side-link">
+            <i class="fa-solid fa-hotel"></i>
             <span>Hotel</span>
         </a>
-        <a href="<?php echo site_url('franchise/group-tours'); ?>" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; text-decoration: none; color: #475569; font-weight: 600; font-size: 14px; border-left: 4px solid transparent; transition: background 0.15s; white-space: nowrap;">
-            <i class="fa-solid fa-users-rectangle" style="font-size: 16px; color: #64748b; width: 20px; text-align: center;"></i>
-            <span>Group Tour Follow Up</span>
+        <a href="<?php echo site_url('franchise/group-tours'); ?>" class="f-side-link">
+            <i class="fa-solid fa-users-rectangle"></i>
+            <span><span class="f-side-text-desktop">Group Tour Follow Up</span><span class="f-side-text-mobile">Group Tours</span></span>
         </a>
     </div>
 
     <!-- Right Side: Flight Search Box (Faithfully Matching 1st Screenshot) -->
-    <div>
+    <div class="f-main-content">
         <div class="f-flight-card">
             
             <form action="<?php echo site_url('franchise/flight_search'); ?>" method="GET" id="b2bFlightForm">
@@ -56,7 +56,7 @@
                 <div class="f-search-grid">
 
                     <!-- FROM Box with plane icon -->
-                    <div class="f-input-box active-box" id="fFromBox" onclick="openAirportDropdown(event, 'from')">
+                    <div class="f-input-box" id="fFromBox" onclick="openAirportDropdown(event, 'from')">
                         <div class="f-input-lbl"><i class="fa-solid fa-plane-departure"></i> FROM</div>
                         <div class="f-input-main" id="fFromCityText">Delhi (DEL)</div>
                         <input type="hidden" name="origin" id="fFromCityInput" value="Delhi (DEL)">
@@ -116,11 +116,12 @@
                     <div class="f-input-box disabled" id="fReturnBox" onclick="openFlightCalendar(event, 'return')">
                         <div class="f-input-lbl"><i class="fa-regular fa-calendar-days"></i> RETURN</div>
                         <div class="f-input-main" id="fReturnMainDate"><?php echo date('d/m/Y', strtotime('+7 days')); ?></div>
-                        <div class="f-input-sub" id="fReturnSubDate">Save up to 20% on round trips</div>
+                        <div class="f-input-sub" id="fReturnSubDate">Add return trip</div>
                         <input type="hidden" name="return_date" id="fReturnDateInput" value="<?php echo date('Y-m-d', strtotime('+7 days')); ?>" disabled>
                     </div>
 
                     <!-- Akbar Dual-Month Interactive Calendar Dropdown matching Screenshot 3 -->
+                    <div class="f-cal-backdrop" id="fCalBackdrop" onclick="closeAllFranchiseDropdowns()"></div>
                     <div class="akbar-dropdown-panel akbar-calendar-panel" id="flightCalendarDropdown" onclick="event.stopPropagation();">
                         <!-- Top Switcher Tabs -->
                         <div class="akbar-cal-header-tabs">
@@ -132,6 +133,9 @@
                                 <span class="akbar-cal-tab-label">RETURN</span>
                                 <span class="akbar-cal-tab-val" id="fFlightTabReturnVal"><?php echo date('M d, Y', strtotime('+7 days')); ?></span>
                             </div>
+                            <button type="button" class="akbar-cal-close-btn" onclick="closeAllFranchiseDropdowns()" title="Close calendar">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
                         </div>
 
                         <!-- Dual Month Calendars Body -->
@@ -165,6 +169,14 @@
                                     <!-- Days injected via JS -->
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Calendar Footer for Mobile & Desktop -->
+                        <div class="akbar-cal-footer">
+                            <div style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 6px;">
+                                <span style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #558B2F;"></span> Selected Date
+                            </div>
+                            <button type="button" onclick="closeAllFranchiseDropdowns()" style="background: #558B2F; color: #ffffff; border: none; padding: 6px 18px; border-radius: 6px; font-weight: 700; font-size: 12.5px; cursor: pointer;">Done</button>
                         </div>
                     </div>
 
@@ -618,6 +630,44 @@
 .akbar-calendar-panel.open, .akbar-calendar-panel.show {
     display: block;
 }
+.akbar-cal-close-btn {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 18px;
+    padding: 0 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s;
+}
+.akbar-cal-close-btn:hover {
+    color: #0f172a;
+}
+.akbar-cal-footer {
+    padding: 10px 16px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+}
+.f-cal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 999998;
+}
+.f-cal-backdrop.active {
+    display: block;
+}
 @media (max-width: 991px) {
     .akbar-calendar-panel {
         position: fixed;
@@ -626,8 +676,10 @@
         transform: translate(-50%, -50%);
         max-height: 90vh;
         overflow-y: auto;
-        width: 95%;
-        left: 50%;
+        width: 94%;
+        max-width: 400px;
+        z-index: 999999;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.5);
     }
 }
 .akbar-cal-header-tabs {
@@ -772,6 +824,248 @@
     border-radius: 0;
     font-weight: 700;
 }
+
+/* Responsive Search Grid & Mobile Layout */
+@media (max-width: 991px) {
+    .f-flight-card {
+        padding: 20px 18px 24px 18px;
+        border-radius: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .f-flight-card {
+        padding: 16px 14px 18px 14px;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: visible;
+    }
+    .f-top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 16px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+    .f-trip-types {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        gap: 4px;
+    }
+    .f-radio-label {
+        font-size: 12px;
+        gap: 4px;
+        white-space: nowrap;
+    }
+    .f-radio-label input {
+        width: 15px;
+        height: 15px;
+    }
+    .f-fare-tags {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    .f-fare-pill {
+        justify-content: center;
+        text-align: center;
+        font-size: 11px;
+        padding: 6px 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Stack Search Grid into Mobile Rows */
+    .f-search-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        background: #ffffff;
+    }
+    .f-input-box.active-box {
+        border: none !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        background: #ffffff !important;
+    }
+    #fFromBox {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        border: none !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-top-left-radius: 11px;
+        border-top-right-radius: 11px;
+        padding: 12px 52px 12px 14px;
+        min-width: 0;
+        position: relative;
+        margin: 0 !important;
+        background: #ffffff;
+    }
+    .f-swap-wrap {
+        grid-column: 1 / -1;
+        grid-row: 1 / 3;
+        align-self: center;
+        justify-self: end;
+        margin-right: 14px;
+        position: relative;
+        z-index: 20;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: auto;
+    }
+    .f-swap-btn {
+        position: static;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 1.5px solid #86efac;
+        color: #16a34a;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 13px;
+        transition: transform 0.2s, background 0.15s, border-color 0.15s;
+    }
+    .f-swap-btn i {
+        transform: rotate(90deg);
+        display: inline-block;
+    }
+    .f-swap-btn:hover, .f-swap-btn:active {
+        background: #f0fdf4;
+        border-color: #16a34a;
+        transform: scale(1.05);
+    }
+    #fToBox {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        border: none !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-radius: 0 !important;
+        padding: 12px 52px 12px 14px;
+        min-width: 0;
+        position: relative;
+        margin: 0 !important;
+        background: #ffffff;
+    }
+    #fDepartBox {
+        grid-column: 1;
+        grid-row: 3;
+        border: none !important;
+        border-right: 1px solid #e2e8f0 !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-radius: 0 !important;
+        padding: 12px 14px;
+        min-width: 0;
+        margin: 0 !important;
+    }
+    #fReturnBox {
+        grid-column: 2;
+        grid-row: 3;
+        border: none !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-radius: 0 !important;
+        padding: 12px 14px;
+        min-width: 0;
+        margin: 0 !important;
+    }
+    #fPaxBox {
+        grid-column: 1 / -1;
+        grid-row: 4;
+        border: none !important;
+        border-bottom: none !important;
+        border-radius: 0 0 11px 11px !important;
+        padding: 12px 14px;
+        min-width: 0;
+        margin: 0 !important;
+    }
+    .f-input-lbl {
+        font-size: 10px;
+        margin-bottom: 2px;
+    }
+    .f-input-main {
+        font-size: 15px;
+    }
+    .f-input-sub {
+        font-size: 11px;
+    }
+    .f-search-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+
+    /* Popups on mobile */
+    .f-dropdown-popup {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+        z-index: 1000;
+        padding: 12px;
+    }
+    .f-pax-popup {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 380px) {
+    .f-search-grid {
+        grid-template-columns: 1fr;
+    }
+    #fDepartBox {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        border-right: none !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-radius: 0 !important;
+    }
+    #fReturnBox {
+        grid-column: 1 / -1;
+        grid-row: 4;
+        border-right: none !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-radius: 0 !important;
+    }
+    #fPaxBox {
+        grid-column: 1 / -1;
+        grid-row: 5;
+        border-radius: 0 0 11px 11px !important;
+    }
+}
 </style>
 
 <script>
@@ -911,10 +1205,12 @@ function closeAllFranchiseDropdowns() {
     var toDrop   = document.getElementById('fToDropdown');
     var paxDrop  = document.getElementById('fPaxDropdown');
     var calDrop  = document.getElementById('flightCalendarDropdown');
+    var calBackdrop = document.getElementById('fCalBackdrop');
     if (fromDrop) fromDrop.classList.remove('open');
     if (toDrop)   toDrop.classList.remove('open');
     if (paxDrop)  paxDrop.classList.remove('open');
     if (calDrop)  calDrop.classList.remove('open', 'show');
+    if (calBackdrop) calBackdrop.classList.remove('active');
 }
 
 document.addEventListener('click', function(e) {
@@ -1047,6 +1343,8 @@ function openFlightCalendar(e, tab) {
     switchFlightCalTab(tab);
     var cal = document.getElementById('flightCalendarDropdown');
     if (cal) cal.classList.add('open', 'show');
+    var calBackdrop = document.getElementById('fCalBackdrop');
+    if (calBackdrop) calBackdrop.classList.add('active');
 }
 
 function formatISO(d) {
@@ -1243,7 +1541,7 @@ function handleTripTypeChange(type) {
         document.getElementById('lblOneWay').classList.add('active');
         document.getElementById('fReturnBox').classList.add('disabled');
         document.getElementById('fReturnDateInput').disabled = true;
-        document.getElementById('fReturnSubDate').innerText = 'Save up to 20% on round trips';
+        document.getElementById('fReturnSubDate').innerText = 'Add return trip';
     } else if (type === 'roundtrip') {
         document.getElementById('lblRoundTrip').classList.add('active');
         document.getElementById('fReturnBox').classList.remove('disabled');

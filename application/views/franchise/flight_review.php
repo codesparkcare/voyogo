@@ -241,43 +241,43 @@
     }
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<div style="background-color: #f4f7fe; padding: 25px 0 60px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;">
+<div class="flight-review-page-wrap" style="background-color: #f4f7fe; padding: 25px 0 60px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;">
     <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
         
         <!-- Header Step Progress Bar -->
-        <div style="background: #ffffff; padding: 18px 24px; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,32,90,0.05); display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px;">
+        <div class="review-header-progress-box" style="background: #ffffff; padding: 18px 24px; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,32,90,0.05); display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px;">
             <div>
-                <h1 style="font-size: 22px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 10px;">
+                <h1 class="review-header-title" style="font-size: 22px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 10px;">
                     <i class="fa-solid fa-plane-departure" style="color: #2563eb;"></i> Review Your Flight Itinerary
                 </h1>
-                <p style="font-size: 13px; color: #64748b; margin: 4px 0 0 0;">
+                <p class="review-header-subtitle" style="font-size: 13px; color: #64748b; margin: 4px 0 0 0;">
                     Complete passenger details & select fare options before add-on services
                 </p>
             </div>
-            <div style="display: flex; gap: 16px; font-weight: 700; font-size: 13px; flex-wrap: wrap;">
-                <span style="color: #16a34a; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-circle-check"></i> 1. Flight Selected</span>
-                <span style="color: #2563eb; background: #eff6ff; padding: 6px 14px; border-radius: 20px; border: 1px solid #bfdbfe; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-circle-dot"></i> 2. Review & Pax Details</span>
-                <span style="color: #94a3b8; display: flex; align-items: center; gap: 6px;"><i class="fa-regular fa-circle"></i> 3. Add-on Services</span>
-                <span style="color: #94a3b8; display: flex; align-items: center; gap: 6px;"><i class="fa-regular fa-circle"></i> 4. Payment</span>
+            <div class="review-steps-track" style="display: flex; gap: 16px; font-weight: 700; font-size: 13px; flex-wrap: wrap;">
+                <span class="review-step-pill" style="color: #16a34a; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-circle-check"></i> 1. Flight Selected</span>
+                <span class="review-step-pill" style="color: #2563eb; background: #eff6ff; padding: 6px 14px; border-radius: 20px; border: 1px solid #bfdbfe; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-circle-dot"></i> 2. Review & Pax Details</span>
+                <span class="review-step-pill" style="color: #94a3b8; display: flex; align-items: center; gap: 6px;"><i class="fa-regular fa-circle"></i> 3. Add-on Services</span>
+                <span class="review-step-pill" style="color: #94a3b8; display: flex; align-items: center; gap: 6px;"><i class="fa-regular fa-circle"></i> 4. Payment</span>
             </div>
         </div>
 
         <!-- Franchise Store Agent Verified Status Banner -->
-        <div id="flightLoginBanner" style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
-            <div style="display: flex; align-items: center; gap: 14px;">
-                <div style="width: 42px; height: 42px; border-radius: 50%; background: #16a34a; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0;">
+        <div id="flightLoginBanner" class="flight-login-banner-box franchise-agent-banner" style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+            <div class="login-banner-info" style="display: flex; align-items: center; gap: 14px;">
+                <div class="login-banner-icon" style="width: 42px; height: 42px; border-radius: 50%; background: #16a34a; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0;">
                     <i class="fa-solid fa-store"></i>
                 </div>
                 <div>
-                    <div style="font-size: 14.5px; font-weight: 800; color: #166534;">
+                    <div class="login-banner-heading" style="font-size: 14.5px; font-weight: 800; color: #166534;">
                         Franchise Store Partner: <?php echo htmlspecialchars($store['store_name'] ?? 'Voyogo Store'); ?> (Agent Code: <strong><?php echo htmlspecialchars($store['agent_code'] ?? ''); ?></strong>)
                     </div>
-                    <div style="font-size: 12.5px; color: #15803d;">
+                    <div class="login-banner-text" style="font-size: 12.5px; color: #15803d;">
                         Booking directly through your authorized B2B terminal. Float deduction settles instantly upon confirmation.
                     </div>
                 </div>
             </div>
-            <span style="font-size: 12px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 6px 14px; border-radius: 20px; border: 1px solid #86efac; display: inline-flex; align-items: center; gap: 6px;">
+            <span class="login-banner-btn" style="font-size: 12px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 6px 14px; border-radius: 20px; border: 1px solid #86efac; display: inline-flex; align-items: center; gap: 6px;">
                 <i class="fa-solid fa-circle-check"></i> Agent Authenticated
             </span>
         </div>
@@ -305,8 +305,8 @@
         </form>
 
         <!-- Subheader: Review your flight details & Back to Search (Screenshot 1) -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 4px;">
-            <h2 style="font-size: 19px; font-weight: 800; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 8px;">
+        <div class="review-subheader-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 4px;">
+            <h2 class="review-subheader-title" style="font-size: 19px; font-weight: 800; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 8px;">
                 Review your flight details
             </h2>
             <a href="<?php echo htmlspecialchars($back_search_url ?? site_url('franchise/flight')); ?>" onclick="goBackToSearch(); return false;" class="back-to-search-btn" style="color: #0284c7; text-decoration: none; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: all 0.15s ease;">
@@ -385,9 +385,9 @@
                 $isOnwardConnecting = !empty($flight['stops']) && (int)$flight['stops'] > 0;
                 ?>
 
-                <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
+                <div class="flight-summary-main-card" style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                     <?php if (!empty($flight['hold']) && ($flight['hold'] === true || $flight['hold'] === '1' || $flight['hold'] === 1 || $flight['hold'] === 'true')): ?>
-                    <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 10px 16px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; font-size: 13px;">
+                    <div class="hold-booking-banner" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 10px 16px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; font-size: 13px;">
                         <div style="display: flex; align-items: center; gap: 8px; color: #166534; font-weight: 700;">
                             <i class="fa-solid fa-clock-rotate-left" style="font-size: 15px; color: #16a34a;"></i>
                             <span>Hold Booking (HB) Available for this flight</span>
@@ -400,7 +400,7 @@
                     <?php if ($isOnwardConnecting): ?>
                         <?php $segData = buildConnectingFlightSegments($flight, $airportDb); ?>
                         <!-- 1+ Stop Connecting Flight View (Screenshot 2 Match) -->
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 14px; border-bottom: 1px solid #edf2f7; flex-wrap: wrap; gap: 12px;">
+                        <div class="flight-card-top-row connecting-top-row" style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 14px; border-bottom: 1px solid #edf2f7; flex-wrap: wrap; gap: 12px;">
                             <div>
                                 <h3 style="margin: 0; font-size: 22px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 10px;">
                                     <span><?php echo htmlspecialchars($segData['from_info']['city']); ?></span>
@@ -416,7 +416,7 @@
                                 </div>
                             </div>
 
-                            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <div class="flight-badges-group" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                                 <a href="javascript:void(0);" onclick="scrollToFareOptions('onward');" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
                                     <i class="fa-solid fa-circle-info"></i> Fare Rules
                                 </a>
@@ -426,13 +426,13 @@
                                     </span>
                                 <?php endif; ?>
                                 <?php if (!empty($flight['refundable'])): ?>
-                                <span style="border: 1.5px solid #16a34a; color: #16a34a; background: #f0fdf4; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
-                                    <i class="fa-solid fa-rotate-left"></i> Refundable
-                                </span>
+                                    <span style="border: 1.5px solid #16a34a; color: #16a34a; background: #f0fdf4; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
+                                        <i class="fa-solid fa-rotate-left"></i> Refundable
+                                    </span>
                                 <?php else: ?>
-                                <span style="border: 1.5px solid #fed7aa; color: #ea580c; background: #fff7ed; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
-                                    <i class="fa-solid fa-ban"></i> Non-Refundable
-                                </span>
+                                    <span style="border: 1.5px solid #ea580c; color: #ea580c; background: #fff7ed; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
+                                        <i class="fa-solid fa-ban"></i> Non-Refundable
+                                    </span>
                                 <?php endif; ?>
                                 <!-- Maximize / Minimize Icon (Screenshot 2 Match) -->
                                 <button type="button" id="btnToggle_onward" onclick="toggleFlightBox('onward')" title="Minimize" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #334155; margin-left: 6px; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
@@ -476,38 +476,38 @@
                                 </div>
                             </div>
 
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding: 0 4px;">
-                                <div style="text-align: left; max-width: 38%;">
-                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg1_dep']); ?></span>
+                            <div class="flight-timing-sector-grid connecting-timing-grid" style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding: 0 4px;">
+                                <div class="flight-sector-col dep-col" style="text-align: left; max-width: 38%;">
+                                    <span class="sector-time" style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg1_dep']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($flight['departure_date'])); ?></span>
-                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                    <div class="sector-code" style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
                                         <?php echo htmlspecialchars($segData['from_info']['city']); ?> [<?php echo htmlspecialchars($segData['from_code']); ?>]
                                     </div>
-                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['from_info']['name']); ?></div>
-                                    <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($segData['from_info']['terminal']); ?></span>
+                                    <div class="sector-airport" style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['from_info']['name']); ?></div>
+                                    <span class="sector-terminal" style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($segData['from_info']['terminal']); ?></span>
                                 </div>
 
-                                <div style="text-align: center; flex: 1; margin: 0 20px;">
-                                    <span style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($segData['leg1_duration']); ?></span>
-                                    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                                <div class="flight-sector-middle" style="text-align: center; flex: 1; margin: 0 20px;">
+                                    <span class="sector-duration" style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($segData['leg1_duration']); ?></span>
+                                    <div class="sector-line" style="position: relative; display: flex; align-items: center; justify-content: center;">
                                         <div style="width: 100%; border-top: 2px dashed #38bdf8;"></div>
-                                        <i class="fa-solid fa-plane" style="position: absolute; color: #0284c7; font-size: 15px; transform: rotate(0deg); background: #ffffff; padding: 0 6px;"></i>
+                                        <i class="fa-solid fa-plane sector-plane-icon" style="position: absolute; color: #0284c7; font-size: 15px; transform: rotate(0deg); background: #ffffff; padding: 0 6px;"></i>
                                     </div>
                                 </div>
 
-                                <div style="text-align: left; max-width: 38%; min-width: 190px;">
-                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg1_arr']); ?></span>
+                                <div class="flight-sector-col arr-col connecting-arr-col" style="text-align: right; max-width: 38%;">
+                                    <span class="sector-time" style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg1_arr']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($flight['departure_date'])); ?></span>
-                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                    <div class="sector-code" style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
                                         <?php echo htmlspecialchars($segData['via_info']['city']); ?> [<?php echo htmlspecialchars($segData['via_code']); ?>]
                                     </div>
-                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['via_info']['name']); ?></div>
+                                    <div class="sector-airport" style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['via_info']['name']); ?></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Layover / Connecting Plane Banner (Screenshot 2 Exact Match) -->
-                        <div style="background: linear-gradient(90deg, #e0f2fe 0%, #bae6fd 50%, #e0f2fe 100%); border: 1px solid #7dd3fc; color: #0369a1; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);">
+                        <div class="layover-plane-banner" style="background: linear-gradient(90deg, #e0f2fe 0%, #bae6fd 50%, #e0f2fe 100%); border: 1px solid #7dd3fc; color: #0369a1; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);">
                             <i class="fa-solid fa-circle-info" style="font-size: 14px; color: #0284c7;"></i>
                             <span>Change planes at <strong><?php echo htmlspecialchars($segData['via_info']['city']); ?> | <?php echo htmlspecialchars($segData['via_info']['city']); ?> | IN | India (<?php echo htmlspecialchars($segData['via_code']); ?>)</strong>, Connecting Time: <strong><?php echo htmlspecialchars($segData['layover_duration']); ?></strong></span>
                         </div>
@@ -546,32 +546,32 @@
                                 </div>
                             </div>
 
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding: 0 4px;">
-                                <div style="text-align: left; max-width: 38%;">
-                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg2_dep']); ?></span>
+                            <div class="flight-timing-sector-grid connecting-timing-grid" style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding: 0 4px;">
+                                <div class="flight-sector-col dep-col" style="text-align: left; max-width: 38%;">
+                                    <span class="sector-time" style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg2_dep']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($flight['departure_date'])); ?></span>
-                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                    <div class="sector-code" style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
                                         <?php echo htmlspecialchars($segData['via_info']['city']); ?> [<?php echo htmlspecialchars($segData['via_code']); ?>]
                                     </div>
-                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['via_info']['name']); ?></div>
+                                    <div class="sector-airport" style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['via_info']['name']); ?></div>
                                 </div>
 
-                                <div style="text-align: center; flex: 1; margin: 0 20px;">
-                                    <span style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($segData['leg2_duration']); ?></span>
-                                    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                                <div class="flight-sector-middle" style="text-align: center; flex: 1; margin: 0 20px;">
+                                    <span class="sector-duration" style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($segData['leg2_duration']); ?></span>
+                                    <div class="sector-line" style="position: relative; display: flex; align-items: center; justify-content: center;">
                                         <div style="width: 100%; border-top: 2px dashed #38bdf8;"></div>
-                                        <i class="fa-solid fa-plane" style="position: absolute; color: #0284c7; font-size: 15px; transform: rotate(0deg); background: #ffffff; padding: 0 6px;"></i>
+                                        <i class="fa-solid fa-plane sector-plane-icon" style="position: absolute; color: #0284c7; font-size: 15px; transform: rotate(0deg); background: #ffffff; padding: 0 6px;"></i>
                                     </div>
                                 </div>
 
-                                <div style="text-align: left; max-width: 38%; min-width: 190px;">
-                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg2_arr']); ?></span>
+                                <div class="flight-sector-col arr-col connecting-arr-col" style="text-align: right; max-width: 38%;">
+                                    <span class="sector-time" style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($segData['leg2_arr']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($flight['departure_date'])); ?></span>
-                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                    <div class="sector-code" style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
                                         <?php echo htmlspecialchars($segData['to_info']['city']); ?> [<?php echo htmlspecialchars($segData['to_code']); ?>]
                                     </div>
-                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['to_info']['name']); ?></div>
-                                    <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($segData['to_info']['terminal']); ?></span>
+                                    <div class="sector-airport" style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($segData['to_info']['name']); ?></div>
+                                    <span class="sector-terminal" style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($segData['to_info']['terminal']); ?></span>
                                 </div>
                             </div>
                         </div>
@@ -585,8 +585,8 @@
 
                     <?php else: ?>
                         <!-- Standard Non-Stop Flight View -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 16px; margin-bottom: 18px;">
-                            <div style="display: flex; align-items: center; gap: 14px;">
+                        <div class="flight-card-top-row nonstop-top-row" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 16px; margin-bottom: 18px;">
+                            <div class="flight-airline-info" style="display: flex; align-items: center; gap: 14px;">
                                 <img src="<?php echo htmlspecialchars($flight['airline_logo']); ?>" alt="logo" style="height: 38px; width: 38px; object-fit: contain; border-radius: 6px; padding: 2px; background: #f8fafc; border: 1px solid #e2e8f0;" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($flight['airline_name']); ?>&background=0d3470&color=fff';">
                                 <div>
                                     <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: #0d3470;">
@@ -598,7 +598,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div style="text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
+                            <div class="flight-badges-group" style="text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
                                 <a href="javascript:void(0);" onclick="scrollToFareOptions('onward');" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
                                     <i class="fa-solid fa-circle-info"></i> Fare Rules
                                 </a>
@@ -629,29 +629,29 @@
 
                         <div id="flightBoxBody_onward">
                         <!-- Flight Timing & Sector Grid -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 18px 22px; border-radius: 10px; border: 1px solid #edf2f7; margin-bottom: 20px;">
-                            <div style="text-align: left; max-width: 32%;">
-                                <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($flight['departure_time']); ?></span>
-                                <div style="font-size: 16px; font-weight: 800; color: #0d3470; margin-top: 4px;"><?php echo htmlspecialchars($flight['from_code']); ?></div>
-                                <div style="font-size: 12px; color: #475569; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><?php echo htmlspecialchars($flight['from_airport'] ?? 'Airport'); ?></div>
-                                <span style="display: inline-block; font-size: 11px; font-weight: 700; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; margin-top: 4px;"><?php echo htmlspecialchars($flight['from_terminal'] ?? 'Terminal 2'); ?></span>
+                        <div class="flight-timing-sector-grid" style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 18px 22px; border-radius: 10px; border: 1px solid #edf2f7; margin-bottom: 20px;">
+                            <div class="flight-sector-col dep-col" style="text-align: left; max-width: 32%;">
+                                <span class="sector-time" style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($flight['departure_time']); ?></span>
+                                <div class="sector-code" style="font-size: 16px; font-weight: 800; color: #0d3470; margin-top: 4px;"><?php echo htmlspecialchars($flight['from_code']); ?></div>
+                                <div class="sector-airport" style="font-size: 12px; color: #475569; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><?php echo htmlspecialchars($flight['from_airport'] ?? 'Airport'); ?></div>
+                                <span class="sector-terminal" style="display: inline-block; font-size: 11px; font-weight: 700; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; margin-top: 4px;"><?php echo htmlspecialchars($flight['from_terminal'] ?? 'Terminal 2'); ?></span>
                             </div>
 
-                            <div style="text-align: center; flex: 1; margin: 0 20px;">
-                                <span style="font-size: 12px; color: #64748b; font-weight: 700;"><?php echo htmlspecialchars($flight['duration'] ?? '2h 15m'); ?></span>
-                                <div style="height: 2px; background: #cbd5e1; margin: 8px 0; position: relative;">
-                                    <i class="fa-solid fa-plane" style="position: absolute; top: -7px; left: 48%; color: #2563eb; transform: rotate(0deg); font-size: 14px;"></i>
+                            <div class="flight-sector-middle" style="text-align: center; flex: 1; margin: 0 20px;">
+                                <span class="sector-duration" style="font-size: 12px; color: #64748b; font-weight: 700;"><?php echo htmlspecialchars($flight['duration'] ?? '2h 15m'); ?></span>
+                                <div class="sector-line" style="height: 2px; background: #cbd5e1; margin: 8px 0; position: relative;">
+                                    <i class="fa-solid fa-plane sector-plane-icon" style="position: absolute; top: -7px; left: 48%; color: #2563eb; transform: rotate(0deg); font-size: 14px;"></i>
                                 </div>
-                                <span style="font-size: 11px; color: #16a34a; font-weight: 800; background: #f0fdf4; padding: 3px 10px; border-radius: 12px; border: 1px solid #86efac;">
+                                <span class="sector-stop-badge" style="font-size: 11px; color: #16a34a; font-weight: 800; background: #f0fdf4; padding: 3px 10px; border-radius: 12px; border: 1px solid #86efac;">
                                     Non-Stop Direct
                                 </span>
                             </div>
 
-                            <div style="text-align: right; max-width: 32%;">
-                                <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($flight['arrival_time']); ?></span>
-                                <div style="font-size: 16px; font-weight: 800; color: #0d3470; margin-top: 4px;"><?php echo htmlspecialchars($flight['to_code']); ?></div>
-                                <div style="font-size: 12px; color: #475569; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><?php echo htmlspecialchars($flight['to_airport'] ?? 'Airport'); ?></div>
-                                <span style="display: inline-block; font-size: 11px; font-weight: 700; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; margin-top: 4px;"><?php echo htmlspecialchars($flight['to_terminal'] ?? 'Terminal 1'); ?></span>
+                            <div class="flight-sector-col arr-col" style="text-align: right; max-width: 32%;">
+                                <span class="sector-time" style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($flight['arrival_time']); ?></span>
+                                <div class="sector-code" style="font-size: 16px; font-weight: 800; color: #0d3470; margin-top: 4px;"><?php echo htmlspecialchars($flight['to_code']); ?></div>
+                                <div class="sector-airport" style="font-size: 12px; color: #475569; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><?php echo htmlspecialchars($flight['to_airport'] ?? 'Airport'); ?></div>
+                                <span class="sector-terminal" style="display: inline-block; font-size: 11px; font-weight: 700; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; margin-top: 4px;"><?php echo htmlspecialchars($flight['to_terminal'] ?? 'Terminal 1'); ?></span>
                             </div>
                         </div>
 
@@ -680,7 +680,7 @@
                     <?php endif; ?>
 
                     <!-- Cancellation & Date Change Policy (Brought Down, Always Visible) -->
-                    <div id="cancellationPolicyTable" style="background: #f8fafc; padding: 16px 20px; border-radius: 8px; border: 1px solid #edf2f7; margin-top: 18px;">
+                    <div id="cancellationPolicyTable" class="cancellation-policy-box" style="background: #f8fafc; padding: 16px 20px; border-radius: 8px; border: 1px solid #edf2f7; margin-top: 18px;">
                             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
                                 <h4 style="font-size: 13.5px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
                                     <i class="fa-solid fa-file-contract" style="color: #2563eb;"></i> Cancellation & Date Change Policy (Per Pax)
@@ -748,11 +748,11 @@
                 $retCheckin = !empty($return_flight['checkin_baggage']) ? $return_flight['checkin_baggage'] : $checkinDisplay;
                 $retCabin = !empty($return_flight['cabin_baggage']) ? $return_flight['cabin_baggage'] : $cabinDisplay;
                 ?>
-                <div style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
+                <div class="flight-summary-main-card" style="background: #ffffff; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                     <?php if ($isReturnConnecting): ?>
                         <?php $retSegData = buildConnectingFlightSegments($return_flight, $airportDb); ?>
                         <!-- Return 1+ Stop Connecting Flight View (Screenshot 2 Match) -->
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 14px; border-bottom: 1px solid #edf2f7; flex-wrap: wrap; gap: 12px;">
+                        <div class="flight-card-top-row connecting-top-row" style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 14px; border-bottom: 1px solid #edf2f7; flex-wrap: wrap; gap: 12px;">
                             <div>
                                 <h3 style="margin: 0; font-size: 22px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 10px;">
                                     <i class="fa-solid fa-plane-arrival" style="color: #10b981; font-size: 18px;"></i>
@@ -769,7 +769,7 @@
                                 </div>
                             </div>
 
-                            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <div class="flight-badges-group" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                                 <a href="javascript:void(0);" onclick="scrollToFareOptions('return');" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
                                     <i class="fa-solid fa-circle-info"></i> Fare Rules
                                 </a>
@@ -779,13 +779,13 @@
                                     </span>
                                 <?php endif; ?>
                                 <?php if (!empty($return_flight['refundable'])): ?>
-                                <span style="border: 1.5px solid #16a34a; color: #16a34a; background: #f0fdf4; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
-                                    <i class="fa-solid fa-rotate-left"></i> Refundable
-                                </span>
+                                    <span style="border: 1.5px solid #16a34a; color: #16a34a; background: #f0fdf4; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
+                                        <i class="fa-solid fa-rotate-left"></i> Refundable
+                                    </span>
                                 <?php else: ?>
-                                <span style="border: 1.5px solid #fed7aa; color: #ea580c; background: #fff7ed; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
-                                    <i class="fa-solid fa-ban"></i> Non-Refundable
-                                </span>
+                                    <span style="border: 1.5px solid #ea580c; color: #ea580c; background: #fff7ed; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
+                                        <i class="fa-solid fa-ban"></i> Non-Refundable
+                                    </span>
                                 <?php endif; ?>
                                 <!-- Maximize / Minimize Icon (Screenshot 3 Match) -->
                                 <button type="button" id="btnToggle_return" onclick="toggleFlightBox('return')" title="Minimize" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #334155; margin-left: 6px; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
@@ -829,38 +829,38 @@
                                 </div>
                             </div>
 
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding: 0 4px;">
-                                <div style="text-align: left; max-width: 38%;">
-                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg1_dep']); ?></span>
+                            <div class="flight-timing-sector-grid connecting-timing-grid" style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding: 0 4px;">
+                                <div class="flight-sector-col dep-col" style="text-align: left; max-width: 38%;">
+                                    <span class="sector-time" style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg1_dep']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($return_flight['departure_date'])); ?></span>
-                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                    <div class="sector-code" style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
                                         <?php echo htmlspecialchars($retSegData['from_info']['city']); ?> [<?php echo htmlspecialchars($retSegData['from_code']); ?>]
                                     </div>
-                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['from_info']['name']); ?></div>
-                                    <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($retSegData['from_info']['terminal']); ?></span>
+                                    <div class="sector-airport" style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['from_info']['name']); ?></div>
+                                    <span class="sector-terminal" style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($retSegData['from_info']['terminal']); ?></span>
                                 </div>
 
-                                <div style="text-align: center; flex: 1; margin: 0 20px;">
-                                    <span style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($retSegData['leg1_duration']); ?></span>
-                                    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                                <div class="flight-sector-middle" style="text-align: center; flex: 1; margin: 0 20px;">
+                                    <span class="sector-duration" style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($retSegData['leg1_duration']); ?></span>
+                                    <div class="sector-line" style="position: relative; display: flex; align-items: center; justify-content: center;">
                                         <div style="width: 100%; border-top: 2px dashed #10b981;"></div>
-                                        <i class="fa-solid fa-plane" style="position: absolute; color: #10b981; font-size: 15px; transform: rotate(0deg); background: #ffffff; padding: 0 6px;"></i>
+                                        <i class="fa-solid fa-plane sector-plane-icon" style="position: absolute; color: #10b981; font-size: 15px; transform: rotate(0deg); background: #ffffff; padding: 0 6px;"></i>
                                     </div>
                                 </div>
 
-                                <div style="text-align: left; max-width: 38%; min-width: 190px;">
-                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg1_arr']); ?></span>
+                                <div class="flight-sector-col arr-col connecting-arr-col" style="text-align: right; max-width: 38%;">
+                                    <span class="sector-time" style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg1_arr']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($return_flight['departure_date'])); ?></span>
-                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                    <div class="sector-code" style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
                                         <?php echo htmlspecialchars($retSegData['via_info']['city']); ?> [<?php echo htmlspecialchars($retSegData['via_code']); ?>]
                                     </div>
-                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['via_info']['name']); ?></div>
+                                    <div class="sector-airport" style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['via_info']['name']); ?></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Layover / Connecting Plane Banner -->
-                        <div style="background: linear-gradient(90deg, #ecfdf5 0%, #d1fae5 50%, #ecfdf5 100%); border: 1px solid #a7f3d0; color: #065f46; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);">
+                        <div class="layover-plane-banner" style="background: linear-gradient(90deg, #ecfdf5 0%, #d1fae5 50%, #ecfdf5 100%); border: 1px solid #a7f3d0; color: #065f46; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);">
                             <i class="fa-solid fa-circle-info" style="font-size: 14px; color: #10b981;"></i>
                             <span>Change planes at <strong><?php echo htmlspecialchars($retSegData['via_info']['city']); ?> | <?php echo htmlspecialchars($retSegData['via_info']['city']); ?> | IN | India (<?php echo htmlspecialchars($retSegData['via_code']); ?>)</strong>, Connecting Time: <strong><?php echo htmlspecialchars($retSegData['layover_duration']); ?></strong></span>
                         </div>
@@ -899,32 +899,32 @@
                                 </div>
                             </div>
 
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding: 0 4px;">
-                                <div style="text-align: left; max-width: 38%;">
-                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg2_dep']); ?></span>
+                            <div class="flight-timing-sector-grid connecting-timing-grid" style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding: 0 4px;">
+                                <div class="flight-sector-col dep-col" style="text-align: left; max-width: 38%;">
+                                    <span class="sector-time" style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg2_dep']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($return_flight['departure_date'])); ?></span>
-                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                    <div class="sector-code" style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
                                         <?php echo htmlspecialchars($retSegData['via_info']['city']); ?> [<?php echo htmlspecialchars($retSegData['via_code']); ?>]
                                     </div>
-                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['via_info']['name']); ?></div>
+                                    <div class="sector-airport" style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['via_info']['name']); ?></div>
                                 </div>
 
-                                <div style="text-align: center; flex: 1; margin: 0 20px;">
-                                    <span style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($retSegData['leg2_duration']); ?></span>
-                                    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                                <div class="flight-sector-middle" style="text-align: center; flex: 1; margin: 0 20px;">
+                                    <span class="sector-duration" style="font-size: 13px; color: #0f172a; font-weight: 800; display: block; margin-bottom: 6px;"><?php echo htmlspecialchars($retSegData['leg2_duration']); ?></span>
+                                    <div class="sector-line" style="position: relative; display: flex; align-items: center; justify-content: center;">
                                         <div style="width: 100%; border-top: 2px dashed #10b981;"></div>
-                                        <i class="fa-solid fa-plane" style="position: absolute; color: #10b981; font-size: 15px; transform: rotate(0deg); background: #ffffff; padding: 0 6px;"></i>
+                                        <i class="fa-solid fa-plane sector-plane-icon" style="position: absolute; color: #10b981; font-size: 15px; transform: rotate(0deg); background: #ffffff; padding: 0 6px;"></i>
                                     </div>
                                 </div>
 
-                                <div style="text-align: left; max-width: 38%; min-width: 190px;">
-                                    <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg2_arr']); ?></span>
+                                <div class="flight-sector-col arr-col connecting-arr-col" style="text-align: right; max-width: 38%;">
+                                    <span class="sector-time" style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($retSegData['leg2_arr']); ?></span>
                                     <span style="font-size: 13px; color: #475569; font-weight: 600; display: block; margin-top: 3px;"><?php echo date('D, d M y', strtotime($return_flight['departure_date'])); ?></span>
-                                    <div style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
+                                    <div class="sector-code" style="font-size: 14.5px; font-weight: 800; color: #0d3470; margin-top: 4px;">
                                         <?php echo htmlspecialchars($retSegData['to_info']['city']); ?> [<?php echo htmlspecialchars($retSegData['to_code']); ?>]
                                     </div>
-                                    <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['to_info']['name']); ?></div>
-                                    <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($retSegData['to_info']['terminal']); ?></span>
+                                    <div class="sector-airport" style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 1px;"><?php echo htmlspecialchars($retSegData['to_info']['name']); ?></div>
+                                    <span class="sector-terminal" style="display: inline-block; font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;"><?php echo htmlspecialchars($retSegData['to_info']['terminal']); ?></span>
                                 </div>
                             </div>
                         </div>
@@ -937,8 +937,8 @@
                         </div>
                     <?php else: ?>
                         <!-- Standard Return Non-Stop Flight View -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 16px; margin-bottom: 18px;">
-                            <div style="display: flex; align-items: center; gap: 14px;">
+                        <div class="flight-card-top-row nonstop-top-row" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 16px; margin-bottom: 18px;">
+                            <div class="flight-airline-info" style="display: flex; align-items: center; gap: 14px;">
                                 <img src="<?php echo htmlspecialchars($return_flight['airline_logo']); ?>" alt="logo" style="height: 38px; width: 38px; object-fit: contain; border-radius: 6px; padding: 2px; background: #f8fafc; border: 1px solid #e2e8f0;" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($return_flight['airline_name']); ?>&background=0d3470&color=fff';">
                                 <div>
                                     <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: #0d3470;">
@@ -950,7 +950,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div style="text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
+                            <div class="flight-badges-group" style="text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
                                 <a href="javascript:void(0);" onclick="scrollToFareOptions('return');" style="color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
                                     <i class="fa-solid fa-circle-info"></i> Fare Rules
                                 </a>
@@ -972,29 +972,29 @@
 
                         <div id="flightBoxBody_return">
                         <!-- Return Flight Timing & Sector Grid -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 18px 22px; border-radius: 10px; border: 1px solid #edf2f7;">
-                            <div style="text-align: left; max-width: 32%;">
-                                <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($return_flight['departure_time']); ?></span>
-                                <div style="font-size: 16px; font-weight: 800; color: #0d3470; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['from_code']); ?></div>
-                                <div style="font-size: 12px; color: #475569; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><?php echo htmlspecialchars($return_flight['from_airport'] ?? 'Airport'); ?></div>
-                                <span style="display: inline-block; font-size: 11px; font-weight: 700; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['from_terminal'] ?? 'Terminal 1'); ?></span>
+                        <div class="flight-timing-sector-grid" style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 18px 22px; border-radius: 10px; border: 1px solid #edf2f7;">
+                            <div class="flight-sector-col dep-col" style="text-align: left; max-width: 32%;">
+                                <span class="sector-time" style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($return_flight['departure_time']); ?></span>
+                                <div class="sector-code" style="font-size: 16px; font-weight: 800; color: #0d3470; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['from_code']); ?></div>
+                                <div class="sector-airport" style="font-size: 12px; color: #475569; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><?php echo htmlspecialchars($return_flight['from_airport'] ?? 'Airport'); ?></div>
+                                <span class="sector-terminal" style="display: inline-block; font-size: 11px; font-weight: 700; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['from_terminal'] ?? 'Terminal 1'); ?></span>
                             </div>
 
-                            <div style="text-align: center; flex: 1; margin: 0 20px;">
-                                <span style="font-size: 12px; color: #64748b; font-weight: 700;"><?php echo htmlspecialchars($return_flight['duration'] ?? '2h 15m'); ?></span>
-                                <div style="height: 2px; background: #cbd5e1; margin: 8px 0; position: relative;">
-                                    <i class="fa-solid fa-plane" style="position: absolute; top: -7px; left: 48%; color: #10b981; transform: rotate(180deg); font-size: 14px;"></i>
+                            <div class="flight-sector-middle" style="text-align: center; flex: 1; margin: 0 20px;">
+                                <span class="sector-duration" style="font-size: 12px; color: #64748b; font-weight: 700;"><?php echo htmlspecialchars($return_flight['duration'] ?? '2h 15m'); ?></span>
+                                <div class="sector-line" style="height: 2px; background: #cbd5e1; margin: 8px 0; position: relative;">
+                                    <i class="fa-solid fa-plane sector-plane-icon" style="position: absolute; top: -7px; left: 48%; color: #10b981; transform: rotate(180deg); font-size: 14px;"></i>
                                 </div>
-                                <span style="font-size: 11px; color: #16a34a; font-weight: 800; background: #f0fdf4; padding: 3px 10px; border-radius: 12px; border: 1px solid #86efac;">
+                                <span class="sector-stop-badge" style="font-size: 11px; color: #16a34a; font-weight: 800; background: #f0fdf4; padding: 3px 10px; border-radius: 12px; border: 1px solid #86efac;">
                                     Non-Stop Direct
                                 </span>
                             </div>
 
-                            <div style="text-align: right; max-width: 32%;">
-                                <span style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($return_flight['arrival_time']); ?></span>
-                                <div style="font-size: 16px; font-weight: 800; color: #0d3470; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['to_code']); ?></div>
-                                <div style="font-size: 12px; color: #475569; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><?php echo htmlspecialchars($return_flight['to_airport'] ?? 'Airport'); ?></div>
-                                <span style="display: inline-block; font-size: 11px; font-weight: 700; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['to_terminal'] ?? 'Terminal 2'); ?></span>
+                            <div class="flight-sector-col arr-col" style="text-align: right; max-width: 32%;">
+                                <span class="sector-time" style="font-size: 26px; font-weight: 900; color: #0f172a; display: block; line-height: 1.1;"><?php echo htmlspecialchars($return_flight['arrival_time']); ?></span>
+                                <div class="sector-code" style="font-size: 16px; font-weight: 800; color: #0d3470; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['to_code']); ?></div>
+                                <div class="sector-airport" style="font-size: 12px; color: #475569; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><?php echo htmlspecialchars($return_flight['to_airport'] ?? 'Airport'); ?></div>
+                                <span class="sector-terminal" style="display: inline-block; font-size: 11px; font-weight: 700; background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; margin-top: 4px;"><?php echo htmlspecialchars($return_flight['to_terminal'] ?? 'Terminal 2'); ?></span>
                             </div>
                         </div>
 
@@ -1023,7 +1023,7 @@
                     <?php endif; ?>
 
                     <!-- Cancellation & Date Change Policy for Return Flight (Per Pax) -->
-                    <div id="returnCancellationPolicyTable" style="background: #f8fafc; padding: 16px 20px; border-radius: 8px; border: 1px solid #edf2f7; margin-top: 18px;">
+                    <div id="returnCancellationPolicyTable" class="cancellation-policy-box" style="background: #f8fafc; padding: 16px 20px; border-radius: 8px; border: 1px solid #edf2f7; margin-top: 18px;">
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
                             <h4 style="font-size: 13.5px; font-weight: 800; color: #0d3470; margin: 0; display: flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-file-contract" style="color: #2563eb;"></i> Cancellation & Date Change Policy (Per Pax)
@@ -1386,7 +1386,7 @@
                     </div>
 
                     <!-- 2. Maximize Your Travel Safety & Flexibility (Screenshot 1) -->
-                    <div style="background: #ffffff; border-radius: 14px; padding: 22px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
+                    <div class="safety-flexibility-box" style="background: #ffffff; border-radius: 14px; padding: 22px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,32,90,0.04); border: 1px solid #e2e8f0;">
                         <h3 style="font-size: 17px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0;">
                             Maximize Your Travel Safety & Flexibility
                         </h3>
@@ -1492,7 +1492,7 @@
                     ?>
 
                     <!-- Section Header: Traveller Details (Screenshot 1) -->
-                    <div style="margin-top: 28px; margin-bottom: 16px;">
+                    <div class="passenger-card" style="margin-top: 28px; margin-bottom: 16px;">
                         <h2 style="font-size: 20px; font-weight: 800; color: #1e293b; margin: 0 0 14px 0;">Traveller Details</h2>
 
                         <?php if ($is_intl): ?>
@@ -2082,7 +2082,7 @@
                                 <input type="hidden" name="contact_name" id="hidden_contact_name" value="<?php echo htmlspecialchars($curContactName); ?>">
 
                                 <!-- Inputs: Country Code + Mobile Number & Email (Screenshot 1) -->
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+                                <div class="contact-inputs-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
                                     <!-- Mobile with Calling Code Flag Dropdown -->
                                     <div style="display: flex; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; background: #ffffff;">
                                         <select name="contact_country_code" style="border: none; background: #f8fafc; padding: 10px 12px; font-size: 13px; font-weight: 600; color: #334155; border-right: 1px solid #cbd5e1; cursor: pointer; outline: none;">
@@ -3334,7 +3334,476 @@ function showProcessingModal(message) {
 }
 @media (max-width: 992px) {
     .flight-review-layout-grid {
-        grid-template-columns: 1fr !important;
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .flight-review-layout-grid > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* ========================================================
+   RESPONSIVE UI FOR MOBILE (Flight Review & Itinerary Page)
+   ======================================================== */
+html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+}
+.flight-review-page-wrap {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+}
+.flight-review-page-wrap * {
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 768px) {
+    .flight-review-page-wrap {
+        padding: 14px 0 45px 0 !important;
+    }
+    .flight-review-page-wrap .container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+    }
+    
+    /* 1. Header Step Progress Bar */
+    .review-header-progress-box {
+        padding: 14px 12px !important;
+        margin-bottom: 14px !important;
+        border-radius: 12px !important;
+        width: 100% !important;
+    }
+    .review-header-title {
+        font-size: 18px !important;
+        line-height: 1.3 !important;
+    }
+    .review-header-subtitle {
+        font-size: 12px !important;
+    }
+    .review-steps-track {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin-top: 10px !important;
+    }
+    .review-step-pill {
+        font-size: 11.5px !important;
+        padding: 6px 10px !important;
+        border-radius: 8px !important;
+        justify-content: flex-start !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    
+    /* 2. Franchise Store Partner & Agent Authenticated Banner */
+    .flight-login-banner-box,
+    .franchise-agent-banner {
+        padding: 12px 14px !important;
+        border-radius: 12px !important;
+        margin-bottom: 16px !important;
+        gap: 12px !important;
+        width: 100% !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        box-sizing: border-box !important;
+    }
+    .franchise-agent-banner .login-banner-info {
+        gap: 12px !important;
+        width: 100% !important;
+    }
+    .franchise-agent-banner .login-banner-btn {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 8px 14px !important;
+        font-size: 12px !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+    }
+    .hold-booking-banner {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        padding: 10px 12px !important;
+        font-size: 12px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .login-banner-info {
+        gap: 12px !important;
+        width: 100% !important;
+    }
+    .login-banner-icon {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 18px !important;
+    }
+    .login-banner-heading {
+        font-size: 14.5px !important;
+        line-height: 1.3 !important;
+    }
+    .login-banner-text {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+    }
+    .login-banner-btn {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 12px 16px !important;
+        font-size: 13.5px !important;
+    }
+
+    /* 3. Subheader */
+    .review-subheader-row {
+        margin-bottom: 12px !important;
+        width: 100% !important;
+        padding: 0 2px !important;
+    }
+    .review-subheader-title {
+        font-size: 16.5px !important;
+    }
+    .back-to-search-btn {
+        font-size: 12.5px !important;
+        padding: 5px 8px !important;
+        white-space: nowrap !important;
+    }
+
+    /* 4. Flight Summary Main Card */
+    .flight-summary-main-card {
+        padding: 14px 12px !important;
+        border-radius: 12px !important;
+        margin-bottom: 16px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+    .flight-card-top-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        padding-bottom: 12px !important;
+        margin-bottom: 14px !important;
+        width: 100% !important;
+    }
+    .flight-airline-info {
+        width: 100% !important;
+        gap: 10px !important;
+    }
+    .flight-airline-info h3 {
+        font-size: 16px !important;
+        line-height: 1.3 !important;
+    }
+    .flight-badges-group {
+        width: 100% !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-wrap: wrap !important;
+        text-align: left !important;
+    }
+    .flight-badges-group span,
+    .flight-badges-group a {
+        font-size: 11px !important;
+        padding: 4px 8px !important;
+    }
+    .flight-badges-group button {
+        margin-left: auto !important;
+    }
+    
+    /* 5. Flight Timing & Sector Grid (Guaranteed Full Visibility of Departure & Arrival) */
+    .flight-timing-sector-grid {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 12px 8px !important;
+        margin-bottom: 14px !important;
+        margin-top: 10px !important;
+        gap: 2px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        border-radius: 8px !important;
+    }
+    .flight-sector-col.dep-col {
+        max-width: 37% !important;
+        min-width: 0 !important;
+        flex: 1 1 37% !important;
+        overflow: hidden !important;
+        text-align: left !important;
+    }
+    .flight-sector-col.arr-col,
+    .flight-sector-col.arr-col.connecting-arr-col {
+        max-width: 37% !important;
+        min-width: 0 !important;
+        flex: 1 1 37% !important;
+        overflow: hidden !important;
+        text-align: right !important;
+    }
+    .flight-sector-middle {
+        flex: 0 0 66px !important;
+        min-width: 58px !important;
+        max-width: 72px !important;
+        margin: 0 2px !important;
+        text-align: center !important;
+    }
+    .sector-time {
+        font-size: 19px !important;
+        font-weight: 900 !important;
+        line-height: 1.1 !important;
+    }
+    .sector-code {
+        font-size: 13.5px !important;
+        font-weight: 800 !important;
+        margin-top: 2px !important;
+    }
+    .sector-airport {
+        font-size: 11px !important;
+        max-width: 100% !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        display: block !important;
+        margin-top: 2px !important;
+    }
+    .sector-terminal {
+        font-size: 10px !important;
+        padding: 2px 5px !important;
+        margin-top: 3px !important;
+        white-space: nowrap !important;
+        display: inline-block !important;
+    }
+    .sector-duration {
+        font-size: 10.5px !important;
+        font-weight: 700 !important;
+        white-space: nowrap !important;
+        display: block !important;
+        margin-bottom: 4px !important;
+    }
+    .sector-line {
+        margin: 5px 0 !important;
+    }
+    .sector-plane-icon {
+        font-size: 11px !important;
+        top: -6px !important;
+    }
+    .sector-stop-badge {
+        font-size: 8.5px !important;
+        padding: 2px 5px !important;
+        white-space: nowrap !important;
+        letter-spacing: -0.2px !important;
+        display: inline-block !important;
+    }
+
+    /* Connecting Flights: Layover Banner */
+    .layover-plane-banner {
+        padding: 8px 10px !important;
+        font-size: 11.5px !important;
+        margin: 12px 0 !important;
+        line-height: 1.4 !important;
+        text-align: left !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+    }
+
+    /* 6. More Fare Options Horizontal Scroll */
+    #moreFareOptionsSection {
+        padding: 14px 12px !important;
+        border-radius: 12px !important;
+        margin-bottom: 16px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+    .fare-route-tabs-nav {
+        display: flex !important;
+        gap: 8px !important;
+        margin-bottom: 14px !important;
+        width: 100% !important;
+    }
+    .fare-route-tab {
+        flex: 1 1 calc(50% - 4px) !important;
+        min-width: 130px !important;
+        padding: 8px 10px !important;
+        box-sizing: border-box !important;
+    }
+    .fare-route-tab .tab-title {
+        font-size: 12.5px !important;
+    }
+    .fare-scroll-hint {
+        display: flex !important;
+    }
+    .fare-tiers-cards-track {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scroll-snap-type: x mandatory;
+        gap: 14px !important;
+        padding: 6px 4px 16px 4px !important;
+        margin: 0 -4px !important;
+        width: calc(100% + 8px) !important;
+        max-width: calc(100% + 8px) !important;
+    }
+    .fare-tier-card {
+        flex: 0 0 260px !important;
+        min-width: 260px !important;
+        max-width: 275px !important;
+        scroll-snap-align: start;
+        box-sizing: border-box !important;
+    }
+    .fare-tiers-cards-track::-webkit-scrollbar {
+        height: 5px;
+    }
+    .fare-tiers-cards-track::-webkit-scrollbar-track {
+        background: #e2e8f0;
+        border-radius: 4px;
+    }
+    .fare-tiers-cards-track::-webkit-scrollbar-thumb {
+        background: #0284c7;
+        border-radius: 4px;
+    }
+
+    /* 7. Cancellation & Date Change Policy Table */
+    .cancellation-policy-box {
+        padding: 12px 10px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .cancellation-policy-box table {
+        min-width: 380px !important;
+        width: 100% !important;
+    }
+
+    /* 8. Safety & Flexibility Cards */
+    .safety-flexibility-box {
+        padding: 14px 12px !important;
+        border-radius: 12px !important;
+        margin-bottom: 16px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+    .safety-card {
+        padding: 12px 10px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .safety-card label {
+        width: 100% !important;
+    }
+    .safety-card > div:last-child {
+        text-align: left !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding-top: 8px !important;
+        border-top: 1px dashed #e2e8f0 !important;
+        min-width: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 9. Traveller Details (Passenger Form) */
+    .passenger-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 14px !important;
+    }
+    .pax-card-header {
+        padding: 10px 12px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .pax-card-intl > div[id^="paxBody_"] {
+        padding: 14px 12px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .pax-grid-4, .pax-grid-passport {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .pax-field-input {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 10. Contact Info Card */
+    .contact-info-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .contact-info-card > div:last-child {
+        padding: 14px 12px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 11. Continue to Add-on Services Button */
+    #continueToAddonsBtn {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 14px 20px !important;
+        font-size: 15.5px !important;
+        border-radius: 8px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .flight-review-page-wrap .container {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+    .flight-summary-main-card,
+    #moreFareOptionsSection,
+    .safety-flexibility-box,
+    .passenger-card,
+    .contact-info-card,
+    .f-fare-details-box {
+        padding: 12px 10px !important;
+    }
+    .flight-sector-col.dep-col,
+    .flight-sector-col.arr-col {
+        max-width: 36% !important;
+        flex: 1 1 36% !important;
+    }
+    .flight-sector-middle {
+        flex: 0 0 62px !important;
+        min-width: 54px !important;
+    }
+    .sector-time {
+        font-size: 17px !important;
+    }
+    .sector-code {
+        font-size: 13px !important;
+    }
+    .sector-stop-badge {
+        font-size: 8px !important;
+        padding: 1px 4px !important;
+    }
+    .fare-tier-card {
+        flex: 0 0 250px !important;
+        min-width: 250px !important;
+        padding: 16px 14px !important;
     }
 }
 </style>
