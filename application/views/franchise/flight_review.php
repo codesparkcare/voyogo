@@ -3405,38 +3405,13 @@ html, body {
         text-overflow: ellipsis !important;
     }
     
-    /* 2. Franchise Store Partner & Agent Authenticated Banner */
-    .flight-login-banner-box,
-    .franchise-agent-banner {
-        padding: 12px 14px !important;
+    /* 2. Login Gate Banner */
+    .flight-login-banner-box {
+        padding: 14px 12px !important;
         border-radius: 12px !important;
         margin-bottom: 16px !important;
-        gap: 12px !important;
+        gap: 14px !important;
         width: 100% !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
-        box-sizing: border-box !important;
-    }
-    .franchise-agent-banner .login-banner-info {
-        gap: 12px !important;
-        width: 100% !important;
-    }
-    .franchise-agent-banner .login-banner-btn {
-        width: 100% !important;
-        justify-content: center !important;
-        padding: 8px 14px !important;
-        font-size: 12px !important;
-        text-align: center !important;
-        box-sizing: border-box !important;
-    }
-    .hold-booking-banner {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 8px !important;
-        padding: 10px 12px !important;
-        font-size: 12px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
     }
     .login-banner-info {
         gap: 12px !important;

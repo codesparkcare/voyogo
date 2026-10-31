@@ -223,8 +223,8 @@ uasort($connectingAirportsList, function($a, $b) {
 
 <div style="margin-bottom: 24px;">
     <!-- Top Search Header Box (Parity with customer flight results) -->
-    <div class="f-summary-card" style="background: linear-gradient(135deg, #09204b 0%, #0d3470 100%); border-radius: 14px; padding: 18px 24px; color: #ffffff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 16px rgba(9, 32, 75, 0.15); flex-wrap: wrap; gap: 16px;">
-        <div class="f-summary-info" style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+    <div style="background: linear-gradient(135deg, #09204b 0%, #0d3470 100%); border-radius: 14px; padding: 18px 24px; color: #ffffff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 16px rgba(9, 32, 75, 0.15); flex-wrap: wrap; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
             <!-- From -->
             <div>
                 <span style="font-size: 11px; text-transform: uppercase; color: #93c5fd; font-weight: 700; display: block;">From</span>
@@ -243,7 +243,7 @@ uasort($connectingAirportsList, function($a, $b) {
                 <span style="font-size: 12px; color: #cbd5e1; display: block;"><?php echo htmlspecialchars($destCode); ?>, Airport</span>
             </div>
 
-            <div class="f-summary-divider" style="height: 32px; width: 1px; background: rgba(255,255,255,0.2);"></div>
+            <div style="height: 32px; width: 1px; background: rgba(255,255,255,0.2);"></div>
 
             <!-- Departure Date -->
             <div>
@@ -254,7 +254,7 @@ uasort($connectingAirportsList, function($a, $b) {
 
             <!-- Return Date if Round Trip -->
             <?php if ($is_roundtrip): ?>
-            <div class="f-summary-divider" style="height: 32px; width: 1px; background: rgba(255,255,255,0.2);"></div>
+            <div style="height: 32px; width: 1px; background: rgba(255,255,255,0.2);"></div>
             <div>
                 <span style="font-size: 11px; text-transform: uppercase; color: #93c5fd; font-weight: 700; display: block;">Return</span>
                 <strong style="font-size: 16px; font-weight: 700; color: #78B722;"><?php echo date('d M\'y', strtotime($returnDate)); ?></strong>
@@ -262,7 +262,7 @@ uasort($connectingAirportsList, function($a, $b) {
             </div>
             <?php endif; ?>
 
-            <div class="f-summary-divider" style="height: 32px; width: 1px; background: rgba(255,255,255,0.2);"></div>
+            <div style="height: 32px; width: 1px; background: rgba(255,255,255,0.2);"></div>
 
             <!-- Pax & Class -->
             <div>
@@ -283,35 +283,17 @@ uasort($connectingAirportsList, function($a, $b) {
 <!-- ========================================================================= -->
 <!-- MAIN LAYOUT: SIDEBAR FILTERS (EXACT MATCH SCREENSHOT 1) + RESULTS AREA    -->
 <!-- ========================================================================= -->
-<!-- Mobile Filter Bar Trigger (Visible only on mobile <= 991px) -->
-<div class="f-mobile-filter-bar-wrap">
-    <button type="button" class="btn-f-mobile-filter-trigger" id="btnMobileFilterTrigger" onclick="toggleMobileFilters(true);">
-        <i class="fa-solid fa-sliders"></i> <span>Filters &amp; Sort</span>
-    </button>
-</div>
-<div class="f-mobile-filter-backdrop" id="mobileFilterBackdrop" onclick="toggleMobileFilters(false);"></div>
-
 <div class="flight-results-layout" style="display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start;">
 
     <!-- Left Interactive Filter Sidebar (Screenshot 1 Exact Match) -->
     <aside class="flight-filters-sidebar">
-        <!-- Sidebar Header: Desktop Card Style / Mobile Drawer Style -->
+        <!-- Sidebar Header -->
         <div class="filter-header-row">
-            <h3 class="filter-main-title desktop-filter-title">
+            <h3 class="filter-main-title">
                 <i class="fa-solid fa-sliders" style="color: #0d3470;"></i> Filters
             </h3>
-            <div class="mobile-filter-drawer-title">
-                <i class="fa-solid fa-sliders"></i> <span>Filters &amp; Sort</span>
-            </div>
-            <div class="filters-header-actions">
-                <span onclick="resetAllFilters();" class="filter-reset-btn"><i class="fa-solid fa-rotate-left"></i> Reset All</span>
-                <button type="button" class="mobile-filter-close-btn" onclick="toggleMobileFilters(false);" aria-label="Close filters">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
+            <span onclick="resetAllFilters();" class="filter-reset-btn">Reset All</span>
         </div>
-
-        <div class="filters-sidebar-content">
 
         <!-- 1. Stops (Screenshot 1: Non Stop, 1, 1+) -->
         <div class="filter-section">
@@ -466,32 +448,20 @@ uasort($connectingAirportsList, function($a, $b) {
             </div>
             <div style="font-size: 11px; color: #15803d; margin-top: 4px;">Direct Store Float Settlement</div>
         </div>
-
-        </div><!-- /.filters-sidebar-content -->
-
-        <!-- Sticky Bottom Footer in Mobile Drawer -->
-        <div class="mobile-filter-drawer-footer">
-            <button type="button" class="drawer-footer-reset-btn" onclick="resetAllFilters();">
-                <i class="fa-solid fa-rotate-left"></i> Reset All
-            </button>
-            <button type="button" class="drawer-footer-apply-btn" onclick="toggleMobileFilters(false);">
-                Apply Filters
-            </button>
-        </div>
     </aside>
 
     <!-- Right Results Area -->
     <div>
         <!-- Sorting & Results Summary Bar -->
-        <div class="f-results-top-bar" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
-            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
                 <strong style="font-size: 15px; color: #0f172a;" id="resultsCountText">Showing <?php echo count($groupedOnward); ?> Flights (<?php echo $totalFaresCount; ?> Fares found)</strong>
                 <span style="background: #e0f2fe; color: #0369a1; font-size: 11.5px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">Live Benzy API Inventory</span>
             </div>
 
             <!-- Sorting Tabs matching voyogos.com/flight -->
-            <div class="f-sort-wrap" style="display: flex; gap: 8px; align-items: center;">
-                <span class="f-sort-label" style="font-size: 12px; color: #64748b; font-weight: 600;">Sort By:</span>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="font-size: 12px; color: #64748b; font-weight: 600;">Sort By:</span>
                 <div class="f-sort-tab active" onclick="sortFlights('cheapest', this)">
                     <i class="fa-solid fa-arrow-down-1-9"></i> CHEAPEST
                 </div>
@@ -508,7 +478,7 @@ uasort($connectingAirportsList, function($a, $b) {
         <!-- ================================================================ -->
         <!-- ROUND TRIP DUAL SECTOR LAYOUT (Onward Left + Return Right)       -->
         <!-- ================================================================ -->
-        <div class="f-roundtrip-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 80px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 80px;">
             
             <!-- 1. Onward Flights Column -->
             <div>
@@ -695,9 +665,9 @@ uasort($connectingAirportsList, function($a, $b) {
         </div>
 
         <!-- Sticky Bottom Action Bar for Round Trip (matching voyogos.com/flight) -->
-        <div id="roundTripStickyBar" class="f-rt-sticky-bar" style="position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 2px solid #78B722; box-shadow: 0 -8px 30px rgba(0,0,0,0.12); z-index: 9999; padding: 14px 24px;">
-            <div class="f-rt-sticky-inner" style="max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
-                <div class="f-rt-flight-info" style="display: flex; gap: 30px; align-items: center;">
+        <div id="roundTripStickyBar" style="position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 2px solid #78B722; box-shadow: 0 -8px 30px rgba(0,0,0,0.12); z-index: 9999; padding: 14px 24px;">
+            <div style="max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 30px; align-items: center;">
                     <!-- Onward Info -->
                     <div>
                         <span style="background: #e8f5e9; color: #2e7d32; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px;">OUTBOUND</span>
@@ -713,7 +683,7 @@ uasort($connectingAirportsList, function($a, $b) {
                     </div>
                 </div>
 
-                <div class="f-rt-price-cta" style="display: flex; align-items: center; gap: 24px;">
+                <div style="display: flex; align-items: center; gap: 24px;">
                     <div style="text-align: right;">
                         <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total B2B Net Fare</span>
                         <strong style="font-size: 24px; color: #09204b; display: block; line-height: 1;" id="barTotalPrice">₹ 0</strong>
@@ -805,10 +775,10 @@ uasort($connectingAirportsList, function($a, $b) {
                  data-via="<?php echo htmlspecialchars($viaAirport); ?>">
                 
                 <!-- 1. Akbar Travels Parity Flight Schedule Header -->
-                <div class="f-group-header">
+                <div class="f-group-header" style="padding: 18px 24px; border-bottom: 1px solid #f1f5f9; display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: center; background: #ffffff;">
                     
                     <!-- Airline Block -->
-                    <div class="f-airline-info">
+                    <div style="display: flex; align-items: center; gap: 14px;">
                         <img src="<?php echo htmlspecialchars($g['airline_logo']); ?>" alt="<?php echo htmlspecialchars($g['airline_name']); ?>" style="width: 40px; height: 40px; object-fit: contain;">
                         <div>
                             <strong style="font-size: 15px; color: #0f172a; display: block; font-weight: 800;"><?php echo htmlspecialchars($g['airline_name']); ?></strong>
@@ -817,9 +787,9 @@ uasort($connectingAirportsList, function($a, $b) {
                     </div>
 
                     <!-- Timings & Route Schedule (Akbar Travels layout) -->
-                    <div class="f-route-schedule">
+                    <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px;">
                         <!-- Departure Info -->
-                        <div class="f-dep-info">
+                        <div style="text-align: left;">
                             <div style="display: flex; align-items: baseline; gap: 8px;">
                                 <strong style="font-size: 22px; color: #0f172a; font-weight: 800; line-height: 1;"><?php echo htmlspecialchars($g['departure_time']); ?></strong>
                                 <span style="font-size: 11.5px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($g['departure_date']); ?></span>
@@ -830,7 +800,7 @@ uasort($connectingAirportsList, function($a, $b) {
                         </div>
 
                         <!-- Duration & Route Path -->
-                        <div class="f-dur-info">
+                        <div style="display: flex; flex-direction: column; align-items: center; min-width: 130px;">
                             <span style="font-size: 11.5px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($g['duration']); ?></span>
                             <div style="width: 100%; height: 2px; background: #cbd5e1; position: relative; margin: 6px 0;">
                                 <i class="fa-solid fa-plane" style="position: absolute; top: -6px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #78B722; background: #ffffff; padding: 0 4px;"></i>
@@ -841,8 +811,8 @@ uasort($connectingAirportsList, function($a, $b) {
                         </div>
 
                         <!-- Arrival Info -->
-                        <div class="f-arr-info">
-                            <div class="f-arr-time-row" style="display: flex; align-items: baseline; justify-content: flex-end; gap: 8px;">
+                        <div style="text-align: right;">
+                            <div style="display: flex; align-items: baseline; justify-content: flex-end; gap: 8px;">
                                 <strong style="font-size: 22px; color: #0f172a; font-weight: 800; line-height: 1;"><?php echo htmlspecialchars($g['arrival_time']); ?></strong>
                                 <span style="font-size: 11.5px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($g['arrival_date']); ?></span>
                                 <?php if (!empty($g['is_next_day'])): ?>
@@ -874,100 +844,95 @@ uasort($connectingAirportsList, function($a, $b) {
                     ?>
                     <div class="f-fare-row <?php echo $isExtra ? 'f-extra-fare f-extra-fare-' . $gIdx : ''; ?>" 
                          id="<?php echo $fareRowId; ?>"
-                         style="<?php echo $isExtra ? 'display: none;' : ''; ?> background: <?php echo ($fIdx % 2 === 0) ? '#ffffff' : '#fcfdfe'; ?>;"
+                         style="<?php echo $isExtra ? 'display: none;' : ''; ?> padding: 14px 24px; border-top: 1px solid #f1f5f9; background: <?php echo ($fIdx % 2 === 0) ? '#ffffff' : '#fcfdfe'; ?>; display: grid; grid-template-columns: 210px 140px 180px 1fr 180px; gap: 16px; align-items: center;"
                          data-original-price="<?php echo $fGross; ?>"
                          data-net-fare="<?php echo $fNet; ?>">
                         
-                        <div class="f-fare-meta-top">
-                            <!-- Fare Brand & Fare Code -->
-                            <div class="f-fare-brand-col">
-                                <strong style="font-size: 13.5px; color: #0f172a; display: block; font-weight: 800; letter-spacing: 0.3px;"><?php echo htmlspecialchars($fLabel); ?></strong>
-                                <span style="font-size: 11px; color: #94a3b8; font-weight: 600;">(<?php echo htmlspecialchars($fCode); ?>)</span>
-                            </div>
+                        <!-- Fare Brand & Fare Code -->
+                        <div>
+                            <strong style="font-size: 13.5px; color: #0f172a; display: block; font-weight: 800; letter-spacing: 0.3px;"><?php echo htmlspecialchars($fLabel); ?></strong>
+                            <span style="font-size: 11px; color: #94a3b8; font-weight: 600;">(<?php echo htmlspecialchars($fCode); ?>)</span>
+                        </div>
 
-                            <!-- Baggage Icons -->
-                            <div class="f-baggage-col" style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #475569;">
-                                <span title="Check-in Baggage" style="display: inline-flex; align-items: center; gap: 5px;">
-                                    <i class="fa-solid fa-suitcase" style="color: #64748b; font-size: 13px;"></i> <strong><?php echo htmlspecialchars($fBaggage); ?></strong>
-                                </span>
-                                <span title="Cabin Baggage" style="display: inline-flex; align-items: center; gap: 5px;">
-                                    <i class="fa-solid fa-briefcase" style="color: #64748b; font-size: 13px;"></i> 7 Kg
-                                </span>
+                        <!-- Baggage Icons -->
+                        <div style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #475569;">
+                            <span title="Check-in Baggage" style="display: inline-flex; align-items: center; gap: 5px;">
+                                <i class="fa-solid fa-suitcase" style="color: #64748b; font-size: 13px;"></i> <strong><?php echo htmlspecialchars($fBaggage); ?></strong>
+                            </span>
+                            <span title="Cabin Baggage" style="display: inline-flex; align-items: center; gap: 5px;">
+                                <i class="fa-solid fa-briefcase" style="color: #64748b; font-size: 13px;"></i> 7 Kg
+                            </span>
+                        </div>
+
+                        <!-- Details & Policy Links -->
+                        <div style="font-size: 11.5px;">
+                            <span style="color: #0284c7; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;" onclick="toggleDetailsDrawer('details_<?php echo $fareRowId; ?>')">
+                                <span>Flight Details</span> <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
+                            </span>
+                            <div style="margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+                                <?php if (!empty($f['refundable'])): ?>
+                                    <span style="color: #166534; font-weight: 700; font-size: 11px;">● Refundable</span>
+                                <?php else: ?>
+                                    <span style="color: #c2410c; font-weight: 700; font-size: 11px;">● Non-Refundable</span>
+                                <?php endif; ?>
+                                <?php if (!empty($f['hold']) && ($f['hold'] === true || $f['hold'] === '1' || $f['hold'] === 1 || $f['hold'] === 'true')): ?>
+                                    <span style="color: #0284c7; font-weight: 700; font-size: 11px;">● Hold</span>
+                                <?php endif; ?>
                             </div>
                         </div>
 
-                        <div class="f-fare-meta-sub">
-                            <!-- Details & Policy Links -->
-                            <div class="f-policy-col" style="font-size: 11.5px;">
-                                <span style="color: #0284c7; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;" onclick="toggleDetailsDrawer('details_<?php echo $fareRowId; ?>')">
-                                    <span>Flight Details</span> <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
-                                </span>
-                                <div style="margin-top: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                    <?php if (!empty($f['refundable'])): ?>
-                                        <span style="color: #166534; font-weight: 700; font-size: 11px;">● Refundable</span>
-                                    <?php else: ?>
-                                        <span style="color: #c2410c; font-weight: 700; font-size: 11px;">● Non-Refundable</span>
-                                    <?php endif; ?>
-                                    <?php if (!empty($f['hold']) && ($f['hold'] === true || $f['hold'] === '1' || $f['hold'] === 1 || $f['hold'] === 'true')): ?>
-                                        <span style="color: #0284c7; font-weight: 700; font-size: 11px;">● Hold</span>
-                                    <?php endif; ?>
+                        <!-- Price & Wholesale Net Fare -->
+                        <div style="text-align: right;">
+                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 5px;">
+                                <div style="font-size: 21px; font-weight: 800; color: #09204b; line-height: 1;">
+                                    ₹ <span class="fare-display-price card-display-price"><?php echo number_format($fGross); ?></span>
                                 </div>
+                                <span style="color: #94a3b8; font-size: 12px; cursor: pointer;" title="Fare Details">ⓘ</span>
+                            </div>
+                            <div style="font-size: 11.5px; color: #475569; font-weight: 700; margin-top: 3px;">
+                                Net Fare: ₹ <span class="fare-net-price card-net-fare"><?php echo number_format($fNet); ?></span>
                             </div>
                         </div>
 
-                        <div class="f-fare-action-row">
-                            <!-- Price & Wholesale Net Fare -->
-                            <div class="f-fare-price-block" style="text-align: right;">
-                                <div style="display: flex; align-items: center; justify-content: flex-end; gap: 5px;">
-                                    <div style="font-size: 21px; font-weight: 800; color: #09204b; line-height: 1;">
-                                        ₹ <span class="fare-display-price card-display-price"><?php echo number_format($fGross); ?></span>
-                                    </div>
-                                    <span style="color: #94a3b8; font-size: 12px; cursor: pointer;" title="Fare Details">ⓘ</span>
-                                </div>
-                                <div style="font-size: 11.5px; color: #475569; font-weight: 700; margin-top: 3px;">
-                                    Net Fare: ₹ <span class="fare-net-price card-net-fare"><?php echo number_format($fNet); ?></span>
-                                </div>
-                            </div>
+                        <!-- Action: Book Now Button -->
+                        <div style="text-align: right;">
+                            <form method="post" action="<?php echo site_url('franchise/flight_review'); ?>" class="flight-book-form">
+                                <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($f['id'] ?? ('FL_' . $gAlCode . '_' . rand(100, 999))); ?>">
+                                <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($g['airline_name']); ?>">
+                                <input type="hidden" name="flight_number" value="<?php echo htmlspecialchars($g['raw_flight_number']); ?>">
+                                <input type="hidden" name="airline_code" value="<?php echo htmlspecialchars($gAlCode); ?>">
+                                <input type="hidden" name="airline_logo" value="<?php echo htmlspecialchars($g['airline_logo']); ?>">
+                                <input type="hidden" name="from_code" value="<?php echo htmlspecialchars($g['from_code']); ?>">
+                                <input type="hidden" name="to_code" value="<?php echo htmlspecialchars($g['to_code']); ?>">
+                                <input type="hidden" name="departure_time" value="<?php echo htmlspecialchars($g['departure_time']); ?>">
+                                <input type="hidden" name="arrival_time" value="<?php echo htmlspecialchars($g['arrival_time']); ?>">
+                                <input type="hidden" name="duration" value="<?php echo htmlspecialchars($g['duration']); ?>">
+                                <input type="hidden" name="stops" value="<?php echo (int)$gStops; ?>">
+                                <input type="hidden" name="base_fare" value="<?php echo $fNet; ?>">
+                                <input type="hidden" name="net_fare" class="input-form-net-fare" value="<?php echo $fNet; ?>">
+                                <input type="hidden" name="markup_amount" class="input-form-markup-amount" value="0">
+                                <input type="hidden" name="markup_type" class="input-form-markup-type" value="pax">
+                                <input type="hidden" name="display_price" class="input-form-display-price" value="<?php echo $fGross; ?>">
+                                <input type="hidden" name="tax" value="<?php echo $fTax; ?>">
+                                <input type="hidden" name="price" class="input-form-price" value="<?php echo $fGross; ?>">
+                                <input type="hidden" name="total_fare" class="input-form-total-fare" value="<?php echo $fGross; ?>">
+                                <input type="hidden" name="adults" value="<?php echo (int)($search_query['adults'] ?? 1); ?>">
+                                <input type="hidden" name="children" value="<?php echo (int)($search_query['children'] ?? 0); ?>">
+                                <input type="hidden" name="infants" value="<?php echo (int)($search_query['infants'] ?? 0); ?>">
+                                <input type="hidden" name="refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
+                                <input type="hidden" name="is_refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
+                                <input type="hidden" name="hold" value="<?php echo (!empty($f['hold']) && ($f['hold'] === true || $f['hold'] === '1' || $f['hold'] === 1 || $f['hold'] === 'true')) ? '1' : '0'; ?>">
+                                <input type="hidden" name="hold_info" value="<?php echo htmlspecialchars($f['hold_info'] ?? ''); ?>">
+                                <input type="hidden" name="flight_index" value="<?php echo htmlspecialchars($f['flight_index'] ?? ($f['Index'] ?? '')); ?>">
+                                <input type="hidden" name="fare_class" value="<?php echo htmlspecialchars($f['fare_class'] ?? ($f['FareClass'] ?? '')); ?>">
+                                <input type="hidden" name="fbc" value="<?php echo htmlspecialchars($f['fbc'] ?? ($f['FBC'] ?? '')); ?>">
+                                <input type="hidden" name="fare_type" value="<?php echo htmlspecialchars($f['fare_type'] ?? ($f['FareType'] ?? '')); ?>">
+                                <input type="hidden" name="fare_name" value="<?php echo htmlspecialchars($fLabel); ?>">
+                                <input type="hidden" name="baggage" value="<?php echo htmlspecialchars($fBaggage); ?>">
 
-                            <!-- Action: Book Now Button -->
-                            <div class="f-fare-action-block" style="text-align: right;">
-                                <form method="post" action="<?php echo site_url('franchise/flight_review'); ?>" class="flight-book-form">
-                                    <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($f['id'] ?? ('FL_' . $gAlCode . '_' . rand(100, 999))); ?>">
-                                    <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($g['airline_name']); ?>">
-                                    <input type="hidden" name="flight_number" value="<?php echo htmlspecialchars($g['raw_flight_number']); ?>">
-                                    <input type="hidden" name="airline_code" value="<?php echo htmlspecialchars($gAlCode); ?>">
-                                    <input type="hidden" name="airline_logo" value="<?php echo htmlspecialchars($g['airline_logo']); ?>">
-                                    <input type="hidden" name="from_code" value="<?php echo htmlspecialchars($g['from_code']); ?>">
-                                    <input type="hidden" name="to_code" value="<?php echo htmlspecialchars($g['to_code']); ?>">
-                                    <input type="hidden" name="departure_time" value="<?php echo htmlspecialchars($g['departure_time']); ?>">
-                                    <input type="hidden" name="arrival_time" value="<?php echo htmlspecialchars($g['arrival_time']); ?>">
-                                    <input type="hidden" name="duration" value="<?php echo htmlspecialchars($g['duration']); ?>">
-                                    <input type="hidden" name="stops" value="<?php echo (int)$gStops; ?>">
-                                    <input type="hidden" name="base_fare" value="<?php echo $fNet; ?>">
-                                    <input type="hidden" name="net_fare" class="input-form-net-fare" value="<?php echo $fNet; ?>">
-                                    <input type="hidden" name="markup_amount" class="input-form-markup-amount" value="0">
-                                    <input type="hidden" name="markup_type" class="input-form-markup-type" value="pax">
-                                    <input type="hidden" name="display_price" class="input-form-display-price" value="<?php echo $fGross; ?>">
-                                    <input type="hidden" name="tax" value="<?php echo $fTax; ?>">
-                                    <input type="hidden" name="price" class="input-form-price" value="<?php echo $fGross; ?>">
-                                    <input type="hidden" name="total_fare" class="input-form-total-fare" value="<?php echo $fGross; ?>">
-                                    <input type="hidden" name="adults" value="<?php echo (int)($search_query['adults'] ?? 1); ?>">
-                                    <input type="hidden" name="children" value="<?php echo (int)($search_query['children'] ?? 0); ?>">
-                                    <input type="hidden" name="infants" value="<?php echo (int)($search_query['infants'] ?? 0); ?>">
-                                    <input type="hidden" name="refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
-                                    <input type="hidden" name="is_refundable" value="<?php echo !empty($f['refundable']) ? '1' : '0'; ?>">
-                                    <input type="hidden" name="hold" value="<?php echo (!empty($f['hold']) && ($f['hold'] === true || $f['hold'] === '1' || $f['hold'] === 1 || $f['hold'] === 'true')) ? '1' : '0'; ?>">
-                                    <input type="hidden" name="hold_info" value="<?php echo htmlspecialchars($f['hold_info'] ?? ''); ?>">
-                                    <input type="hidden" name="flight_index" value="<?php echo htmlspecialchars($f['flight_index'] ?? ($f['Index'] ?? '')); ?>">
-                                    <input type="hidden" name="fare_class" value="<?php echo htmlspecialchars($f['fare_class'] ?? ($f['FareClass'] ?? '')); ?>">
-                                    <input type="hidden" name="fbc" value="<?php echo htmlspecialchars($f['fbc'] ?? ($f['FBC'] ?? '')); ?>">
-                                    <input type="hidden" name="fare_type" value="<?php echo htmlspecialchars($f['fare_type'] ?? ($f['FareType'] ?? '')); ?>">
-                                    <input type="hidden" name="fare_name" value="<?php echo htmlspecialchars($fLabel); ?>">
-                                    <input type="hidden" name="baggage" value="<?php echo htmlspecialchars($fBaggage); ?>">
-
-                                    <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
-                                        <button type="submit" class="f-book-btn" style="background: #8ac33e; color: #ffffff; padding: 7px 16px; font-weight: 800; font-size: 13px; border-radius: 6px; border: none; cursor: pointer;">
-                                            Book Now
+                                <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
+                                    <button type="submit" class="f-book-btn" style="background: #8ac33e; color: #ffffff; padding: 7px 16px; font-weight: 800; font-size: 13px; border-radius: 6px; border: none; cursor: pointer;">
+                                        Book Now
                                     </button>
                                     <span style="display: inline-flex; flex-direction: column; gap: 3px; color: #64748b; font-size: 11px; cursor: pointer;">
                                         <i class="fa-regular fa-copy" title="Copy Fare"></i>
@@ -980,8 +945,8 @@ uasort($connectingAirportsList, function($a, $b) {
                     </div>
 
                     <!-- Hidden Collapsible Detail Drawer for this fare -->
-                    <div id="details_<?php echo $fareRowId; ?>" class="f-fare-details-drawer" style="display: none; padding: 14px 24px; background: #f8fafc; border-top: 1px dashed #cbd5e1; font-size: 12px; color: #334155;">
-                        <div class="f-fare-details-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div id="details_<?php echo $fareRowId; ?>" style="display: none; padding: 14px 24px; background: #f8fafc; border-top: 1px dashed #cbd5e1; font-size: 12px; color: #334155;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                             <div>
                                 <strong style="color: #09204b; display: block; margin-bottom: 4px;">Baggage Allowance</strong>
                                 <p style="margin: 0; color: #64748b;">Adult check-in baggage: <?php echo htmlspecialchars($fBaggage); ?> (1 piece) &bull; Hand baggage: 7 Kg. Excess baggage can be purchased at airline check-in.</p>
@@ -1754,27 +1719,6 @@ function toggleDetailsDrawer(drawerId) {
         el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
     }
 }
-
-function toggleMobileFilters(open) {
-    var sidebar = document.querySelector('.flight-filters-sidebar');
-    var backdrop = document.getElementById('mobileFilterBackdrop');
-    if (!sidebar) return;
-    if (open) {
-        sidebar.classList.add('mobile-open');
-        if (backdrop) backdrop.classList.add('mobile-open');
-        document.body.style.overflow = 'hidden';
-    } else {
-        sidebar.classList.remove('mobile-open');
-        if (backdrop) backdrop.classList.remove('mobile-open');
-        document.body.style.overflow = '';
-    }
-}
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' || e.key === 'Esc') {
-        toggleMobileFilters(false);
-    }
-});
 
 function toggleFlightFares(groupId, btn) {
     const extraRows = document.querySelectorAll('.f-extra-fare-' + groupId);
@@ -2719,58 +2663,10 @@ function msUpdateTravellerText() {
 </script>
 
 <style>
-/* ------------------------------------------------------------- */
-/* Mobile Filter Bar & Drawer defaults for Desktop               */
-/* ------------------------------------------------------------- */
-.f-mobile-filter-bar-wrap {
-    display: none;
-}
-.f-mobile-filter-backdrop {
-    display: none;
-}
-.mobile-filter-drawer-title {
-    display: none;
-}
-.mobile-filter-close-btn {
-    display: none;
-}
-.mobile-filter-drawer-footer {
-    display: none;
-}
-
-/* Flight item header & fare rows base styles */
-.f-group-header {
-    padding: 18px 24px;
-    border-bottom: 1px solid #f1f5f9;
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 20px;
-    align-items: center;
-    background: #ffffff;
-}
-.f-airline-info {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-.f-route-schedule {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 20px;
-}
-.f-fare-row {
-    padding: 14px 24px;
-    border-top: 1px solid #f1f5f9;
-    display: grid;
-    grid-template-columns: 210px 140px 180px 1fr 180px;
-    gap: 16px;
-    align-items: center;
-}
-.f-fare-meta-top,
-.f-fare-meta-sub,
-.f-fare-action-row {
-    display: contents;
+@media (max-width: 991px) {
+    .flight-results-layout {
+        grid-template-columns: 1fr !important;
+    }
 }
 /* ------------------------------------------------------------- */
 /* Akbar Travels Sidebar Styling (Exact Parity with Screenshot 1) */
@@ -3792,382 +3688,5 @@ function msUpdateTravellerText() {
 .rt-card.selected-rt-card {
     border-color: #78B722;
     background: #f0fdf4;
-}
-
-/* ============================================================= */
-/* Responsive Media Queries: Tablet & Mobile (<= 991px)          */
-/* ============================================================= */
-@media (max-width: 991px) {
-    .flight-results-layout {
-        grid-template-columns: 1fr !important;
-        gap: 14px !important;
-    }
-
-    /* Mobile Filter Bar Trigger (matches User flight flow) */
-    .f-mobile-filter-bar-wrap {
-        display: flex !important;
-        justify-content: flex-start;
-        margin-bottom: 14px;
-    }
-    .btn-f-mobile-filter-trigger {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: #ffffff;
-        border: 1.5px solid #0d3470;
-        padding: 8px 18px;
-        border-radius: 8px;
-        font-size: 13.5px;
-        font-weight: 700;
-        color: #0d3470;
-        cursor: pointer;
-        box-shadow: 0 2px 6px rgba(13, 52, 112, 0.08);
-        transition: all 0.2s ease;
-    }
-    .btn-f-mobile-filter-trigger:hover,
-    .btn-f-mobile-filter-trigger:active {
-        background: #f0f9ff;
-        border-color: #0d3470;
-    }
-
-    /* Mobile Filter Drawer Backdrop */
-    .f-mobile-filter-backdrop {
-        display: block !important;
-        position: fixed !important;
-        inset: 0 !important;
-        background: rgba(6, 22, 51, 0.65) !important;
-        backdrop-filter: blur(4px) !important;
-        -webkit-backdrop-filter: blur(4px) !important;
-        z-index: 100002 !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
-        pointer-events: none !important;
-        transition: opacity 0.3s ease, visibility 0.3s ease !important;
-    }
-    .f-mobile-filter-backdrop.mobile-open {
-        opacity: 1 !important;
-        visibility: visible !important;
-        pointer-events: auto !important;
-    }
-
-    /* Off-Canvas Filter Drawer (Slides from Right like User Flow) */
-    .flight-filters-sidebar {
-        display: flex !important;
-        flex-direction: column !important;
-        position: fixed !important;
-        top: 0 !important;
-        right: 0 !important;
-        left: auto !important;
-        bottom: 0 !important;
-        width: 330px !important;
-        max-width: 88vw !important;
-        height: 100vh !important;
-        height: 100dvh !important;
-        background: #ffffff !important;
-        z-index: 100005 !important;
-        transform: translateX(105%) !important;
-        transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s !important;
-        box-shadow: -8px 0 35px rgba(0, 0, 0, 0.35) !important;
-        border-radius: 0 !important;
-        border: none !important;
-        overflow: hidden !important;
-        padding: 0 !important;
-        visibility: hidden !important;
-        pointer-events: none !important;
-    }
-    .flight-filters-sidebar.mobile-open {
-        transform: translateX(0) !important;
-        visibility: visible !important;
-        pointer-events: auto !important;
-    }
-
-    .desktop-filter-title {
-        display: none !important;
-    }
-    .mobile-filter-drawer-title {
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-        color: #ffffff !important;
-        font-size: 16px !important;
-        font-weight: 800 !important;
-    }
-    .mobile-filter-drawer-title i {
-        color: #78B722 !important;
-    }
-    .filter-header-row {
-        background: #09204b !important;
-        color: #ffffff !important;
-        padding: 14px 18px !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
-        border-radius: 0 !important;
-        flex-shrink: 0 !important;
-    }
-    .filters-header-actions {
-        display: flex !important;
-        align-items: center !important;
-        gap: 10px !important;
-    }
-    .filter-reset-btn {
-        background: rgba(255, 255, 255, 0.12) !important;
-        border: 1px solid rgba(255, 255, 255, 0.24) !important;
-        color: #ffffff !important;
-        font-size: 11.5px !important;
-        font-weight: 700 !important;
-        padding: 4px 10px !important;
-        border-radius: 16px !important;
-        cursor: pointer !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 5px !important;
-        text-decoration: none !important;
-    }
-    .mobile-filter-close-btn {
-        width: 32px !important;
-        height: 32px !important;
-        border-radius: 50% !important;
-        background: rgba(255, 255, 255, 0.12) !important;
-        border: none !important;
-        color: #ffffff !important;
-        font-size: 15px !important;
-        cursor: pointer !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        transition: transform 0.2s, background 0.2s !important;
-        padding: 0 !important;
-    }
-    .mobile-filter-close-btn:hover {
-        background: rgba(255, 255, 255, 0.25) !important;
-        transform: rotate(90deg) !important;
-    }
-
-    .filters-sidebar-content {
-        flex: 1 !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        padding-bottom: 20px !important;
-    }
-    .mobile-filter-drawer-footer {
-        display: flex !important;
-        align-items: center !important;
-        gap: 10px !important;
-        padding: 12px 18px !important;
-        background: #ffffff !important;
-        border-top: 1px solid #e2e8f0 !important;
-        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06) !important;
-        flex-shrink: 0 !important;
-    }
-    .drawer-footer-reset-btn {
-        flex: 1 !important;
-        padding: 10px 14px !important;
-        background: #f1f5f9 !important;
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 8px !important;
-        font-size: 13px !important;
-        font-weight: 700 !important;
-        color: #475569 !important;
-        cursor: pointer !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 6px !important;
-    }
-    .drawer-footer-apply-btn {
-        flex: 2 !important;
-        padding: 10px 16px !important;
-        background: #78B722 !important;
-        border: none !important;
-        border-radius: 8px !important;
-        font-size: 13.5px !important;
-        font-weight: 800 !important;
-        color: #ffffff !important;
-        cursor: pointer !important;
-    }
-
-    /* Responsive filter section sub-elements */
-    .stops-grid-3 {
-        gap: 6px !important;
-    }
-    .stops-grid-3 .stop-box {
-        padding: 8px 4px !important;
-    }
-    .stops-grid-3 .stop-box .stop-name {
-        font-size: 11px !important;
-    }
-    .stops-grid-3 .stop-box .stop-price {
-        font-size: 11px !important;
-    }
-    .time-grid {
-        gap: 6px !important;
-    }
-    .time-box {
-        font-size: 11px !important;
-        padding: 8px 6px !important;
-        white-space: nowrap !important;
-    }
-}
-
-/* ============================================================= */
-/* Responsive Media Queries: Mobile Devices (<= 768px)           */
-/* ============================================================= */
-@media (max-width: 768px) {
-    /* Summary Card */
-    .f-summary-card {
-        padding: 14px 16px !important;
-        border-radius: 12px !important;
-    }
-    .f-summary-info {
-        gap: 12px !important;
-        width: 100% !important;
-        justify-content: space-between !important;
-    }
-    .f-summary-divider {
-        display: none !important;
-    }
-    .btn-modify-search {
-        width: 100% !important;
-        justify-content: center !important;
-        padding: 10px 16px !important;
-        font-size: 13px !important;
-        margin-top: 6px !important;
-    }
-
-    /* Results Top Bar */
-    .f-results-top-bar {
-        padding: 12px 14px !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 10px !important;
-    }
-    .f-sort-wrap {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 6px !important;
-        width: 100% !important;
-    }
-    .f-sort-label {
-        display: none !important;
-    }
-    .f-sort-tab {
-        justify-content: center !important;
-        padding: 8px 4px !important;
-        font-size: 11px !important;
-        text-align: center !important;
-    }
-
-    /* Flight Cards Layout */
-    .f-flight-item {
-        border-radius: 10px !important;
-    }
-    .f-group-header {
-        padding: 12px 14px !important;
-        grid-template-columns: 1fr !important;
-        gap: 10px !important;
-    }
-    .f-airline-info {
-        gap: 10px !important;
-    }
-    .f-airline-info img {
-        width: 32px !important;
-        height: 32px !important;
-    }
-    .f-airline-info strong {
-        font-size: 13.5px !important;
-    }
-    .f-route-schedule {
-        grid-template-columns: 1fr auto 1fr !important;
-        gap: 8px !important;
-        padding-top: 10px !important;
-        border-top: 1px dashed #e2e8f0 !important;
-    }
-    .f-dep-info strong,
-    .f-arr-info strong {
-        font-size: 18px !important;
-    }
-    .f-dur-info {
-        min-width: 90px !important;
-    }
-
-    /* Multi-Fare Rows on Mobile */
-    .f-fare-row {
-        padding: 12px 14px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 8px !important;
-    }
-    .f-fare-meta-top {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        width: 100% !important;
-    }
-    .f-fare-meta-sub {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        width: 100% !important;
-        font-size: 11px !important;
-    }
-    .f-fare-action-row {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        padding-top: 8px !important;
-        border-top: 1px solid #f1f5f9 !important;
-        width: 100% !important;
-    }
-    .f-fare-price-block {
-        text-align: left !important;
-    }
-    .f-fare-price-block .fare-display-price {
-        font-size: 20px !important;
-    }
-    .f-fare-action-block {
-        text-align: right !important;
-    }
-    .f-book-btn {
-        padding: 8px 18px !important;
-        font-size: 13px !important;
-    }
-
-    .f-fare-details-drawer {
-        padding: 12px 14px !important;
-    }
-    .f-fare-details-grid {
-        grid-template-columns: 1fr !important;
-        gap: 10px !important;
-    }
-
-    /* Roundtrip Columns & Sticky Bottom Bar */
-    .f-roundtrip-grid {
-        grid-template-columns: 1fr !important;
-        gap: 16px !important;
-        margin-bottom: 120px !important;
-    }
-    .f-rt-sticky-bar {
-        padding: 10px 14px !important;
-    }
-    .f-rt-sticky-inner {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 8px !important;
-    }
-    .f-rt-flight-info {
-        gap: 14px !important;
-        justify-content: space-between !important;
-    }
-    .f-rt-price-cta {
-        justify-content: space-between !important;
-        gap: 12px !important;
-    }
-    .f-rt-price-cta #barTotalPrice {
-        font-size: 20px !important;
-    }
-    .f-rt-price-cta button {
-        padding: 10px 18px !important;
-        font-size: 13.5px !important;
-    }
 }
 </style>
