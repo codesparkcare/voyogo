@@ -285,6 +285,9 @@ uasort($connectingAirportsList, function($a, $b) {
 <!-- ========================================================================= -->
 <div class="flight-results-layout" style="display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start;">
 
+    <!-- Filter Drawer Overlay Backdrop (Mobile Only) -->
+    <div id="filterDrawerBackdrop" class="f-filter-backdrop" onclick="toggleFilterDrawer(false)"></div>
+
     <!-- Left Interactive Filter Sidebar (Screenshot 1 Exact Match) -->
     <aside class="flight-filters-sidebar">
         <!-- Sidebar Header -->
@@ -292,7 +295,12 @@ uasort($connectingAirportsList, function($a, $b) {
             <h3 class="filter-main-title">
                 <i class="fa-solid fa-sliders" style="color: #0d3470;"></i> Filters
             </h3>
-            <span onclick="resetAllFilters();" class="filter-reset-btn">Reset All</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span onclick="resetAllFilters();" class="filter-reset-btn">Reset All</span>
+                <button type="button" class="f-filter-close-btn" onclick="toggleFilterDrawer(false)" title="Close Filters">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
         </div>
 
         <!-- 1. Stops (Screenshot 1: Non Stop, 1, 1+) -->
@@ -448,15 +456,27 @@ uasort($connectingAirportsList, function($a, $b) {
             </div>
             <div style="font-size: 11px; color: #15803d; margin-top: 4px;">Direct Store Float Settlement</div>
         </div>
+
+        <!-- Drawer Footer (Mobile Only) -->
+        <div class="f-filter-drawer-footer">
+            <button type="button" class="btn-apply-filters" onclick="toggleFilterDrawer(false)">
+                Apply Filters
+            </button>
+        </div>
     </aside>
 
     <!-- Right Results Area -->
     <div>
         <!-- Sorting & Results Summary Bar -->
         <div class="f-results-top-bar" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <strong style="font-size: 15px; color: #0f172a;" id="resultsCountText">Showing <?php echo count($groupedOnward); ?> Flights (<?php echo $totalFaresCount; ?> Fares found)</strong>
-                <span style="background: #e0f2fe; color: #0369a1; font-size: 11.5px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">Live Benzy API Inventory</span>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;" class="f-results-count-wrap">
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <strong style="font-size: 15px; color: #0f172a;" id="resultsCountText">Showing <?php echo count($groupedOnward); ?> Flights (<?php echo $totalFaresCount; ?> Fares found)</strong>
+                    <span style="background: #e0f2fe; color: #0369a1; font-size: 11.5px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">Live Benzy API Inventory</span>
+                </div>
+                <button type="button" class="btn-open-filter-drawer" onclick="toggleFilterDrawer(true)" title="Open Filters">
+                    <i class="fa-solid fa-sliders"></i> Filters
+                </button>
             </div>
 
             <!-- Sorting Tabs matching voyogos.com/flight -->
@@ -1719,6 +1739,28 @@ function toggleDetailsDrawer(drawerId) {
         el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
     }
 }
+
+function toggleFilterDrawer(open) {
+    const sidebar = document.querySelector('.flight-filters-sidebar');
+    const backdrop = document.getElementById('filterDrawerBackdrop');
+    if (!sidebar || !backdrop) return;
+
+    if (open) {
+        sidebar.classList.add('active');
+        backdrop.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    } else {
+        sidebar.classList.remove('active');
+        backdrop.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        toggleFilterDrawer(false);
+    }
+});
 
 function toggleFlightFares(groupId, btn) {
     const extraRows = document.querySelectorAll('.f-extra-fare-' + groupId);
@@ -3690,6 +3732,20 @@ function msUpdateTravellerText() {
     background: #f0fdf4;
 }
 
+/* Base desktop defaults for filter drawer elements */
+.f-filter-backdrop {
+    display: none;
+}
+.f-filter-close-btn {
+    display: none;
+}
+.f-filter-drawer-footer {
+    display: none;
+}
+.btn-open-filter-drawer {
+    display: none;
+}
+
 /* ============================================================== */
 /* MOBILE RESPONSIVE UI RULES (Viewport <= 991px and <= 768px)    */
 /* ============================================================== */
@@ -3702,6 +3758,140 @@ function msUpdateTravellerText() {
         grid-template-columns: 1fr !important;
         gap: 16px !important;
         margin-bottom: 120px !important;
+    }
+
+    /* Mobile Filter Button */
+    .btn-open-filter-drawer {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 6px;
+        background: #09204b;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        padding: 7px 14px;
+        font-size: 12.5px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(9, 32, 75, 0.2);
+        transition: all 0.15s;
+        white-space: nowrap;
+    }
+    .btn-open-filter-drawer:hover, .btn-open-filter-drawer:active {
+        background: #0d3470;
+        transform: scale(0.97);
+    }
+    .btn-open-filter-drawer i {
+        font-size: 12px;
+        color: #78B722;
+    }
+
+    /* Filter Drawer Overlay Backdrop */
+    .f-filter-backdrop {
+        display: block !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(6, 22, 51, 0.65);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        z-index: 99998;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+    }
+    .f-filter-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Right-side Off-Canvas Filter Drawer */
+    .flight-filters-sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 320px !important;
+        max-width: 86vw !important;
+        height: 100vh !important;
+        background: #ffffff !important;
+        z-index: 99999 !important;
+        box-shadow: -6px 0 25px rgba(0, 0, 0, 0.25) !important;
+        border: none !important;
+        border-radius: 16px 0 0 16px !important;
+        transform: translateX(105%) !important;
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        overflow-y: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        margin-bottom: 0 !important;
+    }
+    .flight-filters-sidebar.active {
+        transform: translateX(0) !important;
+    }
+
+    /* Drawer Header */
+    .filter-header-row {
+        position: sticky;
+        top: 0;
+        background: #ffffff;
+        z-index: 10;
+        border-bottom: 1.5px solid #e2e8f0;
+        padding: 14px 18px !important;
+    }
+    .f-filter-close-btn {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        border: none;
+        color: #64748b;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.15s;
+    }
+    .f-filter-close-btn:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+
+    /* Drawer Sections */
+    .flight-filters-sidebar .filter-section {
+        padding: 14px 18px !important;
+    }
+
+    /* Drawer Sticky Footer */
+    .f-filter-drawer-footer {
+        display: block !important;
+        position: sticky;
+        bottom: 0;
+        background: #ffffff;
+        border-top: 1.5px solid #e2e8f0;
+        padding: 12px 18px;
+        z-index: 10;
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+        margin-top: auto;
+    }
+    .btn-apply-filters {
+        width: 100%;
+        background: #78B722;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        padding: 11px 16px;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(120, 183, 34, 0.3);
+        transition: background 0.15s;
+    }
+    .btn-apply-filters:hover {
+        background: #6aa31e;
     }
 }
 
@@ -3736,16 +3926,10 @@ function msUpdateTravellerText() {
         font-size: 13px !important;
     }
 
-    /* Sidebar Filters */
-    .flight-filters-sidebar {
-        border-radius: 12px !important;
-        margin-bottom: 16px !important;
-    }
-    .filter-header-row {
-        padding: 12px 14px !important;
-    }
-    .filter-section {
-        padding: 12px 14px !important;
+    /* Results Top Bar Count & Filter Button Row */
+    .f-results-count-wrap {
+        width: 100% !important;
+        justify-content: space-between !important;
     }
 
     /* Results Count & Sort Tabs Bar */
