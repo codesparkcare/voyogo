@@ -99,6 +99,12 @@ if ($maxPrice == 0) $maxPrice = 60000;
     flex-wrap: wrap;
 }
 
+.modify-checkout-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
 .modify-destination {
     display: flex;
     align-items: center;
@@ -1592,30 +1598,157 @@ if ($maxPrice == 0) $maxPrice = 60000;
         box-sizing: border-box !important;
     }
 
+    /* Top Search Summary Bar - Screenshot 2 Mobile 2x2 Layout */
+    .top-modify-section {
+        position: relative !important;
+        top: 0 !important;
+        margin-bottom: 12px !important;
+        border-radius: 12px !important;
+        border: 1px solid var(--voyogo-border) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+        background: #ffffff !important;
+    }
+    .top-modify-card {
+        padding: 12px 14px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .modify-info-group {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px 8px !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+    .modify-destination {
+        min-width: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+    .dest-icon-circle {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 14px !important;
+        flex-shrink: 0 !important;
+    }
+    .dest-text-label {
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+    }
+    .dest-text-city {
+        font-size: 14px !important;
+        max-width: 125px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+    .modify-divider {
+        display: none !important;
+    }
+    .modify-date-col-checkin {
+        text-align: right !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        min-width: 0 !important;
+    }
+    .modify-date-col-checkin .modify-date-row {
+        justify-content: flex-end !important;
+    }
+    .modify-checkout-wrap {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        min-width: 0 !important;
+    }
+    .nights-duration-badge {
+        font-size: 10.5px !important;
+        padding: 2px 7px !important;
+        border-radius: 12px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+    .modify-date-col-checkout {
+        display: flex !important;
+        flex-direction: column !important;
+        min-width: 0 !important;
+    }
+    .modify-date-num {
+        font-size: 18px !important;
+        line-height: 1 !important;
+    }
+    .modify-date-sub {
+        font-size: 11px !important;
+        white-space: nowrap !important;
+    }
+    .modify-occupancy-col {
+        text-align: right !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        min-width: 0 !important;
+    }
+    .modify-occupancy-val {
+        font-size: 12.5px !important;
+        white-space: nowrap !important;
+    }
+    .modify-actions-group {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin-top: 2px !important;
+    }
+    .btn-share-trigger {
+        width: 40px !important;
+        height: 40px !important;
+        flex-shrink: 0 !important;
+        border-radius: 8px !important;
+    }
+    .btn-modify-search {
+        flex: 1 !important;
+        height: 40px !important;
+        justify-content: center !important;
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        border-radius: 8px !important;
+    }
+
     /* 1. Mobile Filter Bar Trigger (Screenshot 2 Match) */
     .mobile-filter-bar-wrap {
         display: flex !important;
         align-items: center !important;
-        justify-content: flex-start !important;
-        padding: 10px 16px !important;
-        background: #ffffff !important;
-        border-bottom: 1px solid #e2e8f0 !important;
-        margin-bottom: 12px !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 0 12px 0 !important;
+        background: transparent !important;
+        border: none !important;
     }
     .btn-mobile-filter-trigger {
+        flex: 1 1 50% !important;
+        min-width: 0 !important;
         background: #ffffff !important;
         border: 1.5px solid #003B95 !important;
         color: #003B95 !important;
-        padding: 8px 18px !important;
+        height: 42px !important;
+        padding: 0 12px !important;
         border-radius: 8px !important;
-        font-size: 13.5px !important;
+        font-size: 13px !important;
         font-weight: 800 !important;
         cursor: pointer !important;
         display: inline-flex !important;
         align-items: center !important;
+        justify-content: center !important;
         gap: 8px !important;
-        box-shadow: 0 2px 8px rgba(0, 59, 149, 0.08) !important;
+        box-shadow: 0 2px 6px rgba(0, 59, 149, 0.08) !important;
         transition: all 0.2s ease !important;
+        white-space: nowrap !important;
     }
     .btn-mobile-filter-trigger:hover,
     .btn-mobile-filter-trigger:active {
@@ -1624,6 +1757,31 @@ if ($maxPrice == 0) $maxPrice = 60000;
     }
     .btn-mobile-filter-trigger i {
         font-size: 14px !important;
+    }
+    .btn-mobile-map-trigger {
+        flex: 1 1 50% !important;
+        min-width: 0 !important;
+        background: #ffffff !important;
+        border: 1.5px solid #16a34a !important;
+        color: #16a34a !important;
+        height: 42px !important;
+        padding: 0 12px !important;
+        border-radius: 8px !important;
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        box-shadow: 0 2px 6px rgba(22, 163, 74, 0.08) !important;
+        transition: all 0.2s ease !important;
+        white-space: nowrap !important;
+    }
+    .btn-mobile-map-trigger:hover,
+    .btn-mobile-map-trigger:active {
+        background: #16a34a !important;
+        color: #ffffff !important;
     }
     .mobile-filter-badge {
         background: #ef4444 !important;
@@ -1905,34 +2063,204 @@ if ($maxPrice == 0) $maxPrice = 60000;
         background: #09204b !important;
     }
 
-    /* Hotel Card Mobile Responsiveness */
+    /* Hotel Card Mobile Responsiveness (Screenshot 2 Match) */
     .hotel-card {
         border-radius: 12px !important;
         margin-bottom: 16px !important;
+        overflow: hidden !important;
+        background: #ffffff !important;
+        border: 1px solid var(--voyogo-border) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
         width: 100% !important;
         box-sizing: border-box !important;
     }
     .hotel-card-main {
+        display: flex !important;
+        flex-direction: column !important;
         grid-template-columns: 1fr !important;
         gap: 0 !important;
     }
     .hotel-card-image-box {
         height: 200px !important;
         width: 100% !important;
+        position: relative !important;
         border-radius: 12px 12px 0 0 !important;
+    }
+    .hotel-card-gallery-badge {
+        position: absolute !important;
+        bottom: 10px !important;
+        left: 10px !important;
+        background: rgba(15, 23, 42, 0.75) !important;
+        color: #ffffff !important;
+        padding: 4px 10px !important;
+        border-radius: 6px !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        z-index: 2 !important;
     }
     .hotel-card-info-box {
         padding: 14px 14px 8px 14px !important;
     }
+    .hotel-card-title {
+        font-size: 16px !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        line-height: 1.3 !important;
+    }
+    .hotel-card-facilities-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px 12px !important;
+        margin: 8px 0 10px 0 !important;
+    }
+    .facility-item {
+        font-size: 12px !important;
+        color: #334155 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+    }
+    .hotel-card-tags-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        margin-bottom: 10px !important;
+    }
+    .tag-breakfast {
+        background: #f0f7ff !important;
+        color: #0284c7 !important;
+        border: 1px solid #bae6fd !important;
+        padding: 4px 10px !important;
+        border-radius: 6px !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+    }
+    .tag-cancellation {
+        background: #f0fdf4 !important;
+        color: #16a34a !important;
+        border: 1px solid #bbf7d0 !important;
+        padding: 4px 10px !important;
+        border-radius: 6px !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+    }
+
+    /* Pricing Box: Horizontal Row matching Screenshot 2 */
     .hotel-card-pricing-box {
-        align-items: flex-start !important;
-        text-align: left !important;
-        padding: 8px 14px 14px 14px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-end !important;
+        padding: 12px 14px 14px 14px !important;
         border-top: 1px dashed #e2e8f0 !important;
+        background: #fafbfc !important;
+        gap: 12px !important;
+        text-align: left !important;
+        box-sizing: border-box !important;
+    }
+    .hotel-card-pricing-box > div:first-child {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+        flex-shrink: 0 !important;
+    }
+    .rating-badge-group {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-direction: row !important;
+    }
+    .rating-text-meta {
+        text-align: left !important;
+    }
+    .rating-text-label {
+        font-size: 12px !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        line-height: 1.1 !important;
+    }
+    .rating-count-sub {
+        font-size: 11px !important;
+        color: #64748b !important;
+    }
+    .rating-score-box {
+        background: #16a34a !important;
+        color: #ffffff !important;
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        padding: 3px 8px !important;
+        border-radius: 6px !important;
+    }
+    .hotel-card-pricing-box > div:first-child > div:last-child {
+        display: flex !important;
+        justify-content: flex-start !important;
+        margin-top: 4px !important;
+    }
+    .btn-shortlist {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #475569 !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        padding: 5px 12px !important;
+        border-radius: 6px !important;
+        cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+    }
+    .hotel-card-pricing-box > div:last-child {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        text-align: right !important;
+        width: auto !important;
+        flex: 1 !important;
+    }
+    .hotel-price-block {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        text-align: right !important;
+        margin-bottom: 0 !important;
+    }
+    .price-strike {
+        font-size: 13px !important;
+        color: #ef4444 !important;
+        text-decoration: line-through !important;
+        font-weight: 700 !important;
+        display: block !important;
+    }
+    .price-final-number {
+        font-size: 24px !important;
+        font-weight: 900 !important;
+        color: #09204b !important;
+        line-height: 1.15 !important;
+    }
+    .price-tax-text {
+        font-size: 11px !important;
+        color: #64748b !important;
+        margin-top: 2px !important;
+    }
+    .price-savings-tag {
+        display: none !important;
+    }
+    .btn-select-room {
+        display: none !important;
     }
     .btn-view-rates {
-        width: 100% !important;
-        justify-content: center !important;
+        display: none !important;
     }
     .modify-grid-form {
         grid-template-columns: 1fr !important;
@@ -2045,7 +2373,7 @@ if ($maxPrice == 0) $maxPrice = 60000;
                 <div class="modify-divider"></div>
 
                 <!-- Check-In -->
-                <div class="modify-date-col">
+                <div class="modify-date-col modify-date-col-checkin">
                     <span class="modify-col-label">Check-In</span>
                     <div class="modify-date-row">
                         <span class="modify-date-num"><?php echo date('d', strtotime($qCheckin)); ?></span>
@@ -2053,17 +2381,17 @@ if ($maxPrice == 0) $maxPrice = 60000;
                     </div>
                 </div>
 
-                <!-- Duration Pill -->
-                <div class="nights-duration-badge">
-                    <?php echo $qNights; ?> Night<?php echo $qNights > 1 ? 's' : ''; ?>
-                </div>
-
-                <!-- Check-Out -->
-                <div class="modify-date-col">
-                    <span class="modify-col-label">Check-Out</span>
-                    <div class="modify-date-row">
-                        <span class="modify-date-num"><?php echo date('d', strtotime($qCheckout)); ?></span>
-                        <span class="modify-date-sub"><?php echo date("M'y , l", strtotime($qCheckout)); ?></span>
+                <!-- Check-Out with Duration Pill (Screenshot 2 Match) -->
+                <div class="modify-checkout-wrap">
+                    <div class="nights-duration-badge">
+                        <?php echo $qNights; ?> Night<?php echo $qNights > 1 ? 's' : ''; ?>
+                    </div>
+                    <div class="modify-date-col modify-date-col-checkout">
+                        <span class="modify-col-label">Check-Out</span>
+                        <div class="modify-date-row">
+                            <span class="modify-date-num"><?php echo date('d', strtotime($qCheckout)); ?></span>
+                            <span class="modify-date-sub"><?php echo date("M'y , l", strtotime($qCheckout)); ?></span>
+                        </div>
                     </div>
                 </div>
 
@@ -2615,12 +2943,12 @@ if ($maxPrice == 0) $maxPrice = 60000;
                                 </div>
 
                                 <div class="hotel-card-tags-row">
-                                    <?php if (!empty($h['free_breakfast'])): ?>
+                                    <?php if (!empty($h['free_breakfast']) || stripos(implode(',', $hAmenities), 'breakfast') !== false): ?>
                                     <span class="tag-breakfast">
                                         <i class="fa-solid fa-mug-hot"></i> Breakfast Available
                                     </span>
                                     <?php endif; ?>
-                                    <?php if (!empty($h['free_cancellation'])): ?>
+                                    <?php if (!empty($h['free_cancellation']) || stripos(implode(',', $hAmenities), 'cancellation') !== false || !isset($h['free_cancellation'])): ?>
                                     <span class="tag-cancellation">
                                         <i class="fa-solid fa-shield-halved"></i> Free cancellation
                                     </span>
@@ -2638,7 +2966,7 @@ if ($maxPrice == 0) $maxPrice = 60000;
 
                         <!-- Right Pricing & Select Room Action -->
                         <div class="hotel-card-pricing-box">
-                            <div>
+                            <div class="pricing-box-left-col">
                                 <div class="rating-badge-group">
                                     <div class="rating-text-meta">
                                         <div class="rating-text-label"><?php echo htmlspecialchars($hRatingTxt); ?></div>
@@ -2656,7 +2984,7 @@ if ($maxPrice == 0) $maxPrice = 60000;
                                 </div>
                             </div>
 
-                            <div style="width: 100%;">
+                            <div class="pricing-box-right-col" style="width: 100%;">
                                 <div class="hotel-price-block">
                                     <?php if ($hOrigPrice > $hPrice): ?>
                                     <span class="price-strike">₹ <?php echo number_format($hOrigPrice); ?></span>
