@@ -480,18 +480,13 @@
                     <th>NEED</th>
                     <th>45 DAYS REMINDER</th>
                     <th>30 DAYS REMINDER</th>
-                    <th>TICKET STATUS</th>
-                    <th>VISA STATUS</th>
-                    <th>HANDLING PERSON</th>
-                    <th>TRAVEL BAG</th>
-                    <th>TOUR MANAGER</th>
                     <th style="text-align: center; width: 90px;">ACTIONS</th>
                 </tr>
             </thead>
             <tbody id="gtTableBody">
                 <?php if (empty($tours)): ?>
                 <tr>
-                    <td colspan="16" style="text-align: center; padding: 48px; color: #94a3b8;">
+                    <td colspan="11" style="text-align: center; padding: 48px; color: #94a3b8;">
                         <i class="fa-solid fa-file-excel" style="font-size: 38px; color: #cbd5e1; margin-bottom: 12px; display: block;"></i>
                         <h4 style="color: #0f172a; margin: 0 0 6px 0;">No Group Tour Follow-Up Records Found</h4>
                         <p style="margin: 0 0 16px 0; font-size: 13px;">Click below to import your Excel sheet (.xls / .xlsx) or add a tour row manually.</p>
@@ -511,7 +506,7 @@
                 ?>
                 <!-- Month Divider Row Matching PDF -->
                 <tr class="month-header-row" data-month-header="<?php echo htmlspecialchars($currentMonth); ?>">
-                    <td colspan="16">
+                    <td colspan="11">
                         <i class="fa-regular fa-calendar-days" style="margin-right: 8px;"></i>
                         <?php echo htmlspecialchars($currentMonth); ?>
                     </td>
@@ -588,55 +583,6 @@
                         </span>
                         <?php else: ?>
                         <span style="color: #94a3b8;">-</span>
-                        <?php endif; ?>
-                    </td>
-
-                    <!-- 11. TICKET STATUS -->
-                    <td>
-                        <?php if (!empty($t['ticket_status']) && $t['ticket_status'] !== '-'): ?>
-                        <span class="badge-status ticket-taken">
-                            <i class="fa-solid fa-check" style="font-size: 9px; margin-right: 2px;"></i> <?php echo htmlspecialchars($t['ticket_status']); ?>
-                        </span>
-                        <?php else: ?>
-                        <span style="color: #94a3b8;">-</span>
-                        <?php endif; ?>
-                    </td>
-
-                    <!-- 12. VISA STATUS -->
-                    <td>
-                        <?php if (!empty($t['visa_status']) && $t['visa_status'] !== '-'): ?>
-                        <span class="badge-status visa-include">
-                            <i class="fa-solid fa-passport" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($t['visa_status']); ?>
-                        </span>
-                        <?php else: ?>
-                        <span style="color: #94a3b8;">-</span>
-                        <?php endif; ?>
-                    </td>
-
-                    <!-- 13. HANDLING PERSON -->
-                    <td>
-                        <?php if (!empty($t['handling_person']) && $t['handling_person'] !== '-'): ?>
-                        <span class="badge-person">
-                            <i class="fa-regular fa-user" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($t['handling_person']); ?>
-                        </span>
-                        <?php else: ?>
-                        <span style="color: #94a3b8;">-</span>
-                        <?php endif; ?>
-                    </td>
-
-                    <!-- 14. TRAVEL BAG -->
-                    <td>
-                        <span style="color: #64748b;"><?php echo htmlspecialchars($t['travel_bag'] ?: '-'); ?></span>
-                    </td>
-
-                    <!-- 15. TOUR MANAGER -->
-                    <td>
-                        <?php if (!empty($t['tour_manager']) && $t['tour_manager'] !== '-' && strtoupper($t['tour_manager']) !== 'NO TOUR MANAGER'): ?>
-                        <span class="badge-manager">
-                            <i class="fa-solid fa-user-tie" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($t['tour_manager']); ?>
-                        </span>
-                        <?php else: ?>
-                        <span style="color: #94a3b8; font-size: 11.5px;"><?php echo htmlspecialchars($t['tour_manager'] ?: '-'); ?></span>
                         <?php endif; ?>
                     </td>
 
@@ -1249,15 +1195,14 @@ function exportTableToExcel() {
     const rows = [];
     rows.push([
         'S. NO', 'DATE', 'TOUR CODE', 'COUNTRY NAME', 'TOUR AMOUNT',
-        'CONFIRMED', 'GRP. TKN', 'NEED', '45 DAYS REMINDER', '30 DAYS REMINDER',
-        'TICKET STATUS', 'VISA STATUS', 'HANDLING PERSON', 'TRAVEL BAG', 'TOUR MANAGER'
+        'CONFIRMED', 'GRP. TKN', 'NEED', '45 DAYS REMINDER', '30 DAYS REMINDER'
     ]);
 
     const dataRows = document.querySelectorAll('.tour-data-row');
     dataRows.forEach(tr => {
         if (tr.style.display === 'none') return;
         const tds = tr.querySelectorAll('td');
-        if (tds.length >= 15) {
+        if (tds.length >= 10) {
             rows.push([
                 tds[0].innerText.trim(),
                 tds[1].innerText.trim(),
@@ -1268,12 +1213,7 @@ function exportTableToExcel() {
                 tds[6].innerText.trim(),
                 tds[7].innerText.trim(),
                 tds[8].innerText.trim(),
-                tds[9].innerText.trim(),
-                tds[10].innerText.trim(),
-                tds[11].innerText.trim(),
-                tds[12].innerText.trim(),
-                tds[13].innerText.trim(),
-                tds[14].innerText.trim()
+                tds[9].innerText.trim()
             ]);
         }
     });
