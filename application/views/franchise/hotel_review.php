@@ -34,16 +34,183 @@ $sessionUserPhone = $store['phone'] ?? '9876543210';
 $sessionUserEmail = $store['email'] ?? 'booking@voyogo.com';
 $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
 ?>
-<div style="background-color: #f5f7fa; padding: 30px 0 60px 0;">
+<style>
+.hotel-review-page {
+    background-color: #f5f7fa;
+    padding: 30px 0 60px 0;
+}
+.hotel-review-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+.traveller-row {
+    display: grid;
+    grid-template-columns: 80px 100px 1fr 1fr;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.contact-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+.sidebar-sticky-wrap {
+    position: sticky;
+    top: 90px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.hotel-card-body-wrap {
+    padding: 20px 22px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.hotel-card-img {
+    width: 175px;
+    height: 115px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.hotel-dates-strip {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.hotel-dates-duration {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 110px;
+}
+.hotel-change-room-wrap {
+    margin-left: auto;
+}
+.payment-btn-wrap {
+    text-align: right;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 991px) {
+    .hotel-review-page {
+        padding: 20px 0 40px 0 !important;
+    }
+    .hotel-review-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    .sidebar-sticky-wrap {
+        position: static !important;
+        top: auto !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .payment-btn-wrap {
+        text-align: center !important;
+    }
+    #btnContinueToPayment {
+        width: 100% !important;
+        padding: 15px !important;
+        font-size: 16px !important;
+        justify-content: center !important;
+        display: block !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .review-header-box {
+        padding: 14px 16px !important;
+        gap: 12px !important;
+    }
+    .review-steps-list {
+        gap: 10px !important;
+        font-size: 12px !important;
+        flex-wrap: wrap;
+    }
+    .franchise-store-banner {
+        padding: 14px 16px !important;
+        gap: 12px !important;
+    }
+    .hotel-card-body-wrap {
+        padding: 16px !important;
+        gap: 16px !important;
+    }
+    .hotel-img-wrap {
+        width: 100% !important;
+    }
+    .hotel-card-img {
+        width: 100% !important;
+        height: 180px !important;
+        border-radius: 8px !important;
+    }
+    .hotel-dates-main-wrap {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+    .hotel-dates-strip {
+        gap: 12px !important;
+        justify-content: space-between !important;
+    }
+    .hotel-dates-duration {
+        min-width: 65px !important;
+        flex: 1 !important;
+    }
+    .hotel-change-room-wrap {
+        width: 100% !important;
+        text-align: right !important;
+        margin-top: 6px !important;
+    }
+    .traveller-row {
+        grid-template-columns: 80px 1fr !important;
+        gap: 10px !important;
+        margin-bottom: 16px !important;
+        padding-bottom: 14px !important;
+        border-bottom: 1px dashed #e2e8f0;
+    }
+    .traveller-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    .traveller-row > div:first-child {
+        grid-column: 1 / -1 !important;
+        font-weight: 700;
+        font-size: 13.5px !important;
+        color: #0f172a !important;
+    }
+    .traveller-row > div:nth-child(4) {
+        grid-column: 1 / -1 !important;
+    }
+    .contact-info-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+    .review-box-card {
+        padding: 16px !important;
+    }
+    .review-box-header {
+        padding: 14px 16px !important;
+    }
+}
+</style>
+<div class="hotel-review-page">
     <div class="container">
         
         <!-- Header Step Progress -->
-        <div style="background: #ffffff; padding: 18px 24px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <div class="review-header-box" style="background: #ffffff; padding: 18px 24px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
             <div>
                 <h2 style="font-family: var(--font-heading); font-size: 20px; color: #09204b; margin: 0;">Review Your Hotel Reservation</h2>
                 <p style="font-size: 13px; color: #64748b; margin: 4px 0 0 0;">Fill primary guest info to confirm your hotel booking</p>
             </div>
-            <div style="display: flex; gap: 20px; font-weight: 600; font-size: 14px;">
+            <div class="review-steps-list" style="display: flex; gap: 20px; font-weight: 600; font-size: 14px;">
                 <span style="color: #16a34a;"><i class="fa-solid fa-circle-check"></i> 1. Hotel Selected</span>
                 <span style="color: #0d3470;"><i class="fa-solid fa-circle-dot"></i> 2. Guest Information</span>
                 <span style="color: #94a3b8;"><i class="fa-regular fa-circle"></i> 3. Voucher Confirmation</span>
@@ -51,7 +218,7 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
         </div>
 
         <!-- Franchise Store B2B Partner Banner -->
-        <div style="background: linear-gradient(135deg, #09204b 0%, #0d3470 100%); color: #ffffff; border-radius: 12px; padding: 16px 24px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; box-shadow: 0 4px 15px rgba(9,32,75,0.1);">
+        <div class="franchise-store-banner" style="background: linear-gradient(135deg, #09204b 0%, #0d3470 100%); color: #ffffff; border-radius: 12px; padding: 16px 24px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; box-shadow: 0 4px 15px rgba(9,32,75,0.1);">
             <div style="display: flex; align-items: center; gap: 14px;">
                 <div style="width: 42px; height: 42px; border-radius: 50%; background: rgba(120, 183, 34, 0.2); color: #78B722; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; border: 1.5px solid #78B722;">
                     <i class="fa-solid fa-store"></i>
@@ -68,7 +235,7 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+        <div class="hotel-review-grid">
             
             <!-- Left Side Form -->
             <div>
@@ -110,15 +277,15 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
                     </div>
 
                     <!-- Card Body -->
-                    <div style="padding: 20px 22px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+                    <div class="hotel-card-body-wrap">
                         <!-- Hotel Image Thumbnail -->
-                        <div style="flex-shrink: 0;">
-                            <img src="<?php echo htmlspecialchars($hotel_image); ?>" alt="<?php echo htmlspecialchars($hotel_name); ?>" style="width: 175px; height: 115px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+                        <div class="hotel-img-wrap" style="flex-shrink: 0;">
+                            <img src="<?php echo htmlspecialchars($hotel_image); ?>" alt="<?php echo htmlspecialchars($hotel_name); ?>" class="hotel-card-img">
                         </div>
 
                         <!-- Dates & Duration Strip -->
-                        <div style="flex: 1; min-width: 280px;">
-                            <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                        <div class="hotel-dates-main-wrap" style="flex: 1; min-width: 280px;">
+                            <div class="hotel-dates-strip">
                                 <!-- Check-in -->
                                 <div>
                                     <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">CHECK-IN</div>
@@ -131,7 +298,7 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
                                 </div>
 
                                 <!-- Center Dashed Duration -->
-                                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 110px;">
+                                <div class="hotel-dates-duration">
                                     <div style="width: 100%; border-top: 2px dashed #cbd5e1; margin-bottom: 4px;"></div>
                                     <div style="font-size: 12px; font-weight: 700; color: #475569;"><?php echo $nights; ?> Night<?php echo $nights > 1 ? 's' : ''; ?></div>
                                 </div>
@@ -148,7 +315,7 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
                                 </div>
 
                                 <!-- Change Room Button -->
-                                <div style="margin-left: auto;">
+                                <div class="hotel-change-room-wrap">
                                     <a href="<?php echo $changeRoomUrl; ?>" style="color: #0284c7; font-size: 12.5px; font-weight: 800; text-transform: uppercase; text-decoration: underline; letter-spacing: 0.5px;">
                                         CHANGE ROOM
                                     </a>
@@ -238,7 +405,7 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
                     ?>
 
                     <!-- 1. Traveller Details Card (Akbar Travels Style) -->
-                    <div style="background: #ffffff; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
+                    <div class="review-box-card" style="background: #ffffff; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
                         <h3 style="font-family: var(--font-heading); font-size: 18px; color: #0d3470; margin-top: 0; margin-bottom: 12px; font-weight: 700;">
                             Traveller Details
                         </h3>
@@ -273,7 +440,7 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
                                     $paxNum = $a + 1;
                                     $isLead = ($rIdx === 0 && $a === 0);
                                 ?>
-                                <div class="traveller-row" style="display: grid; grid-template-columns: 80px 100px 1fr 1fr; gap: 12px; align-items: center; margin-bottom: 12px;">
+                                <div class="traveller-row">
                                     <div style="font-size: 13px; font-weight: 600; color: #475569;">
                                         Adult <?php echo $paxNum; ?>
                                     </div>
@@ -299,7 +466,7 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
                                         $cNum = $rAdults + $c + 1;
                                         $cAge = isset($rChildAges[$c]) && (int)$rChildAges[$c] > 0 ? (int)$rChildAges[$c] : (($c === 0) ? 7 : 3);
                                     ?>
-                                    <div class="traveller-row" style="display: grid; grid-template-columns: 80px 100px 1fr 1fr; gap: 12px; align-items: center; margin-bottom: 12px;">
+                                    <div class="traveller-row">
                                         <div style="font-size: 13px; font-weight: 600; color: #475569;">
                                             Child <?php echo $cNum; ?>
                                             <div style="font-size: 11px; color: #94a3b8; font-weight: 400;">Age: <?php echo $cAge; ?></div>
@@ -332,7 +499,7 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
                     </div>
 
                     <!-- 2. Contact Information Card (Akbar Travels Style) -->
-                    <div style="background: #ffffff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
+                    <div class="review-box-card" style="background: #ffffff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
                         <h3 style="font-family: var(--font-heading); font-size: 18px; color: #0d3470; margin-top: 0; margin-bottom: 6px; font-weight: 700;">
                             Contact information
                         </h3>
@@ -341,7 +508,7 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
                             Your ticket and hotels information will be sent here..
                         </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="contact-info-grid">
                             <!-- Phone with +91 Country Code -->
                             <div>
                                 <div style="display: flex;">
@@ -376,7 +543,7 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
                     </div>
 
                     <!-- 4. Essential Information Card (Exact Screenshot 1 Matching) -->
-                    <div style="background: #ffffff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
+                    <div class="review-box-card" style="background: #ffffff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
                         <h3 style="font-family: var(--font-heading); font-size: 18px; color: #0d3470; margin-top: 0; margin-bottom: 16px; font-weight: 700;">
                             Essential Information
                         </h3>
@@ -404,7 +571,7 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
                     </div>
 
                     <!-- Continue to Payment Button (Exact Screenshot 1 Matching) -->
-                    <div style="text-align: right; margin-bottom: 24px;">
+                    <div class="payment-btn-wrap">
                         <button type="submit" id="btnContinueToPayment" style="background: #ef4444; color: #ffffff; border: none; padding: 14px 42px; font-size: 15px; font-weight: 800; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35); transition: background 0.15s, transform 0.15s;">
                             CONTINUE TO PAYMENT
                         </button>
@@ -415,10 +582,10 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
 
             <!-- Right Side Price Breakdown (Exact Screenshot 5 Matching) -->
             <div>
-                <div style="position: sticky; top: 90px; display: flex; flex-direction: column; gap: 20px;">
+                <div class="sidebar-sticky-wrap">
                     
                     <!-- Fare Summary Card -->
-                    <div style="background: #ffffff; border-radius: 8px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); border: 1px solid #e2e8f0;">
+                    <div class="review-box-card" style="background: #ffffff; border-radius: 8px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); border: 1px solid #e2e8f0;">
                         <h3 style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 18px;">
                             Fare Summary
                         </h3>
@@ -478,7 +645,7 @@ $cleanPhone       = preg_replace('/^\+91/', '', $sessionUserPhone);
                     </div>
 
                     <!-- Promo Code Card (Exact Screenshot 5 Matching) -->
-                    <div style="background: #ffffff; border-radius: 8px; padding: 20px 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); border: 1px solid #e2e8f0;">
+                    <div class="review-box-card" style="background: #ffffff; border-radius: 8px; padding: 20px 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); border: 1px solid #e2e8f0;">
                         <h4 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 6px;">
                             Promo code
                         </h4>
