@@ -971,6 +971,18 @@ if ($maxPrice == 0) $maxPrice = 60000;
     background: #fafafa;
 }
 
+.pricing-content-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.pricing-action-wrap {
+    width: 100%;
+    margin-top: 10px;
+}
+
 .rating-badge-group {
     display: flex;
     align-items: center;
@@ -2154,25 +2166,34 @@ if ($maxPrice == 0) $maxPrice = 60000;
         gap: 6px !important;
     }
 
-    /* Pricing Box: Horizontal Row matching Screenshot 2 */
+    /* Pricing Box: Screenshot 2 Exact Mobile Match */
     .hotel-card-pricing-box {
         display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: flex-end !important;
-        padding: 12px 14px 14px 14px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 14px 14px 16px 14px !important;
         border-top: 1px dashed #e2e8f0 !important;
         background: #fafbfc !important;
         gap: 12px !important;
         text-align: left !important;
         box-sizing: border-box !important;
+        width: 100% !important;
     }
-    .hotel-card-pricing-box > div:first-child {
+    .pricing-content-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+        width: 100% !important;
+        gap: 12px !important;
+    }
+    .pricing-box-left-col {
         display: flex !important;
         flex-direction: column !important;
         align-items: flex-start !important;
         gap: 6px !important;
         flex-shrink: 0 !important;
+        width: auto !important;
     }
     .rating-badge-group {
         display: flex !important;
@@ -2201,11 +2222,6 @@ if ($maxPrice == 0) $maxPrice = 60000;
         padding: 3px 8px !important;
         border-radius: 6px !important;
     }
-    .hotel-card-pricing-box > div:first-child > div:last-child {
-        display: flex !important;
-        justify-content: flex-start !important;
-        margin-top: 4px !important;
-    }
     .btn-shortlist {
         background: #ffffff !important;
         border: 1px solid #cbd5e1 !important;
@@ -2219,8 +2235,9 @@ if ($maxPrice == 0) $maxPrice = 60000;
         align-items: center !important;
         gap: 6px !important;
         box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+        margin-top: 4px !important;
     }
-    .hotel-card-pricing-box > div:last-child {
+    .pricing-box-right-col {
         display: flex !important;
         flex-direction: column !important;
         align-items: flex-end !important;
@@ -2254,10 +2271,38 @@ if ($maxPrice == 0) $maxPrice = 60000;
         margin-top: 2px !important;
     }
     .price-savings-tag {
-        display: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: #16a34a !important;
+        margin-top: 6px !important;
+    }
+    .pricing-action-wrap {
+        width: 100% !important;
+        display: block !important;
+        margin-top: 4px !important;
     }
     .btn-select-room {
-        display: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 44px !important;
+        background: #c40021 !important;
+        color: #ffffff !important;
+        font-size: 14.5px !important;
+        font-weight: 800 !important;
+        border-radius: 8px !important;
+        text-decoration: none !important;
+        box-shadow: 0 3px 10px rgba(196, 0, 33, 0.22) !important;
+        transition: background 0.2s ease !important;
+    }
+    .btn-select-room:hover,
+    .btn-select-room:active {
+        background: #a6001c !important;
+        color: #ffffff !important;
     }
     .btn-view-rates {
         display: none !important;
@@ -2964,53 +3009,57 @@ if ($maxPrice == 0) $maxPrice = 60000;
                             </div>
                         </div>
 
-                        <!-- Right Pricing & Select Room Action -->
+                        <!-- Right Pricing & Select Room Action (Screenshot 2 Match) -->
                         <div class="hotel-card-pricing-box">
-                            <div class="pricing-box-left-col">
-                                <div class="rating-badge-group">
-                                    <div class="rating-text-meta">
-                                        <div class="rating-text-label"><?php echo htmlspecialchars($hRatingTxt); ?></div>
-                                        <div class="rating-count-sub"><?php echo $hReviews; ?> rating<?php echo $hReviews > 1 ? 's' : ''; ?></div>
+                            <div class="pricing-content-grid">
+                                <div class="pricing-box-left-col">
+                                    <div class="rating-badge-group">
+                                        <div class="rating-text-meta">
+                                            <div class="rating-text-label"><?php echo htmlspecialchars($hRatingTxt); ?></div>
+                                            <div class="rating-count-sub"><?php echo $hReviews; ?> rating<?php echo $hReviews > 1 ? 's' : ''; ?></div>
+                                        </div>
+                                        <div class="rating-score-box">
+                                            <?php echo number_format($hRating, 1); ?>
+                                        </div>
                                     </div>
-                                    <div class="rating-score-box">
-                                        <?php echo number_format($hRating, 1); ?>
+
+                                    <div style="display: flex; justify-content: flex-start; margin-top: 6px;">
+                                        <button type="button" class="btn-shortlist" onclick="event.stopPropagation(); toggleShortlist(this)">
+                                            <i class="fa-regular fa-heart"></i> Shortlist
+                                        </button>
                                     </div>
                                 </div>
 
-                                <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
-                                    <button type="button" class="btn-shortlist" onclick="event.stopPropagation(); toggleShortlist(this)">
-                                        <i class="fa-regular fa-heart"></i> Shortlist
-                                    </button>
+                                <div class="pricing-box-right-col">
+                                    <div class="hotel-price-block">
+                                        <?php if ($hOrigPrice > $hPrice): ?>
+                                        <span class="price-strike">₹ <?php echo number_format($hOrigPrice); ?></span>
+                                        <?php endif; ?>
+                                        <div class="price-final-number">₹ <?php echo number_format($hPrice); ?></div>
+                                        <div class="price-tax-text">+ ₹ <?php echo number_format($hTax); ?> Tax and Fees</div>
+                                        <?php if ($hSaved > 0): ?>
+                                        <div class="price-savings-tag">
+                                            You Saved ₹ <?php echo number_format($hSaved); ?> <i class="fa-solid fa-check"></i>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="pricing-box-right-col" style="width: 100%;">
-                                <div class="hotel-price-block">
-                                    <?php if ($hOrigPrice > $hPrice): ?>
-                                    <span class="price-strike">₹ <?php echo number_format($hOrigPrice); ?></span>
-                                    <?php endif; ?>
-                                    <div class="price-final-number">₹ <?php echo number_format($hPrice); ?></div>
-                                    <div class="price-tax-text">+ ₹ <?php echo number_format($hTax); ?> Tax and Fees</div>
-                                    <?php if ($hSaved > 0): ?>
-                                    <div class="price-savings-tag">
-                                        You Saved ₹ <?php echo number_format($hSaved); ?> <i class="fa-solid fa-check"></i>
-                                    </div>
-                                    <?php endif; ?>
-                                </div>
-
-                                <?php 
-                                $detailUrl = site_url('franchise/hotel_detail/' . urlencode($hId) . '?' . http_build_query(array(
-                                    'city'               => $qCity,
-                                    'checkin'            => $qCheckin,
-                                    'checkout'           => $qCheckout,
-                                    'rooms'              => $qRooms,
-                                    'adults'             => $qAdults,
-                                    'children'           => $qChildren,
-                                    'roomData'           => $qRoomData ?? '',
-                                    'search_id'          => $sId ?? '',
-                                    'search_tracing_key' => $sTrace ?? ''
-                                )));
-                                ?>
+                            <?php 
+                            $detailUrl = site_url('franchise/hotel_detail/' . urlencode($hId) . '?' . http_build_query(array(
+                                'city'               => $qCity,
+                                'checkin'            => $qCheckin,
+                                'checkout'           => $qCheckout,
+                                'rooms'              => $qRooms,
+                                'adults'             => $qAdults,
+                                'children'           => $qChildren,
+                                'roomData'           => $qRoomData ?? '',
+                                'search_id'          => $sId ?? '',
+                                'search_tracing_key' => $sTrace ?? ''
+                            )));
+                            ?>
+                            <div class="pricing-action-wrap">
                                 <a href="<?php echo $detailUrl; ?>" target="_blank" onclick="event.stopPropagation();" class="btn-select-room" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
                                     View Room
                                 </a>
