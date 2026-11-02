@@ -1344,8 +1344,8 @@ uasort($connectingAirportsList, function($a, $b) {
                 <input type="hidden" name="trip_type" id="ms_tripType" value="<?php echo !empty($is_roundtrip) ? 'roundtrip' : 'oneway'; ?>">
                 <input type="hidden" name="from_code" id="ms_from_code" value="<?php echo htmlspecialchars($origCode); ?>">
                 <input type="hidden" name="to_code" id="ms_to_code" value="<?php echo htmlspecialchars($destCode); ?>">
-                <input type="hidden" name="origin" id="ms_origin" value="<?php echo htmlspecialchars($origCode); ?>">
-                <input type="hidden" name="destination" id="ms_destination" value="<?php echo htmlspecialchars($destCode); ?>">
+                <input type="hidden" name="origin" id="ms_origin" value="<?php echo htmlspecialchars($fromCity); ?>">
+                <input type="hidden" name="destination" id="ms_destination" value="<?php echo htmlspecialchars($toCity); ?>">
 
                 <!-- 1. Standard Search Grid (One Way & Round Trip) -->
                 <div class="ms-form-grid" id="msStandardGrid">
@@ -1411,11 +1411,13 @@ uasort($connectingAirportsList, function($a, $b) {
                             <div class="ms-field-label">From</div>
                             <input type="text" name="multi_from[]" id="msMultiFrom1" class="ms-city-input" value="<?php echo htmlspecialchars($fromCity); ?>" autocomplete="off">
                             <div class="ms-field-sub" id="msMultiFromSub1"><?php echo htmlspecialchars($origCode); ?>, Airport</div>
+                            <div class="ms-airport-suggest" id="msMultiFromSuggest1"></div>
                         </div>
                         <div class="ms-field">
                             <div class="ms-field-label">To</div>
                             <input type="text" name="multi_to[]" id="msMultiTo1" class="ms-city-input" value="<?php echo htmlspecialchars($toCity); ?>" autocomplete="off">
                             <div class="ms-field-sub" id="msMultiToSub1"><?php echo htmlspecialchars($destCode); ?>, Airport</div>
+                            <div class="ms-airport-suggest" id="msMultiToSuggest1"></div>
                         </div>
                         <div class="ms-field ms-field-date ms-multi-dep-box" data-leg="1" id="msMultiDepBox1">
                             <div class="ms-field-label">Departure <i class="fa-solid fa-chevron-down ms-chevron"></i></div>
@@ -1436,11 +1438,13 @@ uasort($connectingAirportsList, function($a, $b) {
                             <div class="ms-field-label">From</div>
                             <input type="text" name="multi_from[]" id="msMultiFrom2" class="ms-city-input" value="<?php echo htmlspecialchars($toCity); ?>" autocomplete="off">
                             <div class="ms-field-sub" id="msMultiFromSub2"><?php echo htmlspecialchars($destCode); ?>, Airport</div>
+                            <div class="ms-airport-suggest" id="msMultiFromSuggest2"></div>
                         </div>
                         <div class="ms-field">
                             <div class="ms-field-label">To</div>
                             <input type="text" name="multi_to[]" id="msMultiTo2" class="ms-city-input" placeholder="Select a City" value="" autocomplete="off">
                             <div class="ms-field-sub" id="msMultiToSub2" style="display: none;">Destination Airport</div>
+                            <div class="ms-airport-suggest" id="msMultiToSuggest2"></div>
                         </div>
                         <div class="ms-field ms-field-date ms-multi-dep-box" data-leg="2" id="msMultiDepBox2">
                             <div class="ms-field-label"><i class="fa-regular fa-calendar-days" style="color: #0ea5e9; margin-right: 4px;"></i> Departure <i class="fa-solid fa-chevron-down ms-chevron"></i></div>
@@ -1557,32 +1561,145 @@ uasort($connectingAirportsList, function($a, $b) {
 const onwardFlightsData = <?php echo json_encode($onwardList); ?>;
 const returnFlightsData = <?php echo json_encode($returnList); ?>;
 
-// Popular airports database for Modify Search Autocomplete
+// Comprehensive Domestic & International Airports Database for Autocomplete & Search
 const msAirportsList = [
-    { city: "Delhi", code: "DEL", airport: "Indira Gandhi International Airport", country: "India" },
-    { city: "Mumbai", code: "BOM", airport: "Chhatrapati Shivaji Maharaj International", country: "India" },
-    { city: "Bangalore", code: "BLR", airport: "Kempegowda International Airport", country: "India" },
-    { city: "Hyderabad", code: "HYD", airport: "Rajiv Gandhi International Airport", country: "India" },
-    { city: "Chennai", code: "MAA", airport: "Chennai International Airport", country: "India" },
-    { city: "Kolkata", code: "CCU", airport: "Netaji Subhash Chandra Bose Intl", country: "India" },
-    { city: "Goa (Mopa)", code: "GOX", airport: "Manohar International Airport", country: "India" },
-    { city: "Goa (Dabolim)", code: "GOI", airport: "Dabolim Airport", country: "India" },
-    { city: "Ahmedabad", code: "AMD", airport: "Sardar Vallabhbhai Patel Intl", country: "India" },
-    { city: "Pune", code: "PNQ", airport: "Pune International Airport", country: "India" },
-    { city: "Jaipur", code: "JAI", airport: "Jaipur International Airport", country: "India" },
-    { city: "Lucknow", code: "LKO", airport: "Chaudhary Charan Singh Intl", country: "India" },
-    { city: "Kochi", code: "COK", airport: "Cochin International Airport", country: "India" },
-    { city: "Amritsar", code: "ATQ", airport: "Sri Guru Ram Dass Jee Intl", country: "India" },
-    { city: "Chandigarh", code: "IXC", airport: "Shaheed Bhagat Singh Intl", country: "India" },
-    { city: "Srinagar", code: "SXR", airport: "Sheikh ul-Alam Intl Airport", country: "India" },
-    { city: "Bhubaneswar", code: "BBI", airport: "Biju Patnaik International Airport", country: "India" },
-    { city: "Guwahati", code: "GAU", airport: "Lokpriya Gopinath Bordoloi Intl", country: "India" },
-    { city: "Patna", code: "PAT", airport: "Jay Prakash Narayan Airport", country: "India" },
-    { city: "Varanasi", code: "VNS", airport: "Lal Bahadur Shastri Intl", country: "India" },
-    { city: "Dubai", code: "DXB", airport: "Dubai International Airport", country: "UAE" },
-    { city: "Bangkok", code: "BKK", airport: "Suvarnabhumi Airport", country: "Thailand" },
-    { city: "Singapore", code: "SIN", airport: "Changi Airport", country: "Singapore" },
-    { city: "London", code: "LHR", airport: "Heathrow Airport", country: "United Kingdom" }
+    // Popular Domestic (India)
+    { city: "Delhi", code: "DEL", airport: "Indira Gandhi International Airport", country: "India", popular: true },
+    { city: "Mumbai", code: "BOM", airport: "Chhatrapati Shivaji Maharaj Intl", country: "India", popular: true },
+    { city: "Bengaluru", code: "BLR", airport: "Kempegowda Intl Airport", country: "India", popular: true },
+    { city: "Hyderabad", code: "HYD", airport: "Rajiv Gandhi Intl Airport", country: "India", popular: true },
+    { city: "Chennai", code: "MAA", airport: "Chennai International Airport", country: "India", popular: true },
+    { city: "Kolkata", code: "CCU", airport: "Netaji Subhash Chandra Bose Intl", country: "India", popular: true },
+    { city: "Goa (Dabolim)", code: "GOI", airport: "Dabolim Airport", country: "India", popular: true },
+    { city: "Goa (Mopa)", code: "GOX", airport: "Manohar International Airport", country: "India", popular: true },
+    { city: "Ahmedabad", code: "AMD", airport: "Sardar Vallabhbhai Patel Intl", country: "India", popular: true },
+    { city: "Kochi", code: "COK", airport: "Cochin International Airport", country: "India", popular: true },
+    { city: "Pune", code: "PNQ", airport: "Pune Airport", country: "India", popular: true },
+    { city: "Jaipur", code: "JAI", airport: "Jaipur International Airport", country: "India", popular: false },
+    { city: "Lucknow", code: "LKO", airport: "Chaudhary Charan Singh Intl", country: "India", popular: false },
+    { city: "Chandigarh", code: "IXC", airport: "Shaheed Bhagat Singh Intl", country: "India", popular: false },
+    { city: "Srinagar", code: "SXR", airport: "Sheikh ul-Alam Intl Airport", country: "India", popular: false },
+    { city: "Amritsar", code: "ATQ", airport: "Sri Guru Ram Dass Jee Intl", country: "India", popular: false },
+    { city: "Varanasi", code: "VNS", airport: "Lal Bahadur Shastri Intl", country: "India", popular: false },
+    { city: "Patna", code: "PAT", airport: "Jay Prakash Narayan Airport", country: "India", popular: false },
+    { city: "Guwahati", code: "GAU", airport: "Lokpriya Gopinath Bordoloi Intl", country: "India", popular: false },
+    { city: "Bhubaneswar", code: "BBI", airport: "Biju Patnaik International Airport", country: "India", popular: false },
+    { city: "Indore", code: "IDR", airport: "Devi Ahilyabai Holkar Airport", country: "India", popular: false },
+    { city: "Bhopal", code: "BHO", airport: "Raja Bhoj Airport", country: "India", popular: false },
+    { city: "Nagpur", code: "NAG", airport: "Dr. Babasaheb Ambedkar Intl", country: "India", popular: false },
+    { city: "Vadodara", code: "BDQ", airport: "Vadodara Airport", country: "India", popular: false },
+    { city: "Surat", code: "STV", airport: "Surat International Airport", country: "India", popular: false },
+    { city: "Visakhapatnam", code: "VTZ", airport: "Visakhapatnam International Airport", country: "India", popular: false },
+    { city: "Vijayawada", code: "VGA", airport: "Vijayawada International Airport", country: "India", popular: false },
+    { city: "Tiruchirappalli", code: "TRZ", airport: "Tiruchirappalli Intl Airport", country: "India", popular: false },
+    { city: "Coimbatore", code: "CJB", airport: "Coimbatore International Airport", country: "India", popular: false },
+    { city: "Madurai", code: "IXM", airport: "Madurai Airport", country: "India", popular: false },
+    { city: "Mangaluru", code: "IXE", airport: "Mangaluru International Airport", country: "India", popular: false },
+    { city: "Kozhikode", code: "CCJ", airport: "Calicut International Airport", country: "India", popular: false },
+    { city: "Thiruvananthapuram", code: "TRV", airport: "Trivandrum International Airport", country: "India", popular: false },
+    { city: "Kannur", code: "CNN", airport: "Kannur International Airport", country: "India", popular: false },
+    { city: "Ranchi", code: "IXR", airport: "Birsa Munda Airport", country: "India", popular: false },
+    { city: "Raipur", code: "RPR", airport: "Swami Vivekananda Airport", country: "India", popular: false },
+    { city: "Dehradun", code: "DED", airport: "Jolly Grant Airport", country: "India", popular: false },
+    { city: "Bagdogra", code: "IXB", airport: "Bagdogra International Airport", country: "India", popular: false },
+    { city: "Udaipur", code: "UDR", airport: "Maharana Pratap Airport", country: "India", popular: false },
+    { city: "Jodhpur", code: "JDH", airport: "Jodhpur Airport", country: "India", popular: false },
+    { city: "Ayodhya", code: "AYJ", airport: "Maharishi Valmiki Intl Airport", country: "India", popular: false },
+    { city: "Prayagraj", code: "IXD", airport: "Prayagraj Airport", country: "India", popular: false },
+    { city: "Port Blair", code: "IXZ", airport: "Veer Savarkar Intl Airport", country: "India", popular: false },
+
+    // Middle East & Gulf (Saudi Arabia, UAE, Qatar, Oman, Kuwait, Bahrain)
+    { city: "Dubai", code: "DXB", airport: "Dubai International Airport", country: "UAE", popular: true },
+    { city: "Dubai (Al Maktoum)", code: "DWC", airport: "Al Maktoum International Airport", country: "UAE", popular: false },
+    { city: "Abu Dhabi", code: "AUH", airport: "Zayed International Airport", country: "UAE", popular: true },
+    { city: "Sharjah", code: "SHJ", airport: "Sharjah International Airport", country: "UAE", popular: true },
+    { city: "Doha", code: "DOH", airport: "Hamad International Airport", country: "Qatar", popular: true },
+    { city: "Riyadh", code: "RUH", airport: "King Khalid International Airport", country: "Saudi Arabia", popular: true },
+    { city: "Jeddah", code: "JED", airport: "King Abdulaziz Intl Airport", country: "Saudi Arabia", popular: true },
+    { city: "Dammam", code: "DMM", airport: "King Fahd International Airport", country: "Saudi Arabia", popular: true },
+    { city: "Medina", code: "MED", airport: "Prince Mohammad bin Abdulaziz Airport", country: "Saudi Arabia", popular: true },
+    { city: "Abha", code: "AHB", airport: "Abha International Airport", country: "Saudi Arabia", popular: false },
+    { city: "Gassim", code: "ELQ", airport: "Prince Naif bin Abdulaziz Airport", country: "Saudi Arabia", popular: false },
+    { city: "Taif", code: "TIF", airport: "Taif Regional Airport", country: "Saudi Arabia", popular: false },
+    { city: "Tabuk", code: "TUU", airport: "Tabuk Regional Airport", country: "Saudi Arabia", popular: false },
+    { city: "Yanbu", code: "YNB", airport: "Yanbu Airport", country: "Saudi Arabia", popular: false },
+    { city: "Jizan", code: "GIZ", airport: "King Abdullah bin Abdulaziz Airport", country: "Saudi Arabia", popular: false },
+    { city: "Muscat", code: "MCT", airport: "Muscat International Airport", country: "Oman", popular: true },
+    { city: "Salalah", code: "SLL", airport: "Salalah Airport", country: "Oman", popular: false },
+    { city: "Kuwait", code: "KWI", airport: "Kuwait International Airport", country: "Kuwait", popular: true },
+    { city: "Bahrain", code: "BAH", airport: "Bahrain International Airport", country: "Bahrain", popular: true },
+
+    // Southeast Asia, East Asia & Indian Subcontinent
+    { city: "Singapore", code: "SIN", airport: "Singapore Changi Airport", country: "Singapore", popular: true },
+    { city: "Bangkok", code: "BKK", airport: "Suvarnabhumi International Airport", country: "Thailand", popular: true },
+    { city: "Bangkok (Don Mueang)", code: "DMK", airport: "Don Mueang International Airport", country: "Thailand", popular: false },
+    { city: "Phuket", code: "HKT", airport: "Phuket International Airport", country: "Thailand", popular: true },
+    { city: "Krabi", code: "KBV", airport: "Krabi International Airport", country: "Thailand", popular: false },
+    { city: "Kuala Lumpur", code: "KUL", airport: "Kuala Lumpur Intl Airport", country: "Malaysia", popular: true },
+    { city: "Penang", code: "PEN", airport: "Penang International Airport", country: "Malaysia", popular: false },
+    { city: "Bali (Denpasar)", code: "DPS", airport: "Ngurah Rai International Airport", country: "Indonesia", popular: true },
+    { city: "Jakarta", code: "CGK", airport: "Soekarno-Hatta International Airport", country: "Indonesia", popular: false },
+    { city: "Colombo", code: "CMB", airport: "Bandaranaike International Airport", country: "Sri Lanka", popular: true },
+    { city: "Male (Maldives)", code: "MLE", airport: "Velana International Airport", country: "Maldives", popular: true },
+    { city: "Kathmandu", code: "KTM", airport: "Tribhuvan International Airport", country: "Nepal", popular: true },
+    { city: "Dhaka", code: "DAC", airport: "Hazrat Shahjalal Intl Airport", country: "Bangladesh", popular: false },
+    { city: "Hong Kong", code: "HKG", airport: "Hong Kong International Airport", country: "Hong Kong", popular: true },
+    { city: "Tokyo (Narita)", code: "NRT", airport: "Narita International Airport", country: "Japan", popular: true },
+    { city: "Tokyo (Haneda)", code: "HND", airport: "Tokyo Haneda Airport", country: "Japan", popular: false },
+    { city: "Osaka", code: "KIX", airport: "Kansai International Airport", country: "Japan", popular: false },
+    { city: "Seoul", code: "ICN", airport: "Incheon International Airport", country: "South Korea", popular: true },
+    { city: "Manila", code: "MNL", airport: "Ninoy Aquino International Airport", country: "Philippines", popular: false },
+    { city: "Ho Chi Minh City", code: "SGN", airport: "Tan Son Nhat International Airport", country: "Vietnam", popular: true },
+    { city: "Hanoi", code: "HAN", airport: "Noi Bai International Airport", country: "Vietnam", popular: false },
+
+    // Europe & UK
+    { city: "London (Heathrow)", code: "LHR", airport: "Heathrow Airport", country: "UK", popular: true },
+    { city: "London (Gatwick)", code: "LGW", airport: "Gatwick Airport", country: "UK", popular: false },
+    { city: "London (Stansted)", code: "STN", airport: "Stansted Airport", country: "UK", popular: false },
+    { city: "Manchester", code: "MAN", airport: "Manchester Airport", country: "UK", popular: false },
+    { city: "Birmingham", code: "BHX", airport: "Birmingham Airport", country: "UK", popular: false },
+    { city: "Paris (Charles de Gaulle)", code: "CDG", airport: "Charles de Gaulle Airport", country: "France", popular: true },
+    { city: "Frankfurt", code: "FRA", airport: "Frankfurt am Main Airport", country: "Germany", popular: true },
+    { city: "Munich", code: "MUC", airport: "Munich International Airport", country: "Germany", popular: false },
+    { city: "Amsterdam", code: "AMS", airport: "Amsterdam Schiphol Airport", country: "Netherlands", popular: true },
+    { city: "Zurich", code: "ZRH", airport: "Zurich Airport", country: "Switzerland", popular: true },
+    { city: "Geneva", code: "GVA", airport: "Geneva Airport", country: "Switzerland", popular: false },
+    { city: "Rome", code: "FCO", airport: "Leonardo da Vinci–Fiumicino", country: "Italy", popular: true },
+    { city: "Milan", code: "MXP", airport: "Milan Malpensa Airport", country: "Italy", popular: false },
+    { city: "Madrid", code: "MAD", airport: "Adolfo Suárez Madrid–Barajas", country: "Spain", popular: false },
+    { city: "Barcelona", code: "BCN", airport: "Josep Tarradellas Barcelona-El Prat", country: "Spain", popular: false },
+    { city: "Vienna", code: "VIE", airport: "Vienna International Airport", country: "Austria", popular: false },
+    { city: "Brussels", code: "BRU", airport: "Brussels Airport", country: "Belgium", popular: false },
+    { city: "Istanbul", code: "IST", airport: "Istanbul Airport", country: "Turkey", popular: true },
+    { city: "Dublin", code: "DUB", airport: "Dublin Airport", country: "Ireland", popular: false },
+
+    // North America
+    { city: "New York (JFK)", code: "JFK", airport: "John F. Kennedy Intl Airport", country: "USA", popular: true },
+    { city: "New York (Newark)", code: "EWR", airport: "Newark Liberty Intl Airport", country: "USA", popular: false },
+    { city: "San Francisco", code: "SFO", airport: "San Francisco Intl Airport", country: "USA", popular: true },
+    { city: "Los Angeles", code: "LAX", airport: "Los Angeles Intl Airport", country: "USA", popular: true },
+    { city: "Chicago", code: "ORD", airport: "O'Hare International Airport", country: "USA", popular: true },
+    { city: "Washington", code: "IAD", airport: "Washington Dulles Intl Airport", country: "USA", popular: false },
+    { city: "Dallas", code: "DFW", airport: "Dallas/Fort Worth Intl Airport", country: "USA", popular: false },
+    { city: "Houston", code: "IAH", airport: "George Bush Intercontinental", country: "USA", popular: false },
+    { city: "Boston", code: "BOS", airport: "Boston Logan Intl Airport", country: "USA", popular: false },
+    { city: "Seattle", code: "SEA", airport: "Seattle-Tacoma Intl Airport", country: "USA", popular: false },
+    { city: "Atlanta", code: "ATL", airport: "Hartsfield-Jackson Atlanta Intl", country: "USA", popular: false },
+    { city: "Toronto", code: "YYZ", airport: "Toronto Pearson Intl Airport", country: "Canada", popular: true },
+    { city: "Vancouver", code: "YVR", airport: "Vancouver International Airport", country: "Canada", popular: true },
+    { city: "Montreal", code: "YUL", airport: "Montréal–Trudeau Intl Airport", country: "Canada", popular: false },
+
+    // Australia, New Zealand & Africa
+    { city: "Sydney", code: "SYD", airport: "Sydney Kingsford Smith Airport", country: "Australia", popular: true },
+    { city: "Melbourne", code: "MEL", airport: "Melbourne Airport", country: "Australia", popular: true },
+    { city: "Brisbane", code: "BNE", airport: "Brisbane Airport", country: "Australia", popular: false },
+    { city: "Perth", code: "PER", airport: "Perth Airport", country: "Australia", popular: false },
+    { city: "Auckland", code: "AKL", airport: "Auckland Airport", country: "New Zealand", popular: false },
+    { city: "Johannesburg", code: "JNB", airport: "O. R. Tambo Intl Airport", country: "South Africa", popular: false },
+    { city: "Cape Town", code: "CPT", airport: "Cape Town International Airport", country: "South Africa", popular: false },
+    { city: "Nairobi", code: "NBO", airport: "Jomo Kenyatta Intl Airport", country: "Kenya", popular: false },
+    { city: "Cairo", code: "CAI", airport: "Cairo International Airport", country: "Egypt", popular: false },
+    { city: "Mauritius", code: "MRU", airport: "Sir Seewoosagur Ramgoolam Intl", country: "Mauritius", popular: true }
 ];
 
 // 0. B2B Franchise Markup Calculation Engine (Exact match to Akbar Travels Screenshots 2 & 3)
@@ -2404,35 +2521,79 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // City Suggestion Dropdown Handling
+    // City Suggestion Dropdown Handling with Live Fetching & Master List
     function setupCitySuggest(inputId, suggestId, codeId, subId, paramId) {
-        const inp = document.getElementById(inputId);
-        const sug = document.getElementById(suggestId);
-        const cod = document.getElementById(codeId);
-        const sub = document.getElementById(subId);
-        const par = document.getElementById(paramId);
+        const inp = typeof inputId === 'string' ? document.getElementById(inputId) : inputId;
+        const sug = typeof suggestId === 'string' ? document.getElementById(suggestId) : suggestId;
+        const cod = codeId ? (typeof codeId === 'string' ? document.getElementById(codeId) : codeId) : null;
+        const sub = subId ? (typeof subId === 'string' ? document.getElementById(subId) : subId) : null;
+        const par = paramId ? (typeof paramId === 'string' ? document.getElementById(paramId) : paramId) : null;
 
         if (!inp || !sug) return;
 
-        function renderSuggestions(query) {
-            const q = (query || '').trim().toLowerCase();
-            const filtered = msAirportsList.filter(a => {
-                return !q || a.city.toLowerCase().includes(q) || a.code.toLowerCase().includes(q) || a.airport.toLowerCase().includes(q);
+        let activeIndex = -1;
+        let fetchTimer = null;
+
+        function filterAirports(query) {
+            const rawQ = (query || '').trim();
+            const cleanQ = rawQ.replace(/[(),]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+
+            if (!cleanQ) {
+                return msAirportsList.filter(a => a.popular || a.code === 'DEL' || a.code === 'BOM' || a.code === 'DXB' || a.code === 'DMM').slice(0, 30);
+            }
+
+            const words = cleanQ.split(' ').filter(Boolean);
+            const matches = msAirportsList.filter(a => {
+                const city = (a.city || '').toLowerCase();
+                const code = (a.code || '').toLowerCase();
+                const airport = (a.airport || '').toLowerCase();
+                const country = (a.country || '').toLowerCase();
+                const haystack = `${city} ${code} ${airport} ${country}`;
+                return words.every(w => haystack.includes(w));
             });
 
-            if (filtered.length === 0) {
-                sug.innerHTML = '<div style="padding:10px 14px; color:#94a3b8; font-size:12px;">No matching airports found</div>';
+            matches.sort((a, b) => {
+                const aCode = (a.code || '').toLowerCase();
+                const bCode = (b.code || '').toLowerCase();
+                const aCity = (a.city || '').toLowerCase();
+                const bCity = (b.city || '').toLowerCase();
+
+                if (aCode === cleanQ) return -1;
+                if (bCode === cleanQ) return 1;
+                if (aCode.startsWith(cleanQ) && !bCode.startsWith(cleanQ)) return -1;
+                if (bCode.startsWith(cleanQ) && !aCode.startsWith(cleanQ)) return 1;
+                if (aCity.startsWith(cleanQ) && !bCity.startsWith(cleanQ)) return -1;
+                if (bCity.startsWith(cleanQ) && !aCity.startsWith(cleanQ)) return 1;
+                return 0;
+            });
+
+            if (matches.length <= 1) {
+                const populars = msAirportsList.filter(a => a.popular && !matches.some(m => m.code === a.code));
+                return matches.concat(populars.slice(0, 20));
+            }
+
+            return matches.slice(0, 30);
+        }
+
+        function renderList(items) {
+            activeIndex = -1;
+            if (!items || items.length === 0) {
+                sug.innerHTML = '<div style="padding:12px 14px; text-align:center; color:#94a3b8; font-size:12px;"><i class="fa-solid fa-plane-slash" style="margin-right:6px;"></i>No matching airports found</div>';
                 sug.style.display = 'block';
                 return;
             }
 
-            sug.innerHTML = filtered.map(item => `
-                <div class="ms-suggest-item" data-city="${item.city}" data-code="${item.code}" data-airport="${item.airport}">
-                    <div>
-                        <div style="font-weight:700; color:#0f172a; font-size:13px;">${item.city}</div>
-                        <div style="font-size:11px; color:#64748b;">${item.airport}</div>
+            sug.innerHTML = items.map((item, idx) => `
+                <div class="ms-suggest-item" data-index="${idx}" data-city="${item.city}" data-code="${item.code}" data-airport="${item.airport || ''}">
+                    <div style="flex:1; min-width:0; padding-right:8px;">
+                        <div style="font-weight:700; color:#0f172a; font-size:13px; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            ${item.city} ${item.country ? `<span style="font-weight:500; font-size:11px; color:#64748b;">· ${item.country}</span>` : ''}
+                        </div>
+                        <div style="font-size:11px; color:#64748b; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">
+                            ${item.airport || (item.city + ' Airport')}
+                        </div>
                     </div>
-                    <span style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-weight:800; color:#0f172a; font-size:11px;">${item.code}</span>
+                    <span class="ms-airport-badge">${item.code}</span>
                 </div>
             `).join('');
             sug.style.display = 'block';
@@ -2440,37 +2601,127 @@ document.addEventListener('DOMContentLoaded', function() {
             sug.querySelectorAll('.ms-suggest-item').forEach(el => {
                 el.addEventListener('click', function(ev) {
                     ev.stopPropagation();
-                    const cCity = this.getAttribute('data-city');
-                    const cCode = this.getAttribute('data-code');
-                    inp.value = cCity;
-                    if (cod) cod.value = cCode;
-                    if (par) par.value = cCode;
-                    if (sub) sub.textContent = `${cCode}, Airport`;
-                    sug.style.display = 'none';
+                    selectAirportItem(this);
                 });
             });
         }
 
+        function selectAirportItem(el) {
+            const cCity = el.getAttribute('data-city');
+            const cCode = el.getAttribute('data-code');
+            const label = `${cCity} (${cCode})`;
+
+            inp.value = label;
+            if (cod) cod.value = cCode;
+            if (par) par.value = label;
+            if (sub) sub.textContent = `${cCode}, Airport`;
+
+            inp.dataset.selectedCode = cCode;
+            inp.dataset.selectedCity = cCity;
+            sug.style.display = 'none';
+        }
+
+        function fetchLiveAirports(cleanQ) {
+            if (!cleanQ || cleanQ.length < 2) return;
+            const endpoint = '<?php echo site_url("franchise/ajax_airports"); ?>';
+            fetch(endpoint + '?q=' + encodeURIComponent(cleanQ))
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data) && data.length > 0) {
+                        data.forEach(item => {
+                            if (!msAirportsList.some(a => a.code === item.code)) {
+                                msAirportsList.push(item);
+                            }
+                        });
+                        const curQ = (inp.value || '').replace(/[(),]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+                        if (curQ === cleanQ) {
+                            const updated = filterAirports(inp.value);
+                            renderList(updated);
+                        }
+                    }
+                })
+                .catch(() => {});
+        }
+
         inp.addEventListener('focus', function() {
             closeAllCitySuggest();
-            renderSuggestions(this.value);
+            setTimeout(() => {
+                try { inp.select(); } catch(e) {}
+            }, 50);
+            const filtered = filterAirports(this.value);
+            renderList(filtered);
+        });
+
+        inp.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (sug.style.display !== 'block') {
+                closeAllCitySuggest();
+                const filtered = filterAirports(this.value);
+                renderList(filtered);
+            }
         });
 
         inp.addEventListener('input', function() {
-            renderSuggestions(this.value);
+            const val = this.value;
+            const filtered = filterAirports(val);
+            renderList(filtered);
+
+            clearTimeout(fetchTimer);
+            const cleanQ = val.replace(/[(),]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+            if (cleanQ.length >= 2) {
+                fetchTimer = setTimeout(() => {
+                    fetchLiveAirports(cleanQ);
+                }, 200);
+            }
         });
+
+        inp.addEventListener('keydown', function(e) {
+            const items = sug.querySelectorAll('.ms-suggest-item');
+            if (!items || items.length === 0 || sug.style.display === 'none') return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = (activeIndex + 1) % items.length;
+                updateActive(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = (activeIndex - 1 + items.length) % items.length;
+                updateActive(items);
+            } else if (e.key === 'Enter') {
+                if (activeIndex >= 0 && activeIndex < items.length) {
+                    e.preventDefault();
+                    selectAirportItem(items[activeIndex]);
+                }
+            } else if (e.key === 'Escape') {
+                sug.style.display = 'none';
+            }
+        });
+
+        function updateActive(items) {
+            items.forEach((it, i) => {
+                if (i === activeIndex) {
+                    it.classList.add('active');
+                    it.scrollIntoView({ block: 'nearest' });
+                } else {
+                    it.classList.remove('active');
+                }
+            });
+        }
     }
 
     setupCitySuggest('ms_from_city', 'msFromSuggest', 'ms_from_code', 'ms_from_sub', 'ms_origin');
     setupCitySuggest('ms_to_city', 'msToSuggest', 'ms_to_code', 'ms_to_sub', 'ms_destination');
+    setupCitySuggest('msMultiFrom1', 'msMultiFromSuggest1', null, 'msMultiFromSub1', null);
+    setupCitySuggest('msMultiTo1', 'msMultiToSuggest1', null, 'msMultiToSub1', null);
+    setupCitySuggest('msMultiFrom2', 'msMultiFromSuggest2', null, 'msMultiFromSub2', null);
+    setupCitySuggest('msMultiTo2', 'msMultiToSuggest2', null, 'msMultiToSub2', null);
 
     function closeAllCitySuggest() {
-        const s1 = document.getElementById('msFromSuggest'); if (s1) s1.style.display = 'none';
-        const s2 = document.getElementById('msToSuggest'); if (s2) s2.style.display = 'none';
+        document.querySelectorAll('.ms-airport-suggest').forEach(s => s.style.display = 'none');
     }
 
     document.addEventListener('click', function(e) {
-        if (!e.target.closest('#msFromBox') && !e.target.closest('#msToBox')) {
+        if (!e.target.closest('.ms-field')) {
             closeAllCitySuggest();
         }
     });
@@ -2573,11 +2824,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="ms-field-label">From</div>
                     <input type="text" name="multi_from[]" id="msMultiFrom${legNum}" class="ms-city-input" value="${prevCity}" autocomplete="off">
                     <div class="ms-field-sub">Airport</div>
+                    <div class="ms-airport-suggest" id="msMultiFromSuggest${legNum}"></div>
                 </div>
                 <div class="ms-field">
                     <div class="ms-field-label">To</div>
                     <input type="text" name="multi_to[]" id="msMultiTo${legNum}" class="ms-city-input" placeholder="Select a City" autocomplete="off">
                     <div class="ms-field-sub" style="display:none;">Destination Airport</div>
+                    <div class="ms-airport-suggest" id="msMultiToSuggest${legNum}"></div>
                 </div>
                 <div class="ms-field ms-field-date ms-multi-dep-box" data-leg="${legNum}" id="msMultiDepBox${legNum}">
                     <div class="ms-field-label"><i class="fa-regular fa-calendar-days" style="color: #0ea5e9; margin-right: 4px;"></i> Departure <i class="fa-solid fa-chevron-down ms-chevron"></i></div>
@@ -2590,6 +2843,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
             extraLegsContainer.appendChild(row);
+
+            setupCitySuggest(`msMultiFrom${legNum}`, `msMultiFromSuggest${legNum}`, null, null, null);
+            setupCitySuggest(`msMultiTo${legNum}`, `msMultiToSuggest${legNum}`, null, null, null);
 
             const newDateBox = row.querySelector('.ms-multi-dep-box');
             if (newDateBox) {
@@ -3631,15 +3887,23 @@ function msUpdateTravellerText() {
     position: absolute;
     top: 100%;
     left: 0;
-    width: 280px;
-    max-height: 260px;
+    width: 330px;
+    min-width: 280px;
+    max-height: 290px;
     overflow-y: auto;
     background: #ffffff;
     border: 1px solid #cbd5e1;
     border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
     z-index: 10000;
     margin-top: 6px;
+}
+.ms-airport-suggest::-webkit-scrollbar {
+    width: 5px;
+}
+.ms-airport-suggest::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
 }
 .ms-suggest-item {
     display: flex;
@@ -3650,8 +3914,20 @@ function msUpdateTravellerText() {
     border-bottom: 1px solid #f1f5f9;
     transition: background 0.15s;
 }
-.ms-suggest-item:hover {
-    background: #f8fafc;
+.ms-suggest-item:hover,
+.ms-suggest-item.active {
+    background: #f0f9ff;
+}
+.ms-airport-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    border: 1px solid #bae6fd;
+    flex-shrink: 0;
 }
 
 /* Travellers popup */

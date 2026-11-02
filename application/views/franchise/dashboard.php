@@ -1260,19 +1260,44 @@ function renderPills(type) {
     });
 }
 
+let fAirportsFetchTimer = null;
 function renderAirportList(type, query) {
     const container = document.getElementById(type === 'from' ? 'fFromList' : 'fToList');
     container.innerHTML = '';
-    const q = query.trim().toLowerCase();
-    const filtered = fAirports.filter(a => {
-        return a.city.toLowerCase().includes(q) || 
-               a.code.toLowerCase().includes(q) || 
-               a.airport.toLowerCase().includes(q) ||
-               (a.country && a.country.toLowerCase().includes(q));
-    });
+    const cleanQ = (query || '').replace(/[(),]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+
+    let filtered = [];
+    if (!cleanQ) {
+        filtered = fAirports.slice(0, 35);
+    } else {
+        const words = cleanQ.split(' ').filter(Boolean);
+        filtered = fAirports.filter(a => {
+            const city = (a.city || '').toLowerCase();
+            const code = (a.code || '').toLowerCase();
+            const airport = (a.airport || '').toLowerCase();
+            const country = (a.country || '').toLowerCase();
+            const haystack = `${city} ${code} ${airport} ${country}`;
+            return words.every(w => haystack.includes(w));
+        });
+
+        filtered.sort((a, b) => {
+            const aCode = (a.code || '').toLowerCase();
+            const bCode = (b.code || '').toLowerCase();
+            const aCity = (a.city || '').toLowerCase();
+            const bCity = (b.city || '').toLowerCase();
+
+            if (aCode === cleanQ) return -1;
+            if (bCode === cleanQ) return 1;
+            if (aCode.startsWith(cleanQ) && !bCode.startsWith(cleanQ)) return -1;
+            if (bCode.startsWith(cleanQ) && !aCode.startsWith(cleanQ)) return 1;
+            if (aCity.startsWith(cleanQ) && !bCity.startsWith(cleanQ)) return -1;
+            if (bCity.startsWith(cleanQ) && !aCity.startsWith(cleanQ)) return 1;
+            return 0;
+        });
+    }
 
     if (filtered.length === 0) {
-        container.innerHTML = '<div style="padding: 12px; text-align: center; color: #94a3b8; font-size: 12px;">No matching airports found</div>';
+        container.innerHTML = '<div style="padding: 12px; text-align: center; color: #94a3b8; font-size: 12px;"><i class="fa-solid fa-plane-slash" style="margin-right:6px;"></i>No matching airports found</div>';
         return;
     }
 
@@ -1294,6 +1319,30 @@ function renderAirportList(type, query) {
 
 function filterAirports(type, val) {
     renderAirportList(type, val);
+
+    clearTimeout(fAirportsFetchTimer);
+    const cleanQ = (val || '').replace(/[(),]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+    if (cleanQ.length >= 2) {
+        fAirportsFetchTimer = setTimeout(() => {
+            fetch('<?php echo site_url("franchise/ajax_airports"); ?>?q=' + encodeURIComponent(cleanQ))
+                .then(r => r.json())
+                .then(data => {
+                    if (Array.isArray(data) && data.length > 0) {
+                        data.forEach(item => {
+                            if (!fAirports.some(a => a.code === item.code)) {
+                                fAirports.push(item);
+                            }
+                        });
+                        const searchInp = document.getElementById(type === 'from' ? 'fFromSearchInput' : 'fToSearchInput');
+                        const curQ = (searchInp ? searchInp.value : '').replace(/[(),]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+                        if (curQ === cleanQ) {
+                            renderAirportList(type, searchInp.value);
+                        }
+                    }
+                })
+                .catch(() => {});
+        }, 200);
+    }
 }
 
 function selectAirport(type, item) {
