@@ -37,7 +37,7 @@ $defaultNights   = 4;
                     <form action="<?php echo site_url('franchise/hotel_search'); ?>" method="GET" id="franchiseHotelForm" class="ak-search-form">
                         
                         <!-- 1. Destination Column -->
-                        <div class="ak-search-col" id="colDest" onclick="openHotelDestDropdown(event)" style="flex: 2.2;">
+                        <div class="ak-search-col ak-col-dest" id="colDest" onclick="openHotelDestDropdown(event)">
                             <div class="ak-col-label">
                                 <span>ENTER YOUR DESTINATION OR PROPERTY</span>
                             </div>
@@ -54,6 +54,10 @@ $defaultNights   = 4;
 
                             <!-- Destination Autocomplete Popup -->
                             <div class="ak-dest-popup" id="hotelDestDropdown" onclick="event.stopPropagation()">
+                                <div class="ak-dest-popup-header">
+                                    <span>Select Destination</span>
+                                    <button type="button" class="ak-popup-close-btn" onclick="event.stopPropagation(); closeAllHotelDropdowns();">&times;</button>
+                                </div>
                                 <div style="position: relative; margin-bottom: 12px;">
                                     <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 12px; color: #64748b; font-size: 13px;"></i>
                                     <input type="text" id="hotelCitySearchInput" placeholder="Type city or hotel destination (e.g. Tirunelveli, Goa, Mumbai)..." oninput="filterHotelCities(this.value)">
@@ -76,7 +80,7 @@ $defaultNights   = 4;
                         </div>
 
                         <!-- 2. Check In Date Column matching Screenshot 3 -->
-                        <div class="ak-search-col" id="colCheckin" onclick="openHotelCalendar(event, 'checkin')" style="flex: 1.25;">
+                        <div class="ak-search-col ak-col-checkin" id="colCheckin" onclick="openHotelCalendar(event, 'checkin')">
                             <div class="ak-col-label">
                                 <span>CHECK IN</span> <i class="fa-solid fa-chevron-down ak-chevron"></i>
                             </div>
@@ -96,7 +100,7 @@ $defaultNights   = 4;
                         </div>
 
                         <!-- 3. Check Out Date Column matching Screenshot 3 -->
-                        <div class="ak-search-col" id="colCheckout" onclick="openHotelCalendar(event, 'checkout')" style="flex: 1.25; padding-left: 36px;">
+                        <div class="ak-search-col ak-col-checkout" id="colCheckout" onclick="openHotelCalendar(event, 'checkout')">
                             <div class="ak-col-label">
                                 <span>CHECK OUT</span> <i class="fa-solid fa-chevron-down ak-chevron"></i>
                             </div>
@@ -110,6 +114,10 @@ $defaultNights   = 4;
 
                         <!-- Akbar Dual-Month Interactive Calendar Dropdown matching Screenshot 3 -->
                         <div class="akbar-dropdown-panel akbar-calendar-panel" id="hotelCalendarDropdown" onclick="event.stopPropagation();">
+                            <div class="akbar-cal-modal-header">
+                                <span>Select Dates</span>
+                                <button type="button" class="ak-popup-close-btn" onclick="event.stopPropagation(); closeAllHotelDropdowns();">&times;</button>
+                            </div>
                             <!-- Top Switcher Tabs -->
                             <div class="akbar-cal-header-tabs">
                                 <div class="akbar-cal-tab active" id="hotelTabCheckin" onclick="switchHotelCalTab('checkin')">
@@ -154,10 +162,16 @@ $defaultNights   = 4;
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Calendar Modal Footer on Mobile -->
+                            <div class="akbar-cal-footer">
+                                <div class="akbar-cal-footer-nights"><span id="hotelCalFooterNights"><?php echo $defaultNights; ?></span> Nights Selected</div>
+                                <button type="button" class="akbar-cal-done-btn" onclick="event.stopPropagation(); closeAllHotelDropdowns();">Done</button>
+                            </div>
                         </div>
 
                         <!-- 4. Rooms & Guests Column matching Screenshot 1 -->
-                        <div class="ak-search-col" id="colGuests" onclick="openHotelGuestDropdown(event)" style="flex: 1.6;">
+                        <div class="ak-search-col ak-col-guests" id="colGuests" onclick="openHotelGuestDropdown(event)">
                             <div class="ak-col-label">
                                 <span>ROOMS & GUESTS</span> <i class="fa-solid fa-chevron-down ak-chevron"></i>
                             </div>
@@ -176,6 +190,10 @@ $defaultNights   = 4;
 
                             <!-- Multi-Room & Guests Configuration Popover (Screenshot 1 Exact Match) -->
                             <div class="akbar-dropdown-panel akbar-guests-panel ak-guests-popup" id="hotelGuestsPopup" onclick="event.stopPropagation();">
+                                <div class="akbar-guests-modal-header">
+                                    <span>Guests &amp; Rooms</span>
+                                    <button type="button" class="ak-popup-close-btn" onclick="event.stopPropagation(); closeAllHotelDropdowns();">&times;</button>
+                                </div>
                                 <!-- Scrollable Room Cards List Container -->
                                 <div class="akbar-rooms-list-container" id="hotelRoomsListContainer">
                                     <!-- Populated dynamically by JS -->
@@ -203,38 +221,41 @@ $defaultNights   = 4;
                     </form>
                 </div>
 
+                <!-- Backdrop Overlay for Mobile Dropdowns -->
+                <div class="ak-popup-backdrop" id="hotelPopupBackdrop" onclick="closeAllHotelDropdowns()"></div>
+
             </div>
         </div>
 
         <!-- B2B Franchise Hotel Info Cards Below Banner -->
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px;">
-            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 14px;">
-                <div style="width: 44px; height: 44px; border-radius: 10px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+        <div class="ak-info-cards-grid">
+            <div class="ak-info-card">
+                <div class="ak-info-icon" style="background: #e0f2fe; color: #0284c7;">
                     <i class="fa-solid fa-tags"></i>
                 </div>
                 <div>
-                    <div style="font-weight: 800; font-size: 14px; color: #0f172a;">Direct B2B Net Rates</div>
-                    <div style="font-size: 12px; color: #64748b;">Wholesale negotiated rates for store owners</div>
+                    <div class="ak-info-title">Direct B2B Net Rates</div>
+                    <div class="ak-info-sub">Wholesale negotiated rates for store owners</div>
                 </div>
             </div>
 
-            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 14px;">
-                <div style="width: 44px; height: 44px; border-radius: 10px; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+            <div class="ak-info-card">
+                <div class="ak-info-icon" style="background: #dcfce7; color: #16a34a;">
                     <i class="fa-solid fa-wallet"></i>
                 </div>
                 <div>
-                    <div style="font-weight: 800; font-size: 14px; color: #0f172a;">Instant Float Settlement</div>
-                    <div style="font-size: 12px; color: #64748b;">Instant voucher issuance from wallet float</div>
+                    <div class="ak-info-title">Instant Float Settlement</div>
+                    <div class="ak-info-sub">Instant voucher issuance from wallet float</div>
                 </div>
             </div>
 
-            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 14px;">
-                <div style="width: 44px; height: 44px; border-radius: 10px; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+            <div class="ak-info-card">
+                <div class="ak-info-icon" style="background: #fef3c7; color: #d97706;">
                     <i class="fa-solid fa-print"></i>
                 </div>
                 <div>
-                    <div style="font-weight: 800; font-size: 14px; color: #0f172a;">Branded Vouchers</div>
-                    <div style="font-size: 12px; color: #64748b;">Agency header printed with your Agent Code</div>
+                    <div class="ak-info-title">Branded Vouchers</div>
+                    <div class="ak-info-sub">Agency header printed with your Agent Code</div>
                 </div>
             </div>
         </div>
@@ -297,6 +318,68 @@ $defaultNights   = 4;
 }
 .ak-search-col:hover {
     background: #f8fafc;
+}
+.ak-col-dest { flex: 2.2; }
+.ak-col-checkin { flex: 1.25; }
+.ak-col-checkout { flex: 1.25; padding-left: 36px; }
+.ak-col-guests { flex: 1.6; }
+
+/* Info Cards below banner */
+.ak-info-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 24px;
+}
+.ak-info-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.ak-info-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.ak-info-title {
+    font-weight: 800;
+    font-size: 14px;
+    color: #0f172a;
+}
+.ak-info-sub {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* Modal Headers & Backdrop Defaults */
+.ak-dest-popup-header,
+.akbar-cal-modal-header,
+.akbar-guests-modal-header,
+.akbar-cal-footer {
+    display: none;
+}
+.ak-popup-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 999990;
+    display: none;
+}
+.ak-popup-backdrop.open {
+    display: block;
+}
+body.ak-modal-open {
+    overflow: hidden;
 }
 .ak-col-label {
     font-size: 11px;
@@ -526,18 +609,6 @@ $defaultNights   = 4;
     background: #ffffff;
     z-index: 999999;
 }
-@media (max-width: 768px) {
-    .ak-guests-popup.akbar-guests-panel {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        right: auto;
-        transform: translate(-50%, -50%);
-        max-height: 90vh;
-        overflow-y: auto;
-        width: 92vw;
-    }
-}
 .akbar-rooms-list-container {
     max-height: 380px;
     overflow-y: auto;
@@ -740,17 +811,6 @@ $defaultNights   = 4;
 .akbar-calendar-panel.open, .akbar-calendar-panel.show {
     display: block;
 }
-@media (max-width: 991px) {
-    .akbar-calendar-panel {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        max-height: 90vh;
-        overflow-y: auto;
-        width: 95%;
-    }
-}
 .akbar-cal-header-tabs {
     display: flex;
     background: #f8fafc;
@@ -893,6 +953,315 @@ $defaultNights   = 4;
     border-radius: 0;
     font-weight: 700;
 }
+
+/* ==========================================================================
+   Responsive Breakpoints for Franchise Hotel Search (Mobile & Tablet)
+   ========================================================================== */
+@media (max-width: 991px) {
+    .ak-hero-banner {
+        padding: 24px 16px 28px 16px;
+        border-radius: 14px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .ak-hero-heading {
+        font-size: 20px;
+        line-height: 1.3;
+        margin-bottom: 16px;
+        letter-spacing: -0.3px;
+    }
+    .ak-search-card {
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        overflow: visible;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .ak-search-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        position: relative;
+        width: 100%;
+        background: #ffffff;
+        border-radius: 12px;
+    }
+    .ak-search-col {
+        padding: 12px 14px;
+        transition: none;
+    }
+    .ak-col-dest {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        flex: none !important;
+        border-right: none !important;
+        border-bottom: 1px solid #e2e8f0;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+    .ak-dest-main {
+        font-size: 18px;
+    }
+    .ak-dest-sub {
+        font-size: 11.5px;
+    }
+    .ak-col-label {
+        font-size: 10px;
+        letter-spacing: 0.4px;
+        margin-bottom: 3px;
+    }
+    .ak-col-checkin {
+        grid-column: 1 / 2;
+        grid-row: 2;
+        flex: none !important;
+        border-right: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 10px 24px 10px 14px !important;
+        min-width: 0;
+    }
+    .ak-col-checkout {
+        grid-column: 2 / 3;
+        grid-row: 2;
+        flex: none !important;
+        border-right: none !important;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 10px 14px 10px 24px !important;
+        min-width: 0;
+    }
+    .ak-date-num {
+        font-size: 22px;
+    }
+    .ak-date-mon {
+        font-size: 13px;
+    }
+    .ak-date-day {
+        font-size: 11px;
+        margin-top: 2px;
+    }
+    .ak-nights-divider {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        justify-self: center;
+        align-self: center;
+        z-index: 15;
+        width: 0;
+        height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+    }
+    .ak-nights-pill {
+        position: static;
+        transform: none;
+        font-size: 9px;
+        padding: 2.5px 7px;
+        border-radius: 10px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #334155;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        white-space: nowrap;
+        letter-spacing: 0.2px;
+    }
+    .ak-col-guests {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        flex: none !important;
+        border-right: none !important;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 12px 14px;
+        min-width: 0;
+    }
+    .ak-guest-num {
+        font-size: 20px;
+    }
+    .ak-guest-lbl {
+        font-size: 13px;
+    }
+    .ak-search-btn-col {
+        grid-column: 1 / -1;
+        grid-row: 4;
+        padding: 12px 14px 14px 14px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .ak-search-btn {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 14px 20px;
+        font-size: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 14px rgba(235, 32, 39, 0.35);
+    }
+    
+    /* Feature info cards below hero */
+    .ak-info-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 16px;
+    }
+    .ak-info-card {
+        padding: 14px 16px;
+        border-radius: 10px;
+    }
+
+    /* Modal popups on mobile */
+    .ak-dest-popup {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 92vw !important;
+        max-width: 420px !important;
+        max-height: 85vh !important;
+        overflow-y: auto !important;
+        padding: 16px !important;
+        border-radius: 14px !important;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.35) !important;
+        z-index: 999999 !important;
+    }
+    .ak-dest-popup-header,
+    .akbar-cal-modal-header,
+    .akbar-guests-modal-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 12px !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        font-weight: 800 !important;
+        font-size: 14px !important;
+        color: #0f172a !important;
+    }
+    .ak-popup-close-btn {
+        background: #f1f5f9;
+        border: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 700;
+        color: #64748b;
+        cursor: pointer;
+        line-height: 1;
+        transition: background 0.15s;
+    }
+    .ak-popup-close-btn:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+
+    /* Calendar modal on mobile */
+    .akbar-calendar-panel {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 94vw !important;
+        max-width: 440px !important;
+        max-height: 88vh !important;
+        overflow-y: auto !important;
+        border-radius: 14px !important;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.35) !important;
+        z-index: 999999 !important;
+    }
+    .akbar-cal-modal-header {
+        padding: 14px 16px 12px !important;
+        margin-bottom: 0 !important;
+        background: #f8fafc !important;
+    }
+    .akbar-cal-header-tabs {
+        border-top: 1px solid #e2e8f0;
+    }
+    .akbar-cal-tab {
+        padding: 10px 14px;
+    }
+    .akbar-cal-tab-val {
+        font-size: 13.5px;
+    }
+    .akbar-cal-body {
+        flex-direction: column !important;
+        padding: 12px 14px 14px !important;
+        gap: 16px !important;
+    }
+    .akbar-cal-footer {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 12px 16px !important;
+        background: #ffffff !important;
+        border-top: 1px solid #e2e8f0 !important;
+    }
+    .akbar-cal-footer-nights {
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #09204b !important;
+    }
+    .akbar-cal-done-btn {
+        background: #09204b !important;
+        color: #ffffff !important;
+        border: none !important;
+        padding: 8px 20px !important;
+        border-radius: 6px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        cursor: pointer !important;
+    }
+
+    /* Guests modal on mobile */
+    .ak-guests-popup.akbar-guests-panel {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translate(-50%, -50%) !important;
+        width: 94vw !important;
+        max-width: 420px !important;
+        max-height: 88vh !important;
+        overflow-y: auto !important;
+        border-radius: 14px !important;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.35) !important;
+        z-index: 999999 !important;
+    }
+    .akbar-guests-modal-header {
+        padding: 14px 16px 12px !important;
+        margin-bottom: 0 !important;
+        background: #f8fafc !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .ak-hero-banner {
+        padding: 18px 12px 22px 12px;
+    }
+    .ak-dest-main {
+        font-size: 16px;
+    }
+    .ak-date-num {
+        font-size: 20px;
+    }
+    .ak-date-mon {
+        font-size: 12px;
+    }
+    .ak-guest-num {
+        font-size: 18px;
+    }
+    .ak-nights-pill {
+        font-size: 8px;
+        padding: 2px 5px;
+    }
+    .ak-col-checkin {
+        padding: 10px 18px 10px 10px !important;
+    }
+    .ak-col-checkout {
+        padding: 10px 10px 10px 18px !important;
+    }
+}
 </style>
 
 <script>
@@ -935,9 +1304,12 @@ function closeAllHotelDropdowns() {
     var destDropdown = document.getElementById('hotelDestDropdown');
     var guestsPopup = document.getElementById('hotelGuestsPopup');
     var calDropdown = document.getElementById('hotelCalendarDropdown');
-    if (destDropdown) destDropdown.classList.remove('open');
-    if (guestsPopup) guestsPopup.classList.remove('open');
+    var backdrop = document.getElementById('hotelPopupBackdrop');
+    if (destDropdown) destDropdown.classList.remove('open', 'show');
+    if (guestsPopup) guestsPopup.classList.remove('open', 'show');
     if (calDropdown) calDropdown.classList.remove('open', 'show');
+    if (backdrop) backdrop.classList.remove('open');
+    document.body.classList.remove('ak-modal-open');
 }
 
 document.addEventListener('click', function(e) {
@@ -946,11 +1318,15 @@ document.addEventListener('click', function(e) {
     const colCheckin = document.getElementById('colCheckin');
     const colCheckout = document.getElementById('colCheckout');
     const calDropdown = document.getElementById('hotelCalendarDropdown');
+    const destDropdown = document.getElementById('hotelDestDropdown');
+    const guestsPopup = document.getElementById('hotelGuestsPopup');
 
     if ((colDest && colDest.contains(e.target)) ||
         (colGuests && colGuests.contains(e.target)) ||
         (colCheckin && colCheckin.contains(e.target)) ||
         (colCheckout && colCheckout.contains(e.target)) ||
+        (destDropdown && destDropdown.contains(e.target)) ||
+        (guestsPopup && guestsPopup.contains(e.target)) ||
         (calDropdown && calDropdown.contains(e.target))) {
         return;
     }
@@ -1029,11 +1405,19 @@ document.addEventListener('DOMContentLoaded', function() {
 function openHotelDestDropdown(e) {
     e.stopPropagation();
     closeAllHotelDropdowns();
-    document.getElementById('hotelDestDropdown').classList.add('open');
+    var dest = document.getElementById('hotelDestDropdown');
+    if (dest) dest.classList.add('open', 'show');
+    var backdrop = document.getElementById('hotelPopupBackdrop');
+    if (backdrop && window.innerWidth <= 991) {
+        backdrop.classList.add('open');
+        document.body.classList.add('ak-modal-open');
+    }
     filterHotelCities('');
     const input = document.getElementById('hotelCitySearchInput');
-    input.value = '';
-    setTimeout(() => input.focus(), 100);
+    if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 100);
+    }
 }
 
 function filterHotelCities(query) {
@@ -1073,6 +1457,11 @@ function openHotelCalendar(e, tab) {
     switchHotelCalTab(tab);
     var cal = document.getElementById('hotelCalendarDropdown');
     if (cal) cal.classList.add('open', 'show');
+    var backdrop = document.getElementById('hotelPopupBackdrop');
+    if (backdrop && window.innerWidth <= 991) {
+        backdrop.classList.add('open');
+        document.body.classList.add('ak-modal-open');
+    }
 }
 
 function formatDateISO(d) {
@@ -1114,6 +1503,8 @@ function updateHotelDateDisplays() {
     var diffMs = selCheckout.getTime() - selCheckin.getTime();
     var nights = Math.max(1, Math.round(diffMs / 86400000));
     document.getElementById('hotelNightsCount').innerText = nights;
+    var calFooterNights = document.getElementById('hotelCalFooterNights');
+    if (calFooterNights) calFooterNights.innerText = nights;
 }
 
 function switchHotelCalTab(tab) {
@@ -1266,6 +1657,11 @@ function openHotelGuestDropdown(e) {
     var popup = document.getElementById('hotelGuestsPopup');
     if (popup) {
         popup.classList.add('open', 'show');
+    }
+    var backdrop = document.getElementById('hotelPopupBackdrop');
+    if (backdrop && window.innerWidth <= 991) {
+        backdrop.classList.add('open');
+        document.body.classList.add('ak-modal-open');
     }
 }
 
