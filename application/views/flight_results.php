@@ -3191,7 +3191,9 @@
                         <?php 
                         $legRoutes = array();
                         foreach ($search_query['multi_legs'] as $l) {
-                            $legRoutes[] = htmlspecialchars($l['From']) . ' &rarr; ' . htmlspecialchars($l['To']);
+                            $fromCode = !empty($l['from']) ? $l['from'] : (!empty($l['From']) ? $l['From'] : (!empty($l['from_raw']) ? $l['from_raw'] : 'DEL'));
+                            $toCode = !empty($l['to']) ? $l['to'] : (!empty($l['To']) ? $l['To'] : (!empty($l['to_raw']) ? $l['to_raw'] : 'BOM'));
+                            $legRoutes[] = htmlspecialchars($fromCode) . ' &rarr; ' . htmlspecialchars($toCode);
                         }
                         echo implode(' &bull; ', $legRoutes);
                         ?>
@@ -3200,7 +3202,10 @@
                         <?php 
                         $legDates = array();
                         foreach ($search_query['multi_legs'] as $l) {
-                            $legDates[] = date('d M', strtotime($l['OnwardDate']));
+                            $dStr = !empty($l['date']) ? $l['date'] : (!empty($l['OnwardDate']) ? $l['OnwardDate'] : '');
+                            if (!empty($dStr)) {
+                                $legDates[] = date('d M', strtotime($dStr));
+                            }
                         }
                         echo implode(', ', $legDates);
                         ?>
@@ -3652,7 +3657,9 @@
                     'FlightIndex' => $item['flight_index'] ?? $item['Index'] ?? ($code . '|' . ($idx + 1)),
                     'Aircraft' => !empty($item['AirCraft']) ? $item['AirCraft'] : (!empty($item['aircraft']) ? $item['aircraft'] : ($code === 'SG' ? 'BOEING' : 'AIRBUS A320')),
                     'cabin_class' => $item['cabin_class'] ?? ($search_query['cabin_class'] ?? 'Economy'),
-                    'DepartureDate' => !empty($item['departure_date']) ? $item['departure_date'] : $search_query['date']
+                    'DepartureDate' => !empty($item['departure_date']) ? $item['departure_date'] : $search_query['date'],
+                    'segments' => !empty($item['segments']) ? $item['segments'] : (!empty($item['Segments']) ? $item['Segments'] : array()),
+                    'is_multicity' => !empty($is_multicity)
                 );
             } elseif (isset($item['AirlineName']) || isset($item['FlightNumber']) || isset($item['Price']) || isset($item['GrossFare']) || isset($item['NetFare'])) {
                 $code = isset($item['AirlineCode']) ? strtoupper($item['AirlineCode']) : (isset($item['VAC']) ? strtoupper($item['VAC']) : (isset($item['Provider']) ? strtoupper($item['Provider']) : '6E'));
@@ -3719,7 +3726,9 @@
                     'FlightIndex' => $item['Index'] ?? ($item['flight_index'] ?? ($code . '|' . ($idx + 1))),
                     'Aircraft' => !empty($item['AirCraft']) ? $item['AirCraft'] : (!empty($item['aircraft']) ? $item['aircraft'] : ($code === 'SG' ? 'BOEING' : 'AIRBUS A320')),
                     'cabin_class' => $item['Cabin'] ?? ($item['cabin_class'] ?? ($search_query['cabin_class'] ?? 'Economy')),
-                    'DepartureDate' => !empty($item['DepartureTime']) ? date('Y-m-d', strtotime($item['DepartureTime'])) : ($item['departure_date'] ?? $search_query['date'])
+                    'DepartureDate' => !empty($item['DepartureTime']) ? date('Y-m-d', strtotime($item['DepartureTime'])) : ($item['departure_date'] ?? $search_query['date']),
+                    'segments' => !empty($item['segments']) ? $item['segments'] : (!empty($item['Segments']) ? $item['Segments'] : array()),
+                    'is_multicity' => !empty($is_multicity)
                 );
             }
         }
@@ -4553,6 +4562,217 @@
                      data-to="<?php echo htmlspecialchars($search_query['to_code']); ?>"
                      data-index="<?php echo htmlspecialchars($f['FlightIndex'] ?? $airlineCode . '|1'); ?>">
                     
+                    <?php if (!empty($is_multicity)): ?>
+                        <?php
+                        $airportNamesMap = array(
+                            'DEL' => 'Delhi (DEL)', 'BOM' => 'Mumbai (BOM)', 'BLR' => 'Bengaluru (BLR)',
+                            'MAA' => 'Chennai (MAA)', 'HYD' => 'Hyderabad (HYD)', 'CCU' => 'Kolkata (CCU)',
+                            'GOI' => 'Goa (GOI)', 'GOX' => 'Goa (GOX)', 'COK' => 'Kochi (COK)',
+                            'AMD' => 'Ahmedabad (AMD)', 'PNQ' => 'Pune (PNQ)', 'JAI' => 'Jaipur (JAI)',
+                            'DXB' => 'Dubai (DXB)', 'DMM' => 'Dammam (DMM)', 'SIN' => 'Singapore (SIN)',
+                            'BKK' => 'Bangkok (BKK)', 'LHR' => 'London (LHR)'
+                        );
+
+                        $mcTrips = array();
+                        $fSegments = !empty($f['segments']) ? $f['segments'] : (!empty($f['Segments']) ? $f['Segments'] : array());
+
+                        if (!empty($fSegments) && is_array($fSegments)) {
+                            foreach ($fSegments as $sIdx => $seg) {
+                                $sFlight = !empty($seg['Flight']) ? $seg['Flight'] : $seg;
+                                $segVac = !empty($sFlight['VAC']) ? strtoupper($sFlight['VAC']) : (!empty($sFlight['AirlineCode']) ? strtoupper($sFlight['AirlineCode']) : $airlineCode);
+                                $segLogo = isset($airlineMap[$segVac]) ? $airlineMap[$segVac]['logo'] : (isset($airlineMap[$airlineCode]) ? $airlineMap[$airlineCode]['logo'] : $f['AirlineLogo']);
+                                $segName = !empty($sFlight['Airline']) ? explode('|', $sFlight['Airline'])[0] : (!empty($airlineMap[$segVac]['name']) ? $airlineMap[$segVac]['name'] : ($sFlight['AirlineName'] ?? $f['AirlineName']));
+                                $rawFn = !empty($sFlight['FlightNo']) ? trim($sFlight['FlightNo']) : '';
+                                $segFn = !empty($rawFn) ? (strpos($rawFn, $segVac) === 0 ? $rawFn : ($segVac . '-' . $rawFn)) : ($sFlight['FlightNumber'] ?? $f['FlightNumber']);
+                                $segFrom = !empty($sFlight['DepartureCode']) ? strtoupper($sFlight['DepartureCode']) : (!empty($sFlight['From']) ? strtoupper($sFlight['From']) : '');
+                                $segTo = !empty($sFlight['ArrivalCode']) ? strtoupper($sFlight['ArrivalCode']) : (!empty($sFlight['To']) ? strtoupper($sFlight['To']) : '');
+                                $segDepTime = !empty($sFlight['DepartureTime']) ? date('H:i', strtotime($sFlight['DepartureTime'])) : (!empty($sFlight['departure_time']) ? $sFlight['departure_time'] : '06:00');
+                                $segArrTime = !empty($sFlight['ArrivalTime']) ? date('H:i', strtotime($sFlight['ArrivalTime'])) : (!empty($sFlight['arrival_time']) ? $sFlight['arrival_time'] : '08:15');
+                                $segDepDate = !empty($sFlight['DepartureTime']) ? date('d M, D', strtotime($sFlight['DepartureTime'])) : (!empty($search_query['multi_legs'][$sIdx]['date']) ? date('d M, D', strtotime($search_query['multi_legs'][$sIdx]['date'])) : '');
+                                $segDur = !empty($sFlight['Duration']) ? trim($sFlight['Duration']) : '2h 15m';
+                                $segFromName = !empty($sFlight['DepAirportName']) ? (explode('|', $sFlight['DepAirportName'])[1] ?? explode('|', $sFlight['DepAirportName'])[0]) : ($airportNamesMap[$segFrom] ?? $segFrom);
+                                $segToName = !empty($sFlight['ArrAirportName']) ? (explode('|', $sFlight['ArrAirportName'])[1] ?? explode('|', $sFlight['ArrAirportName'])[0]) : ($airportNamesMap[$segTo] ?? $segTo);
+                                $segOperated = !empty($sFlight['OAC']) && $sFlight['OAC'] !== $segVac && isset($airlineMap[$sFlight['OAC']]) ? ('Operated by: ' . $airlineMap[$sFlight['OAC']]['name']) : '';
+
+                                $segNextDay = false;
+                                if (!empty($sFlight['DepartureTime']) && !empty($sFlight['ArrivalTime'])) {
+                                    $segNextDay = (date('Y-m-d', strtotime($sFlight['ArrivalTime'])) > date('Y-m-d', strtotime($sFlight['DepartureTime'])));
+                                }
+
+                                $mcTrips[] = array(
+                                    'trip_num' => $sIdx + 1,
+                                    'from_code' => $segFrom,
+                                    'to_code' => $segTo,
+                                    'from_name' => $segFromName . ' (' . $segFrom . ')',
+                                    'to_name' => $segToName . ' (' . $segTo . ')',
+                                    'date_str' => $segDepDate,
+                                    'logo' => $segLogo,
+                                    'airline_name' => $segName,
+                                    'airline_code' => $segVac,
+                                    'flight_no' => $segFn,
+                                    'operated_by' => $segOperated,
+                                    'dep_time' => $segDepTime,
+                                    'arr_time' => $segArrTime,
+                                    'duration' => $segDur,
+                                    'stops_text' => 'Non Stop',
+                                    'is_next_day' => $segNextDay
+                                );
+                            }
+                        } else {
+                            if (!empty($search_query['multi_legs']) && is_array($search_query['multi_legs'])) {
+                                foreach ($search_query['multi_legs'] as $sIdx => $leg) {
+                                    $lFrom = !empty($leg['from']) ? $leg['from'] : (!empty($leg['From']) ? $leg['From'] : 'DEL');
+                                    $lTo = !empty($leg['to']) ? $leg['to'] : (!empty($leg['To']) ? $leg['To'] : 'BOM');
+                                    $lDate = !empty($leg['date']) ? $leg['date'] : (!empty($leg['OnwardDate']) ? $leg['OnwardDate'] : '');
+                                    $lFromName = !empty($leg['from_raw']) ? explode('(', $leg['from_raw'])[0] : ($airportNamesMap[$lFrom] ?? $lFrom);
+                                    $lToName = !empty($leg['to_raw']) ? explode('(', $leg['to_raw'])[0] : ($airportNamesMap[$lTo] ?? $lTo);
+
+                                    $mcTrips[] = array(
+                                        'trip_num' => $sIdx + 1,
+                                        'from_code' => $lFrom,
+                                        'to_code' => $lTo,
+                                        'from_name' => trim($lFromName) . ' (' . $lFrom . ')',
+                                        'to_name' => trim($lToName) . ' (' . $lTo . ')',
+                                        'date_str' => !empty($lDate) ? date('d M, D', strtotime($lDate)) : '',
+                                        'logo' => $f['AirlineLogo'],
+                                        'airline_name' => $f['AirlineName'],
+                                        'airline_code' => $airlineCode,
+                                        'flight_no' => $f['FlightNumber'],
+                                        'operated_by' => '',
+                                        'dep_time' => $f['DepartureTime'],
+                                        'arr_time' => $f['ArrivalTime'],
+                                        'duration' => $f['Duration'],
+                                        'stops_text' => ($owStops == 0) ? 'Non Stop' : ($owStops . ' Stop'),
+                                        'is_next_day' => $isNextDay
+                                    );
+                                }
+                            }
+                        }
+
+                        $participatingAirlines = array();
+                        foreach ($mcTrips as $t) {
+                            $c = $t['airline_code'];
+                            if (!isset($participatingAirlines[$c])) {
+                                $participatingAirlines[$c] = array(
+                                    'code' => $c,
+                                    'name' => $t['airline_name'],
+                                    'logo' => $t['logo']
+                                );
+                            }
+                        }
+                        if (empty($participatingAirlines)) {
+                            $participatingAirlines[$airlineCode] = array(
+                                'code' => $airlineCode,
+                                'name' => $f['AirlineName'],
+                                'logo' => $f['AirlineLogo']
+                            );
+                        }
+                        $cardTui = (!empty($f['ResultID']) && strpos($f['ResultID'], 'FL_') !== 0) ? $f['ResultID'] : (!empty($search_tui) ? $search_tui : ($search_query['tui'] ?? $f['ResultID']));
+                        ?>
+                        <!-- MULTI-CITY CARD HEADER (Akbar Travels Screenshot 2) -->
+                        <div class="mc-card-top" style="display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-bottom:1px solid #e2e8f0; background:#fff; border-radius:12px 12px 0 0;">
+                            <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+                                <?php foreach ($participatingAirlines as $pAirline): ?>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <img src="<?php echo htmlspecialchars($pAirline['logo']); ?>" alt="" style="height:28px; width:28px; object-fit:contain;" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($pAirline['name']); ?>&background=0d3470&color=fff';">
+                                    <span style="font-weight:700; color:#0f172a; font-size:14px;"><?php echo htmlspecialchars($pAirline['name']); ?></span>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+
+                            <div style="display:flex; align-items:center; gap:24px;">
+                                <div style="text-align:right;">
+                                    <div style="font-size:12px; color:#ef4444; text-decoration:line-through; font-weight:600; line-height:1.2;">₹ <?php echo number_format($strikePrice); ?></div>
+                                    <strong style="font-size:22px; color:#0f172a; display:block; line-height:1.2;">₹ <?php echo number_format($owPrice); ?></strong>
+                                    <div style="font-size:11px; color:#16a34a; font-weight:700; margin-top:2px;">Extra ₹ <?php echo number_format($discountAmt); ?> Off</div>
+                                </div>
+                                <div style="display:flex; flex-direction:column; align-items:flex-end;">
+                                    <form action="<?php echo site_url('flight/review'); ?>" method="POST" style="margin:0;">
+                                        <input type="hidden" name="tripType" value="multicity">
+                                        <input type="hidden" name="from_city" value="<?php echo htmlspecialchars($search_query['from'] ?? ''); ?>">
+                                        <input type="hidden" name="to_city" value="<?php echo htmlspecialchars($search_query['to'] ?? ''); ?>">
+                                        <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($cardTui); ?>">
+                                        <input type="hidden" name="tui" value="<?php echo htmlspecialchars($cardTui); ?>">
+                                        <input type="hidden" name="discount_amount" value="<?php echo htmlspecialchars($discountAmt); ?>">
+                                        <input type="hidden" name="airline_name" value="<?php echo htmlspecialchars($f['AirlineName']); ?>">
+                                        <input type="hidden" name="airline_logo" value="<?php echo htmlspecialchars($f['AirlineLogo']); ?>">
+                                        <input type="hidden" name="flight_number" value="<?php echo htmlspecialchars($f['FlightNumber']); ?>">
+                                        <input type="hidden" name="flight_index" value="<?php echo htmlspecialchars($f['FlightIndex'] ?? $airlineCode . '|1'); ?>">
+                                        <input type="hidden" name="from_code" value="<?php echo htmlspecialchars($search_query['from_code']); ?>">
+                                        <input type="hidden" name="to_code" value="<?php echo htmlspecialchars($search_query['to_code']); ?>">
+                                        <input type="hidden" name="departure_time" value="<?php echo htmlspecialchars($f['DepartureTime']); ?>">
+                                        <input type="hidden" name="arrival_time" value="<?php echo htmlspecialchars($f['ArrivalTime']); ?>">
+                                        <input type="hidden" name="duration" value="<?php echo htmlspecialchars($f['Duration']); ?>">
+                                        <input type="hidden" name="stops" value="<?php echo htmlspecialchars($f['Stops'] ?? 0); ?>">
+                                        <input type="hidden" name="via" value="<?php echo htmlspecialchars(!empty($f['via']) ? $f['via'] : (!empty($f['Via']) ? $f['Via'] : '')); ?>">
+                                        <input type="hidden" name="departure_date" value="<?php echo htmlspecialchars($search_query['date']); ?>">
+                                        <input type="hidden" name="price" value="<?php echo htmlspecialchars($f['Price']); ?>">
+                                        <input type="hidden" name="adults" value="<?php echo htmlspecialchars($search_query['adults'] ?? 1); ?>">
+                                        <input type="hidden" name="children" value="<?php echo htmlspecialchars($search_query['children'] ?? 0); ?>">
+                                        <input type="hidden" name="infants" value="<?php echo htmlspecialchars($search_query['infants'] ?? 0); ?>">
+                                        <input type="hidden" name="cabin_class" value="<?php echo htmlspecialchars($search_query['cabin_class'] ?? 'Economy'); ?>">
+                                        <input type="hidden" name="flight_type" value="<?php echo (!empty($is_international) || ($flight_type ?? '') === 'I') ? 'I' : 'D'; ?>">
+                                        <input type="hidden" name="is_international" value="<?php echo (!empty($is_international) || ($flight_type ?? '') === 'I') ? '1' : '0'; ?>">
+                                        <input type="hidden" name="refundable" value="<?php echo !empty($f['Refundable']) ? '1' : '0'; ?>">
+                                        <input type="hidden" name="is_refundable" value="<?php echo !empty($f['Refundable']) ? '1' : '0'; ?>">
+                                        <button type="submit" class="f-book-btn" style="background:#ef4444; color:#fff; border:none; padding:10px 24px; border-radius:6px; font-weight:700; font-size:14px; cursor:pointer;">Book Now</button>
+                                    </form>
+                                    <div style="display:flex; align-items:center; gap:8px; margin-top:5px;">
+                                        <button type="button" class="btn-details-toggle" id="btn_toggle_<?php echo $idx; ?>" onclick="toggleFlightDetails('details_drawer_<?php echo $idx; ?>', this);" style="background:none; border:none; color:#0284c7; font-size:12px; font-weight:700; cursor:pointer; padding:0;">+ Details</button>
+                                        <span class="badge-refundable-r" style="color:<?php echo !empty($f['Refundable']) ? '#16a34a' : '#ea580c'; ?>; font-weight:800; font-size:12px;">
+                                            <?php echo !empty($f['Refundable']) ? 'R' : 'N'; ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- MULTI-CITY SECTOR PANELS (Akbar Travels Screenshot 2) -->
+                        <div class="mc-sectors-body" style="background:#fff;">
+                            <?php foreach ($mcTrips as $trip): ?>
+                            <div class="mc-trip-panel" style="border-bottom:1px solid #f1f5f9;">
+                                <div class="mc-trip-header" style="background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 100%); padding: 8px 20px; font-size: 13px; font-weight: 700; color: #0284c7;">
+                                    Trip <?php echo $trip['trip_num']; ?>: <?php echo htmlspecialchars($trip['from_name']); ?> to <?php echo htmlspecialchars($trip['to_name']); ?> <?php if (!empty($trip['date_str'])): ?>| <?php echo htmlspecialchars($trip['date_str']); ?><?php endif; ?>
+                                </div>
+                                <div class="mc-flight-row" style="display: flex; align-items: center; padding: 14px 20px; gap: 20px;">
+                                    <div style="color: #ef4444; font-size: 16px;">
+                                        <i class="fa-solid fa-circle-dot"></i>
+                                    </div>
+                                    <div style="width: 36px; height: 36px; flex-shrink: 0;">
+                                        <img src="<?php echo htmlspecialchars($trip['logo']); ?>" alt="" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($trip['airline_name']); ?>&background=0d3470&color=fff';">
+                                    </div>
+                                    <div style="min-width: 140px;">
+                                        <strong style="display: block; font-size: 14px; color: #0f172a;"><?php echo htmlspecialchars($trip['airline_name']); ?></strong>
+                                        <span style="font-size: 12px; color: #64748b; font-weight: 600;"><?php echo htmlspecialchars($trip['flight_no']); ?></span>
+                                        <?php if (!empty($trip['operated_by'])): ?>
+                                            <div style="font-size: 11px; color: #94a3b8;"><?php echo htmlspecialchars($trip['operated_by']); ?></div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div style="min-width: 110px;">
+                                        <strong style="display: block; font-size: 18px; color: #0f172a; font-weight: 800;"><?php echo htmlspecialchars($trip['dep_time']); ?></strong>
+                                        <span style="font-size: 12px; color: #64748b;"><?php echo htmlspecialchars($trip['from_code']); ?></span>
+                                    </div>
+                                    <div style="flex: 1; max-width: 160px; text-align: center;">
+                                        <span style="font-size: 11.5px; color: #64748b; font-weight: 600; display: block;"><?php echo htmlspecialchars($trip['duration']); ?></span>
+                                        <div style="position: relative; height: 2px; background: #cbd5e1; margin: 6px 0;">
+                                            <i class="fa-solid fa-plane" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #0284c7; background: #fff; padding: 0 4px; font-size: 11px;"></i>
+                                        </div>
+                                        <span style="font-size: 11px; color: #16a34a; font-weight: 700;"><?php echo htmlspecialchars($trip['stops_text']); ?></span>
+                                    </div>
+                                    <div style="min-width: 110px;">
+                                        <strong style="display: block; font-size: 18px; color: #0f172a; font-weight: 800;"><?php echo htmlspecialchars($trip['arr_time']); ?></strong>
+                                        <span style="font-size: 12px; color: #64748b;">
+                                            <?php echo htmlspecialchars($trip['to_code']); ?>
+                                            <?php if (!empty($trip['is_next_day'])): ?>
+                                                <small style="color: #ef4444; font-size: 10px; font-weight: 700; display: block;">Next Day</small>
+                                            <?php endif; ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
                     <div class="f-card-main">
                         <div class="f-airline">
                             <div class="f-logo">
@@ -4658,6 +4878,7 @@
                             </div>
                         </div>
                     </div>
+                    <?php endif; ?>
 
                     <!-- Notice Row (Screenshot 2: Meal, Seat are chargeable) -->
                     <div style="padding: 6px 20px 10px 20px; font-size: 11.5px; color: #475569; display: flex; align-items: center; gap: 6px; border-top: 1px dashed #f1f5f9;">
@@ -4687,7 +4908,40 @@
                                     </div>
                                 </div>
 
-                                <?php if ($owStops === 0): ?>
+                                <?php if (!empty($is_multicity) && !empty($mcTrips)): ?>
+                                    <!-- Multi-City Sectors Breakdown in Details Drawer -->
+                                    <?php foreach ($mcTrips as $mct): ?>
+                                    <div class="f-leg-card" style="margin-bottom:12px;">
+                                        <div class="f-leg-airline">
+                                            <img src="<?php echo htmlspecialchars($mct['logo']); ?>" alt="" onerror="this.src='https://ui-avatars.com/api/?name=<?php echo urlencode($mct['airline_name']); ?>&background=0d3470&color=fff';">
+                                            <div class="f-leg-airline-name">
+                                                <strong><?php echo htmlspecialchars($mct['airline_name']); ?></strong>
+                                                <span><?php echo htmlspecialchars($mct['flight_no']); ?></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="f-leg-point">
+                                            <span class="f-point-time"><?php echo htmlspecialchars($mct['dep_time']); ?></span>
+                                            <span class="f-point-date"><?php echo htmlspecialchars($mct['date_str']); ?></span>
+                                            <span class="f-point-city"><?php echo htmlspecialchars($mct['from_name']); ?></span>
+                                        </div>
+
+                                        <div class="f-leg-mid">
+                                            <span class="f-leg-duration"><?php echo htmlspecialchars($mct['duration']); ?></span>
+                                            <div class="f-leg-flight-line">
+                                                <i class="fa-solid fa-plane"></i>
+                                            </div>
+                                            <span style="font-size:10px; color:#16a34a; font-weight:700;"><?php echo htmlspecialchars($mct['stops_text']); ?></span>
+                                        </div>
+
+                                        <div class="f-leg-point">
+                                            <span class="f-point-time"><?php echo htmlspecialchars($mct['arr_time']); ?></span>
+                                            <span class="f-point-date"><?php echo htmlspecialchars($mct['date_str']); ?></span>
+                                            <span class="f-point-city"><?php echo htmlspecialchars($mct['to_name']); ?></span>
+                                        </div>
+                                    </div>
+                                    <?php endforeach; ?>
+                                <?php elseif ($owStops === 0): ?>
                                 <!-- Non-Stop Flight Leg -->
                                 <div class="f-leg-card">
                                     <div class="f-leg-airline">

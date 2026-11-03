@@ -76,12 +76,15 @@ class Welcome extends CI_Controller {
                 }
 
                 $multi_legs[] = array(
-                    'from_raw'  => $legFromRaw,
-                    'to_raw'    => $legToRaw,
-                    'from'      => $lfCode,
-                    'to'        => $ltCode,
-                    'date'      => $legDate,
-                    'leg_index' => $i + 1
+                    'from_raw'   => $legFromRaw,
+                    'to_raw'     => $legToRaw,
+                    'from'       => $lfCode,
+                    'From'       => $lfCode,
+                    'to'         => $ltCode,
+                    'To'         => $ltCode,
+                    'date'       => $legDate,
+                    'OnwardDate' => $legDate,
+                    'leg_index'  => $i + 1
                 );
             }
 
