@@ -3184,6 +3184,29 @@
     <div class="search-header-container">
         <div class="container">
             <div class="search-header-box">
+                <?php if (!empty($is_multicity) && !empty($search_query['multi_legs'])): ?>
+                <div class="sh-block" style="flex: 2.2;">
+                    <span class="sh-label"><i class="fa-solid fa-route" style="color: #ef4444; margin-right: 4px;"></i> Multi-City Itinerary (<?php echo count($search_query['multi_legs']); ?> Sectors)</span>
+                    <strong class="sh-title" style="font-size: 15px; color: #0d3470;">
+                        <?php 
+                        $legRoutes = array();
+                        foreach ($search_query['multi_legs'] as $l) {
+                            $legRoutes[] = htmlspecialchars($l['From']) . ' &rarr; ' . htmlspecialchars($l['To']);
+                        }
+                        echo implode(' &bull; ', $legRoutes);
+                        ?>
+                    </strong>
+                    <span class="sh-sub">
+                        <?php 
+                        $legDates = array();
+                        foreach ($search_query['multi_legs'] as $l) {
+                            $legDates[] = date('d M', strtotime($l['OnwardDate']));
+                        }
+                        echo implode(', ', $legDates);
+                        ?>
+                    </span>
+                </div>
+                <?php else: ?>
                 <div class="sh-block">
                     <span class="sh-label">From</span>
                     <strong class="sh-title"><?php echo htmlspecialchars($search_query['from']); ?></strong>
@@ -3201,6 +3224,7 @@
                     <strong class="sh-title"><?php echo date('d M\'y', strtotime($search_query['date'])); ?></strong>
                     <span class="sh-sub"><?php echo date('l', strtotime($search_query['date'])); ?></span>
                 </div>
+                <?php endif; ?>
                 <?php if (!empty($is_roundtrip) && !empty($search_query['return_date'])): ?>
                 <div class="sh-divider"></div>
                 <div class="sh-block">
@@ -3701,7 +3725,7 @@
         }
     }
 
-    if (empty($onwardFlights)) {
+    if (empty($onwardFlights) && empty($is_multicity)) {
         $mockAirlines = array(
             // Non-Stop Flights (Matching Akbar Travels Screenshot 1 & 2)
             array('code' => 'SG', 'name' => 'SpiceJet', 'flight_no' => 'SG - 164', 'logo' => 'https://imgak.mmtcdn.com/flights/assets/media/dt/common/icons/SG.png', 'dep' => '23:25', 'arr' => '01:50', 'dur' => '2 Hr  25 Min', 'stops' => 0, 'price' => 6034, 'base_fare' => 4500, 'taxes' => 1534, 'via' => '', 'seats' => 1, 'aircraft' => 'BOEING', 'refundable' => false),
@@ -4958,10 +4982,19 @@
                     }
                 } else {
                 ?>
-                    <div class="no-flights-msg" style="padding: 50px; text-align: center; background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 10px;">
-                        <h3 style="color: #ef4444; font-family: var(--font-heading);">No Flights Found</h3>
-                        <p style="color: #64748b; margin-top: 10px;">Please try modifying your origin, destination, or travel date.</p>
-                        <a href="<?php echo site_url('flight'); ?>" class="btn-search" style="display: inline-flex; margin-top: 15px;">Search Again</a>
+                    <div class="no-flights-msg" style="padding: 50px 20px; text-align: center; background: #fff; border-radius: 12px; border: 1.5px solid #e2e8f0; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.04);">
+                        <i class="fa-solid fa-route" style="font-size: 42px; color: #ef4444; margin-bottom: 14px; display: inline-block;"></i>
+                        <h3 style="color: #0f172a; font-family: var(--font-heading); font-size: 20px; font-weight: 800;">
+                            <?php echo !empty($is_multicity) ? 'No Multi-City Flights Found' : 'No Flights Found'; ?>
+                        </h3>
+                        <p style="color: #64748b; margin-top: 8px; font-size: 14px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                            <?php echo !empty($is_multicity) 
+                                ? 'No live airline itineraries matched this multi-city route. Please try adjusting your sector combinations or dates.' 
+                                : 'Please try modifying your origin, destination, or travel date.'; ?>
+                        </p>
+                        <a href="<?php echo site_url('flight'); ?>" class="btn-search" style="display: inline-flex; margin-top: 18px; align-items: center; gap: 8px; padding: 10px 24px; border-radius: 8px; background: #0d3470; color: #fff; text-decoration: none; font-weight: 700;">
+                            <i class="fa-solid fa-arrow-left"></i> Modify Multi-City Search
+                        </a>
                     </div>
                 <?php } ?>
             </div>

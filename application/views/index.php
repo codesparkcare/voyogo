@@ -194,6 +194,10 @@
             <!-- Search Inputs Form -->
             <form action="<?php echo function_exists('site_url') ? site_url('flight/search') : '#'; ?>" method="POST" id="flightSearchForm">
                 <input type="hidden" name="tripType" id="hiddenTripType" value="oneway">
+                <input type="hidden" name="adults" id="hiddenAdults" value="1">
+                <input type="hidden" name="children" id="hiddenChildren" value="0">
+                <input type="hidden" name="infants" id="hiddenInfants" value="0">
+                <input type="hidden" name="cabin_class" id="hiddenCabinClass" value="Economy">
                 <div class="search-grid" id="standardSearchGrid">
                     
                     <!-- From & To Group with Centered Swap Button -->
@@ -317,11 +321,6 @@
                         <div class="input-val" id="passengerSummary">1 Traveler, Economy</div>
                         <div class="input-subtext">Click to change</div>
 
-                        <input type="hidden" name="adults" id="hiddenAdults" value="1">
-                        <input type="hidden" name="children" id="hiddenChildren" value="0">
-                        <input type="hidden" name="infants" id="hiddenInfants" value="0">
-                        <input type="hidden" name="cabin_class" id="hiddenCabinClass" value="Economy">
-
                         <!-- Dropdown Popup -->
                         <div class="dropdown-popup" id="passengerDropdown" style="z-index: 99999; text-align: left;" onclick="event.stopPropagation();">
                             <div class="counter-row">
@@ -371,65 +370,207 @@
 
                 </div>
 
-                <!-- Multi City Container (hidden by default) -->
-                <div id="multiCitySearchContainer" style="display: none; background: #ffffff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 10px;">
-                    <div style="font-family: var(--font-heading); font-weight: 800; font-size: 16px; color: #0d3470; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;">
+                <!-- Multi City Container (hidden by default, Akbar Travels Style) -->
+                <div id="multiCitySearchContainer" style="display: none; background: #ffffff; padding: 22px 20px; border-radius: 12px; border: 1.5px solid #e2e8f0; margin-top: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); position: relative;">
+                    <div style="font-family: var(--font-heading); font-weight: 800; font-size: 15px; color: #0d3470; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;">
                         <span><i class="fa-solid fa-route" style="color: #ef4444; margin-right: 6px;"></i> Build Your Multi-City Itinerary</span>
-                        <span style="font-size: 12px; font-weight: 500; color: #64748b;">Add up to 5 flight legs</span>
+                        <span style="font-size: 12px; font-weight: 600; color: #64748b;">Add up to 5 flight sectors</span>
                     </div>
 
                     <!-- Dynamic Flight Legs Container -->
-                    <div id="multiCityLegsList" style="display: flex; flex-direction: column; gap: 12px;">
+                    <div id="multiCityLegsList" style="display: flex; flex-direction: column; gap: 10px;">
                         
                         <!-- Leg 1 -->
-                        <div class="multi-leg-row" data-leg="1" style="display: grid; grid-template-columns: 2fr 2fr 1.5fr 40px; gap: 12px; align-items: center; background: #f8fafc; padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1;">
-                            <div>
-                                <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Flight 1 - From</label>
-                                <input type="text" class="field-input multi-from-input" name="multi_from[]" value="Delhi (DEL)" placeholder="City / Code" required disabled style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+                        <div class="multi-leg-row" data-leg="1" style="display: grid; grid-template-columns: 2.2fr 2.2fr 1.6fr 1.8fr 38px; gap: 10px; align-items: center; background: #ffffff; padding: 6px 0; position: relative;">
+                            <!-- From -->
+                            <div class="input-box multi-airport-box" data-type="from" data-leg="1" style="cursor: pointer; position: relative; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; transition: all 0.2s;">
+                                <div class="input-label" style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 3px; display: flex; align-items: center; gap: 4px;">
+                                    <i class="fa-solid fa-plane-departure" style="color: #0284c7;"></i> From
+                                </div>
+                                <div class="input-val multi-city-val" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;">Delhi</div>
+                                <div class="input-subtext multi-city-sub" style="font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">DEL, Indira Gandhi Intl Airport</div>
+                                <input type="hidden" name="multi_from[]" class="multi-from-code" value="Delhi (DEL)">
                             </div>
-                            <div>
-                                <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">To</label>
-                                <input type="text" class="field-input multi-to-input" name="multi_to[]" value="Mumbai (BOM)" placeholder="City / Code" required disabled style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+
+                            <!-- To -->
+                            <div class="input-box multi-airport-box" data-type="to" data-leg="1" style="cursor: pointer; position: relative; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; transition: all 0.2s;">
+                                <div class="input-label" style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 3px; display: flex; align-items: center; gap: 4px;">
+                                    <i class="fa-solid fa-plane-arrival" style="color: #0284c7;"></i> To
+                                </div>
+                                <div class="input-val multi-city-val" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;">Mumbai</div>
+                                <div class="input-subtext multi-city-sub" style="font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">BOM, Chhatrapati Shivaji Maharaj Intl</div>
+                                <input type="hidden" name="multi_to[]" class="multi-to-code" value="Mumbai (BOM)">
                             </div>
-                            <div>
-                                <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Departure Date</label>
-                                <input type="date" class="field-input" name="multi_date[]" value="<?php echo date('Y-m-d', strtotime('+3 days')); ?>" required disabled style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 600; background: #ffffff;">
+
+                            <!-- Departure Date -->
+                            <div class="input-box multi-date-box" style="cursor: pointer; position: relative; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; transition: all 0.2s;">
+                                <div class="input-label" style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 3px; display: flex; align-items: center; justify-content: space-between;">
+                                    <span><i class="fa-regular fa-calendar-days" style="color: #0284c7;"></i> Departure</span>
+                                    <i class="fa-solid fa-chevron-down" style="font-size: 9px; color: #94a3b8;"></i>
+                                </div>
+                                <div class="input-val multi-date-val" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;"><?php echo date('d M\'y', strtotime('+3 days')); ?></div>
+                                <div class="input-subtext multi-date-sub" style="font-size: 11px; color: #64748b; margin-top: 2px;"><?php echo date('l', strtotime('+3 days')); ?></div>
+                                <input type="date" name="multi_date[]" class="multi-date-input" value="<?php echo date('Y-m-d', strtotime('+3 days')); ?>" min="<?php echo date('Y-m-d'); ?>" style="position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 5;">
                             </div>
-                            <div style="text-align: center; padding-top: 14px;">
-                                <span style="font-size: 11px; font-weight: 800; color: #94a3b8;">LEG 1</span>
+
+                            <!-- Travellers & Class (Leg 1 only) -->
+                            <div class="input-box multi-passenger-box" id="multiPassengerBox" style="cursor: pointer; position: relative; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; transition: all 0.2s;">
+                                <div class="input-label" style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 3px; display: flex; align-items: center; gap: 4px;">
+                                    <i class="fa-solid fa-users" style="color: #0284c7;"></i> Travellers & Class
+                                </div>
+                                <div class="input-val" id="multiPaxText" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;">1 Traveller</div>
+                                <div class="input-subtext" id="multiClassText" style="font-size: 11px; color: #64748b; margin-top: 2px;">Economy</div>
+
+                                <!-- Synced Passenger Dropdown Popup for Multi-City -->
+                                <div class="dropdown-popup" id="multiPassengerDropdown" style="z-index: 999999; text-align: left; width: 280px; position: absolute; top: calc(100% + 4px); right: 0; background: #ffffff; border-radius: 12px; box-shadow: 0 12px 35px rgba(0,0,0,0.25); border: 1px solid #cbd5e1; padding: 14px;" onclick="event.stopPropagation();">
+                                    <div class="counter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                        <div class="counter-info">
+                                            <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: #09204b;">Adults</h4>
+                                            <p style="margin: 0; font-size: 11px; color: #64748b;">12+ years</p>
+                                        </div>
+                                        <div class="counter-controls" style="display: flex; align-items: center; gap: 8px;">
+                                            <button type="button" class="counter-btn" onclick="event.stopPropagation(); updatePassengers('adult', -1);">-</button>
+                                            <span class="counter-val multi-adult-count" style="font-weight: 700; font-size: 14px; min-width: 20px; text-align: center;">1</span>
+                                            <button type="button" class="counter-btn" onclick="event.stopPropagation(); updatePassengers('adult', 1);">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="counter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                        <div class="counter-info">
+                                            <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: #09204b;">Children</h4>
+                                            <p style="margin: 0; font-size: 11px; color: #64748b;">2-12 years</p>
+                                        </div>
+                                        <div class="counter-controls" style="display: flex; align-items: center; gap: 8px;">
+                                            <button type="button" class="counter-btn" onclick="event.stopPropagation(); updatePassengers('child', -1);">-</button>
+                                            <span class="counter-val multi-child-count" style="font-weight: 700; font-size: 14px; min-width: 20px; text-align: center;">0</span>
+                                            <button type="button" class="counter-btn" onclick="event.stopPropagation(); updatePassengers('child', 1);">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="counter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                        <div class="counter-info">
+                                            <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: #09204b;">Infants</h4>
+                                            <p style="margin: 0; font-size: 11px; color: #64748b;">Below 2 years</p>
+                                        </div>
+                                        <div class="counter-controls" style="display: flex; align-items: center; gap: 8px;">
+                                            <button type="button" class="counter-btn" onclick="event.stopPropagation(); updatePassengers('infant', -1);">-</button>
+                                            <span class="counter-val multi-infant-count" style="font-weight: 700; font-size: 14px; min-width: 20px; text-align: center;">0</span>
+                                            <button type="button" class="counter-btn" onclick="event.stopPropagation(); updatePassengers('infant', 1);">+</button>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #f1f5f9;" onclick="event.stopPropagation();">
+                                        <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px; color: #0d3470;">Cabin Class</label>
+                                        <select class="field-input multi-cabin-select" style="width: 100%; padding: 8px 12px; border: 1.5px solid #0d3470; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;" onclick="event.stopPropagation();">
+                                            <option value="Economy">Economy</option>
+                                            <option value="Premium Economy">Premium Economy</option>
+                                            <option value="Business">Business</option>
+                                            <option value="First Class">First Class</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Remove Button / Spacer -->
+                            <div style="text-align: center;">
+                                <span style="color: #cbd5e1; font-size: 18px;" title="Sector 1">&bull;</span>
                             </div>
                         </div>
 
                         <!-- Leg 2 -->
-                        <div class="multi-leg-row" data-leg="2" style="display: grid; grid-template-columns: 2fr 2fr 1.5fr 40px; gap: 12px; align-items: center; background: #f8fafc; padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1;">
-                            <div>
-                                <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Flight 2 - From</label>
-                                <input type="text" class="field-input multi-from-input" name="multi_from[]" value="Mumbai (BOM)" placeholder="City / Code" required disabled style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+                        <div class="multi-leg-row" data-leg="2" style="display: grid; grid-template-columns: 2.2fr 2.2fr 1.6fr 1.8fr 38px; gap: 10px; align-items: center; background: #ffffff; padding: 6px 0; position: relative;">
+                            <!-- From -->
+                            <div class="input-box multi-airport-box" data-type="from" data-leg="2" style="cursor: pointer; position: relative; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; transition: all 0.2s;">
+                                <div class="input-label" style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 3px; display: flex; align-items: center; gap: 4px;">
+                                    <i class="fa-solid fa-plane-departure" style="color: #0284c7;"></i> From
+                                </div>
+                                <div class="input-val multi-city-val" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;">Mumbai</div>
+                                <div class="input-subtext multi-city-sub" style="font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">BOM, Chhatrapati Shivaji Maharaj Intl</div>
+                                <input type="hidden" name="multi_from[]" class="multi-from-code" value="Mumbai (BOM)">
                             </div>
-                            <div>
-                                <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">To</label>
-                                <input type="text" class="field-input multi-to-input" name="multi_to[]" value="Bengaluru (BLR)" placeholder="City / Code" required disabled style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+
+                            <!-- To -->
+                            <div class="input-box multi-airport-box" data-type="to" data-leg="2" style="cursor: pointer; position: relative; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; transition: all 0.2s;">
+                                <div class="input-label" style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 3px; display: flex; align-items: center; gap: 4px;">
+                                    <i class="fa-solid fa-plane-arrival" style="color: #0284c7;"></i> To
+                                </div>
+                                <div class="input-val multi-city-val" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;">Bengaluru</div>
+                                <div class="input-subtext multi-city-sub" style="font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">BLR, Kempegowda Intl Airport</div>
+                                <input type="hidden" name="multi_to[]" class="multi-to-code" value="Bengaluru (BLR)">
                             </div>
-                            <div>
-                                <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Departure Date</label>
-                                <input type="date" class="field-input" name="multi_date[]" value="<?php echo date('Y-m-d', strtotime('+6 days')); ?>" required disabled style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 600; background: #ffffff;">
+
+                            <!-- Departure Date -->
+                            <div class="input-box multi-date-box" style="cursor: pointer; position: relative; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; transition: all 0.2s;">
+                                <div class="input-label" style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 3px; display: flex; align-items: center; justify-content: space-between;">
+                                    <span><i class="fa-regular fa-calendar-days" style="color: #0284c7;"></i> Departure</span>
+                                    <i class="fa-solid fa-chevron-down" style="font-size: 9px; color: #94a3b8;"></i>
+                                </div>
+                                <div class="input-val multi-date-val" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;"><?php echo date('d M\'y', strtotime('+6 days')); ?></div>
+                                <div class="input-subtext multi-date-sub" style="font-size: 11px; color: #64748b; margin-top: 2px;"><?php echo date('l', strtotime('+6 days')); ?></div>
+                                <input type="date" name="multi_date[]" class="multi-date-input" value="<?php echo date('Y-m-d', strtotime('+6 days')); ?>" min="<?php echo date('Y-m-d'); ?>" style="position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 5;">
                             </div>
-                            <div style="text-align: center; padding-top: 14px;">
-                                <button type="button" class="btn-remove-leg" onclick="removeMultiLeg(this)" style="background: none; border: none; color: #ef4444; font-size: 16px; cursor: pointer;" title="Remove Leg"><i class="fa-solid fa-trash-can"></i></button>
+
+                            <!-- Leg Tag Spacer -->
+                            <div class="multi-leg-spacer" style="display: flex; align-items: center; justify-content: center; height: 100%; border: 1.5px dashed #cbd5e1; border-radius: 8px; color: #64748b; font-size: 12px; font-weight: 700; padding: 10px; background: #f8fafc;">
+                                <span><i class="fa-solid fa-plane" style="color: #0284c7; margin-right: 4px;"></i> Sector 2</span>
+                            </div>
+
+                            <!-- Remove Button -->
+                            <div style="text-align: center;">
+                                <button type="button" class="btn-remove-leg" onclick="removeMultiLeg(this)" style="background: none; border: none; color: #ef4444; font-size: 18px; cursor: pointer; padding: 6px; border-radius: 50%; transition: all 0.2s;" title="Remove Sector">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
                             </div>
                         </div>
 
                     </div>
 
-                    <!-- Controls Bar -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;">
-                        <button type="button" id="addMultiLegBtn" style="background: #eff6ff; color: #2563eb; border: 1.5px dashed #3b82f6; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
-                            <i class="fa-solid fa-circle-plus"></i> + ADD ANOTHER CITY
-                        </button>
-                        <div style="font-size: 12px; font-weight: 600; color: #475569;">
-                            <i class="fa-solid fa-circle-info" style="color: #2563eb;"></i> Single ticket checkout for all flight legs
+                    <!-- Bottom Controls Bar (Akbar Travels Style - Screenshot 1) -->
+                    <div class="multi-city-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding-top: 14px; border-top: 1px solid #f1f5f9; flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <button type="button" id="addMultiLegBtn" style="background: #ffffff; color: #0284c7; border: 1.5px solid #0284c7; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; box-shadow: 0 2px 6px rgba(2,132,199,0.1);">
+                                <i class="fa-solid fa-plus"></i> ADD CITY
+                            </button>
+                            <span style="font-size: 12px; color: #64748b; font-weight: 600;">
+                                <i class="fa-solid fa-circle-check" style="color: #16a34a; margin-right: 4px;"></i> Single ticket checkout for all flight sectors
+                            </span>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn-search-multi" style="background: #ef4444; color: #ffffff; border: none; padding: 11px 32px; border-radius: 8px; font-weight: 800; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 4px 14px rgba(239,68,68,0.3);">
+                                <span>SEARCH</span>
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
                         </div>
                     </div>
+
+                    <!-- Reusable Multi-City Airport Autocomplete Dropdown Popup (Akbar Travels Style - Screenshot 1) -->
+                    <div class="dropdown-popup multi-airport-dropdown" id="multiAirportDropdown" style="display: none; position: absolute; z-index: 999999; background: #ffffff; border-radius: 12px; box-shadow: 0 16px 40px rgba(0,0,0,0.25); border: 1.5px solid #cbd5e1; width: 340px; text-align: left; overflow: hidden;" onclick="event.stopPropagation();">
+                        <!-- Search Bar with Magnifying Glass -->
+                        <div style="padding: 12px 14px; border-bottom: 1px solid #f1f5f9; position: relative; background: #ffffff;">
+                            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 24px; top: 22px; color: #0d3470; font-size: 13px;"></i>
+                            <input type="text" id="multiAirportSearchInput" placeholder="Type city or airport (e.g. BOM, Dubai, DEL)..." style="width: 100%; padding: 8px 12px 8px 34px; border: 1.5px solid #0d3470; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none; box-sizing: border-box;">
+                        </div>
+                        
+                        <!-- Scrollable Content -->
+                        <div style="max-height: 320px; overflow-y: auto;">
+                            <!-- Previously Searched Sectors (Screenshot 1) -->
+                            <div id="multiPrevSectorsSection">
+                                <div style="background: #f1f5f9; padding: 7px 14px; font-size: 11px; font-weight: 700; color: #0d3470; text-transform: capitalize; border-bottom: 1px solid #e2e8f0; letter-spacing: 0.3px;">
+                                    Previously Searched Sectors
+                                </div>
+                                <div id="multiPrevSectorsList"></div>
+                            </div>
+
+                            <!-- Important Airports (Screenshot 1) -->
+                            <div id="multiImportantSection">
+                                <div style="background: #f1f5f9; padding: 7px 14px; font-size: 11px; font-weight: 700; color: #0d3470; text-transform: capitalize; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; letter-spacing: 0.3px;">
+                                    Important Airports
+                                </div>
+                                <div id="multiImportantList"></div>
+                            </div>
+
+                            <!-- Filtered Airport Results (shown when typing) -->
+                            <div id="multiFilteredList" style="display: none;"></div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Submit Button -->

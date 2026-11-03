@@ -159,6 +159,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (fromCityDropdown) fromCityDropdown.classList.remove('open');
     if (toCityDropdown) toCityDropdown.classList.remove('open');
     if (passengerDropdown) passengerDropdown.classList.remove('open');
+    const multiDrop = document.getElementById('multiAirportDropdown');
+    if (multiDrop) {
+      multiDrop.style.display = 'none';
+      multiDrop.classList.remove('open');
+    }
+    const multiPaxDrop = document.getElementById('multiPassengerDropdown');
+    if (multiPaxDrop) multiPaxDrop.classList.remove('open');
     const hotelCityDropdown = document.getElementById('hotelCityDropdown');
     const hotelGuestDropdown = document.getElementById('hotelGuestDropdown');
     if (hotelCityDropdown) hotelCityDropdown.classList.remove('open');
@@ -171,6 +178,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (toCityBox && toCityBox.contains(e.target)) return;
     const passengerBox = document.getElementById('passengerSelectBox');
     if (passengerBox && passengerBox.contains(e.target)) return;
+    const multiPaxBox = document.getElementById('multiPassengerBox');
+    if (multiPaxBox && multiPaxBox.contains(e.target)) return;
+    const multiDrop = document.getElementById('multiAirportDropdown');
+    if (multiDrop && multiDrop.contains(e.target)) return;
+    if (e.target && e.target.closest && e.target.closest('.multi-airport-box')) return;
     const hotelCityBox = document.getElementById('hotelCityBox');
     if (hotelCityBox && hotelCityBox.contains(e.target)) return;
     const hotelGuestBox = document.getElementById('hotelGuestSelectBox');
@@ -396,9 +408,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const hiddenTripType = document.getElementById('hiddenTripType');
         if (hiddenTripType) hiddenTripType.value = this.value;
         const multiInputs = multiCitySearchContainer ? multiCitySearchContainer.querySelectorAll('input') : [];
+        const stdSearchWrap = document.querySelector('.search-btn-wrapper');
         if (this.value === 'oneway') {
           if (standardSearchGrid) standardSearchGrid.style.display = 'grid';
           if (multiCitySearchContainer) multiCitySearchContainer.style.display = 'none';
+          if (stdSearchWrap) stdSearchWrap.style.display = 'flex';
           multiInputs.forEach(inp => inp.disabled = true);
           if (returnDateBox) {
             returnDateBox.style.opacity = '0.5';
@@ -411,6 +425,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (this.value === 'roundtrip') {
           if (standardSearchGrid) standardSearchGrid.style.display = 'grid';
           if (multiCitySearchContainer) multiCitySearchContainer.style.display = 'none';
+          if (stdSearchWrap) stdSearchWrap.style.display = 'flex';
           multiInputs.forEach(inp => inp.disabled = true);
           if (returnDateBox) {
             returnDateBox.style.opacity = '1';
@@ -428,6 +443,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (this.value === 'multicity') {
           if (standardSearchGrid) standardSearchGrid.style.display = 'none';
           if (multiCitySearchContainer) multiCitySearchContainer.style.display = 'block';
+          if (stdSearchWrap) stdSearchWrap.style.display = 'none';
           multiInputs.forEach(inp => inp.disabled = false);
         }
         if (flightCalendarDropdown && flightCalendarDropdown.style.display === 'block') {
@@ -878,7 +894,245 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Multi-City Dynamic Leg Builder
+  // =========================================================================
+  // MULTI-CITY AIRPORT AUTOCOMPLETE, LEG BUILDER & PAX SYNC (Akbar Travels Style)
+  // =========================================================================
+  const countryFlagMap = {
+    "India": "🇮🇳", "UAE": "🇦🇪", "Saudi Arabia": "🇸🇦", "Qatar": "🇶🇦", "Oman": "🇴🇲",
+    "Kuwait": "🇰🇼", "Bahrain": "🇧🇭", "Singapore": "🇸🇬", "Thailand": "🇹🇭", "Malaysia": "🇲🇾",
+    "Indonesia": "🇮🇩", "Sri Lanka": "🇱🇰", "Maldives": "🇲🇻", "Nepal": "🇳🇵", "Bangladesh": "🇧🇩",
+    "Hong Kong": "🇭🇰", "Japan": "🇯🇵", "South Korea": "🇰🇷", "Philippines": "🇵🇭", "Vietnam": "🇻🇳",
+    "UK": "🇬🇧", "France": "🇫🇷", "Germany": "🇩🇪", "Netherlands": "🇳🇱", "Switzerland": "🇨🇭",
+    "Italy": "🇮🇹", "Spain": "🇪🇸", "Austria": "🇦🇹", "Belgium": "🇧🇪", "Turkey": "🇹🇷",
+    "Ireland": "🇮🇪", "Denmark": "🇩🇰", "Sweden": "🇸🇪", "Finland": "🇫🇮", "Portugal": "🇵🇹",
+    "Greece": "🇬🇷", "USA": "🇺🇸", "Canada": "🇨🇦", "Australia": "🇦🇺", "New Zealand": "🇳🇿",
+    "South Africa": "🇿🇦", "Kenya": "🇰🇪", "Egypt": "🇪🇬", "Mauritius": "🇲🇺"
+  };
+
+  // Default Akbar Travels Sectors (Matching Screenshot 1)
+  let recentMultiSectors = [
+    { city: "New Delhi", code: "DEL", airport: "Indira Gandhi International", country: "India" },
+    { city: "Mumbai", code: "BOM", airport: "Chhatrapati Shivaji International Airport", country: "India" },
+    { city: "Dubai", code: "DXB", airport: "Dubai", country: "UAE" },
+    { city: "Dammam", code: "DMM", airport: "King Fahad International", country: "Saudi Arabia" }
+  ];
+
+  let activeAirportTarget = null;
+  const multiAirportDropdown = document.getElementById('multiAirportDropdown');
+  const multiAirportSearchInput = document.getElementById('multiAirportSearchInput');
+  const multiPrevSectorsList = document.getElementById('multiPrevSectorsList');
+  const multiImportantList = document.getElementById('multiImportantList');
+  const multiFilteredList = document.getElementById('multiFilteredList');
+  const multiPrevSectorsSection = document.getElementById('multiPrevSectorsSection');
+  const multiImportantSection = document.getElementById('multiImportantSection');
+
+  function openMultiAirportDropdown(boxEl) {
+    if (!multiAirportDropdown) return;
+    closeAllDropdowns();
+
+    const legRow = boxEl.closest('.multi-leg-row');
+    const legIdx = legRow ? parseInt(legRow.getAttribute('data-leg'), 10) : 1;
+    const type = boxEl.getAttribute('data-type'); // 'from' or 'to'
+    const inputEl = boxEl.querySelector('input[type="hidden"]');
+    const cityEl = boxEl.querySelector('.multi-city-val');
+    const subEl = boxEl.querySelector('.multi-city-sub');
+
+    activeAirportTarget = { boxEl, legRow, legIdx, type, inputEl, cityEl, subEl };
+
+    // Move dropdown inside clicked box for natural positioning
+    boxEl.appendChild(multiAirportDropdown);
+    multiAirportDropdown.style.top = 'calc(100% + 4px)';
+    multiAirportDropdown.style.left = '0';
+    multiAirportDropdown.style.display = 'block';
+    multiAirportDropdown.classList.add('open');
+
+    // Reset search
+    if (multiAirportSearchInput) {
+      multiAirportSearchInput.value = '';
+      multiAirportSearchInput.placeholder = type === 'from' ? 'Type departure city or code (e.g. BOM, DEL)...' : 'Type destination city or code (e.g. DXB, DMM)...';
+      setTimeout(() => multiAirportSearchInput.focus(), 80);
+    }
+
+    renderMultiPrevSectors();
+    renderMultiImportantAirports();
+    if (multiPrevSectorsSection) multiPrevSectorsSection.style.display = 'block';
+    if (multiImportantSection) multiImportantSection.style.display = 'block';
+    if (multiFilteredList) multiFilteredList.style.display = 'none';
+  }
+
+  function createAirportItemElement(item) {
+    const div = document.createElement('div');
+    div.className = 'airport-option-item';
+    div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: background 0.15s; background: #ffffff;';
+    
+    const flag = countryFlagMap[item.country] || '✈️';
+
+    div.innerHTML = `
+      <div style="flex: 1; min-width: 0; padding-right: 8px;">
+        <div style="font-weight: 700; font-size: 13.5px; color: #09204b; display: flex; align-items: center; gap: 6px;">
+          <span>${item.city}</span>
+          <span style="background: #e0f2fe; color: #0284c7; font-weight: 800; font-size: 11px; padding: 1px 6px; border-radius: 4px; font-family: monospace;">${item.code}</span>
+        </div>
+        <div style="font-size: 11px; color: #64748b; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          ${item.airport}
+        </div>
+      </div>
+      <div style="font-size: 20px; line-height: 1; flex-shrink: 0;">
+        ${flag}
+      </div>
+    `;
+
+    div.addEventListener('mouseover', () => div.style.background = '#f8fafc');
+    div.addEventListener('mouseout', () => div.style.background = '#ffffff');
+    div.addEventListener('click', function(e) {
+      e.stopPropagation();
+      selectMultiAirport(item);
+    });
+
+    return div;
+  }
+
+  function renderMultiPrevSectors() {
+    if (!multiPrevSectorsList) return;
+    multiPrevSectorsList.innerHTML = '';
+    recentMultiSectors.forEach(item => {
+      multiPrevSectorsList.appendChild(createAirportItemElement(item));
+    });
+  }
+
+  function renderMultiImportantAirports() {
+    if (!multiImportantList) return;
+    multiImportantList.innerHTML = '';
+    const importantList = airportsData.filter(a => a.popular).slice(0, 10);
+    importantList.forEach(item => {
+      multiImportantList.appendChild(createAirportItemElement(item));
+    });
+  }
+
+  function selectMultiAirport(item) {
+    if (!activeAirportTarget) return;
+    const { boxEl, legRow, legIdx, type, inputEl, cityEl, subEl } = activeAirportTarget;
+
+    const formattedVal = `${item.city} (${item.code})`;
+    if (inputEl) inputEl.value = formattedVal;
+    if (cityEl) cityEl.textContent = item.city;
+    if (subEl) subEl.textContent = `${item.code}, ${item.airport}`;
+
+    // Add to recent sectors if not already top
+    recentMultiSectors = recentMultiSectors.filter(s => s.code !== item.code);
+    recentMultiSectors.unshift(item);
+    if (recentMultiSectors.length > 5) recentMultiSectors.pop();
+
+    // Leg Chaining (Akbar Travels Screenshot 1):
+    // When destination ("To") of Leg N is selected, auto-update origin ("From") of Leg N+1!
+    if (type === 'to' && legRow) {
+      const nextLeg = legRow.nextElementSibling;
+      if (nextLeg && nextLeg.classList.contains('multi-leg-row')) {
+        const nextFromInput = nextLeg.querySelector('.multi-from-code');
+        const nextFromCity = nextLeg.querySelector('[data-type="from"] .multi-city-val');
+        const nextFromSub = nextLeg.querySelector('[data-type="from"] .multi-city-sub');
+        if (nextFromInput) nextFromInput.value = formattedVal;
+        if (nextFromCity) nextFromCity.textContent = item.city;
+        if (nextFromSub) nextFromSub.textContent = `${item.code}, ${item.airport}`;
+      }
+    }
+
+    closeAllDropdowns();
+  }
+
+  // Filter Search Input Listener
+  if (multiAirportSearchInput) {
+    multiAirportSearchInput.addEventListener('click', e => e.stopPropagation());
+    multiAirportSearchInput.addEventListener('input', function(e) {
+      e.stopPropagation();
+      const q = this.value.trim().toLowerCase();
+      if (!q) {
+        if (multiPrevSectorsSection) multiPrevSectorsSection.style.display = 'block';
+        if (multiImportantSection) multiImportantSection.style.display = 'block';
+        if (multiFilteredList) multiFilteredList.style.display = 'none';
+        return;
+      }
+
+      if (multiPrevSectorsSection) multiPrevSectorsSection.style.display = 'none';
+      if (multiImportantSection) multiImportantSection.style.display = 'none';
+      if (multiFilteredList) {
+        multiFilteredList.style.display = 'block';
+        multiFilteredList.innerHTML = '';
+
+        const matches = airportsData.filter(a => {
+          return a.city.toLowerCase().includes(q) ||
+                 a.code.toLowerCase().includes(q) ||
+                 a.airport.toLowerCase().includes(q) ||
+                 a.country.toLowerCase().includes(q);
+        });
+
+        if (matches.length === 0) {
+          multiFilteredList.innerHTML = `<div style="padding: 20px; text-align: center; color: #64748b; font-size: 12px;"><i class="fa-solid fa-magnifying-glass" style="margin-right: 6px;"></i> No airports found for "${q}"</div>`;
+        } else {
+          matches.forEach(item => {
+            multiFilteredList.appendChild(createAirportItemElement(item));
+          });
+        }
+      }
+    });
+  }
+
+  // Date Display Helper
+  function formatMultiDisplayDate(ymdStr) {
+    if (!ymdStr) return { dateStr: '', dayStr: '' };
+    const d = new Date(ymdStr + 'T00:00:00');
+    if (isNaN(d.getTime())) return { dateStr: ymdStr, dayStr: '' };
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const dayName = days[d.getDay()];
+    const dateNum = String(d.getDate()).padStart(2, '0');
+    const monName = months[d.getMonth()];
+    const yearShort = String(d.getFullYear()).slice(-2);
+    return {
+      dateStr: `${dateNum} ${monName}'${yearShort}`,
+      dayStr: dayName
+    };
+  }
+
+  function initMultiLegDate(legRow) {
+    const dateInput = legRow.querySelector('.multi-date-input');
+    const dateVal = legRow.querySelector('.multi-date-val');
+    const dateSub = legRow.querySelector('.multi-date-sub');
+    if (!dateInput) return;
+
+    dateInput.addEventListener('change', function() {
+      const fmt = formatMultiDisplayDate(this.value);
+      if (dateVal) dateVal.textContent = fmt.dateStr;
+      if (dateSub) dateSub.textContent = fmt.dayStr;
+
+      // Update minimum date on subsequent legs
+      const allRows = Array.from(document.querySelectorAll('.multi-leg-row'));
+      const currIdx = allRows.indexOf(legRow);
+      for (let i = currIdx + 1; i < allRows.length; i++) {
+        const nextInput = allRows[i].querySelector('.multi-date-input');
+        if (nextInput) {
+          nextInput.min = this.value;
+          if (nextInput.value < this.value) {
+            nextInput.value = this.value;
+            nextInput.dispatchEvent(new Event('change'));
+          }
+        }
+      }
+    });
+  }
+
+  // Initialize all existing legs
+  document.querySelectorAll('.multi-leg-row').forEach(row => {
+    row.querySelectorAll('.multi-airport-box').forEach(box => {
+      box.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openMultiAirportDropdown(this);
+      });
+    });
+    initMultiLegDate(row);
+  });
+
+  // Dynamic Add Leg
   const addMultiLegBtn = document.getElementById('addMultiLegBtn');
   const multiCityLegsList = document.getElementById('multiCityLegsList');
 
@@ -887,46 +1141,113 @@ document.addEventListener('DOMContentLoaded', function() {
       const legRows = multiCityLegsList.querySelectorAll('.multi-leg-row');
       const count = legRows.length;
       if (count >= 5) {
-        alert('Maximum 5 flight legs allowed per Multi-City search.');
+        alert('Maximum 5 flight sectors allowed per Multi-City itinerary.');
         return;
       }
       const newLegIndex = count + 1;
-      
+
       // Default From to previous leg's To
-      let defaultFrom = 'Bengaluru (BLR)';
-      const lastToInput = legRows[count - 1].querySelector('.multi-to-input');
-      if (lastToInput && lastToInput.value) {
-        defaultFrom = lastToInput.value;
+      let defaultCity = 'Bengaluru';
+      let defaultCode = 'BLR';
+      let defaultSub = 'BLR, Kempegowda Intl Airport';
+      let defaultFromVal = 'Bengaluru (BLR)';
+
+      const lastRow = legRows[count - 1];
+      const lastToCode = lastRow ? lastRow.querySelector('.multi-to-code') : null;
+      const lastToCity = lastRow ? lastRow.querySelector('[data-type="to"] .multi-city-val') : null;
+      const lastToSub = lastRow ? lastRow.querySelector('[data-type="to"] .multi-city-sub') : null;
+      if (lastToCode && lastToCode.value) {
+        defaultFromVal = lastToCode.value;
+        defaultCity = lastToCity ? lastToCity.textContent : defaultCity;
+        defaultSub = lastToSub ? lastToSub.textContent : defaultSub;
       }
+
+      // Default To: choose popular next (e.g. Dubai, Dammam, Goa)
+      const nextDefaults = [
+        { city: 'Dubai', code: 'DXB', sub: 'DXB, Dubai International Airport' },
+        { city: 'Dammam', code: 'DMM', sub: 'DMM, King Fahd International Airport' },
+        { city: 'Goa (Mopa)', code: 'GOX', sub: 'GOX, Manohar International Airport' }
+      ];
+      const nextDef = nextDefaults[(newLegIndex - 3) % nextDefaults.length] || nextDefaults[0];
+
+      // Date: previous leg's date + 3 days
+      const lastDateInput = lastRow ? lastRow.querySelector('.multi-date-input') : null;
+      let nextDateObj = new Date();
+      if (lastDateInput && lastDateInput.value) {
+        nextDateObj = new Date(lastDateInput.value + 'T00:00:00');
+        nextDateObj.setDate(nextDateObj.getDate() + 3);
+      } else {
+        nextDateObj.setDate(nextDateObj.getDate() + 3 + (newLegIndex * 3));
+      }
+      const ymdStr = nextDateObj.toISOString().split('T')[0];
+      const fmt = formatMultiDisplayDate(ymdStr);
 
       const row = document.createElement('div');
       row.className = 'multi-leg-row';
       row.setAttribute('data-leg', newLegIndex);
-      row.style.cssText = 'display: grid; grid-template-columns: 2fr 2fr 1.5fr 40px; gap: 12px; align-items: center; background: #f8fafc; padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1;';
-      
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + 3 + (newLegIndex * 3));
-      const dateStr = futureDate.toISOString().split('T')[0];
+      row.style.cssText = 'display: grid; grid-template-columns: 2.2fr 2.2fr 1.6fr 1.8fr 38px; gap: 10px; align-items: center; background: #ffffff; padding: 6px 0; position: relative;';
 
       row.innerHTML = `
-        <div>
-            <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Flight ${newLegIndex} - From</label>
-            <input type="text" class="field-input multi-from-input" name="multi_from[]" value="${defaultFrom}" placeholder="City / Code" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+        <!-- From -->
+        <div class="input-box multi-airport-box" data-type="from" data-leg="${newLegIndex}" style="cursor: pointer; position: relative; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; transition: all 0.2s;">
+            <div class="input-label" style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 3px; display: flex; align-items: center; gap: 4px;">
+                <i class="fa-solid fa-plane-departure" style="color: #0284c7;"></i> From
+            </div>
+            <div class="input-val multi-city-val" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;">${defaultCity}</div>
+            <div class="input-subtext multi-city-sub" style="font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">${defaultSub}</div>
+            <input type="hidden" name="multi_from[]" class="multi-from-code" value="${defaultFromVal}">
         </div>
-        <div>
-            <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">To</label>
-            <input type="text" class="field-input multi-to-input" name="multi_to[]" value="Dubai (DXB)" placeholder="City / Code" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 700; color: #09204b; background: #ffffff;">
+
+        <!-- To -->
+        <div class="input-box multi-airport-box" data-type="to" data-leg="${newLegIndex}" style="cursor: pointer; position: relative; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; transition: all 0.2s;">
+            <div class="input-label" style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 3px; display: flex; align-items: center; gap: 4px;">
+                <i class="fa-solid fa-plane-arrival" style="color: #0284c7;"></i> To
+            </div>
+            <div class="input-val multi-city-val" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;">${nextDef.city}</div>
+            <div class="input-subtext multi-city-sub" style="font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">${nextDef.sub}</div>
+            <input type="hidden" name="multi_to[]" class="multi-to-code" value="${nextDef.city} (${nextDef.code})">
         </div>
-        <div>
-            <label style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Departure Date</label>
-            <input type="date" class="field-input" name="multi_date[]" value="${dateStr}" required style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-weight: 600; background: #ffffff;">
+
+        <!-- Departure Date -->
+        <div class="input-box multi-date-box" style="cursor: pointer; position: relative; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; transition: all 0.2s;">
+            <div class="input-label" style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 3px; display: flex; align-items: center; justify-content: space-between;">
+                <span><i class="fa-regular fa-calendar-days" style="color: #0284c7;"></i> Departure</span>
+                <i class="fa-solid fa-chevron-down" style="font-size: 9px; color: #94a3b8;"></i>
+            </div>
+            <div class="input-val multi-date-val" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;">${fmt.dateStr}</div>
+            <div class="input-subtext multi-date-sub" style="font-size: 11px; color: #64748b; margin-top: 2px;">${fmt.dayStr}</div>
+            <input type="date" name="multi_date[]" class="multi-date-input" value="${ymdStr}" min="${lastDateInput ? lastDateInput.value : ''}" style="position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 5;">
         </div>
-        <div style="text-align: center; padding-top: 14px;">
-            <button type="button" class="btn-remove-leg" onclick="removeMultiLeg(this)" style="background: none; border: none; color: #ef4444; font-size: 16px; cursor: pointer;" title="Remove Leg"><i class="fa-solid fa-trash-can"></i></button>
+
+        <!-- Leg Spacer -->
+        <div class="multi-leg-spacer" style="display: flex; align-items: center; justify-content: center; height: 100%; border: 1.5px dashed #cbd5e1; border-radius: 8px; color: #64748b; font-size: 12px; font-weight: 700; padding: 10px; background: #f8fafc;">
+            <span><i class="fa-solid fa-plane" style="color: #0284c7; margin-right: 4px;"></i> Sector ${newLegIndex}</span>
+        </div>
+
+        <!-- Remove Button -->
+        <div style="text-align: center;">
+            <button type="button" class="btn-remove-leg" onclick="removeMultiLeg(this)" style="background: none; border: none; color: #ef4444; font-size: 18px; cursor: pointer; padding: 6px; border-radius: 50%; transition: all 0.2s;" title="Remove Sector">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
       `;
 
       multiCityLegsList.appendChild(row);
+
+      // Attach airport listeners
+      row.querySelectorAll('.multi-airport-box').forEach(box => {
+        box.addEventListener('click', function(e) {
+          e.stopPropagation();
+          openMultiAirportDropdown(this);
+        });
+      });
+
+      // Attach date listener
+      initMultiLegDate(row);
+
+      if (multiCityLegsList.querySelectorAll('.multi-leg-row').length >= 5) {
+        addMultiLegBtn.style.opacity = '0.5';
+      }
     });
   }
 
@@ -937,7 +1258,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const legRows = multiCityLegsList.querySelectorAll('.multi-leg-row');
     if (legRows.length <= 2) {
-      alert('Multi-City search requires at least 2 flight legs.');
+      alert('Multi-City search requires at least 2 flight sectors.');
       return;
     }
 
@@ -946,15 +1267,17 @@ document.addEventListener('DOMContentLoaded', function() {
     remaining.forEach((r, idx) => {
       const legNum = idx + 1;
       r.setAttribute('data-leg', legNum);
-      const labels = r.querySelectorAll('label');
-      if (labels.length > 0) {
-        labels[0].textContent = `Flight ${legNum} - From`;
+      const spacer = r.querySelector('.multi-leg-spacer span');
+      if (spacer) {
+        spacer.innerHTML = `<i class="fa-solid fa-plane" style="color: #0284c7; margin-right: 4px;"></i> Sector ${legNum}`;
       }
     });
+
+    if (addMultiLegBtn) addMultiLegBtn.style.opacity = '1';
   };
 
   // =========================================================================
-  // 4. PASSENGER COUNTER DROPDOWN LOGIC
+  // 4. PASSENGER COUNTER DROPDOWN LOGIC (SYNCED STANDARD & MULTI-CITY)
   // =========================================================================
   const passengerBox = document.getElementById('passengerSelectBox');
   if (passengerBox && passengerDropdown) {
@@ -966,6 +1289,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     passengerDropdown.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  }
+
+  // Multi-City Passenger Box Listener
+  const multiPassengerBox = document.getElementById('multiPassengerBox');
+  const multiPassengerDropdown = document.getElementById('multiPassengerDropdown');
+  if (multiPassengerBox && multiPassengerDropdown) {
+    multiPassengerBox.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = multiPassengerDropdown.classList.contains('open');
+      closeAllDropdowns();
+      if (!isOpen) {
+        multiPassengerDropdown.classList.add('open');
+      }
+    });
+
+    multiPassengerDropdown.addEventListener('click', function(e) {
       e.stopPropagation();
     });
   }
@@ -1015,11 +1356,36 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // Multi-City Cabin Select Listener
+  document.querySelectorAll('.multi-cabin-select').forEach(sel => {
+    sel.addEventListener('click', e => e.stopPropagation());
+    sel.addEventListener('change', function(e) {
+      e.stopPropagation();
+      travelClass = this.value;
+      if (classSelect) classSelect.value = travelClass;
+      if (hiddenCabinClass) hiddenCabinClass.value = travelClass;
+      updateSummaryText();
+    });
+  });
+
   function updateSummaryText() {
     const total = adults + children + infants;
     if (passengerSummaryEl) {
       passengerSummaryEl.textContent = `${total} Traveler${total > 1 ? 's' : ''}, ${travelClass}`;
     }
+    const multiPaxText = document.getElementById('multiPaxText');
+    const multiClassText = document.getElementById('multiClassText');
+    if (multiPaxText) {
+      multiPaxText.textContent = `${total} Traveller${total > 1 ? 's' : ''}`;
+    }
+    if (multiClassText) {
+      multiClassText.textContent = travelClass;
+    }
+    // Update counter values in multiPassengerDropdown
+    document.querySelectorAll('.multi-adult-count').forEach(el => el.textContent = adults);
+    document.querySelectorAll('.multi-child-count').forEach(el => el.textContent = children);
+    document.querySelectorAll('.multi-infant-count').forEach(el => el.textContent = infants);
+    document.querySelectorAll('.multi-cabin-select').forEach(el => el.value = travelClass);
   }
 
   // =========================================================================

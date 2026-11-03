@@ -47,12 +47,55 @@ class Welcome extends CI_Controller {
         $is_roundtrip = ($trip_type === 'roundtrip');
         $is_multicity = false;
 
-        if ($trip_type === 'multicity' && !empty($multi_from) && is_array($multi_from)) {
-            $from_raw = $multi_from[0];
-            $to_raw   = end($multi_to);
-            $date     = isset($multi_date[0]) ? $multi_date[0] : date('Y-m-d', strtotime('+3 days'));
-            $is_multicity = true;
-        } else {
+        $domesticAirports = array(
+            'DEL', 'BOM', 'BLR', 'MAA', 'HYD', 'CCU', 'GOI', 'GOX', 'COK', 'AMD', 'PNQ', 'JAI', 
+            'TRV', 'ATQ', 'BBI', 'IXC', 'IXB', 'VTZ', 'PAT', 'GAU', 'LKO', 'NAG', 'IDR', 'SXR', 
+            'IXR', 'BDQ', 'IXE', 'TRZ', 'CJB', 'VNS', 'UDR', 'IXJ', 'IMF', 'RPR', 'DED', 'IXA', 
+            'IXZ', 'IXL', 'IXD', 'IXU', 'JGA', 'JDH', 'AJL', 'DMU', 'TEZ', 'IXS', 'SHL', 'IXV', 
+            'IXW', 'IXP', 'IXT', 'IXY', 'HJR', 'BHO', 'GWL', 'JLR', 'TIR', 'VGA'
+        );
+
+        $multi_legs = array();
+        $has_multi_international = false;
+
+        if ($trip_type === 'multicity' && !empty($multi_from) && is_array($multi_from) && count($multi_from) >= 2) {
+            $legCount = min(count($multi_from), count($multi_to));
+            for ($i = 0; $i < $legCount; $i++) {
+                $legFromRaw = trim($multi_from[$i] ?? '');
+                $legToRaw   = trim($multi_to[$i] ?? '');
+                $legDate    = !empty($multi_date[$i]) ? $multi_date[$i] : date('Y-m-d', strtotime('+' . (3 + $i * 3) . ' days'));
+
+                preg_match('/\(([A-Z]{3})\)/', $legFromRaw, $lf_match);
+                preg_match('/\(([A-Z]{3})\)/', $legToRaw, $lt_match);
+
+                $lfCode = !empty($lf_match[1]) ? $lf_match[1] : (strlen($legFromRaw) == 3 ? strtoupper($legFromRaw) : ($cityCodeMap[strtolower($legFromRaw)] ?? 'DEL'));
+                $ltCode = !empty($lt_match[1]) ? $lt_match[1] : (strlen($legToRaw) == 3 ? strtoupper($legToRaw) : ($cityCodeMap[strtolower($legToRaw)] ?? 'BOM'));
+
+                if (!in_array($lfCode, $domesticAirports) || !in_array($ltCode, $domesticAirports)) {
+                    $has_multi_international = true;
+                }
+
+                $multi_legs[] = array(
+                    'from_raw'  => $legFromRaw,
+                    'to_raw'    => $legToRaw,
+                    'from'      => $lfCode,
+                    'to'        => $ltCode,
+                    'date'      => $legDate,
+                    'leg_index' => $i + 1
+                );
+            }
+
+            if (!empty($multi_legs)) {
+                $is_multicity = true;
+                $from_raw = $multi_legs[0]['from_raw'];
+                $to_raw   = end($multi_legs)['to_raw'];
+                $from     = $multi_legs[0]['from'];
+                $to       = end($multi_legs)['to'];
+                $date     = $multi_legs[0]['date'];
+            }
+        }
+
+        if (!$is_multicity) {
             $from_raw = $this->input->post('from_city') ?: $this->input->get('from_city') ?: $this->input->get('from') ?: 'Delhi (DEL)';
             $to_raw   = $this->input->post('to_city') ?: $this->input->get('to_city') ?: $this->input->get('to') ?: 'Mumbai (BOM)';
             $date     = $this->input->post('departure_date') ?: $this->input->get('departure_date') ?: $this->input->get('date') ?: date('Y-m-d', strtotime('+3 days'));
@@ -116,10 +159,14 @@ class Welcome extends CI_Controller {
         $this->load->library('BenzyFlightApi');
         
         $fareType = 'ON';
-        if ($is_roundtrip) {
+        if ($is_multicity) {
+            $fareType = $has_multi_international ? 'IM' : 'DM';
+            $tui = $this->benzyflightapi->expressSearch($from, $to, $date, '', $adults, $children, $infants, substr($cabin_class, 0, 1), $fareType, false, $multi_legs);
+        } elseif ($is_roundtrip) {
             $fareType = 'RT';
             $tui = $this->benzyflightapi->expressSearch($from, $to, $date, $return_date, $adults, $children, $infants, substr($cabin_class, 0, 1), 'RT', false);
         } else {
+            $fareType = 'ON';
             $tui = $this->benzyflightapi->expressSearch($from, $to, $date, '', $adults, $children, $infants, substr($cabin_class, 0, 1), 'ON', false);
         }
 
@@ -128,7 +175,7 @@ class Welcome extends CI_Controller {
             $this->benzyflightapi->getWebSettings($tui);
         }
 
-        $rawSearchResults = $this->benzyflightapi->getExpSearch($tui, $from, $to, $date, false, $is_roundtrip, $return_date);
+        $rawSearchResults = $this->benzyflightapi->getExpSearch($tui, $from, $to, $date, false, $is_roundtrip, $return_date, $is_multicity, $multi_legs);
         $flightResults = array();
         $returnFlights = array();
 
@@ -214,6 +261,7 @@ class Welcome extends CI_Controller {
         $data['active_page'] = 'flight';
         $data['search_tui']  = $tui;
         $data['is_roundtrip'] = $is_roundtrip;
+        $data['is_multicity'] = $is_multicity;
         $data['search_query'] = array(
             'from' => $from_raw,
             'to'   => $to_raw,
@@ -228,6 +276,8 @@ class Welcome extends CI_Controller {
             'multi_from' => $multi_from,
             'multi_to' => $multi_to,
             'multi_date' => $multi_date,
+            'multi_legs' => $multi_legs,
+            'has_international' => $has_multi_international,
             'adults' => $adults,
             'children' => $children,
             'infants' => $infants,

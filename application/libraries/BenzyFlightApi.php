@@ -381,20 +381,39 @@ class BenzyFlightApi {
      * 3. Express Search (Step 1 of Search)
      * Endpoint: /flights/ExpressSearch
      */
-    public function expressSearch($from = 'DEL', $to = 'BOM', $date = '', $returnDate = '', $adults = 2, $children = 2, $infants = 2, $cabin = 'E', $fareType = 'ON', $isDirect = true) {
+    public function expressSearch($from = 'DEL', $to = 'BOM', $date = '', $returnDate = '', $adults = 2, $children = 2, $infants = 2, $cabin = 'E', $fareType = 'ON', $isDirect = true, $multiTrips = null) {
         if (empty($date)) {
             $date = date('Y-m-d', strtotime('+7 days'));
         }
 
-        $trips = array(
-            array(
-                "From"       => strtoupper($from),
-                "To"         => strtoupper($to),
-                "OnwardDate" => $date,
-                "ReturnDate" => !empty($returnDate) ? $returnDate : "",
-                "TUI"        => ""
-            )
-        );
+        // Multi-City support: Build trips array from all provided legs
+        if (!empty($multiTrips) && is_array($multiTrips) && count($multiTrips) >= 2) {
+            $trips = array();
+            foreach ($multiTrips as $leg) {
+                $trips[] = array(
+                    "From"       => strtoupper($leg['from'] ?? 'DEL'),
+                    "To"         => strtoupper($leg['to'] ?? 'BOM'),
+                    "OnwardDate" => $leg['date'] ?? date('Y-m-d', strtotime('+7 days')),
+                    "ReturnDate" => "",
+                    "TUI"        => ""
+                );
+            }
+            // Preserve DM (Domestic Multicity) or IM (International Multicity)
+            if (empty($fareType) || !in_array($fareType, array('DM', 'IM'), true)) {
+                $fareType = 'DM';
+            }
+        } else {
+            $trips = array(
+                array(
+                    "From"       => strtoupper($from),
+                    "To"         => strtoupper($to),
+                    "OnwardDate" => $date,
+                    "ReturnDate" => !empty($returnDate) ? $returnDate : "",
+                    "TUI"        => ""
+                )
+            );
+            $fareType = !empty($returnDate) ? "RT" : (in_array($fareType, array('RS', 'DM', 'IM', 'ON'), true) ? $fareType : "ON");
+        }
 
         $payload = array(
             "ADT"        => (int)$adults,
@@ -405,7 +424,7 @@ class BenzyFlightApi {
             "Mode"       => "AS",
             "ClientID"   => $this->getEncryptedClientId(),
             "TUI"        => "",
-            "FareType"   => !empty($returnDate) ? "RT" : "ON",
+            "FareType"   => $fareType,
             "Trips"      => $trips,
             "Parameters" => array(
                 "Airlines"        => "",
@@ -438,7 +457,7 @@ class BenzyFlightApi {
      * 4. Get Express Search Results (Step 2 of Search)
      * Endpoint: /flights/GetExpSearch
      */
-    public function getExpSearch($tui, $from = 'DEL', $to = 'BOM', $date = '', $isConnecting = false, $isRoundtrip = false, $returnDate = '') {
+    public function getExpSearch($tui, $from = 'DEL', $to = 'BOM', $date = '', $isConnecting = false, $isRoundtrip = false, $returnDate = '', $isMulticity = false, $multiTrips = null) {
         $token = $this->generateToken();
         $payload = array(
             "TUI"      => $tui,
@@ -447,20 +466,27 @@ class BenzyFlightApi {
 
         $attemptLogIds = array();
         $res = null;
-        for ($poll = 1; $poll <= 2; $poll++) {
-            $res = $this->callApi($this->getExpSearchUrl, $payload, $token, 'POST', '/flights/GetExpSearch', 6);
+        // Poll for asynchronous aggregation (up to 4 attempts with progressive backoff)
+        for ($poll = 1; $poll <= 4; $poll++) {
+            $res = $this->callApi($this->getExpSearchUrl, $payload, $token, 'POST', '/flights/GetExpSearch', 7);
             if (!empty($res['log_id'])) {
                 $attemptLogIds[] = $res['log_id'];
             }
             if (!empty($res['data']['Trips'])) {
-                return $this->parseSearchResults($res['data'], $tui);
+                return $this->parseSearchResults($res['data'], $tui, $isMulticity, $multiTrips);
             }
             if (isset($res['data']['Completed']) && (string)$res['data']['Completed'] === 'True') {
                 break;
             }
-            if ($poll < 2) {
-                usleep(500000); // 0.5s wait
+            if ($poll < 4) {
+                usleep(800000); // 0.8s wait between polls
             }
+        }
+
+        // If Multicity, strictly return live results only - NEVER inject single-sector dummy flight templates!
+        if ($isMulticity) {
+            log_message('info', 'BenzyFlightApi::getExpSearch: No live trips returned by Benz API for multicity TUI ' . $tui);
+            return array();
         }
 
         // Onward Flight Templates (Morning / Day)
@@ -676,7 +702,7 @@ class BenzyFlightApi {
         );
         $lastLogId = !empty($attemptLogIds) ? array_pop($attemptLogIds) : ($res['log_id'] ?? 0);
         $this->updateOrLogSuccess($lastLogId, 'flights/GetExpSearch', $this->getExpSearchUrl, 'POST', $payload, $simResponse, 0, $attemptLogIds);
-        return $this->parseSearchResults($simResponse, $tui);
+        return $this->parseSearchResults($simResponse, $tui, $isMulticity, $multiTrips);
     }
 
     public function smartPricer($tui, $priceHint = 5150, $index = '6E|1', $isRoundTrip = false, $from = 'DEL', $to = 'BOM', $returnPrice = 0, $returnIndex = '6E|1') {
@@ -2974,11 +3000,11 @@ class BenzyFlightApi {
         return $this->lastLog;
     }
 
-    protected function parseSearchResults($data, $tui) {
+    protected function parseSearchResults($data, $tui, $isMulticity = false, $multiTrips = null) {
         $results = array();
         if (empty($data['Trips']) || !is_array($data['Trips'])) return $results;
 
-        foreach ($data['Trips'] as $trip) {
+        foreach ($data['Trips'] as $tripIdx => $trip) {
             // Handle Benzy standard 'Journey' structure
             if (!empty($trip['Journey']) && is_array($trip['Journey'])) {
                 foreach ($trip['Journey'] as $j) {
@@ -3140,6 +3166,10 @@ class BenzyFlightApi {
                         'Index' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1'),
                         'FlightIndex' => !empty($j['Index']) ? $j['Index'] : ($airlineCode . '|1'),
                         'return_identifier' => isset($j['ReturnIdentifier']) ? (int)$j['ReturnIdentifier'] : 0,
+                        'trip_index' => $tripIdx,
+                        'leg_index' => $tripIdx + 1,
+                        'is_multicity' => $isMulticity,
+                        'segments' => !empty($j['Segments']) ? $j['Segments'] : array(),
                         'departure_date' => !empty($j['DepartureTime']) ? date('Y-m-d', strtotime($j['DepartureTime'])) : '',
                         'mac' => !empty($j['MAC']) ? $j['MAC'] : (!empty($j['VAC']) ? $j['VAC'] : $airlineCode),
                         'MAC' => !empty($j['MAC']) ? $j['MAC'] : (!empty($j['VAC']) ? $j['VAC'] : $airlineCode),
