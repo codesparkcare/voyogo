@@ -4599,6 +4599,12 @@
                                     $segNextDay = (date('Y-m-d', strtotime($sFlight['ArrivalTime'])) > date('Y-m-d', strtotime($sFlight['DepartureTime'])));
                                 }
 
+                                $segCheckin = !empty($sFlight['Baggage']) ? $sFlight['Baggage'] : (!empty($seg['Baggage']) ? $seg['Baggage'] : (!empty($f['Baggage']) ? $f['Baggage'] : '15Kg'));
+                                if (stripos($segCheckin, 'Adult') === false) $segCheckin .= ' (Adult)';
+                                $segCabin = !empty($sFlight['CabinBaggage']) ? $sFlight['CabinBaggage'] : '7Kg (Adult)';
+                                if (stripos($segCabin, 'Adult') === false) $segCabin .= ' (Adult)';
+                                $segRawDate = !empty($sFlight['DepartureTime']) ? date('Y-m-d', strtotime($sFlight['DepartureTime'])) : (!empty($search_query['multi_legs'][$sIdx]['date']) ? $search_query['multi_legs'][$sIdx]['date'] : '');
+
                                 $mcTrips[] = array(
                                     'trip_num' => $sIdx + 1,
                                     'from_code' => $segFrom,
@@ -4606,6 +4612,7 @@
                                     'from_name' => $segFromName . ' (' . $segFrom . ')',
                                     'to_name' => $segToName . ' (' . $segTo . ')',
                                     'date_str' => $segDepDate,
+                                    'raw_date' => $segRawDate,
                                     'logo' => $segLogo,
                                     'airline_name' => $segName,
                                     'airline_code' => $segVac,
@@ -4615,7 +4622,9 @@
                                     'arr_time' => $segArrTime,
                                     'duration' => $segDur,
                                     'stops_text' => 'Non Stop',
-                                    'is_next_day' => $segNextDay
+                                    'is_next_day' => $segNextDay,
+                                    'checkin_baggage' => $segCheckin,
+                                    'cabin_baggage' => $segCabin
                                 );
                             }
                         } else {
@@ -4627,6 +4636,10 @@
                                     $lFromName = !empty($leg['from_raw']) ? explode('(', $leg['from_raw'])[0] : ($airportNamesMap[$lFrom] ?? $lFrom);
                                     $lToName = !empty($leg['to_raw']) ? explode('(', $leg['to_raw'])[0] : ($airportNamesMap[$lTo] ?? $lTo);
 
+                                    $segCheckin = !empty($f['Baggage']) ? $f['Baggage'] : '15Kg (Adult)';
+                                    if (stripos($segCheckin, 'Adult') === false) $segCheckin .= ' (Adult)';
+                                    $segCabin = '7Kg (Adult)';
+
                                     $mcTrips[] = array(
                                         'trip_num' => $sIdx + 1,
                                         'from_code' => $lFrom,
@@ -4634,6 +4647,7 @@
                                         'from_name' => trim($lFromName) . ' (' . $lFrom . ')',
                                         'to_name' => trim($lToName) . ' (' . $lTo . ')',
                                         'date_str' => !empty($lDate) ? date('d M, D', strtotime($lDate)) : '',
+                                        'raw_date' => !empty($lDate) ? date('Y-m-d', strtotime($lDate)) : '',
                                         'logo' => $f['AirlineLogo'],
                                         'airline_name' => $f['AirlineName'],
                                         'airline_code' => $airlineCode,
@@ -4643,7 +4657,9 @@
                                         'arr_time' => $f['ArrivalTime'],
                                         'duration' => $f['Duration'],
                                         'stops_text' => ($owStops == 0) ? 'Non Stop' : ($owStops . ' Stop'),
-                                        'is_next_day' => $isNextDay
+                                        'is_next_day' => $isNextDay,
+                                        'checkin_baggage' => $segCheckin,
+                                        'cabin_baggage' => $segCabin
                                     );
                                 }
                             }
@@ -4689,6 +4705,9 @@
                                 <div style="display:flex; flex-direction:column; align-items:flex-end;">
                                     <form action="<?php echo site_url('flight/review'); ?>" method="POST" style="margin:0;">
                                         <input type="hidden" name="tripType" value="multicity">
+                                        <input type="hidden" name="is_multicity" value="1">
+                                        <input type="hidden" name="multi_trips_json" value="<?php echo htmlspecialchars(json_encode($mcTrips)); ?>">
+                                        <input type="hidden" name="multi_legs_json" value="<?php echo htmlspecialchars(json_encode($search_query['multi_legs'] ?? [])); ?>">
                                         <input type="hidden" name="from_city" value="<?php echo htmlspecialchars($search_query['from'] ?? ''); ?>">
                                         <input type="hidden" name="to_city" value="<?php echo htmlspecialchars($search_query['to'] ?? ''); ?>">
                                         <input type="hidden" name="flight_id" value="<?php echo htmlspecialchars($cardTui); ?>">
@@ -5200,11 +5219,24 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($search_query['from_code']); ?> - <?php echo htmlspecialchars($search_query['to_code']); ?></td>
-                                        <td>15Kg (Adult)</td>
-                                        <td>7Kg (Adult)</td>
-                                    </tr>
+                                    <?php if (!empty($is_multicity) && !empty($mcTrips)): ?>
+                                        <?php foreach ($mcTrips as $mct): ?>
+                                        <tr>
+                                            <td style="font-weight:700; color:#09204b; text-align:left; padding-left:16px;">
+                                                <span><?php echo htmlspecialchars($mct['from_code']); ?> - <?php echo htmlspecialchars($mct['to_code']); ?></span>
+                                                <div style="font-size:11.5px; color:#64748b; font-weight:600; margin-top:2px;"><?php echo htmlspecialchars($mct['flight_no']); ?></div>
+                                            </td>
+                                            <td><i class="fa-solid fa-suitcase" style="color:#0ea5e9; margin-right:5px;"></i> <?php echo htmlspecialchars($mct['checkin_baggage'] ?? ($f['Baggage'] ?: '15Kg (Adult)')); ?></td>
+                                            <td><i class="fa-solid fa-briefcase" style="color:#64748b; margin-right:5px;"></i> <?php echo htmlspecialchars($mct['cabin_baggage'] ?? '7Kg (Adult)'); ?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td style="font-weight:700; color:#09204b;"><?php echo htmlspecialchars($search_query['from_code']); ?> - <?php echo htmlspecialchars($search_query['to_code']); ?></td>
+                                            <td><i class="fa-solid fa-suitcase" style="color:#0ea5e9; margin-right:5px;"></i> <?php echo htmlspecialchars($f['Baggage'] ?: '15Kg (Adult)'); ?></td>
+                                            <td><i class="fa-solid fa-briefcase" style="color:#64748b; margin-right:5px;"></i> 7Kg (Adult)</td>
+                                        </tr>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
 

@@ -383,7 +383,18 @@ class Welcome extends CI_Controller {
         $children    = max(0, (int)($this->input->post('children') ?: $this->input->get('children') ?: 0));
         $infants     = max(0, (int)($this->input->post('infants') ?: $this->input->get('infants') ?: 0));
         $cabin_class = $this->input->post('cabin_class') ?: $this->input->get('cabin_class') ?: 'Economy';
-        $is_roundtrip = (bool)($this->input->post('is_roundtrip') ?: ($fare_type === 'RT' || $fare_type === 'RD' || $this->input->post('tripType') === 'roundtrip' || $this->input->get('tripType') === 'roundtrip'));
+        
+        $is_multicity = (bool)($this->input->post('is_multicity') || $this->input->post('tripType') === 'multicity' || $fare_type === 'MC' || $fare_type === 'IM' || $fare_type === 'DM');
+        $multi_trips = array();
+        $rawMultiJson = $this->input->post('multi_trips_json');
+        if (!empty($rawMultiJson)) {
+            $decodedTrips = json_decode($rawMultiJson, true);
+            if (is_array($decodedTrips) && !empty($decodedTrips)) {
+                $multi_trips = $decodedTrips;
+                $is_multicity = true;
+            }
+        }
+        $is_roundtrip = !$is_multicity && (bool)($this->input->post('is_roundtrip') ?: ($fare_type === 'RT' || $fare_type === 'RD' || $this->input->post('tripType') === 'roundtrip' || $this->input->get('tripType') === 'roundtrip'));
 
         $from_code_post      = strtoupper($this->input->post('from_code') ?: $this->input->get('from_code') ?: 'DEL');
         $to_code_post        = strtoupper($this->input->post('to_code') ?: $this->input->get('to_code') ?: 'BOM');
@@ -405,7 +416,7 @@ class Welcome extends CI_Controller {
 
         // Fetch revalidated flight data using Benzy API (SmartPricer & GetSPricer)
         $search_tui = $tui; // Save original search TUI before SmartPricer creates new TUI
-        $spRes = @$this->benzyflightapi->smartPricer($tui, $price, $onward_index, $is_roundtrip, $from_code_post, $to_code_post, $return_price, $return_index);
+        $spRes = @$this->benzyflightapi->smartPricer($tui, $price, $onward_index, $is_roundtrip, $from_code_post, $to_code_post, $return_price, $return_index, $is_multicity, $multi_trips);
         
         $flightDetails = null;
         // Only call getSPricer if smartPricer returned a valid 200 response with Trips
@@ -541,6 +552,31 @@ class Welcome extends CI_Controller {
             $returnFlight['from_terminal'] = $airportNames[$returnFlight['from_code']]['terminal'] ?? 'Terminal 1';
             $returnFlight['to_airport'] = $airportNames[$returnFlight['to_code']]['name'] ?? ($returnFlight['to_code'] . ' Airport');
             $returnFlight['to_terminal'] = $airportNames[$returnFlight['to_code']]['terminal'] ?? 'Terminal 2';
+        }
+
+        // Multi-City flight sectors setup
+        if ($is_multicity && !empty($multi_trips)) {
+            foreach ($multi_trips as $mIdx => &$mItem) {
+                $mFrom = strtoupper($mItem['from_code'] ?? 'DEL');
+                $mTo = strtoupper($mItem['to_code'] ?? 'BOM');
+                $mItem['from_airport']   = $airportNames[$mFrom]['name'] ?? ($mItem['from_name'] ?? ($mFrom . ' Airport'));
+                $mItem['to_airport']     = $airportNames[$mTo]['name'] ?? ($mItem['to_name'] ?? ($mTo . ' Airport'));
+                $mItem['from_terminal']  = $airportNames[$mFrom]['terminal'] ?? 'Terminal 1';
+                $mItem['to_terminal']    = $airportNames[$mTo]['terminal'] ?? 'Terminal 2';
+                $mItem['departure_date'] = !empty($mItem['raw_date']) ? $mItem['raw_date'] : (!empty($mItem['date_str']) ? $mItem['date_str'] : $departure_date_post);
+                $mItem['flight_number']  = $mItem['flight_no'] ?? ($mItem['flight_number'] ?? $flight_number);
+                $mItem['aircraft']       = $mItem['aircraft'] ?? 'BOEING';
+                $mItem['cabin_class']    = $cabin_class;
+                $mItem['refundable']     = !empty($flightDetails['refundable']);
+                $mItem['fare_type']      = $onward_fare_type;
+                $mItem['checkin_baggage']= $mItem['checkin_baggage'] ?? 'Adult - 25Kg';
+                $mItem['cabin_baggage']  = $mItem['cabin_baggage'] ?? 'Adult - 7Kg';
+                $mItem['stops']          = (int)($mItem['stops'] ?? 0);
+            }
+            unset($mItem);
+
+            $flightDetails['multi_trips'] = $multi_trips;
+            $flightDetails['is_multicity'] = true;
         }
 
         // Set airport names and terminals based on codes
@@ -827,6 +863,8 @@ class Welcome extends CI_Controller {
         $data['return_flight']        = $returnFlight;
         $data['is_refundable']        = !empty($flightDetails['refundable']);
         $data['is_roundtrip']         = $is_roundtrip;
+        $data['is_multicity']         = $is_multicity;
+        $data['multi_flights']        = $multi_trips;
         $data['fare_rules']           = $fareRules;
         $data['return_fare_rules']    = $returnFareRules;
         $data['ssr']                  = $ssrOptions;
@@ -855,7 +893,7 @@ class Welcome extends CI_Controller {
             'DXB' => 'Dubai (DXB)', 'SIN' => 'Singapore (SIN)', 'BKK' => 'Bangkok (BKK)',
             'LHR' => 'London (LHR)'
         );
-        $trip_type_str    = $is_roundtrip ? 'roundtrip' : 'oneway';
+        $trip_type_str    = $is_multicity ? 'multicity' : ($is_roundtrip ? 'roundtrip' : 'oneway');
         $actual_from_city = !empty($from_city_post) ? $from_city_post : ($airportDisplayNames[$fromCode] ?? ($flightDetails['from_airport'] ?? ($fromCode . ' (' . $fromCode . ')')));
         $actual_to_city   = !empty($to_city_post) ? $to_city_post : ($airportDisplayNames[$toCode] ?? ($flightDetails['to_airport'] ?? ($toCode . ' (' . $toCode . ')')));
         $actual_dep_date  = !empty($flightDetails['departure_date']) ? $flightDetails['departure_date'] : ($departure_date_post ?: date('Y-m-d', strtotime('+3 days')));
@@ -874,7 +912,9 @@ class Welcome extends CI_Controller {
             'children'       => $children,
             'infants'        => $infants,
             'cabin_class'    => $cabin_class,
-            'is_roundtrip'   => $is_roundtrip
+            'is_roundtrip'   => $is_roundtrip,
+            'is_multicity'   => $is_multicity,
+            'multi_legs'     => $multi_trips
         );
 
         $backSearchParams = array(

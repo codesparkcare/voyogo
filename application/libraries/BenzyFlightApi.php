@@ -705,26 +705,58 @@ class BenzyFlightApi {
         return $this->parseSearchResults($simResponse, $tui, $isMulticity, $multiTrips);
     }
 
-    public function smartPricer($tui, $priceHint = 5150, $index = '6E|1', $isRoundTrip = false, $from = 'DEL', $to = 'BOM', $returnPrice = 0, $returnIndex = '6E|1') {
+    public function smartPricer($tui, $priceHint = 5150, $index = '6E|1', $isRoundTrip = false, $from = 'DEL', $to = 'BOM', $returnPrice = 0, $returnIndex = '6E|1', $isMulticity = false, $multiTrips = array()) {
         $token = $this->generateToken();
         
-        $trips = array(
-            array(
-                "Amount"  => (float)($priceHint ?: 5150),
-                "Index"   => $index ?: "6E|1",
-                "OrderID" => 1,
-                "TUI"     => $tui
-            )
+        $domesticAirports = array(
+            'DEL', 'BOM', 'BLR', 'MAA', 'HYD', 'CCU', 'GOI', 'GOX', 'COK', 'AMD', 'PNQ', 'JAI', 
+            'TRV', 'ATQ', 'BBI', 'IXC', 'IXB', 'VTZ', 'PAT', 'GAU', 'LKO', 'NAG', 'IDR', 'SXR', 
+            'IXR', 'BDQ', 'IXE', 'TRZ', 'CJB', 'VNS', 'UDR', 'IXJ', 'IMF', 'RPR', 'DED', 'IXA', 
+            'IXZ', 'IXL', 'IXD', 'IXU', 'JGA', 'JDH', 'AJL', 'DMU', 'TEZ', 'IXS', 'SHL', 'IXV', 
+            'IXW', 'IXP', 'IXT', 'IXY', 'HJR', 'BHO', 'GWL', 'JLR', 'TIR', 'VGA'
         );
 
-        if ($isRoundTrip) {
-            $retPrice = (float)($returnPrice > 0 ? $returnPrice : ($priceHint ?: 5150));
-            $trips[] = array(
-                "Amount"  => $retPrice,
-                "Index"   => $returnIndex ?: "6E|1",
-                "OrderID" => 2,
-                "TUI"     => $tui
+        $tripType = $isRoundTrip ? "RT" : "ON";
+
+        if ($isMulticity && !empty($multiTrips) && is_array($multiTrips)) {
+            $trips = array();
+            $hasInt = false;
+            $legCount = count($multiTrips);
+            $perLegPrice = round((float)($priceHint ?: 5150) / max(1, $legCount));
+
+            foreach ($multiTrips as $mIdx => $mt) {
+                $fc = strtoupper($mt['from_code'] ?? 'DEL');
+                $tc = strtoupper($mt['to_code'] ?? 'BOM');
+                if (!in_array($fc, $domesticAirports) || !in_array($tc, $domesticAirports)) {
+                    $hasInt = true;
+                }
+                $trips[] = array(
+                    "Amount"  => (float)($mt['price'] ?? $perLegPrice),
+                    "Index"   => $mt['flight_index'] ?? ($mt['index'] ?? ($index ?: "6E|1")),
+                    "OrderID" => $mIdx + 1,
+                    "TUI"     => $mt['tui'] ?? $tui
+                );
+            }
+            $tripType = $hasInt ? "IM" : "DM";
+        } else {
+            $trips = array(
+                array(
+                    "Amount"  => (float)($priceHint ?: 5150),
+                    "Index"   => $index ?: "6E|1",
+                    "OrderID" => 1,
+                    "TUI"     => $tui
+                )
             );
+
+            if ($isRoundTrip) {
+                $retPrice = (float)($returnPrice > 0 ? $returnPrice : ($priceHint ?: 5150));
+                $trips[] = array(
+                    "Amount"  => $retPrice,
+                    "Index"   => $returnIndex ?: "6E|1",
+                    "OrderID" => 2,
+                    "TUI"     => $tui
+                );
+            }
         }
 
         $payload = array(
@@ -733,7 +765,7 @@ class BenzyFlightApi {
             "Mode"     => "SS",
             "Options"  => "A",
             "Source"   => "CF",
-            "TripType" => $isRoundTrip ? "RT" : "ON"
+            "TripType" => $tripType
         );
         
         // Step 1: Call SmartPricer with Cache First (CF) and 6s timeout
