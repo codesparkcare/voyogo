@@ -164,6 +164,11 @@ document.addEventListener('DOMContentLoaded', function() {
       multiDrop.style.display = 'none';
       multiDrop.classList.remove('open');
     }
+    const multiDateDrop = document.getElementById('multiDateDropdown');
+    if (multiDateDrop) {
+      multiDateDrop.style.display = 'none';
+      multiDateDrop.classList.remove('open');
+    }
     const multiPaxDrop = document.getElementById('multiPassengerDropdown');
     if (multiPaxDrop) multiPaxDrop.classList.remove('open');
     const hotelCityDropdown = document.getElementById('hotelCityDropdown');
@@ -183,6 +188,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const multiDrop = document.getElementById('multiAirportDropdown');
     if (multiDrop && multiDrop.contains(e.target)) return;
     if (e.target && e.target.closest && e.target.closest('.multi-airport-box')) return;
+    const multiDateDrop = document.getElementById('multiDateDropdown');
+    if (multiDateDrop && multiDateDrop.contains(e.target)) return;
+    if (e.target && e.target.closest && e.target.closest('.multi-date-box')) return;
     const hotelCityBox = document.getElementById('hotelCityBox');
     if (hotelCityBox && hotelCityBox.contains(e.target)) return;
     const hotelGuestBox = document.getElementById('hotelGuestSelectBox');
@@ -1094,30 +1102,260 @@ document.addEventListener('DOMContentLoaded', function() {
     };
   }
 
-  function initMultiLegDate(legRow) {
-    const dateInput = legRow.querySelector('.multi-date-input');
-    const dateVal = legRow.querySelector('.multi-date-val');
-    const dateSub = legRow.querySelector('.multi-date-sub');
-    if (!dateInput) return;
+  // Multi-City Departure Datepicker (Akbar Travels Style)
+  let activeDateTarget = null;
+  let multiCalViewYear = new Date().getFullYear();
+  let multiCalViewMonth = new Date().getMonth();
 
-    dateInput.addEventListener('change', function() {
-      const fmt = formatMultiDisplayDate(this.value);
-      if (dateVal) dateVal.textContent = fmt.dateStr;
-      if (dateSub) dateSub.textContent = fmt.dayStr;
+  function openMultiDateDropdown(boxEl) {
+    const multiDateDropdown = document.getElementById('multiDateDropdown');
+    if (!multiDateDropdown) return;
+    closeAllDropdowns();
 
-      // Update minimum date on subsequent legs
+    const legRow = boxEl.closest('.multi-leg-row');
+    const legIdx = legRow ? parseInt(legRow.getAttribute('data-leg'), 10) : 1;
+    const dateInput = boxEl.querySelector('.multi-date-input');
+    const dateVal = boxEl.querySelector('.multi-date-val');
+    const dateSub = boxEl.querySelector('.multi-date-sub');
+
+    // Calculate minimum allowed date:
+    // If legIdx > 1, minimum is the previous leg's departure date
+    let minDateStr = formatYMD(new Date());
+    if (legIdx > 1 && legRow) {
       const allRows = Array.from(document.querySelectorAll('.multi-leg-row'));
       const currIdx = allRows.indexOf(legRow);
-      for (let i = currIdx + 1; i < allRows.length; i++) {
-        const nextInput = allRows[i].querySelector('.multi-date-input');
-        if (nextInput) {
-          nextInput.min = this.value;
-          if (nextInput.value < this.value) {
-            nextInput.value = this.value;
-            nextInput.dispatchEvent(new Event('change'));
-          }
+      if (currIdx > 0) {
+        const prevInput = allRows[currIdx - 1].querySelector('.multi-date-input');
+        if (prevInput && prevInput.value) {
+          minDateStr = prevInput.value;
         }
       }
+    }
+
+    activeDateTarget = { boxEl, legRow, legIdx, dateInput, dateVal, dateSub, minDateStr };
+
+    // Set view year & month from current input value or today
+    let viewDate = new Date();
+    if (dateInput && dateInput.value) {
+      const parsed = new Date(dateInput.value + 'T00:00:00');
+      if (!isNaN(parsed.getTime())) {
+        viewDate = parsed;
+      }
+    }
+    multiCalViewYear = viewDate.getFullYear();
+    multiCalViewMonth = viewDate.getMonth();
+
+    // Move dropdown inside clicked box for natural positioning
+    boxEl.appendChild(multiDateDropdown);
+    multiDateDropdown.style.top = 'calc(100% + 4px)';
+    multiDateDropdown.style.left = '0';
+    multiDateDropdown.style.display = 'block';
+    multiDateDropdown.classList.add('open');
+
+    const badge = document.getElementById('multiCalSectorBadge');
+    if (badge) badge.textContent = `Sector ${legIdx} Departure`;
+
+    renderMultiCalendar();
+  }
+
+  function renderMultiCalendar() {
+    const multiCalMonthTitle = document.getElementById('multiCalMonthTitle');
+    const multiCalMonthContainer = document.getElementById('multiCalMonthContainer');
+    const multiCalPrevBtn = document.getElementById('multiCalPrevBtn');
+    if (!multiCalMonthContainer || !activeDateTarget) return;
+
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    if (multiCalMonthTitle) {
+      multiCalMonthTitle.textContent = `${monthNames[multiCalViewMonth]} ${multiCalViewYear}`;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const minDate = activeDateTarget.minDateStr ? new Date(activeDateTarget.minDateStr + 'T00:00:00') : today;
+    minDate.setHours(0, 0, 0, 0);
+
+    // Disable prev button if viewing month before minDate's month
+    const isPastOrMinMonth = (multiCalViewYear < minDate.getFullYear()) || 
+      (multiCalViewYear === minDate.getFullYear() && multiCalViewMonth <= minDate.getMonth());
+    if (multiCalPrevBtn) {
+      multiCalPrevBtn.disabled = isPastOrMinMonth;
+      multiCalPrevBtn.style.opacity = isPastOrMinMonth ? '0.35' : '1';
+      multiCalPrevBtn.style.cursor = isPastOrMinMonth ? 'not-allowed' : 'pointer';
+    }
+
+    const firstDay = new Date(multiCalViewYear, multiCalViewMonth, 1).getDay();
+    const daysInMonth = new Date(multiCalViewYear, multiCalViewMonth + 1, 0).getDate();
+
+    const selectedYmd = activeDateTarget.dateInput ? activeDateTarget.dateInput.value : '';
+
+    let html = `<table style="width: 100%; border-collapse: collapse; text-align: center;">
+      <thead>
+        <tr>
+          <th style="font-size: 11px; font-weight: 700; color: #94a3b8; padding: 4px 0 8px;">Su</th>
+          <th style="font-size: 11px; font-weight: 700; color: #94a3b8; padding: 4px 0 8px;">Mo</th>
+          <th style="font-size: 11px; font-weight: 700; color: #94a3b8; padding: 4px 0 8px;">Tu</th>
+          <th style="font-size: 11px; font-weight: 700; color: #94a3b8; padding: 4px 0 8px;">We</th>
+          <th style="font-size: 11px; font-weight: 700; color: #94a3b8; padding: 4px 0 8px;">Th</th>
+          <th style="font-size: 11px; font-weight: 700; color: #94a3b8; padding: 4px 0 8px;">Fr</th>
+          <th style="font-size: 11px; font-weight: 700; color: #94a3b8; padding: 4px 0 8px;">Sa</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    let dateNum = 1;
+    for (let row = 0; row < 6; row++) {
+      if (dateNum > daysInMonth) break;
+      html += `<tr>`;
+      for (let col = 0; col < 7; col++) {
+        if (row === 0 && col < firstDay) {
+          html += `<td style="padding: 2px;"></td>`;
+        } else if (dateNum > daysInMonth) {
+          html += `<td style="padding: 2px;"></td>`;
+        } else {
+          const thisDate = new Date(multiCalViewYear, multiCalViewMonth, dateNum);
+          thisDate.setHours(0, 0, 0, 0);
+          const ymd = formatYMD(thisDate);
+
+          const isPast = thisDate < minDate;
+          const isToday = thisDate.getTime() === today.getTime();
+          const isSelected = selectedYmd && (ymd === selectedYmd);
+
+          let btnStyle = 'width: 36px; height: 36px; border-radius: 8px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s; margin: 1px auto;';
+
+          if (isPast) {
+            html += `<td style="padding: 2px;">
+              <button type="button" disabled style="${btnStyle} border: none; background: transparent; color: #cbd5e1; cursor: not-allowed; opacity: 0.45;">
+                ${dateNum}
+              </button>
+            </td>`;
+          } else if (isSelected) {
+            html += `<td style="padding: 2px;">
+              <button type="button" class="multi-cal-day-btn" data-date="${ymd}" style="${btnStyle} border: none; background: #0284c7; color: #ffffff; font-weight: 800; cursor: pointer; box-shadow: 0 3px 8px rgba(2,132,199,0.35);">
+                ${dateNum}
+              </button>
+            </td>`;
+          } else if (isToday) {
+            html += `<td style="padding: 2px;">
+              <button type="button" class="multi-cal-day-btn" data-date="${ymd}" style="${btnStyle} border: 1.5px solid #0284c7; background: #f0f9ff; color: #0284c7; cursor: pointer;">
+                ${dateNum}
+              </button>
+            </td>`;
+          } else {
+            html += `<td style="padding: 2px;">
+              <button type="button" class="multi-cal-day-btn" data-date="${ymd}" style="${btnStyle} border: none; background: transparent; color: #0f172a; cursor: pointer;">
+                ${dateNum}
+              </button>
+            </td>`;
+          }
+          dateNum++;
+        }
+      }
+      html += `</tr>`;
+    }
+
+    html += `</tbody></table>`;
+    multiCalMonthContainer.innerHTML = html;
+
+    // Hover effect
+    multiCalMonthContainer.querySelectorAll('.multi-cal-day-btn').forEach(btn => {
+      const isSel = btn.getAttribute('data-date') === (activeDateTarget.dateInput ? activeDateTarget.dateInput.value : '');
+      if (!isSel) {
+        btn.addEventListener('mouseenter', () => {
+          btn.style.background = '#e0f2fe';
+          btn.style.color = '#0284c7';
+        });
+        btn.addEventListener('mouseleave', () => {
+          if (btn.style.border && btn.style.border.includes('0284c7')) {
+            btn.style.background = '#f0f9ff';
+            btn.style.color = '#0284c7';
+          } else {
+            btn.style.background = 'transparent';
+            btn.style.color = '#0f172a';
+          }
+        });
+      }
+    });
+
+    // Bind Day clicks
+    multiCalMonthContainer.querySelectorAll('.multi-cal-day-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const clickedYmd = this.getAttribute('data-date');
+        if (!clickedYmd || !activeDateTarget) return;
+
+        const fmt = formatMultiDisplayDate(clickedYmd);
+        if (activeDateTarget.dateVal) activeDateTarget.dateVal.textContent = fmt.dateStr;
+        if (activeDateTarget.dateSub) activeDateTarget.dateSub.textContent = fmt.dayStr;
+        if (activeDateTarget.dateInput) activeDateTarget.dateInput.value = clickedYmd;
+
+        // Auto update subsequent legs if their date is before this new date
+        const allRows = Array.from(document.querySelectorAll('.multi-leg-row'));
+        const currIdx = allRows.indexOf(activeDateTarget.legRow);
+        if (currIdx >= 0) {
+          let prevSelectedDate = new Date(clickedYmd + 'T00:00:00');
+          for (let i = currIdx + 1; i < allRows.length; i++) {
+            const nextRow = allRows[i];
+            const nextInput = nextRow.querySelector('.multi-date-input');
+            const nextVal = nextRow.querySelector('.multi-date-val');
+            const nextSub = nextRow.querySelector('.multi-date-sub');
+            if (nextInput && nextInput.value) {
+              const nextDate = new Date(nextInput.value + 'T00:00:00');
+              if (nextDate < prevSelectedDate) {
+                const bumpedDate = new Date(prevSelectedDate);
+                bumpedDate.setDate(bumpedDate.getDate() + 3);
+                const bumpedYmd = formatYMD(bumpedDate);
+                nextInput.value = bumpedYmd;
+                const nextFmt = formatMultiDisplayDate(bumpedYmd);
+                if (nextVal) nextVal.textContent = nextFmt.dateStr;
+                if (nextSub) nextSub.textContent = nextFmt.dayStr;
+                prevSelectedDate = bumpedDate;
+              }
+            }
+          }
+        }
+
+        closeAllDropdowns();
+      });
+    });
+  }
+
+  // Multi-City Calendar Month Nav Buttons
+  const multiCalPrevBtn = document.getElementById('multiCalPrevBtn');
+  const multiCalNextBtn = document.getElementById('multiCalNextBtn');
+
+  if (multiCalPrevBtn) {
+    multiCalPrevBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      multiCalViewMonth--;
+      if (multiCalViewMonth < 0) {
+        multiCalViewMonth = 11;
+        multiCalViewYear--;
+      }
+      renderMultiCalendar();
+    });
+  }
+
+  if (multiCalNextBtn) {
+    multiCalNextBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      multiCalViewMonth++;
+      if (multiCalViewMonth > 11) {
+        multiCalViewMonth = 0;
+        multiCalViewYear++;
+      }
+      renderMultiCalendar();
+    });
+  }
+
+  function initMultiLegDate(legRow) {
+    const dateBox = legRow.querySelector('.multi-date-box');
+    if (!dateBox) return;
+
+    dateBox.addEventListener('click', function(e) {
+      e.stopPropagation();
+      openMultiDateDropdown(this);
     });
   }
 
@@ -1216,7 +1454,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="input-val multi-date-val" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;">${fmt.dateStr}</div>
             <div class="input-subtext multi-date-sub" style="font-size: 11px; color: #64748b; margin-top: 2px;">${fmt.dayStr}</div>
-            <input type="date" name="multi_date[]" class="multi-date-input" value="${ymdStr}" min="${lastDateInput ? lastDateInput.value : ''}" style="position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 5;">
+            <input type="hidden" name="multi_date[]" class="multi-date-input" value="${ymdStr}">
         </div>
 
         <!-- Leg Spacer -->

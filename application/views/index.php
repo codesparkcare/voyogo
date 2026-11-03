@@ -410,7 +410,7 @@
                                 </div>
                                 <div class="input-val multi-date-val" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;"><?php echo date('d M\'y', strtotime('+3 days')); ?></div>
                                 <div class="input-subtext multi-date-sub" style="font-size: 11px; color: #64748b; margin-top: 2px;"><?php echo date('l', strtotime('+3 days')); ?></div>
-                                <input type="date" name="multi_date[]" class="multi-date-input" value="<?php echo date('Y-m-d', strtotime('+3 days')); ?>" min="<?php echo date('Y-m-d'); ?>" style="position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 5;">
+                                <input type="hidden" name="multi_date[]" class="multi-date-input" value="<?php echo date('Y-m-d', strtotime('+3 days')); ?>">
                             </div>
 
                             <!-- Travellers & Class (Leg 1 only) -->
@@ -504,7 +504,7 @@
                                 </div>
                                 <div class="input-val multi-date-val" style="font-size: 17px; font-weight: 800; color: #09204b; line-height: 1.2;"><?php echo date('d M\'y', strtotime('+6 days')); ?></div>
                                 <div class="input-subtext multi-date-sub" style="font-size: 11px; color: #64748b; margin-top: 2px;"><?php echo date('l', strtotime('+6 days')); ?></div>
-                                <input type="date" name="multi_date[]" class="multi-date-input" value="<?php echo date('Y-m-d', strtotime('+6 days')); ?>" min="<?php echo date('Y-m-d'); ?>" style="position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 5;">
+                                <input type="hidden" name="multi_date[]" class="multi-date-input" value="<?php echo date('Y-m-d', strtotime('+6 days')); ?>">
                             </div>
 
                             <!-- Leg Tag Spacer -->
@@ -568,6 +568,28 @@
 
                             <!-- Filtered Airport Results (shown when typing) -->
                             <div id="multiFilteredList" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Reusable Multi-City Calendar Dropdown Popup (Akbar Travels Style - Sector Departure Date) -->
+                    <div class="dropdown-popup multi-date-dropdown" id="multiDateDropdown" style="display: none; position: absolute; z-index: 999999; background: #ffffff; border-radius: 12px; box-shadow: 0 16px 40px rgba(0,0,0,0.25); border: 1.5px solid #cbd5e1; width: 330px; text-align: left; overflow: hidden; padding: 0;" onclick="event.stopPropagation();">
+                        <!-- Header with Month Title, Sector Badge & Navigation -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                            <button type="button" id="multiCalPrevBtn" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #09204b; font-size: 12px; transition: all 0.2s;" title="Previous Month">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <div style="text-align: center;">
+                                <div id="multiCalMonthTitle" style="font-weight: 800; font-size: 14px; color: #09204b;"><?php echo date('F Y'); ?></div>
+                                <div id="multiCalSectorBadge" style="font-size: 10.5px; font-weight: 700; color: #0284c7; text-transform: uppercase;">Sector Departure</div>
+                            </div>
+                            <button type="button" id="multiCalNextBtn" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #09204b; font-size: 12px; transition: all 0.2s;" title="Next Month">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Calendar Month Grid Container -->
+                        <div id="multiCalMonthContainer" style="padding: 10px 12px 14px;">
+                            <!-- Dynamic Day Table -->
                         </div>
                     </div>
 
