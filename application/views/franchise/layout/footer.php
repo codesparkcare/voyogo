@@ -152,7 +152,6 @@
                     <li><a href="<?php echo site_url('disclaimer'); ?>" style="color: #cbd5e1; text-decoration: none;">Disclaimer</a></li>
                     <li><a href="<?php echo site_url('faq'); ?>" style="color: #cbd5e1; text-decoration: none;">Help &amp; FAQs</a></li>
                     <li><a href="tel:+918098999096" style="color: #cbd5e1; text-decoration: none;"><i class="fa-solid fa-phone" style="font-size: 11px; margin-right: 6px; color: #78B722;"></i> +91 8098999096</a></li>
-                    <li><a href="tel:+918098999095" style="color: #cbd5e1; text-decoration: none;"><i class="fa-solid fa-phone" style="font-size: 11px; margin-right: 6px; color: #78B722;"></i> +91 8098999095</a></li>
                     <li><a href="mailto:support@voyogos.com" style="color: #cbd5e1; text-decoration: none;"><i class="fa-solid fa-envelope" style="font-size: 11px; margin-right: 6px; color: #78B722;"></i> Support@voyogos.com</a></li>
                 </ul>
             </div>

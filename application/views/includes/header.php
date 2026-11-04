@@ -79,7 +79,7 @@
                 <div class="top-strip-item top-strip-phone">
                     <a href="tel:+918098999096" class="top-phone-link">
                         <i class="fa-solid fa-headset"></i>
-                        <span>24x7 Support: <strong>+91 8098999096</strong><span class="desktop-only-phone"> / +91 8098999095</span></span>
+                        <span>24x7 Support: <strong>+91 8098999096</strong></span>
                     </a>
                 </div>
                 <div class="top-strip-item desktop-only-email">
@@ -345,9 +345,6 @@
             <div class="drawer-support-box">
                 <a href="tel:+918098999096" class="drawer-support-phone">
                     <i class="fa-solid fa-headset"></i> +91 8098999096
-                </a>
-                <a href="tel:+918098999095" class="drawer-support-phone">
-                    <i class="fa-solid fa-phone"></i> +91 8098999095
                 </a>
                 <a href="mailto:support@voyogos.com" class="drawer-support-email">
                     <i class="fa-solid fa-envelope"></i> support@voyogos.com

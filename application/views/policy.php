@@ -1252,9 +1252,7 @@
                     </div>
 
                     <div class="support-phones-wrap">
-                        <a href="tel:+918098999096" class="sup-phone-link" title="Call Flight Support"><i class="fa-solid fa-phone"></i> +91 8098999096</a>
-                        <span class="sup-phone-slash">/</span>
-                        <a href="tel:+918098999095" class="sup-phone-link" title="Call Hotel Support">+91 8098999095</a>
+                        <a href="tel:+918098999096" class="sup-phone-link" title="Call Support"><i class="fa-solid fa-phone"></i> +91 8098999096</a>
                     </div>
                 </div>
 
@@ -1972,7 +1970,7 @@
                                 <div class="p-callout">
                                     <strong>SkyPlanet Voyages Private Limited</strong><br>
                                     Email: <a href="mailto:support@voyogos.com" style="color: #0284c7; font-weight: 600;">Support@voyogos.com</a><br>
-                                    Helpline: +91 8098999096 / +91 8098999095
+                                    Helpline: +91 8098999096
                                 </div>
                             </div>
                         </div>
@@ -2186,7 +2184,7 @@
                             <div class="p-accordion-body">
                                 <p>For assistance with registration, account recharge, bookings, cancellations, refunds, technical issues, or other travel-related queries, please contact the SkyPlanet Voyages Private Limited customer support team through the official contact details provided on our website:</p>
                                 <ul>
-                                    <li><strong>Helpline:</strong> +91 8098999096 / +91 8098999095</li>
+                                    <li><strong>Helpline:</strong> +91 8098999096</li>
                                     <li><strong>Support Email:</strong> Support@voyogos.com</li>
                                     <li><strong>Website:</strong> <a href="https://voyogos.com" target="_blank" style="color:#0284c7;">https://voyogos.com/</a></li>
                                 </ul>
