@@ -273,7 +273,7 @@ $holdExpiresAt = !empty($booking['hold_expires_at']) ? strtotime($booking['hold_
             &bull; This is an official booking quotation and seat reservation confirmation, not a valid boarding pass.<br>
             &bull; Seats and fares are held temporarily at the airline system. To prevent cancellation, full ticketing confirmation must be executed before the cutoff deadline.<br>
             &bull; Once ticketed, standard airline cancellation and date change policies apply.<br>
-            &bull; For any modifications or assistance, contact support at supports@voyogo.com or agency desk.
+            &bull; For any modifications or assistance, contact support at support@voyogos.com or agency desk.
         </div>
     </div>
 </div>

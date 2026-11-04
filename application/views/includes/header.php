@@ -83,9 +83,9 @@
                     </a>
                 </div>
                 <div class="top-strip-item desktop-only-email">
-                    <a href="mailto:supports@voyogo.com" class="top-email-link">
+                    <a href="mailto:support@voyogos.com" class="top-email-link">
                         <i class="fa-solid fa-envelope"></i>
-                        <span>supports@voyogo.com</span>
+                        <span>support@voyogos.com</span>
                     </a>
                 </div>
             </div>
@@ -349,8 +349,8 @@
                 <a href="tel:+918098999095" class="drawer-support-phone">
                     <i class="fa-solid fa-phone"></i> +91 8098999095
                 </a>
-                <a href="mailto:supports@voyogo.com" class="drawer-support-email">
-                    <i class="fa-solid fa-envelope"></i> supports@voyogo.com
+                <a href="mailto:support@voyogos.com" class="drawer-support-email">
+                    <i class="fa-solid fa-envelope"></i> support@voyogos.com
                 </a>
             </div>
         </div>

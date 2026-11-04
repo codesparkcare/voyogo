@@ -637,7 +637,7 @@
 <div class="f-top-strip">
     <div class="f-top-strip-left">
         <span><a href="tel:+918098999096"><i class="fa-solid fa-headset"></i> 24x7 Support: <strong>+91 8098999096</strong></a></span>
-        <span><a href="mailto:supports@voyogo.com"><i class="fa-solid fa-envelope"></i> supports@voyogo.com</a></span>
+        <span><a href="mailto:support@voyogos.com"><i class="fa-solid fa-envelope"></i> support@voyogos.com</a></span>
     </div>
     <div class="f-top-strip-right">
         <span><i class="fa-solid fa-globe"></i> India (INR ₹)</span>
