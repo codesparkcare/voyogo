@@ -3246,4 +3246,204 @@ class Welcome extends CI_Controller {
         echo json_encode($response);
         return;
     }
+
+    /**
+     * Airport autocomplete endpoint for user flight search
+     */
+    public function ajax_airports() {
+        $q = trim((string)($this->input->get('q') ?: ($this->input->get('term') ?: ($this->input->post('q') ?: ''))));
+        $airports = $this->_get_master_airports();
+
+        $qLower = strtolower($q);
+        $cleanQ = trim(preg_replace('/[(),]/', ' ', $qLower));
+        $cleanQ = preg_replace('/\s+/', ' ', $cleanQ);
+
+        if ($cleanQ === '') {
+            $results = array_slice($airports, 0, 30);
+        } else {
+            $words = array_filter(explode(' ', $cleanQ));
+            $results = array();
+            foreach ($airports as $a) {
+                $city    = strtolower($a['city'] ?? '');
+                $code    = strtolower($a['code'] ?? '');
+                $airport = strtolower($a['airport'] ?? '');
+                $country = strtolower($a['country'] ?? '');
+                $haystack = "{$city} {$code} {$airport} {$country}";
+
+                $match = true;
+                foreach ($words as $w) {
+                    if (strpos($haystack, $w) === false) {
+                        $match = false;
+                        break;
+                    }
+                }
+                if ($match) {
+                    $results[] = $a;
+                }
+            }
+
+            usort($results, function($a, $b) use ($cleanQ) {
+                $aCode = strtolower($a['code'] ?? '');
+                $bCode = strtolower($b['code'] ?? '');
+                $aCity = strtolower($a['city'] ?? '');
+                $bCity = strtolower($b['city'] ?? '');
+
+                if ($aCode === $cleanQ) return -1;
+                if ($bCode === cleanQ) return 1;
+                if (strpos($aCode, $cleanQ) === 0 && strpos($bCode, $cleanQ) !== 0) return -1;
+                if (strpos($bCode, $cleanQ) === 0 && strpos($aCode, $cleanQ) !== 0) return 1;
+                if (strpos($aCity, $cleanQ) === 0 && strpos($bCity, $cleanQ) !== 0) return -1;
+                if (strpos($bCity, $cleanQ) === 0 && strpos($aCity, $cleanQ) !== 0) return 1;
+                return 0;
+            });
+
+            $results = array_slice($results, 0, 35);
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($results));
+    }
+
+    private function _get_master_airports() {
+        return array(
+            // Popular Domestic (India)
+            array('city' => 'Delhi', 'code' => 'DEL', 'airport' => 'Indira Gandhi Intl Airport', 'country' => 'India', 'popular' => true),
+            array('city' => 'Mumbai', 'code' => 'BOM', 'airport' => 'Chhatrapati Shivaji Maharaj Intl', 'country' => 'India', 'popular' => true),
+            array('city' => 'Bengaluru', 'code' => 'BLR', 'airport' => 'Kempegowda Intl Airport', 'country' => 'India', 'popular' => true),
+            array('city' => 'Hyderabad', 'code' => 'HYD', 'airport' => 'Rajiv Gandhi Intl Airport', 'country' => 'India', 'popular' => true),
+            array('city' => 'Chennai', 'code' => 'MAA', 'airport' => 'Chennai International Airport', 'country' => 'India', 'popular' => true),
+            array('city' => 'Kolkata', 'code' => 'CCU', 'airport' => 'Netaji Subhash Chandra Bose Intl', 'country' => 'India', 'popular' => true),
+            array('city' => 'Goa (Dabolim)', 'code' => 'GOI', 'airport' => 'Dabolim Airport', 'country' => 'India', 'popular' => true),
+            array('city' => 'Goa (Mopa)', 'code' => 'GOX', 'airport' => 'Manohar International Airport', 'country' => 'India', 'popular' => true),
+            array('city' => 'Ahmedabad', 'code' => 'AMD', 'airport' => 'Sardar Vallabhbhai Patel Intl', 'country' => 'India', 'popular' => true),
+            array('city' => 'Kochi', 'code' => 'COK', 'airport' => 'Cochin International Airport', 'country' => 'India', 'popular' => true),
+            array('city' => 'Pune', 'code' => 'PNQ', 'airport' => 'Pune Airport', 'country' => 'India', 'popular' => true),
+            array('city' => 'Jaipur', 'code' => 'JAI', 'airport' => 'Jaipur International Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Lucknow', 'code' => 'LKO', 'airport' => 'Chaudhary Charan Singh Intl', 'country' => 'India', 'popular' => false),
+            array('city' => 'Chandigarh', 'code' => 'IXC', 'airport' => 'Shaheed Bhagat Singh Intl', 'country' => 'India', 'popular' => false),
+            array('city' => 'Srinagar', 'code' => 'SXR', 'airport' => 'Sheikh ul-Alam Intl Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Amritsar', 'code' => 'ATQ', 'airport' => 'Sri Guru Ram Dass Jee Intl', 'country' => 'India', 'popular' => false),
+            array('city' => 'Varanasi', 'code' => 'VNS', 'airport' => 'Lal Bahadur Shastri Intl', 'country' => 'India', 'popular' => false),
+            array('city' => 'Patna', 'code' => 'PAT', 'airport' => 'Jay Prakash Narayan Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Guwahati', 'code' => 'GAU', 'airport' => 'Lokpriya Gopinath Bordoloi Intl', 'country' => 'India', 'popular' => false),
+            array('city' => 'Bhubaneswar', 'code' => 'BBI', 'airport' => 'Biju Patnaik International Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Indore', 'code' => 'IDR', 'airport' => 'Devi Ahilyabai Holkar Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Bhopal', 'code' => 'BHO', 'airport' => 'Raja Bhoj Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Nagpur', 'code' => 'NAG', 'airport' => 'Dr. Babasaheb Ambedkar Intl', 'country' => 'India', 'popular' => false),
+            array('city' => 'Vadodara', 'code' => 'BDQ', 'airport' => 'Vadodara Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Surat', 'code' => 'STV', 'airport' => 'Surat International Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Visakhapatnam', 'code' => 'VTZ', 'airport' => 'Visakhapatnam International Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Vijayawada', 'code' => 'VGA', 'airport' => 'Vijayawada International Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Tiruchirappalli', 'code' => 'TRZ', 'airport' => 'Tiruchirappalli Intl Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Coimbatore', 'code' => 'CJB', 'airport' => 'Coimbatore International Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Madurai', 'code' => 'IXM', 'airport' => 'Madurai Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Mangaluru', 'code' => 'IXE', 'airport' => 'Mangaluru International Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Kozhikode', 'code' => 'CCJ', 'airport' => 'Calicut International Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Thiruvananthapuram', 'code' => 'TRV', 'airport' => 'Trivandrum International Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Kannur', 'code' => 'CNN', 'airport' => 'Kannur International Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Ranchi', 'code' => 'IXR', 'airport' => 'Birsa Munda Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Raipur', 'code' => 'RPR', 'airport' => 'Swami Vivekananda Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Dehradun', 'code' => 'DED', 'airport' => 'Jolly Grant Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Bagdogra', 'code' => 'IXB', 'airport' => 'Bagdogra International Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Udaipur', 'code' => 'UDR', 'airport' => 'Maharana Pratap Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Jodhpur', 'code' => 'JDH', 'airport' => 'Jodhpur Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Ayodhya', 'code' => 'AYJ', 'airport' => 'Maharishi Valmiki Intl Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Prayagraj', 'code' => 'IXD', 'airport' => 'Prayagraj Airport', 'country' => 'India', 'popular' => false),
+            array('city' => 'Port Blair', 'code' => 'IXZ', 'airport' => 'Veer Savarkar Intl Airport', 'country' => 'India', 'popular' => false),
+
+            // Middle East & Gulf (Saudi Arabia, UAE, Qatar, Oman, Kuwait, Bahrain)
+            array('city' => 'Dubai', 'code' => 'DXB', 'airport' => 'Dubai International Airport', 'country' => 'UAE', 'popular' => true),
+            array('city' => 'Dubai (Al Maktoum)', 'code' => 'DWC', 'airport' => 'Al Maktoum International Airport', 'country' => 'UAE', 'popular' => false),
+            array('city' => 'Abu Dhabi', 'code' => 'AUH', 'airport' => 'Zayed International Airport', 'country' => 'UAE', 'popular' => true),
+            array('city' => 'Sharjah', 'code' => 'SHJ', 'airport' => 'Sharjah International Airport', 'country' => 'UAE', 'popular' => true),
+            array('city' => 'Doha', 'code' => 'DOH', 'airport' => 'Hamad International Airport', 'country' => 'Qatar', 'popular' => true),
+            array('city' => 'Riyadh', 'code' => 'RUH', 'airport' => 'King Khalid International Airport', 'country' => 'Saudi Arabia', 'popular' => true),
+            array('city' => 'Jeddah', 'code' => 'JED', 'airport' => 'King Abdulaziz Intl Airport', 'country' => 'Saudi Arabia', 'popular' => true),
+            array('city' => 'Dammam', 'code' => 'DMM', 'airport' => 'King Fahd International Airport', 'country' => 'Saudi Arabia', 'popular' => true),
+            array('city' => 'Medina', 'code' => 'MED', 'airport' => 'Prince Mohammad bin Abdulaziz Airport', 'country' => 'Saudi Arabia', 'popular' => true),
+            array('city' => 'Abha', 'code' => 'AHB', 'airport' => 'Abha International Airport', 'country' => 'Saudi Arabia', 'popular' => false),
+            array('city' => 'Gassim', 'code' => 'ELQ', 'airport' => 'Prince Naif bin Abdulaziz Airport', 'country' => 'Saudi Arabia', 'popular' => false),
+            array('city' => 'Taif', 'code' => 'TIF', 'airport' => 'Taif Regional Airport', 'country' => 'Saudi Arabia', 'popular' => false),
+            array('city' => 'Tabuk', 'code' => 'TUU', 'airport' => 'Tabuk Regional Airport', 'country' => 'Saudi Arabia', 'popular' => false),
+            array('city' => 'Yanbu', 'code' => 'YNB', 'airport' => 'Yanbu Airport', 'country' => 'Saudi Arabia', 'popular' => false),
+            array('city' => 'Jizan', 'code' => 'GIZ', 'airport' => 'King Abdullah bin Abdulaziz Airport', 'country' => 'Saudi Arabia', 'popular' => false),
+            array('city' => 'Muscat', 'code' => 'MCT', 'airport' => 'Muscat International Airport', 'country' => 'Oman', 'popular' => true),
+            array('city' => 'Salalah', 'code' => 'SLL', 'airport' => 'Salalah Airport', 'country' => 'Oman', 'popular' => false),
+            array('city' => 'Kuwait', 'code' => 'KWI', 'airport' => 'Kuwait International Airport', 'country' => 'Kuwait', 'popular' => true),
+            array('city' => 'Bahrain', 'code' => 'BAH', 'airport' => 'Bahrain International Airport', 'country' => 'Bahrain', 'popular' => true),
+
+            // Southeast Asia, East Asia & Indian Subcontinent
+            array('city' => 'Singapore', 'code' => 'SIN', 'airport' => 'Singapore Changi Airport', 'country' => 'Singapore', 'popular' => true),
+            array('city' => 'Bangkok', 'code' => 'BKK', 'airport' => 'Suvarnabhumi International Airport', 'country' => 'Thailand', 'popular' => true),
+            array('city' => 'Bangkok (Don Mueang)', 'code' => 'DMK', 'airport' => 'Don Mueang International Airport', 'country' => 'Thailand', 'popular' => false),
+            array('city' => 'Phuket', 'code' => 'HKT', 'airport' => 'Phuket International Airport', 'country' => 'Thailand', 'popular' => true),
+            array('city' => 'Krabi', 'code' => 'KBV', 'airport' => 'Krabi International Airport', 'country' => 'Thailand', 'popular' => false),
+            array('city' => 'Kuala Lumpur', 'code' => 'KUL', 'airport' => 'Kuala Lumpur Intl Airport', 'country' => 'Malaysia', 'popular' => true),
+            array('city' => 'Penang', 'code' => 'PEN', 'airport' => 'Penang International Airport', 'country' => 'Malaysia', 'popular' => false),
+            array('city' => 'Bali (Denpasar)', 'code' => 'DPS', 'airport' => 'Ngurah Rai International Airport', 'country' => 'Indonesia', 'popular' => true),
+            array('city' => 'Jakarta', 'code' => 'CGK', 'airport' => 'Soekarno-Hatta International Airport', 'country' => 'Indonesia', 'popular' => false),
+            array('city' => 'Colombo', 'code' => 'CMB', 'airport' => 'Bandaranaike International Airport', 'country' => 'Sri Lanka', 'popular' => true),
+            array('city' => 'Male (Maldives)', 'code' => 'MLE', 'airport' => 'Velana International Airport', 'country' => 'Maldives', 'popular' => true),
+            array('city' => 'Kathmandu', 'code' => 'KTM', 'airport' => 'Tribhuvan International Airport', 'country' => 'Nepal', 'popular' => true),
+            array('city' => 'Dhaka', 'code' => 'DAC', 'airport' => 'Hazrat Shahjalal Intl Airport', 'country' => 'Bangladesh', 'popular' => false),
+            array('city' => 'Hong Kong', 'code' => 'HKG', 'airport' => 'Hong Kong International Airport', 'country' => 'Hong Kong', 'popular' => true),
+            array('city' => 'Tokyo (Narita)', 'code' => 'NRT', 'airport' => 'Narita International Airport', 'country' => 'Japan', 'popular' => true),
+            array('city' => 'Tokyo (Haneda)', 'code' => 'HND', 'airport' => 'Tokyo Haneda Airport', 'country' => 'Japan', 'popular' => false),
+            array('city' => 'Osaka', 'code' => 'KIX', 'airport' => 'Kansai International Airport', 'country' => 'Japan', 'popular' => false),
+            array('city' => 'Seoul', 'code' => 'ICN', 'airport' => 'Incheon International Airport', 'country' => 'South Korea', 'popular' => true),
+            array('city' => 'Manila', 'code' => 'MNL', 'airport' => 'Ninoy Aquino International Airport', 'country' => 'Philippines', 'popular' => false),
+            array('city' => 'Ho Chi Minh City', 'code' => 'SGN', 'airport' => 'Tan Son Nhat International Airport', 'country' => 'Vietnam', 'popular' => true),
+            array('city' => 'Hanoi', 'code' => 'HAN', 'airport' => 'Noi Bai International Airport', 'country' => 'Vietnam', 'popular' => false),
+
+            // Europe & UK
+            array('city' => 'London (Heathrow)', 'code' => 'LHR', 'airport' => 'Heathrow Airport', 'country' => 'UK', 'popular' => true),
+            array('city' => 'London (Gatwick)', 'code' => 'LGW', 'airport' => 'Gatwick Airport', 'country' => 'UK', 'popular' => false),
+            array('city' => 'London (Stansted)', 'code' => 'STN', 'airport' => 'Stansted Airport', 'country' => 'UK', 'popular' => false),
+            array('city' => 'Manchester', 'code' => 'MAN', 'airport' => 'Manchester Airport', 'country' => 'UK', 'popular' => false),
+            array('city' => 'Birmingham', 'code' => 'BHX', 'airport' => 'Birmingham Airport', 'country' => 'UK', 'popular' => false),
+            array('city' => 'Paris (Charles de Gaulle)', 'code' => 'CDG', 'airport' => 'Charles de Gaulle Airport', 'country' => 'France', 'popular' => true),
+            array('city' => 'Frankfurt', 'code' => 'FRA', 'airport' => 'Frankfurt am Main Airport', 'country' => 'Germany', 'popular' => true),
+            array('city' => 'Munich', 'code' => 'MUC', 'airport' => 'Munich International Airport', 'country' => 'Germany', 'popular' => false),
+            array('city' => 'Amsterdam', 'code' => 'AMS', 'airport' => 'Amsterdam Schiphol Airport', 'country' => 'Netherlands', 'popular' => true),
+            array('city' => 'Zurich', 'code' => 'ZRH', 'airport' => 'Zurich Airport', 'country' => 'Switzerland', 'popular' => true),
+            array('city' => 'Geneva', 'code' => 'GVA', 'airport' => 'Geneva Airport', 'country' => 'Switzerland', 'popular' => false),
+            array('city' => 'Rome', 'code' => 'FCO', 'airport' => 'Leonardo da Vinci–Fiumicino', 'country' => 'Italy', 'popular' => true),
+            array('city' => 'Milan', 'code' => 'MXP', 'airport' => 'Milan Malpensa Airport', 'country' => 'Italy', 'popular' => false),
+            array('city' => 'Madrid', 'code' => 'MAD', 'airport' => 'Adolfo Suárez Madrid–Barajas', 'country' => 'Spain', 'popular' => false),
+            array('city' => 'Barcelona', 'code' => 'BCN', 'airport' => 'Josep Tarradellas Barcelona-El Prat', 'country' => 'Spain', 'popular' => false),
+            array('city' => 'Vienna', 'code' => 'VIE', 'airport' => 'Vienna International Airport', 'country' => 'Austria', 'popular' => false),
+            array('city' => 'Brussels', 'code' => 'BRU', 'airport' => 'Brussels Airport', 'country' => 'Belgium', 'popular' => false),
+            array('city' => 'Istanbul', 'code' => 'IST', 'airport' => 'Istanbul Airport', 'country' => 'Turkey', 'popular' => true),
+            array('city' => 'Dublin', 'code' => 'DUB', 'airport' => 'Dublin Airport', 'country' => 'Ireland', 'popular' => false),
+
+            // North America
+            array('city' => 'New York (JFK)', 'code' => 'JFK', 'airport' => 'John F. Kennedy Intl Airport', 'country' => 'USA', 'popular' => true),
+            array('city' => 'New York (Newark)', 'code' => 'EWR', 'airport' => 'Newark Liberty Intl Airport', 'country' => 'USA', 'popular' => false),
+            array('city' => 'San Francisco', 'code' => 'SFO', 'airport' => 'San Francisco Intl Airport', 'country' => 'USA', 'popular' => true),
+            array('city' => 'Los Angeles', 'code' => 'LAX', 'airport' => 'Los Angeles Intl Airport', 'country' => 'USA', 'popular' => true),
+            array('city' => 'Chicago', 'code' => 'ORD', 'airport' => 'O\'Hare International Airport', 'country' => 'USA', 'popular' => true),
+            array('city' => 'Washington', 'code' => 'IAD', 'airport' => 'Washington Dulles Intl Airport', 'country' => 'USA', 'popular' => false),
+            array('city' => 'Dallas', 'code' => 'DFW', 'airport' => 'Dallas/Fort Worth Intl Airport', 'country' => 'USA', 'popular' => false),
+            array('city' => 'Houston', 'code' => 'IAH', 'airport' => 'George Bush Intercontinental', 'country' => 'USA', 'popular' => false),
+            array('city' => 'Boston', 'code' => 'BOS', 'airport' => 'Boston Logan Intl Airport', 'country' => 'USA', 'popular' => false),
+            array('city' => 'Seattle', 'code' => 'SEA', 'airport' => 'Seattle-Tacoma Intl Airport', 'country' => 'USA', 'popular' => false),
+            array('city' => 'Atlanta', 'code' => 'ATL', 'airport' => 'Hartsfield-Jackson Atlanta Intl', 'country' => 'USA', 'popular' => false),
+            array('city' => 'Toronto', 'code' => 'YYZ', 'airport' => 'Toronto Pearson Intl Airport', 'country' => 'Canada', 'popular' => true),
+            array('city' => 'Vancouver', 'code' => 'YVR', 'airport' => 'Vancouver International Airport', 'country' => 'Canada', 'popular' => true),
+            array('city' => 'Montreal', 'code' => 'YUL', 'airport' => 'Montréal–Trudeau Intl Airport', 'country' => 'Canada', 'popular' => false),
+
+            // Australia, New Zealand & Africa
+            array('city' => 'Sydney', 'code' => 'SYD', 'airport' => 'Sydney Kingsford Smith Airport', 'country' => 'Australia', 'popular' => true),
+            array('city' => 'Melbourne', 'code' => 'MEL', 'airport' => 'Melbourne Airport', 'country' => 'Australia', 'popular' => true),
+            array('city' => 'Brisbane', 'code' => 'BNE', 'airport' => 'Brisbane Airport', 'country' => 'Australia', 'popular' => false),
+            array('city' => 'Perth', 'code' => 'PER', 'airport' => 'Perth Airport', 'country' => 'Australia', 'popular' => false),
+            array('city' => 'Auckland', 'code' => 'AKL', 'airport' => 'Auckland Airport', 'country' => 'New Zealand', 'popular' => false),
+            array('city' => 'Johannesburg', 'code' => 'JNB', 'airport' => 'O. R. Tambo Intl Airport', 'country' => 'South Africa', 'popular' => false),
+            array('city' => 'Cape Town', 'code' => 'CPT', 'airport' => 'Cape Town International Airport', 'country' => 'South Africa', 'popular' => false),
+            array('city' => 'Nairobi', 'code' => 'NBO', 'airport' => 'Jomo Kenyatta Intl Airport', 'country' => 'Kenya', 'popular' => false),
+            array('city' => 'Cairo', 'code' => 'CAI', 'airport' => 'Cairo International Airport', 'country' => 'Egypt', 'popular' => false),
+            array('city' => 'Mauritius', 'code' => 'MRU', 'airport' => 'Sir Seewoosagur Ramgoolam Intl', 'country' => 'Mauritius', 'popular' => true)
+        );
+    }
 }

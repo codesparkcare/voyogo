@@ -12,6 +12,7 @@ $route['flight/addons'] = 'welcome/flight_addons';
 $route['flight/payment'] = 'welcome/flight_payment';
 $route['flight/search'] = 'welcome/search_flights';
 $route['flight/process_payment'] = 'welcome/process_flight_payment';
+$route['flight/ajax_airports'] = 'welcome/ajax_airports';
 $route['flight/ajax_fare_details'] = 'welcome/ajax_fare_details';
 $route['flight/ajax_fare_options'] = 'welcome/ajax_fare_options';
 $route['flight/confirmation/(:any)'] = 'welcome/flight_confirmation/$1';
