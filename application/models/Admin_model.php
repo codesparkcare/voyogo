@@ -290,6 +290,7 @@ class Admin_model extends CI_Model {
             $this->db->like('name', $search);
             $this->db->or_like('phone', $search);
             $this->db->or_like('email', $search);
+            $this->db->or_like('user_location', $search);
             $this->db->or_like('destination_country', $search);
             $this->db->group_end();
         }
@@ -305,6 +306,7 @@ class Admin_model extends CI_Model {
             $this->db->like('name', $search);
             $this->db->or_like('phone', $search);
             $this->db->or_like('email', $search);
+            $this->db->or_like('user_location', $search);
             $this->db->or_like('destination_country', $search);
             $this->db->group_end();
         }
@@ -376,6 +378,7 @@ class Admin_model extends CI_Model {
             $this->db->like('name', $search);
             $this->db->or_like('phone', $search);
             $this->db->or_like('email', $search);
+            $this->db->or_like('user_location', $search);
             $this->db->or_like('destination', $search);
             $this->db->or_like('package_name', $search);
             $this->db->group_end();
@@ -392,6 +395,7 @@ class Admin_model extends CI_Model {
             $this->db->like('name', $search);
             $this->db->or_like('phone', $search);
             $this->db->or_like('email', $search);
+            $this->db->or_like('user_location', $search);
             $this->db->or_like('destination', $search);
             $this->db->or_like('package_name', $search);
             $this->db->group_end();
@@ -464,6 +468,7 @@ class Admin_model extends CI_Model {
             $this->db->like('name', $search);
             $this->db->or_like('phone', $search);
             $this->db->or_like('email', $search);
+            $this->db->or_like('user_location', $search);
             $this->db->or_like('destination', $search);
             $this->db->or_like('cruise_line', $search);
             $this->db->group_end();
@@ -480,6 +485,7 @@ class Admin_model extends CI_Model {
             $this->db->like('name', $search);
             $this->db->or_like('phone', $search);
             $this->db->or_like('email', $search);
+            $this->db->or_like('user_location', $search);
             $this->db->or_like('destination', $search);
             $this->db->or_like('cruise_line', $search);
             $this->db->group_end();

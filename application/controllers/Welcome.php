@@ -2329,6 +2329,7 @@ class Welcome extends CI_Controller {
         }
 
         $destination  = trim((string)$this->input->post('destination')) ?: 'General Visa';
+        $user_location = trim((string)($this->input->post('your_location') ?: $this->input->post('user_location') ?: $this->input->post('location')));
         $purpose      = trim((string)($this->input->post('purpose_of_travel') ?: $this->input->post('modal_purpose_of_travel'))) ?: 'Tourist';
         $travel_date  = trim((string)$this->input->post('travel_date'));
         $passengers   = trim((string)$this->input->post('passengers')) ?: '1 Traveler';
@@ -2340,6 +2341,7 @@ class Welcome extends CI_Controller {
             'name'                => $name,
             'phone'               => $phone,
             'email'               => $email,
+            'user_location'       => $user_location,
             'destination_country' => $destination,
             'purpose_of_travel'   => $purpose,
             'travel_date'         => $travel_date,
@@ -2457,6 +2459,7 @@ class Welcome extends CI_Controller {
         }
 
         $destination  = trim((string)$this->input->post('destination')) ?: 'Custom Holiday';
+        $user_location = trim((string)($this->input->post('your_location') ?: $this->input->post('user_location') ?: $this->input->post('location')));
         $travel_date  = trim((string)$this->input->post('travel_date'));
         $people_count = trim((string)$this->input->post('passengers')) ?: '2 People (Couple)';
         $package_name = trim((string)$this->input->post('package_name')) ?: trim((string)$this->input->post('message'));
@@ -2467,6 +2470,7 @@ class Welcome extends CI_Controller {
             'name'             => $name,
             'phone'            => $phone,
             'email'            => $email,
+            'user_location'    => $user_location,
             'destination'      => $destination,
             'travel_date'      => $travel_date,
             'people_count'     => $people_count,
@@ -2516,7 +2520,7 @@ class Welcome extends CI_Controller {
             $phone = $country_code . ' ' . $phone;
         }
 
-        $city         = trim((string)$this->input->post('location'));
+        $city         = trim((string)($this->input->post('your_location') ?: $this->input->post('location') ?: $this->input->post('user_location')));
         $purpose      = trim((string)$this->input->post('purpose_of_visit')) ?: 'Tourism / Holiday';
         $currency     = trim((string)$this->input->post('currency')) ?: 'USD';
         $product      = trim((string)$this->input->post('product')) ?: 'Foreign Currency Notes';
@@ -2575,6 +2579,7 @@ class Welcome extends CI_Controller {
         }
 
         $destination  = trim((string)$this->input->post('destination')) ?: 'Luxury Cruise';
+        $user_location = trim((string)($this->input->post('your_location') ?: $this->input->post('user_location') ?: $this->input->post('location')));
         $travel_date  = trim((string)$this->input->post('travel_date'));
         $travelers    = trim((string)($this->input->post('travelers') ?: $this->input->post('passengers'))) ?: '2 Travelers';
         $budget       = trim((string)($this->input->post('budget') ?: $this->input->post('budget_per_person')));
@@ -2586,6 +2591,7 @@ class Welcome extends CI_Controller {
             'name'              => $name,
             'phone'             => $phone,
             'email'             => $email,
+            'user_location'     => $user_location,
             'destination'       => $destination,
             'travel_date'       => $travel_date,
             'travelers'         => $travelers,

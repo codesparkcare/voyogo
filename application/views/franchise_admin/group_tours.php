@@ -365,7 +365,7 @@
     <div>
         <h1 class="gt-title">
             <i class="fa-solid fa-users-rectangle" style="color: #78B722;"></i>
-            GROUP TOUR FOLLOW UP
+            GROUP TOURS LIST
         </h1>
         <p class="gt-subtitle">
             <strong>SKY PLANET HOLIDAYS</strong> &bull; Group Tour Board Follow-Up Tracking Sheet &bull; Import Excel (.xls / .xlsx) & Manage Departure Milestones
@@ -411,7 +411,7 @@
             <i class="fa-solid fa-user-group"></i>
         </div>
         <div>
-            <div class="gt-stat-label">Block Capacity (Grp. Tkn)</div>
+            <div class="gt-stat-label">Block Capacity (Grp. Size)</div>
             <div class="gt-stat-val"><?php echo number_format($stats['total_grp_tkn'] ?? 0); ?></div>
         </div>
     </div>
@@ -423,16 +423,6 @@
         <div>
             <div class="gt-stat-label">Total Seats Needed</div>
             <div class="gt-stat-val" style="color: #ea580c;"><?php echo number_format($stats['total_needed'] ?? 0); ?></div>
-        </div>
-    </div>
-
-    <div class="gt-stat-card">
-        <div class="gt-stat-icon" style="background: #fdf2f8; color: #db2777;">
-            <i class="fa-solid fa-passport"></i>
-        </div>
-        <div>
-            <div class="gt-stat-label">Visa Processing Pending</div>
-            <div class="gt-stat-val" style="color: #db2777;"><?php echo number_format($stats['visa_pending_count'] ?? 0); ?></div>
         </div>
     </div>
 </div>
@@ -476,10 +466,10 @@
                     <th>COUNTRY NAME</th>
                     <th>TOUR AMOUNT</th>
                     <th>CONFIRMED</th>
-                    <th>GRP. TKN</th>
+                    <th>GRP. SIZE</th>
                     <th>NEED</th>
-                    <th>45 DAYS REMINDER</th>
-                    <th>30 DAYS REMINDER</th>
+                    <th>FINAL DATE TO CLOSE THE GROUP</th>
+                    <th>TICKET STATUS</th>
                     <th style="text-align: center; width: 90px;">ACTIONS</th>
                 </tr>
             </thead>
@@ -564,22 +554,28 @@
                         </span>
                     </td>
 
-                    <!-- 9. 45 DAYS REMINDER -->
+                    <!-- 9. FINAL DATE TO CLOSE THE GROUP -->
                     <td>
-                        <?php if (!empty($t['reminder_45']) && $t['reminder_45'] !== '-'): ?>
+                        <?php 
+                        $finalDate = trim((string)($t['final_date'] ?? ($t['reminder_45'] ?? '')));
+                        if (!empty($finalDate) && $finalDate !== '-'): 
+                        ?>
                         <span style="color: #b45309; font-weight: 600; font-size: 12px; background: #fef3c7; padding: 2px 7px; border-radius: 4px;">
-                            <i class="fa-regular fa-bell" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($t['reminder_45']); ?>
+                            <i class="fa-regular fa-bell" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($finalDate); ?>
                         </span>
                         <?php else: ?>
                         <span style="color: #94a3b8;">-</span>
                         <?php endif; ?>
                     </td>
 
-                    <!-- 10. 30 DAYS REMINDER -->
+                    <!-- 10. TICKET STATUS -->
                     <td>
-                        <?php if (!empty($t['reminder_30']) && $t['reminder_30'] !== '-'): ?>
-                        <span style="color: #b91c1c; font-weight: 600; font-size: 12px; background: #fee2e2; padding: 2px 7px; border-radius: 4px;">
-                            <i class="fa-solid fa-triangle-exclamation" style="font-size: 10px; margin-right: 3px;"></i> <?php echo htmlspecialchars($t['reminder_30']); ?>
+                        <?php 
+                        $tktStatus = trim((string)($t['ticket_status'] ?? ''));
+                        if (!empty($tktStatus) && $tktStatus !== '-'): 
+                        ?>
+                        <span class="badge-status <?php echo (stripos($tktStatus, 'ONLINE') !== false) ? 'visa-include' : 'ticket-taken'; ?>">
+                            <?php echo htmlspecialchars($tktStatus); ?>
                         </span>
                         <?php else: ?>
                         <span style="color: #94a3b8;">-</span>
@@ -620,7 +616,7 @@
             <div class="gt-dropzone" id="excelDropzone" onclick="document.getElementById('excelFileInput').click()">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
                 <h4 style="font-size: 16px; color: #0f172a; margin: 0 0 6px 0;">Click or Drag & Drop Excel File Here</h4>
-                <p style="font-size: 13px; color: #64748b; margin: 0 0 14px 0;">Supports <strong>.xlsx</strong>, <strong>.xls</strong>, and <strong>.csv</strong> spreadsheets matching your 15 headers.</p>
+                <p style="font-size: 13px; color: #64748b; margin: 0 0 14px 0;">Supports <strong>.xlsx</strong>, <strong>.xls</strong>, and <strong>.csv</strong> spreadsheets matching your Group Tour headers.</p>
                 <button type="button" class="btn btn-secondary btn-sm">Browse Computer</button>
                 <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleExcelFileSelect(this.files[0])">
             </div>
@@ -722,8 +718,8 @@
                     </div>
 
                     <div class="gt-form-group">
-                        <label>Grp. Tkn (Total Block)</label>
-                        <input type="text" name="grp_tkn" id="formGrpTkn" placeholder="e.g. 22">
+                        <label>Grp. Size</label>
+                        <input type="text" name="grp_tkn" id="formGrpTkn" placeholder="e.g. 16">
                     </div>
 
                     <div class="gt-form-group">
@@ -732,13 +728,10 @@
                     </div>
 
                     <div class="gt-form-group">
-                        <label>45 Days Reminder</label>
-                        <input type="text" name="reminder_45" id="formReminder45" placeholder="e.g. 02.08.2026">
-                    </div>
-
-                    <div class="gt-form-group">
-                        <label>30 Days Reminder</label>
-                        <input type="text" name="reminder_30" id="formReminder30" placeholder="e.g. 17.08.2026">
+                        <label>Final Date to Close the Group</label>
+                        <input type="text" name="final_date" id="formFinalDate" placeholder="e.g. 25.08.2026">
+                        <input type="hidden" name="reminder_45" id="formReminder45">
+                        <input type="hidden" name="reminder_30" id="formReminder30">
                     </div>
 
                     <div class="gt-form-group">
@@ -819,7 +812,8 @@ function editTourRow(tour) {
     document.getElementById('formConfirmed').value = tour.confirmed || '';
     document.getElementById('formGrpTkn').value = tour.grp_tkn || '';
     document.getElementById('formNeed').value = tour.need || '';
-    document.getElementById('formReminder45').value = tour.reminder_45 || '';
+    document.getElementById('formFinalDate').value = tour.final_date || tour.reminder_45 || '';
+    document.getElementById('formReminder45').value = tour.reminder_45 || tour.final_date || '';
     document.getElementById('formReminder30').value = tour.reminder_30 || '';
     document.getElementById('formTicketStatus').value = tour.ticket_status || '';
     document.getElementById('formVisaStatus').value = tour.visa_status || '';
@@ -895,7 +889,7 @@ function processExcelSheetRows(rows) {
     parsedImportRows = [];
     let headerRowIdx = -1;
     let colMap = {};
-    let activeMonth = 'SEPTEMBER:2026';
+    let activeMonth = 'OCTOBER:2026';
 
     // 1. Find Header Row
     for (let i = 0; i < Math.min(rows.length, 10); i++) {
@@ -911,8 +905,9 @@ function processExcelSheetRows(rows) {
                 else if (norm.includes('COUNTRY') || norm.includes('PACKAGE') || norm.includes('DESTINATION')) colMap['country_name'] = cIdx;
                 else if (norm.includes('AMOUNT') || norm.includes('PRICE') || norm.includes('FARE')) colMap['tour_amount'] = cIdx;
                 else if (norm.includes('CONFIRMED') || norm === 'PAX') colMap['confirmed'] = cIdx;
-                else if (norm.includes('GRP') || norm.includes('TKN')) colMap['grp_tkn'] = cIdx;
+                else if (norm.includes('GRP') || norm.includes('SIZE') || norm.includes('TKN')) colMap['grp_tkn'] = cIdx;
                 else if (norm === 'NEED' || norm.includes('SEATS NEEDED')) colMap['need'] = cIdx;
+                else if (norm.includes('FINAL') || norm.includes('CLOSE') || norm.includes('DEADLINE')) colMap['final_date'] = cIdx;
                 else if (norm.includes('45')) colMap['reminder_45'] = cIdx;
                 else if (norm.includes('30')) colMap['reminder_30'] = cIdx;
                 else if (norm.includes('TICKET')) colMap['ticket_status'] = cIdx;
@@ -931,8 +926,7 @@ function processExcelSheetRows(rows) {
         headerRowIdx = 0;
         colMap = {
             s_no: 0, tour_date: 1, tour_code: 2, country_name: 3, tour_amount: 4,
-            confirmed: 5, grp_tkn: 6, need: 7, reminder_45: 8, reminder_30: 9,
-            ticket_status: 10, visa_status: 11, handling_person: 12, travel_bag: 13, tour_manager: 14
+            confirmed: 5, grp_tkn: 6, need: 7, final_date: 8, reminder_45: 8, ticket_status: 9
         };
     }
 
@@ -941,11 +935,17 @@ function processExcelSheetRows(rows) {
         const r = rows[i];
         if (!r || r.length === 0) continue;
 
-        // Check if row is a month section header (e.g. "SEPTEMBER:2026")
-        const firstCell = String(r[0] || '').trim().toUpperCase();
+        // Check if row is a month section header (e.g. "OCTOBER:2026", "COMPLETED TOURS", "CANCEL")
         const fullRowStr = r.map(c => String(c).trim()).join(' ').toUpperCase();
+        if (fullRowStr.includes('COMPLETED TOURS')) {
+            activeMonth = 'COMPLETED TOURS';
+            continue;
+        } else if (fullRowStr.includes('CANCEL')) {
+            activeMonth = 'CANCEL';
+            continue;
+        }
+
         const monthMatch = fullRowStr.match(/(JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER)\s*:\s*\d{4}/i);
-        
         if (monthMatch) {
             activeMonth = monthMatch[0].toUpperCase();
             continue;
@@ -957,6 +957,8 @@ function processExcelSheetRows(rows) {
 
         if (!tourCode && !country && !tourDate) continue;
 
+        const finalDateVal = String(r[colMap.final_date !== undefined ? colMap.final_date : (colMap.reminder_45 !== undefined ? colMap.reminder_45 : 8)] || '').trim();
+
         parsedImportRows.push({
             s_no: String(parsedImportRows.length + 1),
             tour_date: tourDate,
@@ -966,9 +968,10 @@ function processExcelSheetRows(rows) {
             confirmed: String(r[colMap.confirmed !== undefined ? colMap.confirmed : 5] || '').trim(),
             grp_tkn: String(r[colMap.grp_tkn !== undefined ? colMap.grp_tkn : 6] || '').trim(),
             need: String(r[colMap.need !== undefined ? colMap.need : 7] || '').trim(),
-            reminder_45: String(r[colMap.reminder_45 !== undefined ? colMap.reminder_45 : 8] || '').trim(),
+            final_date: finalDateVal,
+            reminder_45: finalDateVal,
             reminder_30: String(r[colMap.reminder_30 !== undefined ? colMap.reminder_30 : 9] || '').trim(),
-            ticket_status: String(r[colMap.ticket_status !== undefined ? colMap.ticket_status : 10] || '').trim(),
+            ticket_status: String(r[colMap.ticket_status !== undefined ? colMap.ticket_status : 9] || '').trim(),
             visa_status: String(r[colMap.visa_status !== undefined ? colMap.visa_status : 11] || '').trim(),
             handling_person: String(r[colMap.handling_person !== undefined ? colMap.handling_person : 12] || '').trim(),
             travel_bag: String(r[colMap.travel_bag !== undefined ? colMap.travel_bag : 13] || '').trim(),
@@ -1001,8 +1004,10 @@ function renderImportPreview(rows) {
             <th>COUNTRY</th>
             <th>AMOUNT</th>
             <th>CONFIRMED</th>
-            <th>GRP. TKN</th>
+            <th>GRP. SIZE</th>
             <th>NEED</th>
+            <th>FINAL DATE</th>
+            <th>TICKET STATUS</th>
             <th>MONTH</th>
         </tr>
     `;
@@ -1021,6 +1026,8 @@ function renderImportPreview(rows) {
             <td>${r.confirmed || '-'}</td>
             <td>${r.grp_tkn || '-'}</td>
             <td>${r.need || '-'}</td>
+            <td>${r.final_date || r.reminder_45 || '-'}</td>
+            <td>${r.ticket_status || '-'}</td>
             <td><span style="font-size: 11px; background: #fce7f3; color: #9d174d; padding: 2px 6px; border-radius: 4px;">${r.month_group}</span></td>
         `;
         tbody.appendChild(tr);
@@ -1195,7 +1202,7 @@ function exportTableToExcel() {
     const rows = [];
     rows.push([
         'S. NO', 'DATE', 'TOUR CODE', 'COUNTRY NAME', 'TOUR AMOUNT',
-        'CONFIRMED', 'GRP. TKN', 'NEED', '45 DAYS REMINDER', '30 DAYS REMINDER'
+        'CONFIRMED', 'GRP. SIZE', 'NEED', 'FINAL DATE TO CLOSE THE GROUP', 'TICKET STATUS'
     ]);
 
     const dataRows = document.querySelectorAll('.tour-data-row');

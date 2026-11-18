@@ -114,8 +114,8 @@ class BenzyHotelApi {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 180);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 6);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 25);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         if (strtoupper($method) === 'POST') {
@@ -419,9 +419,9 @@ class BenzyHotelApi {
         // 1. Hotel Rate Endpoint (Poll until searchStatus is completed per Benzy specification)
         $rateUrl = $this->hotelUrl . '/api/hotels/search/result/' . urlencode($searchId) . '/rate';
         $rateRes = null;
-        for ($attempt = 1; $attempt <= 12; $attempt++) {
+        for ($attempt = 1; $attempt <= 5; $attempt++) {
             if ($attempt > 1) {
-                usleep(1500000); // 1.5 seconds delay between polls
+                usleep(500000); // 0.5s delay between polls
             }
             $rateRes = $this->makeRequest('HotelRate', $rateUrl, array(), 'GET', $token);
             if ($rateRes['http_code'] === 200 && !empty($rateRes['json']['searchStatus']) && strtolower(trim($rateRes['json']['searchStatus'])) === 'completed') {

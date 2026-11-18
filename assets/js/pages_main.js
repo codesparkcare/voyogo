@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
       pageContext = 'visa';
     } else if (firstSlideStyle.includes('/holidays/')) {
       pageContext = 'holidays';
-    } else if (firstSlideStyle.includes('FRANCHISE') || heroSection.classList.contains('franchise-hero-section')) {
+    } else if (firstSlideStyle.includes('FRANCHISE') || firstSlideStyle.includes('franchise') || heroSection.classList.contains('franchise-hero-section')) {
       pageContext = 'franchise';
     }
 
@@ -263,8 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
       ],
       visa: [
         {
-          title: 'Schengen & Europe Visa',
-          subtitle: 'Travel Across 27 European Countries with One Visa',
+          title: 'Schengen & UK Visa',
+          subtitle: 'Travel Across 27 European Countries & UK with One Trusted Partner',
           pills: [
             { icon: 'fa-passport', text: 'Schengen Express' },
             { icon: 'fa-file-circle-check', text: 'Full Document Audit' },
@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
           cursive: 'Europe<br>Express<br><i class="fa-solid fa-plane"></i>'
         },
         {
-          title: 'Dubai & UAE Tourist Visa',
+          title: 'UAE & GC Tourist Visa',
           subtitle: 'Instant Express E-Visa in Just 24 to 48 Hours',
           pills: [
             { icon: 'fa-bolt', text: '24h Express Processing' },
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
           cursive: 'Dubai<br>Calling<br><i class="fa-solid fa-building"></i>'
         },
         {
-          title: 'USA, UK & Canada Visa',
+          title: 'USA, UK & North America Visa',
           subtitle: 'Expert Guidance for Long-Term Tourist & Business Visas',
           pills: [
             { icon: 'fa-briefcase', text: 'B1/B2 & Visitor Visas' },
@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
           cursive: 'Global<br>Access<br><i class="fa-solid fa-globe"></i>'
         },
         {
-          title: 'Asia & Far East E-Visas',
+          title: 'Asia Tourist Visa',
           subtitle: 'Thailand, Singapore, Malaysia, Vietnam & Japan',
           pills: [
             { icon: 'fa-plane', text: 'Seamless E-Visa' },
@@ -306,13 +306,45 @@ document.addEventListener('DOMContentLoaded', () => {
           ],
           cursive: 'Asia<br>Entry<br><i class="fa-solid fa-passport"></i>'
         }
+      ],
+      franchise: [
+        {
+          title: 'YOUR DREAM. YOUR BUSINESS.<br>YOUR TRAVEL EMPIRE.',
+          subtitle: "Start your own travel franchise with Skyplanet's Voyogo.",
+          pill: '<i class="fa-solid fa-handshake-angle me-2"></i> Become a Travel Franchise Partner Today!'
+        },
+        {
+          title: 'YOUR CITY. YOUR FRANCHISE.<br>YOUR SUCCESS STORY.',
+          subtitle: 'Take the first step towards owning a travel business.',
+          pill: '<i class="fa-solid fa-city me-2"></i> Become Our Franchise Partner'
+        },
+        {
+          title: 'BRING THE WORLD<br>TO YOUR CITY!',
+          subtitle: 'Partner with us and explore opportunities across domestic and international travel.',
+          pill: '<i class="fa-solid fa-earth-americas me-2"></i> YOUR JOURNEY AS A TRAVEL ENTREPRENEUR STARTS HERE.'
+        },
+        {
+          title: 'THE WORLD IS BIG.<br>YOUR BUSINESS CAN BE BIGGER!',
+          subtitle: 'Build your own travel business with a trusted franchise partner.',
+          pill: '<i class="fa-solid fa-chart-line me-2"></i> EXPLORE FRANCHISE OPPORTUNITIES'
+        },
+        {
+          title: 'YOUR CITY NEEDS A TRAVEL LEADER.<br>WHY NOT YOU?',
+          subtitle: 'Bring exciting travel experiences to your city with a Voyogo franchise.',
+          pill: '<i class="fa-solid fa-trophy me-2"></i> BECOME OUR FRANCHISE PARTNER'
+        }
       ]
     };
 
-    const destTitle = heroSection.querySelector('.ref-dest-title');
-    const destSub = heroSection.querySelector('.ref-dest-subtitle');
+    const destTitle = heroSection.querySelector('.ref-dest-title, .franchise-hero-title');
+    const destSub = heroSection.querySelector('.ref-dest-subtitle, .franchise-hero-subtitle');
+    const destPill = heroSection.querySelector('.franchise-hero-pill');
     const pillsContainer = heroSection.querySelector('.ref-feature-pills');
     const cursiveTag = heroSection.querySelector('.ref-cursive-tag');
+
+    if (destTitle) destTitle.style.transition = 'opacity 0.22s ease';
+    if (destSub) destSub.style.transition = 'opacity 0.22s ease';
+    if (destPill) destPill.style.transition = 'opacity 0.22s ease';
 
     function updateSlideContent(realIndex, immediate = false) {
       const pageData = sliderContentMap[pageContext];
@@ -321,12 +353,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const currentData = pageData[realIndex];
 
       const applyContent = () => {
+        if (destPill && currentData.pill) {
+          destPill.innerHTML = currentData.pill;
+          destPill.style.opacity = '1';
+        }
         if (destTitle) {
           destTitle.innerHTML = currentData.title;
           destTitle.style.opacity = '1';
         }
         if (destSub) {
-          destSub.textContent = currentData.subtitle;
+          destSub.innerHTML = currentData.subtitle;
           destSub.style.opacity = '1';
         }
         if (pillsContainer && currentData.pills) {
@@ -354,6 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (immediate) {
         applyContent();
       } else {
+        if (destPill) destPill.style.opacity = '0';
         if (destTitle) destTitle.style.opacity = '0';
         if (destSub) destSub.style.opacity = '0';
         if (pillsContainer) pillsContainer.style.opacity = '0';

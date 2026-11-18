@@ -45,7 +45,7 @@ if ($maxPrice == 0) $maxPrice = 60000;
 ?>
 
 <!-- Google Maps JavaScript API for Interactive Map View -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEMcMuPBXIMcL_ngk4igC95zyh2fWiWlI"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEMcMuPBXIMcL_ngk4igC95zyh2fWiWlI"></script>
 
 <!-- Modern CSS for Hotel Search Results Page -->
 <style>

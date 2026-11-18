@@ -346,7 +346,14 @@ class Franchise_model extends CI_Model {
     // =========================================================================
     // 6. GROUP TOUR FOLLOW UP MANAGEMENT
     // =========================================================================
+    private static $ensured = false;
+
     public function ensure_group_tours_table() {
+        if (self::$ensured) {
+            return;
+        }
+        self::$ensured = true;
+
         $sql = "CREATE TABLE IF NOT EXISTS `franchise_group_tours` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `s_no` varchar(50) DEFAULT NULL,
@@ -357,6 +364,7 @@ class Franchise_model extends CI_Model {
             `confirmed` varchar(100) DEFAULT NULL,
             `grp_tkn` varchar(50) DEFAULT NULL,
             `need` varchar(50) DEFAULT NULL,
+            `final_date` varchar(100) DEFAULT NULL,
             `reminder_45` varchar(100) DEFAULT NULL,
             `reminder_30` varchar(100) DEFAULT NULL,
             `ticket_status` varchar(100) DEFAULT NULL,
@@ -373,6 +381,17 @@ class Franchise_model extends CI_Model {
             KEY `month_group_idx` (`month_group`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
         $this->db->query($sql);
+
+        if (!$this->db->field_exists('final_date', 'franchise_group_tours')) {
+            $this->db->query("ALTER TABLE `franchise_group_tours` ADD COLUMN `final_date` varchar(100) DEFAULT NULL AFTER `need`");
+        }
+
+        // Auto-seed user dataset if empty or if new data not present
+        $total = $this->db->count_all('franchise_group_tours');
+        $hasNew = $this->db->where('month_group', 'OCTOBER:2026')->where('tour_code', 'KIX221026')->count_all_results('franchise_group_tours');
+        if ($total == 0 || $hasNew == 0) {
+            $this->seed_default_group_tours();
+        }
     }
 
     public function get_group_tours($month_group = null, $search = null) {
@@ -482,6 +501,7 @@ class Franchise_model extends CI_Model {
                 'confirmed'       => isset($r['confirmed']) ? trim($r['confirmed']) : null,
                 'grp_tkn'         => isset($r['grp_tkn']) ? trim($r['grp_tkn']) : null,
                 'need'            => isset($r['need']) ? trim($r['need']) : null,
+                'final_date'      => isset($r['final_date']) ? trim($r['final_date']) : (isset($r['reminder_45']) ? trim($r['reminder_45']) : null),
                 'reminder_45'     => isset($r['reminder_45']) ? trim($r['reminder_45']) : null,
                 'reminder_30'     => isset($r['reminder_30']) ? trim($r['reminder_30']) : null,
                 'ticket_status'   => isset($r['ticket_status']) ? trim($r['ticket_status']) : null,
@@ -519,6 +539,7 @@ class Franchise_model extends CI_Model {
             'confirmed'       => $data['confirmed'] ?? null,
             'grp_tkn'         => $data['grp_tkn'] ?? null,
             'need'            => $data['need'] ?? null,
+            'final_date'      => $data['final_date'] ?? ($data['reminder_45'] ?? null),
             'reminder_45'     => $data['reminder_45'] ?? null,
             'reminder_30'     => $data['reminder_30'] ?? null,
             'ticket_status'   => $data['ticket_status'] ?? null,
@@ -554,47 +575,129 @@ class Franchise_model extends CI_Model {
     }
 
     public function seed_default_group_tours() {
-        $this->ensure_group_tours_table();
         $this->db->truncate('franchise_group_tours');
         $samples = array(
-            // SEPTEMBER:2026
-            array('s_no'=>'1', 'tour_date'=>'16.09.2026', 'tour_code'=>'NBO160926', 'country_name'=>'KENYA (5N/6D)', 'tour_amount'=>'259,000', 'confirmed'=>'21+1+1+2+2', 'grp_tkn'=>'22', 'need'=>'-', 'reminder_45'=>'02.08.2026', 'reminder_30'=>'17.08.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'WE APPLY (INCLUDE)', 'handling_person'=>'KEERTHANA DEVI', 'travel_bag'=>'-', 'tour_manager'=>'YOGESH', 'month_group'=>'SEPTEMBER:2026'),
-            array('s_no'=>'2', 'tour_date'=>'17.09.2026', 'tour_code'=>'NRT170926', 'country_name'=>'JAPAN (7N/8D)', 'tour_amount'=>'259,000', 'confirmed'=>'35+1', 'grp_tkn'=>'36', 'need'=>'-', 'reminder_45'=>'03.08.2026', 'reminder_30'=>'18.08.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'WE APPLY (INCLUDE)', 'handling_person'=>'NAVEENA', 'travel_bag'=>'-', 'tour_manager'=>'SARATHKUMAR', 'month_group'=>'SEPTEMBER:2026'),
-            array('s_no'=>'3', 'tour_date'=>'20.09.2025', 'tour_code'=>'CDG200926', 'country_name'=>'AMAZING EUROPE (9N/10)', 'tour_amount'=>'274,000', 'confirmed'=>'31+1+1+2', 'grp_tkn'=>'32', 'need'=>'-', 'reminder_45'=>'06.08.2026', 'reminder_30'=>'21.08.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'WE APPLY (INCLUDE)', 'handling_person'=>'MUKESH', 'travel_bag'=>'-', 'tour_manager'=>'RAJA MITHUN', 'month_group'=>'SEPTEMBER:2026'),
-            array('s_no'=>'4', 'tour_date'=>'21.09.2026', 'tour_code'=>'CPH210926', 'country_name'=>'SCANDINAVIA (9N/10D)', 'tour_amount'=>'345,000', 'confirmed'=>'31+1+1+2', 'grp_tkn'=>'32', 'need'=>'-', 'reminder_45'=>'07.08.2026', 'reminder_30'=>'22.08.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'WE APPLY (INCLUDE)', 'handling_person'=>'MUKESH', 'travel_bag'=>'-', 'tour_manager'=>'BALA MURUGAN', 'month_group'=>'SEPTEMBER:2026'),
-            array('s_no'=>'5', 'tour_date'=>'23.09.2026', 'tour_code'=>'DAD230926', 'country_name'=>'ONLY VIETNAM', 'tour_amount'=>'105,000', 'confirmed'=>'21+1', 'grp_tkn'=>'22', 'need'=>'-', 'reminder_45'=>'09.08.2026', 'reminder_30'=>'24.08.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'WE APPLY (INCLUDE)', 'handling_person'=>'NAVEENA', 'travel_bag'=>'-', 'tour_manager'=>'PANDISELVAM', 'month_group'=>'SEPTEMBER:2026'),
-            array('s_no'=>'6', 'tour_date'=>'24.09.2026', 'tour_code'=>'SINKUL240926', 'country_name'=>'SINGAPORE & MALAYSIA (5N/6D)', 'tour_amount'=>'99,000', 'confirmed'=>'20+1', 'grp_tkn'=>'21', 'need'=>'-', 'reminder_45'=>'10.08.2026', 'reminder_30'=>'25.08.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'SIN-WE APPLY (INCLUDE) / MH-FREE', 'handling_person'=>'KEERTHANA DEVI', 'travel_bag'=>'-', 'tour_manager'=>'YASIN', 'month_group'=>'SEPTEMBER:2026'),
-            
             // OCTOBER:2026
-            array('s_no'=>'7', 'tour_date'=>'10.10.2026', 'tour_code'=>'SGN101026', 'country_name'=>'VIETNAM CAMBODIA ( 7N/8D)', 'tour_amount'=>'142,000', 'confirmed'=>'21+1', 'grp_tkn'=>'22', 'need'=>'-', 'reminder_45'=>'20.09.2026', 'reminder_30'=>'01.10.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'NAVEENA', 'travel_bag'=>'-', 'tour_manager'=>'CHANDRASEKAR', 'month_group'=>'OCTOBER:2026'),
-            array('s_no'=>'8', 'tour_date'=>'18.10.2026', 'tour_code'=>'DPS181026', 'country_name'=>'BALI (4N/5D)', 'tour_amount'=>'74,000', 'confirmed'=>'21+1+1+2', 'grp_tkn'=>'22', 'need'=>'-', 'reminder_45'=>'16.10.2026', 'reminder_30'=>'01.12.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'YOGESH', 'travel_bag'=>'-', 'tour_manager'=>'HARIHARAN', 'month_group'=>'OCTOBER:2026'),
-            array('s_no'=>'9', 'tour_date'=>'20.10.2026', 'tour_code'=>'CDG181026', 'country_name'=>'AMAZING EUROPE (9N/10)', 'tour_amount'=>'274,000', 'confirmed'=>'24+1', 'grp_tkn'=>'32', 'need'=>'7', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'MUKESH', 'travel_bag'=>'-', 'tour_manager'=>'BALA MURUGAN', 'month_group'=>'OCTOBER:2026'),
-            array('s_no'=>'10', 'tour_date'=>'22.10.2026', 'tour_code'=>'KIX221026', 'country_name'=>'JAPAN (7N/8D)', 'tour_amount'=>'259,000', 'confirmed'=>'28+1+4', 'grp_tkn'=>'36', 'need'=>'7', 'reminder_45'=>'20.10.2026', 'reminder_30'=>'28.11.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'WE APPLY (INCLUDE)', 'handling_person'=>'NAVEENA', 'travel_bag'=>'-', 'tour_manager'=>'RAJA MITHUN', 'month_group'=>'OCTOBER:2026'),
-            array('s_no'=>'11', 'tour_date'=>'23.10.2026', 'tour_code'=>'SINKUL231026', 'country_name'=>'SINGAPORE & MALAYSIA (5N/6D)', 'tour_amount'=>'103,000', 'confirmed'=>'18+1', 'grp_tkn'=>'22', 'need'=>'3', 'reminder_45'=>'21.10.2026', 'reminder_30'=>'29.11.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'SIN-WE APPLY (INCLUDE) / MH-FREE', 'handling_person'=>'KEERTHANA DEVI', 'travel_bag'=>'-', 'tour_manager'=>'PANDISELVAM', 'month_group'=>'OCTOBER:2026'),
-            array('s_no'=>'12', 'tour_date'=>'24.10.2026', 'tour_code'=>'CAI241026', 'country_name'=>'EGYPT (7N/8D)', 'tour_amount'=>'189,000', 'confirmed'=>'10+1', 'grp_tkn'=>'22', 'need'=>'11', 'reminder_45'=>'22.10.2026', 'reminder_30'=>'30.11.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'WE APPLY (INCLUDE)', 'handling_person'=>'JANANI', 'travel_bag'=>'-', 'tour_manager'=>'SARATHKUMAR', 'month_group'=>'OCTOBER:2026'),
+            array('s_no'=>'1', 'tour_date'=>'22.10.2026', 'tour_code'=>'KIX221026', 'country_name'=>'JAPAN (7N/8D)', 'tour_amount'=>'259000', 'confirmed'=>'34+1+4', 'grp_tkn'=>'36', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'OCTOBER:2026'),
+            array('s_no'=>'2', 'tour_date'=>'24.10.2026', 'tour_code'=>'CAI241026', 'country_name'=>'EGYPT (7N/8D)', 'tour_amount'=>'189000', 'confirmed'=>'19+1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'OCTOBER:2026'),
 
             // NOVEMBER:2026
-            array('s_no'=>'13', 'tour_date'=>'11.11.2026', 'tour_code'=>'IXB111126', 'country_name'=>'BHUTAN (5N/6D)', 'tour_amount'=>'62,000', 'confirmed'=>'13+1', 'grp_tkn'=>'22', 'need'=>'8', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'HARINI', 'travel_bag'=>'-', 'tour_manager'=>'BALA MURUGAN', 'month_group'=>'NOVEMBER:2026'),
-            array('s_no'=>'14', 'tour_date'=>'16.11.2026', 'tour_code'=>'IXB161126', 'country_name'=>'BHUTAN (5N/6D)', 'tour_amount'=>'57,000', 'confirmed'=>'21+1', 'grp_tkn'=>'22', 'need'=>'-', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'HARINI', 'travel_bag'=>'-', 'tour_manager'=>'PANDISELVAM', 'month_group'=>'NOVEMBER:2026'),
-            array('s_no'=>'15', 'tour_date'=>'18.11.2026', 'tour_code'=>'DAD181126', 'country_name'=>'ONLY VIETNAM (6D/5N)', 'tour_amount'=>'105,000', 'confirmed'=>'7+1', 'grp_tkn'=>'22', 'need'=>'14', 'reminder_45'=>'08.10.2026', 'reminder_30'=>'21.10.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'WE APPLY (INCLUDE)', 'handling_person'=>'NAVEENA', 'travel_bag'=>'-', 'tour_manager'=>'RAJA MITHUN', 'month_group'=>'NOVEMBER:2026'),
-            array('s_no'=>'16', 'tour_date'=>'18.11.2026', 'tour_code'=>'NRT181126', 'country_name'=>'JAPAN (7N/8D)', 'tour_amount'=>'259,000', 'confirmed'=>'2+1', 'grp_tkn'=>'36', 'need'=>'33', 'reminder_45'=>'03.08.2026', 'reminder_30'=>'18.08.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'WE APPLY (INCLUDE)', 'handling_person'=>'NAVEENA', 'travel_bag'=>'-', 'tour_manager'=>'BALA MURUGAN', 'month_group'=>'NOVEMBER:2026'),
-            array('s_no'=>'17', 'tour_date'=>'20.11.2026', 'tour_code'=>'SINMH201126', 'country_name'=>'SINGAPORE & MALAYSIA (5N/6D)', 'tour_amount'=>'103,000', 'confirmed'=>'9+1', 'grp_tkn'=>'22', 'need'=>'12', 'reminder_45'=>'10.10.2026', 'reminder_30'=>'23.10.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'SIN-WE APPLY (INCLUDE) / MH-FREE', 'handling_person'=>'KEERTHANA DEVI', 'travel_bag'=>'-', 'tour_manager'=>'BALASUBRAMANIAN', 'month_group'=>'NOVEMBER:2026'),
-            array('s_no'=>'18', 'tour_date'=>'23.11.2026', 'tour_code'=>'CAI231126', 'country_name'=>'EGYPT (7N/8D)', 'tour_amount'=>'189,000', 'confirmed'=>'1+1', 'grp_tkn'=>'22', 'need'=>'20', 'reminder_45'=>'13.10.2026', 'reminder_30'=>'26.10.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'WE APPLY (INCLUDE)', 'handling_person'=>'JANANI', 'travel_bag'=>'-', 'tour_manager'=>'HARIHARAN', 'month_group'=>'NOVEMBER:2026'),
+            array('s_no'=>'3', 'tour_date'=>'11.11.2026', 'tour_code'=>'IXB111126', 'country_name'=>'BHUTAN (5N/6D)', 'tour_amount'=>'62000', 'confirmed'=>'21+1+2+3', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'20.10.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'NOVEMBER:2026'),
+            array('s_no'=>'4', 'tour_date'=>'16.11.2026', 'tour_code'=>'IXB161126', 'country_name'=>'BHUTAN (5N/6D)', 'tour_amount'=>'57000', 'confirmed'=>'21+1+1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'24.10.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'NOVEMBER:2026'),
+            array('s_no'=>'5', 'tour_date'=>'18.11.2026', 'tour_code'=>'DAD181126', 'country_name'=>'ONLY VIETNAM (6D/5N)', 'tour_amount'=>'105000', 'confirmed'=>'21+1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'15.10.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'NOVEMBER:2026'),
+            array('s_no'=>'6', 'tour_date'=>'18.11.2026', 'tour_code'=>'NRT181126', 'country_name'=>'JAPAN (7N/8D)', 'tour_amount'=>'259000', 'confirmed'=>'35+1+1', 'grp_tkn'=>'36', 'need'=>'-', 'final_date'=>'10.10.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'NOVEMBER:2026'),
+            array('s_no'=>'7', 'tour_date'=>'20.11.2026', 'tour_code'=>'SINMH201126', 'country_name'=>'SINGAPORE &  MALAYSIA  (5N/6D)', 'tour_amount'=>'103000', 'confirmed'=>'23+1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'05.10.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'NOVEMBER:2026'),
+            array('s_no'=>'8', 'tour_date'=>'23.11.2026', 'tour_code'=>'CAI231126', 'country_name'=>'EGYPT (7N/8D)', 'tour_amount'=>'189000', 'confirmed'=>'15+1', 'grp_tkn'=>'22', 'need'=>'6', 'final_date'=>'20.10.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'NOVEMBER:2026'),
 
             // DECEMBER:2026
-            array('s_no'=>'19', 'tour_date'=>'10.12.2026', 'tour_code'=>'SINMH101226', 'country_name'=>'SINGAPORE & MALAYSIA (5N/6D)', 'tour_amount'=>'103,000', 'confirmed'=>'2+1', 'grp_tkn'=>'22', 'need'=>'19', 'reminder_45'=>'27.10.2026', 'reminder_30'=>'11.11.2026', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'SIN-WE APPLY (INCLUDE) / MH-FREE', 'handling_person'=>'KEERTHANA DEVI', 'travel_bag'=>'-', 'tour_manager'=>'MUTHUPANDI', 'month_group'=>'DECEMBER:2026'),
-            array('s_no'=>'20', 'tour_date'=>'10.12.2026', 'tour_code'=>'SXR101226', 'country_name'=>'KASHMIR (4N/5D)', 'tour_amount'=>'59,000', 'confirmed'=>'2+1', 'grp_tkn'=>'22', 'need'=>'19', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'ASHOK KUMAR', 'travel_bag'=>'-', 'tour_manager'=>'PANDISELVAM', 'month_group'=>'DECEMBER:2026'),
-            array('s_no'=>'21', 'tour_date'=>'16.12.2026', 'tour_code'=>'CAI161226', 'country_name'=>'EGYPT (6N/7D)', 'tour_amount'=>'189,000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'-', 'visa_status'=>'-', 'handling_person'=>'JANANI', 'travel_bag'=>'-', 'tour_manager'=>'BALA MURUGAN', 'month_group'=>'DECEMBER:2026'),
+            array('s_no'=>'9', 'tour_date'=>'10.12.2026', 'tour_code'=>'SINMH101226', 'country_name'=>'SINGAPORE & MALAYSIA (5N/6D)', 'tour_amount'=>'103000', 'confirmed'=>'18+1', 'grp_tkn'=>'22', 'need'=>'3', 'final_date'=>'25.11.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'DECEMBER:2026'),
+            array('s_no'=>'10', 'tour_date'=>'10.12.2026', 'tour_code'=>'SXR101226', 'country_name'=>'KASHMIR (4N/5D)', 'tour_amount'=>'59000', 'confirmed'=>'5+1', 'grp_tkn'=>'22', 'need'=>'16', 'final_date'=>'15.11.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'DECEMBER:2026'),
+            array('s_no'=>'11', 'tour_date'=>'16.12.2026', 'tour_code'=>'CAI161226', 'country_name'=>'EGYPT (6N/7D)', 'tour_amount'=>'189000', 'confirmed'=>'1+1', 'grp_tkn'=>'22', 'need'=>'20', 'final_date'=>'31.10.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'DECEMBER:2026'),
 
             // JANUARY:2027
-            array('s_no'=>'22', 'tour_date'=>'10.01.2027', 'tour_code'=>'JAI100127', 'country_name'=>'RAJASTHAN (5N/6D)', 'tour_amount'=>'58,500', 'confirmed'=>'4+1', 'grp_tkn'=>'22', 'need'=>'17', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'ASHOK KUMAR', 'travel_bag'=>'-', 'tour_manager'=>'YASIN', 'month_group'=>'JANUARY:2027'),
-            array('s_no'=>'23', 'tour_date'=>'11.01.2027', 'tour_code'=>'IXZ110127', 'country_name'=>'ANDAMAN (4N/5D)', 'tour_amount'=>'52,000', 'confirmed'=>'8+1', 'grp_tkn'=>'22', 'need'=>'13', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'JEBA SURYA', 'travel_bag'=>'-', 'tour_manager'=>'MUTHUPANDI', 'month_group'=>'JANUARY:2027'),
-            array('s_no'=>'24', 'tour_date'=>'11.01.2027', 'tour_code'=>'IXC110127', 'country_name'=>'SHIMLA KULLU MANALI (4N/5D)', 'tour_amount'=>'39,000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'HARINI', 'travel_bag'=>'-', 'tour_manager'=>'-', 'month_group'=>'JANUARY:2027'),
-            array('s_no'=>'25', 'tour_date'=>'12.01.2027', 'tour_code'=>'AUH120127', 'country_name'=>'DUBAI (4N/5D)', 'tour_amount'=>'99,000', 'confirmed'=>'7+1', 'grp_tkn'=>'32', 'need'=>'24', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'KEERTHANA DEVI', 'travel_bag'=>'-', 'tour_manager'=>'HARIHARAN', 'month_group'=>'JANUARY:2027'),
-            array('s_no'=>'26', 'tour_date'=>'13.01.2027', 'tour_code'=>'DAD130127', 'country_name'=>'ONLY VIETNAM (6D/5N)', 'tour_amount'=>'118,000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'NAVEENA', 'travel_bag'=>'-', 'tour_manager'=>'PANDISELVAM', 'month_group'=>'JANUARY:2027'),
-            array('s_no'=>'27', 'tour_date'=>'14.01.2027', 'tour_code'=>'SINKUL140127', 'country_name'=>'SINGAPORE & MALAYSIA (5N/6D)', 'tour_amount'=>'107,000', 'confirmed'=>'-', 'grp_tkn'=>'32', 'need'=>'32', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'KEERTHANA DEVI', 'travel_bag'=>'-', 'tour_manager'=>'KARUKUVEL', 'month_group'=>'JANUARY:2027'),
-            array('s_no'=>'28', 'tour_date'=>'17.01.2027', 'tour_code'=>'CAI170127', 'country_name'=>'EGYPT (6N/7D)', 'tour_amount'=>'189,000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'JANANI', 'travel_bag'=>'-', 'tour_manager'=>'BALA MURUGAN', 'month_group'=>'JANUARY:2027'),
-            array('s_no'=>'29', 'tour_date'=>'19.01.2027', 'tour_code'=>'PRODMK190127', 'country_name'=>'PROTHAILAND (3N/4D)', 'tour_amount'=>'Online Fare +14900', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'-', 'reminder_45'=>'-', 'reminder_30'=>'-', 'ticket_status'=>'GROUP TAKEN', 'visa_status'=>'-', 'handling_person'=>'KEERTHANA DEVI', 'travel_bag'=>'-', 'tour_manager'=>'NO TOUR MANAGER', 'month_group'=>'JANUARY:2027')
+            array('s_no'=>'12', 'tour_date'=>'10.01.2027', 'tour_code'=>'JAI100127', 'country_name'=>'RAJASTHAN (5N/6D)', 'tour_amount'=>'58500', 'confirmed'=>'4+1', 'grp_tkn'=>'22', 'need'=>'17', 'final_date'=>'15.12.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JANUARY:2027'),
+            array('s_no'=>'13', 'tour_date'=>'11.01.2027', 'tour_code'=>'IXZ110127', 'country_name'=>'ANDAMAN (4N/5D)', 'tour_amount'=>'52000', 'confirmed'=>'16+1', 'grp_tkn'=>'22', 'need'=>'5', 'final_date'=>'15.12.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JANUARY:2027'),
+            array('s_no'=>'14', 'tour_date'=>'11.01.2027', 'tour_code'=>'IXC110127', 'country_name'=>'SHIMLA KULLU MANALI (4N/5D)', 'tour_amount'=>'39000', 'confirmed'=>'20+1', 'grp_tkn'=>'22', 'need'=>'1', 'final_date'=>'15.12.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JANUARY:2027'),
+            array('s_no'=>'15', 'tour_date'=>'12.01.2027', 'tour_code'=>'AUH120127', 'country_name'=>'DUBAI (4N/5D)', 'tour_amount'=>'99000', 'confirmed'=>'14+1', 'grp_tkn'=>'32', 'need'=>'24', 'final_date'=>'01.12.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JANUARY:2027'),
+            array('s_no'=>'16', 'tour_date'=>'13.01.2027', 'tour_code'=>'DAD130127', 'country_name'=>'ONLY VIETNAM (6D/5N)', 'tour_amount'=>'118000', 'confirmed'=>'1+1', 'grp_tkn'=>'22', 'need'=>'20', 'final_date'=>'05.12.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JANUARY:2027'),
+            array('s_no'=>'17', 'tour_date'=>'14.01.2027', 'tour_code'=>'SINKUL140127', 'country_name'=>'SINGAPORE &  MALAYSIA  (5N/6D)', 'tour_amount'=>'107000', 'confirmed'=>'5+1', 'grp_tkn'=>'32', 'need'=>'26', 'final_date'=>'01.12.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JANUARY:2027'),
+            array('s_no'=>'18', 'tour_date'=>'16.01.2027', 'tour_code'=>'IXZ160127', 'country_name'=>'ANDAMAN (4N/5D)', 'tour_amount'=>'52000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'20.12.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JANUARY:2027'),
+            array('s_no'=>'19', 'tour_date'=>'17.01.2027', 'tour_code'=>'CAI170127', 'country_name'=>'EGYPT (6N/7D)', 'tour_amount'=>'189000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'10.12.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JANUARY:2027'),
+            array('s_no'=>'20', 'tour_date'=>'19.01.2027', 'tour_code'=>'PRODMK190127', 'country_name'=>'PROTHAILAND (3N/4D)', 'tour_amount'=>'Online Fare +14900', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JANUARY:2027'),
+
+            // FEBRUARY:2027
+            array('s_no'=>'21', 'tour_date'=>'05.02.2027', 'tour_code'=>'PAT050227', 'country_name'=>'KASI AYODHYA (5N/6D)', 'tour_amount'=>'49000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'15.01.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'FEBRUARY:2027'),
+            array('s_no'=>'22', 'tour_date'=>'11.02.2027', 'tour_code'=>'DADSAI110227', 'country_name'=>'VIETNAM CAMBODIA ( 7N/8D)', 'tour_amount'=>'149000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'01.01.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'FEBRUARY:2027'),
+            array('s_no'=>'23', 'tour_date'=>'15.02.2027', 'tour_code'=>'DEL150227', 'country_name'=>'GOLDEN TRIANGLE  (4N/5D)', 'tour_amount'=>'49000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'20.01.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'FEBRUARY:2027'),
+            array('s_no'=>'24', 'tour_date'=>'16.02.2027', 'tour_code'=>'MNLBWN160227', 'country_name'=>'PHILIPPINES & BRUNEI', 'tour_amount'=>'155300', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'20.12.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'FEBRUARY:2027'),
+            array('s_no'=>'25', 'tour_date'=>'17.02.2027', 'tour_code'=>'CAI170227', 'country_name'=>'EGYPT (7N/8D)', 'tour_amount'=>'189000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'01.01.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'FEBRUARY:2027'),
+            array('s_no'=>'26', 'tour_date'=>'18.02.2027', 'tour_code'=>'IXC180227', 'country_name'=>'SHIMLA MANALI', 'tour_amount'=>'39900', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'15.01.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'FEBRUARY:2027'),
+            array('s_no'=>'27', 'tour_date'=>'22.02.2027', 'tour_code'=>'CMB220227', 'country_name'=>'SRILANKA (4N/5D)', 'tour_amount'=>'57000', 'confirmed'=>'1+1', 'grp_tkn'=>'22', 'need'=>'20', 'final_date'=>'15.01.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'FEBRUARY:2027'),
+
+            // MARCH:2027
+            array('s_no'=>'28', 'tour_date'=>'13.03.2027', 'tour_code'=>'IXZ130327', 'country_name'=>'ANDAMAN (4N/5D)', 'tour_amount'=>'52000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'15.02.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MARCH:2027'),
+            array('s_no'=>'29', 'tour_date'=>'15.03.2027', 'tour_code'=>'IXB150327', 'country_name'=>'BHUTAN (5N/6D)', 'tour_amount'=>'62000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'10.02.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MARCH:2027'),
+            array('s_no'=>'30', 'tour_date'=>'16.03.2027', 'tour_code'=>'CDG160327', 'country_name'=>'AMAZING EUROPE(9N/10)', 'tour_amount'=>'279000', 'confirmed'=>'-', 'grp_tkn'=>'32', 'need'=>'32', 'final_date'=>'15.01.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MARCH:2027'),
+            array('s_no'=>'31', 'tour_date'=>'16.03.2027', 'tour_code'=>'AUH160327', 'country_name'=>'DUBAI (4N/5D)', 'tour_amount'=>'101000', 'confirmed'=>'-', 'grp_tkn'=>'26', 'need'=>'26', 'final_date'=>'01.02.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MARCH:2027'),
+            array('s_no'=>'32', 'tour_date'=>'17.03.2027', 'tour_code'=>'KIX170327', 'country_name'=>'JAPAN (7N/8D)', 'tour_amount'=>'286000', 'confirmed'=>'-', 'grp_tkn'=>'36', 'need'=>'36', 'final_date'=>'25.01.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MARCH:2027'),
+            array('s_no'=>'33', 'tour_date'=>'20.03.2027', 'tour_code'=>'CAI200327', 'country_name'=>'EGYPT (7N/8D)', 'tour_amount'=>'189000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'01.02.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MARCH:2027'),
+            array('s_no'=>'34', 'tour_date'=>'20.03.2027', 'tour_code'=>'KIX200327', 'country_name'=>'JAPAN (7N/8D)', 'tour_amount'=>'284000', 'confirmed'=>'-', 'grp_tkn'=>'36', 'need'=>'36', 'final_date'=>'28.01.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MARCH:2027'),
+            array('s_no'=>'35', 'tour_date'=>'24.03.2027', 'tour_code'=>'DAD240327', 'country_name'=>'ONLY VIETNAM (5N/6D)', 'tour_amount'=>'118000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'15.02.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MARCH:2027'),
+            array('s_no'=>'36', 'tour_date'=>'25.03.2027', 'tour_code'=>'SINKUL250327', 'country_name'=>'SINGAPORE &  MALAYSIA  (5N/6D)', 'tour_amount'=>'107000', 'confirmed'=>'-', 'grp_tkn'=>'32', 'need'=>'32', 'final_date'=>'05.02.2027', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MARCH:2027'),
+            array('s_no'=>'37', 'tour_date'=>'25.03.2027', 'tour_code'=>'PVG250327', 'country_name'=>'CHINA (7N/8D)', 'tour_amount'=>'194000', 'confirmed'=>'2+1', 'grp_tkn'=>'26', 'need'=>'23', 'final_date'=>'01.12.2026', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MARCH:2027'),
+
+            // APRIL:2027
+            array('s_no'=>'38', 'tour_date'=>'07.04.2027', 'tour_code'=>'DADSAI070427', 'country_name'=>'VIETNAM CAMBODIA (7N/8D)', 'tour_amount'=>'149000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'APRIL:2027'),
+            array('s_no'=>'39', 'tour_date'=>'12.04.2027', 'tour_code'=>'DEL120427', 'country_name'=>'GOLDEN TRIANGLE  (4N/5D)', 'tour_amount'=>'49000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'APRIL:2027'),
+            array('s_no'=>'40', 'tour_date'=>'19.04.2027', 'tour_code'=>'CMB190427', 'country_name'=>'SRILANKA (4N/5D)', 'tour_amount'=>'57000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'APRIL:2027'),
+            array('s_no'=>'41', 'tour_date'=>'20.04.2027', 'tour_code'=>'CPH200427', 'country_name'=>'SCANDINAVIA (9N/10D)', 'tour_amount'=>'375000', 'confirmed'=>'3+1', 'grp_tkn'=>'32', 'need'=>'28', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'APRIL:2027'),
+            array('s_no'=>'42', 'tour_date'=>'21.04.2027', 'tour_code'=>'SINKUL210427', 'country_name'=>'SINGAPORE & MALAYSIA  (5N/6D)', 'tour_amount'=>'112000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'APRIL:2027'),
+            array('s_no'=>'43', 'tour_date'=>'22.04.2027', 'tour_code'=>'NRT220427', 'country_name'=>'JAPAN (7N/8D)', 'tour_amount'=>'286000', 'confirmed'=>'2+1', 'grp_tkn'=>'36', 'need'=>'33', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'APRIL:2027'),
+
+            // MAY:2027
+            array('s_no'=>'44', 'tour_date'=>'12.05.2027', 'tour_code'=>'NRT120527', 'country_name'=>'JAPAN (7N/8D)', 'tour_amount'=>'286000', 'confirmed'=>'-', 'grp_tkn'=>'36', 'need'=>'36', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MAY:2027'),
+            array('s_no'=>'45', 'tour_date'=>'12.05.2027', 'tour_code'=>'DAD120527', 'country_name'=>'ONLY VIETNAM (6D/5N)', 'tour_amount'=>'118000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MAY:2027'),
+            array('s_no'=>'46', 'tour_date'=>'20.05.2027', 'tour_code'=>'PVG200527', 'country_name'=>'CHINA (7N/8D)', 'tour_amount'=>'205000', 'confirmed'=>'-', 'grp_tkn'=>'32', 'need'=>'32', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MAY:2027'),
+            array('s_no'=>'47', 'tour_date'=>'20.05.2027', 'tour_code'=>'YVR200527', 'country_name'=>'CANADA WITH ALASKA (14N/15D)', 'tour_amount'=>'779000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MAY:2027'),
+            array('s_no'=>'48', 'tour_date'=>'20.05.2027', 'tour_code'=>'SINKUL200527', 'country_name'=>'SINGAPORE & MALAYSIA  (5N/6D)', 'tour_amount'=>'113000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'MAY:2027'),
+
+            // JUNE:2027
+            array('s_no'=>'49', 'tour_date'=>'20.06.2027', 'tour_code'=>'SINKUL200627', 'country_name'=>'SINGAPORE &  MALAYSIA  (5N/6D)', 'tour_amount'=>'112000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JUNE:2027'),
+            array('s_no'=>'50', 'tour_date'=>'21.06.2027', 'tour_code'=>'DADSAI210627', 'country_name'=>'VIETNAM CAMBODIA (7N/8D)', 'tour_amount'=>'149000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JUNE:2027'),
+
+            // JULY:2027
+            array('s_no'=>'51', 'tour_date'=>'12.07.2027', 'tour_code'=>'CMB120727', 'country_name'=>'SRILANKA (4N/5D)', 'tour_amount'=>'57000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JULY:2027'),
+            array('s_no'=>'52', 'tour_date'=>'22.07.2027', 'tour_code'=>'SINKUL220727', 'country_name'=>'SINGAPORE & MALAYSIA  (5N/6D)', 'tour_amount'=>'113000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'JULY:2027'),
+
+            // AUGUST:2027
+            array('s_no'=>'53', 'tour_date'=>'13.08.2027', 'tour_code'=>'CMB130827', 'country_name'=>'SRILANKA (4N/5D)', 'tour_amount'=>'57000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'AUGUST:2027'),
+            array('s_no'=>'54', 'tour_date'=>'13.08.2027', 'tour_code'=>'NBO130827', 'country_name'=>'KENYA (5N/6D)', 'tour_amount'=>'235000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'AUGUST:2027'),
+            array('s_no'=>'55', 'tour_date'=>'19.08.2027', 'tour_code'=>'SINKUL190827', 'country_name'=>'SINGAPORE & MALAYSIA  (5N/6D)', 'tour_amount'=>'113000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'AUGUST:2027'),
+            array('s_no'=>'56', 'tour_date'=>'21.08.2027', 'tour_code'=>'DADSAI210827', 'country_name'=>'VIETNAM CAMBODIA (7N/8D)', 'tour_amount'=>'149000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'AUGUST:2027'),
+
+            // SEPTEMBER:2027
+            array('s_no'=>'57', 'tour_date'=>'10.09.2027', 'tour_code'=>'NBO100927', 'country_name'=>'KENYA (5N/6D)', 'tour_amount'=>'235000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'SEPTEMBER:2027'),
+            array('s_no'=>'58', 'tour_date'=>'14.09.2027', 'tour_code'=>'CPH140927', 'country_name'=>'SCANDINAVIA (9N/10D)', 'tour_amount'=>'385000', 'confirmed'=>'-', 'grp_tkn'=>'32', 'need'=>'32', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'SEPTEMBER:2027'),
+            array('s_no'=>'59', 'tour_date'=>'16.09.2027', 'tour_code'=>'NRT160927', 'country_name'=>'JAPAN (7N/8D)', 'tour_amount'=>'286000', 'confirmed'=>'-', 'grp_tkn'=>'36', 'need'=>'36', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'SEPTEMBER:2027'),
+            array('s_no'=>'60', 'tour_date'=>'18.09.2027', 'tour_code'=>'IXB180927', 'country_name'=>'BHUTAN (5N/6D)', 'tour_amount'=>'65000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'SEPTEMBER:2027'),
+            array('s_no'=>'61', 'tour_date'=>'23.09.2027', 'tour_code'=>'SINKUL230927', 'country_name'=>'SINGAPORE & MALAYSIA  (5N/6D)', 'tour_amount'=>'113000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'SEPTEMBER:2027'),
+
+            // COMPLETED TOURS
+            array('s_no'=>'62', 'tour_date'=>'10.04.2026', 'tour_code'=>'CDG100426', 'country_name'=>'AMAZING EUROPE(9N/10)', 'tour_amount'=>'-', 'confirmed'=>'35+1+4+2+2', 'grp_tkn'=>'42', 'need'=>'6', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'63', 'tour_date'=>'22.04.2026', 'tour_code'=>'DME220426', 'country_name'=>'RUSSIA (6N /7D)', 'tour_amount'=>'-', 'confirmed'=>'24+1+2+1', 'grp_tkn'=>'26', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'64', 'tour_date'=>'11.06.2026', 'tour_code'=>'JFK110626', 'country_name'=>'UNITED STATES OF AMERICA (20N/21D)', 'tour_amount'=>'759000', 'confirmed'=>'17+ 1+ 2+2', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'65', 'tour_date'=>'21.06.2026', 'tour_code'=>'SINKUL210626', 'country_name'=>'SINGAPORE &  MALAYSIA  (5N/6D)', 'tour_amount'=>'99000', 'confirmed'=>'21+1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'66', 'tour_date'=>'12.07.2026', 'tour_code'=>'PRODMK120726', 'country_name'=>'PRO THAILAND(3N/4D)', 'tour_amount'=>'Online Fare +14900', 'confirmed'=>'6+1+3+4+3+1', 'grp_tkn'=>'-', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'ONLINE FARE', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'67', 'tour_date'=>'15.07.2026', 'tour_code'=>'DAD150726', 'country_name'=>'ONLY VIETNAM(5N/6D)', 'tour_amount'=>'105000', 'confirmed'=>'20+1+2', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'68', 'tour_date'=>'18.07.2026', 'tour_code'=>'SINKUL180726', 'country_name'=>'SINGAPORE &  MALAYSIA  (5N/6D)', 'tour_amount'=>'99000', 'confirmed'=>'21+1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'69', 'tour_date'=>'13.08.2026', 'tour_code'=>'SINMH130826', 'country_name'=>'SINGAPORE &  MALAYSIA  (5N/6D)', 'tour_amount'=>'99000', 'confirmed'=>'21+1+2', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'70', 'tour_date'=>'20.08.2026', 'tour_code'=>'SGN200826', 'country_name'=>'VIETNAM|CAMBODIA (7N/8D)', 'tour_amount'=>'142000', 'confirmed'=>'21+1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'71', 'tour_date'=>'23.08.2026', 'tour_code'=>'DPS230826', 'country_name'=>'BALI(4N/5D)', 'tour_amount'=>'74000', 'confirmed'=>'21+1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'72', 'tour_date'=>'16.09.2026', 'tour_code'=>'NBO160926', 'country_name'=>'KENYA (5N/6D)', 'tour_amount'=>'259000', 'confirmed'=>'21+1+1+2+2', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'73', 'tour_date'=>'17.09.2026', 'tour_code'=>'NRT170926', 'country_name'=>'JAPAN (7N/8D)', 'tour_amount'=>'259000', 'confirmed'=>'35+1', 'grp_tkn'=>'36', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'74', 'tour_date'=>'20.09.2025', 'tour_code'=>'CDG200926', 'country_name'=>'AMAZING EUROPE (9N/10)', 'tour_amount'=>'274000', 'confirmed'=>'31+1+1+2', 'grp_tkn'=>'32', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'75', 'tour_date'=>'21.09.2026', 'tour_code'=>'CPH210926', 'country_name'=>'SCANDINAVIA (9N/10D)', 'tour_amount'=>'345000', 'confirmed'=>'31+1+1+2', 'grp_tkn'=>'32', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'76', 'tour_date'=>'23.09.2026', 'tour_code'=>'DAD230926', 'country_name'=>'ONLY VIETNAM', 'tour_amount'=>'105000', 'confirmed'=>'21+1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'77', 'tour_date'=>'24.09.2026', 'tour_code'=>'SINKUL240926', 'country_name'=>'SINGAPORE &  MALAYSIA  (5N/6D)', 'tour_amount'=>'99000', 'confirmed'=>'20+1', 'grp_tkn'=>'21', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'78', 'tour_date'=>'10.10.2026', 'tour_code'=>'SGN101026', 'country_name'=>'VIETNAM CAMBODIA ( 7N/8D)', 'tour_amount'=>'142000', 'confirmed'=>'21+1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'79', 'tour_date'=>'18.10.2026', 'tour_code'=>'DPS181026', 'country_name'=>'BALI (4N/5D)', 'tour_amount'=>'74000', 'confirmed'=>'21+1+1+2', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'80', 'tour_date'=>'18.10.2026', 'tour_code'=>'CDG181026', 'country_name'=>'AMAZING EUROPE (9N/10)', 'tour_amount'=>'274000', 'confirmed'=>'31+1', 'grp_tkn'=>'32', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'81', 'tour_date'=>'22.10.2026', 'tour_code'=>'KIX221026', 'country_name'=>'JAPAN (7N/8D)', 'tour_amount'=>'259000', 'confirmed'=>'34+1+4', 'grp_tkn'=>'36', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'82', 'tour_date'=>'23.10.2026', 'tour_code'=>'SINKUL231026', 'country_name'=>'SINGAPORE &  MALAYSIA  (5N/6D)', 'tour_amount'=>'103000', 'confirmed'=>'20+1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'83', 'tour_date'=>'24.10.2026', 'tour_code'=>'CAI241026', 'country_name'=>'EGYPT (7N/8D)', 'tour_amount'=>'189000', 'confirmed'=>'19+1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'84', 'tour_date'=>'14.09.2026', 'tour_code'=>'PRODMK140926', 'country_name'=>'PROTHAILAND(3N/4D)', 'tour_amount'=>'Online Fare +14900', 'confirmed'=>'6+1+3', 'grp_tkn'=>'-', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'ONLINE', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'85', 'tour_date'=>'13.01.2026', 'tour_code'=>'HKG130126', 'country_name'=>'HONGKONG(4N/5D)', 'tour_amount'=>'154000', 'confirmed'=>'3 + 1', 'grp_tkn'=>'22', 'need'=>'18', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'86', 'tour_date'=>'19.11.2025', 'tour_code'=>'DAD191125', 'country_name'=>'ONLY VIETNAM  (5N/6D)', 'tour_amount'=>'-', 'confirmed'=>'14 + 1', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+            array('s_no'=>'87', 'tour_date'=>'21.11.2025', 'tour_code'=>'SINMH211125', 'country_name'=>'SINGAPORE &  MALAYSIA  (5N/6D)', 'tour_amount'=>'105000', 'confirmed'=>'6+ 1 + 12', 'grp_tkn'=>'22', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'COMPLETED TOURS'),
+
+            // CANCEL
+            array('s_no'=>'88', 'tour_date'=>'26.04.2026', 'tour_code'=>'SYD260426', 'country_name'=>'AUSTRALIA & NEW ZEALAND (17N/18D)', 'tour_amount'=>'-', 'confirmed'=>'12+ 1', 'grp_tkn'=>'22', 'need'=>'9', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'CANCEL'),
+            array('s_no'=>'89', 'tour_date'=>'03.09.2026', 'tour_code'=>'JFK030926', 'country_name'=>'UNITED STATES OF AMERICA (20N/21D)', 'tour_amount'=>'759000', 'confirmed'=>'-', 'grp_tkn'=>'22', 'need'=>'22', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'CANCEL'),
+            array('s_no'=>'90', 'tour_date'=>'11.09.2026', 'tour_code'=>'TST110926', 'country_name'=>'TRANSSEIBERIAN(12N/13D)', 'tour_amount'=>'380000', 'confirmed'=>'1+2+1', 'grp_tkn'=>'-', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'ONLINE FARE', 'month_group'=>'CANCEL'),
+            array('s_no'=>'91', 'tour_date'=>'16.09.2026', 'tour_code'=>'PVG160926', 'country_name'=>'CHINA(7N/8D)', 'tour_amount'=>'194000', 'confirmed'=>'25+1+2', 'grp_tkn'=>'32', 'need'=>'6', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'CANCEL'),
+            array('s_no'=>'92', 'tour_date'=>'17.07.2026', 'tour_code'=>'PVG170726', 'country_name'=>'CHINA(7N/8D)', 'tour_amount'=>'194000', 'confirmed'=>'25+2+1', 'grp_tkn'=>'26', 'need'=>'-', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'CANCEL'),
+            array('s_no'=>'93', 'tour_date'=>'21.11.2026', 'tour_code'=>'PVG211126', 'country_name'=>'CHINA (7N/8D)', 'tour_amount'=>'194000', 'confirmed'=>'7+1', 'grp_tkn'=>'26', 'need'=>'18', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'CANCEL'),
+            array('s_no'=>'94', 'tour_date'=>'17.04.2026', 'tour_code'=>'CPT170426', 'country_name'=>'SOUTH AFRICA(9N/10D)', 'tour_amount'=>'-', 'confirmed'=>'1+1', 'grp_tkn'=>'22', 'need'=>'20', 'final_date'=>'-', 'ticket_status'=>'GROUP TAKEN', 'month_group'=>'CANCEL')
         );
 
         $this->db->insert_batch('franchise_group_tours', $samples);

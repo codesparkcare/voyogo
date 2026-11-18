@@ -6448,13 +6448,15 @@ html, body {
 }
 
 .franchise-hero-text-block {
-  max-width: 420px;
+  max-width: 540px;
   color: #FFFFFF;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important;
   margin-top: 15px;
+  position: relative;
+  z-index: 10;
 }
 
 /* Franchise Hero Banner (Single Wide Banner) */
@@ -6582,6 +6584,21 @@ html, body {
   color: #FFFFFF;
   transform: rotate(35deg);
   filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.9));
+}
+
+.franchise-hero-section .ref-slider-dots {
+  position: static !important;
+  display: inline-flex !important;
+  margin-top: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  z-index: 30;
+}
+
+.franchise-hero-section .ref-slider-arrow {
+  top: 42%;
+  z-index: 20;
 }
 
 /* Floating Horizontal Form Section (Matching Other Pages) */
@@ -8572,6 +8589,16 @@ html, body {
   color: #ff6a00;
   letter-spacing: -0.02em;
   line-height: 1;
+}
+
+.invest-price-terms {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-align: center;
+  margin-top: 6px;
+  letter-spacing: 0.2px;
 }
 
 /* Large Green Claim Offer CTA Button */

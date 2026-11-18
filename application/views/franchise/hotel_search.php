@@ -18,7 +18,7 @@ $defaultNights   = 4;
         </a>
         <a href="<?php echo site_url('franchise/group-tours'); ?>" class="f-side-link">
             <i class="fa-solid fa-users-rectangle"></i>
-            <span><span class="f-side-text-desktop">Group Tour Follow Up</span><span class="f-side-text-mobile">Group Tours</span></span>
+            <span><span class="f-side-text-desktop">Group Tours List</span><span class="f-side-text-mobile">Group Tours</span></span>
         </a>
     </div>
 
@@ -269,7 +269,7 @@ $defaultNights   = 4;
 .ak-hero-banner {
     position: relative;
     border-radius: 16px;
-    background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=85') no-repeat center center / cover;
+    background: #09204b url('<?php echo base_url("assets/images/franchiseslider/slide1.jpeg"); ?>') no-repeat center center / cover;
     padding: 50px 36px 60px 36px;
     overflow: visible;
     box-shadow: 0 12px 30px rgba(9, 32, 75, 0.15);
@@ -1858,4 +1858,16 @@ function updateHotelChildAge(roomIdx, childIdx, age) {
 renderHotelRooms();
 updateHotelDateDisplays();
 renderHotelCalendarMonths();
+
+var hotelForm = document.getElementById('franchiseHotelForm');
+if (hotelForm) {
+    hotelForm.addEventListener('submit', function() {
+        var btn = hotelForm.querySelector('.ak-search-btn');
+        if (btn) {
+            btn.innerHTML = '<span>SEARCHING...</span> <i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.style.opacity = '0.9';
+            btn.style.pointerEvents = 'none';
+        }
+    });
+}
 </script>

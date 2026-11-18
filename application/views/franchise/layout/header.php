@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($title) ? htmlspecialchars($title) : 'Franchise Partner Portal - Voyogo'; ?></title>
+    <link rel="icon" type="image/png" href="<?php echo base_url('assets/images/logo.png'); ?>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -50,14 +54,16 @@
             font-weight: 700;
         }
 
-        /* Main Header Navbar matching Screenshot 2 (Deep Navy #09204b) */
+        /* Main Header Navbar */
         .store-navbar {
             background: #09204b;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 14px 32px;
+            padding: 8px 20px;
+            min-height: 58px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 16px;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -66,44 +72,66 @@
         .nav-left {
             display: flex;
             align-items: center;
-            gap: 28px;
+            gap: 14px;
+            min-width: 0;
+            flex: 1 1 auto;
+            overflow: hidden;
         }
         .brand-box {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             text-decoration: none;
+            flex-shrink: 0;
         }
         .brand-box img { 
-            max-height: 40px; 
+            max-height: 34px; 
             width: auto;
+            display: block;
         }
         .b2b-pill {
             background: #78B722;
             color: #ffffff;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 800;
-            padding: 3px 10px;
-            border-radius: 6px;
+            padding: 2px 7px;
+            border-radius: 5px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         .nav-links {
             display: flex;
-            gap: 8px;
+            align-items: center;
+            gap: 4px;
             list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: nowrap;
+            flex-shrink: 0;
         }
-        .nav-links a {
+        .nav-links li {
+            list-style: none;
+            flex-shrink: 0;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 8px;
+        }
+        .nav-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 11px;
+            border-radius: 7px;
             text-decoration: none;
             color: #cbd5e1;
-            font-size: 13.5px;
+            font-size: 12.5px;
             font-weight: 600;
-            transition: all 0.15s;
+            white-space: nowrap !important;
+            transition: all 0.15s ease;
+            line-height: 1;
+            height: 34px;
+            box-sizing: border-box;
         }
         .nav-links a:hover {
             background: rgba(255, 255, 255, 0.1);
@@ -119,85 +147,96 @@
         .nav-right {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 10px;
+            flex-shrink: 0;
+            margin-left: auto;
+            position: relative;
+            z-index: 2;
         }
 
         /* Wallet Float Badge */
         .wallet-badge-card {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             background: rgba(255, 255, 255, 0.1);
             border: 1.5px solid rgba(255, 255, 255, 0.2);
-            padding: 6px 16px;
+            padding: 4px 12px;
             border-radius: 30px;
             text-decoration: none;
             transition: all 0.15s;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
         .wallet-badge-card:hover { 
             background: rgba(255, 255, 255, 0.15);
             border-color: #78B722;
         }
         .wallet-icon-circle {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: #78B722;
             color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 12px;
             box-shadow: 0 2px 6px rgba(120, 183, 34, 0.4);
+            flex-shrink: 0;
         }
         .wallet-label {
-            font-size: 10px;
+            font-size: 9.5px;
             font-weight: 700;
             color: #86efac;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            line-height: 1.1;
         }
         .wallet-amount {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 800;
             color: #ffffff;
+            line-height: 1.2;
         }
 
         /* Store Owner Profile Badge */
         .store-user-card {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 6px 14px;
+            gap: 8px;
+            padding: 4px 10px;
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 24px;
+            flex-shrink: 0;
         }
         .store-avatar {
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
             color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 12px;
+            flex-shrink: 0;
         }
         .store-info-text {
             line-height: 1.2;
-            font-size: 12.5px;
+            font-size: 12px;
         }
         .store-name-text {
             font-weight: 700;
             color: #ffffff;
-            max-width: 140px;
+            max-width: 110px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
         .store-code-text {
-            font-size: 11px;
+            font-size: 10px;
             color: #93c5fd;
             font-weight: 700;
         }
@@ -473,7 +512,68 @@
             display: none;
         }
 
-        /* Responsive Breakpoints for Header & Layout */
+        /* Responsive Navbar Scaling for Laptops & Desktops */
+        @media (max-width: 1380px) {
+            .store-navbar {
+                padding: 7px 14px;
+                gap: 10px;
+            }
+            .nav-left {
+                gap: 10px;
+            }
+            .nav-links {
+                gap: 3px;
+            }
+            .nav-links a {
+                padding: 6px 8px;
+                font-size: 11.5px;
+                gap: 5px;
+                height: 32px;
+            }
+            .brand-box img {
+                max-height: 30px;
+            }
+            .b2b-pill {
+                font-size: 9px;
+                padding: 2px 5px;
+            }
+            .store-name-text {
+                max-width: 80px;
+            }
+            .wallet-badge-card {
+                padding: 3px 9px;
+                gap: 6px;
+            }
+            .wallet-icon-circle {
+                width: 24px;
+                height: 24px;
+                font-size: 11px;
+            }
+            .wallet-amount {
+                font-size: 13px;
+            }
+        }
+
+        /* Screen under 1180px: cleanly switch navbar links into Mobile Drawer */
+        @media (max-width: 1180px) {
+            .nav-links {
+                display: none !important;
+            }
+            .f-mobile-toggle {
+                display: inline-flex !important;
+            }
+            .store-user-card {
+                display: none !important;
+            }
+            .store-navbar {
+                padding: 8px 14px;
+            }
+            .nav-right {
+                gap: 8px;
+            }
+        }
+
+        /* Responsive Breakpoints for General Page Layout */
         @media (max-width: 991px) {
             .f-top-strip {
                 padding: 6px 14px;
@@ -668,7 +768,7 @@
             </li>
             <li>
                 <a href="<?php echo site_url('franchise/group-tours'); ?>" class="<?php echo ($active_menu ?? '') === 'group_tours' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-users-rectangle"></i> Group Tour Follow Up
+                    <i class="fa-solid fa-users-rectangle"></i> Group Tours List
                 </a>
             </li>
             <li>
@@ -777,7 +877,7 @@
             <i class="fa-solid fa-hotel"></i> <span>Hotel Booking</span>
         </a>
         <a href="<?php echo site_url('franchise/group-tours'); ?>" class="f-drawer-link <?php echo ($active_menu ?? '') === 'group_tours' ? 'active' : ''; ?>">
-            <i class="fa-solid fa-users-rectangle"></i> <span>Group Tour Follow Up</span>
+            <i class="fa-solid fa-users-rectangle"></i> <span>Group Tours List</span>
         </a>
         <a href="<?php echo site_url('franchise/bookings'); ?>" class="f-drawer-link <?php echo ($active_menu ?? '') === 'bookings' ? 'active' : ''; ?>">
             <i class="fa-solid fa-clipboard-list"></i> <span>My Bookings</span>

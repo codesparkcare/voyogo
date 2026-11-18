@@ -141,10 +141,10 @@
 
                   <!-- Location -->
                   <div class="ref-form-group">
-                    <label class="ref-label">Location <span class="ref-req">*</span></label>
+                    <label class="ref-label">Your Location <span class="ref-req">*</span></label>
                     <div class="ref-input-box">
-                      <i class="fa-solid fa-location-dot ref-input-icon"></i>
-                      <input type="text" name="location" class="ref-input" placeholder="Select City" required>
+                      <i class="fa-solid fa-location-crosshairs ref-input-icon"></i>
+                      <input type="text" name="location" class="ref-input" placeholder="Your City / Location" required>
                     </div>
                   </div>
 
@@ -654,6 +654,10 @@
 
         <div class="pill-form-group">
           <input type="email" name="email" class="pill-input" placeholder="Email Address *" required>
+        </div>
+
+        <div class="pill-form-group">
+          <input type="text" name="location" class="pill-input" placeholder="Your Location *" required>
         </div>
 
         <div class="pill-form-group">

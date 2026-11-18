@@ -273,7 +273,7 @@
         <li class="nav-item <?php echo ($active_menu == 'group_tours') ? 'active' : ''; ?>">
             <a href="<?php echo site_url('franchise-admin/group-tour-follow-up'); ?>">
                 <i class="fa-solid fa-users-rectangle"></i>
-                <span>Group Tour Follow Up</span>
+                <span>Group Tours List</span>
             </a>
         </li>
         <li class="nav-item <?php echo ($active_menu == 'enquiries') ? 'active' : ''; ?>">

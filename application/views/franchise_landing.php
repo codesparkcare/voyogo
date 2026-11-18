@@ -7,25 +7,35 @@
   <!-- Hero Background Slider Track -->
   <div class="ref-hero-slider">
     <div class="slider-track">
-      <div class="slide active franchise-hero-slide" style="background-image: url('<?php echo base_url('assets/images/VOYOGO%20FRANCHISE%20BANNER.png?v=' . (file_exists(FCPATH . 'assets/images/VOYOGO FRANCHISE BANNER.png') ? filemtime(FCPATH . 'assets/images/VOYOGO FRANCHISE BANNER.png') : time())); ?>');"></div>
+      <div class="slide active franchise-hero-slide" style="background-image: url('<?php echo base_url('assets/images/franchiseslider/slide1.jpeg'); ?>');"></div>
+      <div class="slide franchise-hero-slide" style="background-image: url('<?php echo base_url('assets/images/franchiseslider/slide2.jpeg'); ?>');"></div>
+      <div class="slide franchise-hero-slide" style="background-image: url('<?php echo base_url('assets/images/franchiseslider/slide3.jpeg'); ?>');"></div>
+      <div class="slide franchise-hero-slide" style="background-image: url('<?php echo base_url('assets/images/franchiseslider/slide4.jpeg'); ?>');"></div>
+      <div class="slide franchise-hero-slide" style="background-image: url('<?php echo base_url('assets/images/franchiseslider/slide5.jpeg'); ?>');"></div>
     </div>
   </div>
 
-  <!-- Hero Content Overlay (Pure text & download button on left) -->
+  <!-- Slider Arrows -->
+  <button class="ref-slider-arrow prev" aria-label="Previous Slide">‹</button>
+  <button class="ref-slider-arrow next" aria-label="Next Slide">›</button>
+
+  <!-- Hero Content Overlay (Pure text & dots on left) -->
   <div class="container ref-hero-container">
     <div class="ref-hero-header-row franchise-hero-header-row">
       <!-- Left Content on Slider -->
       <div class="franchise-hero-text-block">
-        <span class="franchise-hero-pill"><i class="fa-solid fa-handshake-angle me-2"></i> Partner With India's Leading Travel Brand</span>
-        <h1 class="franchise-hero-title">Own a Voyogo Franchise</h1>
-        <p class="franchise-hero-subtitle">High Margins • Full Tech & Operations Support • 100+ Global Suppliers</p>
-        
-        <!-- Download Brochure Button directly on Slider -->
-        <a href="<?php echo base_url('assets/images/Sky-Planet-%20Holidays.pdf'); ?>" download="Sky-Planet-Holidays-Franchise.pdf" target="_blank" class="btn-slider-download-only" title="Download Official Franchise Prospectus PDF">
-          <i class="fa-solid fa-file-pdf"></i>
-          <span>DOWNLOAD BROCHURE</span>
-          <i class="fa-solid fa-cloud-arrow-down"></i>
-        </a>
+        <span class="franchise-hero-pill"><i class="fa-solid fa-handshake-angle me-2"></i> Become a Travel Franchise Partner Today!</span>
+        <h1 class="franchise-hero-title">YOUR DREAM. YOUR BUSINESS.<br>YOUR TRAVEL EMPIRE.</h1>
+        <p class="franchise-hero-subtitle">Start your own travel franchise with Skyplanet's Voyogo.</p>
+
+        <!-- Slider Pagination Dots directly beneath subtitle -->
+        <div class="ref-slider-dots">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
       </div>
     </div>
   </div>
@@ -993,7 +1003,7 @@
             <span>INVESTMENT DETAILS</span>
           </div>
 
-          <h3 class="invest-sub-heading">30% OFFER FOR THE FIRST</h3>
+          <h3 class="invest-sub-heading">10% OFFER FOR THE FIRST</h3>
           <div class="invest-headline-row">
             <h2 class="invest-giant-headline">
               <span class="text-gradient-orange">25</span>
@@ -1036,6 +1046,15 @@
             </div>
           </div>
 
+          <!-- Download Brochure Action Button -->
+          <div class="invest-download-cta-wrap" style="margin-top: 28px;">
+            <a href="<?php echo base_url('assets/images/Sky-Planet-%20Holidays.pdf'); ?>" download="Sky-Planet-Holidays-Franchise.pdf" target="_blank" class="btn-slider-download-only" title="Download Official Franchise Prospectus PDF">
+              <i class="fa-solid fa-file-pdf"></i>
+              <span>DOWNLOAD BROCHURE</span>
+              <i class="fa-solid fa-cloud-arrow-down"></i>
+            </a>
+          </div>
+
         </div>
 
         <!-- Right Side: Special Offer Blue Card with Folded Orange Ribbon & ₹ 10,00,000 -->
@@ -1058,6 +1077,9 @@
               <div class="invest-price-display">
                 <span class="currency-symbol">₹</span>
                 <span class="price-digits">10,00,000</span>
+              </div>
+              <div class="invest-price-terms" style="text-align: center; font-size: 11px; font-weight: 600; color: #64748b; margin-top: 6px; letter-spacing: 0.2px;">
+                * Terms and Conditions applicable
               </div>
             </div>
 
@@ -1961,4 +1983,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+
+<!-- Franchise Slider Interactivity -->
+<script src="<?php echo base_url('assets/js/pages_main.js?v=' . time()); ?>"></script>
 

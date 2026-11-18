@@ -193,6 +193,9 @@ $route['franchise/bookings']                      = 'Franchise/bookings';
 $route['franchise/wallet_ledger']                 = 'Franchise/wallet_ledger';
 $route['franchise/group-tour-follow-up']          = 'Franchise/group_tours';
 $route['franchise/group-tours']                   = 'Franchise/group_tours';
+$route['franchise/group_tours']                   = 'Franchise/group_tours';
+$route['franchise/group-tours-list']              = 'Franchise/group_tours';
+$route['franchise/group-tour-list']               = 'Franchise/group_tours';
 
 /* ==========================================================================
    Customer Portal (User Profile & Phone OTP Auth)

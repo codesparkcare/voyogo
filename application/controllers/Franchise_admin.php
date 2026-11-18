@@ -368,9 +368,10 @@ class Franchise_admin extends CI_Controller {
                             'confirmed'       => $data[5] ?? '',
                             'grp_tkn'         => $data[6] ?? '',
                             'need'            => $data[7] ?? '',
+                            'final_date'      => $data[8] ?? '',
                             'reminder_45'     => $data[8] ?? '',
                             'reminder_30'     => $data[9] ?? '',
-                            'ticket_status'   => $data[10] ?? '',
+                            'ticket_status'   => $data[9] ?? ($data[10] ?? ''),
                             'visa_status'     => $data[11] ?? '',
                             'handling_person' => $data[12] ?? '',
                             'travel_bag'      => $data[13] ?? '',
@@ -411,6 +412,7 @@ class Franchise_admin extends CI_Controller {
             'confirmed'       => trim($this->input->post('confirmed')),
             'grp_tkn'         => trim($this->input->post('grp_tkn')),
             'need'            => trim($this->input->post('need')),
+            'final_date'      => trim($this->input->post('final_date')) ?: trim($this->input->post('reminder_45')),
             'reminder_45'     => trim($this->input->post('reminder_45')),
             'reminder_30'     => trim($this->input->post('reminder_30')),
             'ticket_status'   => trim($this->input->post('ticket_status')),
@@ -418,7 +420,7 @@ class Franchise_admin extends CI_Controller {
             'handling_person' => trim($this->input->post('handling_person')),
             'travel_bag'      => trim($this->input->post('travel_bag')),
             'tour_manager'    => trim($this->input->post('tour_manager')),
-            'month_group'     => trim($this->input->post('month_group')) ?: 'SEPTEMBER:2026',
+            'month_group'     => trim($this->input->post('month_group')) ?: 'OCTOBER:2026',
             'notes'           => trim($this->input->post('notes'))
         );
 
@@ -475,7 +477,7 @@ class Franchise_admin extends CI_Controller {
         header('Content-Disposition: attachment; filename=' . $filename);
 
         $output = fopen('php://output', 'w');
-        // Exact 15 headers matching workbook1.pdf
+        // Exact 10 headers matching Group Tours table
         fputcsv($output, array(
             'S. NO',
             'DATE',
@@ -483,22 +485,16 @@ class Franchise_admin extends CI_Controller {
             'COUNTRY NAME',
             'TOUR AMOUNT',
             'CONFIRMED',
-            'GRP. TKN',
+            'GRP. SIZE',
             'NEED',
-            '45 DAYS REMINDER',
-            '30 DAYS REMINDER',
+            'FINAL DATE TO CLOSE THE GROUP',
             'TICKET STATUS',
-            'VISA STATUS',
-            'HANDLING PERSON',
-            'TRAVEL BAG',
-            'TOUR MANAGER',
             'MONTH'
         ));
 
-        // Sample rows from PDF
-        fputcsv($output, array('1', '16.09.2026', 'NBO160926', 'KENYA (5N/6D)', '259,000', '21+1+1+2+2', '22', '-', '02.08.2026', '17.08.2026', 'GROUP TAKEN', 'WE APPLY (INCLUDE)', 'KEERTHANA DEVI', '-', 'YOGESH', 'SEPTEMBER:2026'));
-        fputcsv($output, array('2', '17.09.2026', 'NRT170926', 'JAPAN (7N/8D)', '259,000', '35+1', '36', '-', '03.08.2026', '18.08.2026', 'GROUP TAKEN', 'WE APPLY (INCLUDE)', 'NAVEENA', '-', 'SARATHKUMAR', 'SEPTEMBER:2026'));
-        fputcsv($output, array('3', '20.09.2025', 'CDG200926', 'AMAZING EUROPE (9N/10)', '274,000', '31+1+1+2', '32', '-', '06.08.2026', '21.08.2026', 'GROUP TAKEN', 'WE APPLY (INCLUDE)', 'MUKESH', '-', 'RAJA MITHUN', 'SEPTEMBER:2026'));
+        // Sample rows matching user's sheet
+        fputcsv($output, array('1', '22.10.2026', 'KIX221026', 'JAPAN (7N/8D)', '259,000', '15+1', '16', '-', '25.08.2026', 'GROUP TAKEN', 'OCTOBER:2026'));
+        fputcsv($output, array('2', '24.10.2026', 'CAI241026', 'EGYPT (8N/9D)', '189,000', '12+1', '13', '-', '25.08.2026', 'GROUP TAKEN', 'OCTOBER:2026'));
         fclose($output);
         exit;
     }

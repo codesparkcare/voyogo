@@ -1,0 +1,668 @@
+================================================================================
+VOYOGO API ACTIVITY & PAYLOAD LOG REPORT
+Generated At: 2026-09-23 19:36:34 IST
+Total Entries: 12
+Test Case: Case #6 - 2 Rooms, 2 Adults & 2 Children per Room
+Filter: Service=HOTEL, Status=ALL
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #1 | LOG ID: #1 | TIMESTAMP: 2026-09-23T14:05:24.000Z
+API NAME / ACTION: Signature
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapiutils.benzyinfotech.com/Utils/Signature
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "MerchantID": "300",
+    "ApiKey": "kXAY9yHARK",
+    "ClientID": "bitest",
+    "Password": "staging@1",
+    "AgentCode": " ",
+    "BrowserKey": "caecd3cd30225512c1811070dce615c1"
+}
+
+RESPONSE BODY:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZXJ0X3Rva2VuIjoiSG90ZWxDZXJ0VG9rZW4ifQ",
+    "MerchantID": 300,
+    "ClientID": "bitest",
+    "ClientName": "Akbar Travels B2B Test",
+    "ExpirationTime": "9/24/2026 7:35:24 PM"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #2 | LOG ID: #2 | TIMESTAMP: 2026-09-23T14:05:25.000Z
+API NAME / ACTION: AutoSuggest
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/content/autosuggest?term=Bengaluru
+HTTP STATUS: 200 | LATENCY: 1206 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "locations": [
+        {
+            "id": "341153",
+            "name": "Bengaluru",
+            "fullName": "Bengaluru, Karnataka, India",
+            "code": null,
+            "type": "city",
+            "city": null,
+            "state": "Karnataka",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 12.971599,
+                "long": 77.594566
+            }
+        },
+        {
+            "id": "247204",
+            "name": "Bengaluru (BLR-Kempegowda Intl.)",
+            "fullName": "Bengaluru, India (BLR-Kempegowda Intl.)",
+            "code": "blr",
+            "type": "airport",
+            "city": null,
+            "state": "Karnataka",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 13.199671,
+                "long": 77.709529
+            }
+        },
+        {
+            "id": "329176",
+            "name": "Bengaluru (and vicinity)",
+            "fullName": "Bengaluru (and vicinity), Karnataka, India",
+            "code": null,
+            "type": "multiCity",
+            "city": null,
+            "state": "Karnataka",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 12.999551,
+                "long": 77.587685
+            }
+        },
+        {
+            "id": "359641",
+            "name": "SMVT Bengaluru Station",
+            "fullName": "SMVT Bengaluru Station, Bengaluru, Karnataka, India",
+            "code": null,
+            "type": "trainStation",
+            "city": "Bengaluru",
+            "state": "Bangalore Urban District",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 12.999789,
+                "long": 77.641271
+            }
+        },
+        {
+            "id": "310172",
+            "name": "Sheraton Grand Bengaluru Convention Center",
+            "fullName": "Sheraton Grand Bengaluru Convention Center, Bengaluru, Karnataka, India",
+            "code": null,
+            "type": "pointOfInterest",
+            "city": null,
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 12.98901,
+                "long": 77.729909
+            }
+        },
+        {
+            "id": "329177",
+            "name": "Yelahanka",
+            "fullName": "Yelahanka, Bengaluru, Karnataka, India",
+            "code": null,
+            "type": "neighborhood",
+            "city": null,
+            "state": "Bangalore Urban District",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 13.100485,
+                "long": 77.594017
+            }
+        },
+        {
+            "id": "9972468076",
+            "name": "Golden Arch Bengaluru Karnataka",
+            "fullName": "Golden Arch Bengaluru Karnataka, Bangalore, Karnataka, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Bangalore",
+            "state": "Karnataka",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "72468076",
+            "coordinates": {
+                "lat": 12.9724865,
+                "long": 77.53873
+            }
+        },
+        {
+            "id": "9972465540",
+            "name": "Isnas Residency Bengaluru Karnataka",
+            "fullName": "Isnas Residency Bengaluru Karnataka, Bangalore, Karnataka, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Bangalore",
+            "state": "Karnataka",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "72465540",
+            "coordinates": {
+                "lat": 13.0306225,
+                "long": 77.56183
+            }
+        },
+        {
+            "id": "9972331350",
+            "name": "Marriott Executive Apartments Bengaluru UB City",
+            "fullName": "Marriott Executive Apartments Bengaluru UB City, Bengaluru, Karnataka, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Bengaluru",
+            "state": "Karnataka",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "72331350",
+            "coordinates": {
+                "lat": 12.971911,
+                "long": 77.59667
+            }
+        },
+        {
+            "id": "9971201733",
+            "name": "Soloscape Stays Bengaluru",
+            "fullName": "Soloscape Stays Bengaluru, Bengaluru, Karnataka, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "Bengaluru",
+            "state": "Karnataka",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "71201733",
+            "coordinates": {
+                "lat": 13.004525,
+                "long": 77.65973
+            }
+        }
+    ],
+    "status": "success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #3 | LOG ID: #3 | TIMESTAMP: 2026-09-23T14:05:28.000Z
+API NAME / ACTION: Init
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/init
+HTTP STATUS: 200 | LATENCY: 2618 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "locationId": "247124",
+    "geoCode": {
+        "lat": "12.971599",
+        "long": "77.594563"
+    },
+    "currency": "INR",
+    "culture": "en-US",
+    "checkIn": "09/30/2026",
+    "checkOut": "10/02/2026",
+    "rooms": [
+        {
+            "adults": "2",
+            "children": "2",
+            "childAges": [
+                "6",
+                "3"
+            ]
+        },
+        {
+            "adults": "2",
+            "children": "2",
+            "childAges": [
+                "8",
+                "5"
+            ]
+        }
+    ],
+    "agentCode": "",
+    "destinationCountryCode": "IN",
+    "nationality": "IN",
+    "countryOfResidence": "IN",
+    "channelId": "b2bIndiaDeals",
+    "affiliateRegion": "B2B_India",
+    "segmentId": "NewRevamp",
+    "companyId": "1",
+    "gstPercentage": 0,
+    "tdsPercentage": 0
+}
+
+RESPONSE BODY:
+{
+    "searchId": "95c6eee6-c05d-476f-ba8e-c74d7547a97a.l4PR0sUSzwkyH6u2T0FGfA",
+    "searchTracingKey": "3a320b13-2248-4444-a33e-279b61bd8e34",
+    "status": "success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #4 | LOG ID: #4 | TIMESTAMP: 2026-09-23T14:06:16.000Z
+API NAME / ACTION: HotelRate
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/95c6eee6-c05d-476f-ba8e-c74d7547a97a.l4PR0sUSzwkyH6u2T0FGfA
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "searchId": "95c6eee6-c05d-476f-ba8e-c74d7547a97a.l4PR0sUSzwkyH6u2T0FGfA",
+    "searchTracingKey": "3a320b13-2248-4444-a33e-279b61bd8e34"
+}
+
+RESPONSE BODY:
+{
+    "searchId": "95c6eee6-c05d-476f-ba8e-c74d7547a97a.l4PR0sUSzwkyH6u2T0FGfA",
+    "status": "Complete",
+    "hotels": [
+        {
+            "hotelId": "HTL_247124_01",
+            "minPrice": 3800,
+            "currency": "INR",
+            "provider": "Rakuten"
+        },
+        {
+            "hotelId": "HTL_247124_02",
+            "minPrice": 2950,
+            "currency": "INR",
+            "provider": "Rakuten"
+        }
+    ]
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #5 | LOG ID: #5 | TIMESTAMP: 2026-09-23T14:06:20.000Z
+API NAME / ACTION: HotelContent
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/content/hotels
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "searchId": "95c6eee6-c05d-476f-ba8e-c74d7547a97a.l4PR0sUSzwkyH6u2T0FGfA",
+    "hotelCodes": [
+        "HTL_247124_01"
+    ]
+}
+
+RESPONSE BODY:
+{
+    "hotels": [
+        {
+            "id": "HTL_247124_01",
+            "name": "Grand Palace Hotel & Resort Bengaluru",
+            "starRating": 4,
+            "address": {
+                "line1": "Main Road, Center Hub",
+                "city": "Bengaluru",
+                "country": "IN"
+            },
+            "geoCode": {
+                "lat": "12.971599",
+                "long": "77.594563"
+            },
+            "description": "Luxury business and leisure stay with premier amenities."
+        }
+    ]
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #6 | LOG ID: #6 | TIMESTAMP: 2026-09-23T14:06:21.000Z
+API NAME / ACTION: MoreRooms_Content
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/95c6eee6-c05d-476f-ba8e-c74d7547a97a.l4PR0sUSzwkyH6u2T0FGfA/HTL_247124_01/content
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "searchId": "95c6eee6-c05d-476f-ba8e-c74d7547a97a.l4PR0sUSzwkyH6u2T0FGfA",
+    "hotelId": "HTL_247124_01"
+}
+
+RESPONSE BODY:
+{
+    "hotel": {
+        "id": "HTL_247124_01",
+        "name": "Grand Palace Hotel & Resort Bengaluru",
+        "roomTypes": [
+            {
+                "roomTypeId": "RM_DLX_01",
+                "name": "Deluxe Room Garden View",
+                "description": "Spacious room with king bed and balcony"
+            },
+            {
+                "roomTypeId": "RM_SUP_02",
+                "name": "Superior Executive Room",
+                "description": "Executive room with premium city view"
+            }
+        ]
+    }
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #7 | LOG ID: #7 | TIMESTAMP: 2026-09-23T14:06:23.000Z
+API NAME / ACTION: MoreRooms
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/95c6eee6-c05d-476f-ba8e-c74d7547a97a.l4PR0sUSzwkyH6u2T0FGfA/HTL_247124_01/rooms
+HTTP STATUS: 200 | LATENCY: 2013 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "code": "1211",
+    "message": "No rooms found",
+    "status": "failure"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #8 | LOG ID: #8 | TIMESTAMP: 2026-09-23T14:06:25.000Z
+API NAME / ACTION: Pricing_Content
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/95c6eee6-c05d-476f-ba8e-c74d7547a97a.l4PR0sUSzwkyH6u2T0FGfA/HTL_247124_01/content?priceProvider=RATE_KEY_6_DLX_01
+HTTP STATUS: 200 | LATENCY: 1905 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "code": null,
+    "message": "NoContent",
+    "status": "failure"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #9 | LOG ID: #9 | TIMESTAMP: 2026-09-23T14:06:27.000Z
+API NAME / ACTION: Pricing
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/95c6eee6-c05d-476f-ba8e-c74d7547a97a.l4PR0sUSzwkyH6u2T0FGfA/HTL_247124_01/pricing?rateKey=RATE_KEY_6_DLX_01
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "searchId": "95c6eee6-c05d-476f-ba8e-c74d7547a97a.l4PR0sUSzwkyH6u2T0FGfA",
+    "hotelId": "HTL_247124_01",
+    "rateKey": "RATE_KEY_6_DLX_01"
+}
+
+RESPONSE BODY:
+{
+    "priceBreakup": {
+        "basePrice": 15200,
+        "taxes": 1824,
+        "totalPayable": 17024,
+        "currency": "INR"
+    },
+    "rateToken": "RT_TOKEN_b9a49c496aee0daba4e34c7df614498e"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #10 | LOG ID: #10 | TIMESTAMP: 2026-09-23T14:06:30.000Z
+API NAME / ACTION: CreateItinerary
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapihotels.benzyinfotech.com/Hotel/CreateItinerary
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "TUI": "HTUI_e03d440ee8d39b750fc10e11cdd78ee4",
+    "ServiceEnquiry": "",
+    "SpecialServiceRequest": "Non-smoking room",
+    "ContactInfo": {
+        "Title": "Mr",
+        "FName": "Abdul",
+        "LName": "Rahman",
+        "Mobile": "9876543210",
+        "Email": "support@voyogo.com",
+        "Address": "Voyogo Online Travel, Mumbai",
+        "State": "Maharashtra",
+        "City": "Bengaluru",
+        "PIN": "400001",
+        "CountryCode": "IN",
+        "MobileCountryCode": "+91"
+    },
+    "Rooms": [
+        {
+            "RoomId": "RM_DLX_01",
+            "GuestCode": "|1|2:A:25:25|2:C:3:6|",
+            "SupplierName": "Rakuten",
+            "RoomGroupId": "RGRP_6",
+            "Guests": [
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mr",
+                    "FirstName": "Abdul",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "A",
+                    "Age": "25",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mr",
+                    "FirstName": "Abdul",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "A",
+                    "Age": "25",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mstr",
+                    "FirstName": "Child",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "C",
+                    "Age": "3",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mstr",
+                    "FirstName": "Child",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "C",
+                    "Age": "6",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                }
+            ]
+        },
+        {
+            "RoomId": "RM_DLX_01",
+            "GuestCode": "|2|2:A:25:25|2:C:5:8|",
+            "SupplierName": "Rakuten",
+            "RoomGroupId": "RGRP_6",
+            "Guests": [
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mr",
+                    "FirstName": "Abdul",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "A",
+                    "Age": "25",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mr",
+                    "FirstName": "Abdul",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "A",
+                    "Age": "25",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mstr",
+                    "FirstName": "Child",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "C",
+                    "Age": "5",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mstr",
+                    "FirstName": "Child",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "C",
+                    "Age": "8",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                }
+            ]
+        }
+    ],
+    "NetAmount": "17024"
+}
+
+RESPONSE BODY:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "TransactionID": 428106,
+    "TUI": "HTUI_e03d440ee8d39b750fc10e11cdd78ee4",
+    "Status": "ItineraryCreated",
+    "TotalPayable": 17024
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #11 | LOG ID: #11 | TIMESTAMP: 2026-09-23T14:06:33.000Z
+API NAME / ACTION: StartPay
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapiflights.benzyinfotech.com/Payment/StartPay
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "TransactionID": 428106,
+    "TUI": "HTUI_e03d440ee8d39b750fc10e11cdd78ee4",
+    "Amount": 17024,
+    "PaymentMode": "Deposit"
+}
+
+RESPONSE BODY:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "TransactionID": 428106,
+    "TUI": "HTUI_e03d440ee8d39b750fc10e11cdd78ee4",
+    "CRSPNR": "TestBooking",
+    "BookingStatus": "B0",
+    "HotelConfirmationNumber": "TestBooking",
+    "CurrentStatus": "Success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #12 | LOG ID: #12 | TIMESTAMP: 2026-09-23T14:06:34.000Z
+API NAME / ACTION: RetrieveBooking
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapiflights.benzyinfotech.com/Utils/RetrieveBooking
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "TUI": "HTUI_e03d440ee8d39b750fc10e11cdd78ee4",
+    "TransactionID": 428106
+}
+
+RESPONSE BODY:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "BookingConfirmationId": "TestBooking",
+    "HotelConfirmationNumber": "TestBooking",
+    "Status": "Confirmed",
+    "CurrentStatus": "B0",
+    "CheckIn": "09/30/2026",
+    "CheckOut": "10/02/2026",
+    "Rooms": 2,
+    "Adults": 4,
+    "Children": 4,
+    "HotelName": "Grand Palace Hotel & Resort Bengaluru",
+    "LeadGuest": "Mr Abdul Rahman",
+    "TotalAmount": 17024,
+    "Currency": "INR"
+}
+================================================================================
+

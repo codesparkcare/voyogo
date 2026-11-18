@@ -151,6 +151,14 @@
                 </div>
               </div>
 
+              <!-- Your Location -->
+              <div class="ref-form-group">
+                <div class="ref-input-box">
+                  <i class="fa-solid fa-location-crosshairs ref-input-icon"></i>
+                  <input type="text" name="your_location" class="ref-input" placeholder="Your Location *" required>
+                </div>
+              </div>
+
               <!-- Travel Destination -->
               <div class="ref-form-group">
                 <div class="ref-input-box">
@@ -168,8 +176,8 @@
                 </div>
               </div>
 
-              <!-- No. of People & Submit -->
-              <div class="holidays-submit-row">
+              <!-- No. of People -->
+              <div class="ref-form-group">
                 <div class="ref-input-box">
                   <i class="fa-solid fa-users ref-input-icon"></i>
                   <select name="passengers" class="ref-select" required>
@@ -180,8 +188,12 @@
                     <option value="6+ People (Group)">6+ People (Group)</option>
                   </select>
                 </div>
-                <button type="submit" class="ref-btn-submit">
-                  <i class="fa-solid fa-paper-plane"></i> SEND ENQUIRY
+              </div>
+
+              <!-- Submit Button -->
+              <div class="ref-form-group">
+                <button type="submit" class="ref-btn-submit" style="width: 100%; height: 100%; min-height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                  <i class="fa-solid fa-plus"></i> ADD ENQUIRY
                 </button>
               </div>
 
@@ -1242,6 +1254,10 @@
 
       <div class="pill-form-group">
         <input type="email" name="email" class="pill-input" placeholder="Email" required>
+      </div>
+
+      <div class="pill-form-group">
+        <input type="text" name="your_location" class="pill-input" placeholder="Your Location *" required>
       </div>
 
       <div class="pill-form-group">

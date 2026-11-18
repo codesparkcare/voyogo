@@ -176,14 +176,14 @@
     color: #15803d;
 }
 
-/* Stat Cards (4 Cards Balanced) */
+/* Stat Cards (3 Cards Balanced) */
 .gt-stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
     margin-bottom: 20px;
 }
-@media (max-width: 1280px) {
+@media (max-width: 991px) {
     .gt-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 680px) {
@@ -455,7 +455,7 @@
         </a>
         <a href="<?php echo site_url('franchise/group-tours'); ?>" class="gt-nav-link active">
             <i class="fa-solid fa-users-rectangle" style="color: #ea580c;"></i>
-            <span>Group Tour Follow Up</span>
+            <span>Group Tours List</span>
         </a>
     </aside>
 
@@ -468,7 +468,7 @@
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap;">
                     <h1 class="gt-title">
                         <i class="fa-solid fa-users-rectangle" style="color: #78B722;"></i>
-                        Group Tour Follow Up
+                        Group Tours List
                     </h1>
                     <span class="gt-live-tag">
                         <span class="gt-pulse-dot"></span> Live Departure Board
@@ -496,7 +496,7 @@
             </div>
         </div>
 
-        <!-- KPI Summary Stat Cards (All 4 Cards Fully Visible in Row) -->
+        <!-- KPI Summary Stat Cards (All 3 Cards Fully Visible in Row) -->
         <div class="gt-stats-grid">
             <div class="gt-stat-card">
                 <div class="gt-stat-icon" style="background: #eff6ff; color: #2563eb;">
@@ -513,7 +513,7 @@
                     <i class="fa-solid fa-users"></i>
                 </div>
                 <div>
-                    <div class="gt-stat-label">Block Capacity (Grp. Tkn)</div>
+                    <div class="gt-stat-label">Block Capacity (Grp. Size)</div>
                     <div class="gt-stat-val"><?php echo number_format((float)($stats['total_grp_tkn'] ?? 0)); ?></div>
                 </div>
             </div>
@@ -525,16 +525,6 @@
                 <div>
                     <div class="gt-stat-label">Total Seats Needed</div>
                     <div class="gt-stat-val" style="color: #ea580c;"><?php echo number_format((float)($stats['total_needed'] ?? 0)); ?></div>
-                </div>
-            </div>
-
-            <div class="gt-stat-card">
-                <div class="gt-stat-icon" style="background: #fdf2f8; color: #db2777;">
-                    <i class="fa-solid fa-passport"></i>
-                </div>
-                <div>
-                    <div class="gt-stat-label">Visa Processing Pending</div>
-                    <div class="gt-stat-val" style="color: #db2777;"><?php echo number_format((float)($stats['visa_pending_count'] ?? 0)); ?></div>
                 </div>
             </div>
         </div>
@@ -575,10 +565,10 @@
                             <th>COUNTRY NAME</th>
                             <th>TOUR AMOUNT</th>
                             <th>CONFIRMED</th>
-                            <th>GRP. TKN</th>
+                            <th>GRP. SIZE</th>
                             <th>NEED</th>
-                            <th>45 DAYS REMINDER</th>
-                            <th>30 DAYS REMINDER</th>
+                            <th>FINAL DATE TO CLOSE THE GROUP</th>
+                            <th>TICKET STATUS</th>
                         </tr>
                     </thead>
                     <tbody id="tourTableBody">
@@ -677,24 +667,29 @@
                                 </span>
                             </td>
 
-                            <!-- 9. 45 DAYS REMINDER -->
+                            <!-- 9. FINAL DATE TO CLOSE THE GROUP -->
                             <td>
-                                <?php if (!empty($t['reminder_45']) && $t['reminder_45'] !== '-'): ?>
+                                <?php 
+                                $finalDate = trim((string)($t['final_date'] ?? ($t['reminder_45'] ?? '')));
+                                if (!empty($finalDate) && $finalDate !== '-'): 
+                                ?>
                                     <span style="background: #fef9c3; color: #854d0e; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
                                         <i class="fa-regular fa-bell" style="font-size: 10px;"></i>
-                                        <?php echo htmlspecialchars($t['reminder_45']); ?>
+                                        <?php echo htmlspecialchars($finalDate); ?>
                                     </span>
                                 <?php else: ?>
                                     <span style="color: #cbd5e1;">-</span>
                                 <?php endif; ?>
                             </td>
 
-                            <!-- 10. 30 DAYS REMINDER -->
+                            <!-- 10. TICKET STATUS -->
                             <td>
-                                <?php if (!empty($t['reminder_30']) && $t['reminder_30'] !== '-'): ?>
-                                    <span style="background: #fee2e2; color: #991b1b; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
-                                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 10px;"></i>
-                                        <?php echo htmlspecialchars($t['reminder_30']); ?>
+                                <?php 
+                                $tktStatus = trim((string)($t['ticket_status'] ?? ''));
+                                if (!empty($tktStatus) && $tktStatus !== '-'): 
+                                ?>
+                                    <span class="badge-status <?php echo (stripos($tktStatus, 'ONLINE') !== false) ? 'visa-include' : 'ticket-taken'; ?>">
+                                        <?php echo htmlspecialchars($tktStatus); ?>
                                     </span>
                                 <?php else: ?>
                                     <span style="color: #cbd5e1;">-</span>
@@ -784,7 +779,7 @@ function exportTableToExcel() {
     const rows = [];
     rows.push([
         'S. NO', 'DATE', 'TOUR CODE', 'COUNTRY NAME', 'TOUR AMOUNT',
-        'CONFIRMED', 'GRP. TKN', 'NEED', '45 DAYS REMINDER', '30 DAYS REMINDER'
+        'CONFIRMED', 'GRP. SIZE', 'NEED', 'FINAL DATE TO CLOSE THE GROUP', 'TICKET STATUS'
     ]);
 
     const dataRows = document.querySelectorAll('.tour-data-row');

@@ -86,8 +86,8 @@
             <input type="hidden" name="message" value="Cruise Booking Enquiry">
             <input type="hidden" name="cabin_type" id="selectedCabinTypeInput" value="Interior Cabin">
 
-            <!-- Row 1: Name, Mobile, Email (3-col) -->
-            <div class="cruises-grid-3col">
+            <!-- Row 1: Name, Mobile, Email, Location (4-col) -->
+            <div class="cruises-grid-4col">
               <div class="ref-form-group">
                 <label class="ref-label">Full Name <span class="ref-req">*</span></label>
                 <div class="ref-input-box">
@@ -147,6 +147,14 @@
                 <div class="ref-input-box">
                   <i class="fa-solid fa-envelope ref-input-icon"></i>
                   <input type="email" name="email" class="ref-input" placeholder="Enter your email address" required>
+                </div>
+              </div>
+
+              <div class="ref-form-group">
+                <label class="ref-label">Your Location <span class="ref-req">*</span></label>
+                <div class="ref-input-box">
+                  <i class="fa-solid fa-location-crosshairs ref-input-icon"></i>
+                  <input type="text" name="your_location" class="ref-input" placeholder="Your City / Location" required>
                 </div>
               </div>
             </div>
@@ -773,6 +781,12 @@
             <label class="cruise-form-label">Email Address <span class="req-star">*</span></label>
             <input type="email" name="email" class="cruise-input" placeholder="Email Address" required>
           </div>
+        </div>
+
+        <!-- Your Location * -->
+        <div class="cruise-form-group">
+          <label class="cruise-form-label">Your Location <span class="req-star">*</span></label>
+          <input type="text" name="your_location" class="cruise-input" placeholder="Your City / Location" required>
         </div>
 
         <!-- Cruise Destination * -->

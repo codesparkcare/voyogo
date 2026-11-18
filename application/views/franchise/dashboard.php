@@ -12,7 +12,7 @@
         </a>
         <a href="<?php echo site_url('franchise/group-tours'); ?>" class="f-side-link">
             <i class="fa-solid fa-users-rectangle"></i>
-            <span><span class="f-side-text-desktop">Group Tour Follow Up</span><span class="f-side-text-mobile">Group Tours</span></span>
+            <span><span class="f-side-text-desktop">Group Tours List</span><span class="f-side-text-mobile">Group Tours</span></span>
         </a>
     </div>
 

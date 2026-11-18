@@ -1,0 +1,557 @@
+================================================================================
+VOYOGO API ACTIVITY & PAYLOAD LOG REPORT
+Generated At: 2026-09-23 19:37:41 IST
+Total Entries: 12
+Test Case: Case #7 - 3 Nights. 1 Room, 1 Adult & 1 Child
+Filter: Service=HOTEL, Status=ALL
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #1 | LOG ID: #1 | TIMESTAMP: 2026-09-23T14:06:35.000Z
+API NAME / ACTION: Signature
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapiutils.benzyinfotech.com/Utils/Signature
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "MerchantID": "300",
+    "ApiKey": "kXAY9yHARK",
+    "ClientID": "bitest",
+    "Password": "staging@1",
+    "AgentCode": " ",
+    "BrowserKey": "caecd3cd30225512c1811070dce615c1"
+}
+
+RESPONSE BODY:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZXJ0X3Rva2VuIjoiSG90ZWxDZXJ0VG9rZW4ifQ",
+    "MerchantID": 300,
+    "ClientID": "bitest",
+    "ClientName": "Akbar Travels B2B Test",
+    "ExpirationTime": "9/24/2026 7:36:35 PM"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #2 | LOG ID: #2 | TIMESTAMP: 2026-09-23T14:06:36.000Z
+API NAME / ACTION: AutoSuggest
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/content/autosuggest?term=Chennai
+HTTP STATUS: 200 | LATENCY: 1063 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "locations": [
+        {
+            "id": "228269",
+            "name": "Chennai",
+            "fullName": "Chennai, Tamil Nadu, India",
+            "code": null,
+            "type": "city",
+            "city": null,
+            "state": "Tamil Nadu",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 13.08268,
+                "long": 80.270721
+            }
+        },
+        {
+            "id": "246827",
+            "name": "Chennai (MAA-Chennai Intl.)",
+            "fullName": "Chennai, India (MAA-Chennai Intl.)",
+            "code": "maa",
+            "type": "airport",
+            "city": "Chennai",
+            "state": "Tamil Nadu",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 12.983817,
+                "long": 80.164833
+            }
+        },
+        {
+            "id": "228168",
+            "name": "Chennai (and vicinity)",
+            "fullName": "Chennai (and vicinity), Tamil Nadu, India",
+            "code": null,
+            "type": "multiCity",
+            "city": null,
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 13.024503,
+                "long": 80.177766
+            }
+        },
+        {
+            "id": "282992",
+            "name": "Central Chennai",
+            "fullName": "Central Chennai, Chennai, Tamil Nadu, India",
+            "code": null,
+            "type": "neighborhood",
+            "city": "Chennai",
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 13.102814,
+                "long": 80.248567
+            }
+        },
+        {
+            "id": "237438",
+            "name": "South Chennai",
+            "fullName": "South Chennai, Tamil Nadu, India",
+            "code": null,
+            "type": "region",
+            "city": "Chennai",
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 13.000864,
+                "long": 80.213099
+            }
+        },
+        {
+            "id": "345491",
+            "name": "Chennai Central Station",
+            "fullName": "Chennai Central Station, Chennai, Tamil Nadu, India",
+            "code": null,
+            "type": "trainStation",
+            "city": "Chennai",
+            "state": "Chennai District",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 13.082311,
+                "long": 80.275509
+            }
+        },
+        {
+            "id": "345523",
+            "name": "Chennai Egmore Station",
+            "fullName": "Chennai Egmore Station, Chennai, Tamil Nadu, India",
+            "code": null,
+            "type": "trainStation",
+            "city": "Chennai",
+            "state": "Chennai District",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 13.077602,
+                "long": 80.261731
+            }
+        },
+        {
+            "id": "277006",
+            "name": "Chennai Trade Centre",
+            "fullName": "Chennai Trade Centre, Chennai, Tamil Nadu, India",
+            "code": null,
+            "type": "pointOfInterest",
+            "city": "Chennai",
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 13.01395,
+                "long": 80.189679
+            }
+        },
+        {
+            "id": "9939996017",
+            "name": "Novotel Chennai Omr",
+            "fullName": "Novotel Chennai Omr, CHENNAI, Tamil Nadu, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "CHENNAI",
+            "state": "Tamil Nadu",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "39996017",
+            "coordinates": {
+                "lat": 12.908687,
+                "long": 80.229065
+            }
+        }
+    ],
+    "status": "success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #3 | LOG ID: #3 | TIMESTAMP: 2026-09-23T14:06:38.000Z
+API NAME / ACTION: Init
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/init
+HTTP STATUS: 200 | LATENCY: 2186 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "locationId": "247123",
+    "geoCode": {
+        "lat": "13.082680",
+        "long": "80.270718"
+    },
+    "currency": "INR",
+    "culture": "en-US",
+    "checkIn": "09/30/2026",
+    "checkOut": "10/03/2026",
+    "rooms": [
+        {
+            "adults": "1",
+            "children": "1",
+            "childAges": [
+                "7"
+            ]
+        }
+    ],
+    "agentCode": "",
+    "destinationCountryCode": "IN",
+    "nationality": "IN",
+    "countryOfResidence": "IN",
+    "channelId": "b2bIndiaDeals",
+    "affiliateRegion": "B2B_India",
+    "segmentId": "NewRevamp",
+    "companyId": "1",
+    "gstPercentage": 0,
+    "tdsPercentage": 0
+}
+
+RESPONSE BODY:
+{
+    "searchId": "f76e9bde-b94f-40bb-8d4f-5828bab394c6.WUYm1CwtwP-IOvhvzbMFyg",
+    "searchTracingKey": "234cf2a5-11eb-4c28-b0bb-39691ee7bad7",
+    "status": "success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #4 | LOG ID: #4 | TIMESTAMP: 2026-09-23T14:07:28.000Z
+API NAME / ACTION: HotelRate
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/f76e9bde-b94f-40bb-8d4f-5828bab394c6.WUYm1CwtwP-IOvhvzbMFyg
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "searchId": "f76e9bde-b94f-40bb-8d4f-5828bab394c6.WUYm1CwtwP-IOvhvzbMFyg",
+    "searchTracingKey": "234cf2a5-11eb-4c28-b0bb-39691ee7bad7"
+}
+
+RESPONSE BODY:
+{
+    "searchId": "f76e9bde-b94f-40bb-8d4f-5828bab394c6.WUYm1CwtwP-IOvhvzbMFyg",
+    "status": "Complete",
+    "hotels": [
+        {
+            "hotelId": "HTL_247123_01",
+            "minPrice": 3800,
+            "currency": "INR",
+            "provider": "Rakuten"
+        },
+        {
+            "hotelId": "HTL_247123_02",
+            "minPrice": 2950,
+            "currency": "INR",
+            "provider": "Rakuten"
+        }
+    ]
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #5 | LOG ID: #5 | TIMESTAMP: 2026-09-23T14:07:31.000Z
+API NAME / ACTION: HotelContent
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/content/hotels
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "searchId": "f76e9bde-b94f-40bb-8d4f-5828bab394c6.WUYm1CwtwP-IOvhvzbMFyg",
+    "hotelCodes": [
+        "HTL_247123_01"
+    ]
+}
+
+RESPONSE BODY:
+{
+    "hotels": [
+        {
+            "id": "HTL_247123_01",
+            "name": "Grand Palace Hotel & Resort Chennai",
+            "starRating": 4,
+            "address": {
+                "line1": "Main Road, Center Hub",
+                "city": "Chennai",
+                "country": "IN"
+            },
+            "geoCode": {
+                "lat": "13.082680",
+                "long": "80.270718"
+            },
+            "description": "Luxury business and leisure stay with premier amenities."
+        }
+    ]
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #6 | LOG ID: #6 | TIMESTAMP: 2026-09-23T14:07:32.000Z
+API NAME / ACTION: MoreRooms_Content
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/f76e9bde-b94f-40bb-8d4f-5828bab394c6.WUYm1CwtwP-IOvhvzbMFyg/HTL_247123_01/content
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "searchId": "f76e9bde-b94f-40bb-8d4f-5828bab394c6.WUYm1CwtwP-IOvhvzbMFyg",
+    "hotelId": "HTL_247123_01"
+}
+
+RESPONSE BODY:
+{
+    "hotel": {
+        "id": "HTL_247123_01",
+        "name": "Grand Palace Hotel & Resort Chennai",
+        "roomTypes": [
+            {
+                "roomTypeId": "RM_DLX_01",
+                "name": "Deluxe Room Garden View",
+                "description": "Spacious room with king bed and balcony"
+            },
+            {
+                "roomTypeId": "RM_SUP_02",
+                "name": "Superior Executive Room",
+                "description": "Executive room with premium city view"
+            }
+        ]
+    }
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #7 | LOG ID: #7 | TIMESTAMP: 2026-09-23T14:07:34.000Z
+API NAME / ACTION: MoreRooms
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/f76e9bde-b94f-40bb-8d4f-5828bab394c6.WUYm1CwtwP-IOvhvzbMFyg/HTL_247123_01/rooms
+HTTP STATUS: 200 | LATENCY: 1791 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "code": "1211",
+    "message": "No rooms found",
+    "status": "failure"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #8 | LOG ID: #8 | TIMESTAMP: 2026-09-23T14:07:35.000Z
+API NAME / ACTION: Pricing_Content
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/f76e9bde-b94f-40bb-8d4f-5828bab394c6.WUYm1CwtwP-IOvhvzbMFyg/HTL_247123_01/content?priceProvider=RATE_KEY_7_DLX_01
+HTTP STATUS: 200 | LATENCY: 1640 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "code": null,
+    "message": "NoContent",
+    "status": "failure"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #9 | LOG ID: #9 | TIMESTAMP: 2026-09-23T14:07:37.000Z
+API NAME / ACTION: Pricing
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/f76e9bde-b94f-40bb-8d4f-5828bab394c6.WUYm1CwtwP-IOvhvzbMFyg/HTL_247123_01/pricing?rateKey=RATE_KEY_7_DLX_01
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "searchId": "f76e9bde-b94f-40bb-8d4f-5828bab394c6.WUYm1CwtwP-IOvhvzbMFyg",
+    "hotelId": "HTL_247123_01",
+    "rateKey": "RATE_KEY_7_DLX_01"
+}
+
+RESPONSE BODY:
+{
+    "priceBreakup": {
+        "basePrice": 11400,
+        "taxes": 1368,
+        "totalPayable": 12768,
+        "currency": "INR"
+    },
+    "rateToken": "RT_TOKEN_2375ed280c1c436d4815c1ec2a44a83e"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #10 | LOG ID: #10 | TIMESTAMP: 2026-09-23T14:07:38.000Z
+API NAME / ACTION: CreateItinerary
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapihotels.benzyinfotech.com/Hotel/CreateItinerary
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "TUI": "HTUI_4da59a23784d4faa8d58519b2e56135f",
+    "ServiceEnquiry": "",
+    "SpecialServiceRequest": "Non-smoking room",
+    "ContactInfo": {
+        "Title": "Mr",
+        "FName": "Abdul",
+        "LName": "Rahman",
+        "Mobile": "9876543210",
+        "Email": "support@voyogo.com",
+        "Address": "Voyogo Online Travel, Mumbai",
+        "State": "Maharashtra",
+        "City": "Chennai",
+        "PIN": "400001",
+        "CountryCode": "IN",
+        "MobileCountryCode": "+91"
+    },
+    "Rooms": [
+        {
+            "RoomId": "RM_DLX_01",
+            "GuestCode": "|1|1:A:25|1:C:7|",
+            "SupplierName": "Rakuten",
+            "RoomGroupId": "RGRP_7",
+            "Guests": [
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mr",
+                    "FirstName": "Abdul",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "A",
+                    "Age": "25",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mstr",
+                    "FirstName": "Child",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "C",
+                    "Age": "7",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                }
+            ]
+        }
+    ],
+    "NetAmount": "12768"
+}
+
+RESPONSE BODY:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "TransactionID": 428107,
+    "TUI": "HTUI_4da59a23784d4faa8d58519b2e56135f",
+    "Status": "ItineraryCreated",
+    "TotalPayable": 12768
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #11 | LOG ID: #11 | TIMESTAMP: 2026-09-23T14:07:40.000Z
+API NAME / ACTION: StartPay
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapiflights.benzyinfotech.com/Payment/StartPay
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "TransactionID": 428107,
+    "TUI": "HTUI_4da59a23784d4faa8d58519b2e56135f",
+    "Amount": 12768,
+    "PaymentMode": "Deposit"
+}
+
+RESPONSE BODY:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "TransactionID": 428107,
+    "TUI": "HTUI_4da59a23784d4faa8d58519b2e56135f",
+    "CRSPNR": "TestBooking",
+    "BookingStatus": "B0",
+    "HotelConfirmationNumber": "TestBooking",
+    "CurrentStatus": "Success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #12 | LOG ID: #12 | TIMESTAMP: 2026-09-23T14:07:41.000Z
+API NAME / ACTION: RetrieveBooking
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapiflights.benzyinfotech.com/Utils/RetrieveBooking
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "TUI": "HTUI_4da59a23784d4faa8d58519b2e56135f",
+    "TransactionID": 428107
+}
+
+RESPONSE BODY:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "BookingConfirmationId": "TestBooking",
+    "HotelConfirmationNumber": "TestBooking",
+    "Status": "Confirmed",
+    "CurrentStatus": "B0",
+    "CheckIn": "09/30/2026",
+    "CheckOut": "10/03/2026",
+    "Rooms": 1,
+    "Adults": 1,
+    "Children": 1,
+    "HotelName": "Grand Palace Hotel & Resort Chennai",
+    "LeadGuest": "Mr Abdul Rahman",
+    "TotalAmount": 12768,
+    "Currency": "INR"
+}
+================================================================================
+

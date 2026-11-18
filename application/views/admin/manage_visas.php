@@ -264,6 +264,11 @@ if (!function_exists('visa_page_url')) {
                                     </a>
                                 </div>
                             <?php endif; ?>
+                            <?php if (!empty($e['user_location'])): ?>
+                                <div class="mt-0.5 text-secondary small" style="font-size: 11px;">
+                                    <i class="fa-solid fa-location-dot text-danger" style="font-size: 10px;"></i> <?php echo htmlspecialchars($e['user_location']); ?>
+                                </div>
+                            <?php endif; ?>
                         </td>
 
                         <!-- Destination -->
@@ -366,6 +371,14 @@ if (!function_exists('visa_page_url')) {
                                                             <?php else: ?>
                                                                 <span class="text-muted">Not provided</span>
                                                             <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="detail-box">
+                                                        <div class="detail-label"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Applicant Location</div>
+                                                        <div class="detail-val">
+                                                            <?php echo !empty($e['user_location']) ? htmlspecialchars($e['user_location']) : '<span class="text-muted">Not specified</span>'; ?>
                                                         </div>
                                                     </div>
                                                 </div>

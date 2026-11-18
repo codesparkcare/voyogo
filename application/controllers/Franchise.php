@@ -3540,6 +3540,10 @@ class Franchise extends CI_Controller {
     // =========================================================================
     // 5. GROUP TOUR FOLLOW UP (READ-ONLY FOR FRANCHISE STORE OWNERS)
     // =========================================================================
+    public function group_tour_follow_up() {
+        return $this->group_tours();
+    }
+
     public function group_tours() {
         $store = $this->_check_auth();
 

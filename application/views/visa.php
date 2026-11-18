@@ -29,7 +29,7 @@
       <div class="ref-hero-header-row">
         <!-- Destination Info Left -->
         <div class="ref-hero-text-block">
-          <h1 class="ref-dest-title">Schengen &<br>Europe Visa</h1>
+          <h1 class="ref-dest-title">Schengen &<br>UK Visa</h1>
           <p class="ref-dest-subtitle">Travel Across 27 European Countries with One Visa</p>
 
           <div class="ref-feature-pills">
@@ -141,6 +141,14 @@
                   </div>
                 </div>
 
+                <!-- Your Location -->
+                <div class="ref-form-group">
+                  <div class="ref-input-box">
+                    <i class="fa-solid fa-location-crosshairs ref-input-icon"></i>
+                    <input type="text" name="your_location" class="ref-input" placeholder="Your Location *" required>
+                  </div>
+                </div>
+
                 <!-- Destination Country -->
                 <div class="ref-form-group">
                   <div class="ref-input-box">
@@ -158,7 +166,7 @@
                 </div>
 
                 <!-- Number of Travelers -->
-                <div class="ref-form-group">
+                <div class="ref-form-group" style="grid-column: 1 / -1;">
                   <div class="ref-input-box">
                     <i class="fa-solid fa-users ref-input-icon"></i>
                     <select name="passengers" class="ref-select" required>
@@ -540,6 +548,11 @@
         <!-- 3. Email Address * -->
         <div class="pill-form-group">
           <input type="email" name="email" class="pill-input" placeholder="Email Address *" required>
+        </div>
+
+        <!-- Your Location * -->
+        <div class="pill-form-group">
+          <input type="text" name="your_location" class="pill-input" placeholder="Your Location *" required>
         </div>
 
         <!-- 4. Destination Country * -->

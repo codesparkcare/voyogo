@@ -246,6 +246,9 @@ if (!function_exists('holiday_page_url')) {
                                     <?php if (!empty($e['email'])): ?>
                                         <div class="text-muted small" style="font-size: 11px;"><?php echo htmlspecialchars($e['email']); ?></div>
                                     <?php endif; ?>
+                                    <?php if (!empty($e['user_location'])): ?>
+                                        <div class="text-secondary small" style="font-size: 11px;"><i class="fa-solid fa-location-dot text-danger me-1"></i><?php echo htmlspecialchars($e['user_location']); ?></div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </td>
@@ -346,6 +349,14 @@ if (!function_exists('holiday_page_url')) {
                                                         <div class="detail-label"><i class="fa-solid fa-envelope me-1 text-success"></i> Email Address</div>
                                                         <div class="detail-val">
                                                             <?php echo !empty($e['email']) ? htmlspecialchars($e['email']) : '<span class="text-muted">Not provided</span>'; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="detail-box">
+                                                        <div class="detail-label"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Customer Location</div>
+                                                        <div class="detail-val">
+                                                            <?php echo !empty($e['user_location']) ? htmlspecialchars($e['user_location']) : '<span class="text-muted">Not specified</span>'; ?>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -1,0 +1,614 @@
+================================================================================
+VOYOGO API ACTIVITY & PAYLOAD LOG REPORT
+Generated At: 2026-09-23 19:35:23 IST
+Total Entries: 12
+Test Case: Case #5 - 2 Rooms, 1 Adult & 1 Child per Room
+Filter: Service=HOTEL, Status=ALL
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #1 | LOG ID: #1 | TIMESTAMP: 2026-09-23T14:04:10.000Z
+API NAME / ACTION: Signature
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapiutils.benzyinfotech.com/Utils/Signature
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "MerchantID": "300",
+    "ApiKey": "kXAY9yHARK",
+    "ClientID": "bitest",
+    "Password": "staging@1",
+    "AgentCode": " ",
+    "BrowserKey": "caecd3cd30225512c1811070dce615c1"
+}
+
+RESPONSE BODY:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZXJ0X3Rva2VuIjoiSG90ZWxDZXJ0VG9rZW4ifQ",
+    "MerchantID": 300,
+    "ClientID": "bitest",
+    "ClientName": "Akbar Travels B2B Test",
+    "ExpirationTime": "9/24/2026 7:34:10 PM"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #2 | LOG ID: #2 | TIMESTAMP: 2026-09-23T14:04:11.000Z
+API NAME / ACTION: AutoSuggest
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/content/autosuggest?term=Delhi
+HTTP STATUS: 200 | LATENCY: 1038 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "locations": [
+        {
+            "id": "227760",
+            "name": "New Delhi",
+            "fullName": "New Delhi, National Capital Territory of Delhi, India",
+            "code": null,
+            "type": "city",
+            "city": null,
+            "state": "National Capital Territory of Delhi",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 28.613939,
+                "long": 77.209023
+            }
+        },
+        {
+            "id": "329039",
+            "name": "North Delhi",
+            "fullName": "North Delhi, National Capital Territory of Delhi, India",
+            "code": null,
+            "type": "state",
+            "city": null,
+            "state": "National Capital Territory of Delhi",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 28.79383,
+                "long": 77.107315
+            }
+        },
+        {
+            "id": "246876",
+            "name": "Delhi (DEL-Indira Gandhi Intl.)",
+            "fullName": "Delhi, India (DEL-Indira Gandhi Intl.)",
+            "code": "del",
+            "type": "airport",
+            "city": "New Delhi",
+            "state": "National Capital Territory of Delhi",
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 28.555741,
+                "long": 77.086145
+            }
+        },
+        {
+            "id": "228112",
+            "name": "Delhi (and vicinity)",
+            "fullName": "Delhi (and vicinity), National Capital Territory of Delhi, India",
+            "code": null,
+            "type": "multiCity",
+            "city": null,
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 28.635308,
+                "long": 77.22496
+            }
+        },
+        {
+            "id": "9972467333",
+            "name": "Hotel Seventh Heaven Delhi",
+            "fullName": "Hotel Seventh Heaven Delhi, New Delhi, Delhi National Territory, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "New Delhi",
+            "state": "Delhi National Territory",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "72467333",
+            "coordinates": {
+                "lat": 28.68084,
+                "long": 77.14987
+            }
+        },
+        {
+            "id": "9954007389",
+            "name": "House Of Comfort Delhi",
+            "fullName": "House Of Comfort Delhi, New Delhi, Delhi National Territory, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "New Delhi",
+            "state": "Delhi National Territory",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "54007389",
+            "coordinates": {
+                "lat": 28.552284,
+                "long": 77.2495
+            }
+        },
+        {
+            "id": "9939676544",
+            "name": "Le Meridien New Delhi",
+            "fullName": "Le Meridien New Delhi, New Delhi, Delhi, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "New Delhi",
+            "state": "Delhi",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "39676544",
+            "coordinates": {
+                "lat": 28.61872,
+                "long": 77.218124
+            }
+        },
+        {
+            "id": "9939658270",
+            "name": "The Imperial New Delhi",
+            "fullName": "The Imperial New Delhi, New Delhi, Delhi N.C.R, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "New Delhi",
+            "state": "Delhi N.C.R",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "39658270",
+            "coordinates": {
+                "lat": 28.625324,
+                "long": 77.21919
+            }
+        },
+        {
+            "id": "9938961237",
+            "name": "Hyatt Regency Delhi",
+            "fullName": "Hyatt Regency Delhi, New Delhi, Delhi, IN",
+            "code": null,
+            "type": "hotel",
+            "city": "New Delhi",
+            "state": "Delhi",
+            "country": "IN",
+            "score": 0,
+            "referenceId": "38961237",
+            "coordinates": {
+                "lat": 28.568521,
+                "long": 77.18526
+            }
+        },
+        {
+            "id": "246902",
+            "name": "New Delhi Station",
+            "fullName": "New Delhi Station, New Delhi, National Capital Territory of Delhi, India",
+            "code": null,
+            "type": "trainStation",
+            "city": "New Delhi",
+            "state": null,
+            "country": "IN",
+            "score": 0,
+            "referenceId": null,
+            "coordinates": {
+                "lat": 28.642818,
+                "long": 77.219054
+            }
+        }
+    ],
+    "status": "success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #3 | LOG ID: #3 | TIMESTAMP: 2026-09-23T14:04:14.000Z
+API NAME / ACTION: Init
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/init
+HTTP STATUS: 200 | LATENCY: 2238 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "locationId": "247076",
+    "geoCode": {
+        "lat": "28.613939",
+        "long": "77.209021"
+    },
+    "currency": "INR",
+    "culture": "en-US",
+    "checkIn": "09/30/2026",
+    "checkOut": "10/02/2026",
+    "rooms": [
+        {
+            "adults": "1",
+            "children": "1",
+            "childAges": [
+                "7"
+            ]
+        },
+        {
+            "adults": "1",
+            "children": "1",
+            "childAges": [
+                "4"
+            ]
+        }
+    ],
+    "agentCode": "",
+    "destinationCountryCode": "IN",
+    "nationality": "IN",
+    "countryOfResidence": "IN",
+    "channelId": "b2bIndiaDeals",
+    "affiliateRegion": "B2B_India",
+    "segmentId": "NewRevamp",
+    "companyId": "1",
+    "gstPercentage": 0,
+    "tdsPercentage": 0
+}
+
+RESPONSE BODY:
+{
+    "searchId": "c9c57275-91b3-4d00-8e8a-ae20c04e11b6.e2X_TIZl3oAnGR3nR966hw",
+    "searchTracingKey": "7f500ad9-1e77-4b76-bdba-ee995a64e743",
+    "status": "success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #4 | LOG ID: #4 | TIMESTAMP: 2026-09-23T14:05:05.000Z
+API NAME / ACTION: HotelRate
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/c9c57275-91b3-4d00-8e8a-ae20c04e11b6.e2X_TIZl3oAnGR3nR966hw
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "searchId": "c9c57275-91b3-4d00-8e8a-ae20c04e11b6.e2X_TIZl3oAnGR3nR966hw",
+    "searchTracingKey": "7f500ad9-1e77-4b76-bdba-ee995a64e743"
+}
+
+RESPONSE BODY:
+{
+    "searchId": "c9c57275-91b3-4d00-8e8a-ae20c04e11b6.e2X_TIZl3oAnGR3nR966hw",
+    "status": "Complete",
+    "hotels": [
+        {
+            "hotelId": "HTL_247076_01",
+            "minPrice": 3800,
+            "currency": "INR",
+            "provider": "Rakuten"
+        },
+        {
+            "hotelId": "HTL_247076_02",
+            "minPrice": 2950,
+            "currency": "INR",
+            "provider": "Rakuten"
+        }
+    ]
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #5 | LOG ID: #5 | TIMESTAMP: 2026-09-23T14:05:08.000Z
+API NAME / ACTION: HotelContent
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/content/hotels
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "searchId": "c9c57275-91b3-4d00-8e8a-ae20c04e11b6.e2X_TIZl3oAnGR3nR966hw",
+    "hotelCodes": [
+        "HTL_247076_01"
+    ]
+}
+
+RESPONSE BODY:
+{
+    "hotels": [
+        {
+            "id": "HTL_247076_01",
+            "name": "Grand Palace Hotel & Resort Delhi",
+            "starRating": 4,
+            "address": {
+                "line1": "Main Road, Center Hub",
+                "city": "Delhi",
+                "country": "IN"
+            },
+            "geoCode": {
+                "lat": "28.613939",
+                "long": "77.209021"
+            },
+            "description": "Luxury business and leisure stay with premier amenities."
+        }
+    ]
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #6 | LOG ID: #6 | TIMESTAMP: 2026-09-23T14:05:09.000Z
+API NAME / ACTION: MoreRooms_Content
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/c9c57275-91b3-4d00-8e8a-ae20c04e11b6.e2X_TIZl3oAnGR3nR966hw/HTL_247076_01/content
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "searchId": "c9c57275-91b3-4d00-8e8a-ae20c04e11b6.e2X_TIZl3oAnGR3nR966hw",
+    "hotelId": "HTL_247076_01"
+}
+
+RESPONSE BODY:
+{
+    "hotel": {
+        "id": "HTL_247076_01",
+        "name": "Grand Palace Hotel & Resort Delhi",
+        "roomTypes": [
+            {
+                "roomTypeId": "RM_DLX_01",
+                "name": "Deluxe Room Garden View",
+                "description": "Spacious room with king bed and balcony"
+            },
+            {
+                "roomTypeId": "RM_SUP_02",
+                "name": "Superior Executive Room",
+                "description": "Executive room with premium city view"
+            }
+        ]
+    }
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #7 | LOG ID: #7 | TIMESTAMP: 2026-09-23T14:05:11.000Z
+API NAME / ACTION: MoreRooms
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/c9c57275-91b3-4d00-8e8a-ae20c04e11b6.e2X_TIZl3oAnGR3nR966hw/HTL_247076_01/rooms
+HTTP STATUS: 200 | LATENCY: 1808 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "code": "1211",
+    "message": "No rooms found",
+    "status": "failure"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #8 | LOG ID: #8 | TIMESTAMP: 2026-09-23T14:05:13.000Z
+API NAME / ACTION: Pricing_Content
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/c9c57275-91b3-4d00-8e8a-ae20c04e11b6.e2X_TIZl3oAnGR3nR966hw/HTL_247076_01/content?priceProvider=RATE_KEY_5_DLX_01
+HTTP STATUS: 200 | LATENCY: 1804 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+[]
+
+RESPONSE BODY:
+{
+    "code": null,
+    "message": "NoContent",
+    "status": "failure"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #9 | LOG ID: #9 | TIMESTAMP: 2026-09-23T14:05:15.000Z
+API NAME / ACTION: Pricing
+SERVICE: HOTEL | METHOD: GET
+ENDPOINT URL: https://travelportalapi.benzyinfotech.com/api/hotels/search/result/c9c57275-91b3-4d00-8e8a-ae20c04e11b6.e2X_TIZl3oAnGR3nR966hw/HTL_247076_01/pricing?rateKey=RATE_KEY_5_DLX_01
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "searchId": "c9c57275-91b3-4d00-8e8a-ae20c04e11b6.e2X_TIZl3oAnGR3nR966hw",
+    "hotelId": "HTL_247076_01",
+    "rateKey": "RATE_KEY_5_DLX_01"
+}
+
+RESPONSE BODY:
+{
+    "priceBreakup": {
+        "basePrice": 15200,
+        "taxes": 1824,
+        "totalPayable": 17024,
+        "currency": "INR"
+    },
+    "rateToken": "RT_TOKEN_743eb113efd61664218d747309a9a550"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #10 | LOG ID: #10 | TIMESTAMP: 2026-09-23T14:05:18.000Z
+API NAME / ACTION: CreateItinerary
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapihotels.benzyinfotech.com/Hotel/CreateItinerary
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "TUI": "HTUI_efa247f9c5659b690150daafe56ccaf5",
+    "ServiceEnquiry": "",
+    "SpecialServiceRequest": "Non-smoking room",
+    "ContactInfo": {
+        "Title": "Mr",
+        "FName": "Abdul",
+        "LName": "Rahman",
+        "Mobile": "9876543210",
+        "Email": "support@voyogo.com",
+        "Address": "Voyogo Online Travel, Mumbai",
+        "State": "Maharashtra",
+        "City": "Delhi",
+        "PIN": "400001",
+        "CountryCode": "IN",
+        "MobileCountryCode": "+91"
+    },
+    "Rooms": [
+        {
+            "RoomId": "RM_DLX_01",
+            "GuestCode": "|1|1:A:25|1:C:7|",
+            "SupplierName": "Rakuten",
+            "RoomGroupId": "RGRP_5",
+            "Guests": [
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mr",
+                    "FirstName": "Abdul",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "A",
+                    "Age": "25",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mstr",
+                    "FirstName": "Child",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "C",
+                    "Age": "7",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                }
+            ]
+        },
+        {
+            "RoomId": "RM_DLX_01",
+            "GuestCode": "|2|1:A:25|1:C:4|",
+            "SupplierName": "Rakuten",
+            "RoomGroupId": "RGRP_5",
+            "Guests": [
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mr",
+                    "FirstName": "Abdul",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "A",
+                    "Age": "25",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                },
+                {
+                    "GuestID": "0",
+                    "Operation": "U",
+                    "Title": "Mstr",
+                    "FirstName": "Child",
+                    "MiddleName": "",
+                    "LastName": "Rahman",
+                    "MobileNo": "9876543210",
+                    "PaxType": "C",
+                    "Age": "4",
+                    "Email": "support@voyogo.com",
+                    "Pan": ""
+                }
+            ]
+        }
+    ],
+    "NetAmount": "17024"
+}
+
+RESPONSE BODY:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "TransactionID": 428105,
+    "TUI": "HTUI_efa247f9c5659b690150daafe56ccaf5",
+    "Status": "ItineraryCreated",
+    "TotalPayable": 17024
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #11 | LOG ID: #11 | TIMESTAMP: 2026-09-23T14:05:22.000Z
+API NAME / ACTION: StartPay
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapiflights.benzyinfotech.com/Payment/StartPay
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "TransactionID": 428105,
+    "TUI": "HTUI_efa247f9c5659b690150daafe56ccaf5",
+    "Amount": 17024,
+    "PaymentMode": "Deposit"
+}
+
+RESPONSE BODY:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "TransactionID": 428105,
+    "TUI": "HTUI_efa247f9c5659b690150daafe56ccaf5",
+    "CRSPNR": "TestBooking",
+    "BookingStatus": "B0",
+    "HotelConfirmationNumber": "TestBooking",
+    "CurrentStatus": "Success"
+}
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP #12 | LOG ID: #12 | TIMESTAMP: 2026-09-23T14:05:23.000Z
+API NAME / ACTION: RetrieveBooking
+SERVICE: HOTEL | METHOD: POST
+ENDPOINT URL: https://b2bapiflights.benzyinfotech.com/Utils/RetrieveBooking
+HTTP STATUS: 200 | LATENCY: 210 ms | CLIENT IP: 95.216.153.25
+--------------------------------------------------------------------------------
+REQUEST BODY:
+{
+    "TUI": "HTUI_efa247f9c5659b690150daafe56ccaf5",
+    "TransactionID": 428105
+}
+
+RESPONSE BODY:
+{
+    "Code": "200",
+    "Msg": [
+        "Success"
+    ],
+    "BookingConfirmationId": "TestBooking",
+    "HotelConfirmationNumber": "TestBooking",
+    "Status": "Confirmed",
+    "CurrentStatus": "B0",
+    "CheckIn": "09/30/2026",
+    "CheckOut": "10/02/2026",
+    "Rooms": 2,
+    "Adults": 2,
+    "Children": 2,
+    "HotelName": "Grand Palace Hotel & Resort Delhi",
+    "LeadGuest": "Mr Abdul Rahman",
+    "TotalAmount": 17024,
+    "Currency": "INR"
+}
+================================================================================
+
