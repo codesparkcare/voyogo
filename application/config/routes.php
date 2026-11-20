@@ -18,6 +18,25 @@ $route['flight/ajax_fare_options'] = 'welcome/ajax_fare_options';
 $route['flight/confirmation/(:any)'] = 'welcome/flight_confirmation/$1';
 $route['flight'] = 'welcome/index';
 
+/* Flutter Mobile Application REST API Routes */
+$route['api/airports']                  = 'api/airports';
+$route['api/flight/search']             = 'api/flight_search';
+$route['api/flight/fare_rule']          = 'api/flight_fare_rule';
+$route['api/flight/ssr']                = 'api/flight_ssr';
+$route['api/flight/reprice']            = 'api/flight_reprice';
+$route['api/flight/book']               = 'api/flight_book';
+$route['api/flight/ticket/(:any)']      = 'api/flight_ticket/$1';
+
+$route['api/hotel/autosuggest']         = 'api/hotel_autosuggest';
+$route['api/hotel/search']              = 'api/hotel_search';
+$route['api/hotel/detail/(:any)']       = 'api/hotel_detail/$1';
+$route['api/hotel/detail']              = 'api/hotel_detail';
+$route['api/hotel/reprice']             = 'api/hotel_reprice';
+$route['api/hotel/book']                = 'api/hotel_book';
+$route['api/hotel/voucher/(:any)']      = 'api/hotel_voucher/$1';
+
+$route['api/user/bookings']             = 'api/my_bookings';
+
 /* Razorpay Standard Web Checkout API Routes */
 $route['api/create-order']   = 'payment/create_order';
 $route['api/verify-payment'] = 'payment/verify_payment';
